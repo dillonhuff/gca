@@ -1,7 +1,8 @@
 #ifndef GCA_INSTR_H
 #define GCA_INSTR_H
 
-//#define M 0
+#define GCA_M 0
+#define GCA_G 1
 
 namespace gca {
 

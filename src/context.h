@@ -13,14 +13,21 @@ namespace gca {
     arena_allocator a;
 
   public:
+    
     gprog* mk_gprog() {
-      gprog* mem = static_cast<gprog*>(a.allocate(sizeof(gprog)));
+      gprog* mem = a.allocate<gprog>();
       return new (mem) gprog();
     }
 
     instr* mk_minstr(int val) {
-      instr* mem = static_cast<instr*>(a.allocate(sizeof(instr)));
-      return new (mem) instr(0, val);
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_M, val);
+    }
+
+    instr* mk_G0(double x, double y, double z) {
+      instr* mem = a.allocate<instr>();
+      instr* i = new (mem) instr(GCA_G, 0);
+      return i;
     }
     
   };

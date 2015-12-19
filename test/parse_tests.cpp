@@ -33,6 +33,14 @@ namespace gca {
       correct->push_back(c.mk_minstr(30));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("Parse G00 line") {
+      string s = "G00 X30.0 Y12 Z-1.5";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G0(30.0, 12.0, -1.5));
+      REQUIRE(*p == *correct);
+    }
     
   }
 

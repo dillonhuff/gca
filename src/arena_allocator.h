@@ -29,13 +29,16 @@ namespace gca {
       delete start;
     }
 
-    void* allocate(size_t s) {
+    template<typename T>
+    T* allocate() {
+      size_t s = sizeof(T);
       space_left = space_left - s;
       assert(space_left > 0);
       void* to_alloc = current;
       current += s;
-      return to_alloc;
+      return static_cast<T*>(to_alloc);
     }
+
   };
  
 }
