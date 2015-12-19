@@ -26,8 +26,7 @@ namespace gca {
 
     instr* mk_G0(double x, double y, double z) {
       instr* mem = a.allocate<instr>();
-      instr* i = new (mem) instr(GCA_G, 0);
-      return i;
+      return new (mem) instr(GCA_G, 0, x, y, z);
     }
     
   };
