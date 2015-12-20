@@ -15,13 +15,11 @@ namespace gca {
   typedef int instr_val;
 
   class instr {
-
-  protected:
+  public:
     instr_class c;
     instr_val v;
     double x, y, z;
-
-  public:
+    
     instr(instr_class cp, instr_val vp) {
       assert(cp != GCA_G);
       c = cp;

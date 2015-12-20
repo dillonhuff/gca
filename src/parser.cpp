@@ -64,6 +64,7 @@ namespace gca {
 	}
 	ignore_whitespace(&i, s);
       } else {
+	cout << "Cannot parse string: " << s.substr(i) << endl;
 	assert(false);
       }
     }
