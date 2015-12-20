@@ -25,7 +25,6 @@ namespace gca {
     }
     
     virtual bool check(ostream& out, instr* p) {
-      cout << "CHECKING INSTR BOUNDS" << endl;
       if (p->c == GCA_G && (p->v == 0 || p->v == 1)) {
 	bool res_x = in_bounds(x_min, p->x, x_max);
 	bool res_y = in_bounds(y_min, p->y, y_max);
@@ -35,11 +34,11 @@ namespace gca {
 	  out << "(" << x_min << ", " << x_max << ")" << endl;
 	}
 	if (!res_y) {
-	  out << "Warning: " << *p << " is not in Y bounds" << endl;
+	  out << "Warning: " << *p << " is not in Y bounds";
 	  out << "(" << z_min << ", " << z_max << ")" << endl;
 	}
 	if (!res_z) {
-	  out << "Warning: " << *p << " is not in Z bounds" << endl;
+	  out << "Warning: " << *p << " is not in Z bounds";
 	  out << "(" << z_min << ", " << z_max << ")" << endl;	  
 	}
 	return res_x && res_y && res_z;

@@ -14,14 +14,19 @@ ALL_FILES += $(SRC_HEADER_FILES)
 SRC_OBJS := $(SRC_FILES:.cpp=.o)
 OBJS := $(ALL_SRC:.cpp=.o)
 
+######## Example files ######################
+CHECK_BOUNDS := examples/check_bounds.cpp
+CHECK_BOUNDS_OBJ := $(CHECK_BOUNDS:.cpp=.o)
+#############################################
+
  %.o : %.cpp
 	$(CC) $(CXX_FLAGS) -c $< -o $@
 
 all-tests: $(SRC_HEADER_FILES) $(OBJS)
 	$(CC) $(CXX_FLAGS) $(OBJS) -o $@
 
-check-bounds-example: $(SRC_HEADER_FILES) $(SRC_OBJS) examples/check_bounds.o
-	$(CC) $(CXX_FLAGS) $(OJBS) examples/check_bounds.o -o $@
+check-bounds-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ)
+	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ) -o $@
 
 static-lib: $(SRC_HEADER_FILES) $(OBJS)
 	ar rcs libgca.a $(OBJS)
@@ -31,3 +36,4 @@ clean:
 	find . -name "*.o" -type f -delete
 	rm -f all-tests
 	rm -f libgca.a
+	rm -f check-bounds-example
