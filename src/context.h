@@ -28,6 +28,11 @@ namespace gca {
       instr* mem = a.allocate<instr>();
       return new (mem) instr(GCA_G, 0, x, y, z);
     }
+
+    instr* mk_G1(double x, double y, double z) {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_G, 1, x, y, z);
+    }
     
   };
 

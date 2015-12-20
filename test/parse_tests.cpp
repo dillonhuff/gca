@@ -57,6 +57,14 @@ namespace gca {
       correct->push_back(c.mk_G0(30.0, 12.0, -1.5));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("Parse G1 line") {
+      string s = "G1 X32.0 Y-6.0 Z-1.5";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G1(32.0, -6.0, -1.5));
+      REQUIRE(*p == *correct);
+    }
     
   }
 

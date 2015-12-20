@@ -43,7 +43,14 @@ namespace gca {
 	  double y = parse_option_coordinate('Y', &i, s);
 	  double z = parse_option_coordinate('Z', &i, s);
 	  p->push_back(c.mk_G0(x, y, z));
+	} else if (val == 1) {
+	  i++;
+	  double x = parse_option_coordinate('X', &i, s);
+	  double y = parse_option_coordinate('Y', &i, s);
+	  double z = parse_option_coordinate('Z', &i, s);
+	  p->push_back(c.mk_G1(x, y, z));	  
 	} else {
+	  cout << "Unrecognized instr code for instr letter: " << val << endl;
 	  assert(false);
 	}
       }
