@@ -2,9 +2,12 @@
 #define GCA_INSTR_H
 
 #include <cassert>
+#include <iostream>
 
 #define GCA_M 0
 #define GCA_G 1
+
+using namespace std;
 
 namespace gca {
 
@@ -34,21 +37,17 @@ namespace gca {
       z = zp;
     }
     
-    bool operator==(const instr& other) {
-      if (c != other.c || v != other.v) {
-	return false;
-      }
-      if (c == GCA_G) {
-	return x == other.x && y == other.y && z == other.z;
-      }
-      return true;
-    }
+    bool operator==(const instr& other);
 
     bool operator!=(const instr& other) {
       return !(*this == other);
     }
 
+    void print(ostream& s);
+
   };
+
+  ostream& operator<<(ostream& stream, instr& i);
 
 }
 

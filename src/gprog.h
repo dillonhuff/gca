@@ -9,11 +9,16 @@ using namespace std;
 
 namespace gca {
 
+  typedef vector<instr*> ilist;
+
   class gprog {
   protected:
-    vector<instr*> instrs;
+    ilist instrs;
 
   public:
+    ilist::iterator begin() { return instrs.begin(); }
+    ilist::iterator end() { return instrs.end(); }
+    
     void push_back(instr* i) { instrs.push_back(i); }
 
     unsigned int size() const { return instrs.size(); }
@@ -29,7 +34,12 @@ namespace gca {
       }
       return true;
     }
+
+    void print(ostream& s);
+
   };
+
+  ostream& operator<<(ostream& stream, gprog& p);
 
 }
 
