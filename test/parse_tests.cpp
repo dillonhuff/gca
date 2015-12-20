@@ -83,6 +83,19 @@ namespace gca {
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("Read and parse file") {
+      string fn = "/Users/dillon/CppWorkspace/gca/test/test_1.txt";
+      gprog* p = read_file(c, fn);
+      cout << "-- Actual" << endl;
+      cout << *p;      
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
+      correct->push_back(c.mk_G0(12.5, 1.5, 0));
+      correct->push_back(c.mk_G1(18.0, 1.5, -0.25));
+      correct->push_back(c.mk_minstr(2));
+      REQUIRE(*p == *correct);
+    }
     
   }
 

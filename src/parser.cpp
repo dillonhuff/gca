@@ -1,5 +1,7 @@
 #include <cctype>
+#include <fstream>
 #include <iostream>
+#include <streambuf>
 
 #include "parser.h"
 
@@ -41,6 +43,7 @@ namespace gca {
       cout << "i = " << i << endl;
       cout << "s.substr(i) = " << s.substr(i) << endl;
       ignore_whitespace(&i, s);
+      if (i >= s.size()) { break; }
       if (s[i] == 'M') {
 	i++;
 	int val = parse_int(&i, s);
@@ -70,5 +73,14 @@ namespace gca {
     }
     return p;
   }
-  
+
+  gprog* read_file(context& c, string file_name) {
+    ifstream t(file_name);
+    string str((istreambuf_iterator<char>(t)),
+	       istreambuf_iterator<char>());
+    cout << "-- str is " << endl;
+    cout << str << endl;
+    return parse_gprog(c, str);
+  }
+
 }

@@ -11,6 +11,7 @@ using namespace std;
 namespace gca {
 
   gprog* parse_gprog(context& c, string s);
+  gprog* read_file(context& c, string file_name);
   
 }
 
