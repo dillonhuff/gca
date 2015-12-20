@@ -34,12 +34,12 @@ namespace gca {
 	  out << "(" << x_min << ", " << x_max << ")" << endl;
 	}
 	if (!res_y) {
-	  out << "Warning: " << *p << " is not in Y bounds";
+	  out << "Warning: " << *p << " is not in Y bounds ";
 	  out << "(" << y_min << ", " << y_max << ")" << endl;
 	}
 	if (!res_z) {
-	  out << "Warning: " << *p << " is not in Z bounds";
-	  out << "(" << z_min << ", " << z_max << ")" << endl;	  
+	  out << "Warning: " << *p << " is not in Z bounds ";
+	  out << "(" << z_min << ", " << z_max << ")" << endl;
 	}
 	return res_x && res_y && res_z;
       }

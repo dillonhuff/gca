@@ -100,6 +100,16 @@ namespace gca {
       REQUIRE(*p == *correct);
     }
 
+    SECTION("Parse Multi-line GCODE with comments") {
+      string s = "G1 Z-1.5 (comment 1)\nG0X12.5 (Comment \n number 2) (s) \n( f)M2 \n(Comment G1 X0.0)";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
+      correct->push_back(c.mk_G0(12.5, 0.0, 0));
+      correct->push_back(c.mk_minstr(2));
+      REQUIRE(*p == *correct);
+    }
+
     SECTION("Read and parse file") {
       string fn = "/Users/dillon/CppWorkspace/gca/test/test_1.txt";
       gprog* p = read_file(c, fn);

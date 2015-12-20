@@ -17,7 +17,9 @@ namespace gca {
       cout << 'M' << v;
     } else if (c == GCA_G) {
       cout << 'G' << v;
-      cout << " F" << feed_rate;
+      if (v != 0) {
+	cout << " F" << feed_rate;
+      }
       s << " X" << x;
       s << " Y" << y;
       s << " Z" << z;

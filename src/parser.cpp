@@ -7,9 +7,18 @@
 
 namespace gca {
 
-  void ignore_whitespace(size_t* i, string s) {
-    while (*i < s.size() && isspace(s[*i])) {
+  void ignore_comment(size_t* i, string s) {
+    if (s[*i] == '(') {
+      while (*i < s.size() && s[*i] != ')') { (*i)++; }
       (*i)++;
+    }
+  }
+
+  void ignore_whitespace(size_t* i, string s) {
+    while (*i < s.size() && (s[*i] == '(' || isspace(s[*i]))) {
+      while (*i < s.size() && isspace(s[*i])) { (*i)++; }
+      if (*i >= s.size()) { break; }
+      ignore_comment(i, s);
     }
   }
 
@@ -52,7 +61,7 @@ namespace gca {
   gprog* parse_gprog(context& c, string s) {
     gprog* p = c.mk_gprog();
     string::size_type i = 0;
-    while ( i < s.size()) {
+    while (i < s.size()) {
       ignore_whitespace(&i, s);
       if (i >= s.size()) { break; }
       if (s[i] == 'M') {
@@ -69,7 +78,7 @@ namespace gca {
 	  p->push_back(c.mk_G0(x, y, z));
 	} else if (val == 1) {
 	  instr* is = parse_G1(c, &i, s);
-	  p->push_back(is);//c.mk_G1(x, y, z));
+	  p->push_back(is);
 	} else {
 	  cout << "Unrecognized instr code for instr letter: " << val << endl;
 	  assert(false);
