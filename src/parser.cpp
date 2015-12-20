@@ -40,8 +40,6 @@ namespace gca {
     gprog* p = c.mk_gprog();
     string::size_type i = 0;
     while ( i < s.size()) {
-      cout << "i = " << i << endl;
-      cout << "s.substr(i) = " << s.substr(i) << endl;
       ignore_whitespace(&i, s);
       if (i >= s.size()) { break; }
       if (s[i] == 'M') {
@@ -78,8 +76,6 @@ namespace gca {
     ifstream t(file_name);
     string str((istreambuf_iterator<char>(t)),
 	       istreambuf_iterator<char>());
-    cout << "-- str is " << endl;
-    cout << str << endl;
     return parse_gprog(c, str);
   }
 

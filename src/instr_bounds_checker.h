@@ -35,7 +35,7 @@ namespace gca {
 	}
 	if (!res_y) {
 	  out << "Warning: " << *p << " is not in Y bounds";
-	  out << "(" << z_min << ", " << z_max << ")" << endl;
+	  out << "(" << y_min << ", " << y_max << ")" << endl;
 	}
 	if (!res_z) {
 	  out << "Warning: " << *p << " is not in Z bounds";
