@@ -34,6 +34,22 @@ namespace gca {
       REQUIRE(*p == *correct);
     }
 
+    SECTION("Parse G00 line, no spaces") {
+      string s = "G00X12.0Y8.0Z-4.5";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G0(12.0, 8.0, -4.5));
+      REQUIRE(*p == *correct);
+    }    
+    
+    SECTION("Parse G00 line, all 12.0") {
+      string s = "G00 X12.0 Y12.0 Z12.0";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G0(12.0, 12.0, 12.0));
+      REQUIRE(*p == *correct);
+    }    
+
     SECTION("Parse G00 line") {
       string s = "G00 X30.0 Y12 Z-1.5";
       gprog* p = parse_gprog(c, s);

@@ -35,7 +35,13 @@ namespace gca {
     }
     
     bool operator==(const instr& other) {
-      return c == other.c && v == other.v;
+      if (c != other.c || v != other.v) {
+	return false;
+      }
+      if (c == GCA_G) {
+	return x == other.x && y == other.y && z == other.z;
+      }
+      return true;
     }
 
     bool operator!=(const instr& other) {
