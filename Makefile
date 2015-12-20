@@ -1,18 +1,22 @@
 CC := g++
-CXX_FLAGS := -std=c++98 -pedantic -I. -Wall -Werror -g
+CXX_FLAGS := -std=c++98 -pedantic -I./src -I./test -Wall -Werror -g
 
-SRC_FILES := $(shell find . -name "*.cpp")
-HEADER_FILES := $(shell find . -name "*.h")
+SRC_FILES := $(shell find ./src -name "*.cpp")
+TEST_FILES := $(shell find ./test -name "*.cpp")
+SRC_HEADER_FILES := $(shell find ./src -name "*.h")
 
-ALL_FILES := $(SRC_FILES)
-ALL_FILES += $(HEADER_FILES)
+ALL_SRC := $(SRC_FILES)
+ALL_SRC += $(TEST_FILES)
 
-OBJS := $(SRC_FILES:.cpp=.o)
+ALL_FILES := $(ALL_SRC)
+ALL_FILES += $(SRC_HEADER_FILES)
+
+OBJS := $(ALL_SRC:.cpp=.o)
 
  %.o : %.cpp
 	$(CC) $(CXX_FLAGS) -c $< -o $@
 
-all-tests: $(HEADER_FILES) $(OBJS)
+all-tests: $(SRC_HEADER_FILES) $(OBJS)
 	$(CC) $(CXX_FLAGS) $(OBJS) -o $@
 
 clean:

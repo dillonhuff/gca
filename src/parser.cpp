@@ -1,7 +1,7 @@
 #include <cctype>
 #include <iostream>
 
-#include "src/parser.h"
+#include "parser.h"
 
 namespace gca {
 

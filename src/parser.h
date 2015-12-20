@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "src/context.h"
-#include "src/gprog.h"
+#include "context.h"
+#include "gprog.h"
 
 using namespace std;
 

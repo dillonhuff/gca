@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "src/gprog.h"
-#include "src/parser.h"
-#include "test/catch.hpp"
+#include "gprog.h"
+#include "parser.h"
+#include "catch.hpp"
 
 namespace gca {
 

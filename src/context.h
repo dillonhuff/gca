@@ -1,9 +1,9 @@
 #ifndef GCA_CONTEXT_H
 #define GCA_CONTEXT_H
 
-#include "src/arena_allocator.h"
-#include "src/gprog.h"
-#include "src/instr.h"
+#include "arena_allocator.h"
+#include "gprog.h"
+#include "instr.h"
 
 namespace gca {
 

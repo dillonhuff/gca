@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "src/instr.h"
+#include "instr.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
 #ifndef GCA_PER_INSTR_CHECKER_H
 #define GCA_PER_INSTR_CHECKER_H
 
-#include "src/gprog.h"
-#include "src/instr_checker.h"
+#include "gprog.h"
+#include "instr_checker.h"
 
 namespace gca {
 

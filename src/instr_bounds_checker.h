@@ -1,7 +1,7 @@
 #ifndef GCA_INSTR_BOUNDS_CHECKER_H
 #define GCA_INSTR_BOUNDS_CHECKER_H
 
-#include "src/instr_checker.h"
+#include "instr_checker.h"
 
 namespace gca {
 

@@ -1,4 +1,4 @@
-#include "src/instr.h"
+#include "instr.h"
 
 namespace gca {
 

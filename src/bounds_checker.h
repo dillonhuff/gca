@@ -1,8 +1,8 @@
 #ifndef GCA_BOUNDS_CHECKER_H
 #define GCA_BOUNDS_CHECKER_H
 
-#include "src/instr_bounds_checker.h"
-#include "src/per_instr_checker.h"
+#include "instr_bounds_checker.h"
+#include "per_instr_checker.h"
 
 namespace gca {
 

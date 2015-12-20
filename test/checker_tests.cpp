@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "src/context.h"
-#include "src/bounds_checker.h"
+#include "context.h"
+#include "bounds_checker.h"
 
 namespace gca {
 

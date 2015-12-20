@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "src/gprog.h"
+#include "gprog.h"
 
 namespace gca {
 
