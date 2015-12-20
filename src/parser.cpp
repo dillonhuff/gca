@@ -11,14 +11,25 @@ namespace gca {
     }
   }
 
+  double parse_double(size_t* i, string s) {
+    size_t j = *i;
+    double v = stod(s.substr(*i), &j);
+    *i += j;
+    return v;
+  }
+
+  int parse_int(size_t* i, string s) {
+    size_t j = *i;
+    int v = stoi(s.substr(*i), &j);
+    *i += j;
+    return v;
+  }
+  
   double parse_option_coordinate(char c, size_t* i, string s) {
     ignore_whitespace(i, s);
     if (s[*i] == c) {
       (*i)++;
-      size_t j = *i;
-      double v = stod(s.substr(*i), &j);
-      *i += j;
-      return v;
+      return parse_double(i, s);
     }
     return 0.0;
   }
@@ -32,16 +43,11 @@ namespace gca {
       ignore_whitespace(&i, s);
       if (s[i] == 'M') {
 	i++;
-	size_t j = i;
-      	int val = stoi(s.substr(i), &j);
-	i += j;
+	int val = parse_int(&i, s);
       	p->push_back(c.mk_minstr(val));
       } else if (s[i] == 'G') {
 	i++;
-	size_t j = i;
-	int val = stoi(s.substr(i), &j);
-	i += j;
-	//	i++;	
+	int val = parse_int(&i, s);
 	if (val == 0) {
 	  double x = parse_option_coordinate('X', &i, s);
 	  double y = parse_option_coordinate('Y', &i, s);

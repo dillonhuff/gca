@@ -75,17 +75,12 @@ namespace gca {
     }
 
     SECTION("Parse Multi-line GCODE") {
-      cout << "-- Multi line parse tests" << endl;
       string s = "G1 Z-1.5\nG0X12.5\nM2";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
       correct->push_back(c.mk_G0(12.5, 0.0, 0));
       correct->push_back(c.mk_minstr(2));
-      cout << "-- Correct" << endl;
-      cout << *correct;
-      cout << "-- Actual" << endl;
-      cout << *p << endl;
       REQUIRE(*p == *correct);
     }
     
