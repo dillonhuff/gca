@@ -29,11 +29,11 @@ namespace gca {
       return new (mem) instr(GCA_G, 0, x, y, z);
     }
 
-    instr* mk_G1(double x, double y, double z) {
+    instr* mk_G1(double x, double y, double z, double feed_rate=1.0) {
       instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 1, x, y, z);
+      return new (mem) instr(GCA_G, 1, x, y, z, feed_rate);
     }
-    
+
   };
 
 }

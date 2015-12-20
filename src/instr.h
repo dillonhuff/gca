@@ -19,11 +19,13 @@ namespace gca {
     instr_class c;
     instr_val v;
     double x, y, z;
+    double feed_rate;
     
     instr(instr_class cp, instr_val vp) {
       assert(cp != GCA_G);
       c = cp;
       v = vp;
+      feed_rate = -1.0;
     }
 
     instr(instr_class cp, instr_val vp, double xp, double yp, double zp) {
@@ -33,6 +35,19 @@ namespace gca {
       x = xp;
       y = yp;
       z = zp;
+      feed_rate = -1.0;
+    }
+    
+
+    instr(instr_class cp, instr_val vp, double xp, double yp, double zp, double frp) {
+      assert(cp == GCA_G);
+      assert(frp > 0);
+      c = cp;
+      v = vp;
+      x = xp;
+      y = yp;
+      z = zp;
+      feed_rate = frp;
     }
     
     bool operator==(const instr& other);

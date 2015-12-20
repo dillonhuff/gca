@@ -27,13 +27,26 @@ namespace gca {
     return v;
   }
   
-  double parse_option_coordinate(char c, size_t* i, string s) {
+  double parse_option_coordinate(char c, size_t* i, string s, double def=0.0) {
     ignore_whitespace(i, s);
     if (s[*i] == c) {
       (*i)++;
       return parse_double(i, s);
     }
-    return 0.0;
+    return def;
+  }
+
+  instr* parse_G1(context& c, size_t* i, string s) {
+    double default_feedrate = 1.0;
+    double fr = parse_option_coordinate('F', i, s, default_feedrate);
+    double x = parse_option_coordinate('X', i, s);
+    double y = parse_option_coordinate('Y', i, s);
+    double z = parse_option_coordinate('Z', i, s);
+    // TODO: Replace w/ epsilon comparison since these are floating point
+    if (fr == default_feedrate) {
+      fr = parse_option_coordinate('F', i, s, default_feedrate);
+    }
+    return c.mk_G1(x, y, z, fr);
   }
 
   gprog* parse_gprog(context& c, string s) {
@@ -55,10 +68,8 @@ namespace gca {
 	  double z = parse_option_coordinate('Z', &i, s);
 	  p->push_back(c.mk_G0(x, y, z));
 	} else if (val == 1) {
-	  double x = parse_option_coordinate('X', &i, s);
-	  double y = parse_option_coordinate('Y', &i, s);
-	  double z = parse_option_coordinate('Z', &i, s);
-	  p->push_back(c.mk_G1(x, y, z));
+	  instr* is = parse_G1(c, &i, s);
+	  p->push_back(is);//c.mk_G1(x, y, z));
 	} else {
 	  cout << "Unrecognized instr code for instr letter: " << val << endl;
 	  assert(false);

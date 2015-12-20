@@ -48,9 +48,9 @@ namespace gca {
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G0(12.0, 12.0, 12.0));
       REQUIRE(*p == *correct);
-    }    
-
-    SECTION("Parse G00 line") {
+    }
+    
+   SECTION("Parse G00 line") {
       string s = "G00 X30.0 Y12 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
@@ -74,6 +74,22 @@ namespace gca {
       REQUIRE(*p == *correct);
     }
 
+    SECTION("Parse G1 line with front feedrate") {
+      string s = "G1 F4 X0.0 Y0.0 Z0.0";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G1(0.0, 0.0, 0.0, 4.0));
+      REQUIRE(*p == *correct);
+    }
+
+    SECTION("Parse G1 line with back feedrate") {
+      string s = "G1 X0.0 Y0.0 Z0.0 F4";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G1(0.0, 0.0, 0.0, 4.0));
+      REQUIRE(*p == *correct);
+    }
+    
     SECTION("Parse Multi-line GCODE") {
       string s = "G1 Z-1.5\nG0X12.5\nM2";
       gprog* p = parse_gprog(c, s);
@@ -92,6 +108,10 @@ namespace gca {
       correct->push_back(c.mk_G0(12.5, 1.5, 0));
       correct->push_back(c.mk_G1(18.0, 1.5, -0.25));
       correct->push_back(c.mk_minstr(2));
+      cout << "-- Correct" << endl;
+      cout << *correct;
+      cout << "-- Actual" << endl;
+      cout << *p;
       REQUIRE(*p == *correct);
     }    
   }

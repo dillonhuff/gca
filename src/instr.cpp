@@ -7,7 +7,7 @@ namespace gca {
       return false;
     }
     if (c == GCA_G) {
-      return x == other.x && y == other.y && z == other.z;
+      return x == other.x && y == other.y && z == other.z && feed_rate == other.feed_rate;
     }
     return true;
   }
@@ -17,6 +17,7 @@ namespace gca {
       cout << 'M' << v;
     } else if (c == GCA_G) {
       cout << 'G' << v;
+      cout << " F" << feed_rate;
       s << " X" << x;
       s << " Y" << y;
       s << " Z" << z;
