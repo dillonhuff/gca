@@ -15,6 +15,7 @@ namespace gca {
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G0(0, 0, -1));
       correct->push_back(c.mk_G1(0, 3, -1));
+      correct->push_back(c.mk_G0(0, 3, 0));
       correct->push_back(c.mk_G0(0, 0, 0));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*res == *correct);
@@ -31,6 +32,7 @@ namespace gca {
       correct->push_back(c.mk_G0(0, 0, -1));
       correct->push_back(c.mk_G1(0, 3, -1));
       correct->push_back(c.mk_G1(2, 5, -1));
+      correct->push_back(c.mk_G0(2, 5, 0));
       correct->push_back(c.mk_G0(0, 0, 0));
       correct->push_back(c.mk_minstr(2));
       cout << "-- Correct" << endl;
