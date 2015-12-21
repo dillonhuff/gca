@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "catch.hpp"
 #include "context.h"
 #include "output.h"
@@ -57,6 +59,46 @@ namespace gca {
       cut* s1 = c.mk_cut(point(0, 0, -1), point(0, 1, -1));
       cut* sink = sink_cut(c, s1, 1.0);
       cut* correct = c.mk_cut(point(0, -1, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+
+    SECTION("Mixed axis sink q1") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(1, 1, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      double v = sqrt(1.0/2.0);
+      cut* correct = c.mk_cut(point(-v, -v, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+    
+    SECTION("Mixed axis sink q2") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(-1, 1, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      double v = sqrt(1.0/2.0);
+      cut* correct = c.mk_cut(point(v, -v, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+
+    SECTION("Mixed axis sink q2") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(-1, 1, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      double v = sqrt(1.0/2.0);
+      cut* correct = c.mk_cut(point(v, -v, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+
+    SECTION("Mixed axis sink q3") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(-1, -1, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      double v = sqrt(1.0/2.0);
+      cut* correct = c.mk_cut(point(v, v, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+
+    SECTION("Mixed axis sink q4") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(1, -1, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      double v = sqrt(1.0/2.0);
+      cut* correct = c.mk_cut(point(-v, v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
     

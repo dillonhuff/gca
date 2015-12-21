@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 
 #include "output.h"
 
@@ -24,13 +24,27 @@ namespace gca {
 
   cut* sink_cut(context& c, cut* s, double l) {
     double xd = s->end.x - s->start.x;
+    double yd = s->end.y - s->start.y;
+    double x_pos = xd > 0;
+    double y_pos = yd > 0;
     if (xd == 0) {
       return c.mk_cut(point(s->start.x, s->start.y - l, 0), s->start);
     }
-    double m = (s->end.y - s->start.y) / xd;
+    double m = yd / xd;
     double a = sqrt((l*l) / (1.0 + m*m));
     double b = m*a;
-    return c.mk_cut(point(s->start.x - a, s->start.y - b, 0), s->start);
+    double xs, ys;
+    if (x_pos) {
+      xs = s->start.x - abs(a);
+    } else {
+      xs = s->start.x + abs(a);
+    }
+    if (y_pos) {
+      ys = s->start.y - abs(b);
+    } else {
+      ys = s->start.y + abs(b);
+    }
+    return c.mk_cut(point(xs, ys, 0), s->start);
   }
   
 }
