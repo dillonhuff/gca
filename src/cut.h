@@ -11,6 +11,10 @@ namespace gca {
 
   cut(point sp, point ep) :
     start(sp), end(ep) {}
+
+    bool operator==(const cut& other) const {
+      return start == other.start && end == other.end;
+    }
     
   };
 

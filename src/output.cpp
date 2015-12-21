@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "output.h"
 
 namespace gca {
@@ -18,6 +20,17 @@ namespace gca {
     p->push_back(c.mk_G0(0, 0, 0));
     p->push_back(c.mk_minstr(2));
     return p;
+  }
+
+  cut* sink_cut(context& c, cut* s, double l) {
+    double xd = s->end.x - s->start.x;
+    if (xd == 0) {
+      return c.mk_cut(point(s->start.x, s->start.y - l, 0), s->start);
+    }
+    double m = (s->end.y - s->start.y) / xd;
+    double a = sqrt((l*l) / (1.0 + m*m));
+    double b = m*a;
+    return c.mk_cut(point(s->start.x - a, s->start.y - b, 0), s->start);
   }
   
 }

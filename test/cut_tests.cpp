@@ -42,5 +42,24 @@ namespace gca {
       REQUIRE(*res == *correct);      
     }
   }
+
+  TEST_CASE("Compute sink cut") {
+    context c;
+
+    SECTION("X axis sink") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(1, 0, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      cut* correct = c.mk_cut(point(-1, 0, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+
+    SECTION("Y axis sink") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(0, 1, -1));
+      cut* sink = sink_cut(c, s1, 1.0);
+      cut* correct = c.mk_cut(point(0, -1, 0), point(0, 0, -1));
+      REQUIRE(*sink == *correct);
+    }
+    
+  }
   
 }
