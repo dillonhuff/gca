@@ -118,10 +118,6 @@ namespace gca {
       correct->push_back(c.mk_G0(12.5, 1.5, 0));
       correct->push_back(c.mk_G1(18.0, 1.5, -0.25));
       correct->push_back(c.mk_minstr(2));
-      cout << "-- Correct" << endl;
-      cout << *correct;
-      cout << "-- Actual" << endl;
-      cout << *p;
       REQUIRE(*p == *correct);
     }    
   }

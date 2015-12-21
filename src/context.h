@@ -2,6 +2,7 @@
 #define GCA_CONTEXT_H
 
 #include "arena_allocator.h"
+#include "cut.h"
 #include "gprog.h"
 #include "instr.h"
 
@@ -32,6 +33,11 @@ namespace gca {
     instr* mk_G1(double x, double y, double z, double feed_rate=1.0) {
       instr* mem = a.allocate<instr>();
       return new (mem) instr(GCA_G, 1, x, y, z, feed_rate);
+    }
+
+    cut* mk_cut(point start, point end) {
+      cut* mem = a.allocate<cut>();
+      return new (mem) cut(start, end);
     }
 
   };
