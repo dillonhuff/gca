@@ -15,6 +15,10 @@ namespace gca {
   cut* sink_cut(context& c, cut* s, double l);
 
   void insert_sink_cuts(context& c, double l, vector<cut*>& cuts, vector<cut*>& dest);
+
+  vector<cut*> surface_cuts(context &c,
+			    point left, point right,
+			    point shift, int num_cuts);
     
 }
 

@@ -14,7 +14,7 @@ namespace gca {
 	}
 	p->push_back(c.mk_G0(cuts[i]->start.x, cuts[i]->start.y, 0.0));
 	if (cuts[i]->start.z != 0.0) {
-	  p->push_back(c.mk_G0(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
+	  p->push_back(c.mk_G1(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
 	}
       }
       last = c.mk_G1(cuts[i]->end.x, cuts[i]->end.y, cuts[i]->end.z);
@@ -65,6 +65,22 @@ namespace gca {
       dest.push_back(sink_cut(c, cuts[i], l));
       dest.push_back(cuts[i]);
     }
+  }
+
+  vector<cut*> surface_cuts(context &c,
+			    point left, point right,
+			    point shift, int num_cuts) {
+    vector<cut*> cuts;
+    point c_left = left;
+    point c_right = right;
+    for (int i = 1; i <= num_cuts; i++) {
+      cuts.push_back(c.mk_cut(c_left, c_right));
+      // Reverse cut directions
+      point temp = c_left;
+      c_left = c_right + shift;
+      c_right = temp + shift;
+    }
+    return cuts;
   }
   
 }

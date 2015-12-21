@@ -17,6 +17,10 @@ OBJS := $(ALL_SRC:.cpp=.o)
 ######## Example files ######################
 CHECK_BOUNDS := examples/check_bounds.cpp
 CHECK_BOUNDS_OBJ := $(CHECK_BOUNDS:.cpp=.o)
+
+SIMPLE_PROG := examples/simple_prog.cpp
+SIMPLE_PROG_OBJ := $(SIMPLE_PROG:.cpp=.o)
+
 #############################################
 
  %.o : %.cpp
@@ -27,6 +31,9 @@ all-tests: $(SRC_HEADER_FILES) $(OBJS)
 
 check-bounds-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ)
 	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ) -o $@
+
+simple-prog-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(SIMPLE_PROG_OBJ)
+	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(SIMPLE_PROG_OBJ) -o $@
 
 static-lib: $(SRC_HEADER_FILES) $(OBJS)
 	ar rcs libgca.a $(OBJS)
