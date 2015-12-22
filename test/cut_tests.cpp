@@ -9,40 +9,45 @@ namespace gca {
   TEST_CASE("Cut to GCODE") {
     context c;
 
-  //   SECTION("GCODE from one cut") {
-  //     cut* s = c.mk_cut(point(0, 0, -1), point(0, 3, -1));
-  //     vector<cut*> cuts;
-  //     cuts.push_back(s);
-  //     gprog* res = gcode_for_cuts(c, cuts);
-  //     gprog* correct = c.mk_gprog();
-  //     correct->push_back(c.mk_G0(0, 0, -1));
-  //     correct->push_back(c.mk_G1(0, 3, -1));
-  //     correct->push_back(c.mk_G0(0, 3, 0));
-  //     correct->push_back(c.mk_G0(0, 0, 0));
-  //     correct->push_back(c.mk_minstr(2));
-  //     REQUIRE(*res == *correct);
-  //   }
+    SECTION("GCODE from one cut") {
+      cut* s = c.mk_cut(point(0, 0, -1), point(0, 3, -1));
+      vector<cut*> cuts;
+      cuts.push_back(s);
+      gprog* res = gcode_for_cuts(c, cuts);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(0, 0, -1));
+      correct->push_back(c.mk_G1(0, 3, -1));
+      correct->push_back(c.mk_G0(0, 3, 0));
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_minstr(2));
+      REQUIRE(*res == *correct);
+    }
 
-  //   SECTION("GCODE for adjacent cuts") {
-  //     cut* s1 = c.mk_cut(point(0, 0, -1), point(0, 3, -1));
-  //     cut* s2 = c.mk_cut(point(0, 3, -1.00000001), point(2, 5, -1));
-  //     vector<cut*> cuts;
-  //     cuts.push_back(s1);
-  //     cuts.push_back(s2);
-  //     gprog* res = gcode_for_cuts(c, cuts);
-  //     gprog* correct = c.mk_gprog();
-  //     correct->push_back(c.mk_G0(0, 0, -1));
-  //     correct->push_back(c.mk_G1(0, 3, -1));
-  //     correct->push_back(c.mk_G1(2, 5, -1));
-  //     correct->push_back(c.mk_G0(2, 5, 0));
-  //     correct->push_back(c.mk_G0(0, 0, 0));
-  //     correct->push_back(c.mk_minstr(2));
-  //     cout << "-- Correct" << endl;
-  //     cout << *correct;
-  //     cout << "-- Actual" << endl;
-  //     cout << *res;
-  //     REQUIRE(*res == *correct);      
-  //   }
+    SECTION("GCODE for adjacent cuts") {
+      cut* s1 = c.mk_cut(point(0, 0, -1), point(0, 3, -1));
+      cut* s2 = c.mk_cut(point(5, 3, -4), point(7, 2, -4));
+      vector<cut*> cuts;
+      cuts.push_back(s1);
+      cuts.push_back(s2);
+      gprog* res = gcode_for_cuts(c, cuts);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(0, 0, -1));
+      correct->push_back(c.mk_G1(0, 3, -1));
+      correct->push_back(c.mk_G0(0, 3, 0));
+      correct->push_back(c.mk_G0(5, 3, 0));
+      correct->push_back(c.mk_G0(5, 3, -4));
+      correct->push_back(c.mk_G1(7, 2, -4));
+      correct->push_back(c.mk_G0(7, 2, 0));
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_minstr(2));
+      REQUIRE(*res == *correct);      
+    }
   }
 
   TEST_CASE("Compute sink cut") {
@@ -113,22 +118,22 @@ namespace gca {
 
   }
 
-  TEST_CASE("Surface cuts") {
-    context c;
-    double coarse_depth = -0.009;
-    double finish_inc = -0.001;
-    double cutter_width = 0.32;
-    double x_s = 0;
-    double x_e = 2;
-    double y = 0;
-    double width = 1.0;
-    vector<cut*> cuts = two_pass_surface(coarse_depth, finish_inc,
-					 cutter_width,
-					 x_s, x_e, y,
-					 width);
-    gprog* p = gcode_for_surface(c, cuts);
-    //cout << "-- Final surface program" << endl;
-    //cout << *p;
-  }
+  // TEST_CASE("Surface cuts") {
+  //   context c;
+  //   double coarse_depth = -0.009;
+  //   double finish_inc = -0.001;
+  //   double cutter_width = 0.32;
+  //   double x_s = 0;
+  //   double x_e = 2;
+  //   double y = 0;
+  //   double width = 1.0;
+  //   vector<cut*> cuts = two_pass_surface(coarse_depth, finish_inc,
+  // 					 cutter_width,
+  // 					 x_s, x_e, y,
+  // 					 width);
+  //   gprog* p = gcode_for_surface(c, cuts);
+  //   //cout << "-- Final surface program" << endl;
+  //   //cout << *p;
+  // }
   
 }

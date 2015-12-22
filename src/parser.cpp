@@ -67,7 +67,7 @@ namespace gca {
       z = parse_coordinate('Z', i, s);
     }
     // TODO: Replace w/ epsilon comparison since these are floating point
-    if (fr == default_feedrate) {
+    if (within_eps(fr, default_feedrate)) {
       fr = parse_option_coordinate('F', i, s, default_feedrate);
     }
     return c.mk_G1(x, y, z, fr);

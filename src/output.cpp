@@ -3,60 +3,35 @@
 #include "output.h"
 
 namespace gca {
+
+  void from_to_with_G0(context& c, gprog* p, point from, point to) {
+    instr* pull_up_instr = c.mk_G0(from.x, from.y, 0.0);
+    instr* move_instr = c.mk_G0(to.x, to.y, 0.0);
+    instr* push_down_instr = c.mk_G0(to.x, to.y, to.z);
+    p->push_back(pull_up_instr);
+    p->push_back(move_instr);
+    p->push_back(push_down_instr);
+  }
+
+  void from_to_with_G1(context& c, gprog* p, point from, point to) {
+    instr* move_instr = c.mk_G1(to.x, to.y, to.z);
+    p->push_back(move_instr);
+  }
   
   gprog* gcode_for_cuts(context& c, vector<cut*>& cuts) {
+    point current_loc = point(0, 0, 0);
     gprog* p = c.mk_gprog();
-    instr* last = NULL;
     for (int i = 0; i < cuts.size(); i++) {
-      if (!(i > 0 && within_eps(cuts[i-1]->end, cuts[i]->start))) {
-	if (i > 0) {
-	  p->push_back(c.mk_G0(cuts[i-1]->end.x, cuts[i-1]->end.y, 0.0));
-	}
-	p->push_back(c.mk_G0(cuts[i]->start.x, cuts[i]->start.y, 0.0));
-	if (cuts[i]->start.z != 0.0) {
-	  p->push_back(c.mk_G1(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
-	}
-      }
-      last = c.mk_G1(cuts[i]->end.x, cuts[i]->end.y, cuts[i]->end.z);
-      p->push_back(last);
+      from_to_with_G0(c, p, current_loc, cuts[i]->start);
+      from_to_with_G1(c, p, cuts[i]->start, cuts[i]->end);
+      current_loc = cuts[i]->end;
     }
-    if (last != NULL) {
-      p->push_back(c.mk_G0(last->x, last->y, 0.0));
-    }
-    p->push_back(c.mk_G0(0, 0, 0));
+    point final_loc = point(0, 0, 0);
+    from_to_with_G0(c, p, current_loc, final_loc);
     p->push_back(c.mk_minstr(2));
     return p;
   }
 
-  gprog* gcode_for_surface(context& c, vector<cut*>& cuts) {
-    double z_eps = 0.2;
-    gprog* p = c.mk_gprog();
-    instr* last = NULL;
-    for (int i = 0; i < cuts.size(); i++) {
-      if (!(i > 0 && within_eps(cuts[i-1]->end.z, cuts[i]->start.z))) {
-	if (i > 0) {
-	  p->push_back(c.mk_G0(cuts[i-1]->end.x, cuts[i-1]->end.y, z_eps));
-	}
-	p->push_back(c.mk_G0(cuts[i]->start.x, cuts[i]->start.y, z_eps));
-	if (cuts[i]->start.z != 0.0) {
-	  p->push_back(c.mk_G1(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
-	}
-      } else {
-	if (cuts[i]->start.z != 0.0) {
-	  p->push_back(c.mk_G1(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
-	}	
-      }
-      last = c.mk_G1(cuts[i]->end.x, cuts[i]->end.y, cuts[i]->end.z);
-      p->push_back(last);
-    }
-    if (last != NULL) {
-      p->push_back(c.mk_G0(last->x, last->y, z_eps));
-    }
-    p->push_back(c.mk_G0(0, 0, 0));
-    p->push_back(c.mk_minstr(2));
-    return p;
-  }
-  
   cut* sink_cut(context& c, cut* s, double l) {
     double xd = s->end.x - s->start.x;
     double yd = s->end.y - s->start.y;
@@ -79,11 +54,8 @@ namespace gca {
       xs = s->start.x + abs(a);
     }
     if (y_pos) {
-      cout << "Y POSITIVE" << endl;
-      cout << "y = " << yd;
       ys = s->start.y - abs(b);
     } else {
-      cout << "Y NEGATIVE" << endl;
       ys = s->start.y + abs(b);
     }
     return c.mk_cut(point(xs, ys, 0), s->start);

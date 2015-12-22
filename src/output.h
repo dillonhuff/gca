@@ -11,7 +11,6 @@ using namespace std;
 namespace gca {
 
   gprog* gcode_for_cuts(context& c, vector<cut*>& cuts);
-  gprog* gcode_for_surface(context& c, vector<cut*>& cuts);
   
   cut* sink_cut(context& c, cut* s, double l);
 

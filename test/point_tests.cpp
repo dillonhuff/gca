@@ -31,7 +31,6 @@ namespace gca {
     point sp = extend_back(s, e, 1);
     double v = sqrt(1.0/2.0);
     point c = point(-v, -v, 0);
-    cout << "-- sp" << sp << endl;
     REQUIRE(within_eps(sp,c ));
   }
 
@@ -41,8 +40,6 @@ namespace gca {
     point sp = extend_back(s, e, 1);
     double v = sqrt(1.0/2.0);
     point c = point(v, -v, 0);
-    cout << "-- sp" << sp << endl;
-    cout << "-- c " << c << endl;
     REQUIRE(within_eps(sp,c ));
   }
 
@@ -52,8 +49,6 @@ namespace gca {
     point sp = extend_back(s, e, 1);
     double v = sqrt(1.0/2.0);
     point c = point(v, v, 0);
-    cout << "-- sp" << sp << endl;
-    cout << "-- c " << c << endl;
     REQUIRE(within_eps(sp,c ));
   }
 
