@@ -24,6 +24,8 @@ namespace gca {
     
     void push_back(instr* i) { instrs.push_back(i); }
 
+    vector<point> all_positions();
+
     unsigned int size() const { return instrs.size(); }
 
     instr* operator[](unsigned int i) { return instrs[i]; }
