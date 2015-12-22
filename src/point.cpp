@@ -31,9 +31,22 @@ namespace gca {
     s << "(" << x << ", " << y << ", " << z << ")";
   }
 
+  double point::len() const {
+    return sqrt(x*x + y*y + z*z);
+  }
+
+  point operator*(double a, const point& p) {
+    return point(a*p.x, a*p.y, a*p.z);
+  }
+  
   ostream& operator<<(ostream& s, const point& p) {
     p.print(s);
     return s;
   }
 
+  point extend_back(point start, point end, double l) {
+    point se = end - start;
+    point sp = start - ((l/se.len())*se);
+    return sp;
+  }
 }

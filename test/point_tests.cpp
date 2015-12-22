@@ -16,5 +16,45 @@ namespace gca {
     point c(0, -1, 0);
     REQUIRE(within_eps(r, c));
   }
-  
+
+  TEST_CASE("Extend back horizontal vector") {
+    point s(1, 0, 0);
+    point e(2, 0, 0);
+    point sp = extend_back(s, e, 1);
+    point c = point(0, 0, 0);
+    REQUIRE(within_eps(sp, c));
+  }
+
+  TEST_CASE("Extend back (1, 1)") {
+    point s(0, 0, 0);
+    point e(1, 1, 0);
+    point sp = extend_back(s, e, 1);
+    double v = sqrt(1.0/2.0);
+    point c = point(-v, -v, 0);
+    cout << "-- sp" << sp << endl;
+    REQUIRE(within_eps(sp,c ));
+  }
+
+  TEST_CASE("Extend back (-1, 1)") {
+    point s(0, 0, 0);
+    point e(-1, 1, 0);
+    point sp = extend_back(s, e, 1);
+    double v = sqrt(1.0/2.0);
+    point c = point(v, -v, 0);
+    cout << "-- sp" << sp << endl;
+    cout << "-- c " << c << endl;
+    REQUIRE(within_eps(sp,c ));
+  }
+
+  TEST_CASE("Extend back (-1, -1)") {
+    point s(0, 0, 0);
+    point e(-1, -1, 0);
+    point sp = extend_back(s, e, 1);
+    double v = sqrt(1.0/2.0);
+    point c = point(v, v, 0);
+    cout << "-- sp" << sp << endl;
+    cout << "-- c " << c << endl;
+    REQUIRE(within_eps(sp,c ));
+  }
+
 }

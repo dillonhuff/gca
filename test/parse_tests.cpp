@@ -67,13 +67,23 @@ namespace gca {
     }
 
     SECTION("Parse G1 line with defaults") {
-      string s = "G1 Z-1.5";
+      string s = "G0 X2.75 Y8.0 Z0.0 G1 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
+      correct->push_back(c.mk_G0(2.75, 8.0, 0.0));
+      correct->push_back(c.mk_G1(2.75, 8.0, -1.5));
       REQUIRE(*p == *correct);
     }
 
+    SECTION("Parse G0 line with defaults") {
+      string s = "G1 X2.75 Y8.0 Z0.0 G0 Z-1.5";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G1(2.75, 8.0, 0.0));
+      correct->push_back(c.mk_G0(2.75, 8.0, -1.5));
+      REQUIRE(*p == *correct);
+    }
+    
     SECTION("Parse G1 line with front feedrate") {
       string s = "G1 F4 X0.0 Y0.0 Z0.0";
       gprog* p = parse_gprog(c, s);
@@ -91,21 +101,21 @@ namespace gca {
     }
     
     SECTION("Parse Multi-line GCODE") {
-      string s = "G1 Z-1.5\nG0X12.5\nM2";
+      string s = "G1 X1.0 Y0.0 Z-1.5\nG0X12.5\nM2";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
-      correct->push_back(c.mk_G0(12.5, 0.0, 0));
+      correct->push_back(c.mk_G1(1.0, 0.0, -1.5));
+      correct->push_back(c.mk_G0(12.5, 0.0, -1.5));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
 
     SECTION("Parse Multi-line GCODE with comments") {
-      string s = "G1 Z-1.5 (comment 1)\nG0X12.5 (Comment \n number 2) (s) \n( f)M2 \n(Comment G1 X0.0)";
+      string s = "G1 X0.0 Y2.75 Z-1.5 (comment 1)\nG0X12.5 (Comment \n number 2) (s) \n( f)M2 \n(Comment G1 X0.0)";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
-      correct->push_back(c.mk_G0(12.5, 0.0, 0));
+      correct->push_back(c.mk_G1(0.0, 2.75, -1.5));
+      correct->push_back(c.mk_G0(12.5, 2.75, -1.5));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }

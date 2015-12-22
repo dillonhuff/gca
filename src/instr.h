@@ -4,6 +4,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "point.h"
+
 #define GCA_M 0
 #define GCA_G 1
 
@@ -57,6 +59,10 @@ namespace gca {
     }
 
     void print(ostream& s);
+
+    bool is_G() const { return c == GCA_G; }
+
+    point pos() const { return point(x, y, z); }
 
   };
 

@@ -35,7 +35,14 @@ namespace gca {
     *i += j;
     return v;
   }
-  
+
+  double parse_coordinate(char c, size_t* i, string s) {
+    ignore_whitespace(i, s);
+    assert(s[*i] == c);
+    (*i)++;
+    return parse_double(i, s);
+  }
+
   double parse_option_coordinate(char c, size_t* i, string s, double def=0.0) {
     ignore_whitespace(i, s);
     if (s[*i] == c) {
@@ -45,12 +52,20 @@ namespace gca {
     return def;
   }
 
-  instr* parse_G1(context& c, size_t* i, string s) {
+  instr* parse_G1(context& c, gprog* p, size_t* i, string s) {
     double default_feedrate = 1.0;
     double fr = parse_option_coordinate('F', i, s, default_feedrate);
-    double x = parse_option_coordinate('X', i, s);
-    double y = parse_option_coordinate('Y', i, s);
-    double z = parse_option_coordinate('Z', i, s);
+    double x, y, z;
+    if (p->size() > 0) {
+      point lp = p->last_position();
+      x = parse_option_coordinate('X', i, s, lp.x);
+      y = parse_option_coordinate('Y', i, s, lp.y);
+      z = parse_option_coordinate('Z', i, s, lp.z);
+    } else {
+      x = parse_coordinate('X', i, s);
+      y = parse_coordinate('Y', i, s);
+      z = parse_coordinate('Z', i, s);
+    }
     // TODO: Replace w/ epsilon comparison since these are floating point
     if (fr == default_feedrate) {
       fr = parse_option_coordinate('F', i, s, default_feedrate);
@@ -58,6 +73,21 @@ namespace gca {
     return c.mk_G1(x, y, z, fr);
   }
 
+  instr* parse_G0(context& c, gprog* p, size_t* i, string s) {
+    double x, y, z;
+    if (p->size() > 0) {
+      point lp = p->last_position();
+      x = parse_option_coordinate('X', i, s, lp.x);
+      y = parse_option_coordinate('Y', i, s, lp.y);
+      z = parse_option_coordinate('Z', i, s, lp.z);
+    } else {
+      x = parse_coordinate('X', i, s);
+      y = parse_coordinate('Y', i, s);
+      z = parse_coordinate('Z', i, s);
+    }
+    return c.mk_G0(x, y, z);
+  }
+  
   gprog* parse_gprog(context& c, string s) {
     gprog* p = c.mk_gprog();
     string::size_type i = 0;
@@ -72,12 +102,10 @@ namespace gca {
 	i++;
 	int val = parse_int(&i, s);
 	if (val == 0) {
-	  double x = parse_option_coordinate('X', &i, s);
-	  double y = parse_option_coordinate('Y', &i, s);
-	  double z = parse_option_coordinate('Z', &i, s);
-	  p->push_back(c.mk_G0(x, y, z));
+	  instr* is = parse_G0(c, p, &i, s);
+	  p->push_back(is); //c.mk_G0(x, y, z));
 	} else if (val == 1) {
-	  instr* is = parse_G1(c, &i, s);
+	  instr* is = parse_G1(c, p, &i, s);
 	  p->push_back(is);
 	} else {
 	  cout << "Unrecognized instr code for instr letter: " << val << endl;

@@ -24,12 +24,21 @@ namespace gca {
       return point(x + other.x, y + other.y, z + other.z);
     }
 
+    point operator-(const point& other) const {
+      return point(x - other.x, y - other.y, z - other.z);
+    }
+
+    double len() const;
+
     point rotate_z(double degrees) const;
 
     void print(ostream& s) const;
 
   };
 
+  point operator*(double a, const point& other);
+
+  point extend_back(point start, point end, double l);
   bool within_eps(point& l, point& r, double eps=0.0000001);
   bool within_eps(double l, double r, double eps=0.0000001);
 
