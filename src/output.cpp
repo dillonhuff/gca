@@ -28,6 +28,35 @@ namespace gca {
     return p;
   }
 
+  gprog* gcode_for_surface(context& c, vector<cut*>& cuts) {
+    double z_eps = 0.2;
+    gprog* p = c.mk_gprog();
+    instr* last = NULL;
+    for (int i = 0; i < cuts.size(); i++) {
+      if (!(i > 0 && within_eps(cuts[i-1]->end.z, cuts[i]->start.z))) {
+	if (i > 0) {
+	  p->push_back(c.mk_G0(cuts[i-1]->end.x, cuts[i-1]->end.y, z_eps));
+	}
+	p->push_back(c.mk_G0(cuts[i]->start.x, cuts[i]->start.y, z_eps));
+	if (cuts[i]->start.z != 0.0) {
+	  p->push_back(c.mk_G1(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
+	}
+      } else {
+	if (cuts[i]->start.z != 0.0) {
+	  p->push_back(c.mk_G1(cuts[i]->start.x, cuts[i]->start.y, cuts[i]->start.z));
+	}	
+      }
+      last = c.mk_G1(cuts[i]->end.x, cuts[i]->end.y, cuts[i]->end.z);
+      p->push_back(last);
+    }
+    if (last != NULL) {
+      p->push_back(c.mk_G0(last->x, last->y, z_eps));
+    }
+    p->push_back(c.mk_G0(0, 0, 0));
+    p->push_back(c.mk_minstr(2));
+    return p;
+  }
+  
   cut* sink_cut(context& c, cut* s, double l) {
     double xd = s->end.x - s->start.x;
     double yd = s->end.y - s->start.y;
@@ -81,6 +110,28 @@ namespace gca {
       c_right = temp + shift;
     }
     return cuts;
+  }
+
+
+  vector<cut*> two_pass_surface(double coarse_depth, double finish_inc,
+				double cutter_width,
+				double x_s, double x_e, double y,
+				double width) {
+    double inc = cutter_width*(2.0/3.0);
+    int num_cuts = ceil(width / inc);
+    point coarse_start(x_s, y, coarse_depth);
+    point coarse_end(x_e, y, coarse_depth);
+    point shift(0, inc, 0);
+    double finish_depth = coarse_depth + finish_inc;
+    point finish_start(x_s, y, finish_depth);
+    point finish_end(x_e, y, finish_depth);
+    context c;
+    vector<cut*> cuts1 = surface_cuts(c, coarse_start, coarse_end,
+				      shift, num_cuts);
+    vector<cut*> cuts2 = surface_cuts(c, finish_start, finish_end,
+				      shift, num_cuts);
+    cuts1.insert(cuts1.end(), cuts2.begin(), cuts2.end());
+    return cuts1;
   }
   
 }

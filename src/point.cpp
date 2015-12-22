@@ -1,5 +1,5 @@
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 #include "point.h"
 
@@ -12,8 +12,11 @@ namespace gca {
     double yd = l.y - r.y;
     double zd = l.z - r.z;
     double diff = sqrt(xd*xd + yd*yd + zd*zd);
-    cout << "diff = " << diff << endl;
-    cout << "eps = " << eps << endl;
+    return diff <= eps;
+  }
+
+  bool within_eps(double l, double r, double eps) {
+    double diff = abs(l - r);
     return diff <= eps;
   }
   

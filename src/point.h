@@ -23,6 +23,7 @@ namespace gca {
   };
 
   bool within_eps(point& l, point& r, double eps=0.0000001);
+  bool within_eps(double l, double r, double eps=0.0000001);
   
 }
 

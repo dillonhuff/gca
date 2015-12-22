@@ -2,3 +2,5 @@
 *.o
 all-tests
 *.dSYM
+*.ngc
+*#

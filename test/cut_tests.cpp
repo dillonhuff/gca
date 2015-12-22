@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 
 #include "catch.hpp"
 #include "context.h"
@@ -114,18 +114,21 @@ namespace gca {
   }
 
   TEST_CASE("Surface cuts") {
-    double depth = -0.05;
-    double cutter_width = 1.0;
-    double x_s = 5;
-    double x_e = 6;
-    point start(x_s, 5, depth);
-    point end(x_e, 5, depth);
-    point shift(0, cutter_width*(2.0/3.0), 0);
     context c;
-    vector<cut*> cuts = surface_cuts(c, start, end, shift, 2);
-    gprog* p = gcode_for_cuts(c, cuts);
-    cout << "-- Final surface program" << endl;
-    cout << *p;
+    double coarse_depth = -0.009;
+    double finish_inc = -0.001;
+    double cutter_width = 0.32;
+    double x_s = 0;
+    double x_e = 2;
+    double y = 0;
+    double width = 1.0;
+    vector<cut*> cuts = two_pass_surface(coarse_depth, finish_inc,
+					 cutter_width,
+					 x_s, x_e, y,
+					 width);
+    gprog* p = gcode_for_surface(c, cuts);
+    //cout << "-- Final surface program" << endl;
+    //cout << *p;
   }
   
 }
