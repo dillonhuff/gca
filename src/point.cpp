@@ -19,5 +19,21 @@ namespace gca {
     double diff = abs(l - r);
     return diff <= eps;
   }
-  
+
+  point point::rotate_z(double degrees) const {
+    double theta_rad = (M_PI/180)*degrees;
+    double new_x = cos(theta_rad)*x - sin(theta_rad)*y;
+    double new_y = sin(theta_rad)*x + cos(theta_rad)*y;
+    return point(new_x, new_y, z);
+  }
+
+  void point::print(ostream& s) const {
+    s << "(" << x << ", " << y << ", " << z << ")";
+  }
+
+  ostream& operator<<(ostream& s, const point& p) {
+    p.print(s);
+    return s;
+  }
+
 }

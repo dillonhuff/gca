@@ -1,7 +1,11 @@
 #ifndef GCA_POINT_H
 #define GCA_POINT_H
 
+#include <iostream>
+
 #include "point.h"
+
+using namespace std;
 
 namespace gca {
 
@@ -20,10 +24,16 @@ namespace gca {
       return point(x + other.x, y + other.y, z + other.z);
     }
 
+    point rotate_z(double degrees) const;
+
+    void print(ostream& s) const;
+
   };
 
   bool within_eps(point& l, point& r, double eps=0.0000001);
   bool within_eps(double l, double r, double eps=0.0000001);
+
+  ostream& operator<<(ostream& s, const point& p);
   
 }
 
