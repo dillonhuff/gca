@@ -107,10 +107,6 @@ namespace gca {
       correct->push_back(c.mk_G1(1.0, 0, 0, 1.0, GCA_RELATIVE));
       correct->push_back(c.mk_G0(1.0, 3.5, 8, GCA_RELATIVE));
       r = f.apply(c, p);
-      cout << "-- correct" << endl;
-      cout << *correct;
-      cout << "-- actual" << endl;
-      cout << *r;
       REQUIRE(*r == *correct);
     }
     

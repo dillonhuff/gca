@@ -19,9 +19,9 @@ namespace gca {
 	assert(false);
       }
       assert(next_ist->is_rel());
-      cout << "next_is is relative" << endl;
       return next_ist;
     }
+
   public:
     virtual gprog* apply(context& c, gprog* p) {
       gprog* g = c.mk_gprog();
