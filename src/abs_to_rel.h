@@ -30,13 +30,10 @@ namespace gca {
       for (unsigned int i = 0; i < p->size(); i++) {
 	instr* ist = (*p)[i];
 	if (ist->is_G()) {
-	  if (i == 0) {
-	    g->push_back(abs_rel(c, ist, prev, start));
-	  } else {
-	  }
-	  prev = point(ist->x, ist->y, ist->z);
+	  g->push_back(abs_rel(c, ist, prev, start));
+	  prev = ist->pos();
 	} else {
-	  //g->push_back(c.mk_inverted_orientation(ist));
+	  g->push_back(c.mk_inverted_orientation(ist));
 	}
       }
       return g;

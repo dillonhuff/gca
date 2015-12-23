@@ -7,12 +7,27 @@ namespace gca {
       return false;
     }
     if (c == GCA_G) {
-      return x == other.x && y == other.y && z == other.z && feed_rate == other.feed_rate && orient == other.orient;
+      point lp = pos();
+      point op = other.pos();
+      bool res = within_eps(lp, op) && feed_rate == other.feed_rate && orient == other.orient;
+      if (!(orient == other.orient)) {
+	cout << "!ORIENT " << *this << " != " << other << endl;
+      }
+      if (!(feed_rate == other.feed_rate)) {
+	cout << "!FEED RATE " << *this << " != " << other << endl;
+      }
+      if (!within_eps(lp, op)) {
+	cout << "!within EPS " << *this << " != " << other << endl;
+      }
+      if (!res) {
+	cout << *this << " != " << other << endl;
+      }
+      return res;
     }
     return true;
   }
   
-  void instr::print(ostream& s) {
+  void instr::print(ostream& s) const {
     if (c == GCA_M) {
       cout << 'M' << v;
     } else if (c == GCA_G) {
@@ -23,12 +38,17 @@ namespace gca {
       s << " X" << x;
       s << " Y" << y;
       s << " Z" << z;
+      if (is_rel()) {
+	cout << " ( relative )";
+      } else {
+	cout << " ( absolute )";
+      }
     } else {
       assert(false);
     }
   }
 
-  ostream& operator<<(ostream& stream, instr& i) {
+  ostream& operator<<(ostream& stream, const instr& i) {
     i.print(stream);
     return stream;
   }

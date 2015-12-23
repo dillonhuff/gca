@@ -77,10 +77,6 @@ namespace gca {
     correct->push_back(c.mk_G0(1.0, 2.0, -2.00000001));
     correct->push_back(c.mk_G1(1.0, 2.0, 2.0));
     correct->push_back(c.mk_minstr(2));
-    cout << "-- Correct" << endl;
-    cout << *correct;
-    cout << "-- Actual" << endl;
-    cout << *r;
     REQUIRE(*r == *correct);
   }
 
@@ -95,15 +91,27 @@ namespace gca {
       p->push_back(c.mk_G0(1.0, 1.0, 1.0));
       correct->push_back(c.mk_G0(1.0, 1.0, 1.0, GCA_RELATIVE));
       r = f.apply(c, p);
-      cout << "-- correct" << endl;
-      cout << *correct;
-      cout << "-- r " << endl;
-      cout << *r;
       REQUIRE(*r == *correct);
     }
 
+    SECTION("abs -> rel 1 m instruction is the same") {
+      p->push_back(c.mk_minstr(2));
+      correct->push_back(c.mk_minstr(2));
+      r = f.apply(c, p);
+      REQUIRE(*r == *correct);
+    }
+    
     SECTION("abs -> rel 2 instructions") {
-      
+      p->push_back(c.mk_G1(1.0, 0, 0));
+      p->push_back(c.mk_G0(2.0, 3.5, 8));
+      correct->push_back(c.mk_G1(1.0, 0, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(1.0, 3.5, 8, GCA_RELATIVE));
+      r = f.apply(c, p);
+      cout << "-- correct" << endl;
+      cout << *correct;
+      cout << "-- actual" << endl;
+      cout << *r;
+      REQUIRE(*r == *correct);
     }
     
   }

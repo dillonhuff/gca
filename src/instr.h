@@ -29,6 +29,16 @@ namespace gca {
     instr_val v;
     double x, y, z;
     double feed_rate;
+
+    instr(instr* i) {
+      c = i->c;
+      v = i->v;
+      x = i->x;
+      y = i->y;
+      z = i->z;
+      feed_rate = i->feed_rate;
+      orient = i->orient;
+    }
     
     instr(instr_class cp, instr_val vp) {
       assert(cp != GCA_G);
@@ -69,7 +79,7 @@ namespace gca {
       return !(*this == other);
     }
 
-    void print(ostream& s);
+    void print(ostream& s) const;
 
     bool is_G() const { return c == GCA_G; }
 
@@ -78,9 +88,13 @@ namespace gca {
     bool is_abs() const { return orient == GCA_ABSOLUTE; }
     bool is_rel() const { return !is_abs(); }
 
+    void swap_orientation() {
+      orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
+    }
+
   };
 
-  ostream& operator<<(ostream& stream, instr& i);
+  ostream& operator<<(ostream& stream, const instr& i);
 
 }
 

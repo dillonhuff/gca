@@ -40,6 +40,13 @@ namespace gca {
       return new (mem) cut(start, end);
     }
 
+    instr* mk_inverted_orientation(instr* i) {
+      instr* mem = a.allocate<instr>();
+      instr* new_i = new (mem) instr(i);
+      new_i->swap_orientation();
+      return new_i;
+    }
+
   };
 
 }
