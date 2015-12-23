@@ -23,19 +23,17 @@ namespace gca {
   class instr {
   protected:
     orientation orient;
+    point position;
     
   public:
     instr_class c;
     instr_val v;
-    double x, y, z;
     double feed_rate;
 
     instr(instr* i) {
       c = i->c;
       v = i->v;
-      x = i->x;
-      y = i->y;
-      z = i->z;
+      position = i->pos();
       feed_rate = i->feed_rate;
       orient = i->orient;
     }
@@ -45,6 +43,7 @@ namespace gca {
       c = cp;
       v = vp;
       feed_rate = -1.0;
+      position = point(0, 0, 0);
       orient = GCA_ABSOLUTE;
     }
 
@@ -53,9 +52,7 @@ namespace gca {
       assert(cp == GCA_G);
       c = cp;
       v = vp;
-      x = xp;
-      y = yp;
-      z = zp;
+      position = point(xp, yp, zp);
       feed_rate = -1.0;
       orient = orientp;
     }
@@ -66,9 +63,7 @@ namespace gca {
       assert(frp > 0);
       c = cp;
       v = vp;
-      x = xp;
-      y = yp;
-      z = zp;
+      position = point(xp, yp, zp);
       feed_rate = frp;
       orient = orientp;
     }
@@ -83,7 +78,7 @@ namespace gca {
 
     bool is_G() const { return c == GCA_G; }
 
-    point pos() const { return point(x, y, z); }
+    point pos() const { return position; }
 
     bool is_abs() const { return orient == GCA_ABSOLUTE; }
     bool is_rel() const { return !is_abs(); }

@@ -35,9 +35,9 @@ namespace gca {
       if (v != 0) {
 	cout << " F" << feed_rate;
       }
-      s << " X" << x;
-      s << " Y" << y;
-      s << " Z" << z;
+      s << " X" << pos().x;
+      s << " Y" << pos().y;
+      s << " Z" << pos().z;
       if (is_rel()) {
 	cout << " ( relative )";
       } else {

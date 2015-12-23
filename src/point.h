@@ -13,6 +13,12 @@ namespace gca {
   public:
     double x, y, z;
 
+    point() {
+      x = 0;
+      y = 0;
+      z = 0;
+    }
+
   point(double xp, double yp, double zp) :
     x(xp), y(yp), z(zp) {}
 

@@ -23,7 +23,8 @@ namespace gca {
 	if (k.is_G()) {
 	  assert(k.v == 0 || k.v == 1);
 	  if (k.v == 1) {
-	    n->push_back(c.mk_G1(k.x, k.y, k.z, new_feedrate));
+	    point kp = k.pos();
+	    n->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate));
 	  } else {
 	    n->push_back(&k);
 	  }

@@ -26,9 +26,9 @@ namespace gca {
     
     virtual bool check(ostream& out, instr* p) {
       if (p->c == GCA_G && (p->v == 0 || p->v == 1)) {
-	bool res_x = in_bounds(x_min, p->x, x_max);
-	bool res_y = in_bounds(y_min, p->y, y_max);
-	bool res_z = in_bounds(z_min, p->z, z_max);
+	bool res_x = in_bounds(x_min, p->pos().x, x_max);
+	bool res_y = in_bounds(y_min, p->pos().y, y_max);
+	bool res_z = in_bounds(z_min, p->pos().z, z_max);
 	if (!res_x) {
 	  out << "Warning: " << *p << " is not in X bounds ";
 	  out << "(" << x_min << ", " << x_max << ")" << endl;

@@ -10,7 +10,7 @@ namespace gca {
     for (int i = 0; i < size(); i++) {
       instr next = *(instrs[i]);
       if (instrs[i]->is_G()) {
-	positions.push_back(point(next.x, next.y, next.z));
+	positions.push_back(next.pos());
       } else {
 	if (i == 0) {
 	  positions.push_back(default_start);
