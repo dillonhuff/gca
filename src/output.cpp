@@ -5,9 +5,9 @@
 namespace gca {
 
   void from_to_with_G0(context& c, gprog* p, point from, point to) {
-    instr* pull_up_instr = c.mk_G0(from.x, from.y, 0.0);
-    instr* move_instr = c.mk_G0(to.x, to.y, 0.0);
-    instr* push_down_instr = c.mk_G0(to.x, to.y, to.z);
+    instr* pull_up_instr = c.mk_G0(point(from.x, from.y, 0.0));
+    instr* move_instr = c.mk_G0(point(to.x, to.y, 0.0));
+    instr* push_down_instr = c.mk_G0(to);
     p->push_back(pull_up_instr);
     p->push_back(move_instr);
     p->push_back(push_down_instr);

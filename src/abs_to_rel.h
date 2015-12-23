@@ -12,7 +12,7 @@ namespace gca {
       point next = current - prev - start;
       instr* next_ist;
       if (ist->v == 0) {
-	next_ist = c.mk_G0(next.x, next.y, next.z, GCA_RELATIVE);
+	next_ist = c.mk_G0(next, GCA_RELATIVE);
       } else if (ist->v == 1) {
 	next_ist = c.mk_G1(next.x, next.y, next.z, ist->feed_rate, GCA_RELATIVE);
       } else {

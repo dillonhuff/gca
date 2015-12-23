@@ -47,23 +47,22 @@ namespace gca {
       orient = GCA_ABSOLUTE;
     }
 
-    instr(instr_class cp, instr_val vp, double xp, double yp, double zp,
-	  orientation orientp=GCA_ABSOLUTE) {
+    instr(instr_class cp, instr_val vp, point p, orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       c = cp;
       v = vp;
-      position = point(xp, yp, zp);
+      position = p;
       feed_rate = -1.0;
       orient = orientp;
     }
     
 
-    instr(instr_class cp, instr_val vp, double xp, double yp, double zp, double frp, orientation orientp=GCA_ABSOLUTE) {
+    instr(instr_class cp, instr_val vp, point p, double frp, orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       assert(frp > 0);
       c = cp;
       v = vp;
-      position = point(xp, yp, zp);
+      position = p;
       feed_rate = frp;
       orient = orientp;
     }

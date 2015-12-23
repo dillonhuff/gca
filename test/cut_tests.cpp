@@ -15,13 +15,13 @@ namespace gca {
       cuts.push_back(s);
       gprog* res = gcode_for_cuts(c, cuts);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(0, 0, 0));
-      correct->push_back(c.mk_G0(0, 0, 0));
-      correct->push_back(c.mk_G0(0, 0, -1));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, -1)));
       correct->push_back(c.mk_G1(0, 3, -1));
-      correct->push_back(c.mk_G0(0, 3, 0));
-      correct->push_back(c.mk_G0(0, 0, 0));
-      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(point(0, 3, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*res == *correct);
     }
@@ -34,17 +34,17 @@ namespace gca {
       cuts.push_back(s2);
       gprog* res = gcode_for_cuts(c, cuts);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(0, 0, 0));
-      correct->push_back(c.mk_G0(0, 0, 0));
-      correct->push_back(c.mk_G0(0, 0, -1));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, -1)));
       correct->push_back(c.mk_G1(0, 3, -1));
-      correct->push_back(c.mk_G0(0, 3, 0));
-      correct->push_back(c.mk_G0(5, 3, 0));
-      correct->push_back(c.mk_G0(5, 3, -4));
+      correct->push_back(c.mk_G0(point(0, 3, 0)));
+      correct->push_back(c.mk_G0(point(5, 3, 0)));
+      correct->push_back(c.mk_G0(point(5, 3, -4)));
       correct->push_back(c.mk_G1(7, 2, -4));
-      correct->push_back(c.mk_G0(7, 2, 0));
-      correct->push_back(c.mk_G0(0, 0, 0));
-      correct->push_back(c.mk_G0(0, 0, 0));
+      correct->push_back(c.mk_G0(point(7, 2, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
+      correct->push_back(c.mk_G0(point(0, 0, 0)));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*res == *correct);      
     }

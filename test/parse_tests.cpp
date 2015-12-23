@@ -38,7 +38,7 @@ namespace gca {
       string s = "G00X12.0Y8.0Z-4.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(12.0, 8.0, -4.5));
+      correct->push_back(c.mk_G0(point(12.0, 8.0, -4.5)));
       REQUIRE(*p == *correct);
     }    
     
@@ -46,7 +46,7 @@ namespace gca {
       string s = "G00 X12.0 Y12.0 Z12.0";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(12.0, 12.0, 12.0));
+      correct->push_back(c.mk_G0(point(12.0, 12.0, 12.0)));
       REQUIRE(*p == *correct);
     }
     
@@ -54,7 +54,7 @@ namespace gca {
       string s = "G00 X30.0 Y12 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(30.0, 12.0, -1.5));
+      correct->push_back(c.mk_G0(point(30.0, 12.0, -1.5)));
       REQUIRE(*p == *correct);
     }
 
@@ -70,7 +70,7 @@ namespace gca {
       string s = "G0 X2.75 Y8.0 Z0.0 G1 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(2.75, 8.0, 0.0));
+      correct->push_back(c.mk_G0(point(2.75, 8.0, 0.0)));
       correct->push_back(c.mk_G1(2.75, 8.0, -1.5));
       REQUIRE(*p == *correct);
     }
@@ -80,7 +80,7 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G1(2.75, 8.0, 0.0));
-      correct->push_back(c.mk_G0(2.75, 8.0, -1.5));
+      correct->push_back(c.mk_G0(point(2.75, 8.0, -1.5)));
       REQUIRE(*p == *correct);
     }
     
@@ -105,7 +105,7 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G1(1.0, 0.0, -1.5));
-      correct->push_back(c.mk_G0(12.5, 0.0, -1.5));
+      correct->push_back(c.mk_G0(point(12.5, 0.0, -1.5)));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
@@ -115,7 +115,7 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G1(0.0, 2.75, -1.5));
-      correct->push_back(c.mk_G0(12.5, 2.75, -1.5));
+      correct->push_back(c.mk_G0(point(12.5, 2.75, -1.5)));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
@@ -125,7 +125,7 @@ namespace gca {
       gprog* p = read_file(c, fn);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
-      correct->push_back(c.mk_G0(12.5, 1.5, 0));
+      correct->push_back(c.mk_G0(point(12.5, 1.5, 0)));
       correct->push_back(c.mk_G1(18.0, 1.5, -0.25));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);

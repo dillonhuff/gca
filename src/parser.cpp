@@ -85,7 +85,7 @@ namespace gca {
       y = parse_coordinate('Y', i, s);
       z = parse_coordinate('Z', i, s);
     }
-    return c.mk_G0(x, y, z);
+    return c.mk_G0(point(x, y, z));
   }
   
   gprog* parse_gprog(context& c, string s) {
@@ -103,7 +103,7 @@ namespace gca {
 	int val = parse_int(&i, s);
 	if (val == 0) {
 	  instr* is = parse_G0(c, p, &i, s);
-	  p->push_back(is); //c.mk_G0(x, y, z));
+	  p->push_back(is);
 	} else if (val == 1) {
 	  instr* is = parse_G1(c, p, &i, s);
 	  p->push_back(is);

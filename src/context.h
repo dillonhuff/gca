@@ -27,12 +27,17 @@ namespace gca {
 
     instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
       instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 0, x, y, z, orient);
+      return new (mem) instr(GCA_G, 0, point(x, y, z), orient);
     }
 
+    instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_G, 0, p, orient);
+    }
+    
     instr* mk_G1(double x, double y, double z, double feed_rate=1.0, orientation orient=GCA_ABSOLUTE) {
       instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 1, x, y, z, feed_rate, orient);
+      return new (mem) instr(GCA_G, 1, point(x, y, z), feed_rate, orient);
     }
 
     cut* mk_cut(point start, point end) {
