@@ -7,7 +7,7 @@ namespace gca {
       return false;
     }
     if (c == GCA_G) {
-      return x == other.x && y == other.y && z == other.z && feed_rate == other.feed_rate;
+      return x == other.x && y == other.y && z == other.z && feed_rate == other.feed_rate && orient == other.orient;
     }
     return true;
   }

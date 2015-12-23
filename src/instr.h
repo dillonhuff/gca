@@ -9,14 +9,21 @@
 #define GCA_M 0
 #define GCA_G 1
 
+#define GCA_ABSOLUTE 0
+#define GCA_RELATIVE 1
+
 using namespace std;
 
 namespace gca {
 
+  typedef int orientation;
   typedef int instr_class;
   typedef int instr_val;
 
   class instr {
+  protected:
+    orientation orient;
+    
   public:
     instr_class c;
     instr_val v;
@@ -28,9 +35,11 @@ namespace gca {
       c = cp;
       v = vp;
       feed_rate = -1.0;
+      orient = GCA_ABSOLUTE;
     }
 
-    instr(instr_class cp, instr_val vp, double xp, double yp, double zp) {
+    instr(instr_class cp, instr_val vp, double xp, double yp, double zp,
+	  orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       c = cp;
       v = vp;
@@ -38,10 +47,11 @@ namespace gca {
       y = yp;
       z = zp;
       feed_rate = -1.0;
+      orient = orientp;
     }
     
 
-    instr(instr_class cp, instr_val vp, double xp, double yp, double zp, double frp) {
+    instr(instr_class cp, instr_val vp, double xp, double yp, double zp, double frp, orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       assert(frp > 0);
       c = cp;
@@ -50,6 +60,7 @@ namespace gca {
       y = yp;
       z = zp;
       feed_rate = frp;
+      orient = orientp;
     }
     
     bool operator==(const instr& other);
@@ -63,6 +74,9 @@ namespace gca {
     bool is_G() const { return c == GCA_G; }
 
     point pos() const { return point(x, y, z); }
+
+    bool is_abs() const { return orient == GCA_ABSOLUTE; }
+    bool is_rel() const { return !is_abs(); }
 
   };
 

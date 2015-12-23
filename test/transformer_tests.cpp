@@ -1,3 +1,4 @@
+#include "abs_to_rel.h"
 #include "catch.hpp"
 #include "context.h"
 #include "feed_changer.h"
@@ -81,6 +82,30 @@ namespace gca {
     cout << "-- Actual" << endl;
     cout << *r;
     REQUIRE(*r == *correct);
+  }
+
+  TEST_CASE("abs -> rel conversion") {
+    context c;
+    gprog* p = c.mk_gprog();
+    gprog* r = c.mk_gprog();
+    gprog* correct = c.mk_gprog();
+    abs_to_rel f;
+
+    SECTION("abs -> rel 1 instruction is the same") {
+      p->push_back(c.mk_G0(1.0, 1.0, 1.0));
+      correct->push_back(c.mk_G0(1.0, 1.0, 1.0, GCA_RELATIVE));
+      r = f.apply(c, p);
+      cout << "-- correct" << endl;
+      cout << *correct;
+      cout << "-- r " << endl;
+      cout << *r;
+      REQUIRE(*r == *correct);
+    }
+
+    SECTION("abs -> rel 2 instructions") {
+      
+    }
+    
   }
   
 }
