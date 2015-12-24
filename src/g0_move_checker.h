@@ -5,10 +5,10 @@
 
 namespace gca {
 
-  class g0_move_checker : checker {
+  class g0_move_checker : public checker {
   public:
-    virtual bool check(ostream& s, gprog* p) const {
-      bool all_correct = true;
+    virtual int check(ostream& s, gprog* p) const {
+      int num_warnings = 0;
       point start(0, 0, 0);
       vector<point> positions = p->all_positions_starting_at(start);
       for (int i = 1; i < positions.size(); i++) {
@@ -16,11 +16,11 @@ namespace gca {
 	instr* ist = (*p)[i-1];
 	if ((diff.z != 0 && (diff.x != 0 || diff.y != 0)) &&
 	    (ist->is_G() && ist->v == 0)) {
-	  all_correct = false;
+	  num_warnings++;
 	  s << "Warning: " << *ist << " moves diagonally" << endl;
 	}
       }
-      return all_correct;
+      return num_warnings;
     }
     
   };
