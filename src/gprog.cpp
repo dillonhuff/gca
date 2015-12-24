@@ -4,25 +4,6 @@
 
 namespace gca {
 
-  vector<point> gprog::all_positions() {
-    point default_start(0, 0, 0);
-    vector<point> positions;
-    for (int i = 0; i < size(); i++) {
-      instr next = *(instrs[i]);
-      assert(next.is_abs());
-      if (instrs[i]->is_G()) {
-	positions.push_back(next.pos());
-      } else {
-	if (i == 0) {
-	  positions.push_back(default_start);
-	} else {
-	  positions.push_back(positions[i-1]);
-	}
-      }
-    }
-    return positions;
-  }
-
   vector<point> gprog::all_positions_starting_at(point start) {
     vector<point> positions;
     positions.push_back(start);
@@ -57,6 +38,19 @@ namespace gca {
       s << **it << endl;
     }
   }
+
+  bool gprog::operator==(const gprog& other) {
+    if (other.size() != this->size()) {
+      return false;
+    }
+    for (int i = 0; i < size(); i++) {
+      if (*(other.instrs[i]) != *(instrs[i])) {
+	return false;
+      }
+    }
+    return true;
+  }
+  
 
   ostream& operator<<(ostream& stream, gprog& p) {
     p.print(stream);

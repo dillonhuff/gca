@@ -23,7 +23,7 @@ SIMPLE_PROG_OBJ := $(SIMPLE_PROG:.cpp=.o)
 
 #############################################
 
- %.o : %.cpp
+ %.o : %.cpp $(SRC_HEADER_FILES)
 	$(CC) $(CXX_FLAGS) -c $< -o $@
 
 all-tests: $(SRC_HEADER_FILES) $(OBJS)
@@ -32,15 +32,7 @@ all-tests: $(SRC_HEADER_FILES) $(OBJS)
 check-bounds-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ)
 	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ) -o $@
 
-simple-prog-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(SIMPLE_PROG_OBJ)
-	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(SIMPLE_PROG_OBJ) -o $@
-
-static-lib: $(SRC_HEADER_FILES) $(OBJS)
-	ar rcs libgca.a $(OBJS)
-	ranlib libgca.a
-
 clean:
 	find . -name "*.o" -type f -delete
 	rm -f all-tests
-	rm -f libgca.a
 	rm -f check-bounds-example

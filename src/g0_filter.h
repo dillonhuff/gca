@@ -27,7 +27,10 @@ namespace gca {
     
   public:
     virtual gprog* apply(context& c, gprog* p) {
-      vector<point> positions = p->all_positions();
+      vector<point> positions = p->all_positions_starting_at(point(0, 0, 0));
+      // TODO: Adjust this algorithm to use all_positions_starting_at
+      // correctly rather than just eliminating the starting position
+      positions.erase(positions.begin());
       gprog* n = c.mk_gprog();
       for (unsigned int j = 0; j < p->size();) {
 	instr* i = (*p)[j];

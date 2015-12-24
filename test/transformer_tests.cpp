@@ -6,7 +6,7 @@
 
 namespace gca {
   
-  TEST_CASE("Feed upgrader") {
+  TEST_CASE("Feed changer") {
     context c;
     gprog* p = c.mk_gprog();
     double initial_feedrate = 1.0;

@@ -24,25 +24,14 @@ namespace gca {
     
     void push_back(instr* i) { instrs.push_back(i); }
 
-    vector<point> all_positions();
     vector<point> all_positions_starting_at(point p);
 
     unsigned int size() const { return instrs.size(); }
 
     instr* operator[](unsigned int i) { return instrs[i]; }
 
-    bool operator==(const gprog& other) {
-      if (other.size() != this->size()) {
-	return false;
-      }
-      for (int i = 0; i < size(); i++) {
-	if (*(other.instrs[i]) != *(instrs[i])) {
-	  return false;
-	}
-      }
-      return true;
-    }
-
+    bool operator==(const gprog& other);
+      
     void print(ostream& s);
 
   };
