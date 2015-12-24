@@ -33,7 +33,7 @@ namespace gca {
 	  g->push_back(abs_rel(c, ist, prev, start));
 	  prev = ist->pos();
 	} else {
-	  g->push_back(c.mk_inverted_orientation(ist));
+	  g->push_back(ist);
 	}
       }
       return g;

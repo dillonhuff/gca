@@ -11,6 +11,7 @@
 
 #define GCA_ABSOLUTE 0
 #define GCA_RELATIVE 1
+#define GCA_NONE 2
 
 using namespace std;
 
@@ -44,7 +45,7 @@ namespace gca {
       v = vp;
       feed_rate = -1.0;
       position = point(0, 0, 0);
-      orient = GCA_ABSOLUTE;
+      orient = GCA_NONE;
     }
 
     instr(instr_class cp, instr_val vp, point p, orientation orientp=GCA_ABSOLUTE) {
@@ -77,12 +78,23 @@ namespace gca {
 
     bool is_G() const { return c == GCA_G; }
 
-    point pos() const { return position; }
+    point pos() const {
+      assert(is_G());
+      return position;
+    }
 
-    bool is_abs() const { return orient == GCA_ABSOLUTE; }
-    bool is_rel() const { return !is_abs(); }
+    bool is_abs() const {
+      assert(is_G());
+      return orient == GCA_ABSOLUTE;
+    }
+    
+    bool is_rel() const {
+      assert(is_G());
+      return !is_abs();
+    }
 
     void swap_orientation() {
+      assert(is_G());
       orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
     }
 
