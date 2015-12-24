@@ -25,6 +25,7 @@ namespace gca {
     void push_back(instr* i) { instrs.push_back(i); }
 
     vector<point> all_positions();
+    vector<point> all_positions_starting_at(point p);
 
     unsigned int size() const { return instrs.size(); }
 

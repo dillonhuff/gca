@@ -8,21 +8,15 @@ namespace gca {
 
   class per_instr_checker {
   protected:
-    instr_checker* c;
-    
   public:
-    per_instr_checker() {
-    }
-    
-    per_instr_checker(instr_checker* cp) {
-      c = cp;
-    }
-    
+    virtual bool check_instr(ostream& out, instr* p) const { assert(false); }
+
+  public:
     virtual bool check(ostream& out, gprog* p) {
       bool all_true = true;
       for (ilist::iterator it = p->begin();
 	   it != p->end(); ++it) {
-	if (!c->check(out, *it)) {
+	if (!check_instr(out, *it)) {
 	  all_true = false;
 	}
       }

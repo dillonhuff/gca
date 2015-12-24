@@ -1,7 +1,7 @@
-#include "catch.hpp"
-
-#include "context.h"
 #include "bounds_checker.h"
+#include "catch.hpp"
+#include "context.h"
+#include "g0_move_checker.h"
 
 namespace gca {
 
@@ -22,6 +22,36 @@ namespace gca {
       p->push_back(c.mk_minstr(2));
       bounds_checker b(0, 9, -20, -10, 0.0, 2.0);
       REQUIRE(!b.check(cout, p));
+    }
+
+    SECTION("g0_move_checker no mistake") {
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G0(2.0, 2.0, 0.0));
+      g0_move_checker c;
+      REQUIRE(c.check(cout, p));
+    }
+
+    SECTION("g0_move_checker mistake") {
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G0(2.0, 2.0, 1.0));
+      g0_move_checker c;
+      REQUIRE(!c.check(cout, p));
+    }
+
+    SECTION("g0_move_checker several instructions no mistake") {
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G1(2.0, 2.0, 1.0));
+      p->push_back(c.mk_minstr(2));
+      g0_move_checker c;
+      REQUIRE(c.check(cout, p));
+    }
+
+    SECTION("g0_move_checker several instructions relative mistake") {
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G0(0.0, 2.0, 1.0, GCA_RELATIVE));
+      p->push_back(c.mk_minstr(2));
+      g0_move_checker c;
+      REQUIRE(!c.check(cout, p));
     }
     
   }
