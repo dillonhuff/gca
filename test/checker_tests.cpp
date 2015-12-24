@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "context.h"
 #include "g0_move_checker.h"
+#include "multi_checker.h"
 
 namespace gca {
 
@@ -54,13 +55,27 @@ namespace gca {
       REQUIRE(c.check(cout, p) == 1);
     }
 
+    SECTION("Multi checker several instructions 1 error") {
+      g0_move_checker f;
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G0(3.0, 0.0, 1.0));
+      p->push_back(c.mk_G1(3.0, -15.0, 3.0));
+      p->push_back(c.mk_minstr(2));
+      REQUIRE(f.check(cout, p) == 1);
+    }
+
     SECTION("Multi checker 2 mistakes absolute coords") {
       bounds_checker b(0, 9, -20, -10, 0.0, 2.0);
-      g0_move_checker c;
+      g0_move_checker f;
       vector<checker*> checkers;
       checkers.push_back(&b);
-      checkers.push_back(&c);
-      //      multi_checker(checkers);
+      checkers.push_back(&f);
+      multi_checker mc(checkers);
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G0(3.0, -11.0, 1.0));
+      p->push_back(c.mk_G1(3.0, -15.0, 3.0));
+      p->push_back(c.mk_minstr(2));
+      REQUIRE(mc.check(cout, p) == 2);
     }
     
   }
