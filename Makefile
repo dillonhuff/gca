@@ -39,3 +39,4 @@ clean:
 	find . -name "*.o" -type f -delete
 	rm -f all-tests
 	rm -f check-bounds-example
+	rm -f simple-prog

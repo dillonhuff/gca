@@ -81,6 +81,35 @@ namespace gca {
     REQUIRE(*r == *correct);
   }
 
+  TEST_CASE("g0_filter starting on G1") {
+    context c;
+    gprog* p = c.mk_gprog();
+    p->push_back(c.mk_G1(1, 1, 1));
+    p->push_back(c.mk_G0(1, 1, 1));
+    g0_filter f;
+    gprog* r = f.apply(c, p);
+    gprog* correct = c.mk_gprog();
+    correct->push_back(c.mk_G1(1, 1, 1));
+    REQUIRE(*r == *correct);
+  }
+
+  TEST_CASE("g0_filter starting on G1 multiple instructions") {
+    context c;
+    gprog* p = c.mk_gprog();
+    p->push_back(c.mk_G1(1, 1, 0));
+    p->push_back(c.mk_G1(1, 1, 1));
+    p->push_back(c.mk_G0(1, 2, 0));
+    p->push_back(c.mk_G0(1, 1, 1));
+    p->push_back(c.mk_G1(2, 3, 3));
+    g0_filter f;
+    gprog* r = f.apply(c, p);
+    gprog* correct = c.mk_gprog();
+    correct->push_back(c.mk_G1(1, 1, 0));
+    correct->push_back(c.mk_G1(1, 1, 1));
+    correct->push_back(c.mk_G1(2, 3, 3));
+    REQUIRE(*r == *correct);
+  }
+  
   TEST_CASE("abs -> rel conversion") {
     context c;
     gprog* p = c.mk_gprog();

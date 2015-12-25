@@ -15,11 +15,10 @@ namespace gca {
       while (n < p->size()) {
 	instr ist = *((*p)[n]);
 	bool is_g0 = ist.is_G() && ist.v == 0;
-	if (within_eps(positions[n], positions[i]) && is_g0) {
+	if (!is_g0) { break; }
+	if (within_eps(positions[n], positions[i])) {
 	  last_net_zero_pos = n;
-	} else if (!is_g0) {
-	  break;
-	}
+	} 
 	n++;
       }
       return last_net_zero_pos;
@@ -34,13 +33,13 @@ namespace gca {
       gprog* n = c.mk_gprog();
       for (unsigned int j = 0; j < p->size();) {
 	instr* i = (*p)[j];
-	if (i->is_G() && i->v == 0) {
+	if (i->is_G()) {
 	  unsigned int next_pos = skip_irrelevant_G0_instrs(j, positions, p);
+	  n->push_back(i);
 	  if (next_pos == j) {
-	    n->push_back(i);
 	    j++;	    
 	  } else {
-	    j = next_pos;
+	    j = next_pos + 1;
 	  }
 	} else {
 	  n->push_back(i);

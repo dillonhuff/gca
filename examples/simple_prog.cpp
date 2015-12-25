@@ -17,8 +17,8 @@ int main() {
   double cutter_width = 0.32;
   vector<cut*> square_cuts = lines_to_cuts(c, square_edges, cutter_width);
   gprog* square_prog = gcode_for_cuts(c, square_cuts);
-  //g0_filter gf;
-  //square_prog = gf.apply(c, square_prog);
+  g0_filter gf;
+  square_prog = gf.apply(c, square_prog);
   cout << *square_prog;
   return 0;
 }
