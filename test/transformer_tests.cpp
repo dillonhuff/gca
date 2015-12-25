@@ -3,6 +3,7 @@
 #include "context.h"
 #include "feed_changer.h"
 #include "g0_filter.h"
+#include "rel_to_abs.h"
 
 namespace gca {
   
@@ -107,6 +108,42 @@ namespace gca {
       correct->push_back(c.mk_G1(1.0, 0, 0, 1.0, GCA_RELATIVE));
       correct->push_back(c.mk_G0(1.0, 3.5, 8, GCA_RELATIVE));
       r = f.apply(c, p);
+      REQUIRE(*r == *correct);
+    }
+    
+  }
+
+  TEST_CASE("rel -> abs conversion") {
+    context c;
+    gprog* p = c.mk_gprog();
+    gprog* r;
+    gprog* correct = c.mk_gprog();
+    rel_to_abs f;
+
+    SECTION("One M2 instruction is the same") {
+      p->push_back(c.mk_minstr(2));
+      correct->push_back(c.mk_minstr(2));
+      r = f.apply(c, p);
+      REQUIRE(*r == *correct);
+    }
+
+    SECTION("One G0 instruction is the same") {
+      p->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_RELATIVE));
+      correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));
+      r = f.apply(c, p);
+      REQUIRE(*r == *correct);
+    }
+
+    SECTION("Two instructions instructions") {
+      p->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_RELATIVE));
+      p->push_back(c.mk_G1(-2.0, 2.0, -10.0, 2.5, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));
+      correct->push_back(c.mk_G1(-1.0, 4.0, -7.0, 2.5, GCA_ABSOLUTE));
+      r = f.apply(c, p);
+      cout << "-- Correct" << endl;
+      cout << *correct << endl;
+      cout << "-- Result" << endl;
+      cout << *r << endl;
       REQUIRE(*r == *correct);
     }
     
