@@ -13,7 +13,8 @@ namespace gca {
     start(sp), end(ep) {}
 
     bool operator==(const cut& other) const {
-      return start == other.start && end == other.end;
+      bool res = within_eps(start, other.start) && within_eps(end, other.end);
+      return res;
     }
     
   };

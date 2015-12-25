@@ -52,4 +52,11 @@ namespace gca {
     REQUIRE(within_eps(sp,c ));
   }
 
+  TEST_CASE("Normalize (-5, 0, 0)") {
+    point s(-5, 0, 0);
+    point r = s.normalize();
+    point c = point(-1, 0, 0);
+    REQUIRE(within_eps(c, r));
+  }
+
 }

@@ -1,6 +1,7 @@
 *~
 *.o
 all-tests
+simple-prog
 *.dSYM
 *.ngc
 *#

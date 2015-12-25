@@ -32,6 +32,9 @@ all-tests: $(SRC_HEADER_FILES) $(OBJS)
 check-bounds-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ)
 	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ) -o $@
 
+simple-prog: $(SRC_HEADER_FILES) $(SRC_OBJS) $(SIMPLE_PROG_OBJ)
+	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(SIMPLE_PROG_OBJ) -o $@
+
 clean:
 	find . -name "*.o" -type f -delete
 	rm -f all-tests

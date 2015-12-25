@@ -4,6 +4,26 @@
 
 namespace gca {
 
+  cut* line_to_cut(context& c, line& l, double cutter_width) {
+    double w = cutter_width / 2;
+    point lv = l.end - l.start;
+    point v = w*(lv.rotate_z(90).normalize());
+    point sp = l.start + v;
+    point ep = l.end + v;
+    point sr = extend_back(sp, ep, w);
+    point er = extend_back(ep, sp, w);
+    return c.mk_cut(sr, er);
+  }
+
+  vector<cut*> lines_to_cuts(context& c, vector<line>& lines, double cutter_width) {
+    vector<cut*> cuts;
+    for (int i = 0; i < lines.size(); i++) {
+      cut* res = line_to_cut(c, lines[i], cutter_width);
+      cuts.push_back(res);
+    }
+    return cuts;
+  }
+  
   void from_to_with_G0(context& c, gprog* p, point from, point to) {
     instr* pull_up_instr = c.mk_G0(point(from.x, from.y, 0.0));
     instr* move_instr = c.mk_G0(point(to.x, to.y, 0.0));

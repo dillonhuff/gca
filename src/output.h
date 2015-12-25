@@ -5,10 +5,13 @@
 
 #include "context.h"
 #include "gprog.h"
+#include "line.h"
 
 using namespace std;
 
 namespace gca {
+
+  vector<cut*> lines_to_cuts(context& c, vector<line>& lines, double cutter_width);
 
   gprog* gcode_for_cuts(context& c, vector<cut*>& cuts);
   

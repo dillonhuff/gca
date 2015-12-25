@@ -140,13 +140,8 @@ namespace gca {
       correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));
       correct->push_back(c.mk_G1(-1.0, 4.0, -7.0, 2.5, GCA_ABSOLUTE));
       r = f.apply(c, p);
-      cout << "-- Correct" << endl;
-      cout << *correct << endl;
-      cout << "-- Result" << endl;
-      cout << *r << endl;
       REQUIRE(*r == *correct);
-    }
-    
+    }    
   }
   
 }

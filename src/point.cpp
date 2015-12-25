@@ -7,7 +7,7 @@ using namespace std;
 
 namespace gca {
   
-  bool within_eps(point& l, point& r, double eps) {
+  bool within_eps(const point& l, const point& r, double eps) {
     double xd = l.x - r.x;
     double yd = l.y - r.y;
     double zd = l.z - r.z;

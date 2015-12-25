@@ -1,6 +1,8 @@
 #ifndef GCA_REL_TO_ABS
 #define GCA_REL_TO_ABS
 
+#include "gprog.h"
+
 namespace gca {
 
   class rel_to_abs {
