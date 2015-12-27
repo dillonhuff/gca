@@ -151,6 +151,17 @@ namespace gca {
       correct->push_back(c.mk_G0(1.0, 0.0, 0.0, GCA_RELATIVE));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("Parse multi line relative code") {
+      string s = "G91\nG0 X1.0 Y1.0 Z1.0\nG0 Y0.5\nM2";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G91());
+      correct->push_back(c.mk_G0(1.0, 1.0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(0.0, 0.5, 0.0, GCA_RELATIVE));
+      correct->push_back(c.mk_minstr(2));
+      REQUIRE(*p == *correct);
+    }
   }
 
 }

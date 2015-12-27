@@ -30,7 +30,7 @@ namespace gca {
   void instr::print(ostream& s) const {
     if (c == GCA_M) {
       cout << 'M' << v;
-    } else if (c == GCA_G) {
+    } else if (c == GCA_G && (v == 0 || v == 1)) {
       cout << 'G' << v;
       if (v != 0) {
 	cout << " F" << feed_rate;
@@ -43,6 +43,9 @@ namespace gca {
       } else {
 	cout << " ( absolute )";
       }
+    } else if (is_G()) {
+      assert(orient == GCA_NONE && orient != GCA_RELATIVE && orient != GCA_ABSOLUTE);
+      cout << 'G' << v;
     } else {
       assert(false);
     }

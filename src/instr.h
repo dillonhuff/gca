@@ -89,12 +89,12 @@ namespace gca {
     }
     
     bool is_rel() const {
-      assert(is_G());
+      assert(is_G() && (v == 0 || v == 1));
       return !is_abs();
     }
 
     void swap_orientation() {
-      assert(is_G());
+      assert(is_G() && (v == 0 || v == 1));
       orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
     }
 

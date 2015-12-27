@@ -52,39 +52,38 @@ namespace gca {
     return def;
   }
 
+  point parse_point(context& c, gprog* p, size_t* i, string s, orientation ori) {
+    double x, y, z;
+    if (p->size() > 0 && ori == GCA_ABSOLUTE) {
+      point lp = p->last_position();
+      x = parse_option_coordinate('X', i, s, lp.x);
+      y = parse_option_coordinate('Y', i, s, lp.y);
+      z = parse_option_coordinate('Z', i, s, lp.z);
+    } else if (ori == GCA_ABSOLUTE) {
+      x = parse_coordinate('X', i, s);
+      y = parse_coordinate('Y', i, s);
+      z = parse_coordinate('Z', i, s);
+    } else {
+      x = parse_option_coordinate('X', i, s, 0);
+      y = parse_option_coordinate('Y', i, s, 0);
+      z = parse_option_coordinate('Z', i, s, 0);
+    }
+    return point(x, y, z);
+  }
+
   instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double default_feedrate = 1.0;
     double fr = parse_option_coordinate('F', i, s, default_feedrate);
-    double x, y, z;
-    if (p->size() > 0) {
-      point lp = p->last_position();
-      x = parse_option_coordinate('X', i, s, lp.x);
-      y = parse_option_coordinate('Y', i, s, lp.y);
-      z = parse_option_coordinate('Z', i, s, lp.z);
-    } else {
-      x = parse_coordinate('X', i, s);
-      y = parse_coordinate('Y', i, s);
-      z = parse_coordinate('Z', i, s);
-    }
+    point pt = parse_point(c, p, i, s, ori);
     if (within_eps(fr, default_feedrate)) {
       fr = parse_option_coordinate('F', i, s, default_feedrate);
     }
-    return c.mk_G1(x, y, z, fr, ori);
+    return c.mk_G1(pt.x, pt.y, pt.z, fr, ori);
   }
 
   instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    double x, y, z;
-    if (p->size() > 0) {
-      point lp = p->last_position();
-      x = parse_option_coordinate('X', i, s, lp.x);
-      y = parse_option_coordinate('Y', i, s, lp.y);
-      z = parse_option_coordinate('Z', i, s, lp.z);
-    } else {
-      x = parse_coordinate('X', i, s);
-      y = parse_coordinate('Y', i, s);
-      z = parse_coordinate('Z', i, s);
-    }
-    return c.mk_G0(point(x, y, z), ori);
+    point pt = parse_point(c, p, i, s, ori);
+    return c.mk_G0(pt, ori);
   }
 
   instr* parse_next_instr(context& c,
