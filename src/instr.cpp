@@ -6,7 +6,7 @@ namespace gca {
     if (c != other.c || v != other.v) {
       return false;
     }
-    if (c == GCA_G) {
+    if (c == GCA_G && (v == 0 || v == 1)) {
       point lp = pos();
       point op = other.pos();
       bool res = within_eps(lp, op) && feed_rate == other.feed_rate && orient == other.orient;

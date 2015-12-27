@@ -52,7 +52,7 @@ namespace gca {
     return def;
   }
 
-  instr* parse_G1(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double default_feedrate = 1.0;
     double fr = parse_option_coordinate('F', i, s, default_feedrate);
     double x, y, z;
@@ -66,14 +66,13 @@ namespace gca {
       y = parse_coordinate('Y', i, s);
       z = parse_coordinate('Z', i, s);
     }
-    // TODO: Replace w/ epsilon comparison since these are floating point
     if (within_eps(fr, default_feedrate)) {
       fr = parse_option_coordinate('F', i, s, default_feedrate);
     }
-    return c.mk_G1(x, y, z, fr);
+    return c.mk_G1(x, y, z, fr, ori);
   }
 
-  instr* parse_G0(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double x, y, z;
     if (p->size() > 0) {
       point lp = p->last_position();
@@ -85,37 +84,50 @@ namespace gca {
       y = parse_coordinate('Y', i, s);
       z = parse_coordinate('Z', i, s);
     }
-    return c.mk_G0(point(x, y, z));
+    return c.mk_G0(point(x, y, z), ori);
+  }
+
+  instr* parse_next_instr(context& c,
+			  gprog* p,
+			  size_t* i,
+			  string s,
+			  orientation* ori) {
+    instr* is;
+    if (s[*i] == 'M') {
+      (*i)++;
+      int val = parse_int(i, s);
+      is = c.mk_minstr(val);
+    } else if (s[*i] == 'G') {
+      (*i)++;
+      int val = parse_int(i, s);
+      if (val == 0) {
+	is = parse_G0(c, p, i, s, *ori);
+      } else if (val == 1) {
+	is = parse_G1(c, p, i, s, *ori);
+      } else if (val == 91) {
+	is = c.mk_G91();
+	*ori = GCA_RELATIVE;
+      } else {
+	cout << "Unrecognized instr code for instr letter: " << val << endl;
+	assert(false);
+      }
+      ignore_whitespace(i, s);
+    } else {
+      cout << "Cannot parse string: " << s.substr(*i) << endl;
+      assert(false);
+    }
+    return is;
   }
   
   gprog* parse_gprog(context& c, string s) {
     gprog* p = c.mk_gprog();
     string::size_type i = 0;
+    orientation ori = GCA_ABSOLUTE;
     while (i < s.size()) {
       ignore_whitespace(&i, s);
       if (i >= s.size()) { break; }
-      if (s[i] == 'M') {
-	i++;
-	int val = parse_int(&i, s);
-      	p->push_back(c.mk_minstr(val));
-      } else if (s[i] == 'G') {
-	i++;
-	int val = parse_int(&i, s);
-	if (val == 0) {
-	  instr* is = parse_G0(c, p, &i, s);
-	  p->push_back(is);
-	} else if (val == 1) {
-	  instr* is = parse_G1(c, p, &i, s);
-	  p->push_back(is);
-	} else {
-	  cout << "Unrecognized instr code for instr letter: " << val << endl;
-	  assert(false);
-	}
-	ignore_whitespace(&i, s);
-      } else {
-	cout << "Cannot parse string: " << s.substr(i) << endl;
-	assert(false);
-      }
+      instr* is = parse_next_instr(c, p, &i, s, &ori);
+      p->push_back(is);
     }
     return p;
   }

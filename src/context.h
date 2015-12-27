@@ -25,6 +25,11 @@ namespace gca {
       return new (mem) instr(GCA_M, val);
     }
 
+    instr* mk_G91() {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_G, 91);
+    }
+    
     instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
       instr* mem = a.allocate<instr>();
       return new (mem) instr(GCA_G, 0, point(x, y, z), orient);

@@ -8,7 +8,7 @@
 
 namespace gca {
 
-  TEST_CASE("Parse GCODE") {
+  TEST_CASE("Parse GCODE with absolute coordinates") {
     context c;
 
     SECTION("Parse empty string") {
@@ -130,6 +130,27 @@ namespace gca {
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }    
+  }
+
+  TEST_CASE("Parse GCODE with relative coordinates") {
+    context c;
+    
+    SECTION("Parse G91") {
+      string s = "G91\n";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G91());
+      REQUIRE(*p == *correct);
+    }
+
+    SECTION("Parse G91 and change to relative") {
+      string s = "G91 G0 X1.0 Y0.0 Z0.0\n";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G91());
+      correct->push_back(c.mk_G0(1.0, 0.0, 0.0, GCA_RELATIVE));
+      REQUIRE(*p == *correct);
+    }
   }
 
 }

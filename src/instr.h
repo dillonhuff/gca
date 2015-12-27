@@ -40,7 +40,7 @@ namespace gca {
     }
     
     instr(instr_class cp, instr_val vp) {
-      assert(cp != GCA_G);
+      assert(cp != GCA_G || (vp != 1 && vp != 0));
       c = cp;
       v = vp;
       feed_rate = -1.0;
