@@ -60,10 +60,12 @@ namespace gca {
 
   bool gprog::operator==(const gprog& other) {
     if (other.size() != this->size()) {
+      cout << "WRONG SIZE!" << endl;
       return false;
     }
     for (int i = 0; i < size(); i++) {
       if (*(other.instrs[i]) != *(instrs[i])) {
+	cout << "Instrs not equal!" << endl;
 	return false;
       }
     }

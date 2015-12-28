@@ -183,8 +183,13 @@ namespace gca {
     SECTION("No op program") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
       p->push_back(c.mk_minstr(2));
+      correct->push_back(c.mk_G91());
       correct->push_back(c.mk_minstr(2));
       r = t.apply(c, p);
+      cout << "-- Correct" << endl;
+      cout << *correct;
+      cout << "-- Actual" << endl;
+      cout << *r;      
       REQUIRE(*r == *correct);
     }
 
@@ -226,10 +231,6 @@ namespace gca {
       correct->push_back(c.mk_minstr(2));
       
       r = t.apply(c, p);
-      cout << "-- Correct" << endl;
-      cout << *correct;
-      cout << "-- Actual" << endl;
-      cout << *r;
       REQUIRE(*r == *correct);
     }
 
