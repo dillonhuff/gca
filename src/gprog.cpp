@@ -4,6 +4,30 @@
 
 namespace gca {
 
+  bool gprog::all_abs() const {
+    for (int i = 0; i < size(); i++) {
+      instr* ist = instrs[i];
+      if (ist->is_G() && (ist->v == 0 || ist->v == 1)) {
+	if (ist->is_rel()) {
+	  return false;
+	}
+      }
+    }
+    return true;
+  }
+
+  bool gprog::all_rel() const {
+    for (int i = 0; i < size(); i++) {
+      instr* ist = instrs[i];
+      if (ist->is_G() && (ist->v == 0 || ist->v == 1)) {
+	if (ist->is_abs()) {
+	  return false;
+	}
+      }
+    }
+    return true;
+  }
+  
   vector<point> gprog::all_positions_starting_at(point start) {
     vector<point> positions;
     positions.push_back(start);

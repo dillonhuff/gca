@@ -67,6 +67,10 @@ namespace gca {
       feed_rate = frp;
       orient = orientp;
     }
+
+    bool is_end_instr() const {
+      return c == GCA_M && (v == 2 || v == 60);
+    }
     
     bool operator==(const instr& other);
 
@@ -90,7 +94,7 @@ namespace gca {
     
     bool is_rel() const {
       assert(is_G() && (v == 0 || v == 1));
-      return !is_abs();
+      return orient == GCA_RELATIVE;
     }
 
     void swap_orientation() {

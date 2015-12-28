@@ -57,6 +57,12 @@ namespace gca {
       return new_i;
     }
 
+    instr* mk_instr_cpy(instr* i) {
+      instr* mem = a.allocate<instr>();
+      instr* new_i = new (mem) instr(i);
+      return new_i;
+    }
+
   };
 
 }

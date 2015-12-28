@@ -4,6 +4,7 @@
 #include "feed_changer.h"
 #include "g0_filter.h"
 #include "rel_to_abs.h"
+#include "tiler.h"
 
 namespace gca {
   
@@ -171,6 +172,68 @@ namespace gca {
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }    
+  }
+
+  TEST_CASE("Tiler") {
+    context c;
+    gprog* p = c.mk_gprog();
+    gprog* r;
+    gprog* correct = c.mk_gprog();
+
+    SECTION("No op program") {
+      tiler t(2, point(1, 0, 0), point(1, 0, 0));
+      p->push_back(c.mk_minstr(2));
+      correct->push_back(c.mk_minstr(2));
+      r = t.apply(c, p);
+      REQUIRE(*r == *correct);
+    }
+
+    SECTION("Tile lines") {
+      double depth = -5;
+      point start = point(0, 0, 0);
+      point shift = point(2, 0, 0);
+      tiler t(3, start, shift);
+      p->push_back(c.mk_G1(0, 0, depth));
+      p->push_back(c.mk_G1(1, 0, depth));
+      p->push_back(c.mk_G1(1, -1, depth));
+      p->push_back(c.mk_minstr(2));
+      point e1 = point(1, -1, depth);
+      point s1 = point(2, 0, depth);
+      point d1 = s1 - e1;
+      
+      correct->push_back(c.mk_G91());
+
+      correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(0, -1, 0, 1.0, GCA_RELATIVE));
+
+      correct->push_back(c.mk_G0(0, 0, -depth, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(d1.x, d1.y, 0, GCA_RELATIVE));
+      //correct->push_back(c.mk_G0(0, 0, 0, GCA_RELATIVE));
+
+      correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(0, -1, 0, 1.0, GCA_RELATIVE));
+
+      correct->push_back(c.mk_G0(0, 0, -depth, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(d1.x, d1.y, 0, GCA_RELATIVE));
+      //      correct->push_back(c.mk_G0(0, 0, 0, GCA_RELATIVE));
+
+      correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(0, -1, 0, 1.0, GCA_RELATIVE));
+      
+      correct->push_back(c.mk_minstr(2));
+      
+      r = t.apply(c, p);
+      cout << "-- Correct" << endl;
+      cout << *correct;
+      cout << "-- Actual" << endl;
+      cout << *r;
+      REQUIRE(*r == *correct);
+    }
+
+    // TODO: Add test with M60 (the other end instruction)
   }
   
 }

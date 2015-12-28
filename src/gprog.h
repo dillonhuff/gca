@@ -20,6 +20,9 @@ namespace gca {
     ilist::iterator begin() { return instrs.begin(); }
     ilist::iterator end() { return instrs.end(); }
 
+    bool all_abs() const;
+    bool all_rel() const;
+
     point last_position();
     
     void push_back(instr* i) { instrs.push_back(i); }
