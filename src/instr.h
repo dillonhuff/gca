@@ -69,7 +69,7 @@ namespace gca {
     }
 
     bool is_end_instr() const {
-      return c == GCA_M && (v == 2 || v == 60);
+      return c == GCA_M && (v == 2 || v == 30);
     }
     
     bool operator==(const instr& other);
