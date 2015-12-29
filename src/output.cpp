@@ -15,10 +15,18 @@ namespace gca {
     return c.mk_cut(sr, er);
   }
 
+  cut* vertical_cut_to(context& c, cut* ct) {
+    point start(ct->start.x, ct->start.y, 0);
+    point end(ct->start);
+    return c.mk_cut(start, end);
+  }
+
   vector<cut*> lines_to_cuts(context& c, vector<line>& lines, double cutter_width) {
     vector<cut*> cuts;
     for (int i = 0; i < lines.size(); i++) {
       cut* res = line_to_cut(c, lines[i], cutter_width);
+      cut* down = vertical_cut_to(c, res);
+      cuts.push_back(down);
       cuts.push_back(res);
     }
     return cuts;
