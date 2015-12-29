@@ -219,7 +219,6 @@ namespace gca {
 
       correct->push_back(c.mk_G0(0, 0, -depth, GCA_RELATIVE));
       correct->push_back(c.mk_G0(d1.x, d1.y, 0, GCA_RELATIVE));
-      //correct->push_back(c.mk_G0(0, 0, 0, GCA_RELATIVE));
 
       correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
       correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
@@ -227,7 +226,6 @@ namespace gca {
 
       correct->push_back(c.mk_G0(0, 0, -depth, GCA_RELATIVE));
       correct->push_back(c.mk_G0(d1.x, d1.y, 0, GCA_RELATIVE));
-      //      correct->push_back(c.mk_G0(0, 0, 0, GCA_RELATIVE));
 
       correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
       correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
