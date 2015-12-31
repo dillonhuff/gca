@@ -28,8 +28,7 @@ namespace gca {
     return true;
   }
   
-  vector<point> gprog::all_positions_starting_at(point start) {
-    vector<point> positions;
+  void gprog::all_positions_starting_at(point start, vector<point>& positions) {
     positions.push_back(start);
     for (int i = 1; i < size() + 1; i++) {
       instr next = *(instrs[i-1]);
@@ -43,11 +42,11 @@ namespace gca {
 	positions.push_back(positions[i-1]);
       }
     }
-    return positions;
   }
   
   point gprog::last_position() {
-    vector<point> positions = all_positions_starting_at(point(0, 0, 0));
+    vector<point> positions;
+    all_positions_starting_at(point(0, 0, 0), positions);
     return positions.back();
   }
 

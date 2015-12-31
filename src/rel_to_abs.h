@@ -8,7 +8,8 @@ namespace gca {
   class rel_to_abs {
   public:
     gprog* apply(context& c, gprog* p) const {
-      vector<point> positions = p->all_positions_starting_at(point(0, 0, 0));
+      vector<point> positions;
+      p->all_positions_starting_at(point(0, 0, 0), positions);
       gprog* n = c.mk_gprog();
       for (int i = 1; i < p->size() + 1; i++) {
 	instr* ist = (*p)[i-1];

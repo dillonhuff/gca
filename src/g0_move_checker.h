@@ -10,7 +10,8 @@ namespace gca {
     virtual int check(ostream& s, gprog* p) const {
       int num_warnings = 0;
       point start(0, 0, 0);
-      vector<point> positions = p->all_positions_starting_at(start);
+      vector<point> positions;
+      p->all_positions_starting_at(start, positions);
       for (int i = 1; i < positions.size(); i++) {
 	point diff = positions[i] - positions[i-1];
 	instr* ist = (*p)[i-1];
