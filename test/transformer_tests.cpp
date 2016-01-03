@@ -21,6 +21,19 @@ namespace gca {
     REQUIRE(*n == *correct);
   }
 
+  TEST_CASE("Feed changer relative coordinates") {
+    context c;
+    gprog* p = c.mk_gprog();
+    double initial_feedrate = 1.0;
+    p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate, GCA_RELATIVE));
+    double new_feedrate = 4.0;
+    feed_changer f(initial_feedrate, new_feedrate);
+    gprog* n = f.apply(c, p);
+    gprog* correct = c.mk_gprog();
+    correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate, GCA_RELATIVE));
+    REQUIRE(*n == *correct);
+  }
+  
   TEST_CASE("No irrelevant G0 moves") {
     context c;
     gprog* p = c.mk_gprog();

@@ -24,7 +24,8 @@ namespace gca {
 	  assert(k.v == 0 || k.v == 1);
 	  if (k.v == 1) {
 	    point kp = k.pos();
-	    n->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate));
+	    orientation orient = k.is_abs() ? GCA_ABSOLUTE : GCA_RELATIVE;
+	    n->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate, orient));
 	  } else {
 	    n->push_back(&k);
 	  }
