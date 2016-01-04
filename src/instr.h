@@ -80,7 +80,11 @@ namespace gca {
 
     void print(ostream& s) const;
 
-    bool is_G() const { return c == GCA_G; }
+    inline bool is_G() const { return c == GCA_G; }
+    inline bool is_G0() const { return is_G() && v == 0; }
+    inline bool is_G1() const { return is_G() && v == 1; }
+    
+    
 
     point pos() const {
       assert(is_G());
@@ -93,12 +97,12 @@ namespace gca {
     }
     
     bool is_rel() const {
-      assert(is_G() && (v == 0 || v == 1));
+      assert(is_G1() || is_G0());
       return orient == GCA_RELATIVE;
     }
 
     void swap_orientation() {
-      assert(is_G() && (v == 0 || v == 1));
+      assert(is_G1());
       orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
     }
 

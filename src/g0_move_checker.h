@@ -15,8 +15,7 @@ namespace gca {
       for (int i = 1; i < positions.size(); i++) {
 	point diff = positions[i] - positions[i-1];
 	instr* ist = (*p)[i-1];
-	if ((diff.z != 0 && (diff.x != 0 || diff.y != 0)) &&
-	    (ist->is_G() && ist->v == 0)) {
+	if (ist->is_G0() && (diff.z != 0 && (diff.x != 0 || diff.y != 0))) {
 	  num_warnings++;
 	  s << "Warning: " << *ist << " moves diagonally" << endl;
 	}

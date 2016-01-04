@@ -7,7 +7,7 @@ namespace gca {
   bool gprog::all_abs() const {
     for (int i = 0; i < size(); i++) {
       instr* ist = instrs[i];
-      if (ist->is_G() && (ist->v == 0 || ist->v == 1)) {
+      if (ist->is_G0() || ist->is_G1()) {
 	if (ist->is_rel()) {
 	  return false;
 	}
@@ -19,7 +19,7 @@ namespace gca {
   bool gprog::all_rel() const {
     for (int i = 0; i < size(); i++) {
       instr* ist = instrs[i];
-      if (ist->is_G() && (ist->v == 0 || ist->v == 1)) {
+      if (ist->is_G0() || ist->is_G1()) {
 	if (ist->is_abs()) {
 	  return false;
 	}

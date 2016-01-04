@@ -14,8 +14,7 @@ namespace gca {
       unsigned int last_net_zero_pos = i;
       while (n < p->size()) {
 	instr ist = *((*p)[n]);
-	bool is_g0 = ist.is_G() && ist.v == 0;
-	if (!is_g0) { break; }
+	if (!ist.is_G0()) { break; }
 	if (within_eps(positions[n], positions[i])) {
 	  last_net_zero_pos = n;
 	} 
