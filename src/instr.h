@@ -25,10 +25,10 @@ namespace gca {
   protected:
     orientation orient;
     point position;
-    
-  public:
     instr_class c;
     instr_val v;
+    
+  public:
     double feed_rate;
 
     instr(instr* i) {

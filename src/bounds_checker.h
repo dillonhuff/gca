@@ -14,7 +14,7 @@ namespace gca {
     }
     
     virtual bool check_instr(ostream& out, instr* p) const {
-      if (p->c == GCA_G && (p->v == 0 || p->v == 1)) {
+      if (p->is_G0() || p->is_G1()) { //p->c == GCA_G && (p->v == 0 || p->v == 1)) {
 	bool res_x = in_bounds(x_min, p->pos().x, x_max);
 	bool res_y = in_bounds(y_min, p->pos().y, y_max);
 	bool res_z = in_bounds(z_min, p->pos().z, z_max);

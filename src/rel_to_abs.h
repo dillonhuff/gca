@@ -16,9 +16,9 @@ namespace gca {
 	if (ist->is_G()) {
 	  point pos = positions[i];
 	  instr* next_ist;
-	  if (ist->v == 0) {
+	  if (ist->is_G0()) {
 	    next_ist = c.mk_G0(pos, GCA_ABSOLUTE);
-	  } else if (ist->v == 1) {
+	  } else if (ist->is_G1()) {
 	    next_ist = c.mk_G1(pos.x, pos.y, pos.z, ist->feed_rate, GCA_ABSOLUTE);
 	  } else {
 	    assert(false);
