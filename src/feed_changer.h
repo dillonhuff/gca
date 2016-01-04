@@ -20,15 +20,12 @@ namespace gca {
       for (ilist::iterator it = p->begin();
 	   it != p->end(); ++it) {
 	instr k = **it;
-	if (k.is_G()) {
-	  assert(k.v == 0 || k.v == 1);
-	  if (k.v == 1) {
-	    point kp = k.pos();
-	    orientation orient = k.is_abs() ? GCA_ABSOLUTE : GCA_RELATIVE;
-	    n->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate, orient));
-	  } else {
-	    n->push_back(&k);
-	  }
+	if (k.is_G1()) {
+	  point kp = k.pos();
+	  orientation orient = k.is_abs() ? GCA_ABSOLUTE : GCA_RELATIVE;
+	  n->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate, orient));
+	} else {
+	  n->push_back(&k);
 	}
       }
       return n;
