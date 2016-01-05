@@ -13,9 +13,9 @@
 namespace gca {
 
   class current_instr_state : public state {
-  protected:
-    int i;
   public:
+    int i;
+    
     current_instr_state(pass* tp) {
       t = tp;
       i = -1;

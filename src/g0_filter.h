@@ -1,12 +1,15 @@
 #ifndef GCA_G0_FILTER_H
 #define GCA_G0_FILTER_H
 
+#include "basic_states.h"
 #include "context.h"
+#include "pass.h"
+
+#define GCA_G0_FILTER_STATE 2002
 
 namespace gca {
 
-  class g0_filter {
-  protected:
+  class g0_filter_state : public per_instr_state {
     unsigned int skip_irrelevant_G0_instrs(unsigned int i,
 					   vector<point>& positions,
 					   gprog* p) {
@@ -24,29 +27,64 @@ namespace gca {
     }
     
   public:
-    virtual gprog* apply(context& c, gprog* p) {
+    gprog* p;
+    context& c;
+    vector<point> positions;
+    int j;
+
+  g0_filter_state(context& cp,
+		  pass* tp) : c(cp) {
+      t = tp;
+      p = c.mk_gprog();
+      j = 0;
+    }
+
+    // TODO: Adjust this algorithm to avoid using
+    // all_positions_starting_at.
+    // TODO: Find a more sensible 
+    void update_G() {
+      current_instr_state* cis = static_cast<current_instr_state*>(get_state(GCA_INSTR_STATE));
+      int curr = cis->i;
+      if (curr != j) { return; }
+      gprog* n = t->p;
       vector<point> positions;
-      p->all_positions_starting_at(point(0, 0, 0), positions);
-      // TODO: Adjust this algorithm to use all_positions_starting_at
-      // correctly rather than just eliminating the starting position
+      n->all_positions_starting_at(point(0, 0, 0), positions);
       positions.erase(positions.begin());
-      gprog* n = c.mk_gprog();
-      for (unsigned int j = 0; j < p->size();) {
-	instr* i = (*p)[j];
-	if (i->is_G()) {
-	  unsigned int next_pos = skip_irrelevant_G0_instrs(j, positions, p);
-	  n->push_back(i);
-	  if (next_pos == j) {
-	    j++;	    
-	  } else {
-	    j = next_pos + 1;
-	  }
-	} else {
-	  n->push_back(i);
+      instr* i = (*n)[j];
+      if (i->is_G()) {
+	unsigned int next_pos = skip_irrelevant_G0_instrs(j, positions, n);
+	p->push_back(i);
+	if (next_pos == j) {
 	  j++;
+	} else {
+	  j = next_pos + 1;
 	}
+      } else {
+	n->push_back(i);
+	j++;
       }
-      return n;
+    }
+
+    void update_G0(instr* ist) { update_G(); }
+    void update_G1(instr* ist) { update_G(); }
+    void update_default(instr* ist) { p->push_back(ist); }
+  };
+
+  class g0_filter : pass {
+  protected:
+    g0_filter_state filter_s;
+    current_instr_state cis;
+    
+  public:
+  g0_filter(context& c) :
+    filter_s(c, this), cis(this) {
+      states[GCA_INSTR_STATE] = &cis;
+      states[GCA_G0_FILTER_STATE] = &filter_s;
+    }
+    
+    virtual gprog* apply(context& c, gprog* p) {
+      exec(p);
+      return filter_s.p;
     }
   };
 

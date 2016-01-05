@@ -50,7 +50,7 @@ namespace gca {
     context c;
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(point(1.0, 1.0, 1.0)));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     REQUIRE(*r == *p);
   }
@@ -59,7 +59,7 @@ namespace gca {
     context c;
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     REQUIRE(*r == *p);
   }
@@ -69,7 +69,7 @@ namespace gca {
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(point(1.0, 2.0, 2.0)));
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G0(point(1.0, 2.0, 2.0)));
@@ -83,7 +83,7 @@ namespace gca {
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G0(1.0, 2.0, 2.0));
@@ -98,7 +98,7 @@ namespace gca {
     p->push_back(c.mk_G0(1.0, 2.0, -2.00000001));
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
     p->push_back(c.mk_minstr(2));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G0(1.0, 2.0, -2.00000001));
@@ -112,7 +112,7 @@ namespace gca {
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1, 1, 1));
     p->push_back(c.mk_G0(1, 1, 1));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1, 1, 1));
@@ -127,7 +127,7 @@ namespace gca {
     p->push_back(c.mk_G0(1, 2, 0));
     p->push_back(c.mk_G0(1, 1, 1));
     p->push_back(c.mk_G1(2, 3, 3));
-    g0_filter f;
+    g0_filter f(c);
     gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1, 1, 0));
