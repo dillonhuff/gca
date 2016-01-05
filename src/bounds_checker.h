@@ -68,13 +68,14 @@ namespace gca {
     bounds_checker_state bound_s;
 
   public:
-  bounds_checker(double x_minp,
+  bounds_checker(orientation def,
+		 double x_minp,
 		 double x_maxp,
 		 double y_minp,
 		 double y_maxp,
 		 double z_minp,
 		 double z_maxp) :
-    cis(this), ps(this, point(0, 0, 0)), orient_s(this),
+    cis(this), ps(this, point(0, 0, 0)), orient_s(this, def),
       bound_s(this, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_WARNING_STATE] = &s;

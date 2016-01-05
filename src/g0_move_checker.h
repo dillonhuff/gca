@@ -34,8 +34,8 @@ namespace gca {
     orientation_state orient_s;
     
   public:
-  g0_move_checker() :
-    cis(this), ps(this, point(0, 0, 0)), ms(this), orient_s(this) {
+  g0_move_checker(orientation def) :
+    cis(this), ps(this, point(0, 0, 0)), ms(this), orient_s(this, def) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_WARNING_STATE] = &s;
       states[GCA_POSITION_STATE] = &ps;

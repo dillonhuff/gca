@@ -141,7 +141,7 @@ namespace gca {
     gprog* p = c.mk_gprog();
     gprog* r = c.mk_gprog();
     gprog* correct = c.mk_gprog();
-    abs_to_rel f(c);
+    abs_to_rel f(c, GCA_ABSOLUTE);
 
     SECTION("abs -> rel 1 instruction is the same") {
       p->push_back(c.mk_G0(1.0, 1.0, 1.0));
@@ -173,7 +173,7 @@ namespace gca {
     gprog* p = c.mk_gprog();
     gprog* r;
     gprog* correct = c.mk_gprog();
-    rel_to_abs f(c);
+    rel_to_abs f(c, GCA_ABSOLUTE);
 
     SECTION("One M2 instruction is the same") {
       p->push_back(c.mk_G91());
@@ -213,7 +213,7 @@ namespace gca {
       p->push_back(c.mk_minstr(2));
       correct->push_back(c.mk_G91());
       correct->push_back(c.mk_minstr(2));
-      r = t.apply(c, p);
+      r = t.apply(c, p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
 
@@ -222,7 +222,7 @@ namespace gca {
       p->push_back(c.mk_minstr(30));
       correct->push_back(c.mk_G91());
       correct->push_back(c.mk_minstr(2));
-      r = t.apply(c, p);
+      r = t.apply(c, p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
     
@@ -261,7 +261,7 @@ namespace gca {
       
       correct->push_back(c.mk_minstr(2));
       
-      r = t.apply(c, p);
+      r = t.apply(c, p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
   }

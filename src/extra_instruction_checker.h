@@ -14,8 +14,8 @@ namespace gca {
     orientation_checker orient_check;
     
   public:
-    extra_instruction_checker()
-      : cis(this), orient_state(this), orient_check(this) {
+    extra_instruction_checker(orientation def)
+      : cis(this), orient_state(this, def), orient_check(this) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_WARNING_STATE] = &s;
       states[GCA_ORIENTATION_STATE] = &orient_state;

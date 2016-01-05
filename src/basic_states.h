@@ -84,9 +84,9 @@ namespace gca {
   public:
     orientation current;
     
-    orientation_state(pass* tp) {
+    orientation_state(pass* tp, orientation default_orient) {
       t = tp;
-      current = GCA_ABSOLUTE;
+      current = default_orient;
     }
 
     virtual void update_G91(instr* ist) {

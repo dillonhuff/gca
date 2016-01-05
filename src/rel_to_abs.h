@@ -37,7 +37,7 @@ namespace gca {
 	position_state* ps = static_cast<position_state*>(get_state(GCA_POSITION_STATE));
 	point after = ps->after;
 	p->push_back(c.mk_G1(after.x, after.y, after.z, ist->feed_rate, GCA_ABSOLUTE));
-      }      
+      }
     }
 
     void update_G91(instr* ist) {}
@@ -53,8 +53,8 @@ namespace gca {
     position_state pis;
     
   public:
-  rel_to_abs(context& c) :
-    rel_to_abs_s(c, this), cis(this), orient_s(this), pis(this, point(0, 0, 0)) {
+  rel_to_abs(context& c, orientation def) :
+    rel_to_abs_s(c, this), cis(this), orient_s(this, def), pis(this, point(0, 0, 0)) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_POSITION_STATE] = &pis;
       states[GCA_ORIENTATION_STATE] = &orient_s;

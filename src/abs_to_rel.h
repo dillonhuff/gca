@@ -54,8 +54,8 @@ namespace gca {
     position_state pis;
     
   public:
-  abs_to_rel(context& c) :
-    abs_to_rel_s(c, this), cis(this), orient_s(this), pis(this, point(0, 0, 0)) {
+  abs_to_rel(context& c, orientation def) :
+    abs_to_rel_s(c, this), cis(this), orient_s(this, def), pis(this, point(0, 0, 0)) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_POSITION_STATE] = &pis;
       states[GCA_ORIENTATION_STATE] = &orient_s;
