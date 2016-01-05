@@ -6,7 +6,7 @@
 
 #define GCA_INSTR_STATE 0
 #define GCA_WARNING_STATE 1
-#define GCA_ORIENTATION_STATE 20
+#define GCA_ORIENTATION_STATE 200
 #define GCA_ORIENTATION_CHECKER_STATE 2
 
 namespace gca {
@@ -26,7 +26,6 @@ namespace gca {
 
     instr* get_instr() {
       assert(i >= 0);
-      cout << "Getting instruction # " << i << endl;
       instr* ist = (*(t->p))[i];
       assert(ist != NULL);
       return ist;
@@ -50,6 +49,36 @@ namespace gca {
     }
   };
 
+  class per_instr_state : public state {
+  public:
+    instr* get_instr() {
+      state* s = get_state(GCA_INSTR_STATE);
+      current_instr_state* c = static_cast<current_instr_state*>(s);
+      return c->get_instr();
+    }
+
+    virtual void update_G0(instr* ist) { update_default(ist); }
+    virtual void update_G1(instr* ist) { update_default(ist); }
+    virtual void update_G91(instr* ist) { update_default(ist); }
+    virtual void update_M2(instr* ist) { update_default(ist); }
+    virtual void update_default(instr* ist) { assert(false); }
+
+    virtual void update() {
+      instr* ist = get_instr();
+      if (ist->is_G0()) {
+	update_G0(ist);
+      } else if (ist->is_G1()) {
+	update_G1(ist);
+      } else if (ist->is_G91()) {
+	update_G91(ist);
+      } else if (ist->is_end_instr()) {
+	update_M2(ist);
+      } else {
+	assert(false);
+      }
+    }
+  };
+
   class gca_position_state : public state {
   protected:
     point before, after, diff;
@@ -65,7 +94,7 @@ namespace gca {
     }
   };
 
-  class orientation_state : public state {
+  class orientation_state : public per_instr_state {
   public:
     orientation current;
     
@@ -74,19 +103,29 @@ namespace gca {
       current = GCA_ABSOLUTE;
     }
 
-    virtual void update() {
-      state* s = get_state(GCA_INSTR_STATE);
-      current_instr_state* c = static_cast<current_instr_state*>(s);
-      instr* ist = c->get_instr();
-      if (ist->is_G91()) {
-	if (current != GCA_RELATIVE) {
-	  current = GCA_RELATIVE;
-	}
-      }
+    virtual void update_G91(instr* ist) {
+      current = GCA_RELATIVE;
     }
 
   };
 
+  class orientation_checker : public per_instr_state {
+  public:
+    orientation_checker(pass* tp) {
+      t = tp;
+    }
+
+    virtual void update_G91(instr* ist) {
+      state* s = get_state(GCA_ORIENTATION_STATE);
+      orientation_state* os = static_cast<orientation_state*>(s);
+      if (os->current == GCA_RELATIVE) {
+	state* s = get_state(GCA_WARNING_STATE);
+	warning_state* ws = static_cast<warning_state*>(s);
+	ws->add_warning("is not needed, relative coordinates are already turned on");
+      }
+    }
+    
+  };  
 }
 
 #endif
