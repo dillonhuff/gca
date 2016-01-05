@@ -6,7 +6,8 @@
 
 #define GCA_INSTR_STATE 0
 #define GCA_WARNING_STATE 1
-#define GCA_ORIENTATION_STATE 2
+#define GCA_ORIENTATION_STATE 20
+#define GCA_ORIENTATION_CHECKER_STATE 2
 
 namespace gca {
 
@@ -65,36 +66,23 @@ namespace gca {
   };
 
   class orientation_state : public state {
-  protected:
-    orientation current;
-
   public:
+    orientation current;
+    
     orientation_state(pass* tp) {
       t = tp;
       current = GCA_ABSOLUTE;
     }
 
     virtual void update() {
-      cout << "Updating orientation" << endl;
       state* s = get_state(GCA_INSTR_STATE);
       current_instr_state* c = static_cast<current_instr_state*>(s);
-      cout << "Orientation getting current instruction" << endl;
       instr* ist = c->get_instr();
-      cout << "Orientation done getting current_instruction" << endl;
       if (ist->is_G91()) {
-	cout << "Instruction is G91" << endl;
 	if (current != GCA_RELATIVE) {
 	  current = GCA_RELATIVE;
-	} else {
-	  cout << "Orientation is already relative" << endl;
-	  state* s = get_state(GCA_WARNING_STATE);
-	  warning_state* ws = static_cast<warning_state*>(s);
-	  ws->add_warning("is not needed, relative coordinates are already turned on");
 	}
-      } else {
-	cout << "Instruction is not G91" << endl;
       }
-      cout << "Done updating orientation" << endl;
     }
 
   };

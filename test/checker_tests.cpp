@@ -13,8 +13,6 @@ namespace gca {
 
     SECTION("Extra instruction checker one warning") {
       gprog* p = parse_gprog(c, "G91 G91");
-      cout << "program is " << endl;
-      cout << *p;
       extra_instruction_checker checker;
       checker.exec(p);
       warning_state* s = static_cast<warning_state*>(checker.get_state(GCA_WARNING_STATE));
