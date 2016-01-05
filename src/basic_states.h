@@ -1,7 +1,6 @@
 #ifndef GCA_BASIC_STATES_H
 #define GCA_BASIC_STATES_H
 
-#include "state.h"
 #include "pass.h"
 
 #define GCA_INSTR_STATE 0
