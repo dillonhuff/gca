@@ -20,8 +20,7 @@ namespace gca {
       bool res_x = in_bounds(x_min, p.x, x_max);
       bool res_y = in_bounds(y_min, p.y, y_max);
       bool res_z = in_bounds(z_min, p.z, z_max);
-      state* s = get_state(GCA_WARNING_STATE);
-      warning_state* ws = static_cast<warning_state*>(s);
+      warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
       if (!res_x) {
       	ws->add_warning("is not in X bounds");
       }
@@ -48,12 +47,12 @@ namespace gca {
     }
     
     virtual void update_G0(instr* ist) {
-      position_state* ps = static_cast<position_state*>(t->get_state(GCA_POSITION_STATE));
+      position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       check_point(ps->after);
     }
 
     virtual void update_G1(instr* ist) {
-      position_state* ps = static_cast<position_state*>(t->get_state(GCA_POSITION_STATE));
+      position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       check_point(ps->after);
     }
     

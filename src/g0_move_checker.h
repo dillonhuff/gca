@@ -15,11 +15,10 @@ namespace gca {
     }
     
     virtual void update_G0(instr* ist) {
-      position_state* ps = static_cast<position_state*>(t->get_state(GCA_POSITION_STATE));
+      position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       point diff = ps->diff;
       if (diff.z != 0 && (diff.x != 0 || diff.y != 0)) {
-	state* s = get_state(GCA_WARNING_STATE);
-	warning_state* ws = static_cast<warning_state*>(s);
+	warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
 	ws->add_warning("moves diagonally");
       }
     }

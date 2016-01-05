@@ -43,7 +43,7 @@ namespace gca {
     // all_positions_starting_at.
     // TODO: Find a more sensible 
     void update_G() {
-      current_instr_state* cis = static_cast<current_instr_state*>(get_state(GCA_INSTR_STATE));
+      current_instr_state* cis = get_state<current_instr_state>(GCA_INSTR_STATE);
       int curr = cis->i;
       if (curr != j) { return; }
       gprog* n = t->p;

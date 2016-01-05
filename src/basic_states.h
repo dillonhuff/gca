@@ -53,8 +53,7 @@ namespace gca {
   class per_instr_state : public state {
   public:
     instr* get_instr() {
-      state* s = get_state(GCA_INSTR_STATE);
-      current_instr_state* c = static_cast<current_instr_state*>(s);
+      current_instr_state* c = get_state<current_instr_state>(GCA_INSTR_STATE);
       return c->get_instr();
     }
 
@@ -102,11 +101,9 @@ namespace gca {
     }
 
     virtual void update_G91(instr* ist) {
-      state* s = get_state(GCA_ORIENTATION_STATE);
-      orientation_state* os = static_cast<orientation_state*>(s);
+      orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
-	state* s = get_state(GCA_WARNING_STATE);
-	warning_state* ws = static_cast<warning_state*>(s);
+	warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
 	ws->add_warning("is not needed, relative coordinates are already turned on");
       }
     }
@@ -125,7 +122,7 @@ namespace gca {
 
     void update_pos(instr* ist) {
       before = after;
-      orientation_state* os = static_cast<orientation_state*>(t->get_state(GCA_ORIENTATION_STATE));
+      orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
       	after = after + ist->pos();
       } else {
