@@ -122,8 +122,8 @@ namespace gca {
       before = start;
       after = start;
     }
-    
-    virtual void update_G0(instr* ist) {
+
+    void update_pos(instr* ist) {
       point temp = before;
       before = after;
       orientation_state* os = static_cast<orientation_state*>(t->get_state(GCA_ORIENTATION_STATE));
@@ -132,11 +132,15 @@ namespace gca {
       } else {
       	after = ist->pos();
       }
-      diff = after - before;
+      diff = after - before;      
+    }
+    
+    virtual void update_G0(instr* ist) {
+      update_pos(ist);
     }
 
     virtual void update_G1(instr* ist) {
-      
+      update_pos(ist);
     }
     
   };

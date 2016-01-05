@@ -20,21 +20,27 @@ namespace gca {
       REQUIRE(num_warnings == 1);
     }
 
-    // SECTION("Program bounds checker true") {
-    //   gprog* p = c.mk_gprog();
-    //   p->push_back(c.mk_G0(12.5, -10.3, 0.0));
-    //   p->push_back(c.mk_minstr(2));
-    //   bounds_checker b(0, 30, -20, -10, -5.0, 2.0);
-    //   REQUIRE(b.check(cout, p) == 0);
-    // }
+    SECTION("Program bounds checker true") {
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G0(12.5, -10.3, 0.0));
+      p->push_back(c.mk_minstr(2));
+      bounds_checker b(0, 30, -20, -10, -5.0, 2.0);
+      b.exec(p);
+      warning_state* s = static_cast<warning_state*>(b.get_state(GCA_WARNING_STATE));
+      int num_warnings = s->num_warnings();
+      REQUIRE(num_warnings == 0);
+    }
 
-    // SECTION("Program bounds checker false") {
-    //   gprog* p = c.mk_gprog();
-    //   p->push_back(c.mk_G1(12.5, -10.3, 0.0));
-    //   p->push_back(c.mk_minstr(2));
-    //   bounds_checker b(0, 9, -20, -10, 0.0, 2.0);
-    //   REQUIRE(b.check(cout, p) == 1);
-    // }
+    SECTION("Program bounds checker false") {
+      gprog* p = c.mk_gprog();
+      p->push_back(c.mk_G1(12.5, -10.3, 0.0));
+      p->push_back(c.mk_minstr(2));
+      bounds_checker b(0, 9, -20, -10, 0.0, 2.0);
+      b.exec(p);
+      warning_state* s = static_cast<warning_state*>(b.get_state(GCA_WARNING_STATE));
+      int num_warnings = s->num_warnings();
+      REQUIRE(num_warnings == 1);
+    }
 
     SECTION("g0_move_checker no mistake") {
       gprog* p = c.mk_gprog();
@@ -67,6 +73,15 @@ namespace gca {
       REQUIRE(num_warnings == 0);
     }
 
+    SECTION("g0_move_checker several instructions one mistake") {
+      gprog* p = parse_gprog(c, "G1 X2.0 Y2.0 Z1.0 G0 X0.0 Y0.0 Z2.0 M2");
+      g0_move_checker checker;
+      checker.exec(p);
+      warning_state* s = static_cast<warning_state*>(checker.get_state(GCA_WARNING_STATE));
+      int num_warnings = s->num_warnings();
+      REQUIRE(num_warnings == 1);
+    }
+    
     SECTION("g0_move_checker several instructions relative mistake") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G0(0.0, 2.0, 1.0, GCA_RELATIVE));
