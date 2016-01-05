@@ -29,19 +29,11 @@ namespace gca {
     state_map states;
     
   public:
-    state* get_state(state_name n) { return states[n]; }
-    
     gprog* p;
-    virtual void exec(gprog* prog) {
-      p = prog;
-      for (int i = 0; i < p->size(); i++) {
-	for (state_map::iterator it = states.begin();
-	     it != states.end(); ++it) {
-	  state* s = it->second;
-	  s->update();
-	}
-      }
-    }
+    
+    state* get_state(state_name n) { return states[n]; }
+
+    virtual void exec(gprog* p);    
   };
 }
 
