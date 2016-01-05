@@ -15,7 +15,7 @@ namespace gca {
     cis(this) {
       current_instr_state cisp(this);
       cis = cisp;
-      states[GCA_CURRENT_INSTR_STATE] = &cis;
+      states[GCA_INSTR_STATE] = &cis;
       warning_state sp;
       s = sp;
       states[GCA_WARNING_STATE] = &s;

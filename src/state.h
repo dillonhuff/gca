@@ -3,11 +3,6 @@
 
 namespace gca {
   
-  class state {
-  public:
-    virtual void update() { assert(false); }
-  };
-
 }
 
 #endif
