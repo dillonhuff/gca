@@ -57,7 +57,6 @@ namespace gca {
       orient = orientp;
     }
     
-
     instr(instr_class cp, instr_val vp, point p, double frp, orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       assert(frp > 0);
@@ -68,7 +67,7 @@ namespace gca {
       orient = orientp;
     }
 
-    bool is_end_instr() const {
+    inline bool is_end_instr() const {
       return c == GCA_M && (v == 2 || v == 30);
     }
     
@@ -82,26 +81,24 @@ namespace gca {
 
     inline bool is_G() const { return c == GCA_G; }
     inline bool is_G0() const { return is_G() && v == 0; }
-    inline bool is_G1() const { return is_G() && v == 1; }
-    
-    
+    inline bool is_G1() const { return is_G() && v == 1; }    
 
-    point pos() const {
+    inline point pos() const {
       assert(is_G());
       return position;
     }
 
-    bool is_abs() const {
+    inline bool is_abs() const {
       assert(is_G());
       return orient == GCA_ABSOLUTE;
     }
-    
-    bool is_rel() const {
+
+    inline bool is_rel() const {
       assert(is_G1() || is_G0());
       return orient == GCA_RELATIVE;
     }
 
-    void swap_orientation() {
+    inline void swap_orientation() {
       assert(is_G1());
       orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
     }
