@@ -6,6 +6,7 @@
 
 #define GCA_INSTR_STATE 0
 #define GCA_WARNING_STATE 1
+#define GCA_POSITION_STATE 2
 #define GCA_ORIENTATION_STATE 200
 #define GCA_ORIENTATION_CHECKER_STATE 2
 
@@ -61,7 +62,7 @@ namespace gca {
     virtual void update_G1(instr* ist) { update_default(ist); }
     virtual void update_G91(instr* ist) { update_default(ist); }
     virtual void update_M2(instr* ist) { update_default(ist); }
-    virtual void update_default(instr* ist) { assert(false); }
+    virtual void update_default(instr* ist) {}
 
     virtual void update() {
       instr* ist = get_instr();
@@ -76,21 +77,6 @@ namespace gca {
       } else {
 	assert(false);
       }
-    }
-  };
-
-  class gca_position_state : public state {
-  protected:
-    point before, after, diff;
-  public:
-    gca_position_state(pass* tp) {
-      t = tp;
-    }
-    
-    virtual void update() {
-      state* s = get_state(GCA_INSTR_STATE);
-      current_instr_state* c = static_cast<current_instr_state*>(s);
-      //      s = get_state(GCA_ORIENTATION_STATE);
     }
   };
 
@@ -125,7 +111,36 @@ namespace gca {
       }
     }
     
-  };  
+  };
+
+  class position_state : public per_instr_state {
+  public:
+    point before, after, diff;
+
+    position_state(pass* tp, point start) {
+      t = tp;
+      before = start;
+      after = start;
+    }
+    
+    virtual void update_G0(instr* ist) {
+      point temp = before;
+      before = after;
+      orientation_state* os = static_cast<orientation_state*>(t->get_state(GCA_ORIENTATION_STATE));
+      if (os->current == GCA_RELATIVE) {
+      	after = temp + ist->pos();
+      } else {
+      	after = ist->pos();
+      }
+      diff = after - before;
+    }
+
+    virtual void update_G1(instr* ist) {
+      
+    }
+    
+  };
+  
 }
 
 #endif
