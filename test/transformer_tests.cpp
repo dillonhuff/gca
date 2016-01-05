@@ -15,7 +15,7 @@ namespace gca {
     double initial_feedrate = 2.0;
     double new_feedrate = 5.0;
     feed_changer f(c, initial_feedrate, new_feedrate);
-    gprog* n = f.apply(c, p);
+    gprog* n = f.apply(p);
     gprog* correct = parse_gprog(c, "G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
     REQUIRE(*n == *correct);
   }
@@ -27,7 +27,7 @@ namespace gca {
     p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate));
     double new_feedrate = 4.0;
     feed_changer f(c, initial_feedrate, new_feedrate);
-    gprog* n = f.apply(c, p);
+    gprog* n = f.apply(p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate));
     REQUIRE(*n == *correct);
@@ -40,7 +40,7 @@ namespace gca {
     p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate, GCA_RELATIVE));
     double new_feedrate = 4.0;
     feed_changer f(c, initial_feedrate, new_feedrate);
-    gprog* n = f.apply(c, p);
+    gprog* n = f.apply(p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate, GCA_RELATIVE));
     REQUIRE(*n == *correct);

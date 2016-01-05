@@ -16,7 +16,7 @@ namespace gca {
 
   public:
     gprog* p;
-    
+
   feed_changer_state(context& cp,
 		     pass* tp,
 		     double initial_feedratep,
@@ -53,7 +53,7 @@ namespace gca {
       states[GCA_FEED_CHANGER_STATE] = &feed_s;
     }
 
-    virtual gprog* apply(context& c, gprog* p) {
+    virtual gprog* apply(gprog* p) {
       exec(p);
       return feed_s.p;
     }
