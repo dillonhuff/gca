@@ -32,10 +32,9 @@ namespace gca {
   class state {
   protected:
     pass* t;
-  public:
-    virtual void update() { assert(false); }
 
-    state* get_state(state_name n);
+  public:
+    virtual void update() { assert(false); }    
 
     template<typename T>
       T* get_state(state_name n) {
