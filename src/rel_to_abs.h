@@ -21,20 +21,18 @@ namespace gca {
     }
 
     void update_G0(instr* ist) {
-      state* s = get_state(GCA_ORIENTATION_STATE);
-      orientation_state* os = static_cast<orientation_state*>(s);
+      orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
-	position_state* ps = static_cast<position_state*>(get_state(GCA_POSITION_STATE));
+	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point after = ps->after;
 	p->push_back(c.mk_G0(after, GCA_ABSOLUTE));
       }
     }
 
     void update_G1(instr* ist) {
-      state* s = get_state(GCA_ORIENTATION_STATE);
-      orientation_state* os = static_cast<orientation_state*>(s);
+      orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
-	position_state* ps = static_cast<position_state*>(get_state(GCA_POSITION_STATE));
+	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point after = ps->after;
 	p->push_back(c.mk_G1(after.x, after.y, after.z, ist->feed_rate, GCA_ABSOLUTE));
       }

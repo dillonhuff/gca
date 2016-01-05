@@ -10,19 +10,9 @@ using namespace std;
 namespace gca {
 
   class state;
-  class pass;
   
   typedef int state_name;
   typedef map<state_name, state*> state_map;
-  
-  class state {
-  protected:
-    pass* t;
-  public:
-    virtual void update() { assert(false); }
-
-    state* get_state(state_name n);
-  };
 
   class pass {
   protected:
@@ -38,6 +28,22 @@ namespace gca {
 
     virtual void exec(gprog* p);    
   };
+  
+  class state {
+  protected:
+    pass* t;
+  public:
+    virtual void update() { assert(false); }
+
+    state* get_state(state_name n);
+
+    template<typename T>
+      T* get_state(state_name n) {
+      state* s = t->get_state(n);
+      return static_cast<T*>(s);
+    }
+  };
+
 }
 
 #endif
