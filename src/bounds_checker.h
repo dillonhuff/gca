@@ -4,8 +4,6 @@
 #include "basic_states.h"
 #include "pass.h"
 
-#define GCA_BOUNDS_CHECKER_STATE 2000
-
 namespace gca {
 
   class bounds_checker_state : public per_instr_state {

@@ -5,8 +5,6 @@
 #include "context.h"
 #include "pass.h"
 
-#define GCA_ABS_TO_REL_STATE 2003
-
 namespace gca {
 
   class abs_to_rel_state : public per_instr_state {

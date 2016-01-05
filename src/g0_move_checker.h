@@ -4,8 +4,6 @@
 #include "basic_states.h"
 #include "pass.h"
 
-#define GCA_MOVE_CHECKER_STATE 201
-
 namespace gca {
 
   class move_checker_state : public per_instr_state {

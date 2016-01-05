@@ -2,12 +2,7 @@
 #define GCA_BASIC_STATES_H
 
 #include "pass.h"
-
-#define GCA_INSTR_STATE 0
-#define GCA_WARNING_STATE 1
-#define GCA_POSITION_STATE 2
-#define GCA_ORIENTATION_STATE 200
-#define GCA_ORIENTATION_CHECKER_STATE 2
+#include "state_names.h"
 
 namespace gca {
 

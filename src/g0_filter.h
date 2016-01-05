@@ -5,8 +5,6 @@
 #include "context.h"
 #include "pass.h"
 
-#define GCA_G0_FILTER_STATE 2002
-
 namespace gca {
 
   class g0_filter_state : public per_instr_state {
