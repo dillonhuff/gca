@@ -42,6 +42,15 @@ namespace gca {
       REQUIRE(num_warnings == 1);
     }
 
+    SECTION("Program bounds checker true relative") {
+      gprog* p = parse_gprog(c, "G91 G1 X8 G0 X7");
+      bounds_checker b(0, 9, -20, 10, 0.0, 2.0);
+      b.exec(p);
+      warning_state* s = static_cast<warning_state*>(b.get_state(GCA_WARNING_STATE));
+      int num_warnings = s->num_warnings();
+      REQUIRE(num_warnings == 1);
+    }
+    
     SECTION("g0_move_checker no mistake") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G0(2.0, 2.0, 0.0));

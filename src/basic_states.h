@@ -124,11 +124,10 @@ namespace gca {
     }
 
     void update_pos(instr* ist) {
-      point temp = before;
       before = after;
       orientation_state* os = static_cast<orientation_state*>(t->get_state(GCA_ORIENTATION_STATE));
       if (os->current == GCA_RELATIVE) {
-      	after = temp + ist->pos();
+      	after = after + ist->pos();
       } else {
       	after = ist->pos();
       }

@@ -16,10 +16,10 @@ namespace gca {
       return lb <= x && x <= rb;
     }
 
-    bool check_instr(instr* p) {
-      bool res_x = in_bounds(x_min, p->pos().x, x_max);
-      bool res_y = in_bounds(y_min, p->pos().y, y_max);
-      bool res_z = in_bounds(z_min, p->pos().z, z_max);
+    bool check_point(point p) {
+      bool res_x = in_bounds(x_min, p.x, x_max);
+      bool res_y = in_bounds(y_min, p.y, y_max);
+      bool res_z = in_bounds(z_min, p.z, z_max);
       state* s = get_state(GCA_WARNING_STATE);
       warning_state* ws = static_cast<warning_state*>(s);
       if (!res_x) {
@@ -48,11 +48,13 @@ namespace gca {
     }
     
     virtual void update_G0(instr* ist) {
-      check_instr(ist);
+      position_state* ps = static_cast<position_state*>(t->get_state(GCA_POSITION_STATE));
+      check_point(ps->after);
     }
 
     virtual void update_G1(instr* ist) {
-      check_instr(ist);
+      position_state* ps = static_cast<position_state*>(t->get_state(GCA_POSITION_STATE));
+      check_point(ps->after);
     }
     
   };
