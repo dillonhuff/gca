@@ -1,38 +1,72 @@
-#ifndef GCA_REL_TO_ABS
-#define GCA_REL_TO_ABS
+#ifndef GCA_REL_TO_ABS_H
+#define GCA_REL_TO_ABS_H
 
-#include "gprog.h"
+#include "basic_states.h"
+#include "context.h"
+#include "pass.h"
+
+#define GCA_REL_TO_ABS_STATE 2004
 
 namespace gca {
 
-  class rel_to_abs {
+  class rel_to_abs_state : public per_instr_state {
   public:
-    gprog* apply(context& c, gprog* p) const {
-      vector<point> positions;
-      p->all_positions_starting_at(point(0, 0, 0), positions);
-      gprog* n = c.mk_gprog();
-      for (int i = 1; i < p->size() + 1; i++) {
-	instr* ist = (*p)[i-1];
-	if (ist->is_G()) {
-	  point pos = positions[i];
-	  instr* next_ist;
-	  if (ist->is_G0()) {
-	    next_ist = c.mk_G0(pos, GCA_ABSOLUTE);
-	  } else if (ist->is_G1()) {
-	    next_ist = c.mk_G1(pos.x, pos.y, pos.z, ist->feed_rate, GCA_ABSOLUTE);
-	  } else {
-	    assert(false);
-	  }
-	  assert(next_ist->is_abs());
-	  n->push_back(next_ist);
-	} else {
-	  n->push_back(ist);
-	}
-      }
-      return n;
+    gprog* p;
+    context& c;
+
+  rel_to_abs_state(context& cp, pass* tp) :
+    c(cp) {
+      t = tp;
+      p = c.mk_gprog();
     }
 
+    void update_G0(instr* ist) {
+      state* s = get_state(GCA_ORIENTATION_STATE);
+      orientation_state* os = static_cast<orientation_state*>(s);
+      if (os->current == GCA_RELATIVE) {
+	position_state* ps = static_cast<position_state*>(get_state(GCA_POSITION_STATE));
+	point after = ps->after;
+	p->push_back(c.mk_G0(after, GCA_ABSOLUTE));
+      }
+    }
+
+    void update_G1(instr* ist) {
+      state* s = get_state(GCA_ORIENTATION_STATE);
+      orientation_state* os = static_cast<orientation_state*>(s);
+      if (os->current == GCA_RELATIVE) {
+	position_state* ps = static_cast<position_state*>(get_state(GCA_POSITION_STATE));
+	point after = ps->after;
+	p->push_back(c.mk_G1(after.x, after.y, after.z, ist->feed_rate, GCA_ABSOLUTE));
+      }      
+    }
+
+    void update_G91(instr* ist) {}
+    void update_default(instr* ist) { p->push_back(ist); }
+
   };
+
+  class rel_to_abs : pass {
+  protected:
+    rel_to_abs_state rel_to_abs_s;
+    current_instr_state cis;
+    orientation_state orient_s;
+    position_state pis;
+    
+  public:
+  rel_to_abs(context& c) :
+    rel_to_abs_s(c, this), cis(this), orient_s(this), pis(this, point(0, 0, 0)) {
+      states[GCA_INSTR_STATE] = &cis;
+      states[GCA_POSITION_STATE] = &pis;
+      states[GCA_ORIENTATION_STATE] = &orient_s;
+      states[GCA_REL_TO_ABS_STATE] = &rel_to_abs_s;
+    }
+    
+    virtual gprog* apply(context& c, gprog* p) {
+      exec(p);
+      return rel_to_abs_s.p;
+    }
+  };
+  
 }
 
 #endif

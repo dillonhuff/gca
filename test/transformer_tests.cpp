@@ -173,9 +173,10 @@ namespace gca {
     gprog* p = c.mk_gprog();
     gprog* r;
     gprog* correct = c.mk_gprog();
-    rel_to_abs f;
+    rel_to_abs f(c);
 
     SECTION("One M2 instruction is the same") {
+      p->push_back(c.mk_G91());
       p->push_back(c.mk_minstr(2));
       correct->push_back(c.mk_minstr(2));
       r = f.apply(c, p);
@@ -183,6 +184,7 @@ namespace gca {
     }
 
     SECTION("One G0 instruction is the same") {
+      p->push_back(c.mk_G91());
       p->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_RELATIVE));
       correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));
       r = f.apply(c, p);
@@ -190,6 +192,7 @@ namespace gca {
     }
 
     SECTION("Two instructions instructions") {
+      p->push_back(c.mk_G91());
       p->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_RELATIVE));
       p->push_back(c.mk_G1(-2.0, 2.0, -10.0, 2.5, GCA_RELATIVE));
       correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));

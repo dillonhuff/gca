@@ -66,7 +66,6 @@ namespace gca {
       exec(p);
       return abs_to_rel_s.p;
     }
-    
   };
   
 }
