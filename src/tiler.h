@@ -18,7 +18,7 @@ namespace gca {
       point diff = (start + shift) - last_pos;
       gprog* rp;
       if (p->all_abs()) {
-	abs_to_rel atr;
+	abs_to_rel atr(c);
 	rp = atr.apply(c, p);
       } else {
 	rp = p;

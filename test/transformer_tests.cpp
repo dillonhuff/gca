@@ -141,7 +141,7 @@ namespace gca {
     gprog* p = c.mk_gprog();
     gprog* r = c.mk_gprog();
     gprog* correct = c.mk_gprog();
-    abs_to_rel f;
+    abs_to_rel f(c);
 
     SECTION("abs -> rel 1 instruction is the same") {
       p->push_back(c.mk_G0(1.0, 1.0, 1.0));
