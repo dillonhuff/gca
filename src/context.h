@@ -5,7 +5,6 @@
 #include "cut.h"
 #include "gprog.h"
 #include "instr.h"
-#include "toolpath.h"
 
 namespace gca {
 
@@ -62,11 +61,6 @@ namespace gca {
       instr* mem = a.allocate<instr>();
       instr* new_i = new (mem) instr(i);
       return new_i;
-    }
-
-    toolpath* mk_toolpath() {
-      toolpath* t = a.allocate<toolpath>();
-      return t;
     }
 
   };
