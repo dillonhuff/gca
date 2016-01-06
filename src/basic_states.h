@@ -42,8 +42,9 @@ namespace gca {
     
     void add_warning(string s) {
       current_instr_state* is = get_state<current_instr_state>(GCA_INSTR_STATE);
+      int ind = is->i;
       instr* ist = is->get_instr();
-      cout << "Warning: " << *ist << " " << s << endl;
+      cout << "Warning at position " << ind << ": " << *ist << " " << s << endl;
       num_warns++;
     }
   };
