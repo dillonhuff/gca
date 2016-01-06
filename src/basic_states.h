@@ -41,11 +41,9 @@ namespace gca {
     virtual void update() {}
     
     void add_warning(string s) {
-      cout << "Getting instr" << endl;
       current_instr_state* is = get_state<current_instr_state>(GCA_INSTR_STATE);
-      cout << "Got instr state" << endl;
       instr* ist = is->get_instr();
-      cout << *ist << ": " << s << endl;
+      cout << "Warning: " << *ist << " " << s << endl;
       num_warns++;
     }
   };
