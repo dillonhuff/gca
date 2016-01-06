@@ -13,6 +13,16 @@ ALL_FILES += $(SRC_HEADER_FILES)
 
 SRC_OBJS := $(SRC_FILES:.cpp=.o)
 OBJS := $(ALL_SRC:.cpp=.o)
+DEPS := $(OBJS:.o=.gca_deps)
+
+all: all-tests
+
+%.gca_deps: %.cpp
+	bash gca_depends.sh $*.cpp >$@
+
+%.h:
+
+include $(DEPS)
 
 ######## Example files ######################
 CHECK_BOUNDS := examples/check_bounds.cpp
@@ -23,8 +33,8 @@ SIMPLE_PROG_OBJ := $(SIMPLE_PROG:.cpp=.o)
 
 #############################################
 
- %.o : %.cpp $(SRC_HEADER_FILES)
-	$(CC) $(CXX_FLAGS) -c $< -o $@
+ # %.o : %.cpp $(SRC_HEADER_FILES)
+ # 	$(CC) $(CXX_FLAGS) -c $< -o $@
 
 all-tests: $(SRC_HEADER_FILES) $(OBJS)
 	$(CC) $(CXX_FLAGS) $(OBJS) -o $@
@@ -37,6 +47,7 @@ simple-prog: $(SRC_HEADER_FILES) $(SRC_OBJS) $(SIMPLE_PROG_OBJ)
 
 clean:
 	find . -name "*.o" -type f -delete
+	find . -name "*.gca_deps" -type f -delete
 	rm -f all-tests
 	rm -f check-bounds-example
 	rm -f simple-prog
