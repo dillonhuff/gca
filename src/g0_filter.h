@@ -39,7 +39,8 @@ namespace gca {
 
     // TODO: Adjust this algorithm to avoid using
     // all_positions_starting_at.
-    // TODO: Find a more sensible 
+    // TODO: Find a more sensible way to structure
+    // code that needs to skip instructions in the iteration
     void update_G() {
       current_instr_state* cis = get_state<current_instr_state>(GCA_INSTR_STATE);
       int curr = cis->i;

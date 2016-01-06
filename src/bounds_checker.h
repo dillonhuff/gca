@@ -72,7 +72,7 @@ namespace gca {
 		 double y_maxp,
 		 double z_minp,
 		 double z_maxp) :
-    cis(this), ps(this, point(0, 0, 0)), orient_s(this, def),
+    cis(this), ps(this, point(0, 0, 0)), s(this), orient_s(this, def),
       bound_s(this, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_WARNING_STATE] = &s;
