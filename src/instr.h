@@ -83,6 +83,9 @@ namespace gca {
     void print(ostream& s) const;
 
     inline bool is_G() const { return c == GCA_G; }
+    inline bool is_F() const { return c == GCA_F; }
+    inline bool is_S() const { return c == GCA_S; }
+    inline bool is_T() const { return c == GCA_T; }
     inline bool is_G0() const { return is_G() && v == 0; }
     inline bool is_G1() const { return is_G() && v == 1; }
     inline bool is_G91() const { return is_G() && v == 91; }

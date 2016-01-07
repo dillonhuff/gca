@@ -30,22 +30,32 @@ namespace gca {
   void instr::print(ostream& s) const {
     if (c == GCA_M) {
       cout << 'M' << v;
-    } else if (c == GCA_G && (v == 0 || v == 1)) {
+    } else if (c == GCA_G && (v == 0 || v == 1 || v == 53)) {
       cout << 'G' << v;
-      if (v != 0) {
+      if (v != 0 && v != 53) {
 	cout << " F" << feed_rate;
       }
       s << " X" << pos().x;
       s << " Y" << pos().y;
       s << " Z" << pos().z;
-      if (is_rel()) {
-	cout << " ( relative )";
-      } else {
-	cout << " ( absolute )";
+      if (v != 53) {
+	if (is_rel()) {
+	  cout << " ( relative )";
+	} else {
+	  cout << " ( absolute )";
+	}
       }
+    } else if (is_G() && v == 90) {
+      s << 'G' << v;
     } else if (is_G()) {
       assert(orient == GCA_NONE && orient != GCA_RELATIVE && orient != GCA_ABSOLUTE);
       cout << 'G' << v;
+    } else if (is_F()) {
+      cout << 'F' << v;
+    } else if (is_T()) {
+      cout << 'T' << v;
+    } else if (is_S()) {
+      cout << 'S' << v;
     } else {
       assert(false);
     }
