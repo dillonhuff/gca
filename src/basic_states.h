@@ -127,9 +127,9 @@ namespace gca {
       } else {
       	after = ist->pos();
       }
-      diff = after - before;      
+      diff = after - before;
     }
-    
+
     virtual void update_G0(instr* ist) {
       update_pos(ist);
     }
@@ -137,7 +137,7 @@ namespace gca {
     virtual void update_G1(instr* ist) {
       update_pos(ist);
     }
-    
+
   };
   
 }

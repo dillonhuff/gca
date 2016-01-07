@@ -8,6 +8,9 @@
 
 #define GCA_M 0
 #define GCA_G 1
+#define GCA_T 2
+#define GCA_S 3
+#define GCA_F 4
 
 #define GCA_ABSOLUTE 0
 #define GCA_RELATIVE 1

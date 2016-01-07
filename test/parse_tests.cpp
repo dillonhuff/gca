@@ -129,7 +129,14 @@ namespace gca {
       correct->push_back(c.mk_G1(18.0, 1.5, -0.25));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
+    }
+
+    SECTION("Read and parse real CNC file") {
+      string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
+      gprog* p = read_file(c, fn);
+      REQUIRE(p->size() == 42);
     }    
+    
   }
 
   TEST_CASE("Parse GCODE with relative coordinates") {

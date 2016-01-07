@@ -25,9 +25,30 @@ namespace gca {
       return new (mem) instr(GCA_M, val);
     }
 
+    instr* mk_tinstr(int val) {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_T, val);
+    }
+
+    instr* mk_sinstr(int val) {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_S, val);
+    }
+
+    // TODO: Actually make use of the control string
+    instr* mk_finstr(int val, string s) {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_F, val);
+    }
+    
     instr* mk_G91() {
       instr* mem = a.allocate<instr>();
       return new (mem) instr(GCA_G, 91);
+    }
+
+    instr* mk_G90() {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_G, 90);
     }
     
     instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
@@ -35,6 +56,11 @@ namespace gca {
       return new (mem) instr(GCA_G, 0, point(x, y, z), orient);
     }
 
+    instr* mk_G53(point p, orientation orient=GCA_ABSOLUTE) {
+      instr* mem = a.allocate<instr>();
+      return new (mem) instr(GCA_G, 53, p, orient);
+    }
+    
     instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
       instr* mem = a.allocate<instr>();
       return new (mem) instr(GCA_G, 0, p, orient);

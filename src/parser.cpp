@@ -7,11 +7,16 @@
 
 namespace gca {
 
-  void ignore_comment(size_t* i, string s) {
-    if (s[*i] == '(') {
-      while (*i < s.size() && s[*i] != ')') { (*i)++; }
+  void ignore_comment_with_delimiters(char sc, char ec, size_t* i, string s) {
+    if (s[*i] == sc) {
+      while (*i < s.size() && s[*i] != ec) { (*i)++; }
       (*i)++;
-    }
+    }    
+  }
+
+  void ignore_comment(size_t* i, string s) {
+    ignore_comment_with_delimiters('(', ')', i, s);
+    ignore_comment_with_delimiters('[', ']', i, s);
   }
 
   void ignore_whitespace(size_t* i, string s) {
@@ -86,6 +91,21 @@ namespace gca {
     return c.mk_G0(pt, ori);
   }
 
+  instr* parse_G53(context& c, gprog* p, size_t* i, string s, orientation ori) {
+    point pt = parse_point(c, p, i, s, ori);
+    return c.mk_G53(pt, ori);
+  }
+
+  // TODO: Actually parse the coordinate string
+  string parse_coord_letters(size_t* i, string s) {
+    char c = s[*i];
+    while (c == 'X' || c == 'Y' || c == 'Z') {
+      (*i)++;
+      c = s[*i];
+    }
+    return "";
+  }
+  
   instr* parse_next_instr(context& c,
 			  gprog* p,
 			  size_t* i,
@@ -96,6 +116,20 @@ namespace gca {
       (*i)++;
       int val = parse_int(i, s);
       is = c.mk_minstr(val);
+    } else if (s[*i] == 'T') {
+      (*i)++;
+      int val = parse_int(i, s);
+      is = c.mk_tinstr(val);
+    } else if (s[*i] == 'S') {
+      (*i)++;
+      int val = parse_int(i, s);
+      is = c.mk_sinstr(val);
+    } else if (s[*i] == 'F') {
+      (*i)++;
+      int val = parse_int(i, s);
+      ignore_whitespace(i, s);
+      string str = parse_coord_letters(i, s);
+      is = c.mk_finstr(val, str);
     } else if (s[*i] == 'G') {
       (*i)++;
       int val = parse_int(i, s);
@@ -106,6 +140,11 @@ namespace gca {
       } else if (val == 91) {
 	is = c.mk_G91();
 	*ori = GCA_RELATIVE;
+      } else if (val == 90) {
+	is = c.mk_G90();
+	*ori = GCA_ABSOLUTE;
+      } else if (val == 53) {
+	is = parse_G53(c, p, i, s, *ori);
       } else {
 	cout << "Unrecognized instr code for instr letter: " << val << endl;
 	assert(false);
