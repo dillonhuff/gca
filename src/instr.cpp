@@ -38,13 +38,13 @@ namespace gca {
       s << " X" << pos().x;
       s << " Y" << pos().y;
       s << " Z" << pos().z;
-      if (v != 53) {
-	if (is_rel()) {
-	  cout << " ( relative )";
-	} else {
-	  cout << " ( absolute )";
-	}
-      }
+      // if (v != 53) {
+      // 	if (is_rel()) {
+      // 	  cout << " ( relative )";
+      // 	} else {
+      // 	  cout << " ( absolute )";
+      // 	}
+      // }
     } else if (is_G() && v == 90) {
       s << 'G' << v;
     } else if (is_G()) {
