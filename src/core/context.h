@@ -3,7 +3,7 @@
 
 #include "arena_allocator.h"
 #include "cut.h"
-#include "gprog.h"
+#include "core/gprog.h"
 #include "instr.h"
 
 namespace gca {

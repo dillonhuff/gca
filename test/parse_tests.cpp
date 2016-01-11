@@ -3,8 +3,8 @@
 #include <string>
 
 #include "catch.hpp"
-#include "gprog.h"
-#include "parser.h"
+#include "core/gprog.h"
+#include "core/parser.h"
 
 namespace gca {
 

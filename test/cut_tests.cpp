@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "catch.hpp"
-#include "context.h"
+#include "core/context.h"
 #include "output.h"
 
 namespace gca {

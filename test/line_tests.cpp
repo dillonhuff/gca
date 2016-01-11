@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "context.h"
+#include "core/context.h"
 #include "cut.h"
 #include "line.h"
 #include "output.h"

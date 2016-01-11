@@ -1,9 +1,9 @@
 #ifndef GCA_ABS_TO_REL_H
 #define GCA_ABS_TO_REL_H
 
-#include "basic_states.h"
-#include "context.h"
-#include "pass.h"
+#include "core/basic_states.h"
+#include "core/context.h"
+#include "core/pass.h"
 
 namespace gca {
 

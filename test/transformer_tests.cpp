@@ -1,9 +1,9 @@
 #include "abs_to_rel.h"
 #include "catch.hpp"
-#include "context.h"
+#include "core/context.h"
 #include "feed_changer.h"
 #include "g0_filter.h"
-#include "parser.h"
+#include "core/parser.h"
 #include "rel_to_abs.h"
 #include "tiler.h"
 

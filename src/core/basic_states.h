@@ -1,7 +1,7 @@
 #ifndef GCA_BASIC_STATES_H
 #define GCA_BASIC_STATES_H
 
-#include "pass.h"
+#include "core/pass.h"
 #include "state_names.h"
 
 namespace gca {

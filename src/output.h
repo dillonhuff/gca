@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "context.h"
-#include "gprog.h"
+#include "core/context.h"
+#include "core/gprog.h"
 #include "line.h"
 
 using namespace std;

@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include "gprog.h"
+#include "core/gprog.h"
 
 using namespace std;
 

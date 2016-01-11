@@ -1,9 +1,9 @@
 #ifndef GCA_FEED_CHANGER_H
 #define GCA_FEED_CHANGER_H
 
-#include "basic_states.h"
-#include "context.h"
-#include "pass.h"
+#include "core/basic_states.h"
+#include "core/context.h"
+#include "core/pass.h"
 
 #define GCA_FEED_CHANGER_STATE 2001
 

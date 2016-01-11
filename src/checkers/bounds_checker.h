@@ -1,8 +1,8 @@
 #ifndef GCA_BOUNDS_CHECKER_H
 #define GCA_BOUNDS_CHECKER_H
 
-#include "basic_states.h"
-#include "pass.h"
+#include "core/basic_states.h"
+#include "core/pass.h"
 
 namespace gca {
 
