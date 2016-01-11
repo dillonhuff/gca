@@ -2,7 +2,7 @@
 
 #include "catch.hpp"
 #include "core/context.h"
-#include "output.h"
+#include "synthesis/output.h"
 
 namespace gca {
   

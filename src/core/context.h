@@ -2,7 +2,7 @@
 #define GCA_CONTEXT_H
 
 #include "arena_allocator.h"
-#include "cut.h"
+#include "synthesis/cut.h"
 #include "core/gprog.h"
 #include "instr.h"
 

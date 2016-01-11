@@ -1,7 +1,7 @@
 #ifndef GCA_LINE_H
 #define GCA_LINE_H
 
-#include "point.h"
+#include "geometry/point.h"
 
 namespace gca {
   

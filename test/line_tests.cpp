@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "core/context.h"
-#include "cut.h"
-#include "line.h"
-#include "output.h"
+#include "geometry/line.h"
+#include "synthesis/cut.h"
+#include "synthesis/output.h"
 
 namespace gca {
   

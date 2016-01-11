@@ -1,7 +1,7 @@
 #ifndef GCA_CUT_H
 #define GCA_CUT_H
 
-#include "point.h"
+#include "geometry/point.h"
 
 namespace gca {
 

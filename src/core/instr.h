@@ -4,7 +4,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "point.h"
+#include "geometry/point.h"
 
 #define GCA_M 0
 #define GCA_G 1

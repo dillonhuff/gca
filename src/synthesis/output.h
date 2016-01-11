@@ -5,7 +5,7 @@
 
 #include "core/context.h"
 #include "core/gprog.h"
-#include "line.h"
+#include "geometry/line.h"
 
 using namespace std;
 

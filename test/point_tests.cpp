@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "point.h"
+#include "geometry/point.h"
 
 namespace gca {
 
