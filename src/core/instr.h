@@ -26,48 +26,26 @@ namespace gca {
 
   class instr {
   protected:
-    orientation orient;
-    point position;
     instr_class c;
     instr_val v;
     
   public:
     double feed_rate;
 
+    instr() {}
+
     instr(instr* i) {
       c = i->c;
       v = i->v;
-      position = i->pos();
-      feed_rate = i->feed_rate;
-      orient = i->orient;
+      //position = i->pos();
+      //feed_rate = i->feed_rate;
+      //orient = i->orient;
     }
     
     instr(instr_class cp, instr_val vp) {
       assert(cp != GCA_G || (vp != 1 && vp != 0));
       c = cp;
       v = vp;
-      feed_rate = -1.0;
-      position = point(0, 0, 0);
-      orient = GCA_NONE;
-    }
-
-    instr(instr_class cp, instr_val vp, point p, orientation orientp=GCA_ABSOLUTE) {
-      assert(cp == GCA_G);
-      c = cp;
-      v = vp;
-      position = p;
-      feed_rate = -1.0;
-      orient = orientp;
-    }
-    
-    instr(instr_class cp, instr_val vp, point p, double frp, orientation orientp=GCA_ABSOLUTE) {
-      assert(cp == GCA_G);
-      assert(frp > 0);
-      c = cp;
-      v = vp;
-      position = p;
-      feed_rate = frp;
-      orient = orientp;
     }
 
     inline bool is_end_instr() const {
@@ -89,26 +67,6 @@ namespace gca {
     inline bool is_G0() const { return is_G() && v == 0; }
     inline bool is_G1() const { return is_G() && v == 1; }
     inline bool is_G91() const { return is_G() && v == 91; }
-
-    inline point pos() const {
-      assert(is_G());
-      return position;
-    }
-
-    inline bool is_abs() const {
-      assert(is_G());
-      return orient == GCA_ABSOLUTE;
-    }
-
-    inline bool is_rel() const {
-      assert(is_G1() || is_G0());
-      return orient == GCA_RELATIVE;
-    }
-
-    inline void swap_orientation() {
-      assert(is_G1());
-      orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
-    }
 
   };
 

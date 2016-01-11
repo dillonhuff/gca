@@ -64,8 +64,8 @@ namespace gca {
       }
     }
 
-    void update_G0(instr* ist) { update_G(); }
-    void update_G1(instr* ist) { update_G(); }
+    void update_G0(move_instr* ist) { update_G(); }
+    void update_G1(move_instr* ist) { update_G(); }
     void update_default(instr* ist) { p->push_back(ist); }
   };
 

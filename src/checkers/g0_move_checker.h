@@ -12,7 +12,7 @@ namespace gca {
       t = tp;
     }
     
-    virtual void update_G0(instr* ist) {
+    virtual void update_G0(move_instr* ist) {
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       point diff = ps->diff;
       if (diff.z != 0 && (diff.x != 0 || diff.y != 0)) {

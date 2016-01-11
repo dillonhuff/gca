@@ -4,7 +4,8 @@
 #include "arena_allocator.h"
 #include "synthesis/cut.h"
 #include "core/gprog.h"
-#include "instr.h"
+#include "core/instr.h"
+#include "core/move_instr.h"
 
 namespace gca {
 
@@ -51,24 +52,24 @@ namespace gca {
       return new (mem) instr(GCA_G, 90);
     }
     
-    instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
-      instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 0, point(x, y, z), orient);
+    move_instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
+      move_instr* mem = a.allocate<move_instr>();
+      return new (mem) move_instr(GCA_G, 0, point(x, y, z), orient);
     }
 
-    instr* mk_G53(point p, orientation orient=GCA_ABSOLUTE) {
-      instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 53, p, orient);
+    move_instr* mk_G53(point p, orientation orient=GCA_ABSOLUTE) {
+      move_instr* mem = a.allocate<move_instr>();
+      return new (mem) move_instr(GCA_G, 53, p, orient);
     }
     
-    instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
-      instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 0, p, orient);
+    move_instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
+      move_instr* mem = a.allocate<move_instr>();
+      return new (mem) move_instr(GCA_G, 0, p, orient);
     }
     
-    instr* mk_G1(double x, double y, double z, double feed_rate=1.0, orientation orient=GCA_ABSOLUTE) {
-      instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_G, 1, point(x, y, z), feed_rate, orient);
+    move_instr* mk_G1(double x, double y, double z, double feed_rate=1.0, orientation orient=GCA_ABSOLUTE) {
+      move_instr* mem = a.allocate<move_instr>();
+      return new (mem) move_instr(GCA_G, 1, point(x, y, z), feed_rate, orient);
     }
 
     cut* mk_cut(point start, point end) {
@@ -76,12 +77,12 @@ namespace gca {
       return new (mem) cut(start, end);
     }
 
-    instr* mk_inverted_orientation(instr* i) {
-      instr* mem = a.allocate<instr>();
-      instr* new_i = new (mem) instr(i);
-      new_i->swap_orientation();
-      return new_i;
-    }
+    /* move_instr* mk_inverted_orientation(move_instr* i) { */
+    /*   instr* mem = a.allocate<instr>(); */
+    /*   instr* new_i = new (mem) instr(i); */
+    /*   new_i->swap_orientation(); */
+    /*   return new_i; */
+    /* } */
 
     instr* mk_instr_cpy(instr* i) {
       instr* mem = a.allocate<instr>();

@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "gprog.h"
+#include "core/gprog.h"
+#include "core/move_instr.h"
 
 namespace gca {
 
@@ -8,7 +9,8 @@ namespace gca {
     for (int i = 0; i < size(); i++) {
       instr* ist = instrs[i];
       if (ist->is_G0() || ist->is_G1()) {
-	if (ist->is_rel()) {
+	move_instr* mist = static_cast<move_instr*>(ist);
+	if (mist->is_rel()) {
 	  return false;
 	}
       }
@@ -20,7 +22,8 @@ namespace gca {
     for (int i = 0; i < size(); i++) {
       instr* ist = instrs[i];
       if (ist->is_G0() || ist->is_G1()) {
-	if (ist->is_abs()) {
+	move_instr* mist = static_cast<move_instr*>(ist);
+	if (mist->is_abs()) {
 	  return false;
 	}
       }
@@ -31,12 +34,13 @@ namespace gca {
   void gprog::all_positions_starting_at(point start, vector<point>& positions) {
     positions.push_back(start);
     for (int i = 1; i < size() + 1; i++) {
-      instr next = *(instrs[i-1]);
-      if (next.is_G()) {
-	if (next.is_abs()) {
-	  positions.push_back(next.pos());
+      instr* next = instrs[i-1];
+      if (next->is_G()) {
+	move_instr mnext = *(static_cast<move_instr*>(next));
+	if (mnext.is_abs()) {
+	  positions.push_back(mnext.pos());
 	} else {
-	  positions.push_back(positions[i-1] + next.pos());
+	  positions.push_back(positions[i-1] + mnext.pos());
 	}
       } else {
 	positions.push_back(positions[i-1]);

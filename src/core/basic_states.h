@@ -1,8 +1,9 @@
 #ifndef GCA_BASIC_STATES_H
 #define GCA_BASIC_STATES_H
 
+#include "core/move_instr.h"
 #include "core/pass.h"
-#include "state_names.h"
+#include "core/state_names.h"
 
 namespace gca {
 
@@ -56,8 +57,8 @@ namespace gca {
       return c->get_instr();
     }
 
-    virtual void update_G0(instr* ist) { update_default(ist); }
-    virtual void update_G1(instr* ist) { update_default(ist); }
+    virtual void update_G0(move_instr* ist) { update_default(ist); }
+    virtual void update_G1(move_instr* ist) { update_default(ist); }
     virtual void update_G91(instr* ist) { update_default(ist); }
     virtual void update_M2(instr* ist) { update_default(ist); }
     virtual void update_default(instr* ist) {}
@@ -65,9 +66,11 @@ namespace gca {
     virtual void update() {
       instr* ist = get_instr();
       if (ist->is_G0()) {
-	update_G0(ist);
+	move_instr* mist = static_cast<move_instr*>(ist);
+	update_G0(mist);
       } else if (ist->is_G1()) {
-	update_G1(ist);
+	move_instr* mist = static_cast<move_instr*>(ist);
+	update_G1(mist);
       } else if (ist->is_G91()) {
 	update_G91(ist);
       } else if (ist->is_end_instr()) {
@@ -119,7 +122,7 @@ namespace gca {
       after = start;
     }
 
-    void update_pos(instr* ist) {
+    void update_pos(move_instr* ist) {
       before = after;
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
@@ -130,11 +133,11 @@ namespace gca {
       diff = after - before;
     }
 
-    virtual void update_G0(instr* ist) {
+    virtual void update_G0(move_instr* ist) {
       update_pos(ist);
     }
 
-    virtual void update_G1(instr* ist) {
+    virtual void update_G1(move_instr* ist) {
       update_pos(ist);
     }
 
