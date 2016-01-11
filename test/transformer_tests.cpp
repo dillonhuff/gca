@@ -1,11 +1,11 @@
-#include "abs_to_rel.h"
 #include "catch.hpp"
 #include "core/context.h"
-#include "feed_changer.h"
-#include "g0_filter.h"
 #include "core/parser.h"
-#include "rel_to_abs.h"
-#include "tiler.h"
+#include "transformers/abs_to_rel.h"
+#include "transformers/feed_changer.h"
+#include "transformers/g0_filter.h"
+#include "transformers/rel_to_abs.h"
+#include "transformers/tiler.h"
 
 namespace gca {
 

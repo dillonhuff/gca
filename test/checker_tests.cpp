@@ -1,9 +1,10 @@
 #include "catch.hpp"
 #include "checkers/bounds_checker.h"
+#include "checkers/extra_instruction_checker.h"
 #include "checkers/g0_move_checker.h"
 #include "core/context.h"
 #include "core/parser.h"
-#include "extra_instruction_checker.h"
+
 
 namespace gca {
 
