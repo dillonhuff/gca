@@ -37,9 +37,6 @@ namespace gca {
     instr(instr* i) {
       c = i->c;
       v = i->v;
-      //position = i->pos();
-      //feed_rate = i->feed_rate;
-      //orient = i->orient;
     }
     
     instr(instr_class cp, instr_val vp) {
@@ -48,17 +45,18 @@ namespace gca {
       v = vp;
     }
 
+    virtual inline bool is_move_instr() const { return false; }
     inline bool is_end_instr() const {
       return c == GCA_M && (v == 2 || v == 30);
     }
     
-    bool operator==(const instr& other);
+    virtual bool operator==(const instr& other);
 
     bool operator!=(const instr& other) {
       return !(*this == other);
     }
 
-    void print(ostream& s) const;
+    virtual void print(ostream& s) const;
 
     inline bool is_G() const { return c == GCA_G; }
     inline bool is_F() const { return c == GCA_F; }

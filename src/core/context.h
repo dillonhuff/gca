@@ -77,16 +77,17 @@ namespace gca {
       return new (mem) cut(start, end);
     }
 
-    /* move_instr* mk_inverted_orientation(move_instr* i) { */
-    /*   instr* mem = a.allocate<instr>(); */
-    /*   instr* new_i = new (mem) instr(i); */
-    /*   new_i->swap_orientation(); */
-    /*   return new_i; */
-    /* } */
-
     instr* mk_instr_cpy(instr* i) {
-      instr* mem = a.allocate<instr>();
-      instr* new_i = new (mem) instr(i);
+      instr* new_i;
+      if (i->is_move_instr()) {
+	move_instr* mi = static_cast<move_instr*>(i);
+	move_instr* mem = a.allocate<move_instr>();
+	move_instr* new_i_m = new (mem) move_instr(mi);
+	new_i = static_cast<instr*>(new_i_m);
+      } else {
+	instr* mem = a.allocate<instr>();
+	new_i = new (mem) instr(i);
+      }
       return new_i;
     }
 

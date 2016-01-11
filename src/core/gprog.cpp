@@ -69,6 +69,8 @@ namespace gca {
     for (int i = 0; i < size(); i++) {
       if (*(other.instrs[i]) != *(instrs[i])) {
 	cout << "Instrs not equal!" << endl;
+	cout << *(other.instrs[i]) << endl;
+	cout << *(instrs[i]) << endl;
 	return false;
       }
     }
