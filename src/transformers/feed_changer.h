@@ -11,7 +11,8 @@ namespace gca {
 
   class feed_changer_state : public per_instr_state {
   protected:
-    double initial_feedrate, new_feedrate;
+    value* initial_feedrate;
+    value* new_feedrate;
     context& c;
 
   public:
@@ -19,8 +20,8 @@ namespace gca {
 
   feed_changer_state(context& cp,
 		     pass* tp,
-		     double initial_feedratep,
-		     double new_feedratep) :
+		     value* initial_feedratep,
+		     value* new_feedratep) :
     c(cp) {
       t = tp;
       initial_feedrate = initial_feedratep;
@@ -46,13 +47,20 @@ namespace gca {
     feed_changer_state feed_s;
 
   public:
-  feed_changer(context& c, double initial_feedratep, double new_feedratep) :
+  feed_changer(context& c, value* initial_feedratep, value* new_feedratep) :
     cis(this),
       feed_s(c, this, initial_feedratep, new_feedratep) {
       states[GCA_INSTR_STATE] = &cis;
       states[GCA_FEED_CHANGER_STATE] = &feed_s;
     }
 
+  feed_changer(context& c, value* default_val, value* initial_feedratep, var* new_feedratep) :
+    cis(this),
+      feed_s(c, this, initial_feedratep, new_feedratep) {
+      states[GCA_INSTR_STATE] = &cis;
+      states[GCA_FEED_CHANGER_STATE] = &feed_s;
+    }
+    
     virtual gprog* apply(gprog* p) {
       exec(p);
       return feed_s.p;

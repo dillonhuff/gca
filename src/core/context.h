@@ -3,6 +3,7 @@
 
 #include "arena_allocator.h"
 #include "synthesis/cut.h"
+#include "core/assign_instr.h"
 #include "core/gprog.h"
 #include "core/instr.h"
 #include "core/move_instr.h"
@@ -15,6 +16,21 @@ namespace gca {
     arena_allocator a;
 
   public:
+
+    var* mk_var(int v) {
+      var* vr = a.allocate<var>();
+      return new (vr) var();
+    }
+
+    lit* mk_lit(double v) {
+      lit* l = a.allocate<lit>();
+      return new (l) lit(v);
+    }
+
+    assign_instr* mk_assign(var* v, value* e) {
+      assign_instr* mem = a.allocate<assign_instr>();
+      return new (mem) assign_instr(v, e);
+    }
     
     gprog* mk_gprog() {
       gprog* mem = a.allocate<gprog>();

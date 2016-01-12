@@ -27,6 +27,15 @@ namespace gca {
     }
   }
 
+  void parse_char(char c, size_t* i, string s) {
+    if (s[*i] == c) {
+      (*i)++;
+      return;
+    }
+    cout << "Cannot parse char " << c << " from string " << s.substr(*i) << endl;
+    assert(false);
+  }
+
   double parse_double(size_t* i, string s) {
     size_t j = *i;
     double v = stod(s.substr(*i), &j);
@@ -112,27 +121,20 @@ namespace gca {
 			  string s,
 			  orientation* ori) {
     instr* is;
-    if (s[*i] == 'M') {
-      (*i)++;
-      int val = parse_int(i, s);
+    char next_char = s[*i];
+    (*i)++;
+    int val = parse_int(i, s);
+    if (next_char == 'M') {
       is = c.mk_minstr(val);
-    } else if (s[*i] == 'T') {
-      (*i)++;
-      int val = parse_int(i, s);
+    } else if (next_char == 'T') {
       is = c.mk_tinstr(val);
-    } else if (s[*i] == 'S') {
-      (*i)++;
-      int val = parse_int(i, s);
+    } else if (next_char == 'S') {
       is = c.mk_sinstr(val);
-    } else if (s[*i] == 'F') {
-      (*i)++;
-      int val = parse_int(i, s);
+    } else if (next_char == 'F') {
       ignore_whitespace(i, s);
       string str = parse_coord_letters(i, s);
       is = c.mk_finstr(val, str);
-    } else if (s[*i] == 'G') {
-      (*i)++;
-      int val = parse_int(i, s);
+    } else if (next_char == 'G') {
       if (val == 0) {
 	is = parse_G0(c, p, i, s, *ori);
       } else if (val == 1) {
@@ -150,6 +152,11 @@ namespace gca {
 	assert(false);
       }
       ignore_whitespace(i, s);
+    } else if (next_char == '#') {
+      cout << s.substr(*i) << endl;
+      parse_char('=', i, s);
+      double e = parse_double(i, s);
+      is = c.mk_assign(c.mk_var(val), c.mk_lit(e));
     } else {
       cout << "Cannot parse string: " << s.substr(*i) << endl;
       assert(false);

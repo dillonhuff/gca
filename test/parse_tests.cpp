@@ -173,4 +173,15 @@ namespace gca {
     }
   }
 
+  TEST_CASE("Parse GCODE with variables") {
+    context c;
+
+    SECTION("Parse assign") {
+      string s = "#1=14";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_assign(c.mk_var(1), c.mk_lit(14)));
+    }
+  }
+
 }
