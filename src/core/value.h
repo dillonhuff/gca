@@ -37,6 +37,8 @@ namespace gca {
       }
       return false;
     }
+
+    virtual void print(ostream& other) const { other << v; }
   };  
 
   class var : public value {

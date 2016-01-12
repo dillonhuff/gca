@@ -64,7 +64,7 @@ namespace gca {
     virtual void print(ostream& s) const {
       assert(is_G());
       s << 'G' << v << ' ';
-      //      s << 'F' << *feed_rate << ' ';
+      s << 'F' << *feed_rate << ' ';
       s << 'X' << position.x << ' ';
       s << 'Y' << position.y << ' ';
       s << 'Z' << position.z << ' ';
