@@ -7,26 +7,6 @@
 
 namespace gca {
 
-  /* class warning_state : public state { */
-  /* protected: */
-  /*   int num_warns; */
-  /*   instr* current; */
-  /* public: */
-  /*   warning_state(pass* tp) { */
-  /*     t = tp; */
-  /*     num_warns = 0; */
-  /*   } */
-    
-  /*   int num_warnings() { return num_warns; } */
-    
-  /*   virtual void update(instr& ist) { current = &ist; } */
-    
-  /*   void add_warning(string s) { */
-  /*     cout << "Warning at position: " << *current << " " << s << endl; */
-  /*     num_warns++; */
-  /*   } */
-  /* }; */
-
   class per_instr_state : public state {
   public:
     virtual void update_G0(move_instr& ist) { update_default(ist); }
