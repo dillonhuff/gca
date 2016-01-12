@@ -16,7 +16,7 @@ namespace gca {
       i = -1;
     }
 
-    virtual void update() {
+    virtual void update(instr& ist) {
       i++;
     }
 
@@ -39,7 +39,7 @@ namespace gca {
     
     int num_warnings() { return num_warns; }
     
-    virtual void update() {}
+    virtual void update(instr& ist) {}
     
     void add_warning(string s) {
       current_instr_state* is = get_state<current_instr_state>(GCA_INSTR_STATE);
@@ -57,23 +57,22 @@ namespace gca {
       return c->get_instr();
     }
 
-    virtual void update_G0(move_instr* ist) { update_default(ist); }
-    virtual void update_G1(move_instr* ist) { update_default(ist); }
-    virtual void update_G91(instr* ist) { update_default(ist); }
-    virtual void update_M2(instr* ist) { update_default(ist); }
-    virtual void update_default(instr* ist) {}
+    virtual void update_G0(move_instr& ist) { update_default(ist); }
+    virtual void update_G1(move_instr& ist) { update_default(ist); }
+    virtual void update_G91(instr& ist) { update_default(ist); }
+    virtual void update_M2(instr& ist) { update_default(ist); }
+    virtual void update_default(instr& ist) {}
 
-    virtual void update() {
-      instr* ist = get_instr();
-      if (ist->is_G0()) {
-	move_instr* mist = static_cast<move_instr*>(ist);
+    virtual void update(instr& ist) {
+      if (ist.is_G0()) {
+	move_instr& mist = static_cast<move_instr&>(ist);
 	update_G0(mist);
-      } else if (ist->is_G1()) {
-	move_instr* mist = static_cast<move_instr*>(ist);
+      } else if (ist.is_G1()) {
+	move_instr& mist = static_cast<move_instr&>(ist);
 	update_G1(mist);
-      } else if (ist->is_G91()) {
+      } else if (ist.is_G91()) {
 	update_G91(ist);
-      } else if (ist->is_end_instr()) {
+      } else if (ist.is_end_instr()) {
 	update_M2(ist);
       } else {
 	assert(false);
@@ -90,7 +89,7 @@ namespace gca {
       current = default_orient;
     }
 
-    virtual void update_G91(instr* ist) {
+    virtual void update_G91(instr& ist) {
       current = GCA_RELATIVE;
     }
 
@@ -102,7 +101,7 @@ namespace gca {
       t = tp;
     }
 
-    virtual void update_G91(instr* ist) {
+    virtual void update_G91(instr& ist) {
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
 	warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
@@ -122,22 +121,22 @@ namespace gca {
       after = start;
     }
 
-    void update_pos(move_instr* ist) {
+    void update_pos(move_instr& ist) {
       before = after;
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
-      	after = after + ist->pos();
+      	after = after + ist.pos();
       } else {
-      	after = ist->pos();
+      	after = ist.pos();
       }
       diff = after - before;
     }
 
-    virtual void update_G0(move_instr* ist) {
+    virtual void update_G0(move_instr& ist) {
       update_pos(ist);
     }
 
-    virtual void update_G1(move_instr* ist) {
+    virtual void update_G1(move_instr& ist) {
       update_pos(ist);
     }
 

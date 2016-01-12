@@ -8,7 +8,8 @@ namespace gca {
       for (state_map::iterator it = states.begin();
 	   it != states.end(); ++it) {
 	state* s = it->second;
-	s->update();
+	instr* ist = (*p)[i];
+	s->update(*ist);
       }
     }
   }

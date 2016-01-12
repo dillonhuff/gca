@@ -18,7 +18,7 @@ namespace gca {
       p = c.mk_gprog();
     }
 
-    void update_G0(move_instr* ist) {
+    void update_G0(move_instr& ist) {
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_ABSOLUTE) {
 	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
@@ -27,17 +27,17 @@ namespace gca {
       }
     }
 
-    void update_G1(move_instr* ist) {
+    void update_G1(move_instr& ist) {
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_ABSOLUTE) {
 	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point diff = ps->diff;
-	p->push_back(c.mk_G1(diff.x, diff.y, diff.z, ist->feed_rate, GCA_RELATIVE));
+	p->push_back(c.mk_G1(diff.x, diff.y, diff.z, ist.feed_rate, GCA_RELATIVE));
       }      
     }
 
-    void update_default(instr* ist) {
-      p->push_back(ist);
+    void update_default(instr& ist) {
+      p->push_back(&ist);
     }
 
   };

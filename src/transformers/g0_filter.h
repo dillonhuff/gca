@@ -64,9 +64,9 @@ namespace gca {
       }
     }
 
-    void update_G0(move_instr* ist) { update_G(); }
-    void update_G1(move_instr* ist) { update_G(); }
-    void update_default(instr* ist) { p->push_back(ist); }
+    void update_G0(move_instr& ist) { update_G(); }
+    void update_G1(move_instr& ist) { update_G(); }
+    void update_default(instr& ist) { p->push_back(&ist); }
   };
 
   class g0_filter : pass {

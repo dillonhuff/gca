@@ -29,13 +29,13 @@ namespace gca {
       p = c.mk_gprog();
     }
 
-    void update_default(instr* ist) {
-      p->push_back(ist);
+    void update_default(instr& ist) {
+      p->push_back(&ist);
     }
 
-    void update_G1(move_instr* ist) {
-      point kp = ist->pos();
-      orientation orient = ist->is_abs() ? GCA_ABSOLUTE : GCA_RELATIVE;
+    void update_G1(move_instr& ist) {
+      point kp = ist.pos();
+      orientation orient = ist.is_abs() ? GCA_ABSOLUTE : GCA_RELATIVE;
       p->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate, orient));
     }
 

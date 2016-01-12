@@ -44,12 +44,12 @@ namespace gca {
       t = tp;
     }
     
-    virtual void update_G0(move_instr* ist) {
+    virtual void update_G0(move_instr& ist) {
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       check_point(ps->after);
     }
 
-    virtual void update_G1(move_instr* ist) {
+    virtual void update_G1(move_instr& ist) {
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       check_point(ps->after);
     }

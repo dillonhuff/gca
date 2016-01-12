@@ -114,6 +114,29 @@ namespace gca {
     }
     return "";
   }
+
+  instr* parse_ginstr(context& c, gprog* p,
+		      int val, size_t* i, string s, orientation* ori) {
+    instr* is;
+    if (val == 0) {
+      is = parse_G0(c, p, i, s, *ori);
+    } else if (val == 1) {
+      is = parse_G1(c, p, i, s, *ori);
+    } else if (val == 91) {
+      is = c.mk_G91();
+      *ori = GCA_RELATIVE;
+    } else if (val == 90) {
+      is = c.mk_G90();
+      *ori = GCA_ABSOLUTE;
+    } else if (val == 53) {
+      is = parse_G53(c, p, i, s, *ori);
+    } else {
+      cout << "Unrecognized instr code for instr letter: " << val << endl;
+      assert(false);
+    }
+    ignore_whitespace(i, s);
+    return is;
+  }
   
   instr* parse_next_instr(context& c,
 			  gprog* p,
@@ -135,23 +158,7 @@ namespace gca {
       string str = parse_coord_letters(i, s);
       is = c.mk_finstr(val, str);
     } else if (next_char == 'G') {
-      if (val == 0) {
-	is = parse_G0(c, p, i, s, *ori);
-      } else if (val == 1) {
-	is = parse_G1(c, p, i, s, *ori);
-      } else if (val == 91) {
-	is = c.mk_G91();
-	*ori = GCA_RELATIVE;
-      } else if (val == 90) {
-	is = c.mk_G90();
-	*ori = GCA_ABSOLUTE;
-      } else if (val == 53) {
-	is = parse_G53(c, p, i, s, *ori);
-      } else {
-	cout << "Unrecognized instr code for instr letter: " << val << endl;
-	assert(false);
-      }
-      ignore_whitespace(i, s);
+      is = parse_ginstr(c, p, val, i, s, ori);
     } else if (next_char == '#') {
       cout << s.substr(*i) << endl;
       parse_char('=', i, s);

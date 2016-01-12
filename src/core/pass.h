@@ -34,7 +34,7 @@ namespace gca {
     pass* t;
 
   public:
-    virtual void update() { assert(false); }    
+    virtual void update(instr& ist) { assert(false); }
 
     template<typename T>
       T* get_state(state_name n) {
