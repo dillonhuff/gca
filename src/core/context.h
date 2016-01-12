@@ -19,7 +19,7 @@ namespace gca {
 
     var* mk_var(int v) {
       var* vr = a.allocate<var>();
-      return new (vr) var();
+      return new (vr) var(v);
     }
 
     lit* mk_lit(double v) {

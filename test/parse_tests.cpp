@@ -181,6 +181,7 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_assign(c.mk_var(1), c.mk_lit(14)));
+      REQUIRE(*p == *correct);
     }
   }
 

@@ -45,12 +45,13 @@ namespace gca {
       v = vp;
     }
 
+    virtual inline bool is_assign_instr() const { return false; }
     virtual inline bool is_move_instr() const { return false; }
     inline bool is_end_instr() const {
       return c == GCA_M && (v == 2 || v == 30);
     }
     
-    virtual bool operator==(const instr& other);
+    virtual bool operator==(const instr& other) const;
 
     bool operator!=(const instr& other) {
       return !(*this == other);

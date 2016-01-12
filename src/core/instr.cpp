@@ -2,7 +2,7 @@
 
 namespace gca {
 
-  bool instr::operator==(const instr& other) {
+  bool instr::operator==(const instr& other) const {
     if (c != other.c || v != other.v) {
       return false;
     }

@@ -70,7 +70,7 @@ namespace gca {
       s << 'Z' << position.z << ' ';
     }
 
-    bool operator==(const instr& other) {
+    bool operator==(const instr& other) const {
       if (!other.is_move_instr()) {
 	return false;
       }

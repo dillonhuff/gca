@@ -160,7 +160,6 @@ namespace gca {
     } else if (next_char == 'G') {
       is = parse_ginstr(c, p, val, i, s, ori);
     } else if (next_char == '#') {
-      cout << s.substr(*i) << endl;
       parse_char('=', i, s);
       double e = parse_double(i, s);
       is = c.mk_assign(c.mk_var(val), c.mk_lit(e));

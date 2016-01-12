@@ -47,15 +47,15 @@ namespace gca {
   }
 
   TEST_CASE("Feed changer with variables") {
-    // context c;
-    // gprog* p = parse_gprog(c, "G1 F15 X1.0 Y1.0 Z2.0");
-    // lit* init_f = c.mk_lit(15.0);
-    // var* new_f = c.mk_var(1);
-    // value* default_val = c.mk_lit(13);
-    // feed_changer f(c, default_val, init_f, new_f);
-    // gprog* n = f.apply(p);
-    //    gprog* correct = parse_gprog(c, "#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
-    //REQUIRE(*n == *correct);
+    context c;
+    gprog* p = parse_gprog(c, "G1 F15 X1.0 Y1.0 Z2.0");
+    lit* init_f = c.mk_lit(15.0);
+    var* new_f = c.mk_var(1);
+    value* default_val = c.mk_lit(13);
+    feed_changer f(c, default_val, init_f, new_f);
+    gprog* n = f.apply(p);
+    gprog* correct = parse_gprog(c, "#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
+    REQUIRE(*n == *correct);
   }
   
   TEST_CASE("No irrelevant G0 moves") {
