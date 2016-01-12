@@ -55,6 +55,10 @@ namespace gca {
     feed_changer f(c, default_val, init_f, new_f);
     gprog* n = f.apply(p);
     gprog* correct = parse_gprog(c, "#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
+    cout << "-- Correct" << endl;
+    cout << *correct;
+    cout << "-- Actual" << endl;
+    cout << *n;
     REQUIRE(*n == *correct);
   }
   

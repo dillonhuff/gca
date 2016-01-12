@@ -58,7 +58,7 @@ namespace gca {
       return false;
     }    
 
-    virtual void print(ostream& other) const { other << n; }
+    virtual void print(ostream& other) const { other << '#' << n; }
   };
 
   ostream& operator<<(ostream& s, const value& v);

@@ -29,6 +29,19 @@ namespace gca {
       p = c.mk_gprog();
     }
 
+  feed_changer_state(context& cp,
+		     pass* tp,
+		     value* default_val,
+		     value* initial_feedratep,
+		     var* new_feedratep) :
+    c(cp) {
+      t = tp;
+      initial_feedrate = initial_feedratep;
+      new_feedrate = new_feedratep;
+      p = c.mk_gprog();
+      p->push_back(c.mk_assign(new_feedratep, default_val));
+    }
+    
     void update_default(instr& ist) {
       p->push_back(&ist);
     }
@@ -52,7 +65,7 @@ namespace gca {
     }
 
   feed_changer(context& c, value* default_val, value* initial_feedratep, var* new_feedratep) :
-      feed_s(c, this, initial_feedratep, new_feedratep) {
+      feed_s(c, this, default_val, initial_feedratep, new_feedratep) {
       states[GCA_FEED_CHANGER_STATE] = &feed_s;
     }
     
