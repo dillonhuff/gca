@@ -58,7 +58,6 @@ namespace gca {
 
   class bounds_checker : public pass {
   protected:
-    current_instr_state cis;
     position_state ps;
     warning_state s;
     orientation_state orient_s;
@@ -72,9 +71,8 @@ namespace gca {
 		 double y_maxp,
 		 double z_minp,
 		 double z_maxp) :
-    cis(this), ps(this, point(0, 0, 0)), s(this), orient_s(this, def),
+    ps(this, point(0, 0, 0)), s(this), orient_s(this, def),
       bound_s(this, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp) {
-      states[GCA_INSTR_STATE] = &cis;
       states[GCA_WARNING_STATE] = &s;
       states[GCA_POSITION_STATE] = &ps;
       states[GCA_ORIENTATION_STATE] = &orient_s;

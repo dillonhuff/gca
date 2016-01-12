@@ -43,21 +43,16 @@ namespace gca {
 
   class feed_changer : public pass {
   protected:
-    current_instr_state cis;
     feed_changer_state feed_s;
 
   public:
   feed_changer(context& c, value* initial_feedratep, value* new_feedratep) :
-    cis(this),
       feed_s(c, this, initial_feedratep, new_feedratep) {
-      states[GCA_INSTR_STATE] = &cis;
       states[GCA_FEED_CHANGER_STATE] = &feed_s;
     }
 
   feed_changer(context& c, value* default_val, value* initial_feedratep, var* new_feedratep) :
-    cis(this),
       feed_s(c, this, initial_feedratep, new_feedratep) {
-      states[GCA_INSTR_STATE] = &cis;
       states[GCA_FEED_CHANGER_STATE] = &feed_s;
     }
     

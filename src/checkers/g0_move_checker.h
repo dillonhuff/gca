@@ -24,7 +24,6 @@ namespace gca {
 
   class g0_move_checker : public pass {
   protected:
-    current_instr_state cis;
     position_state ps;
     warning_state s;
     move_checker_state ms;
@@ -32,8 +31,7 @@ namespace gca {
     
   public:
   g0_move_checker(orientation def) :
-    cis(this), ps(this, point(0, 0, 0)), s(this), ms(this), orient_s(this, def) {
-      states[GCA_INSTR_STATE] = &cis;
+    ps(this, point(0, 0, 0)), s(this), ms(this), orient_s(this, def) {
       states[GCA_WARNING_STATE] = &s;
       states[GCA_POSITION_STATE] = &ps;
       states[GCA_MOVE_CHECKER_STATE] = &ms;

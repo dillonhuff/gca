@@ -20,13 +20,14 @@ namespace gca {
     
   public:
     gprog* p;
+    int i;    
     
     state* get_state(state_name n) {
       assert(states.count(n) > 0);
       return states[n];
     }
 
-    virtual void exec(gprog* p);    
+    virtual void exec(gprog* p);
   };
   
   class state {

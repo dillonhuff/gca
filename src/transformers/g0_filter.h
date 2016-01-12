@@ -42,8 +42,7 @@ namespace gca {
     // TODO: Find a more sensible way to structure
     // code that needs to skip instructions in the iteration
     void update_G() {
-      current_instr_state* cis = get_state<current_instr_state>(GCA_INSTR_STATE);
-      int curr = cis->i;
+      int curr = t->i;
       if (curr != j) { return; }
       gprog* n = t->p;
       vector<point> positions;
@@ -72,12 +71,10 @@ namespace gca {
   class g0_filter : pass {
   protected:
     g0_filter_state filter_s;
-    current_instr_state cis;
     
   public:
   g0_filter(context& c) :
-    filter_s(c, this), cis(this) {
-      states[GCA_INSTR_STATE] = &cis;
+    filter_s(c, this) {
       states[GCA_G0_FILTER_STATE] = &filter_s;
     }
     

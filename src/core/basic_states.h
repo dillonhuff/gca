@@ -7,30 +7,10 @@
 
 namespace gca {
 
-  class current_instr_state : public state {
-  public:
-    int i;
-    
-    current_instr_state(pass* tp) {
-      t = tp;
-      i = -1;
-    }
-
-    virtual void update(instr& ist) {
-      i++;
-    }
-
-    instr* get_instr() {
-      assert(i >= 0);
-      instr* ist = (*(t->p))[i];
-      assert(ist != NULL);
-      return ist;
-    }
-  };
-  
   class warning_state : public state {
   protected:
     int num_warns;
+    instr* current;
   public:
     warning_state(pass* tp) {
       t = tp;
@@ -39,24 +19,16 @@ namespace gca {
     
     int num_warnings() { return num_warns; }
     
-    virtual void update(instr& ist) {}
+    virtual void update(instr& ist) { current = &ist; }
     
     void add_warning(string s) {
-      current_instr_state* is = get_state<current_instr_state>(GCA_INSTR_STATE);
-      int ind = is->i;
-      instr* ist = is->get_instr();
-      cout << "Warning at position " << ind << ": " << *ist << " " << s << endl;
+      cout << "Warning at position: " << *current << " " << s << endl;
       num_warns++;
     }
   };
 
   class per_instr_state : public state {
   public:
-    instr* get_instr() {
-      current_instr_state* c = get_state<current_instr_state>(GCA_INSTR_STATE);
-      return c->get_instr();
-    }
-
     virtual void update_G0(move_instr& ist) { update_default(ist); }
     virtual void update_G1(move_instr& ist) { update_default(ist); }
     virtual void update_G91(instr& ist) { update_default(ist); }

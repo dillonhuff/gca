@@ -44,14 +44,12 @@ namespace gca {
   class rel_to_abs : pass {
   protected:
     rel_to_abs_state rel_to_abs_s;
-    current_instr_state cis;
     orientation_state orient_s;
     position_state pis;
     
   public:
   rel_to_abs(context& c, orientation def) :
-    rel_to_abs_s(c, this), cis(this), orient_s(this, def), pis(this, point(0, 0, 0)) {
-      states[GCA_INSTR_STATE] = &cis;
+    rel_to_abs_s(c, this), orient_s(this, def), pis(this, point(0, 0, 0)) {
       states[GCA_POSITION_STATE] = &pis;
       states[GCA_ORIENTATION_STATE] = &orient_s;
       states[GCA_REL_TO_ABS_STATE] = &rel_to_abs_s;

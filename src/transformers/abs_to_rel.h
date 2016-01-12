@@ -45,14 +45,12 @@ namespace gca {
   class abs_to_rel : pass {
   protected:
     abs_to_rel_state abs_to_rel_s;
-    current_instr_state cis;
     orientation_state orient_s;
     position_state pis;
     
   public:
   abs_to_rel(context& c, orientation def) :
-    abs_to_rel_s(c, this), cis(this), orient_s(this, def), pis(this, point(0, 0, 0)) {
-      states[GCA_INSTR_STATE] = &cis;
+    abs_to_rel_s(c, this), orient_s(this, def), pis(this, point(0, 0, 0)) {
       states[GCA_POSITION_STATE] = &pis;
       states[GCA_ORIENTATION_STATE] = &orient_s;
       states[GCA_ABS_TO_REL_STATE] = &abs_to_rel_s;
