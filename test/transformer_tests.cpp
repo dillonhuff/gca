@@ -277,5 +277,14 @@ namespace gca {
       REQUIRE(*r == *correct);
     }
   }
+
+  TEST_CASE("Coordinate generalizer") {
+    context c;
+
+    SECTION("One move") {
+      gprog* p = parse_gprog(c, "G1 X0.0 Y-1.2 Z2.3");
+      gprog* correct = parse_gprog(c, "#1=2.0 G1 X0.0 Y-1.2 Z#1");
+    }
+  }
   
 }
