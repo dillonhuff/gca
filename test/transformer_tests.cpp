@@ -55,10 +55,6 @@ namespace gca {
     feed_changer f(c, default_val, init_f, new_f);
     gprog* n = f.apply(p);
     gprog* correct = parse_gprog(c, "#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
-    cout << "-- Correct" << endl;
-    cout << *correct;
-    cout << "-- Actual" << endl;
-    cout << *n;
     REQUIRE(*n == *correct);
   }
   
@@ -233,7 +229,7 @@ namespace gca {
       REQUIRE(*r == *correct);
     }
 
-    SECTION("No op program") {
+    SECTION("No move instructions") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
       p->push_back(c.mk_minstr(30));
       correct->push_back(c.mk_G91());

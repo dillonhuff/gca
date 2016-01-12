@@ -171,6 +171,24 @@ namespace gca {
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("Parse G53") {
+      string s = "G53 X3.0 Y2.0 Z1.0";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G53(point(3, 2, 1)));
+      REQUIRE(*p == *correct);
+    }
+
+    SECTION("Parse G53 with default position") {
+      string s = "G90 G53 Z1.0";
+      gprog* p = parse_gprog(c, s);
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G90());
+      correct->push_back(c.mk_G53(point(0, 0, 1)));
+      REQUIRE(*p == *correct);
+    }
+    
   }
 
   TEST_CASE("Parse GCODE with variables") {

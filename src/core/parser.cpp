@@ -68,15 +68,11 @@ namespace gca {
 
   point parse_point(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double x, y, z;
-    if (p->size() > 0 && ori == GCA_ABSOLUTE) {
+    if (ori == GCA_ABSOLUTE) {
       point lp = p->last_position();
       x = parse_option_coordinate('X', i, s, lp.x);
       y = parse_option_coordinate('Y', i, s, lp.y);
       z = parse_option_coordinate('Z', i, s, lp.z);
-    } else if (ori == GCA_ABSOLUTE) {
-      x = parse_coordinate('X', i, s);
-      y = parse_coordinate('Y', i, s);
-      z = parse_coordinate('Z', i, s);
     } else {
       x = parse_option_coordinate('X', i, s, 0);
       y = parse_option_coordinate('Y', i, s, 0);
@@ -115,6 +111,7 @@ namespace gca {
   }
 
   instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {
+    ignore_whitespace(i, s);
     point pt = parse_point(c, p, i, s, ori);
     return c.mk_G0(pt, ori);
   }
