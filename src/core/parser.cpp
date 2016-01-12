@@ -85,12 +85,31 @@ namespace gca {
     return point(x, y, z);
   }
 
+  value* parse_option_value(context& c, char v,
+			    size_t* i, string s,
+			    double default_feedrate) {
+    ignore_whitespace(i, s);
+    if (s[*i] == v) {
+      parse_char(v, i, s);
+      if (s[*i] == '#') {
+	parse_char('#', i, s);
+	int val = parse_int(i, s);
+	return c.mk_var(val);
+      } else {
+	double d = parse_double(i, s);
+	return c.mk_lit(d);
+      }
+    }
+    return c.mk_lit(default_feedrate);
+  }
+
   instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    double default_feedrate = 1.0;
-    double fr = parse_option_coordinate('F', i, s, default_feedrate);
+    double def_f = 1.0;
+    value* default_feedrate = c.mk_lit(def_f);
+    value* fr = parse_option_value(c, 'F', i, s, def_f);
     point pt = parse_point(c, p, i, s, ori);
-    if (within_eps(fr, default_feedrate)) {
-      fr = parse_option_coordinate('F', i, s, default_feedrate);
+    if (*default_feedrate == *fr) {
+      fr = parse_option_value(c, 'F', i, s, def_f);
     }
     return c.mk_G1(pt.x, pt.y, pt.z, fr, ori);
   }
