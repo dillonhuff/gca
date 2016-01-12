@@ -7,25 +7,25 @@
 
 namespace gca {
 
-  class warning_state : public state {
-  protected:
-    int num_warns;
-    instr* current;
-  public:
-    warning_state(pass* tp) {
-      t = tp;
-      num_warns = 0;
-    }
+  /* class warning_state : public state { */
+  /* protected: */
+  /*   int num_warns; */
+  /*   instr* current; */
+  /* public: */
+  /*   warning_state(pass* tp) { */
+  /*     t = tp; */
+  /*     num_warns = 0; */
+  /*   } */
     
-    int num_warnings() { return num_warns; }
+  /*   int num_warnings() { return num_warns; } */
     
-    virtual void update(instr& ist) { current = &ist; }
+  /*   virtual void update(instr& ist) { current = &ist; } */
     
-    void add_warning(string s) {
-      cout << "Warning at position: " << *current << " " << s << endl;
-      num_warns++;
-    }
-  };
+  /*   void add_warning(string s) { */
+  /*     cout << "Warning at position: " << *current << " " << s << endl; */
+  /*     num_warns++; */
+  /*   } */
+  /* }; */
 
   class per_instr_state : public state {
   public:
@@ -76,8 +76,7 @@ namespace gca {
     virtual void update_G91(instr& ist) {
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
-	warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
-	ws->add_warning("is not needed, relative coordinates are already turned on");
+	add_warning("is not needed, relative coordinates are already turned on");
       }
     }
     

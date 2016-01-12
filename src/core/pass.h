@@ -20,7 +20,15 @@ namespace gca {
     
   public:
     gprog* p;
-    int i;    
+    int i;
+    int num_warns;
+
+  pass() : num_warns(0) {}
+    void add_warning(string s) {
+      instr* current = (*p)[i];
+      cout << "Warning at position: " << *current << " " << s << endl;
+      num_warns++;      
+    }
     
     state* get_state(state_name n) {
       assert(states.count(n) > 0);
@@ -36,6 +44,8 @@ namespace gca {
 
   public:
     virtual void update(instr& ist) { assert(false); }
+
+    void add_warning(string s) { t->add_warning(s); }
 
     template<typename T>
       T* get_state(state_name n) {

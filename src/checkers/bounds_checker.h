@@ -18,15 +18,14 @@ namespace gca {
       bool res_x = in_bounds(x_min, p.x, x_max);
       bool res_y = in_bounds(y_min, p.y, y_max);
       bool res_z = in_bounds(z_min, p.z, z_max);
-      warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
       if (!res_x) {
-      	ws->add_warning("is not in X bounds");
+      	add_warning("is not in X bounds");
       }
       if (!res_y) {
-      	ws->add_warning("is not in Y bounds");
+      	add_warning("is not in Y bounds");
       }
       if (!res_z) {
-      	ws->add_warning("is not in Z bounds");
+      	add_warning("is not in Z bounds");
       }
       return res_x && res_y && res_z;
     }
@@ -59,7 +58,6 @@ namespace gca {
   class bounds_checker : public pass {
   protected:
     position_state ps;
-    warning_state s;
     orientation_state orient_s;
     bounds_checker_state bound_s;
 
@@ -71,9 +69,8 @@ namespace gca {
 		 double y_maxp,
 		 double z_minp,
 		 double z_maxp) :
-    ps(this, point(0, 0, 0)), s(this), orient_s(this, def),
+    ps(this, point(0, 0, 0)),orient_s(this, def),
       bound_s(this, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp) {
-      states[GCA_WARNING_STATE] = &s;
       states[GCA_POSITION_STATE] = &ps;
       states[GCA_ORIENTATION_STATE] = &orient_s;
       states[GCA_BOUNDS_CHECKER_STATE] = &bound_s;

@@ -16,8 +16,7 @@ namespace gca {
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
       point diff = ps->diff;
       if (diff.z != 0 && (diff.x != 0 || diff.y != 0)) {
-	warning_state* ws = get_state<warning_state>(GCA_WARNING_STATE);
-	ws->add_warning("moves diagonally");
+	add_warning("moves diagonally");
       }
     }
   };
@@ -25,14 +24,12 @@ namespace gca {
   class g0_move_checker : public pass {
   protected:
     position_state ps;
-    warning_state s;
     move_checker_state ms;
     orientation_state orient_s;
     
   public:
   g0_move_checker(orientation def) :
-    ps(this, point(0, 0, 0)), s(this), ms(this), orient_s(this, def) {
-      states[GCA_WARNING_STATE] = &s;
+    ps(this, point(0, 0, 0)), ms(this), orient_s(this, def) {
       states[GCA_POSITION_STATE] = &ps;
       states[GCA_MOVE_CHECKER_STATE] = &ms;
       states[GCA_ORIENTATION_STATE] = &orient_s;
