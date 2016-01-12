@@ -2,6 +2,7 @@
 #define GCA_MOVE_INSTR_H
 
 #include "core/instr.h"
+#include "core/value.h"
 
 namespace gca {
 
@@ -11,7 +12,7 @@ namespace gca {
     orientation orient;
 
   public:
-    double feed_rate;
+    value* feed_rate;
 
     move_instr(move_instr* i) {
       c = i->c;
@@ -21,16 +22,15 @@ namespace gca {
       feed_rate = i->feed_rate;
     }
 
-    move_instr(instr_class cp, instr_val vp, point p, orientation orientp=GCA_ABSOLUTE) {
-      assert(cp == GCA_G);
-      c = cp;
-      v = vp;
-      position = p;
-      feed_rate = -1.0;
-      orient = orientp;
-    }
+    /* move_instr(instr_class cp, instr_val vp, point p, orientation orientp=GCA_ABSOLUTE) { */
+    /*   assert(cp == GCA_G); */
+    /*   c = cp; */
+    /*   v = vp; */
+    /*   position = p; */
+    /*   orient = orientp; */
+    /* } */
     
-    move_instr(instr_class cp, instr_val vp, point p, double frp, orientation orientp=GCA_ABSOLUTE) {
+    move_instr(instr_class cp, instr_val vp, point p, value* frp, orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       assert(frp > 0);
       c = cp;
@@ -39,7 +39,7 @@ namespace gca {
       feed_rate = frp;
       orient = orientp;
     }
-
+    
     inline point pos() const {
       assert(is_G());
       return position;
@@ -64,7 +64,7 @@ namespace gca {
     virtual void print(ostream& s) const {
       assert(is_G());
       s << 'G' << v << ' ';
-      s << 'F' << feed_rate << ' ';
+      //      s << 'F' << *feed_rate << ' ';
       s << 'X' << position.x << ' ';
       s << 'Y' << position.y << ' ';
       s << 'Z' << position.z << ' ';
@@ -81,19 +81,7 @@ namespace gca {
       if (c == GCA_G && (v == 0 || v == 1)) {
         point lp = pos();
         point op = other_move.pos();
-        bool res = within_eps(lp, op) && feed_rate == other_move.feed_rate && orient == other_move.orient;
-        if (!(orient == other_move.orient)) {
-	  cout << "!ORIENT " << *this << " != " << other_move << endl;
-        }
-        if (!(feed_rate == other_move.feed_rate)) {
-	  cout << "!FEED RATE " << *this << " != " << other_move << endl;
-        }
-        if (!within_eps(lp, op)) {
-	  cout << "!within EPS " << *this << " != " << other_move << endl;
-        }
-        if (!res) {
-	  cout << *this << " != " << other_move << endl;
-        }
+        bool res = within_eps(lp, op) && *feed_rate == *(other_move.feed_rate) && orient == other_move.orient;
         return res;
       }
       return true;
