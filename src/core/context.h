@@ -75,30 +75,22 @@ namespace gca {
     
     move_instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      lit* v = a.allocate<lit>();
-      lit* frp = new (v) lit(-1);            
-      return new (mem) move_instr(GCA_G, 0, mk_lit(x), mk_lit(y), mk_lit(z), frp, orient);
+      return new (mem) move_instr(GCA_G, 0, mk_lit(x), mk_lit(y), mk_lit(z), mk_omitted(), orient);
     }
 
     move_instr* mk_G0(value* x, value* y, value* z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      lit* v = a.allocate<lit>();
-      lit* frp = new (v) lit(-1);                        
-      return new (mem) move_instr(GCA_G, 0, x, y, z, frp, orient);
+      return new (mem) move_instr(GCA_G, 0, x, y, z, mk_omitted(), orient);
     }
     
     move_instr* mk_G53(value* x, value* y, value* z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      lit* v = a.allocate<lit>();
-      lit* frp = new (v) lit(-1);                  
-      return new (mem) move_instr(GCA_G, 53, x, y, z, frp, orient);
+      return new (mem) move_instr(GCA_G, 53, x, y, z, mk_omitted(), orient);
     }
     
     move_instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      lit* v = a.allocate<lit>();
-      lit* frp = new (v) lit(-1);      
-      return new (mem) move_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), frp, orient);
+      return new (mem) move_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted(), orient);
     }
     
     move_instr* mk_G1(double x, double y, double z, double feed_rate=1.0, orientation orient=GCA_ABSOLUTE) {

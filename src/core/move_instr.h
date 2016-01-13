@@ -93,10 +93,10 @@ namespace gca {
     virtual void print(ostream& s) const {
       assert(is_G());
       s << 'G' << v << ' ';
-      s << 'F' << *feed_rate << ' ';
-      s << 'X' << *x << ' ';
-      s << 'Y' << *y << ' ';
-      s << 'Z' << *z << ' ';
+      if (!feed_rate->is_omitted()) { s << 'F' << *feed_rate << ' '; }
+      if (!x->is_omitted()) { s << 'X' << *x << ' '; }
+      if (!y->is_omitted()) { s << 'Y' << *y << ' '; }
+      if (!z->is_omitted()) { s << 'Z' << *z << ' '; }
     }
 
     bool operator==(const instr& other) const {

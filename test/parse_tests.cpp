@@ -204,8 +204,6 @@ namespace gca {
     SECTION("Parse variable coordinate") {
       string s = "G0 X#1025 Y2.5 Z3.0";
       gprog* p = parse_gprog(c, s);
-      cout << "-- actual" << endl;
-      cout << *p;
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G0(c.mk_var(1025), c.mk_lit(2.5), c.mk_lit(3)));
       REQUIRE(*p == *correct);
