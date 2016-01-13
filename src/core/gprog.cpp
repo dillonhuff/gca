@@ -7,11 +7,16 @@ namespace gca {
 
   void gprog::all_positions_starting_at(point start, vector<point>& positions) {
     positions.push_back(start);
+    orientation ori = GCA_ABSOLUTE;
     for (int i = 1; i < size() + 1; i++) {
       instr* next = instrs[i-1];
       if (next->is_G()) {
 	move_instr mnext = *(static_cast<move_instr*>(next));
-	if (mnext.is_abs()) {
+	if (next->is_G90()) {
+	  ori = GCA_ABSOLUTE;
+	} else if (next->is_G91()) {
+	  ori = GCA_RELATIVE;
+	} else if (ori == GCA_ABSOLUTE) {
 	  positions.push_back(mnext.pos());
 	} else {
 	  positions.push_back(positions[i-1] + mnext.pos());

@@ -11,7 +11,6 @@ namespace gca {
     value* x;
     value* y;
     value* z;
-    orientation orient;
 
   public:
     value* feed_rate;
@@ -22,7 +21,6 @@ namespace gca {
       x = i->x;
       y = i->y;
       z = i->z;
-      orient = i->orient;
       feed_rate = i->feed_rate;
     }
 
@@ -35,7 +33,6 @@ namespace gca {
       y = yp;
       z = zp;
       feed_rate = frp;
-      orient = orientp;      
     }
     
     inline point pos() const {
@@ -75,19 +72,9 @@ namespace gca {
     }
     
     inline bool is_move_instr() const { return true; }
-    inline bool is_abs() const {
-      assert(is_G());
-      return orient == GCA_ABSOLUTE;
-    }
-
-    inline bool is_rel() const {
-      assert(is_G1() || is_G0());
-      return orient == GCA_RELATIVE;
-    }
 
     inline void swap_orientation() {
       assert(is_G1());
-      orient = orient == GCA_ABSOLUTE ? GCA_RELATIVE : GCA_ABSOLUTE;
     }
 
     virtual void print(ostream& s) const {
@@ -109,7 +96,7 @@ namespace gca {
       }
       if (c == GCA_G && (v == 0 || v == 1)) {
 	bool pr = *x == *(other_move.x) && *y == *(other_move.y) && *z == *(other_move.z);
-	bool fr = *feed_rate == *(other_move.feed_rate) && orient == other_move.orient;
+	bool fr = *feed_rate == *(other_move.feed_rate);
         return fr && pr;
       }
       return true;

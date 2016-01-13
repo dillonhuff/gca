@@ -66,6 +66,7 @@ namespace gca {
     inline bool is_G0() const { return is_G() && v == 0; }
     inline bool is_G1() const { return is_G() && v == 1; }
     inline bool is_G91() const { return is_G() && v == 91; }
+    inline bool is_G90() const { return is_G() && v == 90; }
 
   };
 
