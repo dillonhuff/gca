@@ -24,7 +24,7 @@ namespace gca {
       feed_rate = i->feed_rate;
     }
 
-    move_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp, orientation orientp=GCA_ABSOLUTE) {
+    move_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) {
       assert(cp == GCA_G);
       assert(frp > 0);
       c = cp;

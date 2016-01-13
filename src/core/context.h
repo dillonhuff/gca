@@ -75,39 +75,39 @@ namespace gca {
     
     move_instr* mk_G0(double x, double y, double z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      return new (mem) move_instr(GCA_G, 0, mk_lit(x), mk_lit(y), mk_lit(z), mk_omitted(), orient);
+      return new (mem) move_instr(GCA_G, 0, mk_lit(x), mk_lit(y), mk_lit(z), mk_omitted());
     }
 
     move_instr* mk_G0(value* x, value* y, value* z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      return new (mem) move_instr(GCA_G, 0, x, y, z, mk_omitted(), orient);
+      return new (mem) move_instr(GCA_G, 0, x, y, z, mk_omitted());
     }
     
     move_instr* mk_G53(value* x, value* y, value* z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      return new (mem) move_instr(GCA_G, 53, x, y, z, mk_omitted(), orient);
+      return new (mem) move_instr(GCA_G, 53, x, y, z, mk_omitted());
     }
     
     move_instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      return new (mem) move_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted(), orient);
+      return new (mem) move_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted());
     }
     
     move_instr* mk_G1(double x, double y, double z, double feed_rate=1.0, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
       lit* v = a.allocate<lit>();
       lit* frp = new (v) lit(feed_rate);
-      return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), frp, orient);
+      return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), frp);
     }
 
     move_instr* mk_G1(value* x, value* y, value* z, value* feed_rate, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      return new (mem) move_instr(GCA_G, 1, x, y, z, feed_rate, orient);
+      return new (mem) move_instr(GCA_G, 1, x, y, z, feed_rate);
     }
     
     move_instr* mk_G1(double x, double y, double z, value* feed_rate, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
-      return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), feed_rate, orient);
+      return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), feed_rate);
     }
     
     cut* mk_cut(point start, point end) {
