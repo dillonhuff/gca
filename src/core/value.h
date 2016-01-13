@@ -13,6 +13,7 @@ namespace gca {
   class value {
   public:
 
+    virtual inline bool is_omitted() const { return false; }
     virtual inline bool is_lit() const { return false; }
     virtual inline bool is_var() const { return false; }
     
@@ -61,6 +62,20 @@ namespace gca {
     }    
 
     virtual void print(ostream& other) const { other << '#' << n; }
+  };
+
+  class omitted : public value {
+    virtual inline bool is_omitted() const { return true; }
+    
+    virtual bool operator==(const value& other) const {
+      if (other.is_omitted()) {
+	return true;
+      }
+      return false;
+    }
+
+    virtual void print(ostream& other) const {}
+    
   };
 
   ostream& operator<<(ostream& s, const value& v);

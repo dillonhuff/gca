@@ -62,7 +62,7 @@ namespace gca {
       string s = "G1 X32.0 Y-6.0 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(32.0, -6.0, -1.5));
+      correct->push_back(c.mk_G1(c.mk_lit(32.0), c.mk_lit(-6.0), c.mk_lit(-1.5), c.mk_omitted()));
       REQUIRE(*p == *correct);
     }
 
@@ -70,8 +70,8 @@ namespace gca {
       string s = "G0 X2.75 Y8.0 Z0.0 G1 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G0(point(2.75, 8.0, 0.0)));
-      correct->push_back(c.mk_G1(2.75, 8.0, -1.5));
+      correct->push_back(c.mk_G0(c.mk_lit(2.75), c.mk_lit(8), c.mk_lit(0)));
+      correct->push_back(c.mk_G1(c.mk_omitted(), c.mk_omitted(), c.mk_lit(-1.5), c.mk_omitted()));
       REQUIRE(*p == *correct);
     }
 
@@ -79,8 +79,8 @@ namespace gca {
       string s = "G1 X2.75 Y8.0 Z0.0 G0 Z-1.5";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(2.75, 8.0, 0.0));
-      correct->push_back(c.mk_G0(point(2.75, 8.0, -1.5)));
+      correct->push_back(c.mk_G1(c.mk_lit(2.75), c.mk_lit(8.0), c.mk_lit(0.0), c.mk_omitted()));
+      correct->push_back(c.mk_G0(c.mk_omitted(), c.mk_omitted(), c.mk_lit(-1.5)));
       REQUIRE(*p == *correct);
     }
     
@@ -104,8 +104,8 @@ namespace gca {
       string s = "G1 X1.0 Y0.0 Z-1.5\nG0X12.5\nM2";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(1.0, 0.0, -1.5));
-      correct->push_back(c.mk_G0(point(12.5, 0.0, -1.5)));
+      correct->push_back(c.mk_G1(c.mk_lit(1.0), c.mk_lit(0.0), c.mk_lit(-1.5), c.mk_omitted()));
+      correct->push_back(c.mk_G0(c.mk_lit(12.5), c.mk_omitted(), c.mk_omitted()));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
@@ -114,8 +114,8 @@ namespace gca {
       string s = "G1 X0.0 Y2.75 Z-1.5 (comment 1)\nG0X12.5 (Comment \n number 2) (s) \n( f)M2 \n(Comment G1 X0.0)";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(0.0, 2.75, -1.5));
-      correct->push_back(c.mk_G0(point(12.5, 2.75, -1.5)));
+      correct->push_back(c.mk_G1(c.mk_lit(0.0), c.mk_lit(2.75), c.mk_lit(-1.5), c.mk_omitted()));
+      correct->push_back(c.mk_G0(c.mk_lit(12.5), c.mk_omitted(), c.mk_omitted()));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
@@ -124,19 +124,18 @@ namespace gca {
       string fn = "/Users/dillon/CppWorkspace/gca/test/test_1.txt";
       gprog* p = read_file(c, fn);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G1(0.0, 0.0, -1.5));
+      correct->push_back(c.mk_G1(c.mk_lit(0.0), c.mk_lit(0.0), c.mk_lit(-1.5), c.mk_omitted()));
       correct->push_back(c.mk_G0(point(12.5, 1.5, 0)));
-      correct->push_back(c.mk_G1(18.0, 1.5, -0.25));
+      correct->push_back(c.mk_G1(c.mk_lit(18.0), c.mk_lit(1.5), c.mk_lit(-0.25), c.mk_omitted()));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
 
     SECTION("Read and parse real CNC file") {
-      // string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
-      // gprog* p = read_file(c, fn);
-      // cout << "Real CNC program" << endl;
-      // cout << *p;
-      // REQUIRE(p->size() == 42);
+      string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
+      gprog* p = read_file(c, fn);
+      cout << *p;
+      REQUIRE(p->size() == 42);
     }    
     
   }
@@ -167,7 +166,7 @@ namespace gca {
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G91());
       correct->push_back(c.mk_G0(1.0, 1.0, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G0(0.0, 0.5, 0.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(c.mk_omitted(), c.mk_lit(0.5), c.mk_omitted(), GCA_RELATIVE));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }
@@ -176,7 +175,7 @@ namespace gca {
       string s = "G53 X3.0 Y2.0 Z1.0";
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
-      correct->push_back(c.mk_G53(point(3, 2, 1)));
+      correct->push_back(c.mk_G53(c.mk_lit(3), c.mk_lit(2), c.mk_lit(1)));
       REQUIRE(*p == *correct);
     }
 
@@ -185,7 +184,7 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G90());
-      correct->push_back(c.mk_G53(point(0, 0, 1)));
+      correct->push_back(c.mk_G53(c.mk_lit(0), c.mk_lit(0), c.mk_lit(1)));
       REQUIRE(*p == *correct);
     }
     

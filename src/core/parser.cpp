@@ -81,17 +81,16 @@ namespace gca {
 	return c.mk_lit(d);
       }
     }
-    return c.mk_lit(default_feedrate);
+    return c.mk_omitted();
   }
   
   void parse_position_values(context& c,
 			     gprog* p, size_t* i, string s, orientation ori,
 			     value** x, value** y, value** z) {
     if (ori == GCA_ABSOLUTE) {
-      point lp = p->last_position();
-      *x = parse_option_value(c, 'X', i, s, lp.x);
-      *y = parse_option_value(c, 'Y', i, s, lp.y);
-      *z = parse_option_value(c, 'Z', i, s, lp.z);
+      *x = parse_option_value(c, 'X', i, s, 0);
+      *y = parse_option_value(c, 'Y', i, s, 0);
+      *z = parse_option_value(c, 'Z', i, s, 0);
     } else {
       *x = parse_option_value(c, 'X', i, s, 0);
       *y = parse_option_value(c, 'Y', i, s, 0);
@@ -116,7 +115,7 @@ namespace gca {
 
   instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double def_f = 1.0;
-    value* default_feedrate = c.mk_lit(def_f);    
+    value* default_feedrate = c.mk_omitted(); //c.mk_lit(def_f);
     value* fr = parse_option_value(c, 'F', i, s, def_f);
     value* xv = NULL;
     value* yv = NULL;
@@ -138,8 +137,11 @@ namespace gca {
   }
 
   instr* parse_G53(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    point pt = parse_point(c, p, i, s, ori);
-    return c.mk_G53(pt, ori);
+    value* xv = NULL;
+    value* yv = NULL;
+    value* zv = NULL;
+    parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);    
+    return c.mk_G53(xv, yv, zv, ori);
   }
 
   // TODO: Actually parse the coordinate string

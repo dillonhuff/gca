@@ -47,6 +47,33 @@ namespace gca {
       return point(x_lit->v, y_lit->v, z_lit->v);
     }
 
+    double x_with_default(double default_value) {
+      assert(!x->is_var());
+      if (x->is_lit()) {
+	lit* x_lit = static_cast<lit*>(x);
+	return x_lit->v;
+      }
+      return default_value;
+    }
+
+    double y_with_default(double default_value) {
+      assert(!y->is_var());
+      if (y->is_lit()) {
+	lit* y_lit = static_cast<lit*>(y);
+	return y_lit->v;
+      }
+      return default_value;
+    }
+
+    double z_with_default(double default_value) {
+      assert(!z->is_var());
+      if (z->is_lit()) {
+	lit* z_lit = static_cast<lit*>(z);
+	return z_lit->v;
+      }
+      return default_value;
+    }
+    
     inline bool is_move_instr() const { return true; }
     inline bool is_abs() const {
       assert(is_G());

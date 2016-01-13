@@ -76,7 +76,11 @@ namespace gca {
       before = after;
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
       if (os->current == GCA_RELATIVE) {
-      	after = after + ist.pos();
+	double xd = ist.x_with_default(0);
+	double yd = ist.y_with_default(0);
+	double zd = ist.z_with_default(0);
+	point p = point(xd, yd, zd);
+      	after = after + p;
       } else {
       	after = ist.pos();
       }

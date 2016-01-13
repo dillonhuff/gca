@@ -27,6 +27,11 @@ namespace gca {
       return new (l) lit(v);
     }
 
+    omitted* mk_omitted() {
+      omitted* mem = a.allocate<omitted>();
+      return new (mem) omitted();
+    }
+
     assign_instr* mk_assign(var* v, value* e) {
       assign_instr* mem = a.allocate<assign_instr>();
       return new (mem) assign_instr(v, e);
@@ -82,11 +87,11 @@ namespace gca {
       return new (mem) move_instr(GCA_G, 0, x, y, z, frp, orient);
     }
     
-    move_instr* mk_G53(point p, orientation orient=GCA_ABSOLUTE) {
+    move_instr* mk_G53(value* x, value* y, value* z, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
       lit* v = a.allocate<lit>();
       lit* frp = new (v) lit(-1);                  
-      return new (mem) move_instr(GCA_G, 53, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), frp, orient);
+      return new (mem) move_instr(GCA_G, 53, x, y, z, frp, orient);
     }
     
     move_instr* mk_G0(point p, orientation orient=GCA_ABSOLUTE) {
