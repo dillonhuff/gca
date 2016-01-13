@@ -125,13 +125,16 @@ namespace gca {
 
   instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double def_f = 1.0;
-    value* default_feedrate = c.mk_lit(def_f);
+    value* default_feedrate = c.mk_lit(def_f);    
     value* fr = parse_option_value(c, 'F', i, s, def_f);
-    point pt = parse_point(c, p, i, s, ori);
+    value* xv = NULL;
+    value* yv = NULL;
+    value* zv = NULL;
+    parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);
     if (*default_feedrate == *fr) {
       fr = parse_option_value(c, 'F', i, s, def_f);
     }
-    return c.mk_G1(pt.x, pt.y, pt.z, fr, ori);
+    return c.mk_G1(xv, yv, zv, fr, ori);
   }
 
   instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {

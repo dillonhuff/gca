@@ -103,6 +103,11 @@ namespace gca {
       return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), frp, orient);
     }
 
+    move_instr* mk_G1(value* x, value* y, value* z, value* feed_rate, orientation orient=GCA_ABSOLUTE) {
+      move_instr* mem = a.allocate<move_instr>();
+      return new (mem) move_instr(GCA_G, 1, x, y, z, feed_rate, orient);
+    }
+    
     move_instr* mk_G1(double x, double y, double z, value* feed_rate, orientation orient=GCA_ABSOLUTE) {
       move_instr* mem = a.allocate<move_instr>();
       return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), feed_rate, orient);

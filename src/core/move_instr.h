@@ -81,10 +81,9 @@ namespace gca {
 	return false;
       }
       if (c == GCA_G && (v == 0 || v == 1)) {
-        point lp = pos();
-        point op = other_move.pos();
-        bool res = within_eps(lp, op) && *feed_rate == *(other_move.feed_rate) && orient == other_move.orient;
-        return res;
+	bool pr = *x == *(other_move.x) && *y == *(other_move.y) && *z == *(other_move.z);
+	bool fr = *feed_rate == *(other_move.feed_rate) && orient == other_move.orient;
+        return fr && pr;
       }
       return true;
     }
