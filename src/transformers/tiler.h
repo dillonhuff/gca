@@ -17,13 +17,8 @@ namespace gca {
       point last_pos = p->last_position();
       point diff = (start + shift) - last_pos;
       gprog* rp;
-      if (p->all_abs()) {
-	abs_to_rel atr(c, def);
-	rp = atr.apply(c, p);
-      } else {
-	rp = p;
-      }
-      assert(rp->all_rel());
+      abs_to_rel atr(c, def);
+      rp = atr.apply(c, p);
       gprog* new_p = c.mk_gprog();
       new_p->push_back(c.mk_G91());
       for (int i = 0; i < num_copies; i++) {

@@ -5,32 +5,6 @@
 
 namespace gca {
 
-  bool gprog::all_abs() const {
-    for (int i = 0; i < size(); i++) {
-      instr* ist = instrs[i];
-      if (ist->is_G0() || ist->is_G1()) {
-	move_instr* mist = static_cast<move_instr*>(ist);
-	if (mist->is_rel()) {
-	  return false;
-	}
-      }
-    }
-    return true;
-  }
-
-  bool gprog::all_rel() const {
-    for (int i = 0; i < size(); i++) {
-      instr* ist = instrs[i];
-      if (ist->is_G0() || ist->is_G1()) {
-	move_instr* mist = static_cast<move_instr*>(ist);
-	if (mist->is_abs()) {
-	  return false;
-	}
-      }
-    }
-    return true;
-  }
-  
   void gprog::all_positions_starting_at(point start, vector<point>& positions) {
     positions.push_back(start);
     for (int i = 1; i < size() + 1; i++) {
