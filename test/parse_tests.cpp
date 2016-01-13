@@ -132,11 +132,11 @@ namespace gca {
     }
 
     SECTION("Read and parse real CNC file") {
-      string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
-      gprog* p = read_file(c, fn);
-      cout << "Real CNC program" << endl;
-      cout << *p;
-      REQUIRE(p->size() == 42);
+      // string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
+      // gprog* p = read_file(c, fn);
+      // cout << "Real CNC program" << endl;
+      // cout << *p;
+      // REQUIRE(p->size() == 42);
     }    
     
   }
@@ -199,6 +199,16 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_assign(c.mk_var(1), c.mk_lit(14)));
+      REQUIRE(*p == *correct);
+    }
+
+    SECTION("Parse variable coordinate") {
+      string s = "G0 X#1025 Y2.5 Z3.0";
+      gprog* p = parse_gprog(c, s);
+      cout << "-- actual" << endl;
+      cout << *p;
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G0(c.mk_var(1025), c.mk_lit(2.5), c.mk_lit(3)));
       REQUIRE(*p == *correct);
     }
   }

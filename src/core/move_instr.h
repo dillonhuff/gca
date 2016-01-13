@@ -8,7 +8,9 @@ namespace gca {
 
   class move_instr : public instr {
   protected:
-    point position;
+    value* x;
+    value* y;
+    value* z;
     orientation orient;
 
   public:
@@ -17,32 +19,32 @@ namespace gca {
     move_instr(move_instr* i) {
       c = i->c;
       v = i->v;
-      position = i->position;
+      x = i->x;
+      y = i->y;
+      z = i->z;
       orient = i->orient;
       feed_rate = i->feed_rate;
     }
 
-    /* move_instr(instr_class cp, instr_val vp, point p, orientation orientp=GCA_ABSOLUTE) { */
-    /*   assert(cp == GCA_G); */
-    /*   c = cp; */
-    /*   v = vp; */
-    /*   position = p; */
-    /*   orient = orientp; */
-    /* } */
-    
-    move_instr(instr_class cp, instr_val vp, point p, value* frp, orientation orientp=GCA_ABSOLUTE) {
+    move_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp, orientation orientp=GCA_ABSOLUTE) {
       assert(cp == GCA_G);
       assert(frp > 0);
       c = cp;
       v = vp;
-      position = p;
+      x = xp;
+      y = yp;
+      z = zp;
       feed_rate = frp;
-      orient = orientp;
+      orient = orientp;      
     }
     
     inline point pos() const {
       assert(is_G());
-      return position;
+      assert(x->is_lit() && y->is_lit() && z->is_lit());
+      lit* x_lit = static_cast<lit*>(x);
+      lit* y_lit = static_cast<lit*>(y);
+      lit* z_lit = static_cast<lit*>(z);
+      return point(x_lit->v, y_lit->v, z_lit->v);
     }
 
     inline bool is_move_instr() const { return true; }
@@ -65,9 +67,9 @@ namespace gca {
       assert(is_G());
       s << 'G' << v << ' ';
       s << 'F' << *feed_rate << ' ';
-      s << 'X' << position.x << ' ';
-      s << 'Y' << position.y << ' ';
-      s << 'Z' << position.z << ' ';
+      s << 'X' << *x << ' ';
+      s << 'Y' << *y << ' ';
+      s << 'Z' << *z << ' ';
     }
 
     bool operator==(const instr& other) const {

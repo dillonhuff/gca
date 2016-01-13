@@ -66,21 +66,15 @@ namespace gca {
     return def;
   }
 
-  point parse_point(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    double x, y, z;
-    if (ori == GCA_ABSOLUTE) {
-      point lp = p->last_position();
-      x = parse_option_coordinate('X', i, s, lp.x);
-      y = parse_option_coordinate('Y', i, s, lp.y);
-      z = parse_option_coordinate('Z', i, s, lp.z);
-    } else {
-      x = parse_option_coordinate('X', i, s, 0);
-      y = parse_option_coordinate('Y', i, s, 0);
-      z = parse_option_coordinate('Z', i, s, 0);
-    }
-    return point(x, y, z);
-  }
-
+  // value* parse_option_value(context& c,
+  // 			    char v, size_t* i, string s, double def=0.0) {
+  //   ignore_whitespace(i, s);
+  //   if (s[*i] == v) {
+  //     (*i)++;
+  //     return c.mk_lit(def);
+  //   }
+  //   return c.mk_lit(def);
+  // }
   value* parse_option_value(context& c, char v,
 			    size_t* i, string s,
 			    double default_feedrate) {
@@ -98,6 +92,36 @@ namespace gca {
     }
     return c.mk_lit(default_feedrate);
   }
+  
+  void parse_position_values(context& c,
+			     gprog* p, size_t* i, string s, orientation ori,
+			     value** x, value** y, value** z) {
+    if (ori == GCA_ABSOLUTE) {
+      point lp = p->last_position();
+      *x = parse_option_value(c, 'X', i, s, lp.x);
+      *y = parse_option_value(c, 'Y', i, s, lp.y);
+      *z = parse_option_value(c, 'Z', i, s, lp.z);
+    } else {
+      *x = parse_option_value(c, 'X', i, s, 0);
+      *y = parse_option_value(c, 'Y', i, s, 0);
+      *z = parse_option_value(c, 'Z', i, s, 0);
+    }
+  }
+
+  point parse_point(context& c, gprog* p, size_t* i, string s, orientation ori) {
+    double x, y, z;
+    if (ori == GCA_ABSOLUTE) {
+      point lp = p->last_position();
+      x = parse_option_coordinate('X', i, s, lp.x);
+      y = parse_option_coordinate('Y', i, s, lp.y);
+      z = parse_option_coordinate('Z', i, s, lp.z);
+    } else {
+      x = parse_option_coordinate('X', i, s, 0);
+      y = parse_option_coordinate('Y', i, s, 0);
+      z = parse_option_coordinate('Z', i, s, 0);
+    }
+    return point(x, y, z);
+  }
 
   instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
     double def_f = 1.0;
@@ -112,8 +136,11 @@ namespace gca {
 
   instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {
     ignore_whitespace(i, s);
-    point pt = parse_point(c, p, i, s, ori);
-    return c.mk_G0(pt, ori);
+    value* xv = NULL;
+    value* yv = NULL;
+    value* zv = NULL;
+    parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);
+    return c.mk_G0(xv, yv, zv, ori);
   }
 
   instr* parse_G53(context& c, gprog* p, size_t* i, string s, orientation ori) {
