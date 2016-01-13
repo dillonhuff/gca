@@ -4,6 +4,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "geometry/point.h"
+
 using namespace std;
 
 namespace gca {
@@ -34,7 +36,7 @@ namespace gca {
     virtual bool operator==(const value& other) const {
       if (other.is_lit()) {
 	const lit& other_lit = static_cast<const lit&>(other);
-	return other_lit.v == v;
+	return within_eps(other_lit.v, v);
       }
       return false;
     }

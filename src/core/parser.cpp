@@ -66,15 +66,6 @@ namespace gca {
     return def;
   }
 
-  // value* parse_option_value(context& c,
-  // 			    char v, size_t* i, string s, double def=0.0) {
-  //   ignore_whitespace(i, s);
-  //   if (s[*i] == v) {
-  //     (*i)++;
-  //     return c.mk_lit(def);
-  //   }
-  //   return c.mk_lit(def);
-  // }
   value* parse_option_value(context& c, char v,
 			    size_t* i, string s,
 			    double default_feedrate) {
