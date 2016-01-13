@@ -156,7 +156,7 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G91());
-      correct->push_back(c.mk_G0(1.0, 0.0, 0.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(1.0, 0.0, 0.0));
       REQUIRE(*p == *correct);
     }
 
@@ -165,8 +165,8 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G91());
-      correct->push_back(c.mk_G0(1.0, 1.0, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G0(c.mk_omitted(), c.mk_lit(0.5), c.mk_omitted(), GCA_RELATIVE));
+      correct->push_back(c.mk_G0(1.0, 1.0, 1.0));
+      correct->push_back(c.mk_G0(c.mk_omitted(), c.mk_lit(0.5), c.mk_omitted()));
       correct->push_back(c.mk_minstr(2));
       REQUIRE(*p == *correct);
     }

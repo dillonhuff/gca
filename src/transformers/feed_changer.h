@@ -48,8 +48,7 @@ namespace gca {
 
     void update_G1(move_instr& ist) {
       point kp = ist.pos();
-      orientation orient = GCA_ABSOLUTE;//ist.is_abs() ? GCA_ABSOLUTE : GCA_RELATIVE;
-      p->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate, orient));
+      p->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate));
     }
 
   };

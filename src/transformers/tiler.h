@@ -31,8 +31,8 @@ namespace gca {
 	  j++;
 	}
 	if (i != num_copies - 1 && num_copied > 0) {
-	  new_p->push_back(c.mk_G0(0, 0, diff.z, GCA_RELATIVE));
-	  new_p->push_back(c.mk_G0(diff.x, diff.y, 0, GCA_RELATIVE));
+	  new_p->push_back(c.mk_G0(0, 0, diff.z));
+	  new_p->push_back(c.mk_G0(diff.x, diff.y, 0));
 	}
       }
       new_p->push_back(c.mk_minstr(2));
@@ -41,4 +41,5 @@ namespace gca {
 
   };
 }
+
 #endif

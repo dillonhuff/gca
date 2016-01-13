@@ -124,7 +124,7 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value(c, 'F', i, s, def_f);
     }
-    return c.mk_G1(xv, yv, zv, fr, ori);
+    return c.mk_G1(xv, yv, zv, fr);
   }
 
   instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {
@@ -133,7 +133,7 @@ namespace gca {
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);
-    return c.mk_G0(xv, yv, zv, ori);
+    return c.mk_G0(xv, yv, zv);
   }
 
   instr* parse_G53(context& c, gprog* p, size_t* i, string s, orientation ori) {
@@ -141,7 +141,7 @@ namespace gca {
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);    
-    return c.mk_G53(xv, yv, zv, ori);
+    return c.mk_G53(xv, yv, zv);
   }
 
   // TODO: Actually parse the coordinate string

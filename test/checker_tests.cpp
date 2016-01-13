@@ -77,7 +77,7 @@ namespace gca {
     
     SECTION("g0_move_checker several instructions relative mistake") {
       gprog* p = c.mk_gprog();
-      p->push_back(c.mk_G0(0.0, 2.0, 1.0, GCA_RELATIVE));
+      p->push_back(c.mk_G0(0.0, 2.0, 1.0));
       p->push_back(c.mk_minstr(2));
       g0_move_checker checker(GCA_ABSOLUTE);
       checker.exec(p);

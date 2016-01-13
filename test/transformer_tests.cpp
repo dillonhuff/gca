@@ -37,12 +37,12 @@ namespace gca {
     context c;
     gprog* p = c.mk_gprog();
     value* initial_feedrate = c.mk_lit(1.0);
-    p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate, GCA_RELATIVE));
+    p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate));
     value* new_feedrate = c.mk_lit(4.0);
     feed_changer f(c, initial_feedrate, new_feedrate);
     gprog* n = f.apply(p);
     gprog* correct = c.mk_gprog();
-    correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate, GCA_RELATIVE));
+    correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate));
     REQUIRE(*n == *correct);
   }
 
@@ -157,7 +157,7 @@ namespace gca {
 
     SECTION("abs -> rel 1 instruction is the same") {
       p->push_back(c.mk_G0(1.0, 1.0, 1.0));
-      correct->push_back(c.mk_G0(1.0, 1.0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(1.0, 1.0, 1.0));
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }
@@ -172,8 +172,8 @@ namespace gca {
     SECTION("abs -> rel 2 instructions") {
       p->push_back(c.mk_G1(1.0, 0, 0));
       p->push_back(c.mk_G0(2.0, 3.5, 8));
-      correct->push_back(c.mk_G1(1.0, 0, 0, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G0(1.0, 3.5, 8, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(1.0, 0, 0, 1.0));
+      correct->push_back(c.mk_G0(1.0, 3.5, 8));
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }
@@ -197,18 +197,18 @@ namespace gca {
 
     SECTION("One G0 instruction is the same") {
       p->push_back(c.mk_G91());
-      p->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_RELATIVE));
-      correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));
+      p->push_back(c.mk_G0(point(1.0, 2.0, 3.0)));
+      correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0)));
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }
 
     SECTION("Two instructions instructions") {
       p->push_back(c.mk_G91());
-      p->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_RELATIVE));
-      p->push_back(c.mk_G1(-2.0, 2.0, -10.0, 2.5, GCA_RELATIVE));
-      correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0), GCA_ABSOLUTE));
-      correct->push_back(c.mk_G1(-1.0, 4.0, -7.0, 2.5, GCA_ABSOLUTE));
+      p->push_back(c.mk_G0(point(1.0, 2.0, 3.0)));
+      p->push_back(c.mk_G1(-2.0, 2.0, -10.0, 2.5));
+      correct->push_back(c.mk_G0(point(1.0, 2.0, 3.0)));
+      correct->push_back(c.mk_G1(-1.0, 4.0, -7.0, 2.5));
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }    
@@ -253,23 +253,23 @@ namespace gca {
       
       correct->push_back(c.mk_G91());
 
-      correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G1(0, -1, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(0, 0, depth, 1.0));
+      correct->push_back(c.mk_G1(1, 0, 0, 1.0));
+      correct->push_back(c.mk_G1(0, -1, 0, 1.0));
 
-      correct->push_back(c.mk_G0(0, 0, -depth, GCA_RELATIVE));
-      correct->push_back(c.mk_G0(d1.x, d1.y, 0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(0, 0, -depth));
+      correct->push_back(c.mk_G0(d1.x, d1.y, 0));
 
-      correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G1(0, -1, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(0, 0, depth, 1.0));
+      correct->push_back(c.mk_G1(1, 0, 0, 1.0));
+      correct->push_back(c.mk_G1(0, -1, 0, 1.0));
 
-      correct->push_back(c.mk_G0(0, 0, -depth, GCA_RELATIVE));
-      correct->push_back(c.mk_G0(d1.x, d1.y, 0, GCA_RELATIVE));
+      correct->push_back(c.mk_G0(0, 0, -depth));
+      correct->push_back(c.mk_G0(d1.x, d1.y, 0));
 
-      correct->push_back(c.mk_G1(0, 0, depth, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G1(1, 0, 0, 1.0, GCA_RELATIVE));
-      correct->push_back(c.mk_G1(0, -1, 0, 1.0, GCA_RELATIVE));
+      correct->push_back(c.mk_G1(0, 0, depth, 1.0));
+      correct->push_back(c.mk_G1(1, 0, 0, 1.0));
+      correct->push_back(c.mk_G1(0, -1, 0, 1.0));
       
       correct->push_back(c.mk_minstr(2));
       
