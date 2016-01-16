@@ -5,7 +5,6 @@
 #include "core/context.h"
 #include "core/parser.h"
 
-
 namespace gca {
 
   TEST_CASE("Checkers") {
@@ -13,34 +12,26 @@ namespace gca {
 
     SECTION("Extra instruction checker one warning") {
       gprog* p = parse_gprog(c, "G91 G91");
-      extra_instruction_checker checker(GCA_ABSOLUTE);
-      checker.exec(p);
-      REQUIRE(checker.num_warns == 1);
+      REQUIRE(check_for_extra_instructions(p, GCA_ABSOLUTE) == 1);
     }
 
     SECTION("Program bounds checker true") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G0(12.5, -10.3, 0.0));
       p->push_back(c.mk_minstr(2));
-      bounds_checker b(GCA_ABSOLUTE, 0, 30, -20, -10, -5.0, 2.0);
-      b.exec(p);
-      REQUIRE(b.num_warns == 0);
+      REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 30, -20, -10, -5.0, 2.0) == 0);
     }
 
     SECTION("Program bounds checker false") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G1(12.5, -10.3, 0.0));
       p->push_back(c.mk_minstr(2));
-      bounds_checker b(GCA_ABSOLUTE, 0, 9, -20, -10, 0.0, 2.0);
-      b.exec(p);
-      REQUIRE(b.num_warns == 1);
+      REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, -10, 0.0, 2.0)  == 1);
     }
 
     SECTION("Program bounds checker true relative") {
       gprog* p = parse_gprog(c, "G91 G1 X8 G0 X7");
-      bounds_checker b(GCA_ABSOLUTE, 0, 9, -20, 10, 0.0, 2.0);
-      b.exec(p);
-      REQUIRE(b.num_warns == 1);
+      REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, 10, 0.0, 2.0) == 1);
     }
     
     SECTION("g0_move_checker no mistake") {

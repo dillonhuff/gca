@@ -53,27 +53,22 @@ namespace gca {
 
   };
 
-  class feed_changer : public pass {
-  protected:
-    feed_changer_state feed_s;
+  gprog* change_feeds(context& c, gprog* p, value* initial_feedratep, value* new_feedratep) {
+    pass ps;
+    feed_changer_state feed_s(c, &ps, initial_feedratep, new_feedratep);
+    ps.add_state(GCA_FEED_CHANGER_STATE, &feed_s);
+    ps.exec(p);
+    return ps.get_state<feed_changer_state>(GCA_FEED_CHANGER_STATE)->p;
+  }
 
-  public:
-  feed_changer(context& c, value* initial_feedratep, value* new_feedratep) :
-      feed_s(c, this, initial_feedratep, new_feedratep) {
-      states[GCA_FEED_CHANGER_STATE] = &feed_s;
-    }
-
-  feed_changer(context& c, value* default_val, value* initial_feedratep, var* new_feedratep) :
-      feed_s(c, this, default_val, initial_feedratep, new_feedratep) {
-      states[GCA_FEED_CHANGER_STATE] = &feed_s;
-    }
-    
-    virtual gprog* apply(gprog* p) {
-      exec(p);
-      return feed_s.p;
-    }
-  };
-
+  gprog* generalize_feeds(context& c, gprog* p, value* default_val, value* initial_feedratep, var* new_feedratep) {
+    pass ps;
+    feed_changer_state feed_s(c, &ps, default_val, initial_feedratep, new_feedratep);
+    ps.add_state(GCA_FEED_CHANGER_STATE, &feed_s);
+    ps.exec(p);
+    return ps.get_state<feed_changer_state>(GCA_FEED_CHANGER_STATE)->p;
+  }
+  
 }
 
 #endif

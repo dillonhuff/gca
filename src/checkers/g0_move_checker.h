@@ -21,21 +21,6 @@ namespace gca {
     }
   };
 
-  class g0_move_checker : public pass {
-  protected:
-    position_state ps;
-    move_checker_state ms;
-    orientation_state orient_s;
-    
-  public:
-  g0_move_checker(orientation def) :
-    ps(this, point(0, 0, 0)), ms(this), orient_s(this, def) {
-      states[GCA_POSITION_STATE] = &ps;
-      states[GCA_MOVE_CHECKER_STATE] = &ms;
-      states[GCA_ORIENTATION_STATE] = &orient_s;
-    }
-  };
-
   int check_for_diagonal_G0_moves(gprog* p, orientation orient) {
     pass ps;
     position_state pos_s(&ps, point(0, 0, 0));

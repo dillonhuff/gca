@@ -31,10 +31,11 @@ namespace gca {
     }
 
     inline void add_state(state_name n, state* s) { states[n] = s; }
-    
-    state* get_state(state_name n) {
+
+    template<typename T>
+    T* get_state(state_name n) {
       assert(states.count(n) > 0);
-      return states[n];
+      return static_cast<T*>(states[n]);
     }
 
     virtual void exec(gprog* p);
@@ -51,8 +52,8 @@ namespace gca {
 
     template<typename T>
       T* get_state(state_name n) {
-      state* s = t->get_state(n);
-      return static_cast<T*>(s);
+      return t->get_state<T>(n);
+      //      return static_cast<T*>(s);
     }
   };
 

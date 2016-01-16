@@ -14,10 +14,8 @@ namespace gca {
     gprog* p = parse_gprog(c, "G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
     value* initial_feedrate = c.mk_lit(2.0);
     value* new_feedrate = c.mk_lit(5.0);
-    feed_changer f(c, initial_feedrate, new_feedrate);
-    gprog* n = f.apply(p);
     gprog* correct = parse_gprog(c, "G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
-    REQUIRE(*n == *correct);
+    REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
   }
   
   TEST_CASE("Feed changer") {
@@ -26,11 +24,9 @@ namespace gca {
     value* initial_feedrate = c.mk_lit(1.0);
     p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate));
     value* new_feedrate = c.mk_lit(4.0);
-    feed_changer f(c, initial_feedrate, new_feedrate);
-    gprog* n = f.apply(p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate));
-    REQUIRE(*n == *correct);
+    REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
   }
 
   TEST_CASE("Feed changer relative coordinates") {
@@ -39,11 +35,9 @@ namespace gca {
     value* initial_feedrate = c.mk_lit(1.0);
     p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate));
     value* new_feedrate = c.mk_lit(4.0);
-    feed_changer f(c, initial_feedrate, new_feedrate);
-    gprog* n = f.apply(p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1.0, 1.0, 1.0, new_feedrate));
-    REQUIRE(*n == *correct);
+    REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
   }
 
   TEST_CASE("Feed changer with variables") {
@@ -52,10 +46,8 @@ namespace gca {
     lit* init_f = c.mk_lit(15.0);
     var* new_f = c.mk_var(1);
     value* default_val = c.mk_lit(13);
-    feed_changer f(c, default_val, init_f, new_f);
-    gprog* n = f.apply(p);
     gprog* correct = parse_gprog(c, "#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
-    REQUIRE(*n == *correct);
+    REQUIRE(*generalize_feeds(c, p, default_val, init_f, new_f) == *correct);
   }
   
   TEST_CASE("No irrelevant G0 moves") {

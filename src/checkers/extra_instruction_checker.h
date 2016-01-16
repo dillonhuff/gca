@@ -6,18 +6,16 @@
 
 namespace gca {
 
-  class extra_instruction_checker : public pass {
-  protected:
-    orientation_state orient_state;
-    orientation_checker orient_check;
-    
-  public:
-    extra_instruction_checker(orientation def)
-      : orient_state(this, def), orient_check(this) {
-      states[GCA_ORIENTATION_STATE] = &orient_state;
-      states[GCA_ORIENTATION_CHECKER_STATE] = &orient_check;
-    }
-  };
+  int check_for_extra_instructions(gprog* p, orientation orient) {
+    pass ps;
+    orientation_state orient_s(&ps, orient);
+    orientation_checker orient_check(&ps);
+    ps.add_state(GCA_ORIENTATION_STATE, &orient_s);
+    ps.add_state(GCA_ORIENTATION_CHECKER_STATE, &orient_check);
+    ps.exec(p);
+    return ps.num_warns;
+  }
+  
 }
 
 #endif

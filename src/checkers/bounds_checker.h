@@ -55,28 +55,23 @@ namespace gca {
     
   };
 
-  class bounds_checker : public pass {
-  protected:
-    position_state ps;
-    orientation_state orient_s;
-    bounds_checker_state bound_s;
-
-  public:
-  bounds_checker(orientation def,
-		 double x_minp,
-		 double x_maxp,
-		 double y_minp,
-		 double y_maxp,
-		 double z_minp,
-		 double z_maxp) :
-    ps(this, point(0, 0, 0)),orient_s(this, def),
-      bound_s(this, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp) {
-      states[GCA_POSITION_STATE] = &ps;
-      states[GCA_ORIENTATION_STATE] = &orient_s;
-      states[GCA_BOUNDS_CHECKER_STATE] = &bound_s;
-    }
-
-  };
+  int check_bounds(gprog* p, orientation orient,
+		   double x_minp,
+		   double x_maxp,
+		   double y_minp,
+		   double y_maxp,
+		   double z_minp,
+		   double z_maxp) {
+    pass ps;
+    position_state pos_s(&ps, point(0, 0, 0));
+    bounds_checker_state bound_s(&ps, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp);
+    orientation_state orient_s(&ps, orient);
+    ps.add_state(GCA_POSITION_STATE, &pos_s);
+    ps.add_state(GCA_BOUNDS_CHECKER_STATE, &bound_s);
+    ps.add_state(GCA_ORIENTATION_STATE, &orient_s);
+    ps.exec(p);
+    return ps.num_warns;
+  }
 
 }
 
