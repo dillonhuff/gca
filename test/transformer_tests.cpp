@@ -54,18 +54,14 @@ namespace gca {
     context c;
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(point(1.0, 1.0, 1.0)));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
-    REQUIRE(*r == *p);
+    REQUIRE(*filter_G0_moves(c, p) == *p);
   }
 
   TEST_CASE("g0_filter no G0 moves") {
     context c;
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
-    REQUIRE(*r == *p);
+    REQUIRE(*filter_G0_moves(c, p) == *p);
   }
 
   TEST_CASE("g0_filter dont remove G1") {
@@ -73,12 +69,10 @@ namespace gca {
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(point(1.0, 2.0, 2.0)));
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G0(point(1.0, 2.0, 2.0)));
     correct->push_back(c.mk_G1(1.0, 2.0, 2.0));
-    REQUIRE(*r == *correct);
+    REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
 
   TEST_CASE("g0_filter several pointless moves") {
@@ -87,11 +81,9 @@ namespace gca {
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G0(1.0, 2.0, 2.0));
-    REQUIRE(*r == *correct);
+    REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
 
   TEST_CASE("g0_filter several pointless moves with G1, M2") {
@@ -102,13 +94,11 @@ namespace gca {
     p->push_back(c.mk_G0(1.0, 2.0, -2.00000001));
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
     p->push_back(c.mk_minstr(2));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G0(1.0, 2.0, -2.00000001));
     correct->push_back(c.mk_G1(1.0, 2.0, 2.0));
     correct->push_back(c.mk_minstr(2));
-    REQUIRE(*r == *correct);
+    REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
 
   TEST_CASE("g0_filter starting on G1") {
@@ -116,11 +106,9 @@ namespace gca {
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1, 1, 1));
     p->push_back(c.mk_G0(1, 1, 1));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1, 1, 1));
-    REQUIRE(*r == *correct);
+    REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
 
   TEST_CASE("g0_filter starting on G1 multiple instructions") {
@@ -131,13 +119,11 @@ namespace gca {
     p->push_back(c.mk_G0(1, 2, 0));
     p->push_back(c.mk_G0(1, 1, 1));
     p->push_back(c.mk_G1(2, 3, 3));
-    g0_filter f(c);
-    gprog* r = f.apply(c, p);
     gprog* correct = c.mk_gprog();
     correct->push_back(c.mk_G1(1, 1, 0));
     correct->push_back(c.mk_G1(1, 1, 1));
     correct->push_back(c.mk_G1(2, 3, 3));
-    REQUIRE(*r == *correct);
+    REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
   
   TEST_CASE("abs -> rel conversion") {

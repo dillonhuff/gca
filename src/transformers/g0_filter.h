@@ -68,21 +68,13 @@ namespace gca {
     void update_default(instr& ist) { p->push_back(&ist); }
   };
 
-  class g0_filter : pass {
-  protected:
-    g0_filter_state filter_s;
-    
-  public:
-  g0_filter(context& c) :
-    filter_s(c, this) {
-      states[GCA_G0_FILTER_STATE] = &filter_s;
-    }
-    
-    virtual gprog* apply(context& c, gprog* p) {
-      exec(p);
-      return filter_s.p;
-    }
-  };
+  gprog* filter_G0_moves(context& c, gprog* p) {
+    pass ps;
+    g0_filter_state filter_s(c, &ps);
+    ps.add_state(GCA_G0_FILTER_STATE, &filter_s);
+    ps.exec(p);
+    return ps.get_state<g0_filter_state>(GCA_G0_FILTER_STATE)->p;
+  }
 
 }
 
