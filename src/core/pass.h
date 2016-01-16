@@ -29,6 +29,8 @@ namespace gca {
       cout << "Warning at position: " << *current << " " << s << endl;
       num_warns++;      
     }
+
+    inline void add_state(state_name n, state* s) { states[n] = s; }
     
     state* get_state(state_name n) {
       assert(states.count(n) > 0);

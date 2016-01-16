@@ -46,42 +46,32 @@ namespace gca {
     SECTION("g0_move_checker no mistake") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G0(2.0, 2.0, 0.0));
-      g0_move_checker checker(GCA_ABSOLUTE);
-      checker.exec(p);
-      REQUIRE(checker.num_warns == 0);
+      REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 0);
     }
 
     SECTION("g0_move_checker mistake") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G0(2.0, 2.0, 1.0));
-      g0_move_checker checker(GCA_ABSOLUTE);
-      checker.exec(p);
-      REQUIRE(checker.num_warns == 1);
+      REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 1);
     }
 
     SECTION("g0_move_checker several instructions no mistake") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G1(2.0, 2.0, 1.0));
       p->push_back(c.mk_minstr(2));
-      g0_move_checker checker(GCA_ABSOLUTE);
-      checker.exec(p);
-      REQUIRE(checker.num_warns == 0);
+      REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 0);
     }
 
     SECTION("g0_move_checker several instructions one mistake") {
       gprog* p = parse_gprog(c, "G1 X2.0 Y2.0 Z1.0 G0 X0.0 Y0.0 Z2.0 M2");
-      g0_move_checker checker(GCA_ABSOLUTE);
-      checker.exec(p);
-      REQUIRE(checker.num_warns == 1);
+      REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 1);
     }
     
     SECTION("g0_move_checker several instructions relative mistake") {
       gprog* p = c.mk_gprog();
       p->push_back(c.mk_G0(0.0, 2.0, 1.0));
       p->push_back(c.mk_minstr(2));
-      g0_move_checker checker(GCA_ABSOLUTE);
-      checker.exec(p);
-      REQUIRE(checker.num_warns == 1);
+      REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 1);
     }
     
   }
