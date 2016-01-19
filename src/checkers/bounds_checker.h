@@ -31,17 +31,16 @@ namespace gca {
     }
 
   public:
-  bounds_checker_state(pass* tp,
+  bounds_checker_state(pass& tp,
 		       double x_minp,
 		       double x_maxp,
 		       double y_minp,
 		       double y_maxp,
 		       double z_minp,
 		       double z_maxp) :
-    x_min(x_minp), y_min(y_minp), z_min(z_minp),
-      x_max(x_maxp),y_max(y_maxp), z_max(z_maxp) {
-      t = tp;
-    }
+    per_instr_state(tp),
+      x_min(x_minp), y_min(y_minp), z_min(z_minp),
+      x_max(x_maxp),y_max(y_maxp), z_max(z_maxp) {}
     
     virtual void update_G0(move_instr& ist) {
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
@@ -63,9 +62,9 @@ namespace gca {
 		   double z_minp,
 		   double z_maxp) {
     pass ps;
-    position_state pos_s(&ps, point(0, 0, 0));
-    bounds_checker_state bound_s(&ps, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp);
-    orientation_state orient_s(&ps, orient);
+    position_state pos_s(ps, point(0, 0, 0));
+    bounds_checker_state bound_s(ps, x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp);
+    orientation_state orient_s(ps, orient);
     ps.add_state(GCA_POSITION_STATE, &pos_s);
     ps.add_state(GCA_BOUNDS_CHECKER_STATE, &bound_s);
     ps.add_state(GCA_ORIENTATION_STATE, &orient_s);

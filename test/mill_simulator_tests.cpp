@@ -20,7 +20,7 @@ namespace gca {
     }
 
     SECTION("One G1 move down") {
-      gprog* p = parse_gprog(c, "G1 Z5");
+      gprog* p = parse_gprog(c, "G1 X0 Y0 Z5");
       region r(10, 10, 10, 0.01);
       double tool_diameter = 1.0;
       cylindrical_bit t(1);

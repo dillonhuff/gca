@@ -8,8 +8,8 @@ namespace gca {
 
   int check_for_extra_instructions(gprog* p, orientation orient) {
     pass ps;
-    orientation_state orient_s(&ps, orient);
-    orientation_checker orient_check(&ps);
+    orientation_state orient_s(ps, orient);
+    orientation_checker orient_check(ps);
     ps.add_state(GCA_ORIENTATION_STATE, &orient_s);
     ps.add_state(GCA_ORIENTATION_CHECKER_STATE, &orient_check);
     ps.exec(p);

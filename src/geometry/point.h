@@ -26,6 +26,10 @@ namespace gca {
       return x == other.x && y == other.y && z == other.z;
     }
 
+    bool operator!=(const point& other) const {
+      return !(*this == other);
+    }
+    
     point operator+(const point& other) const {
       return point(x + other.x, y + other.y, z + other.z);
     }

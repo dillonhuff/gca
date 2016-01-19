@@ -9,6 +9,8 @@ namespace gca {
 
   class per_instr_state : public state {
   public:
+  per_instr_state(pass& tp) : state(tp) {}
+    
     virtual void update_G0(move_instr& ist) { update_default(ist); }
     virtual void update_G1(move_instr& ist) { update_default(ist); }
     virtual void update_G91(instr& ist) { update_default(ist); }
@@ -36,10 +38,8 @@ namespace gca {
   public:
     orientation current;
     
-    orientation_state(pass* tp, orientation default_orient) {
-      t = tp;
-      current = default_orient;
-    }
+  orientation_state(pass& tp, orientation default_orient) :
+    per_instr_state(tp), current(default_orient) {}
 
     virtual void update_G91(instr& ist) {
       current = GCA_RELATIVE;
@@ -49,9 +49,7 @@ namespace gca {
 
   class orientation_checker : public per_instr_state {
   public:
-    orientation_checker(pass* tp) {
-      t = tp;
-    }
+  orientation_checker(pass& tp) : per_instr_state(tp) {}
 
     virtual void update_G91(instr& ist) {
       orientation_state* os = get_state<orientation_state>(GCA_ORIENTATION_STATE);
@@ -66,11 +64,8 @@ namespace gca {
   public:
     point before, after, diff;
 
-    position_state(pass* tp, point start) {
-      t = tp;
-      before = start;
-      after = start;
-    }
+    position_state(pass& tp, point start)
+      : per_instr_state(tp), before(start), after(start) {}
 
     void update_pos(move_instr& ist) {
       before = after;

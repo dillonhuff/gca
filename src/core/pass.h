@@ -43,17 +43,17 @@ namespace gca {
   
   class state {
   protected:
-    pass* t;
+    pass& t;
 
   public:
+  state(pass& tp) : t(tp) {}
     virtual void update(instr& ist) { assert(false); }
 
-    void add_warning(string s) { t->add_warning(s); }
+    void add_warning(string s) { t.add_warning(s); }
 
     template<typename T>
       T* get_state(state_name n) {
-      return t->get_state<T>(n);
-      //      return static_cast<T*>(s);
+      return t.get_state<T>(n);
     }
   };
 
