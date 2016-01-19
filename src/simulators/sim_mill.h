@@ -11,26 +11,30 @@ namespace gca {
   public:
     region& r;
     const mill_tool& t;
-    double inc_size;
+    double inc_size, machine_x_offset, machine_y_offset;
     
   sim_mill_state(pass& pp, region& rp, const mill_tool& tp) :
-    per_instr_state(pp), r(rp), t(tp), inc_size(r.resolution / 2.0) {}
+    per_instr_state(pp), r(rp), t(tp), inc_size(r.resolution / 2.0),
+      machine_x_offset(-5), machine_y_offset(-5) {}
 
+    // TODO: Generalize to allow for user specification of
+    // machine and region coordinates
     point machine_coords_to_region_coords(point p) {
-      assert(false);
+      return point(p.x + machine_x_offset,
+		   p.y + machine_y_offset,
+		   r.height - p.z);
     }
 
     point get_start() {
-      cout << "Getting start" << endl;
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
-      cout << "Got ps" << endl;
       point machine_coord_start = ps->before;
-      cout << "Got start" << endl;
       return machine_coords_to_region_coords(machine_coord_start);
     }
-    point get_end() { assert(false); }
 
-    void update_region(point c) {
+    point get_end() {
+      position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
+      point machine_coord_end = ps->after;
+      return machine_coords_to_region_coords(machine_coord_end);
     }
 
     void update_G1(move_instr& i) {
@@ -45,7 +49,7 @@ namespace gca {
 	} else {
 	  c = c + inc;
 	}
-	update_region(c);
+	r.update(c, t);
       }
     }
 

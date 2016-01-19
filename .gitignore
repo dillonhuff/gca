@@ -6,3 +6,4 @@ simple-prog
 *.ngc
 *#
 *.gca_deps
+compile_commands.json
