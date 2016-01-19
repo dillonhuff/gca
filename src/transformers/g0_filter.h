@@ -31,8 +31,7 @@ namespace gca {
     int j;
 
   g0_filter_state(context& cp,
-		  pass* tp) : c(cp) {
-      t = tp;
+		  pass& tp) : per_instr_state(tp), c(cp) {
       p = c.mk_gprog();
       j = 0;
     }
@@ -42,9 +41,9 @@ namespace gca {
     // TODO: Find a more sensible way to structure
     // code that needs to skip instructions in the iteration
     void update_G() {
-      int curr = t->i;
+      int curr = t.i;
       if (curr != j) { return; }
-      gprog* n = t->p;
+      gprog* n = t.p;
       vector<point> positions;
       n->all_positions_starting_at(point(0, 0, 0), positions);
       positions.erase(positions.begin());
@@ -70,7 +69,7 @@ namespace gca {
 
   gprog* filter_G0_moves(context& c, gprog* p) {
     pass ps;
-    g0_filter_state filter_s(c, &ps);
+    g0_filter_state filter_s(c, ps);
     ps.add_state(GCA_G0_FILTER_STATE, &filter_s);
     ps.exec(p);
     return ps.get_state<g0_filter_state>(GCA_G0_FILTER_STATE)->p;
