@@ -15,7 +15,7 @@ namespace gca {
     
   sim_mill_state(pass& pp, region& rp, const mill_tool& tp) :
     per_instr_state(pp), r(rp), t(tp), inc_size(r.resolution / 2.0),
-      machine_x_offset(-5), machine_y_offset(-5) {}
+      machine_x_offset(5), machine_y_offset(5) {}
 
     // TODO: Generalize to allow for user specification of
     // machine and region coordinates
