@@ -31,10 +31,10 @@ CHECK_BOUNDS_OBJ := $(CHECK_BOUNDS:.cpp=.o)
 SIMPLE_PROG := examples/simple_prog.cpp
 SIMPLE_PROG_OBJ := $(SIMPLE_PROG:.cpp=.o)
 
-#############################################
+BMP_PROG := examples/bmp_prog.cpp
+BMP_PROG_OBJ := $(BMP_PROG:.cpp=.o)
 
- # %.o : %.cpp $(SRC_HEADER_FILES)
- # 	$(CC) $(CXX_FLAGS) -c $< -o $@
+#############################################
 
 all-tests: $(SRC_HEADER_FILES) $(OBJS)
 	$(CC) $(CXX_FLAGS) $(OBJS) -o $@
@@ -44,6 +44,10 @@ check-bounds-example: $(SRC_HEADER_FILES) $(SRC_OBJS) $(CHECK_BOUNDS_OBJ)
 
 simple-prog: $(SRC_HEADER_FILES) $(SRC_OBJS) $(SIMPLE_PROG_OBJ)
 	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(SIMPLE_PROG_OBJ) -o $@
+
+bmp-prog: $(SRC_HEADER_FILES) $(SRC_OBJS) $(BMP_PROG)
+	$(CC) $(CXX_FLAGS) $(BMP_PROG) -c -o $(BMP_PROG_OBJ)
+	$(CC) $(CXX_FLAGS) $(SRC_OBJS) $(BMP_PROG_OBJ) -o $@
 
 clean:
 	find . -name "*.o" -type f -delete

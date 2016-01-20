@@ -7,3 +7,5 @@ simple-prog
 *#
 *.gca_deps
 compile_commands.json
+*.bmp
+bmp-prog
