@@ -13,21 +13,26 @@ namespace gca {
 
   class mill_tool {
   public:
-    virtual void columns_to_update(point p,
-				   double resolution,
-				   vector<column> to_update) const { assert(false); }
-
     virtual bool contains(point p, double resolution, int i, int j) const { assert(false); }
+
+    virtual double x_min(point p) const { assert(false); }
+    virtual double x_max(point p) const { assert(false); }
+    virtual double y_min(point p) const { assert(false); }
+    virtual double y_max(point p) const { assert(false); }
+    
   };
 
   class cylindrical_bit : public mill_tool {
   public:
     double diameter;
-  cylindrical_bit(double d) : diameter(d) {}
+    double radius;
+  cylindrical_bit(double d) : diameter(d), radius(diameter/2.0) {}
 
-    virtual void columns_to_update(point p,
-				   double resolution,
-				   vector<column> to_update) const;
+    virtual inline double x_min(point p) const { return p.x - radius; }
+    virtual inline double x_max(point p) const { return p.x + radius; }
+    virtual inline double y_min(point p) const { return p.y - radius; }
+    virtual inline double y_max(point p) const { return p.y + radius; }
+    
 
     virtual bool contains(point p, double resolution, int i, int j) const;
     inline bool in_circle(point p, double x, double y) const;

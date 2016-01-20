@@ -74,8 +74,12 @@ namespace gca {
     }
 
     void update(point p, const mill_tool& t) {
-      for (int i = 0; i < num_x_elems; i++) {
-	for (int j = 0; j < num_y_elems; j++) {
+      int first_x = static_cast<int>(t.x_min(p) / resolution);
+      int last_x = static_cast<int>(t.x_max(p) / resolution);
+      int first_y = static_cast<int>(t.y_min(p) / resolution);
+      int last_y = static_cast<int>(t.y_max(p) / resolution);
+      for (int i = first_x; i < last_x; i++) {
+	for (int j = first_y; j < last_y; j++) {
 	  if (t.contains(p, resolution, i, j)) {
 	    double z_diff = static_cast<double>(column_height(i, j)) - p.z;
 	    if (z_diff > 0) {
