@@ -19,10 +19,6 @@ namespace gca {
     double yd = y - p.y;
     double r = diameter / 2.0;
     double val = sqrt(xd*xd + yd*yd);
-    // cout << "tool position = " << p << endl;
-    // cout << "(x, y) = (" << x << ", " << y << ")" << endl;
-    // cout << "Value = " << val << endl;
-    // cout << "r = " << r << endl;
     return val <= r;
   }
 
