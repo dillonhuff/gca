@@ -47,6 +47,7 @@ namespace gca {
     void update_G1(move_instr& i) { update_line(); }
     void update_G0(move_instr& i) { update_line(); }
     void update_G91(instr& i) {}
+    void update_M2(instr& i) {}
 
     void update_default(instr& i) {
       cout << "Mill simulator error: Instruction " << i;
