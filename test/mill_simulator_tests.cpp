@@ -22,6 +22,7 @@ namespace gca {
     SECTION("One G1 move down") {
       gprog* p = parse_gprog(c, "G1 X0 Y0 Z5");
       region r(10, 10, 10, 0.01);
+      r.set_height(0, 10, 0, 10, 10);
       r.set_machine_x_offset(5);
       r.set_machine_y_offset(5);
       double tool_diameter = 1.0;
@@ -38,6 +39,7 @@ namespace gca {
     SECTION("Move through whole workpiece") {
       gprog* p = parse_gprog(c, "G0 X0 Y0 Z2 G91 G1 X3");
       region r(5, 5, 5, 0.01);
+      r.set_height(2, 3, 2, 4, 5);
       r.set_machine_x_offset(1);
       r.set_machine_y_offset(3);
       double tool_diameter = 1.0;

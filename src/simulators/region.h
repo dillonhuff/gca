@@ -27,7 +27,7 @@ namespace gca {
       column_heights = static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
       for (int i = 0; i < num_x_elems; i++) {
 	for (int j = 0; j < num_y_elems; j++) {
-	  set_column_height(i, j, z_w);
+	  set_column_height(i, j, 0);
 	}
       }
     }
@@ -42,6 +42,20 @@ namespace gca {
 
     inline void set_machine_x_offset(double x_off) { machine_x_offset = x_off; }
     inline void set_machine_y_offset(double y_off) { machine_y_offset = y_off; }
+
+    void set_height(double x_s, double x_e,
+		    double y_s, double y_e,
+		    double h) {
+      int first_x = static_cast<int>(x_s / resolution);
+      int last_x = static_cast<int>(x_e / resolution);
+      int first_y = static_cast<int>(y_s / resolution);
+      int last_y = static_cast<int>(y_e / resolution);
+      for (int i = first_x; i < last_x; i++) {
+	for (int j = first_y; j < last_y; j++) {
+	  set_column_height(i, j, h);
+	}
+      }      
+    }
     
     ~region() {
       delete column_heights;
