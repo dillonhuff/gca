@@ -23,18 +23,27 @@ int main() {
   unsigned char* red = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*w*h));
   unsigned char* green = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*w*h));
   unsigned char* blue = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*w*h));
+  double max = 0.0;
   int i, j;
   for (i = 0; i < w; i++) {
-    for (j = 0; j < w; j++) {
-      //      cout << "Col height: (" << i << ", " << j << ") = " << r.column_height(i, j) << endl;
-      int val = static_cast<int>(r.column_height(i, j));
-      if (val == 5) {
-	red[i*w + j] = 255;
-      } else {
-	red[i*w + j] = 0;
+    for (j = 0; j < h; j++) {
+      double c = r.column_height(i, j);
+      if (c > max) {
+	max = c;
       }
-      green[i*w + j] = 0;
-      blue[i*w + j] = 0;
+    }
+  }
+
+  cout << "Max = " << max << endl;;
+  double red_pnt = 0.0;
+  double blue_pnt = max*(1.0/3.0);
+  double green_pnt = max*(2.0/3.0);
+  for (i = 0; i < w; i++) {
+    for (j = 0; j < h; j++) {
+      double h = r.column_height(i, j);
+      red[i*w + j] = h > red_pnt ? static_cast<int>((h / max)*255.0) : 0;
+      green[i*w + j] = h > blue_pnt ? static_cast<int>((h / max)*255.0) : 0;
+      blue[i*w + j] = h > green_pnt ? static_cast<int>((h / max)*255.0) : 0;
     }
   }
 

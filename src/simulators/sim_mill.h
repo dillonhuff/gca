@@ -35,7 +35,7 @@ namespace gca {
       point inc = inc_size * d.normalize();
       point c = s;
       while (c != e) {
-	if (within_eps(c + inc, e) || within_eps(c, e)) {
+	if (within_eps(c + inc, e, inc_size) || within_eps(c, e, inc_size)) {
 	  c = e;
 	} else {
 	  c = c + inc;
