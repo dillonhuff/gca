@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (gca)
 
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++98 -pedantic -I./src -I./test -Wall -Werror -g")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -Wall -Werror -g")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -11,3 +11,16 @@ SET(SRCS  src/core/instr.cpp src/core/parser.cpp src/core/gprog.cpp src/core/mov
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
 add_executable(bmp-prog examples/bmp_prog.cpp ${SRCS})
+
+######### VTK Example ##########
+
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+ 
+add_executable(TriangulateTerrainMap MACOSX_BUNDLE examples/TriangulateTerrainMap.cxx ${SRCS})
+ 
+if(VTK_LIBRARIES)
+  target_link_libraries(TriangulateTerrainMap ${VTK_LIBRARIES})
+else()
+  target_link_libraries(TriangulateTerrainMap vtkHybrid vtkWidgets)
+endif()
