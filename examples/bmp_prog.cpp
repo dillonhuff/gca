@@ -8,9 +8,9 @@ using namespace gca;
 
 int main() {
   context c;
-  gprog* p = parse_gprog(c, "G0 X0 Y0 Z2 G91 G1 X3 G0 X-3.0 M2");
+  gprog* p = parse_gprog(c, "G0 X0 Y0 Z0 G91 G1 X3 Z4");
   region r(5, 5, 5, 0.01);
-  r.set_height(2, 3, 2, 4, 5);
+  r.set_height(0, 5, 0, 5, 5);
   r.set_machine_x_offset(1);
   r.set_machine_y_offset(3);
   double tool_diameter = 1.0;
@@ -34,16 +34,16 @@ int main() {
     }
   }
 
-  cout << "Max = " << max << endl;;
-  double red_pnt = 0.0;
-  double blue_pnt = max*(1.0/3.0);
-  double green_pnt = max*(2.0/3.0);
+  cout << "Max = " << max << endl;
+  //double red_pnt = 0.0;
+  //double blue_pnt = max*(1.0/3.0);
+  //double green_pnt = max*(2.0/3.0);
   for (i = 0; i < w; i++) {
     for (j = 0; j < h; j++) {
-      double h = r.column_height(i, j);
-      red[i*w + j] = h > red_pnt ? static_cast<int>((h / max)*255.0) : 0;
-      green[i*w + j] = h > blue_pnt ? static_cast<int>((h / max)*255.0) : 0;
-      blue[i*w + j] = h > green_pnt ? static_cast<int>((h / max)*255.0) : 0;
+      //int h = static_cast<int>(r.column_height(i, j)/max)*100;
+      blue[i*w + j] = 1; //(255*h)/100; //h > red_pnt ? static_cast<int>((h / max)*255.0) : 0;
+      green[i*w + j] = 1; //(255*(100 - h))/100; //h > blue_pnt ? static_cast<int>((h / max)*255.0) : 0;
+      red[i*w + j] = 0; //h > green_pnt ? static_cast<int>((h / max)*255.0) : 0;
     }
   }
 
