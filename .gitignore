@@ -9,3 +9,6 @@ simple-prog
 compile_commands.json
 *.bmp
 bmp-prog
+CMakeCache.txt
+CMakeFiles/*
+cmake_install.cmake
