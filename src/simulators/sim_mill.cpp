@@ -2,7 +2,7 @@
 
 namespace gca {
 
-  void simulate_mill(gprog& p, region& r, const mill_tool& t) {
+  sim_res simulate_mill(gprog& p, region& r, const mill_tool& t) {
     pass ps;
     orientation_state orient_s(ps, GCA_ABSOLUTE);
     position_state pos_s(ps, point(0, 0, 0));
@@ -11,7 +11,7 @@ namespace gca {
     ps.add_state(GCA_ORIENTATION_STATE, &orient_s);    
     ps.add_state(GCA_SIM_MILL_STATE, &sim_state);
     ps.exec(&p);
-    return;
+    return GCA_SIM_OK;
   }
 
 }

@@ -83,6 +83,14 @@ namespace gca {
       cout << "-- Actual: " << actual << endl;
       REQUIRE(within_eps(actual, correct_volume, 0.01));
     }
+
+    SECTION("Move out of bounds in X direction") {
+      // gprog* p = parse_gprog(c, "G0 X19");
+      // region r(7, 10, 4, 0.01);
+      // cylindrical_bit t(1);
+      // sim_res res = simulate_mill(*p, r, t);
+      // REQUIRE(GCA_SIM_OUT_OF_BOUNDS);
+    }
     
   }
 }

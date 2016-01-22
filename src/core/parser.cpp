@@ -67,8 +67,7 @@ namespace gca {
   }
 
   value* parse_option_value(context& c, char v,
-			    size_t* i, string s,
-			    double default_feedrate) {
+			    size_t* i, string s) {
     ignore_whitespace(i, s);
     if (s[*i] == v) {
       parse_char(v, i, s);
@@ -87,42 +86,20 @@ namespace gca {
   void parse_position_values(context& c,
 			     gprog* p, size_t* i, string s, orientation ori,
 			     value** x, value** y, value** z) {
-    if (ori == GCA_ABSOLUTE) {
-      *x = parse_option_value(c, 'X', i, s, 0);
-      *y = parse_option_value(c, 'Y', i, s, 0);
-      *z = parse_option_value(c, 'Z', i, s, 0);
-    } else {
-      *x = parse_option_value(c, 'X', i, s, 0);
-      *y = parse_option_value(c, 'Y', i, s, 0);
-      *z = parse_option_value(c, 'Z', i, s, 0);
-    }
-  }
-
-  point parse_point(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    double x, y, z;
-    if (ori == GCA_ABSOLUTE) {
-      point lp = p->last_position();
-      x = parse_option_coordinate('X', i, s, lp.x);
-      y = parse_option_coordinate('Y', i, s, lp.y);
-      z = parse_option_coordinate('Z', i, s, lp.z);
-    } else {
-      x = parse_option_coordinate('X', i, s, 0);
-      y = parse_option_coordinate('Y', i, s, 0);
-      z = parse_option_coordinate('Z', i, s, 0);
-    }
-    return point(x, y, z);
+    *x = parse_option_value(c, 'X', i, s);
+    *y = parse_option_value(c, 'Y', i, s);
+    *z = parse_option_value(c, 'Z', i, s);
   }
 
   instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    double def_f = 1.0;
     value* default_feedrate = c.mk_omitted(); //c.mk_lit(def_f);
-    value* fr = parse_option_value(c, 'F', i, s, def_f);
+    value* fr = parse_option_value(c, 'F', i, s);
     value* xv = NULL;
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);
     if (*default_feedrate == *fr) {
-      fr = parse_option_value(c, 'F', i, s, def_f);
+      fr = parse_option_value(c, 'F', i, s);
     }
     return c.mk_G1(xv, yv, zv, fr);
   }

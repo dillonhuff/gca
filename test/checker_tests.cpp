@@ -33,6 +33,11 @@ namespace gca {
       gprog* p = parse_gprog(c, "G91 G1 X8 G0 X7");
       REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, 10, 0.0, 2.0) == 1);
     }
+
+    SECTION("g0 move checker no g0s") {
+      gprog* p = parse_gprog(c, "G1 X19");
+      REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 0);
+    }
     
     SECTION("g0_move_checker no mistake") {
       gprog* p = c.mk_gprog();

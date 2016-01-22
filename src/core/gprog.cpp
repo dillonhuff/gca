@@ -28,6 +28,9 @@ namespace gca {
   }
   
   point gprog::last_position() {
+    if (size() == 0) {
+      return point(0, 0, 0);
+    }
     vector<point> positions;
     all_positions_starting_at(point(0, 0, 0), positions);
     return positions.back();

@@ -23,7 +23,8 @@ namespace gca {
     resolution(xy_resolution), height(z_w), x_len(x_w), y_len(y_w),
       num_x_elems(x_w/static_cast<double>(xy_resolution)),
       num_y_elems(y_w/static_cast<double>(xy_resolution)),
-      total_volume_removed(0) {
+      total_volume_removed(0),
+      machine_x_offset(0), machine_y_offset(0) {
       column_heights = static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
       for (int i = 0; i < num_x_elems; i++) {
 	for (int j = 0; j < num_y_elems; j++) {

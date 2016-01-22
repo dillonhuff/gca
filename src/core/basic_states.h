@@ -77,7 +77,10 @@ namespace gca {
 	point p = point(xd, yd, zd);
       	after = after + p;
       } else {
-      	after = ist.pos();
+	double x = ist.x_with_default(after.x);
+	double y = ist.y_with_default(after.y);
+	double z = ist.z_with_default(after.z);
+      	after = point(x, y, z);
       }
       diff = after - before;
     }

@@ -4,6 +4,7 @@
 #include "core/basic_states.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
+#include "simulators/sim_res.h"
 
 namespace gca {
 
@@ -56,7 +57,7 @@ namespace gca {
     }
   };
 
-  void simulate_mill(gprog& p, region& r, const mill_tool& t);
+  sim_res simulate_mill(gprog& p, region& r, const mill_tool& t);
 }
 
 #endif
