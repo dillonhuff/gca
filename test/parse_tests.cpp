@@ -141,7 +141,7 @@ namespace gca {
       gprog* p = read_file(c, fn);
       cout << *p;
       REQUIRE(p->size() == 61);
-    }    
+    }
     
   }
 

@@ -102,40 +102,40 @@ namespace gca {
   }
   
   void parse_position_values(context& c,
-			     gprog* p, size_t* i, string s, orientation ori,
+			     gprog* p, size_t* i, string s,
 			     value** x, value** y, value** z) {
     *x = parse_option_value(c, 'X', i, s);
     *y = parse_option_value(c, 'Y', i, s);
     *z = parse_option_value(c, 'Z', i, s);
   }
 
-  instr* parse_G1(context& c, gprog* p, size_t* i, string s, orientation ori) {
-    value* default_feedrate = c.mk_omitted(); //c.mk_lit(def_f);
+  instr* parse_G1(context& c, gprog* p, size_t* i, string s) {
+    value* default_feedrate = c.mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);
     value* xv = NULL;
     value* yv = NULL;
     value* zv = NULL;
-    parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);
+    parse_position_values(c, p, i, s, &xv, &yv, &zv);
     if (*default_feedrate == *fr) {
       fr = parse_option_value(c, 'F', i, s);
     }
     return c.mk_G1(xv, yv, zv, fr);
   }
 
-  instr* parse_G0(context& c, gprog* p, size_t* i, string s, orientation ori) {
+  instr* parse_G0(context& c, gprog* p, size_t* i, string s) {
     ignore_whitespace(i, s);
     value* xv = NULL;
     value* yv = NULL;
     value* zv = NULL;
-    parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);
+    parse_position_values(c, p, i, s, &xv, &yv, &zv);
     return c.mk_G0(xv, yv, zv);
   }
 
-  instr* parse_G53(context& c, gprog* p, size_t* i, string s, orientation ori) {
+  instr* parse_G53(context& c, gprog* p, size_t* i, string s) {
     value* xv = NULL;
     value* yv = NULL;
     value* zv = NULL;
-    parse_position_values(c, p, i, s, ori, &xv, &yv, &zv);    
+    parse_position_values(c, p, i, s, &xv, &yv, &zv);
     return c.mk_G53(xv, yv, zv);
   }
 
@@ -159,20 +159,18 @@ namespace gca {
   }
 
   instr* parse_ginstr(context& c, gprog* p,
-		      int val, size_t* i, string s, orientation* ori) {
+		      int val, size_t* i, string s) {
     instr* is;
     if (val == 0) {
-      is = parse_G0(c, p, i, s, *ori);
+      is = parse_G0(c, p, i, s);
     } else if (val == 1) {
-      is = parse_G1(c, p, i, s, *ori);
+      is = parse_G1(c, p, i, s);
     } else if (val == 91) {
       is = c.mk_G91();
-      *ori = GCA_RELATIVE;
     } else if (val == 90) {
       is = c.mk_G90();
-      *ori = GCA_ABSOLUTE;
     } else if (val == 53) {
-      is = parse_G53(c, p, i, s, *ori);
+      is = parse_G53(c, p, i, s);
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);
@@ -184,8 +182,7 @@ namespace gca {
   instr* parse_next_instr(context& c,
 			  gprog* p,
 			  size_t* i,
-			  string s,
-			  orientation* ori) {
+			  string s) {
     instr* is;
     char next_char = s[*i];
     if (next_char == '(') {
@@ -208,7 +205,7 @@ namespace gca {
       string str = parse_coord_letters(i, s);
       is = c.mk_finstr(val, str);
     } else if (next_char == 'G') {
-      is = parse_ginstr(c, p, val, i, s, ori);
+      is = parse_ginstr(c, p, val, i, s);
     } else if (next_char == '#') {
       parse_char('=', i, s);
       double e = parse_double(i, s);
@@ -223,11 +220,10 @@ namespace gca {
   gprog* parse_gprog(context& c, string s) {
     gprog* p = c.mk_gprog();
     string::size_type i = 0;
-    orientation ori = GCA_ABSOLUTE;
     while (i < s.size()) {
       ignore_whitespace(&i, s);
       if (i >= s.size()) { break; }
-      instr* is = parse_next_instr(c, p, &i, s, &ori);
+      instr* is = parse_next_instr(c, p, &i, s);
       p->push_back(is);
     }
     return p;
