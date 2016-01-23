@@ -122,8 +122,6 @@ namespace gca {
       correct->push_back(c.mk_comment('(', ')', " f"));
       correct->push_back(c.mk_minstr(2));
       correct->push_back(c.mk_comment('(', ')', "Comment G1 X0.0"));
-      cout << "Actual " << endl;
-      cout << *p;
       REQUIRE(*p == *correct);
     }
 
@@ -141,6 +139,7 @@ namespace gca {
     SECTION("Read and parse real CNC file") {
       string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
       gprog* p = read_file(c, fn);
+      cout << *p;
       REQUIRE(p->size() == 61);
     }    
     

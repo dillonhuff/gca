@@ -27,7 +27,6 @@ namespace gca {
   comment* parse_comment_with_delimiters(context& c,
 					 char sc, char ec, size_t* i, string s) {
     string text = "";
-    cout << "Parsing comment" << endl;
     parse_char(sc, i, s);
     while (s[*i] != ec) {
       text += s[*i];

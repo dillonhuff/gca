@@ -23,7 +23,7 @@ namespace gca {
     }
 
     virtual void print(ostream& s) const {
-      s << 'F' << rate << axes;
+      s << 'F' << rate << ' ' << axes;
     }
     
   };
