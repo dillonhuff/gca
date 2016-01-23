@@ -9,6 +9,7 @@ simple-prog
 compile_commands.json
 *.bmp
 bmp-prog
+print-strap
 CMakeCache.txt
 CMakeFiles/*
 cmake_install.cmake
