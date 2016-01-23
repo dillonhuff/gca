@@ -229,4 +229,17 @@ namespace gca {
     }
   }
 
+  TEST_CASE("Parsing G2 and G3") {
+    context c;
+
+    SECTION("G2 IJ") {
+      gprog* p = parse_gprog(c, "G02 X1.0 Y2.0 Z3.0 I-2.0 J0.15");
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G2(c.mk_lit(1), c.mk_lit(2), c.mk_lit(3),
+				 c.mk_lit(-2.0), c.mk_lit(0.15), c.mk_omitted(),
+				 c.mk_omitted()));
+      REQUIRE(*p == *correct);
+    }
+  }
+
 }

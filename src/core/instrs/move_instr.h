@@ -24,6 +24,13 @@ namespace gca {
       feed_rate = i->feed_rate;
     }
 
+    move_instr(value* xp, value* yp, value* zp, value* frp) {
+      x = xp;
+      y = yp;
+      z = zp;
+      feed_rate = frp;
+    }
+
     move_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) {
       assert(cp == GCA_G);
       assert(frp > 0);
@@ -86,7 +93,7 @@ namespace gca {
       if (!z->is_omitted()) { s << 'Z' << *z << ' '; }
     }
 
-    bool operator==(const instr& other) const {
+    virtual bool operator==(const instr& other) const {
       if (!other.is_move_instr()) {
 	return false;
       }
