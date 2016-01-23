@@ -115,8 +115,15 @@ namespace gca {
       gprog* p = parse_gprog(c, s);
       gprog* correct = c.mk_gprog();
       correct->push_back(c.mk_G1(c.mk_lit(0.0), c.mk_lit(2.75), c.mk_lit(-1.5), c.mk_omitted()));
+      correct->push_back(c.mk_comment('(', ')', "comment 1"));
       correct->push_back(c.mk_G0(c.mk_lit(12.5), c.mk_omitted(), c.mk_omitted()));
+      correct->push_back(c.mk_comment('(', ')', "Comment \n number 2"));
+      correct->push_back(c.mk_comment('(', ')', "s"));
+      correct->push_back(c.mk_comment('(', ')', " f"));
       correct->push_back(c.mk_minstr(2));
+      correct->push_back(c.mk_comment('(', ')', "Comment G1 X0.0"));
+      cout << "Actual " << endl;
+      cout << *p;
       REQUIRE(*p == *correct);
     }
 
@@ -134,7 +141,7 @@ namespace gca {
     SECTION("Read and parse real CNC file") {
       string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
       gprog* p = read_file(c, fn);
-      REQUIRE(p->size() == 42);
+      REQUIRE(p->size() == 61);
     }    
     
   }

@@ -4,6 +4,7 @@
 #include "arena_allocator.h"
 #include "synthesis/cut.h"
 #include "core/assign_instr.h"
+#include "core/comment.h"
 #include "core/gprog.h"
 #include "core/f_instr.h"
 #include "core/instr.h"
@@ -61,6 +62,11 @@ namespace gca {
     f_instr* mk_finstr(int val, string s) {
       f_instr* mem = a.allocate<f_instr>();
       return new (mem) f_instr(val, s);
+    }
+
+    comment* mk_comment(char ld, char rd, string t) {
+      comment* mem = a.allocate<comment>();
+      return new (mem) comment(ld, rd, t);
     }
     
     instr* mk_G91() {

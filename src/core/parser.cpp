@@ -4,7 +4,7 @@
 #include <iostream>
 #include <streambuf>
 
-#include "parser.h"
+#include "core/parser.h"
 
 namespace gca {
 
@@ -15,19 +15,6 @@ namespace gca {
     }    
   }
 
-  void ignore_comment(size_t* i, string s) {
-    ignore_comment_with_delimiters('(', ')', i, s);
-    ignore_comment_with_delimiters('[', ']', i, s);
-  }
-
-  void ignore_whitespace(size_t* i, string s) {
-    while (*i < s.size() && (s[*i] == '(' || isspace(s[*i]))) {
-      while (*i < s.size() && isspace(s[*i])) { (*i)++; }
-      if (*i >= s.size()) { break; }
-      ignore_comment(i, s);
-    }
-  }
-
   void parse_char(char c, size_t* i, string s) {
     if (s[*i] == c) {
       (*i)++;
@@ -35,6 +22,37 @@ namespace gca {
     }
     cout << "Cannot parse char " << c << " from string " << s.substr(*i) << endl;
     assert(false);
+  }
+  
+  comment* parse_comment_with_delimiters(context& c,
+					 char sc, char ec, size_t* i, string s) {
+    string text = "";
+    cout << "Parsing comment" << endl;
+    parse_char(sc, i, s);
+    while (s[*i] != ec) {
+      text += s[*i];
+      (*i)++;
+    }
+    parse_char(ec, i, s);
+    // if (s[*i] == sc) {
+    //   while (*i < s.size() && s[*i] != ec) { (*i)++; }
+    //   (*i)++;
+    // }
+    return c.mk_comment(sc, ec, text);
+  }
+  
+  void ignore_comment(size_t* i, string s) {
+    ignore_comment_with_delimiters('(', ')', i, s);
+    ignore_comment_with_delimiters('[', ']', i, s);
+  }
+
+  void ignore_whitespace(size_t* i, string s) {
+    while (*i < s.size() && isspace(s[*i])) {
+      (*i)++;
+      //      while (*i < s.size() && isspace(s[*i])) { (*i)++; }
+      //      if (*i >= s.size()) { break; }
+      //ignore_comment(i, s);
+    }
   }
 
   double parse_double(size_t* i, string s) {
@@ -171,6 +189,13 @@ namespace gca {
 			  orientation* ori) {
     instr* is;
     char next_char = s[*i];
+    if (next_char == '(') {
+      is = parse_comment_with_delimiters(c, '(', ')', i, s);
+      return is;
+    } else if (next_char == '[') {
+      is = parse_comment_with_delimiters(c, '[', ']', i, s);
+      return is;
+    }
     (*i)++;
     int val = parse_int(i, s);
     if (next_char == 'M') {
