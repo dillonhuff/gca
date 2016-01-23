@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <iostream>
@@ -121,14 +122,23 @@ namespace gca {
     return c.mk_G53(xv, yv, zv);
   }
 
-  // TODO: Actually parse the coordinate string
-  string parse_coord_letters(size_t* i, string s) {
-    char c = s[*i];
-    while (c == 'X' || c == 'Y' || c == 'Z') {
+  string parse_option_char(size_t* i, string s, char t) {
+    if (s[*i] == t) {
       (*i)++;
-      c = s[*i];
+      char str[2];
+      str[0] = t;
+      str[1] = '\0';
+      string c(str);
+      return c;
     }
     return "";
+  }
+
+  string parse_coord_letters(size_t* i, string s) {
+    string x = parse_option_char(i, s, 'X');
+    string y = parse_option_char(i, s, 'Y');
+    string z = parse_option_char(i, s, 'Z');
+    return x + y + z;
   }
 
   instr* parse_ginstr(context& c, gprog* p,

@@ -186,6 +186,20 @@ namespace gca {
       correct->push_back(c.mk_G53(c.mk_lit(0), c.mk_lit(0), c.mk_lit(1)));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("Parse F instruction") {
+      gprog* p = parse_gprog(c, "F15 XY");
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_finstr(15, "XY"));
+      REQUIRE(*p == *correct);
+    }
+
+    SECTION("Parse F instruction not all") {
+      gprog* p = parse_gprog(c, "F15 XYZ");
+      gprog* incorrect = c.mk_gprog();
+      incorrect->push_back(c.mk_finstr(15, "XY"));
+      REQUIRE(*p != *incorrect);
+    }
     
   }
 

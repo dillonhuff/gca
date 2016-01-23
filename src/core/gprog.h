@@ -30,7 +30,10 @@ namespace gca {
 
     instr* operator[](unsigned int i) { return instrs[i]; }
 
-    bool operator==(const gprog& other);
+    bool operator==(const gprog& other) const;
+    inline bool operator!=(const gprog& other) const {
+      return !(*this == other);
+    }
       
     void print(ostream& s);
 

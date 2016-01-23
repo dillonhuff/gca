@@ -5,6 +5,7 @@
 #include "synthesis/cut.h"
 #include "core/assign_instr.h"
 #include "core/gprog.h"
+#include "core/f_instr.h"
 #include "core/instr.h"
 #include "core/move_instr.h"
 
@@ -57,10 +58,9 @@ namespace gca {
       return new (mem) instr(GCA_S, val);
     }
 
-    // TODO: Actually make use of the control string
-    instr* mk_finstr(int val, string s) {
-      instr* mem = a.allocate<instr>();
-      return new (mem) instr(GCA_F, val);
+    f_instr* mk_finstr(int val, string s) {
+      f_instr* mem = a.allocate<f_instr>();
+      return new (mem) f_instr(val, s);
     }
     
     instr* mk_G91() {

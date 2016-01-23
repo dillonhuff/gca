@@ -13,9 +13,13 @@ namespace gca {
     region& r;
     const mill_tool& t;
     double inc_size, machine_x_offset, machine_y_offset;
+    sim_res res;
     
   sim_mill_state(pass& pp, region& rp, const mill_tool& tp) :
-    per_instr_state(pp), r(rp), t(tp), inc_size(r.resolution / 2.0) {}
+    per_instr_state(pp), r(rp), t(tp), inc_size(r.resolution / 2.0),
+      res(GCA_SIM_OK) {}
+
+    inline sim_res result() { return res; }
 
     point get_start() {
       position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
@@ -32,6 +36,9 @@ namespace gca {
     void update_line() {
       point s = get_start();
       point e = get_end();
+      if (!r.in_region(e, t)) {
+	add_warning("goes outside of region bounds");
+      }
       point d = e - s;
       point inc = inc_size * d.normalize();
       point c = s;
@@ -42,7 +49,7 @@ namespace gca {
 	  c = c + inc;
 	}
 	r.update(c, t);
-      }      
+      }
     }
 
     void update_G1(move_instr& i) { update_line(); }

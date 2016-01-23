@@ -11,7 +11,7 @@ namespace gca {
     ps.add_state(GCA_ORIENTATION_STATE, &orient_s);    
     ps.add_state(GCA_SIM_MILL_STATE, &sim_state);
     ps.exec(&p);
-    return GCA_SIM_OK;
+    return sim_state.result();
   }
 
 }

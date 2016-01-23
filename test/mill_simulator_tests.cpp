@@ -91,6 +91,5 @@ namespace gca {
       // sim_res res = simulate_mill(*p, r, t);
       // REQUIRE(GCA_SIM_OUT_OF_BOUNDS);
     }
-    
   }
 }

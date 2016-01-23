@@ -45,6 +45,7 @@ namespace gca {
       v = vp;
     }
 
+    virtual inline bool is_f_instr() const { return true; }
     virtual inline bool is_assign_instr() const { return false; }
     virtual inline bool is_move_instr() const { return false; }
     inline bool is_end_instr() const {

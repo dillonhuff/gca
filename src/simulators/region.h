@@ -74,6 +74,25 @@ namespace gca {
       *(column_heights + i*num_y_elems + j) = f;
     }
 
+    inline bool legal_column(int i, int j) {
+      return (0 <= i && i < num_x_elems) && (0 <= j && j < num_y_elems);
+    }
+
+    inline bool in_region(point p, const mill_tool& t) {
+      int first_x = static_cast<int>(t.x_min(p) / resolution);
+      int last_x = static_cast<int>(t.x_max(p) / resolution);
+      int first_y = static_cast<int>(t.y_min(p) / resolution);
+      int last_y = static_cast<int>(t.y_max(p) / resolution);
+      for (int i = first_x; i < last_x; i++) {
+	for (int j = first_y; j < last_y; j++) {
+	  if (t.contains(p, resolution, i, j) && !legal_column(i, j)) {
+	    return false;
+	  }
+	}
+      }
+      return true;
+    }
+
     void update(point p, const mill_tool& t) {
       int first_x = static_cast<int>(t.x_min(p) / resolution);
       int last_x = static_cast<int>(t.x_max(p) / resolution);
@@ -94,4 +113,5 @@ namespace gca {
   };
 
 }
+
 #endif
