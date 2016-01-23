@@ -1,7 +1,7 @@
 #ifndef GCA_COMMENT_H
 #define GCA_COMMENT_H
 
-#include "core/instr.h"
+#include "core/instrs/instr.h"
 
 namespace gca {
 

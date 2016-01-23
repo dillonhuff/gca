@@ -1,7 +1,7 @@
 #ifndef GCA_F_INSTR_H
 #define GCA_F_INSTR_H
 
-#include "core/instr.h"
+#include "core/instrs/instr.h"
 
 namespace gca {
 

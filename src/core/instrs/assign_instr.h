@@ -1,4 +1,4 @@
-#include "core/instr.h"
+#include "core/instrs/instr.h"
 #include "core/value.h"
 
 namespace gca {

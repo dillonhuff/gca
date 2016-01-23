@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "instr.h"
+#include "core/instrs/all.h"
 #include "geometry/point.h"
 
 using namespace std;

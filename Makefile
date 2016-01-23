@@ -236,38 +236,38 @@ src/core/gprog.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.s
 .PHONY : src/core/gprog.cpp.s
 
-src/core/instr.o: src/core/instr.cpp.o
+src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
 
-.PHONY : src/core/instr.o
+.PHONY : src/core/instrs/instr.o
 
 # target to build an object file
-src/core/instr.cpp.o:
-	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/instr.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instr.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instr.cpp.o
-.PHONY : src/core/instr.cpp.o
+src/core/instrs/instr.cpp.o:
+	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.o
+.PHONY : src/core/instrs/instr.cpp.o
 
-src/core/instr.i: src/core/instr.cpp.i
+src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
 
-.PHONY : src/core/instr.i
+.PHONY : src/core/instrs/instr.i
 
 # target to preprocess a source file
-src/core/instr.cpp.i:
-	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/instr.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instr.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instr.cpp.i
-.PHONY : src/core/instr.cpp.i
+src/core/instrs/instr.cpp.i:
+	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.i
+.PHONY : src/core/instrs/instr.cpp.i
 
-src/core/instr.s: src/core/instr.cpp.s
+src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
 
-.PHONY : src/core/instr.s
+.PHONY : src/core/instrs/instr.s
 
 # target to generate assembly for a file
-src/core/instr.cpp.s:
-	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/instr.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instr.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instr.cpp.s
-.PHONY : src/core/instr.cpp.s
+src/core/instrs/instr.cpp.s:
+	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.s
+.PHONY : src/core/instrs/instr.cpp.s
 
 src/core/parser.o: src/core/parser.cpp.o
 
@@ -742,9 +742,9 @@ help:
 	@echo "... src/core/gprog.o"
 	@echo "... src/core/gprog.i"
 	@echo "... src/core/gprog.s"
-	@echo "... src/core/instr.o"
-	@echo "... src/core/instr.i"
-	@echo "... src/core/instr.s"
+	@echo "... src/core/instrs/instr.o"
+	@echo "... src/core/instrs/instr.i"
+	@echo "... src/core/instrs/instr.s"
 	@echo "... src/core/parser.o"
 	@echo "... src/core/parser.i"
 	@echo "... src/core/parser.s"

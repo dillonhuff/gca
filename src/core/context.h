@@ -3,12 +3,8 @@
 
 #include "arena_allocator.h"
 #include "synthesis/cut.h"
-#include "core/assign_instr.h"
-#include "core/comment.h"
 #include "core/gprog.h"
-#include "core/f_instr.h"
-#include "core/instr.h"
-#include "core/move_instr.h"
+#include "core/instrs/all.h"
 
 namespace gca {
 

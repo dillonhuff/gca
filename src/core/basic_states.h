@@ -1,7 +1,7 @@
 #ifndef GCA_BASIC_STATES_H
 #define GCA_BASIC_STATES_H
 
-#include "core/move_instr.h"
+#include "core/instrs/all.h"
 #include "core/pass.h"
 #include "core/state_names.h"
 

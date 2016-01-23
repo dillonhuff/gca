@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "core/gprog.h"
-#include "core/move_instr.h"
 
 namespace gca {
 
