@@ -33,10 +33,6 @@ namespace gca {
       (*i)++;
     }
     parse_char(ec, i, s);
-    // if (s[*i] == sc) {
-    //   while (*i < s.size() && s[*i] != ec) { (*i)++; }
-    //   (*i)++;
-    // }
     return c.mk_comment(sc, ec, text);
   }
   
@@ -48,9 +44,6 @@ namespace gca {
   void ignore_whitespace(size_t* i, string s) {
     while (*i < s.size() && isspace(s[*i])) {
       (*i)++;
-      //      while (*i < s.size() && isspace(s[*i])) { (*i)++; }
-      //      if (*i >= s.size()) { break; }
-      //ignore_comment(i, s);
     }
   }
 
