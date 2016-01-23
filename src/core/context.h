@@ -118,6 +118,13 @@ namespace gca {
       g2_instr* mem = a.allocate<g2_instr>();
       return new (mem) g2_instr(x, y, z, i, j, k, feed_rate);
     }
+
+    g3_instr* mk_G3(value* x, value* y, value* z,
+		      value* i, value* j, value* k,
+		      value* feed_rate) {
+      g3_instr* mem = a.allocate<g3_instr>();
+      return new (mem) g3_instr(x, y, z, i, j, k, feed_rate);
+    }
     
     cut* mk_cut(point start, point end) {
       cut* mem = a.allocate<cut>();

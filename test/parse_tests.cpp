@@ -240,6 +240,16 @@ namespace gca {
 				 c.mk_omitted()));
       REQUIRE(*p == *correct);
     }
+
+    SECTION("G3 IK") {
+      gprog* p = parse_gprog(c, "G3 X1.0 Y2.0 Z3.0 I-2.0 K0.15");
+      gprog* correct = c.mk_gprog();
+      correct->push_back(c.mk_G3(c.mk_lit(1), c.mk_lit(2), c.mk_lit(3),
+				 c.mk_lit(-2.0), c.mk_omitted(), c.mk_lit(0.15),
+				 c.mk_omitted()));
+      REQUIRE(*p == *correct);
+    }
+    
   }
 
 }

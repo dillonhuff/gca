@@ -45,6 +45,7 @@ namespace gca {
       v = vp;
     }
 
+    virtual inline bool is_g3_instr() const { return false; }
     virtual inline bool is_g2_instr() const { return false; }
     virtual inline bool is_f_instr() const { return false; }
     virtual inline bool is_comment() const { return false; }

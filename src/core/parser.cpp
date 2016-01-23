@@ -140,6 +140,23 @@ namespace gca {
     }    
     return c.mk_G2(xv, yv, zv, iv, jv, kv, fr);
   }
+
+  instr* parse_G3(context& c, gprog* p, size_t* i, string s) {
+    ignore_whitespace(i, s);
+    value* default_feedrate = c.mk_omitted();
+    value* fr = parse_option_value(c, 'F', i, s);    
+    value* xv = NULL;
+    value* yv = NULL;
+    value* zv = NULL;
+    parse_position_values(c, p, i, s, &xv, &yv, &zv);
+    value* iv = parse_option_value(c, 'I', i, s);
+    value* jv = parse_option_value(c, 'J', i, s);
+    value* kv = parse_option_value(c, 'K', i, s);
+    if (*default_feedrate == *fr) {
+      fr = parse_option_value(c, 'F', i, s);
+    }    
+    return c.mk_G3(xv, yv, zv, iv, jv, kv, fr);
+  }
   
   instr* parse_G53(context& c, gprog* p, size_t* i, string s) {
     value* xv = NULL;
@@ -183,6 +200,8 @@ namespace gca {
       is = parse_G53(c, p, i, s);
     } else if (val == 2) {
       is = parse_G2(c, p, i, s);
+    } else if (val == 3) {
+      is = parse_G3(c, p, i, s);
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);

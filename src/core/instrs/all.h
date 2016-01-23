@@ -7,5 +7,6 @@
 #include "core/instrs/comment.h"
 #include "core/instrs/move_instr.h"
 #include "core/instrs/g2_instr.h"
+#include "core/instrs/g3_instr.h"
 
 #endif
