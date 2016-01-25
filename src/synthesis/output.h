@@ -19,6 +19,8 @@ namespace gca {
 
   void insert_sink_cuts(context& c, double l, vector<cut*>& cuts, vector<cut*>& dest);
 
+  void from_to_with_G0(context& c, gprog* p, point from, point to);
+
   vector<cut*> surface_cuts(context &c,
 			    point left, point right,
 			    point shift, int num_cuts);

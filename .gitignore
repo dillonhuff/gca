@@ -12,6 +12,7 @@ bmp-prog
 print-strap
 gdiff
 z-abstract
+hole-optimizer
 curved-strap-assembly.16x.h=.2.tap-generalized
 CMakeCache.txt
 CMakeFiles/*
