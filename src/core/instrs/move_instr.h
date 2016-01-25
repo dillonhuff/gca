@@ -42,6 +42,14 @@ namespace gca {
       feed_rate = frp;
     }
 
+    inline value* get_x() const { return x; }
+    inline value* get_y() const { return y; }
+    inline value* get_z() const { return z; }
+
+    inline void set_x(value* n) { x = n; }
+    inline void set_y(value* n) { y = n; }
+    inline void set_z(value* n) { z = n; }
+    
     inline bool is_concrete() const {
       return x->is_lit() && y->is_lit() && z->is_lit();
     }

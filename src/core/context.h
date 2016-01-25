@@ -134,10 +134,25 @@ namespace gca {
     instr* mk_instr_cpy(instr* i) {
       instr* new_i;
       if (i->is_move_instr()) {
-	move_instr* mi = static_cast<move_instr*>(i);
-	move_instr* mem = a.allocate<move_instr>();
-	move_instr* new_i_m = new (mem) move_instr(mi);
-	new_i = static_cast<instr*>(new_i_m);
+	if (i->is_G0() || i->is_G1() || i->is_G53()) {
+	  move_instr* mi = static_cast<move_instr*>(i);
+	  move_instr* mem = a.allocate<move_instr>();
+	  move_instr* new_i_m = new (mem) move_instr(mi);
+	  new_i = static_cast<instr*>(new_i_m);
+	} else if (i->is_g2_instr()) {
+	  g2_instr* gi = static_cast<g2_instr*>(i);
+	  new_i = mk_G2(gi->get_x(), gi->get_y(), gi->get_z(),
+		       gi->i, gi->j, gi->k,
+		       gi->feed_rate);
+	} else if (i->is_g3_instr()) {
+	  g3_instr* gi = static_cast<g3_instr*>(i);
+	  new_i = mk_G3(gi->get_x(), gi->get_y(), gi->get_z(),
+		       gi->i, gi->j, gi->k,
+		       gi->feed_rate);
+	} else {
+	  cout << "ERROR: DO NOT SUPPORT " << *i << endl;
+	  assert(false);
+	}
       } else {
 	instr* mem = a.allocate<instr>();
 	new_i = new (mem) instr(i);

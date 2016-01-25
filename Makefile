@@ -175,6 +175,19 @@ print-strap/fast:
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/build
 .PHONY : print-strap/fast
 
+#=============================================================================
+# Target rules for targets named z-abstract
+
+# Build rule for target.
+z-abstract: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 z-abstract
+.PHONY : z-abstract
+
+# fast build rule for target.
+z-abstract/fast:
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/build
+.PHONY : z-abstract/fast
+
 examples/TriangulateTerrainMap.o: examples/TriangulateTerrainMap.cxx.o
 
 .PHONY : examples/TriangulateTerrainMap.o
@@ -283,6 +296,33 @@ examples/print_strap.cpp.s:
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/examples/print_strap.cpp.s
 .PHONY : examples/print_strap.cpp.s
 
+examples/z_abstract.o: examples/z_abstract.cpp.o
+
+.PHONY : examples/z_abstract.o
+
+# target to build an object file
+examples/z_abstract.cpp.o:
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.o
+.PHONY : examples/z_abstract.cpp.o
+
+examples/z_abstract.i: examples/z_abstract.cpp.i
+
+.PHONY : examples/z_abstract.i
+
+# target to preprocess a source file
+examples/z_abstract.cpp.i:
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.i
+.PHONY : examples/z_abstract.cpp.i
+
+examples/z_abstract.s: examples/z_abstract.cpp.s
+
+.PHONY : examples/z_abstract.s
+
+# target to generate assembly for a file
+examples/z_abstract.cpp.s:
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.s
+.PHONY : examples/z_abstract.cpp.s
+
 src/core/gprog.o: src/core/gprog.cpp.o
 
 .PHONY : src/core/gprog.o
@@ -294,6 +334,7 @@ src/core/gprog.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.o
 .PHONY : src/core/gprog.cpp.o
 
 src/core/gprog.i: src/core/gprog.cpp.i
@@ -307,6 +348,7 @@ src/core/gprog.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.i
 .PHONY : src/core/gprog.cpp.i
 
 src/core/gprog.s: src/core/gprog.cpp.s
@@ -320,6 +362,7 @@ src/core/gprog.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.s
 .PHONY : src/core/gprog.cpp.s
 
 src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
@@ -333,6 +376,7 @@ src/core/instrs/instr.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.o
 .PHONY : src/core/instrs/instr.cpp.o
 
 src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
@@ -346,6 +390,7 @@ src/core/instrs/instr.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.i
 .PHONY : src/core/instrs/instr.cpp.i
 
 src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
@@ -359,6 +404,7 @@ src/core/instrs/instr.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.s
 .PHONY : src/core/instrs/instr.cpp.s
 
 src/core/parser.o: src/core/parser.cpp.o
@@ -372,6 +418,7 @@ src/core/parser.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.o
 .PHONY : src/core/parser.cpp.o
 
 src/core/parser.i: src/core/parser.cpp.i
@@ -385,6 +432,7 @@ src/core/parser.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.i
 .PHONY : src/core/parser.cpp.i
 
 src/core/parser.s: src/core/parser.cpp.s
@@ -398,6 +446,7 @@ src/core/parser.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.s
 .PHONY : src/core/parser.cpp.s
 
 src/core/pass.o: src/core/pass.cpp.o
@@ -411,6 +460,7 @@ src/core/pass.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.o
 .PHONY : src/core/pass.cpp.o
 
 src/core/pass.i: src/core/pass.cpp.i
@@ -424,6 +474,7 @@ src/core/pass.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.i
 .PHONY : src/core/pass.cpp.i
 
 src/core/pass.s: src/core/pass.cpp.s
@@ -437,6 +488,7 @@ src/core/pass.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.s
 .PHONY : src/core/pass.cpp.s
 
 src/core/value.o: src/core/value.cpp.o
@@ -450,6 +502,7 @@ src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.o
 .PHONY : src/core/value.cpp.o
 
 src/core/value.i: src/core/value.cpp.i
@@ -463,6 +516,7 @@ src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.i
 .PHONY : src/core/value.cpp.i
 
 src/core/value.s: src/core/value.cpp.s
@@ -476,6 +530,7 @@ src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.s
 .PHONY : src/core/value.cpp.s
 
 src/geometry/point.o: src/geometry/point.cpp.o
@@ -489,6 +544,7 @@ src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.o
 .PHONY : src/geometry/point.cpp.o
 
 src/geometry/point.i: src/geometry/point.cpp.i
@@ -502,6 +558,7 @@ src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.i
 .PHONY : src/geometry/point.cpp.i
 
 src/geometry/point.s: src/geometry/point.cpp.s
@@ -515,6 +572,7 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.s
 .PHONY : src/geometry/point.cpp.s
 
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
@@ -528,6 +586,7 @@ src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.o
 .PHONY : src/simulators/mill_tool.cpp.o
 
 src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
@@ -541,6 +600,7 @@ src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.i
 .PHONY : src/simulators/mill_tool.cpp.i
 
 src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
@@ -554,6 +614,7 @@ src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.s
 .PHONY : src/simulators/mill_tool.cpp.s
 
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
@@ -567,6 +628,7 @@ src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.o
 .PHONY : src/simulators/sim_mill.cpp.o
 
 src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
@@ -580,6 +642,7 @@ src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.i
 .PHONY : src/simulators/sim_mill.cpp.i
 
 src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
@@ -593,6 +656,7 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
 src/synthesis/output.o: src/synthesis/output.cpp.o
@@ -606,6 +670,7 @@ src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.o
 .PHONY : src/synthesis/output.cpp.o
 
 src/synthesis/output.i: src/synthesis/output.cpp.i
@@ -619,6 +684,7 @@ src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.i
 .PHONY : src/synthesis/output.cpp.i
 
 src/synthesis/output.s: src/synthesis/output.cpp.s
@@ -632,6 +698,7 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.s
 .PHONY : src/synthesis/output.cpp.s
 
 src/system/bmp_output.o: src/system/bmp_output.cpp.o
@@ -645,6 +712,7 @@ src/system/bmp_output.cpp.o:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.o
 .PHONY : src/system/bmp_output.cpp.o
 
 src/system/bmp_output.i: src/system/bmp_output.cpp.i
@@ -658,6 +726,7 @@ src/system/bmp_output.cpp.i:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.i
 .PHONY : src/system/bmp_output.cpp.i
 
 src/system/bmp_output.s: src/system/bmp_output.cpp.s
@@ -671,6 +740,7 @@ src/system/bmp_output.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.s
 .PHONY : src/system/bmp_output.cpp.s
 
 test/checker_tests.o: test/checker_tests.cpp.o
@@ -869,11 +939,12 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... print-strap"
-	@echo "... TriangulateTerrainMap"
 	@echo "... gdiff"
+	@echo "... z-abstract"
 	@echo "... edit_cache"
 	@echo "... bmp-prog"
+	@echo "... TriangulateTerrainMap"
+	@echo "... print-strap"
 	@echo "... all-tests"
 	@echo "... examples/TriangulateTerrainMap.o"
 	@echo "... examples/TriangulateTerrainMap.i"
@@ -887,6 +958,9 @@ help:
 	@echo "... examples/print_strap.o"
 	@echo "... examples/print_strap.i"
 	@echo "... examples/print_strap.s"
+	@echo "... examples/z_abstract.o"
+	@echo "... examples/z_abstract.i"
+	@echo "... examples/z_abstract.s"
 	@echo "... src/core/gprog.o"
 	@echo "... src/core/gprog.i"
 	@echo "... src/core/gprog.s"

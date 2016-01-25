@@ -11,6 +11,8 @@ compile_commands.json
 bmp-prog
 print-strap
 gdiff
+z-abstract
+curved-strap-assembly.16x.h=.2.tap-generalized
 CMakeCache.txt
 CMakeFiles/*
 cmake_install.cmake

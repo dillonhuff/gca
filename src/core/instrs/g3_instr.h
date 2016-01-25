@@ -14,7 +14,10 @@ namespace gca {
     g3_instr(value* x, value* y, value* z,
 		      value* ip, value* jp, value* kp,
 	     value* feed_rate) : move_instr(x, y, z, feed_rate),
-    i(ip), j(jp), k(kp) {}
+    i(ip), j(jp), k(kp) {
+      c = GCA_G;
+      v = 3;
+    }
 
     virtual inline bool is_g3_instr() const { return true; }
 
