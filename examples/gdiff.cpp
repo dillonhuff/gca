@@ -8,6 +8,14 @@
 using namespace gca;
 using namespace std;
 
+class section {
+public:
+  gprog& p;
+  int start;
+  int end;
+  vector<diff*> diffs;
+};
+
 void summarize_diffs(vector<diff*>& old_diffs, vector<diff*>& new_diffs) {
   if (old_diffs.size() == 0) {
     return;
@@ -49,17 +57,16 @@ void diff_gprogs(vector<diff*>& diffs, gprog* p1, gprog* p2) {
   if (p1->size() == p2->size()) {
     return;
   }
-  gprog* larger;
-  if (p1->size() > p2->size()) {
-    larger = p1;
+  bool p1_larger = p1->size() > p2->size();
+  if (p1_larger) {
+    for (int j = i; j < p1->size(); j++ ) {
+      diffs.push_back(new gca::remove((*p1)[j]));
+    }
   } else {
-    larger = p2;
+    for (int j = i; j < p2->size(); j++ ) {
+      diffs.push_back(new gca::append((*p2)[j]));
+    }    
   }
-  append* e = new gca::append();
-  for (int j = i; j < larger->size(); j++ ) {
-    e->instrs.push_back((*larger)[j]);
-  }
-  diffs.push_back(e);
   return;
 }
 
@@ -88,6 +95,32 @@ void split_toolpaths(context& c, vector<gprog*>& tps, gprog* p) {
   }  
 }
 
+void compute_diff_summary(vector<diff*>& diff_summary, gprog* tp1, gprog* tp2) {
+  vector<diff*> diffs;
+  diff_gprogs(diffs, tp1, tp2);
+  summarize_diffs(diffs, diff_summary);
+}
+
+void show_diff_summary(int section_num, vector<diff*>& diff_summary) {
+  cout << "========== Section " << section_num << endl;
+  for (int j = 0; j < diff_summary.size(); j++) {
+    cout << "\t" << *diff_summary[j] << endl;
+  }
+}
+
+void gdiff_programs(context& c, gprog* p1, gprog* p2) {
+  vector<gprog*> toolpaths1;
+  split_toolpaths(c, toolpaths1, p1);
+  vector<gprog*> toolpaths2;
+  split_toolpaths(c, toolpaths2, p2);
+  assert(toolpaths1.size() == toolpaths2.size());
+  for (int i = 0; i < toolpaths1.size(); i++) {
+    vector<diff*> diff_summary;
+    compute_diff_summary(diff_summary, toolpaths1[i], toolpaths2[i]);
+    show_diff_summary(i, diff_summary);
+  }
+}
+
 int main(int argc, char** argv) {
   if (argc != 3) {
     cout << "Usage: gdiff <gcode_file_path> <gcode_file_path>" << endl;
@@ -97,23 +130,7 @@ int main(int argc, char** argv) {
   string file2 = argv[2];
   context c;
   gprog* p1 = read_file(c, file1);
-  cout << "Parsed p1" << endl;
   gprog* p2 = read_file(c, file2);
-  cout << "Parsed programs " << endl;
-  vector<gprog*> toolpaths1;
-  split_toolpaths(c, toolpaths1, p1);
-  vector<gprog*> toolpaths2;
-  split_toolpaths(c, toolpaths2, p2);
-  assert(toolpaths1.size() == toolpaths2.size());
-  for (int i = 0; i < toolpaths1.size(); i++) {
-    vector<diff*> diffs;
-    diff_gprogs(diffs, toolpaths1[i], toolpaths2[i]);
-    vector<diff*> diff_summary;
-    summarize_diffs(diffs, diff_summary);
-    cout << "Section diffs" << endl;
-    for (int j = 0; j < diff_summary.size(); j++) {
-      cout << *diff_summary[j] << endl;
-    }
-  }
+  gdiff_programs(c, p1, p2);
   return 0;
 }

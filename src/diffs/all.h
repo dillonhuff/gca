@@ -32,18 +32,28 @@ namespace gca {
 
   class append : public diff {
   public:
-    vector<instr*> instrs;
+    instr* is;
+
+  append(instr* isp) : is(isp) {}
 
     virtual bool same_effect(const diff& other) const { return false; }
     virtual void print(ostream& s) const {
-      s << "---------- Append -----------" << endl;
-      for (int i = 0; i < instrs.size(); i++) {
-	s << *instrs[i] << endl;
-      }
-      s << "-----------------------------" << endl;
+      s << "append " << *is;
     }
   };
 
+  class remove : public diff {
+  public:
+    instr* is;
+
+  remove(instr* isp) : is(isp) {}
+
+    virtual bool same_effect(const diff& other) const { return false; }
+    virtual void print(ostream& s) const {
+      s << "remove " << *is;
+    }
+  };
+  
   class shift_xyz : public diff {
   public:
     point p;
