@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define DEFAULT_ARENA_SIZE 1000000
+#define DEFAULT_ARENA_SIZE 10000000
 
 namespace gca {
   

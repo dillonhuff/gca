@@ -8,14 +8,14 @@
 
 namespace gca {
 
-  void ignore_comment_with_delimiters(char sc, char ec, size_t* i, string s) {
+  void ignore_comment_with_delimiters(char sc, char ec, size_t* i, const string& s) {
     if (s[*i] == sc) {
       while (*i < s.size() && s[*i] != ec) { (*i)++; }
       (*i)++;
     }    
   }
 
-  void parse_char(char c, size_t* i, string s) {
+  void parse_char(char c, size_t* i, const string& s) {
     if (s[*i] == c) {
       (*i)++;
       return;
@@ -25,7 +25,8 @@ namespace gca {
   }
   
   comment* parse_comment_with_delimiters(context& c,
-					 char sc, char ec, size_t* i, string s) {
+					 char sc, char ec,
+					 size_t* i, const string& s) {
     string text = "";
     parse_char(sc, i, s);
     while (s[*i] != ec) {
@@ -36,39 +37,39 @@ namespace gca {
     return c.mk_comment(sc, ec, text);
   }
   
-  void ignore_comment(size_t* i, string s) {
+  void ignore_comment(size_t* i, const string& s) {
     ignore_comment_with_delimiters('(', ')', i, s);
     ignore_comment_with_delimiters('[', ']', i, s);
   }
 
-  void ignore_whitespace(size_t* i, string s) {
+  void ignore_whitespace(size_t* i, const string& s) {
     while (*i < s.size() && isspace(s[*i])) {
       (*i)++;
     }
   }
 
-  double parse_double(size_t* i, string s) {
+  double parse_double(size_t* i, const string& s) {
     size_t j = *i;
     double v = stod(s.substr(*i), &j);
     *i += j;
     return v;
   }
 
-  int parse_int(size_t* i, string s) {
+  int parse_int(size_t* i, const string& s) {
     size_t j = *i;
     int v = stoi(s.substr(*i), &j);
     *i += j;
     return v;
   }
 
-  double parse_coordinate(char c, size_t* i, string s) {
+  double parse_coordinate(char c, size_t* i, const string& s) {
     ignore_whitespace(i, s);
     assert(s[*i] == c);
     (*i)++;
     return parse_double(i, s);
   }
 
-  double parse_option_coordinate(char c, size_t* i, string s, double def=0.0) {
+  double parse_option_coordinate(char c, size_t* i, const string& s, double def=0.0) {
     ignore_whitespace(i, s);
     if (s[*i] == c) {
       (*i)++;
@@ -78,7 +79,7 @@ namespace gca {
   }
 
   value* parse_option_value(context& c, char v,
-			    size_t* i, string s) {
+			    size_t* i, const string& s) {
     ignore_whitespace(i, s);
     if (s[*i] == v) {
       parse_char(v, i, s);
@@ -95,14 +96,14 @@ namespace gca {
   }
   
   void parse_position_values(context& c,
-			     gprog* p, size_t* i, string s,
+			     gprog* p, size_t* i, const string& s,
 			     value** x, value** y, value** z) {
     *x = parse_option_value(c, 'X', i, s);
     *y = parse_option_value(c, 'Y', i, s);
     *z = parse_option_value(c, 'Z', i, s);
   }
 
-  instr* parse_G1(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G1(context& c, gprog* p, size_t* i, const string& s) {
     value* default_feedrate = c.mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);
     value* xv = NULL;
@@ -115,7 +116,7 @@ namespace gca {
     return c.mk_G1(xv, yv, zv, fr);
   }
 
-  instr* parse_G0(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G0(context& c, gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
     value* xv = NULL;
     value* yv = NULL;
@@ -124,7 +125,7 @@ namespace gca {
     return c.mk_G0(xv, yv, zv);
   }
 
-  instr* parse_G2(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G2(context& c, gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
     value* default_feedrate = c.mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);    
@@ -141,7 +142,7 @@ namespace gca {
     return c.mk_G2(xv, yv, zv, iv, jv, kv, fr);
   }
 
-  instr* parse_G3(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G3(context& c, gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
     value* default_feedrate = c.mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);    
@@ -158,7 +159,7 @@ namespace gca {
     return c.mk_G3(xv, yv, zv, iv, jv, kv, fr);
   }
   
-  instr* parse_G53(context& c, gprog* p, size_t* i, string s) {
+  instr* parse_G53(context& c, gprog* p, size_t* i, const string& s) {
     value* xv = NULL;
     value* yv = NULL;
     value* zv = NULL;
@@ -166,7 +167,7 @@ namespace gca {
     return c.mk_G53(xv, yv, zv);
   }
 
-  string parse_option_char(size_t* i, string s, char t) {
+  string parse_option_char(size_t* i, const string& s, char t) {
     if (s[*i] == t) {
       (*i)++;
       char str[2];
@@ -178,7 +179,7 @@ namespace gca {
     return "";
   }
 
-  string parse_coord_letters(size_t* i, string s) {
+  string parse_coord_letters(size_t* i, const string& s) {
     string x = parse_option_char(i, s, 'X');
     string y = parse_option_char(i, s, 'Y');
     string z = parse_option_char(i, s, 'Z');
@@ -186,7 +187,7 @@ namespace gca {
   }
 
   instr* parse_ginstr(context& c, gprog* p,
-		      int val, size_t* i, string s) {
+		      int val, size_t* i, const string& s) {
     instr* is;
     if (val == 0) {
       is = parse_G0(c, p, i, s);
@@ -213,7 +214,7 @@ namespace gca {
   instr* parse_next_instr(context& c,
 			  gprog* p,
 			  size_t* i,
-			  string s) {
+			  const string& s) {
     instr* is;
     char next_char = s[*i];
     if (next_char == '(') {
@@ -248,7 +249,7 @@ namespace gca {
     return is;
   }
   
-  gprog* parse_gprog(context& c, string s) {
+  gprog* parse_gprog(context& c, const string& s) {
     gprog* p = c.mk_gprog();
     string::size_type i = 0;
     while (i < s.size()) {

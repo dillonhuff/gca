@@ -12,6 +12,7 @@ SET(SRCS  src/core/instrs/all.h src/core/instrs/instr.cpp src/core/parser.cpp sr
 add_executable(all-tests ${SRCS} ${TEST_FILES})
 add_executable(bmp-prog examples/bmp_prog.cpp ${SRCS})
 add_executable(print-strap examples/print_strap.cpp ${SRCS})
+add_executable(gdiff examples/gdiff.cpp ${SRCS})
 
 ######### VTK Example ##########
 

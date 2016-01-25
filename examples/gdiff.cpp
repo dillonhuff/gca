@@ -1,0 +1,119 @@
+#include <cassert>
+#include <iostream>
+
+#include "core/context.h"
+#include "core/parser.h"
+#include "diffs/all.h"
+
+using namespace gca;
+using namespace std;
+
+void summarize_diffs(vector<diff*>& old_diffs, vector<diff*>& new_diffs) {
+  if (old_diffs.size() == 0) {
+    return;
+  }
+  diff* cd = old_diffs[0];
+  new_diffs.push_back(cd);
+  for (int i = 1; i < old_diffs.size(); i++) {
+    diff* nd = old_diffs[i];
+    if (!cd->same_effect(*nd)) {
+      cd = nd;
+      new_diffs.push_back(nd);
+    }
+  }
+}
+
+diff* explain_diff(instr* i1, instr* i2) {
+  if ((i1->is_G0() && i2->is_G0()) ||
+      (i1->is_G1() && i2->is_G1())) {
+    move_instr* m1 = static_cast<move_instr*>(i1);
+    move_instr* m2 = static_cast<move_instr*>(i2);
+    if (*(m1->feed_rate) == *(m2->feed_rate) &&
+	m1->is_concrete() && m2->is_concrete()) {
+      return new gca::shift_xyz(m2->pos() - m1->pos());
+    }
+  }
+  return new gca::swap(i1, i2);
+}
+
+void diff_gprogs(vector<diff*>& diffs, gprog* p1, gprog* p2) {
+  int i;
+  for (i = 0; i < p1->size() && i < p2->size(); i++) {
+    instr* is1 = (*p1)[i];
+    instr* is2 = (*p2)[i];
+    if (*is1 != *is2) {
+      diff* d = explain_diff(is1, is2);
+      diffs.push_back(d);
+    }
+  }
+  if (p1->size() == p2->size()) {
+    return;
+  }
+  gprog* larger;
+  if (p1->size() > p2->size()) {
+    larger = p1;
+  } else {
+    larger = p2;
+  }
+  append* e = new gca::append();
+  for (int j = i; j < larger->size(); j++ ) {
+    e->instrs.push_back((*larger)[j]);
+  }
+  diffs.push_back(e);
+  return;
+}
+
+bool is_toolpath_start(instr* i) {
+  if (i->is_comment()) {
+    comment* c = static_cast<comment*>(i);
+    return c->text.find("TOOLPATH NAME: ") == 0;
+  }
+  return false;
+}
+
+void split_toolpaths(context& c, vector<gprog*>& tps, gprog* p) {
+  gprog* t = c.mk_gprog();
+  for (int i = 0; i < p->size(); i++) {
+    instr* is = (*p)[i];
+    if (is_toolpath_start(is)) {
+      if (t->size() > 0) {
+	tps.push_back(t);
+      }
+      t = c.mk_gprog();
+    }
+    t->push_back(is);    
+  }
+  if (t->size() > 0) {
+    tps.push_back(t);
+  }  
+}
+
+int main(int argc, char** argv) {
+  if (argc != 3) {
+    cout << "Usage: gdiff <gcode_file_path> <gcode_file_path>" << endl;
+    return 0;
+  }
+  string file1 = argv[1];
+  string file2 = argv[2];
+  context c;
+  gprog* p1 = read_file(c, file1);
+  cout << "Parsed p1" << endl;
+  gprog* p2 = read_file(c, file2);
+  cout << "Parsed programs " << endl;
+  vector<gprog*> toolpaths1;
+  split_toolpaths(c, toolpaths1, p1);
+  vector<gprog*> toolpaths2;
+  split_toolpaths(c, toolpaths2, p2);
+  assert(toolpaths1.size() == toolpaths2.size());
+  for (int i = 0; i < toolpaths1.size(); i++) {
+    vector<diff*> diffs;
+    diff_gprogs(diffs, toolpaths1[i], toolpaths2[i]);
+    vector<diff*> diff_summary;
+    summarize_diffs(diffs, diff_summary);
+    cout << "Section diffs" << endl;
+    for (int j = 0; j < diff_summary.size(); j++) {
+      cout << *diff_summary[j] << endl;
+    }
+  }
+  return 0;
+}

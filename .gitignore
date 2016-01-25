@@ -10,6 +10,7 @@ compile_commands.json
 *.bmp
 bmp-prog
 print-strap
+gdiff
 CMakeCache.txt
 CMakeFiles/*
 cmake_install.cmake

@@ -41,6 +41,10 @@ namespace gca {
       z = zp;
       feed_rate = frp;
     }
+
+    inline bool is_concrete() const {
+      return x->is_lit() && y->is_lit() && z->is_lit();
+    }
     
     inline point pos() const {
       assert(is_G());
