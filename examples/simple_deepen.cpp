@@ -22,7 +22,8 @@ double deepen_z(double z, double push_depth, double old_depth, double new_depth)
   if (z > old_depth || within_eps(z, old_depth - push_depth)) {
     deeper_z = z + diff;
   } else if (old_depth >= z && z > 0) {
-    deeper_z = z + diff/2.0;
+    double k = old_depth / z;
+    deeper_z = z + diff/k;
   } else if (z == 0.0) {
     deeper_z = z;
   } else {
