@@ -1,3 +1,4 @@
+*.tap
 *~
 *.o
 all-tests
@@ -13,6 +14,8 @@ print-strap
 gdiff
 z-abstract
 hole-optimizer
+simple-deepen
+hello-world
 curved-strap-assembly.16x.h=.2.tap-generalized
 CMakeCache.txt
 CMakeFiles/*

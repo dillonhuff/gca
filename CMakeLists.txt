@@ -15,6 +15,8 @@ add_executable(print-strap examples/print_strap.cpp ${SRCS})
 add_executable(gdiff examples/gdiff.cpp ${SRCS})
 add_executable(z-abstract examples/z_abstract.cpp ${SRCS})
 add_executable(hole-optimizer examples/hole_optimizer.cpp ${SRCS})
+add_executable(simple-deepen examples/simple_deepen.cpp ${SRCS})
+add_executable(hello-world examples/hello_world.cpp ${SRCS})
 
 ######### VTK Example ##########
 
