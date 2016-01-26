@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 
+#include "core/callback.h"
 #include "core/context.h"
 #include "core/parser.h"
 
@@ -27,7 +28,7 @@ double deepen_z(double z, double old_depth, double new_depth) {
   }
   double z_max = 2.0;
   assert(z_max >= deeper_z && deeper_z >= 0.0);
-  return deeper_z;
+  return deeper_z;    
 }
 
 // Helper function for deepen
@@ -38,33 +39,42 @@ double get_z(move_instr* mi) {
   return z_lit->v;
 }
 
-instr* deepen_instr(context& c, gprog* p, int i, instr* is, double old_depth, double new_depth) {
+class deepen_callback : public callback<instr*> {
+public:
+  context& c;
+  double old_depth, new_depth;
+
+  deepen_callback(context& cp, double old_dp, double new_dp) :
+    c(cp), old_depth(old_dp), new_depth(new_dp) {}
+
+  instr* call(gprog* p, int i, instr* is) {
     if (is->is_g2_instr() || is->is_g3_instr()) {
       move_instr* mi = static_cast<move_instr*>(is);
       assert(mi->get_z()->is_omitted());
       return mi;
     } else if (is->is_G0() || is->is_G1()) {
       move_instr* mi = static_cast<move_instr*>(is);
-      if (!mi->get_z()->is_omitted()) {
+      if (mi->get_z()->is_omitted()) {
+	return mi;
+      } else {
 	double z = get_z(mi);
 	double deeper_z = deepen_z(z, old_depth, new_depth);
 	move_instr* mi_cpy = static_cast<move_instr*>(c.mk_instr_cpy(mi));
 	mi_cpy->set_z(c.mk_lit(deeper_z));
 	return mi_cpy;
-      } else {
-	return mi;
       }      
     } else {
       return is;
     }
-}
+  }
+};
 
 // Main driver function for deepening
-gprog* deepen(context& c, gprog* p, instr* (*callback)(context& c, gprog* p, int i, instr* is, double old_depth, double new_depth), double old_depth, double new_depth) {
-  gprog* r = c.mk_gprog();
+gprog* deepen(gprog* p, deepen_callback& f) {
+  gprog* r = f.c.mk_gprog();
   for (int i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
-    instr* deepened_is = callback(c, p, i, is, old_depth, new_depth);
+    instr* deepened_is = f.call(p, i, is);
     r->push_back(deepened_is);
   }
   return r;
@@ -77,11 +87,11 @@ int main(int argc, char** argv) {
   }
   double old_depth = stod(argv[1]);
   double new_depth = stod(argv[2]);
-  string file = argv[3];
   context c;
+  deepen_callback call(c, old_depth, new_depth);
+  string file = argv[3];
   gprog* p = read_file(c, file);
-  instr* (*callback) (context&, gprog*, int, instr*, double, double) = &deepen_instr;
-  gprog* r = deepen(c, p, callback, old_depth, new_depth);
+  gprog* r = deepen(p, call);
   cout << *r;
   return 0;
 }
