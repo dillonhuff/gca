@@ -11,6 +11,7 @@ namespace gca {
   
   void instr::print(ostream& s) const {
     if (c == GCA_M) {
+      cout << "An m instruction" << endl;
       cout << 'M' << v;
     } else if (is_G()) {
       s << 'G' << v;

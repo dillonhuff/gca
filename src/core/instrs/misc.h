@@ -25,12 +25,14 @@ namespace gca {
   public:
     inline bool is_M2() const { return true; }
     void print(ostream& s) const { s << "M2"; }
+    inline bool is_end_instr() const { return true; }
   };
 
   class m30_instr : public instr {
   public:
     inline bool is_M30() const { return true; }
     void print(ostream& s) const { s << "M30"; }
+    inline bool is_end_instr() const { return true; }
   };
 
   class m3_instr : public instr {
