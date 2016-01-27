@@ -98,8 +98,9 @@ namespace gca {
 	assert(false);
       }
     } else {
-      instr* mem = allocate<instr>();
-      new_i = new (mem) instr(i);
+      return i->copy();
+      // instr* mem = allocate<instr>();
+      // new_i = new (mem) instr(i);
     }
     return new_i;
   }
