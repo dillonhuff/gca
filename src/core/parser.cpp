@@ -34,7 +34,7 @@ namespace gca {
       (*i)++;
     }
     parse_char(ec, i, s);
-    return c.mk_comment(sc, ec, text);
+    return mk_comment(sc, ec, text);
   }
   
   void ignore_comment(size_t* i, const string& s) {
@@ -164,7 +164,7 @@ namespace gca {
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(c, p, i, s, &xv, &yv, &zv);
-    return c.mk_G53(xv, yv, zv);
+    return mk_G53(xv, yv, zv);
   }
 
   string parse_option_char(size_t* i, const string& s, char t) {
@@ -194,9 +194,9 @@ namespace gca {
     } else if (val == 1) {
       is = parse_G1(c, p, i, s);
     } else if (val == 91) {
-      is = c.mk_G91();
+      is = mk_G91();
     } else if (val == 90) {
-      is = c.mk_G90();
+      is = mk_G90();
     } else if (val == 53) {
       is = parse_G53(c, p, i, s);
     } else if (val == 2) {
@@ -227,21 +227,21 @@ namespace gca {
     (*i)++;
     int val = parse_int(i, s);
     if (next_char == 'M') {
-      is = c.mk_minstr(val);
+      is = mk_minstr(val);
     } else if (next_char == 'T') {
-      is = c.mk_tinstr(val);
+      is = mk_tinstr(val);
     } else if (next_char == 'S') {
-      is = c.mk_sinstr(val);
+      is = mk_sinstr(val);
     } else if (next_char == 'F') {
       ignore_whitespace(i, s);
       string str = parse_coord_letters(i, s);
-      is = c.mk_finstr(val, str);
+      is = mk_finstr(val, str);
     } else if (next_char == 'G') {
       is = parse_ginstr(c, p, val, i, s);
     } else if (next_char == '#') {
       parse_char('=', i, s);
       double e = parse_double(i, s);
-      is = c.mk_assign(mk_var(val), mk_lit(e));
+      is = mk_assign(mk_var(val), mk_lit(e));
     } else {
       cout << "Cannot parse string: " << s.substr(*i) << endl;
       assert(false);
@@ -250,7 +250,7 @@ namespace gca {
   }
   
   gprog* parse_gprog(context& c, const string& s) {
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     string::size_type i = 0;
     while (i < s.size()) {
       ignore_whitespace(&i, s);

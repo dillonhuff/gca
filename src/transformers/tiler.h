@@ -19,8 +19,8 @@ namespace gca {
       gprog* rp;
       abs_to_rel atr(c, def);
       rp = atr.apply(c, p);
-      gprog* new_p = c.mk_gprog();
-      new_p->push_back(c.mk_G91());
+      gprog* new_p = mk_gprog();
+      new_p->push_back(mk_G91());
       for (int i = 0; i < num_copies; i++) {
 	int j = 0;
 	int num_copied = 0;
@@ -35,7 +35,7 @@ namespace gca {
 	  new_p->push_back(mk_G0(diff.x, diff.y, 0));
 	}
       }
-      new_p->push_back(c.mk_minstr(2));
+      new_p->push_back(mk_minstr(2));
       return new_p;
     }
 

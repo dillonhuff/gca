@@ -14,7 +14,7 @@ namespace gca {
 
   abs_to_rel_state(context& cp, pass& tp) :
     per_instr_state(tp), c(cp) {
-      p = c.mk_gprog();
+      p = mk_gprog();
     }
 
     void update_G0(move_instr& ist) {

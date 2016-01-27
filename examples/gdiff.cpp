@@ -79,14 +79,14 @@ bool is_toolpath_start(instr* i) {
 }
 
 void split_toolpaths(context& c, vector<gprog*>& tps, gprog* p) {
-  gprog* t = c.mk_gprog();
+  gprog* t = mk_gprog();
   for (int i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
     if (is_toolpath_start(is)) {
       if (t->size() > 0) {
 	tps.push_back(t);
       }
-      t = c.mk_gprog();
+      t = mk_gprog();
     }
     t->push_back(is);    
   }

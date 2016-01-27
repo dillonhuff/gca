@@ -25,7 +25,7 @@ namespace gca {
     per_instr_state(tp), c(cp) {
       initial_feedrate = initial_feedratep;
       new_feedrate = new_feedratep;
-      p = c.mk_gprog();
+      p = mk_gprog();
     }
 
   feed_changer_state(context& cp,
@@ -36,8 +36,8 @@ namespace gca {
     per_instr_state(tp), c(cp) {
       initial_feedrate = initial_feedratep;
       new_feedrate = new_feedratep;
-      p = c.mk_gprog();
-      p->push_back(c.mk_assign(new_feedratep, default_val));
+      p = mk_gprog();
+      p->push_back(mk_assign(new_feedratep, default_val));
     }
     
     void update_default(instr& ist) {

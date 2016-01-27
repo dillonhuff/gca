@@ -12,13 +12,13 @@ namespace gca {
     point ep = l.end + v;
     point sr = extend_back(sp, ep, w);
     point er = extend_back(ep, sp, w);
-    return c.mk_cut(sr, er);
+    return mk_cut(sr, er);
   }
 
   cut* vertical_cut_to(context& c, cut* ct) {
     point start(ct->start.x, ct->start.y, 0);
     point end(ct->start);
-    return c.mk_cut(start, end);
+    return mk_cut(start, end);
   }
 
   vector<cut*> lines_to_cuts(context& c, vector<line>& lines, double cutter_width) {
@@ -48,7 +48,7 @@ namespace gca {
   
   gprog* gcode_for_cuts(context& c, vector<cut*>& cuts) {
     point current_loc = point(0, 0, 0);
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     for (int i = 0; i < cuts.size(); i++) {
       from_to_with_G0(c, p, current_loc, cuts[i]->start);
       from_to_with_G1(c, p, cuts[i]->start, cuts[i]->end);
@@ -56,7 +56,7 @@ namespace gca {
     }
     point final_loc = point(0, 0, 0);
     from_to_with_G0(c, p, current_loc, final_loc);
-    p->push_back(c.mk_minstr(2));
+    p->push_back(mk_minstr(2));
     return p;
   }
 
@@ -67,9 +67,9 @@ namespace gca {
     double y_pos = yd > 0;
     if (xd == 0) {
       if (y_pos) {
-	return c.mk_cut(point(s->start.x, s->start.y - l, 0), s->start);
+	return mk_cut(point(s->start.x, s->start.y - l, 0), s->start);
       } else {
-	return c.mk_cut(point(s->start.x, s->start.y + l, 0), s->start);
+	return mk_cut(point(s->start.x, s->start.y + l, 0), s->start);
       }
     }
     double m = yd / xd;
@@ -86,7 +86,7 @@ namespace gca {
     } else {
       ys = s->start.y + abs(b);
     }
-    return c.mk_cut(point(xs, ys, 0), s->start);
+    return mk_cut(point(xs, ys, 0), s->start);
   }
 
   void insert_sink_cuts(context& c, double l, vector<cut*>& cuts, vector<cut*>& dest) {
@@ -103,7 +103,7 @@ namespace gca {
     point c_left = left;
     point c_right = right;
     for (int i = 1; i <= num_cuts; i++) {
-      cuts.push_back(c.mk_cut(c_left, c_right));
+      cuts.push_back(mk_cut(c_left, c_right));
       // Reverse cut directions
       point temp = c_left;
       c_left = c_right + shift;

@@ -24,11 +24,11 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     value* initial_feedrate = mk_lit(1.0);
     p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
     value* new_feedrate = mk_lit(4.0);
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
     REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
   }
@@ -37,11 +37,11 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     value* initial_feedrate = mk_lit(1.0);
     p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
     value* new_feedrate = mk_lit(4.0);
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
     REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
   }
@@ -62,7 +62,7 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G0(point(1.0, 1.0, 1.0)));
     REQUIRE(*filter_G0_moves(c, p) == *p);
   }
@@ -71,7 +71,7 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G1(1.0, 2.0, 2.0));
     REQUIRE(*filter_G0_moves(c, p) == *p);
   }
@@ -80,10 +80,10 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G0(point(1.0, 2.0, 2.0)));
     p->push_back(mk_G1(1.0, 2.0, 2.0));
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G0(point(1.0, 2.0, 2.0)));
     correct->push_back(mk_G1(1.0, 2.0, 2.0));
     REQUIRE(*filter_G0_moves(c, p) == *correct);
@@ -93,11 +93,11 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G0(1.0, 2.0, 2.0));
     p->push_back(mk_G0(1.0, 2.0, 2.0));
     p->push_back(mk_G0(1.0, 2.0, 2.0));
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G0(1.0, 2.0, 2.0));
     REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
@@ -106,16 +106,16 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G0(1.0, 2.0, -2.0));
     p->push_back(mk_G0(1.0, 2.0, 0.0));
     p->push_back(mk_G0(1.0, 2.0, -2.00000001));
     p->push_back(mk_G1(1.0, 2.0, 2.0));
-    p->push_back(c.mk_minstr(2));
-    gprog* correct = c.mk_gprog();
+    p->push_back(mk_minstr(2));
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G0(1.0, 2.0, -2.00000001));
     correct->push_back(mk_G1(1.0, 2.0, 2.0));
-    correct->push_back(c.mk_minstr(2));
+    correct->push_back(mk_minstr(2));
     REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
 
@@ -123,10 +123,10 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G1(1, 1, 1));
     p->push_back(mk_G0(1, 1, 1));
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1, 1, 1));
     REQUIRE(*filter_G0_moves(c, p) == *correct);
   }
@@ -135,13 +135,13 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     p->push_back(mk_G1(1, 1, 0));
     p->push_back(mk_G1(1, 1, 1));
     p->push_back(mk_G0(1, 2, 0));
     p->push_back(mk_G0(1, 1, 1));
     p->push_back(mk_G1(2, 3, 3));
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1, 1, 0));
     correct->push_back(mk_G1(1, 1, 1));
     correct->push_back(mk_G1(2, 3, 3));
@@ -152,9 +152,9 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
-    gprog* r = c.mk_gprog();
-    gprog* correct = c.mk_gprog();
+    gprog* p = mk_gprog();
+    gprog* r = mk_gprog();
+    gprog* correct = mk_gprog();
     abs_to_rel f(c, GCA_ABSOLUTE);
 
     SECTION("abs -> rel 1 instruction is the same") {
@@ -165,8 +165,8 @@ namespace gca {
     }
 
     SECTION("abs -> rel 1 m instruction is the same") {
-      p->push_back(c.mk_minstr(2));
-      correct->push_back(c.mk_minstr(2));
+      p->push_back(mk_minstr(2));
+      correct->push_back(mk_minstr(2));
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }
@@ -186,21 +186,21 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     gprog* r;
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
     rel_to_abs f(c, GCA_ABSOLUTE);
 
     SECTION("One M2 instruction is the same") {
-      p->push_back(c.mk_G91());
-      p->push_back(c.mk_minstr(2));
-      correct->push_back(c.mk_minstr(2));
+      p->push_back(mk_G91());
+      p->push_back(mk_minstr(2));
+      correct->push_back(mk_minstr(2));
       r = f.apply(c, p);
       REQUIRE(*r == *correct);
     }
 
     SECTION("One G0 instruction is the same") {
-      p->push_back(c.mk_G91());
+      p->push_back(mk_G91());
       p->push_back(mk_G0(point(1.0, 2.0, 3.0)));
       correct->push_back(mk_G0(point(1.0, 2.0, 3.0)));
       r = f.apply(c, p);
@@ -208,7 +208,7 @@ namespace gca {
     }
 
     SECTION("Two instructions instructions") {
-      p->push_back(c.mk_G91());
+      p->push_back(mk_G91());
       p->push_back(mk_G0(point(1.0, 2.0, 3.0)));
       p->push_back(mk_G1(-2.0, 2.0, -10.0, 2.5));
       correct->push_back(mk_G0(point(1.0, 2.0, 3.0)));
@@ -222,24 +222,24 @@ namespace gca {
     context c;
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = c.mk_gprog();
+    gprog* p = mk_gprog();
     gprog* r;
-    gprog* correct = c.mk_gprog();
+    gprog* correct = mk_gprog();
 
     SECTION("No op program") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
-      p->push_back(c.mk_minstr(2));
-      correct->push_back(c.mk_G91());
-      correct->push_back(c.mk_minstr(2));
+      p->push_back(mk_minstr(2));
+      correct->push_back(mk_G91());
+      correct->push_back(mk_minstr(2));
       r = t.apply(c, p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
 
     SECTION("No move instructions") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
-      p->push_back(c.mk_minstr(30));
-      correct->push_back(c.mk_G91());
-      correct->push_back(c.mk_minstr(2));
+      p->push_back(mk_minstr(30));
+      correct->push_back(mk_G91());
+      correct->push_back(mk_minstr(2));
       r = t.apply(c, p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
@@ -252,12 +252,12 @@ namespace gca {
       p->push_back(mk_G1(0, 0, depth));
       p->push_back(mk_G1(1, 0, depth));
       p->push_back(mk_G1(1, -1, depth));
-      p->push_back(c.mk_minstr(2));
+      p->push_back(mk_minstr(2));
       point e1 = point(1, -1, depth);
       point s1 = point(2, 0, depth);
       point d1 = s1 - e1;
       
-      correct->push_back(c.mk_G91());
+      correct->push_back(mk_G91());
 
       correct->push_back(mk_G1(0, 0, depth, 1.0));
       correct->push_back(mk_G1(1, 0, 0, 1.0));
@@ -277,7 +277,7 @@ namespace gca {
       correct->push_back(mk_G1(1, 0, 0, 1.0));
       correct->push_back(mk_G1(0, -1, 0, 1.0));
       
-      correct->push_back(c.mk_minstr(2));
+      correct->push_back(mk_minstr(2));
       
       r = t.apply(c, p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);

@@ -92,6 +92,61 @@ namespace gca {
     }
     return new_i;
   }
+          
+  cut* mk_cut(point start, point end) {
+    cut* mem = allocate<cut>();
+    return new (mem) cut(start, end);
+  }
 
 
+  assign_instr* mk_assign(var* v, value* e) {
+    assign_instr* mem = allocate<assign_instr>();
+    return new (mem) assign_instr(v, e);
+  }
+    
+  gprog* mk_gprog() {
+    gprog* mem = allocate<gprog>();
+    return new (mem) gprog();
+  }
+
+  instr* mk_minstr(int val) {
+    instr* mem = allocate<instr>();
+    return new (mem) instr(GCA_M, val);
+  }
+
+  instr* mk_tinstr(int val) {
+    instr* mem = allocate<instr>();
+    return new (mem) instr(GCA_T, val);
+  }
+
+  instr* mk_sinstr(int val) {
+    instr* mem = allocate<instr>();
+    return new (mem) instr(GCA_S, val);
+  }
+
+  f_instr* mk_finstr(int val, string s) {
+    f_instr* mem = allocate<f_instr>();
+    return new (mem) f_instr(val, s);
+  }
+
+  comment* mk_comment(char ld, char rd, string t) {
+    comment* mem = allocate<comment>();
+    return new (mem) comment(ld, rd, t);
+  }
+    
+  instr* mk_G91() {
+    instr* mem = allocate<instr>();
+    return new (mem) instr(GCA_G, 91);
+  }
+
+  instr* mk_G90() {
+    instr* mem = allocate<instr>();
+    return new (mem) instr(GCA_G, 90);
+  }
+    
+  move_instr* mk_G53(value* x, value* y, value* z) {
+    move_instr* mem = allocate<move_instr>();
+    return new (mem) move_instr(GCA_G, 53, x, y, z, mk_omitted());
+  }
+  
 }

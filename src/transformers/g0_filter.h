@@ -32,7 +32,7 @@ namespace gca {
 
   g0_filter_state(context& cp,
 		  pass& tp) : per_instr_state(tp), c(cp) {
-      p = c.mk_gprog();
+      p = mk_gprog();
       j = 0;
     }
 

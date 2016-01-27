@@ -25,14 +25,14 @@ void find_z_values(set<double>& z_values, gprog* p) {
 }
 
 gprog* generalize_zs(context& c, set<double>& z_values, gprog* p) {
-  gprog* r = c.mk_gprog();
+  gprog* r = mk_gprog();
   map<double, var*> new_vars;
   int i = 1;
   for (set<double>::iterator it = z_values.begin();
        it != z_values.end(); ++it) {
     var* v = mk_var(i);
     new_vars[*it] = mk_var(i);
-    r->push_back(c.mk_assign(v, mk_lit(*it)));
+    r->push_back(mk_assign(v, mk_lit(*it)));
     i++;
   }
   for (int j = 0; j < p->size(); j++) {
