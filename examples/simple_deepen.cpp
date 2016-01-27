@@ -1,3 +1,6 @@
+// NOTE: This deepener WILL NOT insert additional passes,
+// it just adjusts the z values for existing instructions
+
 #include <cassert>
 #include <iostream>
 
@@ -103,7 +106,6 @@ int main(int argc, char** argv) {
   double new_depth = stod(argv[2]);
   deepen_callback call(old_depth, new_depth);
   string file = argv[3];
-  
   gprog* p = read_file(file);
   gprog* r = deepen(p, call);
   cout << *r;
