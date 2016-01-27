@@ -84,6 +84,8 @@ int main(int argc, char** argv) {
     cout << "Usage: gdiff <old depth> <new depth> <gcode file path>" << endl;
     return 0;
   }
+  arena_allocator a;
+  set_system_allocator(&a);
   double old_depth = stod(argv[1]);
   double new_depth = stod(argv[2]);
   context c;

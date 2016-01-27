@@ -8,6 +8,8 @@ namespace gca {
   
   TEST_CASE("lines_to_cuts") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
     double cutter_width = 1.0;
     double depth = -0.05;
     double l = 10;
