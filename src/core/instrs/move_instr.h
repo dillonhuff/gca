@@ -83,8 +83,7 @@ namespace gca {
     
     inline bool is_move_instr() const { return true; }
 
-    virtual void print(ostream& s) const {
-      s << 'G' << "!!!! UNKOWN !!!!!" << endl;
+    void print_move_data(ostream& s) const {
       if (!feed_rate->is_omitted()) { s << 'F' << *feed_rate << ' '; }
       if (!x->is_omitted()) { s << 'X' << *x << ' '; }
       if (!y->is_omitted()) { s << 'Y' << *y << ' '; }
@@ -95,7 +94,6 @@ namespace gca {
       bool pr = *x == *(other_move.x) && *y == *(other_move.y) && *z == *(other_move.z);
       bool fr = *feed_rate == *(other_move.feed_rate);
       return fr && pr;
-      
     }
     
   };
@@ -106,6 +104,11 @@ namespace gca {
   g0_instr(g0_instr* i) : move_instr(i) {}
 
     virtual inline bool is_G0() const { return true; }
+
+    void print(ostream& s) const {
+      cout << "G0 ";
+      print_move_data(s);
+    }
     
     bool operator==(const instr& other) const {
       return other.is_G0() &&
@@ -119,6 +122,10 @@ namespace gca {
   g1_instr(g1_instr* i) : move_instr(i) {}
     
     virtual inline bool is_G1() const { return true; }
+    void print(ostream& s) const {
+      cout << "G1 ";
+      print_move_data(s);
+    }    
     bool operator==(const instr& other) const {
       return other.is_G1() &&
       same_pos_and_feed_rate(static_cast<const move_instr&>(other));
@@ -131,7 +138,10 @@ namespace gca {
   g53_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g53_instr(g53_instr* i) : move_instr(i) {}
     virtual inline bool is_G53() const { return true; }
-    
+    void print(ostream& s) const {
+      cout << "G53 ";
+      print_move_data(s);
+    }        
     bool operator==(const instr& other) const {
       return other.is_G53() &&
       same_pos_and_feed_rate(static_cast<const move_instr&>(other));
