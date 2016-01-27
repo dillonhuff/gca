@@ -3,10 +3,11 @@
 namespace gca {
 
   bool instr::operator==(const instr& other) const {
-    if (c != other.c || v != other.v) {
-      return false;
-    }
-    return true;
+    assert(false);
+    // if (c != other.c || v != other.v) {
+    //   return false;
+    // }
+    // return true;
   }
   
   void instr::print(ostream& s) const {

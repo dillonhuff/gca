@@ -29,6 +29,7 @@ namespace gca {
   public:
     inline bool is_M5() const { return true; }
     void print(ostream& s) const { s << "M5"; }
+    bool operator==(const instr& other) const { return other.is_M5(); }
   };
 
   class m2_instr : public instr {
@@ -36,6 +37,7 @@ namespace gca {
     inline bool is_M2() const { return true; }
     void print(ostream& s) const { s << "M2"; }
     inline bool is_end_instr() const { return true; }
+    bool operator==(const instr& other) const { return other.is_M2(); }
   };
 
   class m30_instr : public instr {
@@ -43,24 +45,28 @@ namespace gca {
     inline bool is_M30() const { return true; }
     void print(ostream& s) const { s << "M30"; }
     inline bool is_end_instr() const { return true; }
+    bool operator==(const instr& other) const { return other.is_M30(); }
   };
 
   class m3_instr : public instr {
   public:
     inline bool is_M3() const { return true; }
     void print(ostream& s) const { s << "M3"; }
+    bool operator==(const instr& other) const { return other.is_M3(); }
   };
   
   class g90_instr : public instr {
   public:
     inline bool is_G90() const { return true; }
     void print(ostream& s) const { s << "G90"; }
+    bool operator==(const instr& other) const { return other.is_G90(); }
   };
 
   class g91_instr : public instr {
   public:
     inline bool is_G91() const { return true; }
     void print(ostream& s) const { s << "G91"; }
+    bool operator==(const instr& other) const { return other.is_G91(); }
   };
   
 }

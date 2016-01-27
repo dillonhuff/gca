@@ -31,7 +31,7 @@ namespace gca {
       string s = "M30";
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
-      correct->push_back(new (allocate<m2_instr>()) m2_instr());
+      correct->push_back(mk_m30_instr());
       REQUIRE(*p == *correct);
     }
 

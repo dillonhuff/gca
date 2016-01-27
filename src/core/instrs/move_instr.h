@@ -16,8 +16,6 @@ namespace gca {
     value* feed_rate;
 
     move_instr(move_instr* i) {
-      /* c = i->c; */
-      /* v = i->v; */
       x = i->x;
       y = i->y;
       z = i->z;
@@ -26,8 +24,6 @@ namespace gca {
 
     move_instr(value* xp, value* yp, value* zp, value* frp) {
       assert(frp > 0);
-      /* c = cp; */
-      /* v = vp; */
       x = xp;
       y = yp;
       z = zp;
@@ -146,7 +142,6 @@ namespace gca {
     }        
 
     bool operator==(const instr& other) const {
-      cout << "Comparing " << *this << " to " << other << endl;
       return other.is_G53() &&
       same_pos_and_feed_rate(static_cast<const move_instr&>(other));
     }
