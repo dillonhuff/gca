@@ -16,8 +16,8 @@ namespace gca {
     value* feed_rate;
 
     move_instr(move_instr* i) {
-      c = i->c;
-      v = i->v;
+      /* c = i->c; */
+      /* v = i->v; */
       x = i->x;
       y = i->y;
       z = i->z;
@@ -25,17 +25,9 @@ namespace gca {
     }
 
     move_instr(value* xp, value* yp, value* zp, value* frp) {
-      x = xp;
-      y = yp;
-      z = zp;
-      feed_rate = frp;
-    }
-
-    move_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) {
-      assert(cp == GCA_G);
       assert(frp > 0);
-      c = cp;
-      v = vp;
+      /* c = cp; */
+      /* v = vp; */
       x = xp;
       y = yp;
       z = zp;
@@ -92,52 +84,59 @@ namespace gca {
     inline bool is_move_instr() const { return true; }
 
     virtual void print(ostream& s) const {
-      s << 'G' << v << ' ';
+      s << 'G' << "!!!! UNKOWN !!!!!" << endl;
       if (!feed_rate->is_omitted()) { s << 'F' << *feed_rate << ' '; }
       if (!x->is_omitted()) { s << 'X' << *x << ' '; }
       if (!y->is_omitted()) { s << 'Y' << *y << ' '; }
       if (!z->is_omitted()) { s << 'Z' << *z << ' '; }
     }
 
-    virtual bool operator==(const instr& other) const {
-      if (!other.is_move_instr()) {
-	return false;
-      }
-      const move_instr& other_move = static_cast<const move_instr&>(other);
-      if (c != other_move.c || v != other_move.v) {
-	return false;
-      }
-      if (c == GCA_G && (v == 0 || v == 1)) {
-	bool pr = *x == *(other_move.x) && *y == *(other_move.y) && *z == *(other_move.z);
-	bool fr = *feed_rate == *(other_move.feed_rate);
-        return fr && pr;
-      }
-      return true;
+    bool same_pos_and_feed_rate(const move_instr& other_move) const {
+      bool pr = *x == *(other_move.x) && *y == *(other_move.y) && *z == *(other_move.z);
+      bool fr = *feed_rate == *(other_move.feed_rate);
+      return fr && pr;
+      
     }
     
   };
 
   class g0_instr : public move_instr {
   public:
-  g0_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+  g0_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g0_instr(g0_instr* i) : move_instr(i) {}
 
     virtual inline bool is_G0() const { return true; }
+    
+    bool operator==(const instr& other) const {
+      return other.is_G0() &&
+      same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+    }
   };
 
   class g1_instr : public move_instr {
   public:
-  g1_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+  g1_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g1_instr(g1_instr* i) : move_instr(i) {}
     
     virtual inline bool is_G1() const { return true; }
+    bool operator==(const instr& other) const {
+      return other.is_G1() &&
+      same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+    }
+    
   };
 
   class g53_instr : public move_instr {
   public:
-  g53_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+  g53_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g53_instr(g53_instr* i) : move_instr(i) {}
     virtual inline bool is_G53() const { return true; }
+    
+    bool operator==(const instr& other) const {
+      return other.is_G53() &&
+      same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+    }
+    
   };
   
 }

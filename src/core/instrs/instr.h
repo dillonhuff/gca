@@ -32,19 +32,6 @@ namespace gca {
   public:
     double feed_rate;
 
-    /* instr() {} */
-
-    /* instr(instr* i) { */
-    /*   c = i->c; */
-    /*   v = i->v; */
-    /* } */
-    
-    /* instr(instr_class cp, instr_val vp) { */
-    /*   assert(cp != GCA_G || (vp != 1 && vp != 0)); */
-    /*   c = cp; */
-    /*   v = vp; */
-    /* } */
-
     virtual instr* copy() const { assert(false); }
 
     virtual inline bool is_g3_instr() const { return false; }
