@@ -43,6 +43,8 @@ namespace gca {
   }
 
   bool gprog::operator==(const gprog& other) const {
+    cout << "-- Program size: " << size() << endl;
+    cout << "-- Other size: " << other.size() << endl;
     if (other.size() != this->size()) {
       cout << "WRONG SIZE!" << endl;
       return false;

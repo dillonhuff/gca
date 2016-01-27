@@ -137,12 +137,16 @@ namespace gca {
   public:
   g53_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g53_instr(g53_instr* i) : move_instr(i) {}
+    
     virtual inline bool is_G53() const { return true; }
+    
     void print(ostream& s) const {
       cout << "G53 ";
       print_move_data(s);
     }        
+
     bool operator==(const instr& other) const {
+      cout << "Comparing " << *this << " to " << other << endl;
       return other.is_G53() &&
       same_pos_and_feed_rate(static_cast<const move_instr&>(other));
     }

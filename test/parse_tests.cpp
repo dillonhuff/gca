@@ -183,10 +183,6 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G53(mk_lit(3), mk_lit(2), mk_lit(1)));
-      cout << "-- Actual " << endl;
-      cout << *p;
-      cout << "-- Correct " << endl;
-      cout << *correct;      
       REQUIRE(*p == *correct);
     }
 
@@ -195,7 +191,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G90());
-      correct->push_back(mk_G53(mk_lit(0), mk_lit(0), mk_lit(1)));
+      correct->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(1)));
       REQUIRE(*p == *correct);
     }
 
