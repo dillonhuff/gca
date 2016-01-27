@@ -22,22 +22,22 @@ namespace gca {
     return new (mem) g0_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted());
   }
     
-  move_instr* mk_G1(double x, double y, double z, double feed_rate) {
-    move_instr* mem = allocate<move_instr>();
+  g1_instr* mk_G1(double x, double y, double z, double feed_rate) {
+    g1_instr* mem = allocate<g1_instr>();
     lit* v = allocate<lit>();
     lit* frp = new (v) lit(feed_rate);
-    return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), frp);
+    return new (mem) g1_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), frp);
   }
 
   
-  move_instr* mk_G1(value* x, value* y, value* z, value* feed_rate) {
-    move_instr* mem = allocate<move_instr>();
-    return new (mem) move_instr(GCA_G, 1, x, y, z, feed_rate);
+  g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate) {
+    g1_instr* mem = allocate<g1_instr>();
+    return new (mem) g1_instr(GCA_G, 1, x, y, z, feed_rate);
   }
     
-  move_instr* mk_G1(double x, double y, double z, value* feed_rate) {
-    move_instr* mem = allocate<move_instr>();
-    return new (mem) move_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), feed_rate);
+  g1_instr* mk_G1(double x, double y, double z, value* feed_rate) {
+    g1_instr* mem = allocate<g1_instr>();
+    return new (mem) g1_instr(GCA_G, 1, mk_lit(x), mk_lit(y), mk_lit(z), feed_rate);
   }
 
   g2_instr* mk_G2(value* x, value* y, value* z,
@@ -135,7 +135,7 @@ namespace gca {
     return new (mem) t_instr(val);
   }
 
-  instr* mk_sinstr(int val) {
+  s_instr* mk_sinstr(int val) {
     return new (allocate<s_instr>()) s_instr(val);
   }
 
@@ -157,9 +157,9 @@ namespace gca {
     return new (allocate<g90_instr>()) g90_instr();
   }
     
-  move_instr* mk_G53(value* x, value* y, value* z) {
-    move_instr* mem = allocate<move_instr>();
-    return new (mem) move_instr(GCA_G, 53, x, y, z, mk_omitted());
+  g53_instr* mk_G53(value* x, value* y, value* z) {
+    g53_instr* mem = allocate<g53_instr>();
+    return new (mem) g53_instr(GCA_G, 53, x, y, z, mk_omitted());
   }
   
 }

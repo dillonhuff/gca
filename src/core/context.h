@@ -18,9 +18,9 @@ namespace gca {
   g0_instr* mk_G0(double x, double y, double z);
   g0_instr* mk_G0(value* x, value* y, value* z);
       
-  move_instr* mk_G1(double x, double y, double z, double feed_rate=1.0);
-  move_instr* mk_G1(value* x, value* y, value* z, value* feed_rate);
-  move_instr* mk_G1(double x, double y, double z, value* feed_rate);
+  g1_instr* mk_G1(double x, double y, double z, double feed_rate=1.0);
+  g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate);
+  g1_instr* mk_G1(double x, double y, double z, value* feed_rate);
   
   g2_instr* mk_G2(value* x, value* y, value* z,
 		  value* i, value* j, value* k,
@@ -45,7 +45,7 @@ namespace gca {
 
   t_instr* mk_tinstr(int val);
 
-  instr* mk_sinstr(int val);
+  s_instr* mk_sinstr(int val);
 
   f_instr* mk_finstr(int val, string s);
 
@@ -54,7 +54,7 @@ namespace gca {
   g91_instr* mk_G91();
   g90_instr* mk_G90();
     
-  move_instr* mk_G53(value* x, value* y, value* z);
+  g53_instr* mk_G53(value* x, value* y, value* z);
   
 }
 

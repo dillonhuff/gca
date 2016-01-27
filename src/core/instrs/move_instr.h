@@ -133,11 +133,16 @@ namespace gca {
 
   class g1_instr : public move_instr {
   public:
+  g1_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+  g1_instr(g1_instr* i) : move_instr(i) {}
+    
     virtual inline bool is_G1() const { return true; }
   };
 
   class g53_instr : public move_instr {
   public:
+  g53_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+  g53_instr(g53_instr* i) : move_instr(i) {}
     virtual inline bool is_G53() const { return true; }
   };
   
