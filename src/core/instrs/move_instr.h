@@ -30,6 +30,9 @@ namespace gca {
       feed_rate = frp;
     }
 
+    virtual void print(ostream& s) const { assert(false); }
+    virtual bool operator==(const instr& other) const { assert(false); }
+    
     inline value* get_x() const { return x; }
     inline value* get_y() const { return y; }
     inline value* get_z() const { return z; }

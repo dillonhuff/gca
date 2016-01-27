@@ -13,6 +13,11 @@ namespace gca {
 
     inline bool is_T() const { return true; }
     void print(ostream& s) const { s << "T" << num; }
+    bool operator==(const instr& other) const {
+      return other.is_T() &&
+      static_cast<const t_instr&>(other).num == num;
+    }
+
   };
 
   class s_instr : public instr {
@@ -23,6 +28,10 @@ namespace gca {
 
     inline bool is_S() const { return true; }
     void print(ostream& s) const { s << "S" << num; }
+    bool operator==(const instr& other) const {
+      return other.is_S() &&
+      static_cast<const s_instr&>(other).num == num;
+    }
   };
   
   class m5_instr : public instr {

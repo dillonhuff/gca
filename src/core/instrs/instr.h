@@ -42,13 +42,13 @@ namespace gca {
     virtual inline bool is_move_instr() const { return false; }
     virtual inline bool is_end_instr() const { return false; }
     
-    virtual bool operator==(const instr& other) const;
+    virtual bool operator==(const instr& other) const = 0;
 
     bool operator!=(const instr& other) {
       return !(*this == other);
     }
 
-    virtual void print(ostream& s) const;
+    virtual void print(ostream& s) const = 0;
 
     virtual inline bool is_M3() const { return false; }
     virtual inline bool is_M5() const { return false; }
