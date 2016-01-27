@@ -46,7 +46,7 @@ namespace gca {
 
     void update_G1(move_instr& ist) {
       point kp = ist.pos();
-      p->push_back(c.mk_G1(kp.x, kp.y, kp.z, new_feedrate));
+      p->push_back(mk_G1(kp.x, kp.y, kp.z, new_feedrate));
     }
 
   };

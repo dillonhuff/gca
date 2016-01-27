@@ -22,7 +22,7 @@ namespace gca {
       if (os->current == GCA_RELATIVE) {
 	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point after = ps->after;
-	p->push_back(c.mk_G0(after));
+	p->push_back(mk_G0(after));
       }
     }
 
@@ -31,7 +31,7 @@ namespace gca {
       if (os->current == GCA_RELATIVE) {
 	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point after = ps->after;
-	p->push_back(c.mk_G1(after.x, after.y, after.z, ist.feed_rate));
+	p->push_back(mk_G1(after.x, after.y, after.z, ist.feed_rate));
       }
     }
 

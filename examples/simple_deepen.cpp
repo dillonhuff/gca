@@ -40,11 +40,10 @@ double get_z(move_instr* mi) {
 
 class deepen_callback : public per_instr_callback<instr*> {
 public:
-  context& c;
   double old_depth, new_depth;
 
-  deepen_callback(context& cp, double old_dp, double new_dp) :
-    c(cp), old_depth(old_dp), new_depth(new_dp) {}
+  deepen_callback(double old_dp, double new_dp) :
+    old_depth(old_dp), new_depth(new_dp) {}
 
   instr* call_default(gprog* p, int i, instr* is) {
     return is;
@@ -74,8 +73,8 @@ public:
     } else {
       double z = get_z(mi);
       double deeper_z = deepen_z(z, old_depth, new_depth);
-      move_instr* mi_cpy = static_cast<move_instr*>(c.mk_instr_cpy(mi));
-      mi_cpy->set_z(c.mk_lit(deeper_z));
+      move_instr* mi_cpy = static_cast<move_instr*>(mk_instr_cpy(mi));
+      mi_cpy->set_z(mk_lit(deeper_z));
       return mi_cpy;
     }
   }
@@ -102,9 +101,9 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
   double old_depth = stod(argv[1]);
   double new_depth = stod(argv[2]);
-  context c;
-  deepen_callback call(c, old_depth, new_depth);
+  deepen_callback call(old_depth, new_depth);
   string file = argv[3];
+  context c;
   gprog* p = read_file(c, file);
   gprog* r = deepen(p, call);
   cout << *r;

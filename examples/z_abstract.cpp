@@ -30,9 +30,9 @@ gprog* generalize_zs(context& c, set<double>& z_values, gprog* p) {
   int i = 1;
   for (set<double>::iterator it = z_values.begin();
        it != z_values.end(); ++it) {
-    var* v = c.mk_var(i);
-    new_vars[*it] = c.mk_var(i);
-    r->push_back(c.mk_assign(v, c.mk_lit(*it)));
+    var* v = mk_var(i);
+    new_vars[*it] = mk_var(i);
+    r->push_back(c.mk_assign(v, mk_lit(*it)));
     i++;
   }
   for (int j = 0; j < p->size(); j++) {
@@ -43,7 +43,7 @@ gprog* generalize_zs(context& c, set<double>& z_values, gprog* p) {
       if (z->is_lit()) {
 	double z_val = static_cast<lit*>(z)->v;
 	var* l = new_vars[z_val];
-	move_instr* new_mi = static_cast<move_instr*>(c.mk_instr_cpy(mi));
+	move_instr* new_mi = static_cast<move_instr*>(mk_instr_cpy(mi));
 	new_mi->set_z(l);
 	r->push_back(new_mi);
       } else {

@@ -86,13 +86,13 @@ namespace gca {
       if (s[*i] == '#') {
 	parse_char('#', i, s);
 	int val = parse_int(i, s);
-	return c.mk_var(val);
+	return mk_var(val);
       } else {
 	double d = parse_double(i, s);
-	return c.mk_lit(d);
+	return mk_lit(d);
       }
     }
-    return c.mk_omitted();
+    return mk_omitted();
   }
   
   void parse_position_values(context& c,
@@ -104,7 +104,7 @@ namespace gca {
   }
 
   instr* parse_G1(context& c, gprog* p, size_t* i, const string& s) {
-    value* default_feedrate = c.mk_omitted();
+    value* default_feedrate = mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);
     value* xv = NULL;
     value* yv = NULL;
@@ -113,7 +113,7 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value(c, 'F', i, s);
     }
-    return c.mk_G1(xv, yv, zv, fr);
+    return mk_G1(xv, yv, zv, fr);
   }
 
   instr* parse_G0(context& c, gprog* p, size_t* i, const string& s) {
@@ -122,12 +122,12 @@ namespace gca {
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(c, p, i, s, &xv, &yv, &zv);
-    return c.mk_G0(xv, yv, zv);
+    return mk_G0(xv, yv, zv);
   }
 
   instr* parse_G2(context& c, gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
-    value* default_feedrate = c.mk_omitted();
+    value* default_feedrate = mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);    
     value* xv = NULL;
     value* yv = NULL;
@@ -139,12 +139,12 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value(c, 'F', i, s);
     }    
-    return c.mk_G2(xv, yv, zv, iv, jv, kv, fr);
+    return mk_G2(xv, yv, zv, iv, jv, kv, fr);
   }
 
   instr* parse_G3(context& c, gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
-    value* default_feedrate = c.mk_omitted();
+    value* default_feedrate = mk_omitted();
     value* fr = parse_option_value(c, 'F', i, s);    
     value* xv = NULL;
     value* yv = NULL;
@@ -156,7 +156,7 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value(c, 'F', i, s);
     }    
-    return c.mk_G3(xv, yv, zv, iv, jv, kv, fr);
+    return mk_G3(xv, yv, zv, iv, jv, kv, fr);
   }
   
   instr* parse_G53(context& c, gprog* p, size_t* i, const string& s) {
@@ -241,7 +241,7 @@ namespace gca {
     } else if (next_char == '#') {
       parse_char('=', i, s);
       double e = parse_double(i, s);
-      is = c.mk_assign(c.mk_var(val), c.mk_lit(e));
+      is = c.mk_assign(mk_var(val), mk_lit(e));
     } else {
       cout << "Cannot parse string: " << s.substr(*i) << endl;
       assert(false);

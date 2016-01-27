@@ -74,11 +74,11 @@ int main(int argc, char** argv) {
   gprog* r = c.mk_gprog();
   for (int i = 0; i < hole_locations.size(); i++) {
     point pt = hole_locations[res[i]];
-    r->push_back(c.mk_G1(pt.x, pt.y, pt.z, c.mk_omitted()));
+    r->push_back(mk_G1(pt.x, pt.y, pt.z, mk_omitted()));
     if (i < hole_locations.size() - 1) {
       point next = hole_locations[res[i+1]];
-      r->push_back(c.mk_G0(pt.x, pt.y, 0.35));
-      r->push_back(c.mk_G0(next.x, next.y, 0.35));
+      r->push_back(mk_G0(pt.x, pt.y, 0.35));
+      r->push_back(mk_G0(next.x, next.y, 0.35));
     }
   }
   cout << *r;

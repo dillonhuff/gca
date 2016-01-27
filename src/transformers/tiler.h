@@ -25,14 +25,14 @@ namespace gca {
 	int j = 0;
 	int num_copied = 0;
 	while (j < rp->size() && !((*rp)[j]->is_end_instr())) {
-	  instr* cpy = c.mk_instr_cpy((*rp)[j]);
+	  instr* cpy = mk_instr_cpy((*rp)[j]);
 	  new_p->push_back(cpy);
 	  num_copied++;
 	  j++;
 	}
 	if (i != num_copies - 1 && num_copied > 0) {
-	  new_p->push_back(c.mk_G0(0, 0, diff.z));
-	  new_p->push_back(c.mk_G0(diff.x, diff.y, 0));
+	  new_p->push_back(mk_G0(0, 0, diff.z));
+	  new_p->push_back(mk_G0(diff.x, diff.y, 0));
 	}
       }
       new_p->push_back(c.mk_minstr(2));
