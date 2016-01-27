@@ -103,8 +103,8 @@ int main(int argc, char** argv) {
   double new_depth = stod(argv[2]);
   deepen_callback call(old_depth, new_depth);
   string file = argv[3];
-  context c;
-  gprog* p = read_file(c, file);
+  
+  gprog* p = read_file(file);
   gprog* r = deepen(p, call);
   cout << *r;
   return 0;

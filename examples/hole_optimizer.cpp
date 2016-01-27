@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
     return 0;
   }
   string file = argv[1];
-  context c;
-  gprog* p = read_file(c, file);
+  
+  gprog* p = read_file(file);
   vector<point> hole_locations;
   for (int i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];

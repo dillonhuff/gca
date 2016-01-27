@@ -26,8 +26,8 @@ int main(int argc, char* argv[]) {
     return 0;
   }
   string s(argv[1]);
-  context c;
-  gprog* p = read_file(c, s);
+  
+  gprog* p = read_file(s);
   // Adjust these to whatever boudns you would like to check
   int x_min = 0;
   int x_max = 9;

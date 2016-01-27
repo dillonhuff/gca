@@ -58,11 +58,6 @@ namespace gca {
     
   move_instr* mk_G53(value* x, value* y, value* z);
   
-  class context {
-  protected:
-  public:
-  };
-  
 }
 
 #endif

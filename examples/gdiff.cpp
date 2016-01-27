@@ -78,7 +78,7 @@ bool is_toolpath_start(instr* i) {
   return false;
 }
 
-void split_toolpaths(context& c, vector<gprog*>& tps, gprog* p) {
+void split_toolpaths(vector<gprog*>& tps, gprog* p) {
   gprog* t = mk_gprog();
   for (int i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
@@ -108,11 +108,11 @@ void show_diff_summary(int section_num, vector<diff*>& diff_summary) {
   }
 }
 
-void gdiff_programs(context& c, gprog* p1, gprog* p2) {
+void gdiff_programs(gprog* p1, gprog* p2) {
   vector<gprog*> toolpaths1;
-  split_toolpaths(c, toolpaths1, p1);
+  split_toolpaths(toolpaths1, p1);
   vector<gprog*> toolpaths2;
-  split_toolpaths(c, toolpaths2, p2);
+  split_toolpaths(toolpaths2, p2);
   assert(toolpaths1.size() == toolpaths2.size());
   for (int i = 0; i < toolpaths1.size(); i++) {
     vector<diff*> diff_summary;
@@ -128,9 +128,9 @@ int main(int argc, char** argv) {
   }
   string file1 = argv[1];
   string file2 = argv[2];
-  context c;
-  gprog* p1 = read_file(c, file1);
-  gprog* p2 = read_file(c, file2);
-  gdiff_programs(c, p1, p2);
+  
+  gprog* p1 = read_file(file1);
+  gprog* p2 = read_file(file2);
+  gdiff_programs(p1, p2);
   return 0;
 }

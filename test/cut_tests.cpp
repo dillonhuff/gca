@@ -7,7 +7,7 @@
 namespace gca {
   
   TEST_CASE("Cut to GCODE") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -15,7 +15,7 @@ namespace gca {
       cut* s = mk_cut(point(0, 0, -1), point(0, 3, -1));
       vector<cut*> cuts;
       cuts.push_back(s);
-      gprog* res = gcode_for_cuts(c, cuts);
+      gprog* res = gcode_for_cuts(cuts);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(point(0, 0, 0)));
       correct->push_back(mk_G0(point(0, 0, 0)));
@@ -34,7 +34,7 @@ namespace gca {
       vector<cut*> cuts;
       cuts.push_back(s1);
       cuts.push_back(s2);
-      gprog* res = gcode_for_cuts(c, cuts);
+      gprog* res = gcode_for_cuts(cuts);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(point(0, 0, 0)));
       correct->push_back(mk_G0(point(0, 0, 0)));
@@ -53,27 +53,27 @@ namespace gca {
   }
 
   TEST_CASE("Compute sink cut") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);
 
     SECTION("X axis sink") {
       cut* s1 = mk_cut(point(0, 0, -1), point(1, 0, -1));
-      cut* sink = sink_cut(c, s1, 1.0);
+      cut* sink = sink_cut(s1, 1.0);
       cut* correct = mk_cut(point(-1, 0, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
 
     SECTION("Y axis sink") {
       cut* s1 = mk_cut(point(0, 0, -1), point(0, 1, -1));
-      cut* sink = sink_cut(c, s1, 1.0);
+      cut* sink = sink_cut(s1, 1.0);
       cut* correct = mk_cut(point(0, -1, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
 
     SECTION("Mixed axis sink q1") {
       cut* s1 = mk_cut(point(0, 0, -1), point(1, 1, -1));
-      cut* sink = sink_cut(c, s1, 1.0);
+      cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
       cut* correct = mk_cut(point(-v, -v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
@@ -81,7 +81,7 @@ namespace gca {
     
     SECTION("Mixed axis sink q2") {
       cut* s1 = mk_cut(point(0, 0, -1), point(-1, 1, -1));
-      cut* sink = sink_cut(c, s1, 1.0);
+      cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
       cut* correct = mk_cut(point(v, -v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
@@ -89,7 +89,7 @@ namespace gca {
 
     SECTION("Mixed axis sink q3") {
       cut* s1 = mk_cut(point(0, 0, -1), point(-1, -1, -1));
-      cut* sink = sink_cut(c, s1, 1.0);
+      cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
       cut* correct = mk_cut(point(v, v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
@@ -97,7 +97,7 @@ namespace gca {
 
     SECTION("Mixed axis sink q4") {
       cut* s1 = mk_cut(point(0, 0, -1), point(1, -1, -1));
-      cut* sink = sink_cut(c, s1, 1.0);
+      cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
       cut* correct = mk_cut(point(-v, v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);

@@ -24,7 +24,7 @@ void find_z_values(set<double>& z_values, gprog* p) {
   }
 }
 
-gprog* generalize_zs(context& c, set<double>& z_values, gprog* p) {
+gprog* generalize_zs(set<double>& z_values, gprog* p) {
   gprog* r = mk_gprog();
   map<double, var*> new_vars;
   int i = 1;
@@ -62,11 +62,11 @@ int main(int argc, char** argv) {
     return 0;
   }
   string file = argv[1];
-  context c;
-  gprog* p = read_file(c, file);
+  
+  gprog* p = read_file(file);
   set<double> z_values;
   find_z_values(z_values, p);
-  gprog* r = generalize_zs(c, z_values, p);
+  gprog* r = generalize_zs(z_values, p);
   cout << *r;
   return 0;
 }

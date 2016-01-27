@@ -7,8 +7,8 @@
 using namespace gca;
 
 int main() {
-  context c;
-  gprog* p = parse_gprog(c, "G0 X0 Y0 Z0 G91 G1 X3 Z4");
+  
+  gprog* p = parse_gprog("G0 X0 Y0 Z0 G91 G1 X3 Z4");
   region r(5, 5, 5, 0.01);
   r.set_height(0, 5, 0, 5, 5);
   r.set_machine_x_offset(1);

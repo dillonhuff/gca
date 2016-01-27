@@ -9,12 +9,12 @@
 namespace gca {
 
   TEST_CASE("Mill simulator") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);
 
     SECTION("Run empty program") {
-      gprog* p = parse_gprog(c, "");
+      gprog* p = parse_gprog("");
       region r(10, 10, 10, 0.01);
       cylindrical_bit t(1);
       simulate_mill(*p, r, t);
@@ -22,7 +22,7 @@ namespace gca {
     }
 
     SECTION("One G1 move down") {
-      gprog* p = parse_gprog(c, "G1 X0 Y0 Z5");
+      gprog* p = parse_gprog("G1 X0 Y0 Z5");
       region r(10, 10, 10, 0.01);
       r.set_height(0, 10, 0, 10, 10);
       r.set_machine_x_offset(5);
@@ -39,7 +39,7 @@ namespace gca {
     }
 
     SECTION("Move through whole workpiece") {
-      gprog* p = parse_gprog(c, "G0 X0 Y0 Z2 G91 G1 X3");
+      gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3");
       region r(5, 5, 5, 0.01);
       r.set_height(2, 3, 2, 4, 5);
       r.set_machine_x_offset(1);
@@ -55,7 +55,7 @@ namespace gca {
     }
 
     SECTION("Move through whole workpiece then move back and stop") {
-      gprog* p = parse_gprog(c, "G0 X0 Y0 Z2 G91 G1 X3 G0 X-3.0 M2");
+      gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3 G0 X-3.0 M2");
       region r(5, 5, 5, 0.01);
       r.set_height(2, 3, 2, 4, 5);
       r.set_machine_x_offset(1);
@@ -71,7 +71,7 @@ namespace gca {
     }
 
     SECTION("Diagonal cut over nothing") {
-      gprog* p = parse_gprog(c, "G0 X0 Y0 Z2 G91 G1 X3 Y-0.1");
+      gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3 Y-0.1");
       region r(5, 5, 5, 0.01);
       r.set_height(2, 3, 2, 4, 1);
       r.set_machine_x_offset(1);
@@ -87,7 +87,7 @@ namespace gca {
     }
 
     SECTION("Move out of bounds in X direction") {
-      // gprog* p = parse_gprog(c, "G0 X19");
+      // gprog* p = parse_gprog("G0 X19");
       // region r(7, 10, 4, 0.01);
       // cylindrical_bit t(1);
       // sim_res res = simulate_mill(*p, r, t);

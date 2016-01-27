@@ -10,18 +10,18 @@
 namespace gca {
 
   TEST_CASE("Feed changer with G0") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = parse_gprog(c, "G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
+    gprog* p = parse_gprog("G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
     value* initial_feedrate = mk_lit(2.0);
     value* new_feedrate = mk_lit(5.0);
-    gprog* correct = parse_gprog(c, "G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
-    REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
+    gprog* correct = parse_gprog("G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
+    REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
   }
   
   TEST_CASE("Feed changer") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -30,11 +30,11 @@ namespace gca {
     value* new_feedrate = mk_lit(4.0);
     gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
-    REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
+    REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
   }
 
   TEST_CASE("Feed changer relative coordinates") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -43,41 +43,41 @@ namespace gca {
     value* new_feedrate = mk_lit(4.0);
     gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
-    REQUIRE(*change_feeds(c, p, initial_feedrate, new_feedrate) == *correct);
+    REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
   }
 
   TEST_CASE("Feed changer with variables") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);
-    gprog* p = parse_gprog(c, "G1 F15 X1.0 Y1.0 Z2.0");
+    gprog* p = parse_gprog("G1 F15 X1.0 Y1.0 Z2.0");
     lit* init_f = mk_lit(15.0);
     var* new_f = mk_var(1);
     value* default_val = mk_lit(13);
-    gprog* correct = parse_gprog(c, "#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
-    REQUIRE(*generalize_feeds(c, p, default_val, init_f, new_f) == *correct);
+    gprog* correct = parse_gprog("#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
+    REQUIRE(*generalize_feeds(p, default_val, init_f, new_f) == *correct);
   }
   
   TEST_CASE("No irrelevant G0 moves") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
     p->push_back(mk_G0(point(1.0, 1.0, 1.0)));
-    REQUIRE(*filter_G0_moves(c, p) == *p);
+    REQUIRE(*filter_G0_moves(p) == *p);
   }
 
   TEST_CASE("g0_filter no G0 moves") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
     p->push_back(mk_G1(1.0, 2.0, 2.0));
-    REQUIRE(*filter_G0_moves(c, p) == *p);
+    REQUIRE(*filter_G0_moves(p) == *p);
   }
 
   TEST_CASE("g0_filter dont remove G1") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -86,11 +86,11 @@ namespace gca {
     gprog* correct = mk_gprog();
     correct->push_back(mk_G0(point(1.0, 2.0, 2.0)));
     correct->push_back(mk_G1(1.0, 2.0, 2.0));
-    REQUIRE(*filter_G0_moves(c, p) == *correct);
+    REQUIRE(*filter_G0_moves(p) == *correct);
   }
 
   TEST_CASE("g0_filter several pointless moves") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -99,11 +99,10 @@ namespace gca {
     p->push_back(mk_G0(1.0, 2.0, 2.0));
     gprog* correct = mk_gprog();
     correct->push_back(mk_G0(1.0, 2.0, 2.0));
-    REQUIRE(*filter_G0_moves(c, p) == *correct);
+    REQUIRE(*filter_G0_moves(p) == *correct);
   }
 
   TEST_CASE("g0_filter several pointless moves with G1, M2") {
-    context c;
     arena_allocator a;
     set_system_allocator(&a);
     gprog* p = mk_gprog();
@@ -116,11 +115,10 @@ namespace gca {
     correct->push_back(mk_G0(1.0, 2.0, -2.00000001));
     correct->push_back(mk_G1(1.0, 2.0, 2.0));
     correct->push_back(mk_minstr(2));
-    REQUIRE(*filter_G0_moves(c, p) == *correct);
+    REQUIRE(*filter_G0_moves(p) == *correct);
   }
 
   TEST_CASE("g0_filter starting on G1") {
-    context c;
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -128,11 +126,10 @@ namespace gca {
     p->push_back(mk_G0(1, 1, 1));
     gprog* correct = mk_gprog();
     correct->push_back(mk_G1(1, 1, 1));
-    REQUIRE(*filter_G0_moves(c, p) == *correct);
+    REQUIRE(*filter_G0_moves(p) == *correct);
   }
 
   TEST_CASE("g0_filter starting on G1 multiple instructions") {
-    context c;
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -145,29 +142,28 @@ namespace gca {
     correct->push_back(mk_G1(1, 1, 0));
     correct->push_back(mk_G1(1, 1, 1));
     correct->push_back(mk_G1(2, 3, 3));
-    REQUIRE(*filter_G0_moves(c, p) == *correct);
+    REQUIRE(*filter_G0_moves(p) == *correct);
   }
   
   TEST_CASE("abs -> rel conversion") {
-    context c;
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
     gprog* r = mk_gprog();
     gprog* correct = mk_gprog();
-    abs_to_rel f(c, GCA_ABSOLUTE);
+    abs_to_rel f(GCA_ABSOLUTE);
 
     SECTION("abs -> rel 1 instruction is the same") {
       p->push_back(mk_G0(1.0, 1.0, 1.0));
       correct->push_back(mk_G0(1.0, 1.0, 1.0));
-      r = f.apply(c, p);
+      r = f.apply(p);
       REQUIRE(*r == *correct);
     }
 
     SECTION("abs -> rel 1 m instruction is the same") {
       p->push_back(mk_minstr(2));
       correct->push_back(mk_minstr(2));
-      r = f.apply(c, p);
+      r = f.apply(p);
       REQUIRE(*r == *correct);
     }
     
@@ -176,26 +172,26 @@ namespace gca {
       p->push_back(mk_G0(2.0, 3.5, 8));
       correct->push_back(mk_G1(1.0, 0, 0, 1.0));
       correct->push_back(mk_G0(1.0, 3.5, 8));
-      r = f.apply(c, p);
+      r = f.apply(p);
       REQUIRE(*r == *correct);
     }
     
   }
 
   TEST_CASE("rel -> abs conversion") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
     gprog* r;
     gprog* correct = mk_gprog();
-    rel_to_abs f(c, GCA_ABSOLUTE);
+    rel_to_abs f(GCA_ABSOLUTE);
 
     SECTION("One M2 instruction is the same") {
       p->push_back(mk_G91());
       p->push_back(mk_minstr(2));
       correct->push_back(mk_minstr(2));
-      r = f.apply(c, p);
+      r = f.apply(p);
       REQUIRE(*r == *correct);
     }
 
@@ -203,7 +199,7 @@ namespace gca {
       p->push_back(mk_G91());
       p->push_back(mk_G0(point(1.0, 2.0, 3.0)));
       correct->push_back(mk_G0(point(1.0, 2.0, 3.0)));
-      r = f.apply(c, p);
+      r = f.apply(p);
       REQUIRE(*r == *correct);
     }
 
@@ -213,13 +209,13 @@ namespace gca {
       p->push_back(mk_G1(-2.0, 2.0, -10.0, 2.5));
       correct->push_back(mk_G0(point(1.0, 2.0, 3.0)));
       correct->push_back(mk_G1(-1.0, 4.0, -7.0, 2.5));
-      r = f.apply(c, p);
+      r = f.apply(p);
       REQUIRE(*r == *correct);
     }    
   }
 
   TEST_CASE("Tiler") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -231,7 +227,7 @@ namespace gca {
       p->push_back(mk_minstr(2));
       correct->push_back(mk_G91());
       correct->push_back(mk_minstr(2));
-      r = t.apply(c, p, GCA_ABSOLUTE);
+      r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
 
@@ -240,7 +236,7 @@ namespace gca {
       p->push_back(mk_minstr(30));
       correct->push_back(mk_G91());
       correct->push_back(mk_minstr(2));
-      r = t.apply(c, p, GCA_ABSOLUTE);
+      r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
     
@@ -279,19 +275,19 @@ namespace gca {
       
       correct->push_back(mk_minstr(2));
       
-      r = t.apply(c, p, GCA_ABSOLUTE);
+      r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
   }
 
   TEST_CASE("Coordinate generalizer") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);
 
     SECTION("One move") {
-      gprog* p = parse_gprog(c, "G1 X0.0 Y-1.2 Z2.3");
-      gprog* correct = parse_gprog(c, "#1=2.0 G1 X0.0 Y-1.2 Z#1");
+      gprog* p = parse_gprog("G1 X0.0 Y-1.2 Z2.3");
+      gprog* correct = parse_gprog("#1=2.0 G1 X0.0 Y-1.2 Z#1");
     }
   }
   

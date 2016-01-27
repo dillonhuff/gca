@@ -20,8 +20,7 @@
 using namespace gca;
  
 int main(int, char *[]) {
-  context c;
-  gprog* p = parse_gprog(c, "G1 X0 Y0 Z0 G91 G1 X3 Z4");
+  gprog* p = parse_gprog("G1 X0 Y0 Z0 G91 G1 X3 Z4");
   region r(5, 5, 10, 0.05);
   r.set_height(0.1, 4.9, 0.1, 4.9, 9);
   r.set_machine_x_offset(1);

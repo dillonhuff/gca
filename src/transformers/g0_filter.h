@@ -26,12 +26,10 @@ namespace gca {
     
   public:
     gprog* p;
-    context& c;
     vector<point> positions;
     int j;
 
-  g0_filter_state(context& cp,
-		  pass& tp) : per_instr_state(tp), c(cp) {
+  g0_filter_state(pass& tp) : per_instr_state(tp) {
       p = mk_gprog();
       j = 0;
     }
@@ -67,9 +65,9 @@ namespace gca {
     void update_default(instr& ist) { p->push_back(&ist); }
   };
 
-  gprog* filter_G0_moves(context& c, gprog* p) {
+  gprog* filter_G0_moves(gprog* p) {
     pass ps;
-    g0_filter_state filter_s(c, ps);
+    g0_filter_state filter_s(ps);
     ps.add_state(GCA_G0_FILTER_STATE, &filter_s);
     ps.exec(p);
     return ps.get_state<g0_filter_state>(GCA_G0_FILTER_STATE)->p;

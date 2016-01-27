@@ -13,27 +13,24 @@ namespace gca {
   protected:
     value* initial_feedrate;
     value* new_feedrate;
-    context& c;
 
   public:
     gprog* p;
 
-  feed_changer_state(context& cp,
-		     pass& tp,
+  feed_changer_state(pass& tp,
 		     value* initial_feedratep,
 		     value* new_feedratep) :
-    per_instr_state(tp), c(cp) {
+    per_instr_state(tp) {
       initial_feedrate = initial_feedratep;
       new_feedrate = new_feedratep;
       p = mk_gprog();
     }
 
-  feed_changer_state(context& cp,
-		     pass& tp,
+  feed_changer_state(pass& tp,
 		     value* default_val,
 		     value* initial_feedratep,
 		     var* new_feedratep) :
-    per_instr_state(tp), c(cp) {
+    per_instr_state(tp) {
       initial_feedrate = initial_feedratep;
       new_feedrate = new_feedratep;
       p = mk_gprog();
@@ -51,17 +48,17 @@ namespace gca {
 
   };
 
-  gprog* change_feeds(context& c, gprog* p, value* initial_feedratep, value* new_feedratep) {
+  gprog* change_feeds(gprog* p, value* initial_feedratep, value* new_feedratep) {
     pass ps;
-    feed_changer_state feed_s(c, ps, initial_feedratep, new_feedratep);
+    feed_changer_state feed_s(ps, initial_feedratep, new_feedratep);
     ps.add_state(GCA_FEED_CHANGER_STATE, &feed_s);
     ps.exec(p);
     return ps.get_state<feed_changer_state>(GCA_FEED_CHANGER_STATE)->p;
   }
 
-  gprog* generalize_feeds(context& c, gprog* p, value* default_val, value* initial_feedratep, var* new_feedratep) {
+  gprog* generalize_feeds(gprog* p, value* default_val, value* initial_feedratep, var* new_feedratep) {
     pass ps;
-    feed_changer_state feed_s(c, ps, default_val, initial_feedratep, new_feedratep);
+    feed_changer_state feed_s(ps, default_val, initial_feedratep, new_feedratep);
     ps.add_state(GCA_FEED_CHANGER_STATE, &feed_s);
     ps.exec(p);
     return ps.get_state<feed_changer_state>(GCA_FEED_CHANGER_STATE)->p;

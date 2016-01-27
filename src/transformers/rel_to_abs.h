@@ -10,10 +10,9 @@ namespace gca {
   class rel_to_abs_state : public per_instr_state {
   public:
     gprog* p;
-    context& c;
 
-  rel_to_abs_state(context& cp, pass& tp) :
-    per_instr_state(tp), c(cp) {
+  rel_to_abs_state(pass& tp) :
+    per_instr_state(tp) {
       p = mk_gprog();
     }
 
@@ -47,14 +46,14 @@ namespace gca {
     position_state pis;
     
   public:
-  rel_to_abs(context& c, orientation def) :
-    rel_to_abs_s(c, *this), orient_s(*this, def), pis(*this, point(0, 0, 0)) {
+  rel_to_abs(orientation def) :
+    rel_to_abs_s(*this), orient_s(*this, def), pis(*this, point(0, 0, 0)) {
       states[GCA_POSITION_STATE] = &pis;
       states[GCA_ORIENTATION_STATE] = &orient_s;
       states[GCA_REL_TO_ABS_STATE] = &rel_to_abs_s;
     }
     
-    virtual gprog* apply(context& c, gprog* p) {
+    virtual gprog* apply(gprog* p) {
       exec(p);
       return rel_to_abs_s.p;
     }

@@ -8,12 +8,12 @@
 namespace gca {
 
   TEST_CASE("Checkers") {
-    context c;
+    
     arena_allocator a;
     set_system_allocator(&a);
 
     SECTION("Extra instruction checker one warning") {
-      gprog* p = parse_gprog(c, "G91 G91");
+      gprog* p = parse_gprog("G91 G91");
       REQUIRE(check_for_extra_instructions(p, GCA_ABSOLUTE) == 1);
     }
 
@@ -32,12 +32,12 @@ namespace gca {
     }
 
     SECTION("Program bounds checker true relative") {
-      gprog* p = parse_gprog(c, "G91 G1 X8 G0 X7");
+      gprog* p = parse_gprog("G91 G1 X8 G0 X7");
       REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, 10, 0.0, 2.0) == 1);
     }
 
     SECTION("g0 move checker no g0s") {
-      gprog* p = parse_gprog(c, "G1 X19");
+      gprog* p = parse_gprog("G1 X19");
       REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 0);
     }
     
@@ -61,7 +61,7 @@ namespace gca {
     }
 
     SECTION("g0_move_checker several instructions one mistake") {
-      gprog* p = parse_gprog(c, "G1 X2.0 Y2.0 Z1.0 G0 X0.0 Y0.0 Z2.0 M2");
+      gprog* p = parse_gprog("G1 X2.0 Y2.0 Z1.0 G0 X0.0 Y0.0 Z2.0 M2");
       REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 1);
     }
     

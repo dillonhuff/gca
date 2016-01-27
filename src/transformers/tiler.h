@@ -13,12 +13,12 @@ namespace gca {
   tiler(int nc, point s, point v) :
     num_copies(nc), start(s), shift(v) {}
 
-    virtual gprog* apply(context& c, gprog* p, orientation def) {
+    virtual gprog* apply(gprog* p, orientation def) {
       point last_pos = p->last_position();
       point diff = (start + shift) - last_pos;
       gprog* rp;
-      abs_to_rel atr(c, def);
-      rp = atr.apply(c, p);
+      abs_to_rel atr(def);
+      rp = atr.apply(p);
       gprog* new_p = mk_gprog();
       new_p->push_back(mk_G91());
       for (int i = 0; i < num_copies; i++) {

@@ -4,7 +4,7 @@
 
 namespace gca {
 
-  cut* line_to_cut(context& c, line& l, double cutter_width) {
+  cut* line_to_cut(line& l, double cutter_width) {
     double w = cutter_width / 2;
     point lv = l.end - l.start;
     point v = w*(lv.rotate_z(90).normalize());
@@ -15,24 +15,24 @@ namespace gca {
     return mk_cut(sr, er);
   }
 
-  cut* vertical_cut_to(context& c, cut* ct) {
+  cut* vertical_cut_to(cut* ct) {
     point start(ct->start.x, ct->start.y, 0);
     point end(ct->start);
     return mk_cut(start, end);
   }
 
-  vector<cut*> lines_to_cuts(context& c, vector<line>& lines, double cutter_width) {
+  vector<cut*> lines_to_cuts(vector<line>& lines, double cutter_width) {
     vector<cut*> cuts;
     for (int i = 0; i < lines.size(); i++) {
-      cut* res = line_to_cut(c, lines[i], cutter_width);
-      cut* down = vertical_cut_to(c, res);
+      cut* res = line_to_cut(lines[i], cutter_width);
+      cut* down = vertical_cut_to(res);
       cuts.push_back(down);
       cuts.push_back(res);
     }
     return cuts;
   }
   
-  void from_to_with_G0(context& c, gprog* p, point from, point to) {
+  void from_to_with_G0(gprog* p, point from, point to) {
     instr* pull_up_instr = mk_G0(point(from.x, from.y, 0.0));
     instr* move_instr = mk_G0(point(to.x, to.y, 0.0));
     instr* push_down_instr = mk_G0(to);
@@ -41,26 +41,26 @@ namespace gca {
     p->push_back(push_down_instr);
   }
 
-  void from_to_with_G1(context& c, gprog* p, point from, point to) {
+  void from_to_with_G1(gprog* p, point from, point to) {
     instr* move_instr = mk_G1(to.x, to.y, to.z);
     p->push_back(move_instr);
   }
   
-  gprog* gcode_for_cuts(context& c, vector<cut*>& cuts) {
+  gprog* gcode_for_cuts(vector<cut*>& cuts) {
     point current_loc = point(0, 0, 0);
     gprog* p = mk_gprog();
     for (int i = 0; i < cuts.size(); i++) {
-      from_to_with_G0(c, p, current_loc, cuts[i]->start);
-      from_to_with_G1(c, p, cuts[i]->start, cuts[i]->end);
+      from_to_with_G0(p, current_loc, cuts[i]->start);
+      from_to_with_G1(p, cuts[i]->start, cuts[i]->end);
       current_loc = cuts[i]->end;
     }
     point final_loc = point(0, 0, 0);
-    from_to_with_G0(c, p, current_loc, final_loc);
+    from_to_with_G0(p, current_loc, final_loc);
     p->push_back(mk_minstr(2));
     return p;
   }
 
-  cut* sink_cut(context& c, cut* s, double l) {
+  cut* sink_cut(cut* s, double l) {
     double xd = s->end.x - s->start.x;
     double yd = s->end.y - s->start.y;
     double x_pos = xd > 0;
@@ -89,15 +89,14 @@ namespace gca {
     return mk_cut(point(xs, ys, 0), s->start);
   }
 
-  void insert_sink_cuts(context& c, double l, vector<cut*>& cuts, vector<cut*>& dest) {
+  void insert_sink_cuts(double l, vector<cut*>& cuts, vector<cut*>& dest) {
     for (int i = 0; i < cuts.size(); i++) {
-      dest.push_back(sink_cut(c, cuts[i], l));
+      dest.push_back(sink_cut(cuts[i], l));
       dest.push_back(cuts[i]);
     }
   }
 
-  vector<cut*> surface_cuts(context &c,
-			    point left, point right,
+  vector<cut*> surface_cuts(point left, point right,
 			    point shift, int num_cuts) {
     vector<cut*> cuts;
     point c_left = left;
@@ -125,10 +124,10 @@ namespace gca {
     double finish_depth = coarse_depth + finish_inc;
     point finish_start(x_s, y, finish_depth);
     point finish_end(x_e, y, finish_depth);
-    context c;
-    vector<cut*> cuts1 = surface_cuts(c, coarse_start, coarse_end,
+    
+    vector<cut*> cuts1 = surface_cuts(coarse_start, coarse_end,
 				      shift, num_cuts);
-    vector<cut*> cuts2 = surface_cuts(c, finish_start, finish_end,
+    vector<cut*> cuts2 = surface_cuts(finish_start, finish_end,
 				      shift, num_cuts);
     cuts1.insert(cuts1.end(), cuts2.begin(), cuts2.end());
     return cuts1;

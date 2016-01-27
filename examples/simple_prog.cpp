@@ -14,7 +14,7 @@ int main() {
   square_edges.push_back(line(point(0, l, depth), point(l, l, depth)));
   square_edges.push_back(line(point(l, l, depth), point(l, 0, depth)));
   square_edges.push_back(line(point(l, 0, depth), point(0, 0, depth)));
-  context c;
+  
   double cutter_width = 0.32;
   //double x_t = l + cutter_width;
   vector<cut*> square_cuts = lines_to_cuts(c, square_edges, cutter_width);
