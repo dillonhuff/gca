@@ -67,7 +67,7 @@ namespace gca {
     virtual inline bool is_M2() const { return false; }
     virtual inline bool is_M30() const { return false; }
     virtual inline bool is_G() const { return c == GCA_G; }
-    virtual inline bool is_M() const { return c == GCA_M; }
+    virtual inline bool is_M() const { return is_M3() || is_M5() || is_M2() || is_M30(); }
     virtual inline bool is_F() const { return false; }
     virtual inline bool is_S() const { return false; }
     virtual inline bool is_T() const { return false; }
