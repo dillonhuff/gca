@@ -131,8 +131,7 @@ namespace gca {
   }
 
   instr* mk_sinstr(int val) {
-    instr* mem = allocate<instr>();
-    return new (mem) instr(GCA_S, val);
+    return new (allocate<s_instr>()) s_instr(val);
   }
 
   f_instr* mk_finstr(int val, string s) {
@@ -149,9 +148,8 @@ namespace gca {
     return new (allocate<g91_instr>()) g91_instr();
   }
 
-  instr* mk_G90() {
-    instr* mem = allocate<instr>();
-    return new (mem) instr(GCA_G, 90);
+  g90_instr* mk_G90() {
+    return new (allocate<g90_instr>()) g90_instr();
   }
     
   move_instr* mk_G53(value* x, value* y, value* z) {

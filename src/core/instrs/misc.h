@@ -15,6 +15,16 @@ namespace gca {
     void print(ostream& s) const { s << "T" << num; }
   };
 
+  class s_instr : public instr {
+  public:
+    int num;
+
+  s_instr(int n) : num(n) {}
+
+    inline bool is_S() const { return true; }
+    void print(ostream& s) const { s << "S" << num; }
+  };
+  
   class m5_instr : public instr {
   public:
     inline bool is_M5() const { return true; }

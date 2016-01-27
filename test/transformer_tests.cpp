@@ -228,10 +228,6 @@ namespace gca {
       correct->push_back(mk_G91());
       correct->push_back(mk_m2_instr());
       r = t.apply(p, GCA_ABSOLUTE);
-      cout << "-- Actual: " << endl;
-      cout << *r;
-      cout << "-- Correct: " << endl;
-      cout << *correct;
       REQUIRE(*r == *correct);
     }
 
@@ -241,10 +237,6 @@ namespace gca {
       correct->push_back(mk_G91());
       correct->push_back(mk_m2_instr());
       r = t.apply(p, GCA_ABSOLUTE);
-      cout << "-- Actual: " << endl;
-      cout << *r;
-      cout << "-- Correct: " << endl;
-      cout << *correct;      
       REQUIRE(*r == *correct);
     }
     
@@ -284,11 +276,6 @@ namespace gca {
       correct->push_back(mk_m2_instr());
       
       r = t.apply(p, GCA_ABSOLUTE);
-      cout << "-- Actual: " << endl;
-      cout << *r;
-      cout << "-- Correct: " << endl;
-      cout << *correct;
-      
       REQUIRE(*r == *correct);
     }
   }

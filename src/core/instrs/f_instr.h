@@ -14,6 +14,7 @@ namespace gca {
     }
 
     inline bool is_f_instr() const { return true; }
+    inline bool is_F() const { return true; }
     virtual bool operator==(const instr& i) const {
       if (i.is_f_instr()) {
 	const f_instr& fi = static_cast<const f_instr&>(i);
