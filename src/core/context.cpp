@@ -17,9 +17,9 @@ namespace gca {
     return new (l) lit(v);
   }
   
-  move_instr* mk_G0(point p) {
-    move_instr* mem = allocate<move_instr>();
-    return new (mem) move_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted());
+  g0_instr* mk_G0(point p) {
+    g0_instr* mem = allocate<g0_instr>();
+    return new (mem) g0_instr(GCA_G, 0, mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted());
   }
     
   move_instr* mk_G1(double x, double y, double z, double feed_rate) {

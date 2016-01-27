@@ -122,6 +122,23 @@ namespace gca {
     }
     
   };
+
+  class g0_instr : public move_instr {
+  public:
+  g0_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+    virtual inline bool is_G0() const { return true; }
+  };
+
+  class g1_instr : public move_instr {
+  public:
+    virtual inline bool is_G1() const { return true; }
+  };
+
+  class g53_instr : public move_instr {
+  public:
+    virtual inline bool is_G53() const { return true; }
+  };
+  
 }
 
 #endif
