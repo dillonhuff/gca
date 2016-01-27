@@ -10,6 +10,8 @@ namespace gca {
 
   TEST_CASE("Parse GCODE with absolute coordinates") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
 
     SECTION("Parse empty string") {
       string s = "";
@@ -147,7 +149,10 @@ namespace gca {
 
   TEST_CASE("Parse GCODE with relative coordinates") {
     context c;
-    
+
+    arena_allocator a;
+    set_system_allocator(&a);
+
     SECTION("Parse G91") {
       string s = "G91\n";
       gprog* p = parse_gprog(c, s);
@@ -211,6 +216,8 @@ namespace gca {
 
   TEST_CASE("Parse GCODE with variables") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
 
     SECTION("Parse assign") {
       string s = "#1=14";
@@ -231,6 +238,9 @@ namespace gca {
 
   TEST_CASE("Parsing G2 and G3") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
+
 
     SECTION("G2 IJ") {
       gprog* p = parse_gprog(c, "G02 X1.0 Y2.0 Z3.0 I-2.0 J0.15");

@@ -16,12 +16,12 @@ namespace gca {
   public:
 
     var* mk_var(int v) {
-      var* vr = a.allocate<var>();
+      var* vr = allocate<var>(); //a.allocate<var>();//static_cast<var*>(alloc(sizeof(var)));
       return new (vr) var(v);
     }
 
     lit* mk_lit(double v) {
-      lit* l = a.allocate<lit>();
+      lit* l = allocate<lit>();
       return new (l) lit(v);
     }
 

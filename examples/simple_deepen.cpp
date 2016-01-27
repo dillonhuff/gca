@@ -31,7 +31,6 @@ double deepen_z(double z, double old_depth, double new_depth) {
   return deeper_z;    
 }
 
-// Helper function for deepen
 double get_z(move_instr* mi) {
   value* z = mi->get_z();
   assert(z->is_lit());

@@ -29,6 +29,14 @@ namespace gca {
       delete start;
     }
 
+    void* alloc(size_t s) {
+      space_left = space_left - s;
+      assert(space_left > 0);
+      void* to_alloc = current;
+      current += s;
+      return to_alloc;
+    }
+
     template<typename T>
     T* allocate() {
       size_t s = sizeof(T);
@@ -40,7 +48,15 @@ namespace gca {
     }
 
   };
- 
+
+  void set_system_allocator(arena_allocator* a);
+  void* alloc(size_t s);
+  
+  template<typename T> T* allocate() {
+    void* to_alloc = alloc(sizeof(T));
+    return static_cast<T*>(to_alloc);
+  }
+    
 }
 
 #endif

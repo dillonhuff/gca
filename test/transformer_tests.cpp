@@ -11,6 +11,8 @@ namespace gca {
 
   TEST_CASE("Feed changer with G0") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = parse_gprog(c, "G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
     value* initial_feedrate = c.mk_lit(2.0);
     value* new_feedrate = c.mk_lit(5.0);
@@ -20,6 +22,8 @@ namespace gca {
   
   TEST_CASE("Feed changer") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     value* initial_feedrate = c.mk_lit(1.0);
     p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate));
@@ -31,6 +35,8 @@ namespace gca {
 
   TEST_CASE("Feed changer relative coordinates") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     value* initial_feedrate = c.mk_lit(1.0);
     p->push_back(c.mk_G1(1.0, 1.0, 1.0, initial_feedrate));
@@ -42,6 +48,8 @@ namespace gca {
 
   TEST_CASE("Feed changer with variables") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
     gprog* p = parse_gprog(c, "G1 F15 X1.0 Y1.0 Z2.0");
     lit* init_f = c.mk_lit(15.0);
     var* new_f = c.mk_var(1);
@@ -52,6 +60,8 @@ namespace gca {
   
   TEST_CASE("No irrelevant G0 moves") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(point(1.0, 1.0, 1.0)));
     REQUIRE(*filter_G0_moves(c, p) == *p);
@@ -59,6 +69,8 @@ namespace gca {
 
   TEST_CASE("g0_filter no G0 moves") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
     REQUIRE(*filter_G0_moves(c, p) == *p);
@@ -66,6 +78,8 @@ namespace gca {
 
   TEST_CASE("g0_filter dont remove G1") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(point(1.0, 2.0, 2.0)));
     p->push_back(c.mk_G1(1.0, 2.0, 2.0));
@@ -77,6 +91,8 @@ namespace gca {
 
   TEST_CASE("g0_filter several pointless moves") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
     p->push_back(c.mk_G0(1.0, 2.0, 2.0));
@@ -88,6 +104,8 @@ namespace gca {
 
   TEST_CASE("g0_filter several pointless moves with G1, M2") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G0(1.0, 2.0, -2.0));
     p->push_back(c.mk_G0(1.0, 2.0, 0.0));
@@ -103,6 +121,8 @@ namespace gca {
 
   TEST_CASE("g0_filter starting on G1") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1, 1, 1));
     p->push_back(c.mk_G0(1, 1, 1));
@@ -113,6 +133,8 @@ namespace gca {
 
   TEST_CASE("g0_filter starting on G1 multiple instructions") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     p->push_back(c.mk_G1(1, 1, 0));
     p->push_back(c.mk_G1(1, 1, 1));
@@ -128,6 +150,8 @@ namespace gca {
   
   TEST_CASE("abs -> rel conversion") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     gprog* r = c.mk_gprog();
     gprog* correct = c.mk_gprog();
@@ -160,6 +184,8 @@ namespace gca {
 
   TEST_CASE("rel -> abs conversion") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     gprog* r;
     gprog* correct = c.mk_gprog();
@@ -194,6 +220,8 @@ namespace gca {
 
   TEST_CASE("Tiler") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);    
     gprog* p = c.mk_gprog();
     gprog* r;
     gprog* correct = c.mk_gprog();
@@ -258,6 +286,8 @@ namespace gca {
 
   TEST_CASE("Coordinate generalizer") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
 
     SECTION("One move") {
       gprog* p = parse_gprog(c, "G1 X0.0 Y-1.2 Z2.3");

@@ -9,6 +9,8 @@ namespace gca {
 
   TEST_CASE("Checkers") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
 
     SECTION("Extra instruction checker one warning") {
       gprog* p = parse_gprog(c, "G91 G91");

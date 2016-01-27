@@ -10,6 +10,8 @@ namespace gca {
 
   TEST_CASE("Mill simulator") {
     context c;
+    arena_allocator a;
+    set_system_allocator(&a);
 
     SECTION("Run empty program") {
       gprog* p = parse_gprog(c, "");

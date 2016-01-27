@@ -443,6 +443,57 @@ examples/z_abstract.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.s
 .PHONY : examples/z_abstract.cpp.s
 
+src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
+
+.PHONY : src/core/arena_allocator.o
+
+# target to build an object file
+src/core/arena_allocator.cpp.o:
+	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.o
+.PHONY : src/core/arena_allocator.cpp.o
+
+src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
+
+.PHONY : src/core/arena_allocator.i
+
+# target to preprocess a source file
+src/core/arena_allocator.cpp.i:
+	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.i
+.PHONY : src/core/arena_allocator.cpp.i
+
+src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
+
+.PHONY : src/core/arena_allocator.s
+
+# target to generate assembly for a file
+src/core/arena_allocator.cpp.s:
+	$(MAKE) -f CMakeFiles/TriangulateTerrainMap.dir/build.make CMakeFiles/TriangulateTerrainMap.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.s
+.PHONY : src/core/arena_allocator.cpp.s
+
 src/core/gprog.o: src/core/gprog.cpp.o
 
 .PHONY : src/core/gprog.o
@@ -1183,6 +1234,9 @@ help:
 	@echo "... examples/z_abstract.o"
 	@echo "... examples/z_abstract.i"
 	@echo "... examples/z_abstract.s"
+	@echo "... src/core/arena_allocator.o"
+	@echo "... src/core/arena_allocator.i"
+	@echo "... src/core/arena_allocator.s"
 	@echo "... src/core/gprog.o"
 	@echo "... src/core/gprog.i"
 	@echo "... src/core/gprog.s"
