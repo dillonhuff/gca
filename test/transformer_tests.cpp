@@ -34,7 +34,6 @@ namespace gca {
   }
 
   TEST_CASE("Feed changer relative coordinates") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -47,7 +46,6 @@ namespace gca {
   }
 
   TEST_CASE("Feed changer with variables") {
-    
     arena_allocator a;
     set_system_allocator(&a);
     gprog* p = parse_gprog("G1 F15 X1.0 Y1.0 Z2.0");
@@ -59,7 +57,6 @@ namespace gca {
   }
   
   TEST_CASE("No irrelevant G0 moves") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -68,7 +65,6 @@ namespace gca {
   }
 
   TEST_CASE("g0_filter no G0 moves") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -77,7 +73,6 @@ namespace gca {
   }
 
   TEST_CASE("g0_filter dont remove G1") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -90,7 +85,6 @@ namespace gca {
   }
 
   TEST_CASE("g0_filter several pointless moves") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();

@@ -1,3 +1,4 @@
+
 #include "core/context.h"
 
 namespace gca {
@@ -60,7 +61,7 @@ namespace gca {
   }
 
   g0_instr* mk_G0(value* x, value* y, value* z) {
-    move_instr* mem = allocate<move_instr>();
+    g0_instr* mem = allocate<g0_instr>();
     return new (mem) g0_instr(GCA_G, 0, x, y, z, mk_omitted());
   }
       
@@ -72,10 +73,15 @@ namespace gca {
 	g0_instr* mem = allocate<g0_instr>();
 	g0_instr* new_i_m = new (mem) g0_instr(mi);
 	new_i = static_cast<instr*>(new_i_m);	
-      } else if (i->is_G1() || i->is_G53()) {
-	move_instr* mi = static_cast<move_instr*>(i);
-	move_instr* mem = allocate<move_instr>();
-	move_instr* new_i_m = new (mem) move_instr(mi);
+      } else if (i->is_G1()) {
+	g1_instr* mi = static_cast<g1_instr*>(i);
+	g1_instr* mem = allocate<g1_instr>();
+	g1_instr* new_i_m = new (mem) g1_instr(mi);
+	new_i = static_cast<instr*>(new_i_m);		
+      } else if (i->is_G53()) {
+	g53_instr* mi = static_cast<g53_instr*>(i);
+	g53_instr* mem = allocate<g53_instr>();
+	g53_instr* new_i_m = new (mem) g53_instr(mi);
 	new_i = static_cast<instr*>(new_i_m);
       } else if (i->is_g2_instr()) {
 	g2_instr* gi = static_cast<g2_instr*>(i);

@@ -55,7 +55,6 @@ namespace gca {
     }
     
     inline point pos() const {
-      assert(is_G());
       assert(x->is_lit() && y->is_lit() && z->is_lit());
       lit* x_lit = static_cast<lit*>(x);
       lit* y_lit = static_cast<lit*>(y);
@@ -92,12 +91,7 @@ namespace gca {
     
     inline bool is_move_instr() const { return true; }
 
-    inline void swap_orientation() {
-      assert(is_G1());
-    }
-
     virtual void print(ostream& s) const {
-      assert(is_G());
       s << 'G' << v << ' ';
       if (!feed_rate->is_omitted()) { s << 'F' << *feed_rate << ' '; }
       if (!x->is_omitted()) { s << 'X' << *x << ' '; }

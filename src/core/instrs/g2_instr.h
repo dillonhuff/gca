@@ -19,6 +19,7 @@ namespace gca {
       v = 2;
     }
 
+    virtual inline bool is_G2() const { return true; }    
     virtual inline bool is_g2_instr() const { return true; }
 
     void print(ostream& s) const {
