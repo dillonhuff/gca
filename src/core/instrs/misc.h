@@ -12,6 +12,7 @@ namespace gca {
   t_instr(int n) : num(n) {}
 
     inline bool is_T() const { return true; }
+    void print(ostream& s) const { s << "T" << num; }
   };
 
   class m5_instr : public instr {
