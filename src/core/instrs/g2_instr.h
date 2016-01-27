@@ -14,10 +14,7 @@ namespace gca {
     g2_instr(value* x, value* y, value* z,
 		      value* ip, value* jp, value* kp,
 	     value* feed_rate) : move_instr(x, y, z, feed_rate),
-    i(ip), j(jp), k(kp) {
-      c = GCA_G;
-      v = 2;
-    }
+      i(ip), j(jp), k(kp) {}
 
     virtual inline bool is_G2() const { return true; }    
     virtual inline bool is_g2_instr() const { return true; }

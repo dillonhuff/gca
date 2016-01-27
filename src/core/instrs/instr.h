@@ -25,10 +25,6 @@ namespace gca {
   typedef int instr_val;
 
   class instr {
-  protected:
-    instr_class c;
-    instr_val v;
-    
   public:
     double feed_rate;
 
