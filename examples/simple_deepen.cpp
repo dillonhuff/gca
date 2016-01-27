@@ -38,7 +38,7 @@ double get_z(move_instr* mi) {
   return z_lit->v;
 }
 
-class deepen_callback : public callback<instr*> {
+class deepen_callback : public per_instr_callback<instr*> {
 public:
   context& c;
   double old_depth, new_depth;
@@ -46,31 +46,45 @@ public:
   deepen_callback(context& cp, double old_dp, double new_dp) :
     c(cp), old_depth(old_dp), new_depth(new_dp) {}
 
-  instr* call(gprog* p, int i, instr* is) {
-    if (is->is_g2_instr() || is->is_g3_instr()) {
-      move_instr* mi = static_cast<move_instr*>(is);
-      assert(mi->get_z()->is_omitted());
+  instr* call_default(gprog* p, int i, instr* is) {
+    return is;
+  }
+
+  instr* call_G0(gprog* p, int i, move_instr* mi) {
+    return deepen_linear_move(mi);
+  }
+
+  instr* call_G1(gprog* p, int i, move_instr* mi) {
+    return deepen_linear_move(mi);
+  }
+
+  instr* call_G2(gprog* p, int i, g2_instr* is) {
+    assert(is->get_z()->is_omitted());
+    return is;
+  }
+
+  instr* call_G3(gprog* p, int i, g3_instr* is) {
+    assert(is->get_z()->is_omitted());
+    return is;
+  }
+
+  instr* deepen_linear_move(move_instr* mi) {
+    if (mi->get_z()->is_omitted()) {
       return mi;
-    } else if (is->is_G0() || is->is_G1()) {
-      move_instr* mi = static_cast<move_instr*>(is);
-      if (mi->get_z()->is_omitted()) {
-	return mi;
-      } else {
-	double z = get_z(mi);
-	double deeper_z = deepen_z(z, old_depth, new_depth);
-	move_instr* mi_cpy = static_cast<move_instr*>(c.mk_instr_cpy(mi));
-	mi_cpy->set_z(c.mk_lit(deeper_z));
-	return mi_cpy;
-      }      
     } else {
-      return is;
+      double z = get_z(mi);
+      double deeper_z = deepen_z(z, old_depth, new_depth);
+      move_instr* mi_cpy = static_cast<move_instr*>(c.mk_instr_cpy(mi));
+      mi_cpy->set_z(c.mk_lit(deeper_z));
+      return mi_cpy;
     }
   }
+  
 };
 
 // Main driver function for deepening
 gprog* deepen(gprog* p, deepen_callback& f) {
-  gprog* r = f.c.mk_gprog();
+  gprog* r = new (allocate<gprog>()) gprog();
   for (int i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
     instr* deepened_is = f.call(p, i, is);

@@ -45,6 +45,7 @@ namespace gca {
       v = vp;
     }
 
+    virtual inline bool is_M5() const { return c== GCA_M && v == 5; }
     virtual inline bool is_g3_instr() const { return false; }
     virtual inline bool is_g2_instr() const { return false; }
     virtual inline bool is_f_instr() const { return false; }
@@ -64,6 +65,7 @@ namespace gca {
     virtual void print(ostream& s) const;
 
     inline bool is_G() const { return c == GCA_G; }
+    inline bool is_M() const { return c == GCA_M; }
     inline bool is_F() const { return c == GCA_F; }
     inline bool is_S() const { return c == GCA_S; }
     inline bool is_T() const { return c == GCA_T; }
