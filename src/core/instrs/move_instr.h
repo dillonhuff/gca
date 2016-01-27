@@ -126,6 +126,8 @@ namespace gca {
   class g0_instr : public move_instr {
   public:
   g0_instr(instr_class cp, instr_val vp, value* xp, value* yp, value* zp, value* frp) : move_instr(cp, vp, xp, yp, zp, frp) {}
+  g0_instr(g0_instr* i) : move_instr(i) {}
+
     virtual inline bool is_G0() const { return true; }
   };
 

@@ -54,20 +54,25 @@ namespace gca {
     return new (mem) g3_instr(x, y, z, i, j, k, feed_rate);
   }
   
-  move_instr* mk_G0(double x, double y, double z) {
-    move_instr* mem = allocate<move_instr>();
-    return new (mem) move_instr(GCA_G, 0, mk_lit(x), mk_lit(y), mk_lit(z), mk_omitted());
+  g0_instr* mk_G0(double x, double y, double z) {
+    g0_instr* mem = allocate<g0_instr>();
+    return new (mem) g0_instr(GCA_G, 0, mk_lit(x), mk_lit(y), mk_lit(z), mk_omitted());
   }
 
-  move_instr* mk_G0(value* x, value* y, value* z) {
+  g0_instr* mk_G0(value* x, value* y, value* z) {
     move_instr* mem = allocate<move_instr>();
-    return new (mem) move_instr(GCA_G, 0, x, y, z, mk_omitted());
+    return new (mem) g0_instr(GCA_G, 0, x, y, z, mk_omitted());
   }
       
   instr* mk_instr_cpy(instr* i) {
     instr* new_i;
     if (i->is_move_instr()) {
-      if (i->is_G0() || i->is_G1() || i->is_G53()) {
+      if (i->is_G0()) {
+	g0_instr* mi = static_cast<g0_instr*>(i);
+	g0_instr* mem = allocate<g0_instr>();
+	g0_instr* new_i_m = new (mem) g0_instr(mi);
+	new_i = static_cast<instr*>(new_i_m);	
+      } else if (i->is_G1() || i->is_G53()) {
 	move_instr* mi = static_cast<move_instr*>(i);
 	move_instr* mem = allocate<move_instr>();
 	move_instr* new_i_m = new (mem) move_instr(mi);
