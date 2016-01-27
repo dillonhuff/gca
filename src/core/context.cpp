@@ -109,14 +109,25 @@ namespace gca {
     return new (mem) gprog();
   }
 
-  instr* mk_minstr(int val) {
-    instr* mem = allocate<instr>();
-    return new (mem) instr(GCA_M, val);
+  m2_instr* mk_m2_instr() {
+    return new (allocate<m2_instr>()) m2_instr();
   }
 
-  instr* mk_tinstr(int val) {
-    instr* mem = allocate<instr>();
-    return new (mem) instr(GCA_T, val);
+  m30_instr* mk_m30_instr() {
+    return new (allocate<m30_instr>()) m30_instr();
+  }
+
+  m5_instr* mk_m5_instr() {
+    return new (allocate<m5_instr>()) m5_instr();
+  }
+
+  m3_instr* mk_m3_instr() {
+    return new (allocate<m3_instr>()) m3_instr();
+  }
+  
+  t_instr* mk_tinstr(int val) {
+    instr* mem = allocate<t_instr>();
+    return new (mem) t_instr(val);
   }
 
   instr* mk_sinstr(int val) {
@@ -134,9 +145,8 @@ namespace gca {
     return new (mem) comment(ld, rd, t);
   }
     
-  instr* mk_G91() {
-    instr* mem = allocate<instr>();
-    return new (mem) instr(GCA_G, 91);
+  g91_instr* mk_G91() {
+    return new (allocate<g91_instr>()) g91_instr();
   }
 
   instr* mk_G90() {

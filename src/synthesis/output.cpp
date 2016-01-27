@@ -56,7 +56,7 @@ namespace gca {
     }
     point final_loc = point(0, 0, 0);
     from_to_with_G0(p, current_loc, final_loc);
-    p->push_back(mk_minstr(2));
+    p->push_back(mk_m2_instr());
     return p;
   }
 

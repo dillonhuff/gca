@@ -208,7 +208,7 @@ namespace gca {
     ignore_whitespace(i, s);
     return is;
   }
-  
+
   instr* parse_next_instr(gprog* p,
 			  size_t* i,
 			  const string& s) {
@@ -224,7 +224,18 @@ namespace gca {
     (*i)++;
     int val = parse_int(i, s);
     if (next_char == 'M') {
-      is = mk_minstr(val);
+      if (val == 2) {
+	is = mk_m2_instr();
+      } else if (val == 30) {
+	is = mk_m30_instr();
+      } else if (val == 5) {
+	is = mk_m5_instr();
+      } else if (val == 3) {
+	is = mk_m3_instr();
+      } else {
+	cout << "M value not supported " << val << endl;
+	assert(false);
+      }
     } else if (next_char == 'T') {
       is = mk_tinstr(val);
     } else if (next_char == 'S') {

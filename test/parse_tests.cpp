@@ -9,7 +9,6 @@
 namespace gca {
 
   TEST_CASE("Parse GCODE with absolute coordinates") {
-    
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -23,7 +22,7 @@ namespace gca {
       string s = "M2";
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
-      correct->push_back(mk_minstr(2));
+      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       REQUIRE(p->size() == 1);
       REQUIRE(*p == *correct);
     }
@@ -32,7 +31,7 @@ namespace gca {
       string s = "M30";
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
-      correct->push_back(mk_minstr(30));
+      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       REQUIRE(*p == *correct);
     }
 
@@ -108,7 +107,7 @@ namespace gca {
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(mk_lit(1.0), mk_lit(0.0), mk_lit(-1.5), mk_omitted()));
       correct->push_back(mk_G0(mk_lit(12.5), mk_omitted(), mk_omitted()));
-      correct->push_back(mk_minstr(2));
+      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       REQUIRE(*p == *correct);
     }
 
@@ -122,7 +121,7 @@ namespace gca {
       correct->push_back(mk_comment('(', ')', "Comment \n number 2"));
       correct->push_back(mk_comment('(', ')', "s"));
       correct->push_back(mk_comment('(', ')', " f"));
-      correct->push_back(mk_minstr(2));
+      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       correct->push_back(mk_comment('(', ')', "Comment G1 X0.0"));
       REQUIRE(*p == *correct);
     }
@@ -134,7 +133,7 @@ namespace gca {
       correct->push_back(mk_G1(mk_lit(0.0), mk_lit(0.0), mk_lit(-1.5), mk_omitted()));
       correct->push_back(mk_G0(point(12.5, 1.5, 0)));
       correct->push_back(mk_G1(mk_lit(18.0), mk_lit(1.5), mk_lit(-0.25), mk_omitted()));
-      correct->push_back(mk_minstr(2));
+      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       REQUIRE(*p == *correct);
     }
 
@@ -148,8 +147,6 @@ namespace gca {
   }
 
   TEST_CASE("Parse GCODE with relative coordinates") {
-    
-
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -177,7 +174,7 @@ namespace gca {
       correct->push_back(mk_G91());
       correct->push_back(mk_G0(1.0, 1.0, 1.0));
       correct->push_back(mk_G0(mk_omitted(), mk_lit(0.5), mk_omitted()));
-      correct->push_back(mk_minstr(2));
+      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       REQUIRE(*p == *correct);
     }
 
@@ -215,7 +212,6 @@ namespace gca {
   }
 
   TEST_CASE("Parse GCODE with variables") {
-    
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -237,7 +233,6 @@ namespace gca {
   }
 
   TEST_CASE("Parsing G2 and G3") {
-    
     arena_allocator a;
     set_system_allocator(&a);
 

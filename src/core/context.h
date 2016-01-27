@@ -42,9 +42,14 @@ namespace gca {
     
   gprog* mk_gprog();
 
-  instr* mk_minstr(int val);
+  m2_instr* mk_m2_instr();
+  m30_instr* mk_m30_instr();
+  m5_instr* mk_m5_instr();
+  m3_instr* mk_m3_instr();
 
-  instr* mk_tinstr(int val);
+  //  instr* mk_minstr(int val);
+
+  t_instr* mk_tinstr(int val);
 
   instr* mk_sinstr(int val);
 
@@ -52,7 +57,7 @@ namespace gca {
 
   comment* mk_comment(char ld, char rd, string t);
     
-  instr* mk_G91();
+  g91_instr* mk_G91();
 
   instr* mk_G90();
     

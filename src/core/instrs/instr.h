@@ -45,7 +45,7 @@ namespace gca {
       v = vp;
     }
 
-    virtual inline bool is_M5() const { return c== GCA_M && v == 5; }
+
     virtual inline bool is_g3_instr() const { return false; }
     virtual inline bool is_g2_instr() const { return false; }
     virtual inline bool is_f_instr() const { return false; }
@@ -64,16 +64,20 @@ namespace gca {
 
     virtual void print(ostream& s) const;
 
-    inline bool is_G() const { return c == GCA_G; }
-    inline bool is_M() const { return c == GCA_M; }
-    inline bool is_F() const { return c == GCA_F; }
-    inline bool is_S() const { return c == GCA_S; }
-    inline bool is_T() const { return c == GCA_T; }
-    inline bool is_G0() const { return is_G() && v == 0; }
-    inline bool is_G1() const { return is_G() && v == 1; }
-    inline bool is_G91() const { return is_G() && v == 91; }
-    inline bool is_G90() const { return is_G() && v == 90; }
-    inline bool is_G53() const { return is_G() && v == 53; }
+    virtual inline bool is_M3() const { return false; }
+    virtual inline bool is_M5() const { return false; }
+    virtual inline bool is_M2() const { return false; }
+    virtual inline bool is_M30() const { return false; }
+    virtual inline bool is_G() const { return c == GCA_G; }
+    virtual inline bool is_M() const { return c == GCA_M; }
+    virtual inline bool is_F() const { return c == GCA_F; }
+    virtual inline bool is_S() const { return c == GCA_S; }
+    virtual inline bool is_T() const { return c == GCA_T; }
+    virtual inline bool is_G0() const { return is_G() && v == 0; }
+    virtual inline bool is_G1() const { return is_G() && v == 1; }
+    virtual inline bool is_G91() const { return false; }
+    virtual inline bool is_G90() const { return false; }
+    virtual inline bool is_G53() const { return is_G() && v == 53; }
 
   };
 

@@ -24,7 +24,7 @@ namespace gca {
       correct->push_back(mk_G0(point(0, 3, 0)));
       correct->push_back(mk_G0(point(0, 0, 0)));
       correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_minstr(2));
+      correct->push_back(mk_m2_instr());
       REQUIRE(*res == *correct);
     }
 
@@ -47,7 +47,7 @@ namespace gca {
       correct->push_back(mk_G0(point(7, 2, 0)));
       correct->push_back(mk_G0(point(0, 0, 0)));
       correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_minstr(2));
+      correct->push_back(mk_m2_instr());
       REQUIRE(*res == *correct);      
     }
   }

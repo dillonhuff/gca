@@ -35,7 +35,7 @@ namespace gca {
 	  new_p->push_back(mk_G0(diff.x, diff.y, 0));
 	}
       }
-      new_p->push_back(mk_minstr(2));
+      new_p->push_back(mk_m2_instr());
       return new_p;
     }
 

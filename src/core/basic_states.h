@@ -15,6 +15,8 @@ namespace gca {
     virtual void update_G1(move_instr& ist) { update_default(ist); }
     virtual void update_G91(instr& ist) { update_default(ist); }
     virtual void update_M2(instr& ist) { update_default(ist); }
+    virtual void update_M5(instr& ist) { update_default(ist); }
+    virtual void update_M30(instr& ist) { update_default(ist); }
     virtual void update_default(instr& ist) {}
 
     virtual void update(instr& ist) {
@@ -26,9 +28,14 @@ namespace gca {
 	update_G1(mist);
       } else if (ist.is_G91()) {
 	update_G91(ist);
-      } else if (ist.is_end_instr()) {
+      } else if (ist.is_M2()) {
 	update_M2(ist);
+      } else if (ist.is_M5()) {
+	update_M5(ist);
+      } else if (ist.is_M30()) {
+	update_M30(ist);
       } else {
+	cout << "per_instr_state error: Unsupported instruction " << ist << endl;
 	assert(false);
       }
     }
