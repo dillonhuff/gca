@@ -70,6 +70,7 @@ add_executable(z-abstract examples/z_abstract.cpp ${SRCS})
 add_executable(hole-optimizer examples/hole_optimizer.cpp ${SRCS})
 add_executable(simple-deepen examples/simple_deepen.cpp ${SRCS})
 add_executable(hello-world examples/hello_world.cpp ${SRCS})
+add_executable(extract-g1-paths examples/extract_g1_paths.cpp ${SRCS})
 
 ######### VTK Example ##########
 

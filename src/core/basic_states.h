@@ -13,7 +13,10 @@ namespace gca {
     
     virtual void update_G0(move_instr& ist) { update_default(ist); }
     virtual void update_G1(move_instr& ist) { update_default(ist); }
+    virtual void update_G2(move_instr& ist) { update_default(ist); }
+    virtual void update_G3(move_instr& ist) { update_default(ist); }    
     virtual void update_G91(instr& ist) { update_default(ist); }
+    virtual void update_G90(instr& ist) { update_default(ist); }
     virtual void update_M2(instr& ist) { update_default(ist); }
     virtual void update_M5(instr& ist) { update_default(ist); }
     virtual void update_M30(instr& ist) { update_default(ist); }
@@ -34,6 +37,24 @@ namespace gca {
 	update_M5(ist);
       } else if (ist.is_M30()) {
 	update_M30(ist);
+      } else if (ist.is_comment()) {
+	update_default(ist);
+      } else if (ist.is_G90()) {
+	update_G90(ist);
+      } else if (ist.is_G53()) {
+	update_default(ist);
+      } else if (ist.is_T()) {
+	update_default(ist);
+      } else if (ist.is_S()) {
+	update_default(ist);
+      } else if (ist.is_M3()) {
+	update_default(ist);
+      } else if (ist.is_F()) {
+	update_default(ist);
+      } else if (ist.is_G3()) {
+	update_G3(static_cast<g3_instr&>(ist));
+      } else if (ist.is_G2()) {
+	update_G2(static_cast<g2_instr&>(ist));
       } else {
 	cout << "per_instr_state error: Unsupported instruction " << ist << endl;
 	assert(false);
@@ -100,6 +121,14 @@ namespace gca {
       update_pos(ist);
     }
 
+    virtual void update_G2(move_instr& ist) {
+      update_pos(ist);
+    }
+
+    virtual void update_G3(move_instr& ist) {
+      update_pos(ist);
+    }
+    
   };
   
 }

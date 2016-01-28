@@ -150,6 +150,19 @@ bmp-prog/fast:
 .PHONY : bmp-prog/fast
 
 #=============================================================================
+# Target rules for targets named extract-g1-paths
+
+# Build rule for target.
+extract-g1-paths: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 extract-g1-paths
+.PHONY : extract-g1-paths
+
+# fast build rule for target.
+extract-g1-paths/fast:
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/build
+.PHONY : extract-g1-paths/fast
+
+#=============================================================================
 # Target rules for targets named gdiff
 
 # Build rule for target.
@@ -280,6 +293,33 @@ examples/bmp_prog.s: examples/bmp_prog.cpp.s
 examples/bmp_prog.cpp.s:
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/examples/bmp_prog.cpp.s
 .PHONY : examples/bmp_prog.cpp.s
+
+examples/extract_g1_paths.o: examples/extract_g1_paths.cpp.o
+
+.PHONY : examples/extract_g1_paths.o
+
+# target to build an object file
+examples/extract_g1_paths.cpp.o:
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/examples/extract_g1_paths.cpp.o
+.PHONY : examples/extract_g1_paths.cpp.o
+
+examples/extract_g1_paths.i: examples/extract_g1_paths.cpp.i
+
+.PHONY : examples/extract_g1_paths.i
+
+# target to preprocess a source file
+examples/extract_g1_paths.cpp.i:
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/examples/extract_g1_paths.cpp.i
+.PHONY : examples/extract_g1_paths.cpp.i
+
+examples/extract_g1_paths.s: examples/extract_g1_paths.cpp.s
+
+.PHONY : examples/extract_g1_paths.s
+
+# target to generate assembly for a file
+examples/extract_g1_paths.cpp.s:
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/examples/extract_g1_paths.cpp.s
+.PHONY : examples/extract_g1_paths.cpp.s
 
 examples/gdiff.o: examples/gdiff.cpp.o
 
@@ -452,6 +492,7 @@ src/core/arena_allocator.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.o
@@ -469,6 +510,7 @@ src/core/arena_allocator.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.i
@@ -486,6 +528,7 @@ src/core/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.s
@@ -503,6 +546,7 @@ src/core/context.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.o
@@ -520,6 +564,7 @@ src/core/context.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.i
@@ -537,6 +582,7 @@ src/core/context.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.s
@@ -554,6 +600,7 @@ src/core/gprog.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.o
@@ -571,6 +618,7 @@ src/core/gprog.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.i
@@ -588,6 +636,7 @@ src/core/gprog.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.s
@@ -605,6 +654,7 @@ src/core/instrs/instr.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.o
@@ -622,6 +672,7 @@ src/core/instrs/instr.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.i
@@ -639,6 +690,7 @@ src/core/instrs/instr.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.s
@@ -656,6 +708,7 @@ src/core/parser.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.o
@@ -673,6 +726,7 @@ src/core/parser.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.i
@@ -690,6 +744,7 @@ src/core/parser.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.s
@@ -707,6 +762,7 @@ src/core/pass.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.o
@@ -724,6 +780,7 @@ src/core/pass.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.i
@@ -741,6 +798,7 @@ src/core/pass.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.s
@@ -758,6 +816,7 @@ src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.o
@@ -775,6 +834,7 @@ src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.i
@@ -792,6 +852,7 @@ src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.s
@@ -809,6 +870,7 @@ src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.o
@@ -826,6 +888,7 @@ src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.i
@@ -843,6 +906,7 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.s
@@ -860,6 +924,7 @@ src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.o
@@ -877,6 +942,7 @@ src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.i
@@ -894,6 +960,7 @@ src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.s
@@ -911,6 +978,7 @@ src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.o
@@ -928,6 +996,7 @@ src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.i
@@ -945,6 +1014,7 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.s
@@ -962,6 +1032,7 @@ src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.o
@@ -979,6 +1050,7 @@ src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.i
@@ -996,6 +1068,7 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.s
@@ -1013,6 +1086,7 @@ src/system/bmp_output.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.o
@@ -1030,6 +1104,7 @@ src/system/bmp_output.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.i
@@ -1047,6 +1122,7 @@ src/system/bmp_output.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.s
@@ -1064,6 +1140,7 @@ src/transformers/scale_xyz.cpp.o:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.o
@@ -1081,6 +1158,7 @@ src/transformers/scale_xyz.cpp.i:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.i
@@ -1098,6 +1176,7 @@ src/transformers/scale_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.s
@@ -1302,15 +1381,16 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... edit_cache"
+	@echo "... gdiff"
+	@echo "... extract-g1-paths"
 	@echo "... hello-world"
 	@echo "... simple-deepen"
-	@echo "... gdiff"
 	@echo "... hole-optimizer"
 	@echo "... z-abstract"
-	@echo "... edit_cache"
+	@echo "... DataAnimationSubclass"
 	@echo "... bmp-prog"
 	@echo "... print-strap"
-	@echo "... DataAnimationSubclass"
 	@echo "... all-tests"
 	@echo "... examples/DataAnimationSubclass.o"
 	@echo "... examples/DataAnimationSubclass.i"
@@ -1318,6 +1398,9 @@ help:
 	@echo "... examples/bmp_prog.o"
 	@echo "... examples/bmp_prog.i"
 	@echo "... examples/bmp_prog.s"
+	@echo "... examples/extract_g1_paths.o"
+	@echo "... examples/extract_g1_paths.i"
+	@echo "... examples/extract_g1_paths.s"
 	@echo "... examples/gdiff.o"
 	@echo "... examples/gdiff.i"
 	@echo "... examples/gdiff.s"
