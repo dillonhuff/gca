@@ -1,6 +1,7 @@
 #ifndef GCA_MOVE_INSTR_H
 #define GCA_MOVE_INSTR_H
 
+#include "core/arena_allocator.h"
 #include "core/instrs/instr.h"
 #include "core/value.h"
 
@@ -108,6 +109,10 @@ namespace gca {
       cout << "G0 ";
       print_move_data(s);
     }
+
+    virtual instr* copy() const {
+      return new (allocate<g0_instr>()) g0_instr(x, y, z, feed_rate);
+    }
     
     bool operator==(const instr& other) const {
       return other.is_G0() &&
@@ -124,7 +129,12 @@ namespace gca {
     void print(ostream& s) const {
       cout << "G1 ";
       print_move_data(s);
-    }    
+    }
+
+    virtual instr* copy() const {
+      return new (allocate<g1_instr>()) g1_instr(x, y, z, feed_rate);
+    }
+    
     bool operator==(const instr& other) const {
       return other.is_G1() &&
       same_pos_and_feed_rate(static_cast<const move_instr&>(other));

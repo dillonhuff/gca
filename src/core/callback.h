@@ -15,15 +15,15 @@ namespace gca {
     class per_instr_callback : callback<T> {
   public:
 
-    virtual T call_G0(gprog* p, int i, move_instr* is) {
+    virtual T call_G0(gprog* p, int i, g0_instr* is) {
       return call_default(p, i, is);
     }
     
-    virtual T call_G1(gprog* p, int i, move_instr* is) {
+    virtual T call_G1(gprog* p, int i, g1_instr* is) {
       return call_default(p, i, is);
     }
 
-    virtual T call_G53(gprog* p, int i, move_instr* is) {
+    virtual T call_G53(gprog* p, int i, g53_instr* is) {
       return call_default(p, i, is);
     }
     
@@ -35,23 +35,23 @@ namespace gca {
       return call_default(p, i, is);
     }
     
-    virtual T call_T(gprog* p, int i, instr* is) {
+    virtual T call_T(gprog* p, int i, t_instr* is) {
       return call_default(p, i, is);
     }
 
-    virtual T call_S(gprog* p, int i, instr* is) {
+    virtual T call_S(gprog* p, int i, s_instr* is) {
       return call_default(p, i, is);
     }
     
-    virtual T call_M2(gprog* p, int i, instr* is) {
+    virtual T call_M2(gprog* p, int i, m2_instr* is) {
       return call_default(p, i, is);
     }
 
-    virtual T call_M5(gprog* p, int i, instr* is) {
+    virtual T call_M5(gprog* p, int i, m5_instr* is) {
       return call_default(p, i, is);
     }
 
-    virtual T call_M30(gprog* p, int i, instr* is) {
+    virtual T call_M30(gprog* p, int i, m30_instr* is) {
       return call_default(p, i, is);
     }
     
@@ -59,7 +59,7 @@ namespace gca {
       return call_default(p, i, is);
     }
 
-    virtual T call_G90(gprog* p, int i, instr* is) {
+    virtual T call_G90(gprog* p, int i, g90_instr* is) {
       return call_default(p, i, is);
     }
 
@@ -67,10 +67,10 @@ namespace gca {
 
     virtual T call(gprog* p, int i, instr* is) {
       if (is->is_G0()) {
-	move_instr* mi = static_cast<move_instr*>(is);
+	g0_instr* mi = static_cast<g0_instr*>(is);
 	return call_G0(p, i, mi);
       } else if (is->is_G1()) {
-	move_instr* mi = static_cast<move_instr*>(is);
+	g1_instr* mi = static_cast<g1_instr*>(is);
 	return call_G1(p, i, mi);	
       } else if (is->is_g2_instr()) {
 	g2_instr* mi = static_cast<g2_instr*>(is);
@@ -82,20 +82,26 @@ namespace gca {
 	comment* ci = static_cast<comment*>(is);
 	return call_comment(p, i, ci);
       } else if (is->is_G90()) {
-	return call_G90(p, i, is);
+	g90_instr* mi = static_cast<g90_instr*>(is);
+	return call_G90(p, i, mi);
       } else if (is->is_M2()) {
-	return call_M2(p, i, is);
+	m2_instr* mi = static_cast<m2_instr*>(is);
+	return call_M2(p, i, mi);
       } else if (is->is_M5()) {
-	return call_M5(p, i, is);
+	m5_instr* mi = static_cast<m5_instr*>(is);
+	return call_M5(p, i, mi);
       } else if (is->is_M30()) {
-	return call_M30(p, i, is);
+	m30_instr* mi = static_cast<m30_instr*>(is);
+	return call_M30(p, i, mi);
       } else if (is->is_G53()) {
-	move_instr* mi = static_cast<move_instr*>(is);
+	g53_instr* mi = static_cast<g53_instr*>(is);
 	return call_G53(p, i, mi);
       } else if (is->is_T()) {
-	return call_T(p, i, is);
+	t_instr* mi = static_cast<t_instr*>(is);
+	return call_T(p, i, mi);
       } else if (is->is_S()) {
-	return call_S(p, i, is);
+	s_instr* mi = static_cast<s_instr*>(is);
+	return call_S(p, i, mi);
       } else {
 	cout << "Unsupported instruction: " << *is << endl;
 	assert(false);

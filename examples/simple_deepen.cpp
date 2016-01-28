@@ -52,11 +52,11 @@ public:
     return is;
   }
 
-  instr* call_G0(gprog* p, int i, move_instr* mi) {
+  instr* call_G0(gprog* p, int i, g0_instr* mi) {
     return deepen_linear_move(mi);
   }
 
-  instr* call_G1(gprog* p, int i, move_instr* mi) {
+  instr* call_G1(gprog* p, int i, g1_instr* mi) {
     return deepen_linear_move(mi);
   }
 
