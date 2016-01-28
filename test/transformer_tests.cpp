@@ -5,12 +5,12 @@
 #include "transformers/feed_changer.h"
 #include "transformers/g0_filter.h"
 #include "transformers/rel_to_abs.h"
+#include "transformers/scale_xyz.h"
 #include "transformers/tiler.h"
 
 namespace gca {
 
   TEST_CASE("Feed changer with G0") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = parse_gprog("G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
@@ -21,7 +21,6 @@ namespace gca {
   }
   
   TEST_CASE("Feed changer") {
-    
     arena_allocator a;
     set_system_allocator(&a);    
     gprog* p = mk_gprog();
@@ -275,13 +274,24 @@ namespace gca {
   }
 
   TEST_CASE("Coordinate generalizer") {
-    
     arena_allocator a;
     set_system_allocator(&a);
 
     SECTION("One move") {
       gprog* p = parse_gprog("G1 X0.0 Y-1.2 Z2.3");
       gprog* correct = parse_gprog("#1=2.0 G1 X0.0 Y-1.2 Z#1");
+    }
+  }
+
+  TEST_CASE("Scale xyz") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("No moves") {
+      gprog* p = parse_gprog("M2");
+      gprog* r = scale_xyz(2.0, 1.0, 3.0, *p);
+      gprog* correct = parse_gprog("M2");
+      REQUIRE(*r == *correct);
     }
   }
   

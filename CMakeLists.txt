@@ -43,7 +43,8 @@ SET(HEADERS ./src/checkers/bounds_checker.h
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/g0_filter.h
 	    ./src/transformers/rel_to_abs.h
-	    ./src/transformers/tiler.h)
+	    ./src/transformers/tiler.h
+	    ./src/transformers/scale_xyz.cpp)
 
 SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/core/context.cpp
@@ -56,7 +57,8 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/output.cpp
-	 ./src/system/bmp_output.cpp)
+	 ./src/system/bmp_output.cpp
+	 ./src/transformers/scale_xyz.cpp)
 
 SET(SRCS ${CPPS} ${HEADERS})
 
