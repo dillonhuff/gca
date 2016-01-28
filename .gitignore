@@ -21,3 +21,4 @@ CMakeCache.txt
 CMakeFiles/*
 cmake_install.cmake
 TriangulateTerrainMap.app/*
+DataAnimationSubclass.app/*

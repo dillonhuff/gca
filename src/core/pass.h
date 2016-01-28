@@ -38,7 +38,9 @@ namespace gca {
       return static_cast<T*>(states[n]);
     }
 
-    virtual void exec(gprog* p);
+    void update(instr* i);
+
+    void exec(gprog* p);
   };
   
   class state {
