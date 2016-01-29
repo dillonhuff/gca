@@ -11,7 +11,14 @@ namespace gca {
 		    double rad,
 		    point& c_pos,
 		    point& center_off);
-  
+
+  void from_to_with_G0_drag_knife(double safe_height,
+				  double align_depth,
+				  gprog* p,
+				  point last_pos,
+				  point last_orient,
+				  point next_pos,
+				  point next_orient);
 }
 
 #endif

@@ -2,6 +2,7 @@
 
 #include "catch.hpp"
 #include "core/context.h"
+#include "core/parser.h"
 #include "synthesis/align_blade.h"
 #include "synthesis/output.h"
 
@@ -126,6 +127,38 @@ namespace gca {
       point correct_center_off = point(0, 1, 0);
       REQUIRE(within_eps(correct_c_pos, c_pos));
       REQUIRE(within_eps(correct_center_off, center_off));
+    }
+  }
+
+  TEST_CASE("Simple knife aligment code matches real CAM output") {
+    arena_allocator a;
+    set_system_allocator(&a);
+    double safe_height = 0.35;
+    double align_depth = 0.143;
+
+    SECTION("Case 1") {
+      // G1 X15.791066 Y0.859332 Z0.075000
+      // G1 X16.005220 Y0.588386 Z0.075000
+      gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_1.nc");
+      cout << "-- Correct " << endl;
+      cout << *correct;
+      gprog* p = mk_gprog();
+      point sp(15.791066, 0.859332, 0.075000);
+      point last_pos(16.005220, 0.588386, 0.075000);
+      point last_orient = last_pos - sp;
+      point next_pos(16.005220, 81.460030, 0.000000);
+      point np(15.791067, 81.189087, 0.000000);
+      point next_orient = np - next_pos;
+      from_to_with_G0_drag_knife(safe_height,
+				 align_depth,
+				 p,
+				 last_pos,
+				 last_orient,
+				 next_pos,
+				 next_orient);
+      cout << "-- Actual" << endl;
+      cout << *p;
+      REQUIRE(*p == *correct);
     }
   }
 }

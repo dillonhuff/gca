@@ -61,34 +61,6 @@ void merge_cut_sections(vector<cut_section>& g1_sections,
   }
 }
 
-void from_to_with_G0_drag_knife(double safe_height,
-				double align_depth,
-				gprog* p,
-				point last_pos,
-				point last_orient,
-				point next_pos,
-				point next_orient) {
-  instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
-  // TODO: Set this to realistic value
-  double r = 0.5;
-  point c_pos;
-  point circle_center_offset;
-  point next_pos_xy = next_pos;
-  next_pos_xy.z = 0;
-  align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
-  instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
-  instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
-  instr* circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
-				   mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
-				   mk_omitted());
-  instr* final_push_down_instr = mk_G1(next_pos.x, next_pos.y, next_pos.z, mk_omitted());
-  p->push_back(pull_up_instr);
-  p->push_back(move_to_c_pos_instr);
-  p->push_back(push_down_instr);
-  p->push_back(circle_move_instr);
-  p->push_back(final_push_down_instr);
-}
-
 gprog* append_footer(gprog* p) {
   p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
   p->push_back(mk_m5_instr());
