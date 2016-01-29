@@ -159,7 +159,7 @@ int main(int argc, char** argv) {
 					align_depth,
 					start_loc,
 					start_orient,
-					g1_sections);
+					merged_cuts);
   cout << "[ Reconstructed program ]" << endl;
   cout << *res;
   return 0;

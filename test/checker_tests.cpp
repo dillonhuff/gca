@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "checkers/bounds_checker.h"
 #include "checkers/extra_instruction_checker.h"
+#include "checkers/forbidden_tool_checker.h"
 #include "checkers/g0_move_checker.h"
 #include "core/context.h"
 #include "core/parser.h"
@@ -8,7 +9,6 @@
 namespace gca {
 
   TEST_CASE("Checkers") {
-    
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -70,6 +70,25 @@ namespace gca {
       p->push_back(mk_G0(0.0, 2.0, 1.0));
       p->push_back(mk_m2_instr());
       REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 1);
+    }
+  }
+
+  TEST_CASE("Bad tool change checker") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("No bad tool change") {
+      gprog* p = parse_gprog("T6 G1 X1.0 Y2.0 Z1.0");
+      vector<int> permitted_tools;
+      permitted_tools.push_back(6);
+      REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 0);
+    }
+
+    SECTION("Bad tool change") {
+      gprog* p = parse_gprog("T2 G1 X1.0 Y2.0 Z1.0");
+      vector<int> permitted_tools;
+      permitted_tools.push_back(6);
+      REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
     }
     
   }
