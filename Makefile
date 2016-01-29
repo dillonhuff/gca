@@ -483,6 +483,60 @@ examples/z_abstract.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.s
 .PHONY : examples/z_abstract.cpp.s
 
+src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
+
+.PHONY : src/analysis/extract_cuts.o
+
+# target to build an object file
+src/analysis/extract_cuts.cpp.o:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.o
+.PHONY : src/analysis/extract_cuts.cpp.o
+
+src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
+
+.PHONY : src/analysis/extract_cuts.i
+
+# target to preprocess a source file
+src/analysis/extract_cuts.cpp.i:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.i
+.PHONY : src/analysis/extract_cuts.cpp.i
+
+src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
+
+.PHONY : src/analysis/extract_cuts.s
+
+# target to generate assembly for a file
+src/analysis/extract_cuts.cpp.s:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.s
+.PHONY : src/analysis/extract_cuts.cpp.s
+
 src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
 
 .PHONY : src/core/arena_allocator.o
@@ -1500,6 +1554,9 @@ help:
 	@echo "... examples/z_abstract.o"
 	@echo "... examples/z_abstract.i"
 	@echo "... examples/z_abstract.s"
+	@echo "... src/analysis/extract_cuts.o"
+	@echo "... src/analysis/extract_cuts.i"
+	@echo "... src/analysis/extract_cuts.s"
 	@echo "... src/core/arena_allocator.o"
 	@echo "... src/core/arena_allocator.i"
 	@echo "... src/core/arena_allocator.s"

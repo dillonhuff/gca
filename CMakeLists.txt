@@ -8,7 +8,8 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/parse_tests.cpp test/point_tests.cpp test/checker_tests.cpp test/cut_tests.cpp test/line_tests.cpp test/mill_simulator_tests.cpp test/transformer_tests.cpp ./test/analysis_tests.cpp)
 
-SET(HEADERS ./src/checkers/bounds_checker.h
+SET(HEADERS ./src/analysis/extract_cuts.cpp
+	    ./src/checkers/bounds_checker.h
 	    ./src/checkers/extra_instruction_checker.h
 	    ./src/checkers/g0_move_checker.h
 	    ./src/core/arena_allocator.h
