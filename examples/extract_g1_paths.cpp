@@ -5,6 +5,7 @@
 #include "core/callback.h"
 #include "core/context.h"
 #include "core/parser.h"
+#include "synthesis/output.h"
 
 using namespace gca;
 
@@ -41,6 +42,15 @@ public:
   gprog* p;
 
   cut_section(point s, gprog* pp) : start(s), p(pp) {}
+
+  point end() {
+    assert(p->size() > 0);
+    instr* is = (*p)[p->size() - 1];
+    assert(is->is_G1());
+    g1_instr* mi = static_cast<g1_instr*>(is);
+    assert(mi->is_concrete());
+    return mi->pos();
+  }
 };
 
 void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
@@ -48,6 +58,7 @@ void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
   int i = 0;
   bool last_was_g1 = false;  
   gprog* current = mk_gprog();
+  point last_start = point(0, 0, 0);
   while (i < p->size()) {
     instr* ist = (*p)[i];
     s->update(ist);
@@ -56,8 +67,10 @@ void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
     } else if (is_cut_G1(s, ist)) {
       last_was_g1 = true;
       if (current->size() > 0) {
-	g1_sections.push_back(cut_section(get_before(s), current));
+	
+	g1_sections.push_back(cut_section(last_start, current));
       }
+      last_start = get_before(s);
       current = mk_gprog();
       current->push_back(ist);
     } else {
@@ -118,6 +131,15 @@ void merge_cut_sections(vector<cut_section>& g1_sections,
   }
 }
 
+void from_to_with_G0(double h, gprog* p, point from, point to) {
+  instr* pull_up_instr = mk_G0(point(from.x, from.y, h));
+  instr* move_instr = mk_G0(point(to.x, to.y, h));
+  instr* push_down_instr = mk_G1(to.x, to.y, to.z, mk_omitted());
+  p->push_back(pull_up_instr);
+  p->push_back(move_instr);
+  p->push_back(push_down_instr);
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: extract-g1-paths <gcode file path>" << endl;
@@ -132,14 +154,22 @@ int main(int argc, char** argv) {
   vector<cut_section> merged_cuts;
   merge_cut_sections(g1_sections, merged_cuts);
   cout << "Number of distinct sections: " << merged_cuts.size() << endl;
-  
+
+  point last_section_end = point(0, 0, 0);
+  gprog* res = mk_gprog();
+  double safe_height = 0.5;
   for (int i = 0; i < merged_cuts.size(); i++) {
-    cut_section sec = merged_cuts[i];
+    cut_section sec = merged_cuts[i];    
     cout << "-- section starting at " << sec.start << endl;
     cout << "-- section of size " << (sec.p)->size() << endl;
-    // for (int j = 0; j < (sec.p)->size(); j++) {
-    //   cout << *((*(sec.p))[j]) << endl;
-    // }
+    from_to_with_G0(safe_height, res, last_section_end, sec.start);
+    for (int j = 0; j < (sec.p)->size(); j++) {
+      res->push_back((*(sec.p))[j]);
+    }
+    last_section_end = sec.end();
   }
+
+  cout << "-- Reconstructed program" << endl;
+  cout << *res;
   return 0;
 }

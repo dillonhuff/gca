@@ -16,6 +16,7 @@ z-abstract
 hole-optimizer
 simple-deepen
 hello-world
+extract-g1-paths
 curved-strap-assembly.16x.h=.2.tap-generalized
 CMakeCache.txt
 CMakeFiles/*
