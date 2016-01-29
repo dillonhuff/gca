@@ -3,6 +3,7 @@
 #include "checkers/extra_instruction_checker.h"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/g0_move_checker.h"
+#include "checkers/unsafe_spindle_checker.h"
 #include "core/context.h"
 #include "core/parser.h"
 
@@ -90,6 +91,17 @@ namespace gca {
       permitted_tools.push_back(6);
       REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
     }
-    
+  }
+
+  TEST_CASE("Unsafe spindle on checker") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("No bad spindle use") {
+      gprog* p = parse_gprog("M5 T6 T2 S0 M3");
+      vector<int> no_spindle_tools;
+      no_spindle_tools.push_back(6);
+      REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
+    }
   }
 }
