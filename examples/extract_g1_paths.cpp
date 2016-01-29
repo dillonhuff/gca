@@ -47,9 +47,7 @@ public:
   point start_orientation() {
     assert(p->size() > 0);
     point s = start_pos();
-    cout << "Start orientation s = " << s << endl;
     point first_cut_end = static_cast<g1_instr*>((*p)[0])->pos();
-    cout << "Start orientation first_end_cut " << first_cut_end << endl;
     return first_cut_end - s;
   }    
   point end_orientation() {
@@ -154,10 +152,6 @@ void merge_cut_sections(vector<cut_section>& g1_sections,
   }
 }
 
-double angle_between(point p1, point p2) {
-  assert(false);
-}
-
 void from_to_with_G0_drag_knife(double safe_height,
 				double align_depth,
 				gprog* p,
@@ -172,11 +166,8 @@ void from_to_with_G0_drag_knife(double safe_height,
   point circle_center_offset;
   point next_pos_xy = next_pos;
   next_pos_xy.z = 0;
-  cout << "last orient = " << last_orient << endl;
-  cout << "next orient = " << next_orient << endl;
   align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
   instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
-  // TODO: Make this a parameter;
   instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
   instr* circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
 				   mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
@@ -189,21 +180,38 @@ void from_to_with_G0_drag_knife(double safe_height,
   p->push_back(final_push_down_instr);
 }
 
-  //  double safe_height = 3.6;
+gprog* append_footer(gprog* p) {
+  p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+  p->push_back(mk_m5_instr());
+  return p;
+}
+
+gprog* initial_gprog() {
+  gprog* r = mk_gprog();
+  r->push_back(mk_G90());
+  r->push_back(mk_m5_instr());
+  r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+  r->push_back(mk_tinstr(6));
+  r->push_back(mk_sinstr(0));
+  r->push_back(mk_m3_instr());
+  r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+  r->push_back(mk_finstr(5, "XY"));
+  r->push_back(mk_finstr(5, "Z"));
+  return r;
+}
+
 gprog* generate_drag_knife_code(double safe_height,
 				double align_depth,
 				point start_pos,
 				point start_orient,
 				vector<cut_section>& sections) {
-  // TODO: Change these to what the machine actually wants
-  point last_section_end_pos = start_pos; //point(14.7, 5.7, 6.6);
-  point last_section_end_orientation = start_orient; //point(1, 0, 0);
-  gprog* res = mk_gprog();
+  point last_section_end_pos = start_pos;
+  point last_section_end_orientation = start_orient;
+  gprog* res = initial_gprog();
   for (int i = 0; i < sections.size(); i++) {
     cut_section sec = sections[i];    
     cout << "[ section starting at " << sec.start << " ]" << endl;
     cout << "[ section of size " << (sec.p)->size() << " ]" << endl;
-    cout << "last section orientation " << last_section_end_orientation << endl;
     from_to_with_G0_drag_knife(safe_height,
 			       align_depth,
 			       res,
@@ -217,6 +225,7 @@ gprog* generate_drag_knife_code(double safe_height,
     last_section_end_pos = sec.end_pos();
     last_section_end_orientation = sec.end_orientation();
   }
+  res = append_footer(res);
   return res;
 }
 
