@@ -6,7 +6,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -Wall -Werror -g")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
-SET(TEST_FILES test/parse_tests.cpp test/point_tests.cpp test/checker_tests.cpp test/cut_tests.cpp test/line_tests.cpp test/mill_simulator_tests.cpp test/transformer_tests.cpp)
+SET(TEST_FILES test/parse_tests.cpp test/point_tests.cpp test/checker_tests.cpp test/cut_tests.cpp test/line_tests.cpp test/mill_simulator_tests.cpp test/transformer_tests.cpp ./test/analysis_tests.cpp)
 
 SET(HEADERS ./src/checkers/bounds_checker.h
 	    ./src/checkers/extra_instruction_checker.h
