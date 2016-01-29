@@ -5,7 +5,6 @@
 #include "core/callback.h"
 #include "core/context.h"
 #include "core/parser.h"
-#include "synthesis/output.h"
 
 using namespace gca;
 
@@ -131,13 +130,36 @@ void merge_cut_sections(vector<cut_section>& g1_sections,
   }
 }
 
+double angle_between(point p1, point p2) {
+  assert(false);
+}
+
 void from_to_with_G0(double h, gprog* p, point from, point to) {
   instr* pull_up_instr = mk_G0(point(from.x, from.y, h));
+  // TODO: This move instruction needs to be adjusted for the blade
   instr* move_instr = mk_G0(point(to.x, to.y, h));
   instr* push_down_instr = mk_G1(to.x, to.y, to.z, mk_omitted());
   p->push_back(pull_up_instr);
   p->push_back(move_instr);
   p->push_back(push_down_instr);
+}
+
+void align_blade(gprog* p,
+		 point current_dir,
+		 point desired_dir,
+		 point current_pos,
+		 point desired_pos) {
+  assert(current_dir.z == 0);
+  assert(desired_dir.z == 0);
+  // double theta = angle_between(current_dir, desired_dir);
+  // assert(180 >= theta && theta >= -180);
+  // // TODO: INSERT A REALISTIC VALUE
+  // double r = 0.1;
+  // point center = desired_pos * ;
+  // if (180 >= theta && theta >= 0) {
+    
+  // } else {
+  // }
 }
 
 int main(int argc, char** argv) {

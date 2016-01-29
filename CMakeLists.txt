@@ -57,6 +57,7 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/output.cpp
+	 ./src/synthesis/align_blade.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/transformers/scale_xyz.cpp)
 

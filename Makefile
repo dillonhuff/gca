@@ -1023,6 +1023,60 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
+src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
+
+.PHONY : src/synthesis/align_blade.o
+
+# target to build an object file
+src/synthesis/align_blade.cpp.o:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.o
+.PHONY : src/synthesis/align_blade.cpp.o
+
+src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
+
+.PHONY : src/synthesis/align_blade.i
+
+# target to preprocess a source file
+src/synthesis/align_blade.cpp.i:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.i
+.PHONY : src/synthesis/align_blade.cpp.i
+
+src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
+
+.PHONY : src/synthesis/align_blade.s
+
+# target to generate assembly for a file
+src/synthesis/align_blade.cpp.s:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.s
+.PHONY : src/synthesis/align_blade.cpp.s
+
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -1449,6 +1503,9 @@ help:
 	@echo "... src/simulators/sim_mill.o"
 	@echo "... src/simulators/sim_mill.i"
 	@echo "... src/simulators/sim_mill.s"
+	@echo "... src/synthesis/align_blade.o"
+	@echo "... src/synthesis/align_blade.i"
+	@echo "... src/synthesis/align_blade.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"

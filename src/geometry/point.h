@@ -49,6 +49,10 @@ namespace gca {
 
     void print(ostream& s) const;
 
+    double dot(point v) const {
+      return x*v.x + y*v.y + z*v.z;
+    }
+
   };
 
   point operator*(double a, const point& other);
