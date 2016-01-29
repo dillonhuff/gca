@@ -175,7 +175,7 @@ void from_to_with_G0_drag_knife(double safe_height,
   align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
   instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
   // TODO: Make this a parameter;
-  double align_depth = 0.093;
+  double align_depth = 5.0;
   instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
   instr* circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
 				   mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
@@ -190,10 +190,10 @@ void from_to_with_G0_drag_knife(double safe_height,
 
 gprog* generate_drag_knife_code(vector<cut_section>& sections) {
   // TODO: Change these to what the machine actually wants
-  point last_section_end_pos = point(0, 0, 0);
-  point last_section_end_orientation = point(1, -1, 0);
+  point last_section_end_pos = point(14.7, 5.7, 6.6);
+  point last_section_end_orientation = point(1, 0, 0);
   gprog* res = mk_gprog();
-  double safe_height = 0.5;
+  double safe_height = 6.7;
   for (int i = 0; i < sections.size(); i++) {
     cut_section sec = sections[i];    
     cout << "[ section starting at " << sec.start << " ]" << endl;
