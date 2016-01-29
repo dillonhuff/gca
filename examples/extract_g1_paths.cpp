@@ -8,6 +8,7 @@
 #include "synthesis/align_blade.h"
 
 using namespace gca;
+using namespace std;
 
 pass* mk_pos_pass(point start) {
   pass* ps = new (allocate<pass>()) pass();
@@ -158,6 +159,7 @@ double angle_between(point p1, point p2) {
 }
 
 void from_to_with_G0_drag_knife(double safe_height,
+				double align_depth,
 				gprog* p,
 				point last_pos,
 				point last_orient,
@@ -175,7 +177,6 @@ void from_to_with_G0_drag_knife(double safe_height,
   align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
   instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
   // TODO: Make this a parameter;
-  double align_depth = 3.5;
   instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
   instr* circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
 				   mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
@@ -188,18 +189,23 @@ void from_to_with_G0_drag_knife(double safe_height,
   p->push_back(final_push_down_instr);
 }
 
-gprog* generate_drag_knife_code(vector<cut_section>& sections) {
+  //  double safe_height = 3.6;
+gprog* generate_drag_knife_code(double safe_height,
+				double align_depth,
+				point start_pos,
+				point start_orient,
+				vector<cut_section>& sections) {
   // TODO: Change these to what the machine actually wants
-  point last_section_end_pos = point(14.7, 5.7, 6.6);
-  point last_section_end_orientation = point(1, 0, 0);
+  point last_section_end_pos = start_pos; //point(14.7, 5.7, 6.6);
+  point last_section_end_orientation = start_orient; //point(1, 0, 0);
   gprog* res = mk_gprog();
-  double safe_height = 3.6;
   for (int i = 0; i < sections.size(); i++) {
     cut_section sec = sections[i];    
     cout << "[ section starting at " << sec.start << " ]" << endl;
     cout << "[ section of size " << (sec.p)->size() << " ]" << endl;
     cout << "last section orientation " << last_section_end_orientation << endl;
     from_to_with_G0_drag_knife(safe_height,
+			       align_depth,
 			       res,
 			       last_section_end_pos,
 			       last_section_end_orientation,
@@ -227,9 +233,16 @@ int main(int argc, char** argv) {
   extract_cuts(p, g1_sections);
   vector<cut_section> merged_cuts;
   merge_cut_sections(g1_sections, merged_cuts);
-  cout << "Number of distinct sections: " << merged_cuts.size() << endl;
-  gprog* res = generate_drag_knife_code(g1_sections);
-  cout << "-- Reconstructed program" << endl;
+  double safe_height = 0.5;
+  double align_depth = 0.087;
+  point start_loc = point(15.1, 7.1, 0.83);
+  point start_orient = point(1, 0, 0);
+  gprog* res = generate_drag_knife_code(safe_height,
+					align_depth,
+					start_loc,
+					start_orient,
+					g1_sections);
+  cout << "[ Reconstructed program ]" << endl;
   cout << *res;
   return 0;
 }
