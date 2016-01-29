@@ -54,6 +54,10 @@ namespace gca {
     virtual T call_M30(gprog* p, int i, m30_instr* is) {
       return call_default(p, i, is);
     }
+
+    virtual T call_M3(gprog* p, int i, m3_instr* is) {
+      return call_default(p, i, is);
+    }
     
     virtual T call_comment(gprog* p, int i, comment* is) {
       return call_default(p, i, is);
@@ -87,6 +91,9 @@ namespace gca {
       } else if (is->is_M2()) {
 	m2_instr* mi = static_cast<m2_instr*>(is);
 	return call_M2(p, i, mi);
+      } else if (is->is_M3()) {
+	m3_instr* mi = static_cast<m3_instr*>(is);
+	return call_M3(p, i, mi);
       } else if (is->is_M5()) {
 	m5_instr* mi = static_cast<m5_instr*>(is);
 	return call_M5(p, i, mi);

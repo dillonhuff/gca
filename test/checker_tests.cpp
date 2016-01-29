@@ -103,5 +103,12 @@ namespace gca {
       no_spindle_tools.push_back(6);
       REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
     }
+
+    SECTION("Bad spindle use") {
+      gprog* p = parse_gprog("M5 T6 S1200 M3");
+      vector<int> no_spindle_tools;
+      no_spindle_tools.push_back(6);
+      REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 1);
+    }
   }
 }
