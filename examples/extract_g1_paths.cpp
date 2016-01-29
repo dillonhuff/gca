@@ -68,7 +68,14 @@ void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
   g1_sections.push_back(cut_section(get_before(s), current));
 }
 
-bool duplicate_ignoring_z(cut_section& p1, cut_section p2) {
+bool duplicate_ignoring_z(cut_section& p1, cut_section& p2) {
+  point p1s = p1.start;
+  p1s.z = 0;
+  point p2s = p1.start;
+  p2s.z = 0;  
+  if (!within_eps(p1s, p2s)) {
+    return false;
+  }
   if (p1.p->size() != p2.p->size()) {
     return false;
   }
@@ -124,12 +131,15 @@ int main(int argc, char** argv) {
   extract_cuts(p, g1_sections);
   vector<cut_section> merged_cuts;
   merge_cut_sections(g1_sections, merged_cuts);
+  cout << "Number of distinct sections: " << merged_cuts.size() << endl;
+  
   for (int i = 0; i < merged_cuts.size(); i++) {
     cut_section sec = merged_cuts[i];
+    cout << "-- section starting at " << sec.start << endl;
     cout << "-- section of size " << (sec.p)->size() << endl;
-    for (int j = 0; j < (sec.p)->size(); j++) {
-      cout << *((*(sec.p))[j]) << endl;
-    }
+    // for (int j = 0; j < (sec.p)->size(); j++) {
+    //   cout << *((*(sec.p))[j]) << endl;
+    // }
   }
   return 0;
 }
