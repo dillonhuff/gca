@@ -127,6 +127,5 @@ namespace gca {
       REQUIRE(within_eps(correct_c_pos, c_pos));
       REQUIRE(within_eps(correct_center_off, center_off));
     }
-    
   }
 }

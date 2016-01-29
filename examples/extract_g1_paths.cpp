@@ -5,6 +5,7 @@
 #include "core/callback.h"
 #include "core/context.h"
 #include "core/parser.h"
+#include "synthesis/align_blade.h"
 
 using namespace gca;
 
@@ -42,7 +43,24 @@ public:
 
   cut_section(point s, gprog* pp) : start(s), p(pp) {}
 
-  point end() {
+  point start_orientation() {
+    assert(p->size() > 0);
+    point s = start_pos();
+    cout << "Start orientation s = " << s << endl;
+    point first_cut_end = static_cast<g1_instr*>((*p)[0])->pos();
+    cout << "Start orientation first_end_cut " << first_cut_end << endl;
+    return first_cut_end - s;
+  }    
+  point end_orientation() {
+    if (p->size() == 1) {
+      return start_orientation();
+    }
+    point s = static_cast<g1_instr*>((*p)[p->size() - 2])->pos();
+    point e = static_cast<g1_instr*>((*p)[p->size() - 1])->pos();
+    return e - s;
+  }
+  
+  point end_pos() {
     assert(p->size() > 0);
     instr* is = (*p)[p->size() - 1];
     assert(is->is_G1());
@@ -50,6 +68,11 @@ public:
     assert(mi->is_concrete());
     return mi->pos();
   }
+
+  point start_pos() {
+    return start;
+  }
+  
 };
 
 void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
@@ -77,7 +100,7 @@ void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
     }
     i++;
   }
-  g1_sections.push_back(cut_section(get_before(s), current));
+  g1_sections.push_back(cut_section(last_start, current));
 }
 
 bool duplicate_ignoring_z(cut_section& p1, cut_section& p2) {
@@ -134,32 +157,61 @@ double angle_between(point p1, point p2) {
   assert(false);
 }
 
-void from_to_with_G0(double h, gprog* p, point from, point to) {
-  instr* pull_up_instr = mk_G0(point(from.x, from.y, h));
-  // TODO: This move instruction needs to be adjusted for the blade
-  instr* move_instr = mk_G0(point(to.x, to.y, h));
-  instr* push_down_instr = mk_G1(to.x, to.y, to.z, mk_omitted());
+void from_to_with_G0_drag_knife(double safe_height,
+				gprog* p,
+				point last_pos,
+				point last_orient,
+				point next_pos,
+				point next_orient) {
+  instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
+  // TODO: Set this to realistic value
+  double r = 0.5;
+  point c_pos;
+  point circle_center_offset;
+  point next_pos_xy = next_pos;
+  next_pos_xy.z = 0;
+  cout << "last orient = " << last_orient << endl;
+  cout << "next orient = " << next_orient << endl;
+  align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
+  instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
+  // TODO: Make this a parameter;
+  double align_depth = 0.093;
+  instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
+  instr* circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
+				   mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
+				   mk_omitted());
+  instr* final_push_down_instr = mk_G1(next_pos.x, next_pos.y, next_pos.z, mk_omitted());
   p->push_back(pull_up_instr);
-  p->push_back(move_instr);
+  p->push_back(move_to_c_pos_instr);
   p->push_back(push_down_instr);
+  p->push_back(circle_move_instr);
+  p->push_back(final_push_down_instr);
 }
 
-void align_blade(gprog* p,
-		 point current_dir,
-		 point desired_dir,
-		 point current_pos,
-		 point desired_pos) {
-  assert(current_dir.z == 0);
-  assert(desired_dir.z == 0);
-  // double theta = angle_between(current_dir, desired_dir);
-  // assert(180 >= theta && theta >= -180);
-  // // TODO: INSERT A REALISTIC VALUE
-  // double r = 0.1;
-  // point center = desired_pos * ;
-  // if (180 >= theta && theta >= 0) {
-    
-  // } else {
-  // }
+gprog* generate_drag_knife_code(vector<cut_section>& sections) {
+  // TODO: Change these to what the machine actually wants
+  point last_section_end_pos = point(0, 0, 0);
+  point last_section_end_orientation = point(1, -1, 0);
+  gprog* res = mk_gprog();
+  double safe_height = 0.5;
+  for (int i = 0; i < sections.size(); i++) {
+    cut_section sec = sections[i];    
+    cout << "[ section starting at " << sec.start << " ]" << endl;
+    cout << "[ section of size " << (sec.p)->size() << " ]" << endl;
+    cout << "last section orientation " << last_section_end_orientation << endl;
+    from_to_with_G0_drag_knife(safe_height,
+			       res,
+			       last_section_end_pos,
+			       last_section_end_orientation,
+			       sec.start,
+			       sec.start_orientation());
+    for (int j = 0; j < (sec.p)->size(); j++) {
+      res->push_back((*(sec.p))[j]);
+    }
+    last_section_end_pos = sec.end_pos();
+    last_section_end_orientation = sec.end_orientation();
+  }
+  return res;
 }
 
 int main(int argc, char** argv) {
@@ -176,21 +228,7 @@ int main(int argc, char** argv) {
   vector<cut_section> merged_cuts;
   merge_cut_sections(g1_sections, merged_cuts);
   cout << "Number of distinct sections: " << merged_cuts.size() << endl;
-
-  point last_section_end = point(0, 0, 0);
-  gprog* res = mk_gprog();
-  double safe_height = 0.5;
-  for (int i = 0; i < merged_cuts.size(); i++) {
-    cut_section sec = merged_cuts[i];    
-    cout << "-- section starting at " << sec.start << endl;
-    cout << "-- section of size " << (sec.p)->size() << endl;
-    from_to_with_G0(safe_height, res, last_section_end, sec.start);
-    for (int j = 0; j < (sec.p)->size(); j++) {
-      res->push_back((*(sec.p))[j]);
-    }
-    last_section_end = sec.end();
-  }
-
+  gprog* res = generate_drag_knife_code(g1_sections);
   cout << "-- Reconstructed program" << endl;
   cout << *res;
   return 0;
