@@ -140,7 +140,6 @@ namespace gca {
     SECTION("Read and parse real CNC file") {
       string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
       gprog* p = read_file(fn);
-      cout << *p;
       REQUIRE(p->size() == 61);
     }
     

@@ -28,7 +28,6 @@ namespace gca {
     center_off = -1.0 * (c_pos - s);
   }
 
-
   void from_to_with_G0_drag_knife(double safe_height,
 				  double align_depth,
 				  gprog* p,
@@ -38,7 +37,7 @@ namespace gca {
 				  point next_orient) {
     instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
     // TODO: Set this to realistic value
-    double r = 0.5;
+    double r = 0.16;
     point c_pos;
     point circle_center_offset;
     point next_pos_xy = next_pos;
@@ -46,7 +45,7 @@ namespace gca {
     align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
     instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
     instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
-    instr* circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
+    instr* circle_move_instr = mk_G2(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
 				     mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
 				     mk_omitted());
     instr* final_push_down_instr = mk_G1(next_pos.x, next_pos.y, next_pos.z, mk_omitted());

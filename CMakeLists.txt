@@ -73,6 +73,7 @@ add_executable(hole-optimizer examples/hole_optimizer.cpp ${SRCS})
 add_executable(simple-deepen examples/simple_deepen.cpp ${SRCS})
 add_executable(hello-world examples/hello_world.cpp ${SRCS})
 add_executable(extract-g1-paths examples/extract_g1_paths.cpp ${SRCS})
+add_executable(print-knife-hacks examples/print_knife_hacks.cpp ${SRCS})
 
 ######### VTK Example ##########
 

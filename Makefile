@@ -202,6 +202,19 @@ hole-optimizer/fast:
 .PHONY : hole-optimizer/fast
 
 #=============================================================================
+# Target rules for targets named print-knife-hacks
+
+# Build rule for target.
+print-knife-hacks: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 print-knife-hacks
+.PHONY : print-knife-hacks
+
+# fast build rule for target.
+print-knife-hacks/fast:
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/build
+.PHONY : print-knife-hacks/fast
+
+#=============================================================================
 # Target rules for targets named print-strap
 
 # Build rule for target.
@@ -402,6 +415,33 @@ examples/hole_optimizer.cpp.s:
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/examples/hole_optimizer.cpp.s
 .PHONY : examples/hole_optimizer.cpp.s
 
+examples/print_knife_hacks.o: examples/print_knife_hacks.cpp.o
+
+.PHONY : examples/print_knife_hacks.o
+
+# target to build an object file
+examples/print_knife_hacks.cpp.o:
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/examples/print_knife_hacks.cpp.o
+.PHONY : examples/print_knife_hacks.cpp.o
+
+examples/print_knife_hacks.i: examples/print_knife_hacks.cpp.i
+
+.PHONY : examples/print_knife_hacks.i
+
+# target to preprocess a source file
+examples/print_knife_hacks.cpp.i:
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/examples/print_knife_hacks.cpp.i
+.PHONY : examples/print_knife_hacks.cpp.i
+
+examples/print_knife_hacks.s: examples/print_knife_hacks.cpp.s
+
+.PHONY : examples/print_knife_hacks.s
+
+# target to generate assembly for a file
+examples/print_knife_hacks.cpp.s:
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/examples/print_knife_hacks.cpp.s
+.PHONY : examples/print_knife_hacks.cpp.s
+
 examples/print_strap.o: examples/print_strap.cpp.o
 
 .PHONY : examples/print_strap.o
@@ -496,6 +536,7 @@ src/analysis/extract_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.o
@@ -514,6 +555,7 @@ src/analysis/extract_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.i
@@ -532,6 +574,7 @@ src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.s
@@ -550,6 +593,7 @@ src/core/arena_allocator.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.o
@@ -568,6 +612,7 @@ src/core/arena_allocator.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.i
@@ -586,6 +631,7 @@ src/core/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.s
@@ -604,6 +650,7 @@ src/core/context.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/context.cpp.o
@@ -622,6 +669,7 @@ src/core/context.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/context.cpp.i
@@ -640,6 +688,7 @@ src/core/context.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/context.cpp.s
@@ -658,6 +707,7 @@ src/core/gprog.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.o
@@ -676,6 +726,7 @@ src/core/gprog.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.i
@@ -694,6 +745,7 @@ src/core/gprog.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.s
@@ -712,6 +764,7 @@ src/core/instrs/instr.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.o
@@ -730,6 +783,7 @@ src/core/instrs/instr.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.i
@@ -748,6 +802,7 @@ src/core/instrs/instr.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.s
@@ -766,6 +821,7 @@ src/core/parser.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.o
@@ -784,6 +840,7 @@ src/core/parser.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.i
@@ -802,6 +859,7 @@ src/core/parser.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.s
@@ -820,6 +878,7 @@ src/core/pass.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.o
@@ -838,6 +897,7 @@ src/core/pass.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.i
@@ -856,6 +916,7 @@ src/core/pass.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.s
@@ -874,6 +935,7 @@ src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.o
@@ -892,6 +954,7 @@ src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.i
@@ -910,6 +973,7 @@ src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.s
@@ -928,6 +992,7 @@ src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.o
@@ -946,6 +1011,7 @@ src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.i
@@ -964,6 +1030,7 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.s
@@ -982,6 +1049,7 @@ src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.o
@@ -1000,6 +1068,7 @@ src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.i
@@ -1018,6 +1087,7 @@ src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.s
@@ -1036,6 +1106,7 @@ src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.o
@@ -1054,6 +1125,7 @@ src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.i
@@ -1072,6 +1144,7 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.s
@@ -1090,6 +1163,7 @@ src/synthesis/align_blade.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.o
@@ -1108,6 +1182,7 @@ src/synthesis/align_blade.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.i
@@ -1126,6 +1201,7 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.s
@@ -1144,6 +1220,7 @@ src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.o
@@ -1162,6 +1239,7 @@ src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.i
@@ -1180,6 +1258,7 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.s
@@ -1198,6 +1277,7 @@ src/system/bmp_output.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.o
@@ -1216,6 +1296,7 @@ src/system/bmp_output.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.i
@@ -1234,6 +1315,7 @@ src/system/bmp_output.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.s
@@ -1252,6 +1334,7 @@ src/transformers/scale_xyz.cpp.o:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.o
@@ -1270,6 +1353,7 @@ src/transformers/scale_xyz.cpp.i:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.i
@@ -1288,6 +1372,7 @@ src/transformers/scale_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.s
@@ -1521,6 +1606,7 @@ help:
 	@echo "... extract-g1-paths"
 	@echo "... hello-world"
 	@echo "... simple-deepen"
+	@echo "... print-knife-hacks"
 	@echo "... hole-optimizer"
 	@echo "... z-abstract"
 	@echo "... DataAnimationSubclass"
@@ -1545,6 +1631,9 @@ help:
 	@echo "... examples/hole_optimizer.o"
 	@echo "... examples/hole_optimizer.i"
 	@echo "... examples/hole_optimizer.s"
+	@echo "... examples/print_knife_hacks.o"
+	@echo "... examples/print_knife_hacks.i"
+	@echo "... examples/print_knife_hacks.s"
 	@echo "... examples/print_strap.o"
 	@echo "... examples/print_strap.i"
 	@echo "... examples/print_strap.s"
