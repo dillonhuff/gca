@@ -105,30 +105,30 @@ namespace gca {
     }
   }
 
-  TEST_CASE("Align blade") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Align blade") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    SECTION("X axis align") {
-      point desired_dir = point(1, 0, 0);
-      point current_dir = point(0, -1, 0);
-      point desired_pos = point(1, 0, 0);
-      double rad = 1.0;
-      point c_pos;
-      point center_off;
-      align_coords(desired_dir,
-		   desired_pos,
-		   current_dir,
-		   rad,
-		   c_pos,
-		   center_off);
+  //   SECTION("X axis align") {
+  //     point desired_dir = point(1, 0, 0);
+  //     point current_dir = point(0, -1, 0);
+  //     point desired_pos = point(1, 0, 0);
+  //     double rad = 1.0;
+  //     point c_pos;
+  //     point center_off;
+  //     align_coords(desired_dir,
+  // 		   desired_pos,
+  // 		   current_dir,
+  // 		   rad,
+  // 		   c_pos,
+  // 		   center_off);
 
-      point correct_c_pos = point(0, -1, 0);
-      point correct_center_off = point(0, 1, 0);
-      REQUIRE(within_eps(correct_c_pos, c_pos));
-      REQUIRE(within_eps(correct_center_off, center_off));
-    }
-  }
+  //     point correct_c_pos = point(0, -1, 0);
+  //     point correct_center_off = point(0, 1, 0);
+  //     REQUIRE(within_eps(correct_c_pos, c_pos));
+  //     REQUIRE(within_eps(correct_center_off, center_off));
+  //   }
+  // }
 
   TEST_CASE("Simple knife aligment code matches real CAM output") {
     arena_allocator a;
