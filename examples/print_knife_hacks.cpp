@@ -71,17 +71,20 @@ circular_arc compute_arc(const vector<instr*>& window) {
   point end_pos = static_cast<g1_instr*>(window[6])->pos();
   point end_cut = static_cast<g1_instr*>(window[7])->pos();  
   point desired_orient = end_cut - end_pos;
-  double theta = angle_between(desired_orient, current_orient);
-  cout << "angle between desired and current orient = " << theta << endl;
+  point circle_start;
+  point circle_start_off;
   double rad = 0.16;
   point circle_end = end_pos;
   circle_end.z = 0.093;
-  point ef = rad*desired_orient.normalize();
-  point circle_center = circle_end - ef;
-  cout << "Computed circle center: " << circle_center << endl;
-  point circle_start_off = ef.rotate_z(-1*theta);
-  cout << "circle start offset " << circle_start_off << endl;
-  return circular_arc(point(0, 0, 0), circle_end, point(0, 0, 0));
+  
+  align_coords(desired_orient,
+	       circle_end,
+	       current_orient,
+	       rad,
+	       circle_start,
+	       circle_start_off);
+  
+  return circular_arc(circle_start, circle_end, circle_start_off);
 }
 
 ostream& operator<<(ostream& s, const circular_arc& a) {

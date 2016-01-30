@@ -11,26 +11,26 @@ namespace gca {
     return (180.0/M_PI)*rads;
   }
 
-  void align_coords(point desired_dir,
-		    point desired_pos,
-		    point current_dir,
+  void align_coords(point desired_orient,
+		    point circle_end,
+		    point current_orient,
 		    double rad,
-		    point& c_pos,
-		    point& center_off) {
-    assert(desired_dir.z == 0);
-    assert(current_dir.z == 0);
-    assert(desired_pos.z == 0);
-    double theta = angle_between(current_dir, desired_dir);
-    point s = desired_pos - (rad * desired_pos.normalize());
-    point c_pos_prime = (desired_pos - s).rotate_z(theta);
-    c_pos = s + c_pos_prime;
-    center_off = -1.0 * (c_pos - s);
-    if (!within_eps(center_off.len(), rad, 0.00001)) {
-      cout << "incorrect center offset: " << center_off << endl;
-      cout << "bad center offset length: " << center_off.len() << endl;
-      cout << "rad = " << rad << endl;
-      assert(false);
-    }
+		    point& circle_start,
+		    point& circle_start_off) {
+    double theta = angle_between(desired_orient, current_orient);
+    cout << "angle between desired and current orient = " << theta << endl;
+    point ef = rad*desired_orient.normalize();
+    point circle_center = circle_end - ef;
+    cout << "Computed circle center: " << circle_center << endl;
+    circle_start_off = -1*ef.rotate_z(theta);
+    cout << "circle start offset " << circle_start_off << endl;
+    circle_start = circle_center - circle_start_off;
+    // if (!within_eps(center_off.len(), rad, 0.00001)) {
+    //   cout << "incorrect center offset: " << center_off << endl;
+    //   cout << "bad center offset length: " << center_off.len() << endl;
+    //   cout << "rad = " << rad << endl;
+    //   assert(false);
+    // }
   }
 
   void from_to_with_G0_drag_knife(double safe_height,
@@ -46,7 +46,7 @@ namespace gca {
     point c_pos;
     point circle_center_offset;
     point next_pos_xy = next_pos;
-    next_pos_xy.z = 0;
+    next_pos_xy.z = align_depth;
     align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
     instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
     instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
