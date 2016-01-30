@@ -12,6 +12,8 @@ namespace gca {
     point start_offset;
   circular_arc(point sp, point ep, point so) : start(sp), end(ep), start_offset(so) {}
 
+    inline point center_to_start_vec() const { return -1 * start_offset; }
+    inline point center_to_end_vec() const { return end - center(); }
     inline point center() const { return start + start_offset; }
   };
 

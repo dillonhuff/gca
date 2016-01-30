@@ -33,11 +33,9 @@ namespace gca {
   }
 
   move_instr* circular_arc_to_gcode(circular_arc ca) {
-    // Computing signed angle
-    point sv = -1 * ca.start_offset;
-    point ev = ca.end - ca.center();
+    point sv = ca.center_to_start_vec();
+    point ev = ca.center_to_end_vec();
     double angle = atan2(ev.y, ev.x) - atan2(sv.y, sv.x);
-    cout << "Angle between = " << angle << endl;
     move_instr* circle_move_instr;
     if (angle < 0) {
       circle_move_instr = mk_G2(mk_lit(ca.end.x), mk_lit(ca.end.y), mk_omitted(),
