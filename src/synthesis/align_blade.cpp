@@ -40,30 +40,25 @@ namespace gca {
 				  point next_pos,
 				  point next_orient) {
     instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
-    // TODO: Set this to realistic value
     double r = 0.16;
     point next_pos_xy = next_pos;
     next_pos_xy.z = align_depth;
-    circular_arc ca = align_coords(next_orient, next_pos_xy, last_orient, r); //, c_pos, circle_center_offset);
-    point c_pos = ca.start;
-    point circle_center_offset = ca.start_offset;
-    
-    instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
-    instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
+    circular_arc ca = align_coords(next_orient, next_pos_xy, last_orient, r);
+    instr* move_to_c_pos_instr = mk_G0(ca.start.x, ca.start.y, safe_height);
+    instr* push_down_instr = mk_G1(ca.start.x, ca.start.y, align_depth, mk_omitted());
     // Computing signed angle
-    point center = c_pos + circle_center_offset;
-    point sv = -1 * circle_center_offset;
-    point ev = next_pos - center;
+    point sv = -1 * ca.start_offset;
+    point ev = next_pos - ca.center();
     double angle = atan2(ev.y, ev.x) - atan2(sv.y, sv.x);
     instr* circle_move_instr;
     cout << "Angle between = " << angle << endl;
     if (angle < 0) {
       circle_move_instr = mk_G2(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
-				mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
+				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), mk_omitted(),
 				mk_omitted());
     } else {
       circle_move_instr = mk_G3(mk_lit(next_pos.x), mk_lit(next_pos.y), mk_omitted(),
-				mk_lit(circle_center_offset.x), mk_lit(circle_center_offset.y), mk_omitted(),
+				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), mk_omitted(),
 				mk_omitted());
 
     }
