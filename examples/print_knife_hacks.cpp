@@ -79,7 +79,7 @@ circular_arc compute_arc(const vector<instr*>& window) {
   point ef = rad*desired_orient.normalize();
   point circle_center = circle_end - ef;
   cout << "Computed circle center: " << circle_center << endl;
-  point circle_start_off = ef.rotate_z(theta);
+  point circle_start_off = ef.rotate_z(-1*theta);
   cout << "circle start offset " << circle_start_off << endl;
   return circular_arc(point(0, 0, 0), circle_end, point(0, 0, 0));
 }
