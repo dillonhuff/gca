@@ -136,44 +136,50 @@ namespace gca {
     double safe_height = 0.35;
     double align_depth = 0.143;
 
-    SECTION("Case 1") {
-      // G1 X15.791066 Y0.859332 Z0.075000
-      // G1 X16.005220 Y0.588386 Z0.075000
-      gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_1.nc");
-      cout << "-- Correct " << endl;
-      cout << *correct;
-      gprog* p = mk_gprog();
-      point sp(15.791066, 0.859332, 0.075000);
-      point last_pos(16.005220, 0.588386, 0.075000);
-      point last_orient = last_pos - sp;
-      point next_pos(16.005220, 81.460030, 0.000000);
-      point np(15.791067, 81.189087, 0.000000);
-      point next_orient = np - next_pos;
-      cout << "angle between orientations: " << angle_between(last_orient, next_orient) << endl;
-      from_to_with_G0_drag_knife(safe_height,
-				 align_depth,
-				 p,
-				 last_pos,
-				 last_orient,
-				 next_pos,
-				 next_orient);
-      cout << "-- Actual" << endl;
-      cout << *p;
-      REQUIRE(*p == *correct);
-    }
+    // SECTION("Case 1") {
+    //   // G1 X15.791066 Y0.859332 Z0.075000
+    //   // G1 X16.005220 Y0.588386 Z0.075000
+    //   gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_1.nc");
+    //   cout << "-- Correct " << endl;
+    //   cout << *correct;
+    //   gprog* p = mk_gprog();
+    //   point sp(15.791066, 0.859332, 0.075000);
+    //   point last_pos(16.005220, 0.588386, 0.075000);
+    //   point last_orient = last_pos - sp;
+    //   point next_pos(16.005220, 81.460030, 0.000000);
+    //   point np(15.791067, 81.189087, 0.000000);
+    //   point next_orient = np - next_pos;
+    //   cout << "angle between orientations: " << angle_between(last_orient, next_orient) << endl;
+    //   from_to_with_G0_drag_knife(safe_height,
+    // 				 align_depth,
+    // 				 p,
+    // 				 last_pos,
+    // 				 last_orient,
+    // 				 next_pos,
+    // 				 next_orient);
+    //   cout << "-- Actual" << endl;
+    //   cout << *p;
+    //   REQUIRE(*p == *correct);
+    // }
 
     SECTION("Case 2") {
-      // G1 X20.104002 Y77.775887 Z0.075000
-      // G1 X20.299999 Y78.024208 Z0.075000
+      // Cut before
+      // G1 X15.791066 Y0.859332 Z0.000000
+      // G1 X16.005220 Y0.588386 Z0.000000
+
+      // Cut after
+      // G1 X20.299999 Y4.024209 Z0.075000
+      // G1 X20.104019 Y4.272543 Z0.075000
+
       gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_2.nc");
       cout << "-- Correct " << endl;
       cout << *correct;
       gprog* p = mk_gprog();
-      point sp(20.104002, 77.775887, 0.075000);
-      point last_pos(20.299999, 78.024208, 0.075000);
+      point sp(15.791066, 0.859332, 0.000000);
+      point last_pos(16.005220, 0.588386, 0.000000);
       point last_orient = last_pos - sp;
-      point next_pos(20.104019, 4.272543, 0.000000);
-      point np(19.910555, 4.522846, 0.000000);
+      point next_pos(20.299999, 4.024209, 0.075000);
+      point np(20.104019, 4.272543, 0.075000);
       point next_orient = np - next_pos;
       cout << "angle between orientations: " << angle_between(last_orient, next_orient) << endl;
       from_to_with_G0_drag_knife(safe_height,

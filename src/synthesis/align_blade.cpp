@@ -20,12 +20,17 @@ namespace gca {
     assert(desired_dir.z == 0);
     assert(current_dir.z == 0);
     assert(desired_pos.z == 0);
-    double theta = -1.0 * angle_between(current_dir, desired_dir);
+    double theta = angle_between(current_dir, desired_dir);
     point s = desired_pos - (rad * desired_pos.normalize());
-    center_off = point(0, 1, 0);
     point c_pos_prime = (desired_pos - s).rotate_z(theta);
     c_pos = s + c_pos_prime;
     center_off = -1.0 * (c_pos - s);
+    if (!within_eps(center_off.len(), rad, 0.00001)) {
+      cout << "incorrect center offset: " << center_off << endl;
+      cout << "bad center offset length: " << center_off.len() << endl;
+      cout << "rad = " << rad << endl;
+      assert(false);
+    }
   }
 
   void from_to_with_G0_drag_knife(double safe_height,
