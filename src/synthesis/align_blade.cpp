@@ -11,26 +11,25 @@ namespace gca {
     return (180.0/M_PI)*rads;
   }
 
-  void align_coords(point desired_orient,
-		    point circle_end,
-		    point current_orient,
-		    double rad,
-		    point& circle_start,
-		    point& circle_start_off) {
+  circular_arc align_coords(point desired_orient,
+			    point circle_end,
+			    point current_orient,
+			    double rad) {
     double theta = angle_between(desired_orient, current_orient);
     cout << "angle between desired and current orient = " << theta << endl;
     point ef = rad*desired_orient.normalize();
     point circle_center = circle_end - ef;
     cout << "Computed circle center: " << circle_center << endl;
-    circle_start_off = -1*ef.rotate_z(theta);
+    point circle_start_off = -1*ef.rotate_z(theta);
     cout << "circle start offset " << circle_start_off << endl;
-    circle_start = circle_center - circle_start_off;
+    point circle_start = circle_center - circle_start_off;
     if (!within_eps(circle_start_off.len(), rad, 0.00001)) {
       cout << "incorrect center offset: " << circle_start_off << endl;
       cout << "bad center offset length: " << circle_start_off.len() << endl;
       cout << "rad = " << rad << endl;
       assert(false);
     }
+    return circular_arc(circle_start, circle_end, circle_start_off);
   }
 
   void from_to_with_G0_drag_knife(double safe_height,
@@ -43,11 +42,12 @@ namespace gca {
     instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
     // TODO: Set this to realistic value
     double r = 0.16;
-    point c_pos;
-    point circle_center_offset;
     point next_pos_xy = next_pos;
     next_pos_xy.z = align_depth;
-    align_coords(next_orient, next_pos_xy, last_orient, r, c_pos, circle_center_offset);
+    circular_arc ca = align_coords(next_orient, next_pos_xy, last_orient, r); //, c_pos, circle_center_offset);
+    point c_pos = ca.start;
+    point circle_center_offset = ca.start_offset;
+    
     instr* move_to_c_pos_instr = mk_G0(c_pos.x, c_pos.y, safe_height);
     instr* push_down_instr = mk_G1(c_pos.x, c_pos.y, align_depth, mk_omitted());
     // Computing signed angle

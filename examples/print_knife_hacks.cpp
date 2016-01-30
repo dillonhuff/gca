@@ -46,14 +46,6 @@ point get_offset(move_instr* is) {
   return point(0, 0, 0);
 }
 
-class circular_arc {
-public:
-  point start;
-  point end;
-  point start_offset;
-  circular_arc(point sp, point ep, point so) : start(sp), end(ep), start_offset(so) {}
-};
-
 circular_arc extract_arc(const vector<instr*>& window) {
   point circle_start = static_cast<g1_instr*>(window[4])->pos();
   move_instr* ci = static_cast<move_instr*>(window[5]);
@@ -77,20 +69,19 @@ circular_arc compute_arc(const vector<instr*>& window) {
   point circle_end = end_pos;
   circle_end.z = 0.093;
   
-  align_coords(desired_orient,
-	       circle_end,
-	       current_orient,
-	       rad,
-	       circle_start,
-	       circle_start_off);
+  circular_arc ca = align_coords(desired_orient,
+				 circle_end,
+				 current_orient,
+				 rad);
   
-  return circular_arc(circle_start, circle_end, circle_start_off);
+  return ca; //circular_arc(circle_start, circle_end, circle_start_off);
 }
 
 ostream& operator<<(ostream& s, const circular_arc& a) {
   s << a.start << " " << a.end << " " << a.start_offset;
   return s;
 }
+
 void print_window_info(const vector<instr*>& window) {
   cout << endl << "-- window " << endl;
   circular_arc ca = extract_arc(window);
@@ -104,21 +95,8 @@ void print_window_info(const vector<instr*>& window) {
   cout << "sv = " << sv << endl;
   cout << "angle between start and end = " << angle_between(sv, ev) << endl;
   cout << "Extracted angle between ev and end = " << angle_between(ca.end, ev) << endl;
-  //cout << "angle between desired orient and circle rad = " << angle_between(desired_orient, ev) << endl;  
   circular_arc my_a = compute_arc(window);
   cout << "Computed: " << my_a << endl;
-  // // Align coords code
-  // point c_pos;
-  // point center_off;
-  // gprog prog;
-  // point end_pos_xy = ca.end;
-  // end_pos_xy.z = 0;
-  // align_coords(desired_orient, end_pos_xy, current_orient,
-  // 	       0.016, c_pos, center_off);
-  // cout << "computed center offset in align: " << center_off << endl;
-  // cout << "actual center offset: " << circle_offset << endl;
-  // assert(within_eps(circle_offset, center_off));
-  // // End align coords code
   cout << "Instructions: " << endl;
   for (unsigned j = 0; j < window.size(); j++) {
     cout << *(window[j]) << endl;

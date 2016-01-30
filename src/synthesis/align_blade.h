@@ -5,14 +5,21 @@
 
 namespace gca {
 
+  class circular_arc {
+  public:
+    point start;
+    point end;
+    point start_offset;
+  circular_arc(point sp, point ep, point so) : start(sp), end(ep), start_offset(so) {}
+  };
+
+  
   double angle_between(point u, point v);
 
-  void align_coords(point desired_dir,
-		    point desired_pos,
-		    point current_dir,
-		    double rad,
-		    point& c_pos,
-		    point& center_off);
+  circular_arc align_coords(point desired_dir,
+			    point desired_pos,
+			    point current_dir,
+			    double rad);
 
   void from_to_with_G0_drag_knife(double safe_height,
 				  double align_depth,
