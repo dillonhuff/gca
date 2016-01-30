@@ -26,7 +26,7 @@ bool is_align_hack(const vector<instr*>& window) {
   if (!window[2]->is_G0()) { return false; }
   if (!window[3]->is_G0()) { return false; }
   if (!window[4]->is_G1()) { return false; }
-  if (!(window[5]->is_G2() || window[3]->is_G3())) { return false; }
+  if (!(window[5]->is_G2() || window[5]->is_G3())) { return false; }
   if (!window[6]->is_G1()) { return false; }
   if (!window[7]->is_G1()) { return false; }
   return true;
