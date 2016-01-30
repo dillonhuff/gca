@@ -25,12 +25,12 @@ namespace gca {
     circle_start_off = -1*ef.rotate_z(theta);
     cout << "circle start offset " << circle_start_off << endl;
     circle_start = circle_center - circle_start_off;
-    // if (!within_eps(center_off.len(), rad, 0.00001)) {
-    //   cout << "incorrect center offset: " << center_off << endl;
-    //   cout << "bad center offset length: " << center_off.len() << endl;
-    //   cout << "rad = " << rad << endl;
-    //   assert(false);
-    // }
+    if (!within_eps(circle_start_off.len(), rad, 0.00001)) {
+      cout << "incorrect center offset: " << circle_start_off << endl;
+      cout << "bad center offset length: " << circle_start_off.len() << endl;
+      cout << "rad = " << rad << endl;
+      assert(false);
+    }
   }
 
   void from_to_with_G0_drag_knife(double safe_height,
