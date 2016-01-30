@@ -133,12 +133,13 @@ namespace gca {
   TEST_CASE("Simple knife aligment code matches real CAM output") {
     arena_allocator a;
     set_system_allocator(&a);
-    double safe_height = 0.35;
-    double align_depth = 0.143;
-
     SECTION("Case 1") {
       // G1 X15.791066 Y0.859332 Z0.075000
       // G1 X16.005220 Y0.588386 Z0.075000
+      double safe_height = 0.35;
+      double align_depth = 0.143;
+
+
       gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_1.nc");
       cout << "-- Correct " << endl;
       cout << *correct;
@@ -157,8 +158,8 @@ namespace gca {
     				 last_orient,
     				 next_pos,
     				 next_orient);
-      cout << "-- Actual" << endl;
-      cout << *p;
+      // cout << "-- Actual" << endl;
+      // cout << *p;
       REQUIRE(*p == *correct);
     }
 
@@ -171,6 +172,10 @@ namespace gca {
       // G1 X20.299999 Y4.024209 Z0.075000
       // G1 X20.104019 Y4.272543 Z0.075000
 
+      double safe_height = 0.35;
+      double align_depth = 0.143;
+
+      
       gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_2.nc");
       cout << "-- Correct " << endl;
       cout << *correct;
@@ -189,9 +194,45 @@ namespace gca {
 				 last_orient,
 				 next_pos,
 				 next_orient);
+      // cout << "-- Actual" << endl;
+      // cout << *p;
+      REQUIRE(*p == *correct);
+    }
+
+    SECTION("Case 3") {
+      // Cut before
+      // G1 X-1.732718 Y-32.033215 Z0.055000
+      // G1 X-1.561738 Y-32.249390 Z0.055000
+
+      // Cut after
+      // G1 X-1.561737 Y-32.249390 Z0.000000
+      // G1 X-1.872044 Y-31.853912 Z0.000000
+
+
+      double safe_height = 0.31;
+      double align_depth = 0.103;
+
+      gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_3.nc");
+      cout << "-- Correct " << endl;
+      cout << *correct;
+      gprog* p = mk_gprog();
+      point sp(-1.732718, -32.033215, 0.055000);
+      point last_pos(-1.561738, -32.249390, 0.055000);
+      point last_orient = last_pos - sp;
+      point next_pos(-1.561737, -32.249390, 0.000000);
+      point np(-1.872044, -31.853912, 0.000000);
+      point next_orient = np - next_pos;
+      cout << "angle between orientations: " << angle_between(last_orient, next_orient) << endl;
+      from_to_with_G0_drag_knife(safe_height,
+				 align_depth,
+				 p,
+				 last_pos,
+				 last_orient,
+				 next_pos,
+				 next_orient);
       cout << "-- Actual" << endl;
       cout << *p;
-      REQUIRE(*p == *correct);
+      REQUIRE(*p == *correct);      
     }
   }
 }
