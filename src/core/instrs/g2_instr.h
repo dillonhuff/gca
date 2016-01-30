@@ -30,6 +30,26 @@ namespace gca {
       if (!k->is_omitted()) { s << 'K' << *k << ' '; }      
     }
 
+    inline double get_i_val() const {
+      assert(i->is_lit());
+      lit* il = static_cast<lit*>(i);
+      return il->v;
+    }
+
+    inline double get_j_val() const {
+      assert(j->is_lit());
+      lit* jl = static_cast<lit*>(j);
+      return jl->v;
+    }
+
+    inline double get_k_val() const {
+      assert(k->is_lit());
+      lit* kl = static_cast<lit*>(k);
+      return kl->v;
+    }
+
+    inline value* get_k() const { return k; }
+    
     virtual bool operator==(const instr& other) const {
       if (!other.is_g2_instr()) {
 	return false;
