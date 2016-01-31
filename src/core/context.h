@@ -2,9 +2,9 @@
 #define GCA_CONTEXT_H
 
 #include "arena_allocator.h"
-#include "synthesis/cut.h"
 #include "core/gprog.h"
 #include "core/instrs/all.h"
+#include "synthesis/linear_cut.h"
 
 namespace gca {
 
@@ -32,7 +32,7 @@ namespace gca {
 
   instr* mk_instr_cpy(instr* i);
 
-  cut* mk_cut(point start, point end);
+  linear_cut* mk_linear_cut(point start, point end);
 
   assign_instr* mk_assign(var* v, value* e);
     

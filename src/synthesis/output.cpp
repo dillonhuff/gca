@@ -4,7 +4,7 @@
 
 namespace gca {
 
-  cut* line_to_cut(line& l, double cutter_width) {
+  linear_cut* line_to_cut(line& l, double cutter_width) {
     double w = cutter_width / 2;
     point lv = l.end - l.start;
     point v = w*(lv.rotate_z(90).normalize());
@@ -12,20 +12,20 @@ namespace gca {
     point ep = l.end + v;
     point sr = extend_back(sp, ep, w);
     point er = extend_back(ep, sp, w);
-    return mk_cut(sr, er);
+    return mk_linear_cut(sr, er);
   }
 
-  cut* vertical_cut_to(cut* ct) {
+  linear_cut* vertical_cut_to(linear_cut* ct) {
     point start(ct->start.x, ct->start.y, 0);
     point end(ct->start);
-    return mk_cut(start, end);
+    return mk_linear_cut(start, end);
   }
 
-  vector<cut*> lines_to_cuts(vector<line>& lines, double cutter_width) {
-    vector<cut*> cuts;
+  vector<linear_cut*> lines_to_cuts(vector<line>& lines, double cutter_width) {
+    vector<linear_cut*> cuts;
     for (int i = 0; i < lines.size(); i++) {
-      cut* res = line_to_cut(lines[i], cutter_width);
-      cut* down = vertical_cut_to(res);
+      linear_cut* res = line_to_cut(lines[i], cutter_width);
+      linear_cut* down = vertical_cut_to(res);
       cuts.push_back(down);
       cuts.push_back(res);
     }
@@ -46,7 +46,7 @@ namespace gca {
     p->push_back(move_instr);
   }
   
-  gprog* gcode_for_cuts(vector<cut*>& cuts) {
+  gprog* gcode_for_cuts(vector<linear_cut*>& cuts) {
     point current_loc = point(0, 0, 0);
     gprog* p = mk_gprog();
     for (int i = 0; i < cuts.size(); i++) {
@@ -60,16 +60,16 @@ namespace gca {
     return p;
   }
 
-  cut* sink_cut(cut* s, double l) {
+  linear_cut* sink_cut(linear_cut* s, double l) {
     double xd = s->end.x - s->start.x;
     double yd = s->end.y - s->start.y;
     double x_pos = xd > 0;
     double y_pos = yd > 0;
     if (xd == 0) {
       if (y_pos) {
-	return mk_cut(point(s->start.x, s->start.y - l, 0), s->start);
+	return mk_linear_cut(point(s->start.x, s->start.y - l, 0), s->start);
       } else {
-	return mk_cut(point(s->start.x, s->start.y + l, 0), s->start);
+	return mk_linear_cut(point(s->start.x, s->start.y + l, 0), s->start);
       }
     }
     double m = yd / xd;
@@ -86,23 +86,23 @@ namespace gca {
     } else {
       ys = s->start.y + abs(b);
     }
-    return mk_cut(point(xs, ys, 0), s->start);
+    return mk_linear_cut(point(xs, ys, 0), s->start);
   }
 
-  void insert_sink_cuts(double l, vector<cut*>& cuts, vector<cut*>& dest) {
+  void insert_sink_cuts(double l, vector<linear_cut*>& cuts, vector<linear_cut*>& dest) {
     for (int i = 0; i < cuts.size(); i++) {
       dest.push_back(sink_cut(cuts[i], l));
       dest.push_back(cuts[i]);
     }
   }
 
-  vector<cut*> surface_cuts(point left, point right,
+  vector<linear_cut*> surface_cuts(point left, point right,
 			    point shift, int num_cuts) {
-    vector<cut*> cuts;
+    vector<linear_cut*> cuts;
     point c_left = left;
     point c_right = right;
     for (int i = 1; i <= num_cuts; i++) {
-      cuts.push_back(mk_cut(c_left, c_right));
+      cuts.push_back(mk_linear_cut(c_left, c_right));
       // Reverse cut directions
       point temp = c_left;
       c_left = c_right + shift;
@@ -112,7 +112,7 @@ namespace gca {
   }
 
 
-  vector<cut*> two_pass_surface(double coarse_depth, double finish_inc,
+  vector<linear_cut*> two_pass_surface(double coarse_depth, double finish_inc,
 				double cutter_width,
 				double x_s, double x_e, double y,
 				double width) {
@@ -125,9 +125,9 @@ namespace gca {
     point finish_start(x_s, y, finish_depth);
     point finish_end(x_e, y, finish_depth);
     
-    vector<cut*> cuts1 = surface_cuts(coarse_start, coarse_end,
+    vector<linear_cut*> cuts1 = surface_cuts(coarse_start, coarse_end,
 				      shift, num_cuts);
-    vector<cut*> cuts2 = surface_cuts(finish_start, finish_end,
+    vector<linear_cut*> cuts2 = surface_cuts(finish_start, finish_end,
 				      shift, num_cuts);
     cuts1.insert(cuts1.end(), cuts2.begin(), cuts2.end());
     return cuts1;
