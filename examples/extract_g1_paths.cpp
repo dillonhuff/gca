@@ -7,6 +7,7 @@
 #include "core/context.h"
 #include "core/parser.h"
 #include "synthesis/align_blade.h"
+#include "synthesis/output.h"
 
 using namespace gca;
 using namespace std;
@@ -59,26 +60,6 @@ void merge_cut_sections(vector<cut_section>& g1_sections,
       merged_cuts.push_back(sec);
     }
   }
-}
-
-gprog* append_footer(gprog* p) {
-  p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-  p->push_back(mk_m5_instr());
-  return p;
-}
-
-gprog* initial_gprog() {
-  gprog* r = mk_gprog();
-  r->push_back(mk_G90());
-  r->push_back(mk_m5_instr());
-  r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-  r->push_back(mk_tinstr(6));
-  r->push_back(mk_sinstr(0));
-  r->push_back(mk_m3_instr());
-  r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-  r->push_back(mk_finstr(5, "XY"));
-  r->push_back(mk_finstr(5, "Z"));
-  return r;
 }
 
 gprog* generate_drag_knife_code(double safe_height,

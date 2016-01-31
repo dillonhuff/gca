@@ -5,12 +5,20 @@
 #include "core/context.h"
 #include "dxflib/dl_dxf.h"
 #include "dxflib/dl_creationadapter.h"
+#include "synthesis/output.h"
 
 using namespace gca;
 using namespace std;
 
 class dxf_listener : public DL_CreationAdapter {
 public:
+
+  vector<cut*> cuts;
+
+
+  int current_polyline_n;
+  int polyline_vertices_left;
+  point last_vertex;
 
   virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
 
@@ -125,6 +133,11 @@ public:
     printf("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
            data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
     printAttributes();
+    assert(data.z1 == 0);
+    assert(data.z2 == 0);
+    point s(data.x1, data.y1, data.z1);
+    point e(data.x2, data.y2, data.z2);
+    cuts.push_back(mk_linear_cut(s, e));
   }
 
   void addArc(const DL_ArcData& data) {
@@ -143,8 +156,15 @@ public:
 
   void addPolyline(const DL_PolylineData& data) {
     printf("POLYLINE \n");
+    printf("\t MVERTICES: %d\n", data.number);
+    printf("\t MVERTICES: %d\n", data.m);
+    printf("\t NVERTICES: %d\n", data.n);
     printf("flags: %d\n", (int)data.flags);
     printAttributes();
+    assert(data.m == 0);
+    assert(data.n == 0);
+    current_polyline_n = data.n;
+    polyline_vertices_left = current_polyline_n;
   }
 
   void addVertex(const DL_VertexData& data) {
@@ -152,6 +172,12 @@ public:
            data.x, data.y, data.z,
            data.bulge);
     printAttributes();
+    point v(data.x, data.y, data.z);
+    if (polyline_vertices_left < current_polyline_n) {
+      cuts.push_back(mk_linear_cut(last_vertex, v));
+    }
+    last_vertex = v;    
+    polyline_vertices_left--;
   }
 
 
@@ -185,6 +211,17 @@ public:
   }  
 };
 
+void append_cut_code(const dxf_listener& l, gprog* p) {
+  point current_loc = point(0, 0, 0);
+  for (int i = 0; i < l.cuts.size(); i++) {
+    from_to_with_G0(p, current_loc, l.cuts[i]->start);
+    point next_loc = l.cuts[i]->end;
+    instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
+    p->push_back(move_instr);
+    current_loc = l.cuts[i]->end;
+  }
+}
+
 gprog* dxf_to_gcode(char* file) {
   dxf_listener* listener = new dxf_listener();
   DL_Dxf* dxf = new DL_Dxf();
@@ -193,8 +230,11 @@ gprog* dxf_to_gcode(char* file) {
     return NULL;
   }
   delete dxf;
+  gprog* p = initial_gprog();
+  append_cut_code(*listener, p);
+  gprog* r = append_footer(p);
   delete listener;
-  return mk_gprog();
+  return r;
 }
 
 int main(int argc, char** argv) {

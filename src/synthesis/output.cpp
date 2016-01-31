@@ -97,7 +97,7 @@ namespace gca {
   }
 
   vector<linear_cut*> surface_cuts(point left, point right,
-			    point shift, int num_cuts) {
+				   point shift, int num_cuts) {
     vector<linear_cut*> cuts;
     point c_left = left;
     point c_right = right;
@@ -113,9 +113,9 @@ namespace gca {
 
 
   vector<linear_cut*> two_pass_surface(double coarse_depth, double finish_inc,
-				double cutter_width,
-				double x_s, double x_e, double y,
-				double width) {
+				       double cutter_width,
+				       double x_s, double x_e, double y,
+				       double width) {
     double inc = cutter_width*(2.0/3.0);
     int num_cuts = ceil(width / inc);
     point coarse_start(x_s, y, coarse_depth);
@@ -126,11 +126,31 @@ namespace gca {
     point finish_end(x_e, y, finish_depth);
     
     vector<linear_cut*> cuts1 = surface_cuts(coarse_start, coarse_end,
-				      shift, num_cuts);
+					     shift, num_cuts);
     vector<linear_cut*> cuts2 = surface_cuts(finish_start, finish_end,
-				      shift, num_cuts);
+					     shift, num_cuts);
     cuts1.insert(cuts1.end(), cuts2.begin(), cuts2.end());
     return cuts1;
   }
-  
+
+  gprog* append_footer(gprog* p) {
+    p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    p->push_back(mk_m5_instr());
+    return p;
+  }
+
+  gprog* initial_gprog() {
+    gprog* r = mk_gprog();
+    r->push_back(mk_G90());
+    r->push_back(mk_m5_instr());
+    r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    r->push_back(mk_tinstr(6));
+    r->push_back(mk_sinstr(0));
+    r->push_back(mk_m3_instr());
+    r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    r->push_back(mk_finstr(5, "XY"));
+    r->push_back(mk_finstr(5, "Z"));
+    return r;
+  }
+
 }

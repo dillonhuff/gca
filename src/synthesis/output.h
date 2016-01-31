@@ -30,6 +30,10 @@ namespace gca {
 				       double x_s, double x_e, double y,
 				       double width);
 
+  void from_to_with_G0(gprog* p, point from, point to);
+  
+  gprog* initial_gprog();
+  gprog* append_footer(gprog* p);
 }
 
 #endif
