@@ -46,8 +46,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/g0_filter.h
 	    ./src/transformers/rel_to_abs.h
-	    ./src/transformers/tiler.h
-	    ./src/transformers/scale_xyz.cpp)
+	    ./src/transformers/tiler.h)
 
 SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/core/context.cpp
@@ -62,7 +61,11 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/system/bmp_output.cpp
-	 ./src/transformers/scale_xyz.cpp)
+	 ./src/transformers/scale_xyz.cpp
+	 ./src/transformers/scale_xyz.cpp
+	 ./src/dxflib/dl_dxf.cpp
+	 ./src/dxflib/dl_writer_ascii.cpp)
+	 
 
 SET(SRCS ${CPPS} ${HEADERS})
 
@@ -76,6 +79,7 @@ add_executable(simple-deepen examples/simple_deepen.cpp ${SRCS})
 add_executable(hello-world examples/hello_world.cpp ${SRCS})
 add_executable(extract-g1-paths examples/extract_g1_paths.cpp ${SRCS})
 add_executable(print-knife-hacks examples/print_knife_hacks.cpp ${SRCS})
+add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 
 ######### VTK Example ##########
 

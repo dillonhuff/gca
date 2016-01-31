@@ -119,7 +119,7 @@ void print_knife_hacks(gprog* prog) {
 
 int main(int argc, char** argv) {
   if (argc != 2) {
-    cout << "Usage: extract-g1-paths <gcode file path>" << endl;
+    cout << "Usage: print-knife-hacks <gcode file path>" << endl;
     return 0;
   }
 
