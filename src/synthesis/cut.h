@@ -1,24 +1,23 @@
-/* #ifndef GCA_CUT_H */
-/* #define GCA_CUT_H */
+#ifndef GCA_CUT_H
+#define GCA_CUT_H
 
-/* #include "geometry/point.h" */
+#include "geometry/point.h"
 
-/* namespace gca { */
+namespace gca {
 
-/*   class cut { */
-/*   public: */
-/*     point start, end; */
+  class cut {
+  public:
+    point start, end;
+  cut(point s, point e) : start(s), end(e) {}
 
-/*   cut(point sp, point ep) : */
-/*     start(sp), end(ep) {} */
-
-/*     bool operator==(const cut& other) const { */
-/*       bool res = within_eps(start, other.start) && within_eps(end, other.end); */
-/*       return res; */
-/*     } */
+    virtual bool operator==(const cut& other) const = 0;
+    virtual inline bool is_linear_cut() const { return false; }
+    virtual inline bool is_circular_arc() const { return false; }
     
-/*   }; */
+  };
+    
 
-/* } */
+}
 
-/* #endif */
+
+#endif

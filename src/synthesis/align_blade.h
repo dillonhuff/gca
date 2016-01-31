@@ -2,22 +2,10 @@
 #define GCA_ALIGN_BLADE_H
 
 #include "geometry/point.h"
+#include "synthesis/circular_arc.h"
 
 namespace gca {
 
-  class circular_arc {
-  public:
-    point start;
-    point end;
-    point start_offset;
-  circular_arc(point sp, point ep, point so) : start(sp), end(ep), start_offset(so) {}
-
-    inline point center_to_start_vec() const { return -1 * start_offset; }
-    inline point center_to_end_vec() const { return end - center(); }
-    inline point center() const { return start + start_offset; }
-  };
-
-  
   double angle_between(point u, point v);
 
   circular_arc align_coords(point desired_dir,

@@ -2,20 +2,24 @@
 #define GCA_LINEAR_CUT_H
 
 #include "geometry/point.h"
+#include "synthesis/cut.h"
 
 namespace gca {
 
-  class linear_cut {
+  class linear_cut : public cut {
   public:
-    point start, end;
-
   linear_cut(point sp, point ep) :
-    start(sp), end(ep) {}
+    cut(sp, ep) {}
 
-    bool operator==(const linear_cut& other) const {
-      bool res = within_eps(start, other.start) && within_eps(end, other.end);
-      return res;
+    bool operator==(const cut& other) const {
+      if (other.is_linear_cut()) {
+	bool res = within_eps(start, other.start) && within_eps(end, other.end);
+	return res;
+      }
+      return false;
     }
+
+    inline bool is_linear_cut() const { return true; }
     
   };
 

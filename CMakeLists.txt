@@ -39,6 +39,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/simulators/sim_res.h
 	    ./src/synthesis/cut.h
 	    ./src/synthesis/linear_cut.h
+	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
 	    ./src/system/bmp_output.h
 	    ./src/transformers/abs_to_rel.h
