@@ -15,7 +15,6 @@ public:
 
   vector<cut*> cuts;
 
-
   int current_polyline_n;
   int polyline_vertices_left;
   point last_vertex;
@@ -180,12 +179,10 @@ public:
     polyline_vertices_left--;
   }
 
-
   void add3dFace(const DL_3dFaceData& data) {
     cout << "ERROR: 3d faces are not supported" << endl;
     assert(false);
   }
-
 
   void printAttributes() {
     printf("  Attributes: Layer: %s, ", attributes.getLayer().c_str());
@@ -211,14 +208,40 @@ public:
   }  
 };
 
+void collect_adjacent_cuts(const vector<cut*>& cuts,
+			   vector<cut*>& cut_group,
+			   unsigned i) {
+  cut_group.push_back(cuts[i]);
+  if (cuts.size() == i - 1) {
+    return;
+  }
+  unsigned j = i;
+  while (j < cuts.size() - 1) {
+    point last_cut_end = cuts[j]->end;
+    point next_cut_start = cuts[j + 1]->start;
+    if (!within_eps(last_cut_end, next_cut_start)) {
+      break;
+    }
+    cut_group.push_back(cuts[j]);
+    j++;
+  }
+}
+
 void append_cut_code(const dxf_listener& l, gprog* p) {
   point current_loc = point(0, 0, 0);
-  for (int i = 0; i < l.cuts.size(); i++) {
-    from_to_with_G0(p, current_loc, l.cuts[i]->start);
-    point next_loc = l.cuts[i]->end;
-    instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
-    p->push_back(move_instr);
-    current_loc = l.cuts[i]->end;
+  unsigned i = 0;
+  while (i < l.cuts.size()) {
+    vector<cut*> cut_group;
+    collect_adjacent_cuts(l.cuts, cut_group, i);
+    assert(cut_group.size() > 0);
+    i += cut_group.size();
+    from_to_with_G0(p, current_loc, cut_group.front()->start);
+    for (int j = 0; j < cut_group.size(); j++) {
+      point next_loc = cut_group[j]->end;
+      instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
+      p->push_back(move_instr);
+    }
+    current_loc = cut_group.back()->end;
   }
 }
 
