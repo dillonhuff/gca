@@ -5,6 +5,7 @@
 #include "core/context.h"
 #include "dxflib/dl_dxf.h"
 #include "dxflib/dl_creationadapter.h"
+#include "synthesis/align_blade.h"
 #include "synthesis/output.h"
 
 using namespace gca;
@@ -227,17 +228,57 @@ void collect_adjacent_cuts(const vector<cut*>& cuts,
   }
 }
 
+void from_to_with_G0_height(gprog* p,
+			    point current_loc,
+			    point next_loc,
+			    double safe_height) {
+  g0_instr* pull_up_instr = mk_G0(current_loc.x, current_loc.y, safe_height);
+  g0_instr* move_xy_instr = mk_G0(next_loc.x, next_loc.y, safe_height);
+  g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
+  p->push_back(pull_up_instr);
+  p->push_back(move_xy_instr);
+  p->push_back(push_down_instr);
+}
+
+void append_pass_code(gprog* p,
+		      point current_loc,
+		      point current_orient,
+		      const vector<cut*> cut_pass) {
+  double safe_height = 0.35;
+  double material_depth = 0.09;
+  double push_depth = 0.005;
+  double align_depth = material_depth - push_depth;
+  point next_orient = cut_pass.front()->end - cut_pass.front()->start;
+  point next_loc = cut_pass.front()->start;
+  if (!within_eps(current_orient, next_orient)) {
+    from_to_with_G0_drag_knife(safe_height,
+			       align_depth,
+			       p,
+			       current_loc,
+			       current_orient,
+			       next_loc,
+			       next_orient);
+  } else {
+    from_to_with_G0_height(p, current_loc, cut_pass.front()->start, safe_height);
+  }
+  for (int j = 0; j < cut_pass.size(); j++) {
+    point next_loc = cut_pass[j]->end;
+    instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
+    p->push_back(move_instr);
+  }
+}
+
 void append_cut_group_code(gprog* p, const vector<vector<cut*> > cut_passes) {
   point current_loc = point(0, 0, 0);
+  point current_orient = point(1, 0, 0);
   for (unsigned i = 0; i < cut_passes.size(); i++) {
-    vector<cut*> cut_group = cut_passes[i];
-    from_to_with_G0(p, current_loc, cut_group.front()->start);
-    for (int j = 0; j < cut_group.size(); j++) {
-      point next_loc = cut_group[j]->end;
-      instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
-      p->push_back(move_instr);
-    }
-    current_loc = cut_group.back()->end;
+    vector<cut*> cut_pass = cut_passes[i];
+    append_pass_code(p,
+		     current_loc,
+		     current_orient,
+		     cut_pass);
+    current_loc = cut_pass.back()->end;
+    current_orient = cut_pass.back()->end - cut_pass.back()->start;
   }
 }
 
@@ -272,8 +313,8 @@ void append_cut_code(const dxf_listener& l, gprog* p) {
     cut_groups.push_back(cut_group);
     i += cut_group.size();
   }
-  double material_depth = 0.9;
-  double cut_depth = 0.5;
+  double material_depth = 0.09;
+  double cut_depth = 0.05;
   vector<vector<cut*> > cut_group_passes;
   for (unsigned j = 0; j < cut_groups.size(); j++) {
     vector<cut*> current_group = cut_groups[j];

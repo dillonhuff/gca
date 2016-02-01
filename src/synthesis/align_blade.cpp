@@ -15,6 +15,8 @@ namespace gca {
 			    point circle_end,
 			    point current_orient,
 			    double rad) {
+    cout << "Desired " << desired_orient << endl;
+    cout << "Current " << current_orient << endl;
     double theta = angle_between(desired_orient, current_orient);
     cout << "angle between desired and current orient = " << theta << endl;
     point ef = rad*desired_orient.normalize();
@@ -58,7 +60,7 @@ namespace gca {
 				  point next_pos,
 				  point next_orient) {
     instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
-    double r = 0.16;
+    double r = 0.016;
     point next_pos_xy = next_pos;
     next_pos_xy.z = align_depth;
     circular_arc ca = align_coords(next_orient, next_pos_xy, last_orient, r);
