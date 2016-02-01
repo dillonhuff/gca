@@ -18,6 +18,7 @@ simple-deepen
 hello-world
 extract-g1-paths
 print-knife-hacks
+print-dxf
 curved-strap-assembly.16x.h=.2.tap-generalized
 CMakeCache.txt
 CMakeFiles/*
