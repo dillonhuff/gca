@@ -60,7 +60,7 @@ namespace gca {
 				  point next_pos,
 				  point next_orient) {
     instr* pull_up_instr = mk_G0(point(last_pos.x, last_pos.y, safe_height));
-    double r = 0.016;
+    double r = 0.16;
     point next_pos_xy = next_pos;
     next_pos_xy.z = align_depth;
     circular_arc ca = align_coords(next_orient, next_pos_xy, last_orient, r);
