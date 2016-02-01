@@ -227,14 +227,10 @@ void collect_adjacent_cuts(const vector<cut*>& cuts,
   }
 }
 
-void append_cut_code(const dxf_listener& l, gprog* p) {
+void append_cut_group_code(gprog* p, const vector<vector<cut*> > cut_passes) {
   point current_loc = point(0, 0, 0);
-  unsigned i = 0;
-  while (i < l.cuts.size()) {
-    vector<cut*> cut_group;
-    collect_adjacent_cuts(l.cuts, cut_group, i);
-    assert(cut_group.size() > 0);
-    i += cut_group.size();
+  for (unsigned i = 0; i < cut_passes.size(); i++) {
+    vector<cut*> cut_group = cut_passes[i];
     from_to_with_G0(p, current_loc, cut_group.front()->start);
     for (int j = 0; j < cut_group.size(); j++) {
       point next_loc = cut_group[j]->end;
@@ -243,6 +239,47 @@ void append_cut_code(const dxf_listener& l, gprog* p) {
     }
     current_loc = cut_group.back()->end;
   }
+}
+
+void make_cut_group_passes(double material_depth,
+			   double cut_depth,
+			   const vector<cut*>& current_group,
+			   vector<vector<cut*> >& cut_group_passes) {
+  assert(cut_depth < material_depth);
+  double depth = material_depth - cut_depth;
+  while (true) {
+    vector<cut*> new_pass;
+    for (unsigned i = 0; i < current_group.size(); i++) {
+      cut* ct = current_group[i];
+      assert(ct->is_linear_cut());
+      new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth)));
+    }
+    cut_group_passes.push_back(new_pass);
+    if (depth == 0.0) {
+      break;
+    }
+    depth = max(0.0, depth - cut_depth);
+  }
+}
+
+void append_cut_code(const dxf_listener& l, gprog* p) {
+  vector<vector<cut*> > cut_groups;
+  unsigned i = 0;
+  while (i < l.cuts.size()) {
+    vector<cut*> cut_group;
+    collect_adjacent_cuts(l.cuts, cut_group, i);
+    assert(cut_group.size() > 0);
+    cut_groups.push_back(cut_group);
+    i += cut_group.size();
+  }
+  double material_depth = 0.9;
+  double cut_depth = 0.5;
+  vector<vector<cut*> > cut_group_passes;
+  for (unsigned j = 0; j < cut_groups.size(); j++) {
+    vector<cut*> current_group = cut_groups[j];
+    make_cut_group_passes(material_depth, cut_depth, current_group, cut_group_passes);
+  }
+  append_cut_group_code(p, cut_group_passes);
 }
 
 gprog* dxf_to_gcode(char* file) {
