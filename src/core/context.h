@@ -4,6 +4,7 @@
 #include "arena_allocator.h"
 #include "core/gprog.h"
 #include "core/instrs/all.h"
+#include "synthesis/hole_punch.h"
 #include "synthesis/linear_cut.h"
 
 namespace gca {
@@ -55,7 +56,9 @@ namespace gca {
   g90_instr* mk_G90();
     
   g53_instr* mk_G53(value* x, value* y, value* z);
-  
+
+  hole_punch* mk_hole_punch(double x, double y, double z, double r);
+
 }
 
 #endif

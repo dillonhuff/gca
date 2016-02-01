@@ -166,5 +166,10 @@ namespace gca {
     g53_instr* mem = allocate<g53_instr>();
     return new (mem) g53_instr(x, y, z, mk_omitted());
   }
+
+  hole_punch* mk_hole_punch(double x, double y, double z, double r) {
+    hole_punch* mem = allocate<hole_punch>();
+    return new (mem) hole_punch(point(x, y, z), r);
+  }
   
 }

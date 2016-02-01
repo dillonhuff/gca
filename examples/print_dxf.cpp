@@ -14,6 +14,8 @@ using namespace std;
 class dxf_listener : public DL_CreationAdapter {
 public:
 
+  vector<hole_punch*> hole_punches;
+
   vector<cut*> cuts;
 
   int current_polyline_n;
@@ -152,6 +154,8 @@ public:
            data.cx, data.cy, data.cz,
            data.radius);
     printAttributes();
+    assert(data.cz == 0);
+    hole_punches.push_back(mk_hole_punch(data.cx, data.cy, data.cz, data.radius));
   }
 
   void addPolyline(const DL_PolylineData& data) {
@@ -323,6 +327,20 @@ void append_cut_code(const dxf_listener& l, gprog* p) {
   append_cut_group_code(p, cut_group_passes);
 }
 
+void append_drill_code(const vector<hole_punch*>& punches, gprog* p) {
+  point current_loc(0, 0, 0);
+  double safe_height = 0.35;
+  for (unsigned i = 0; i < punches.size(); i++) {
+    hole_punch* punch = punches[i];
+    point next_loc = punch->start;
+    from_to_with_G0_height(p,
+			   current_loc,
+			   next_loc,
+			   safe_height);
+    current_loc = punch->end;
+  }
+}
+
 gprog* dxf_to_gcode(char* file) {
   dxf_listener* listener = new dxf_listener();
   DL_Dxf* dxf = new DL_Dxf();
@@ -332,6 +350,7 @@ gprog* dxf_to_gcode(char* file) {
   }
   delete dxf;
   gprog* p = initial_gprog();
+  append_drill_code(listener->hole_punches, p);
   append_cut_code(*listener, p);
   gprog* r = append_footer(p);
   delete listener;
