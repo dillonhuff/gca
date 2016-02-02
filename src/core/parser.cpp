@@ -237,13 +237,13 @@ namespace gca {
 	assert(false);
       }
     } else if (next_char == 'T') {
-      is = mk_tinstr(val);
+      is = mk_t_instr(val);
     } else if (next_char == 'S') {
-      is = mk_sinstr(val);
+      is = mk_s_instr(val);
     } else if (next_char == 'F') {
       ignore_whitespace(i, s);
       string str = parse_coord_letters(i, s);
-      is = mk_finstr(val, str);
+      is = mk_f_instr(val, str);
     } else if (next_char == 'G') {
       is = parse_ginstr(p, val, i, s);
     } else if (next_char == '#') {

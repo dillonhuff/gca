@@ -20,9 +20,13 @@ namespace gca {
     virtual bool operator==(const value& other) const {
       assert(false);
     }
-
+    
     virtual void print(ostream& other) const {
       assert(false);
+    }
+
+    virtual void print_eps(ostream& s, double eps) const {
+      print(s);
     }
   };
 
@@ -43,6 +47,16 @@ namespace gca {
     }
 
     virtual void print(ostream& other) const { other << v; }
+
+    virtual void print_eps(ostream& s, double eps) const {
+      double abs_i = v >= 0 ? v : -1*v;
+      if (abs_i >= eps) {
+	s << v;
+      } else {
+	cout << 0.0;
+      }
+    }
+
   };  
 
   class var : public value {

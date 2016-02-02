@@ -144,12 +144,12 @@ namespace gca {
     r->push_back(mk_G90());
     r->push_back(mk_m5_instr());
     r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    r->push_back(mk_tinstr(6));
-    r->push_back(mk_sinstr(0));
+    r->push_back(mk_t_instr(6));
+    r->push_back(mk_s_instr(0));
     r->push_back(mk_m3_instr());
     r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    r->push_back(mk_finstr(5, "XY"));
-    r->push_back(mk_finstr(5, "Z"));
+    r->push_back(mk_f_instr(5, "XY"));
+    r->push_back(mk_f_instr(5, "Z"));
     return r;
   }
 

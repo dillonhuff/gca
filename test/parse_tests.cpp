@@ -197,14 +197,14 @@ namespace gca {
     SECTION("Parse F instruction") {
       gprog* p = parse_gprog("F15 XY");
       gprog* correct = mk_gprog();
-      correct->push_back(mk_finstr(15, "XY"));
+      correct->push_back(mk_f_instr(15, "XY"));
       REQUIRE(*p == *correct);
     }
 
     SECTION("Parse F instruction not all") {
       gprog* p = parse_gprog("F15 XYZ");
       gprog* incorrect = mk_gprog();
-      incorrect->push_back(mk_finstr(15, "XY"));
+      incorrect->push_back(mk_f_instr(15, "XY"));
       REQUIRE(*p != *incorrect);
     }
     

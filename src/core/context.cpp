@@ -135,16 +135,16 @@ namespace gca {
     return new (allocate<m3_instr>()) m3_instr();
   }
   
-  t_instr* mk_tinstr(int val) {
+  t_instr* mk_t_instr(int val) {
     instr* mem = allocate<t_instr>();
     return new (mem) t_instr(val);
   }
 
-  s_instr* mk_sinstr(int val) {
+  s_instr* mk_s_instr(int val) {
     return new (allocate<s_instr>()) s_instr(val);
   }
 
-  f_instr* mk_finstr(int val, string s) {
+  f_instr* mk_f_instr(int val, string s) {
     f_instr* mem = allocate<f_instr>();
     return new (mem) f_instr(val, s);
   }

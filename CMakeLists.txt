@@ -25,6 +25,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/core/instrs/g3_instr.h
 	    ./src/core/instrs/instr.h
 	    ./src/core/instrs/misc.h
+	    ./src/core/instrs/circular_arc_instr.h
 	    ./src/core/instrs/move_instr.h
 	    ./src/core/parser.h
 	    ./src/core/pass.h

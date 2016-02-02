@@ -44,11 +44,11 @@ namespace gca {
   m5_instr* mk_m5_instr();
   m3_instr* mk_m3_instr();
 
-  t_instr* mk_tinstr(int val);
+  t_instr* mk_t_instr(int val);
 
-  s_instr* mk_sinstr(int val);
+  s_instr* mk_s_instr(int val);
 
-  f_instr* mk_finstr(int val, string s);
+  f_instr* mk_f_instr(int val, string s);
 
   comment* mk_comment(char ld, char rd, string t);
     

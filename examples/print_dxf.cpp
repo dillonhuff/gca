@@ -213,6 +213,15 @@ public:
   }  
 };
 
+class cut_params {
+public:
+  double safe_height;
+  double material_depth;
+  double cut_depth;
+  point start_loc;
+  point start_orient;
+};
+
 void collect_adjacent_cuts(const vector<cut*>& cuts,
 			   vector<cut*>& cut_group,
 			   unsigned i) {
@@ -307,7 +316,7 @@ void make_cut_group_passes(double material_depth,
   }
 }
 
-void append_cut_code(const dxf_listener& l, gprog* p) {
+void append_cut_code(const dxf_listener& l, gprog* p, cut_params params) {
   vector<vector<cut*> > cut_groups;
   unsigned i = 0;
   while (i < l.cuts.size()) {
@@ -317,31 +326,51 @@ void append_cut_code(const dxf_listener& l, gprog* p) {
     cut_groups.push_back(cut_group);
     i += cut_group.size();
   }
-  double material_depth = 0.09;
-  double cut_depth = 0.05;
   vector<vector<cut*> > cut_group_passes;
   for (unsigned j = 0; j < cut_groups.size(); j++) {
     vector<cut*> current_group = cut_groups[j];
-    make_cut_group_passes(material_depth, cut_depth, current_group, cut_group_passes);
+    make_cut_group_passes(params.material_depth,
+			  params.cut_depth,
+			  current_group,
+			  cut_group_passes);
   }
   append_cut_group_code(p, cut_group_passes);
 }
 
-void append_drill_code(const vector<hole_punch*>& punches, gprog* p) {
-  point current_loc(0, 0, 0);
-  double safe_height = 0.35;
+void append_drill_code(const vector<hole_punch*>& punches, gprog* p,
+		       cut_params params) {
+  point current_loc = params.start_loc;
   for (unsigned i = 0; i < punches.size(); i++) {
     hole_punch* punch = punches[i];
     point next_loc = punch->start;
     from_to_with_G0_height(p,
 			   current_loc,
 			   next_loc,
-			   safe_height);
+			   params.safe_height);
     current_loc = punch->end;
   }
 }
 
-gprog* dxf_to_gcode(char* file) {
+void append_drill_header(gprog* p) {
+  p->push_back(mk_G90());
+  p->push_back(mk_m5_instr());
+  p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+  p->push_back(mk_t_instr(2));
+  p->push_back(mk_s_instr(16000));
+  p->push_back(mk_m3_instr());
+  p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+  p->push_back(mk_f_instr(4, "XY"));
+  p->push_back(mk_f_instr(50, "Z"));
+}
+
+void append_drag_knife_transfer(gprog* p) {
+  p->push_back(mk_t_instr(6));
+  p->push_back(mk_s_instr(0));
+  p->push_back(mk_f_instr(5, "XY"));
+  p->push_back(mk_f_instr(5, "Z"));
+}
+
+gprog* dxf_to_gcode(char* file, cut_params params) {
   dxf_listener* listener = new dxf_listener();
   DL_Dxf* dxf = new DL_Dxf();
   if (!dxf->in(file, listener)) {
@@ -349,9 +378,11 @@ gprog* dxf_to_gcode(char* file) {
     return NULL;
   }
   delete dxf;
-  gprog* p = initial_gprog();
-  append_drill_code(listener->hole_punches, p);
-  append_cut_code(*listener, p);
+  gprog* p = mk_gprog();
+  append_drill_header(p);
+  append_drill_code(listener->hole_punches, p, params);
+  append_drag_knife_transfer(p);
+  append_cut_code(*listener, p, params);
   gprog* r = append_footer(p);
   delete listener;
   return r;
@@ -365,10 +396,17 @@ int main(int argc, char** argv) {
 
   arena_allocator a;
   set_system_allocator(&a);
+
+  cut_params params;
+  params.safe_height = 0.35;
+  params.material_depth = 0.09;
+  params.cut_depth = 0.05;
+  params.start_loc = point(0, 0, 0);
+  params.start_orient = point(1, 0, 0);
   
-  gprog* p = dxf_to_gcode(argv[1]);
+  gprog* p = dxf_to_gcode(argv[1], params);
 
   cout << "-- FINAL GCODE PROGRAM" << endl;
-  cout << *p;
+  p->print_nc_output(cout);
   return 0;
 }

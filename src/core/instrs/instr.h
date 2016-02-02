@@ -45,6 +45,9 @@ namespace gca {
     }
 
     virtual void print(ostream& s) const = 0;
+    virtual void print_nc_output(ostream& s) const {
+      print(s);
+    }
 
     virtual inline bool is_M3() const { return false; }
     virtual inline bool is_M5() const { return false; }

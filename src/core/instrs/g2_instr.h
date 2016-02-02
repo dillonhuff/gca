@@ -1,33 +1,23 @@
 #ifndef GCA_G2_INSTR_H
 #define GCA_G2_INSTR_H
 
-#include "core/instrs/move_instr.h"
+#include "core/instrs/circular_arc_instr.h"
 
 namespace gca {
 
-  class g2_instr : public move_instr {
+  class g2_instr : public circular_arc_instr {
   public:
-    value* i;
-    value* j;
-    value* k;
-    
-    g2_instr(value* x, value* y, value* z,
+    g2_instr(value* xp, value* yp, value* zp,
 		      value* ip, value* jp, value* kp,
-	     value* feed_rate) : move_instr(x, y, z, feed_rate),
-      i(ip), j(jp), k(kp) {}
+	     value* frp) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp) {}
 
     virtual inline bool is_G2() const { return true; }    
     virtual inline bool is_g2_instr() const { return true; }
 
     void print(ostream& s) const {
       s << "G2 ";
-      if (!feed_rate->is_omitted()) { s << 'F' << *feed_rate << ' '; }
-      if (!x->is_omitted()) { s << 'X' << *x << ' '; }
-      if (!y->is_omitted()) { s << 'Y' << *y << ' '; }
-      if (!z->is_omitted()) { s << 'Z' << *z << ' '; }
-      if (!i->is_omitted()) { s << 'I' << *i << ' '; }
-      if (!j->is_omitted()) { s << 'J' << *j << ' '; }
-      if (!k->is_omitted()) { s << 'K' << *k << ' '; }      
+      print_move_data(s, 0.000001);
+      print_arc_data(s, 0.00001);
     }
 
     inline double get_i_val() const {

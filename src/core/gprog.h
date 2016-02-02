@@ -37,6 +37,8 @@ namespace gca {
       
     void print(ostream& s);
 
+    void print_nc_output(ostream& s);
+
   };
 
   ostream& operator<<(ostream& stream, gprog& p);

@@ -42,6 +42,14 @@ namespace gca {
     }
   }
 
+  void gprog::print_nc_output(ostream& s) {
+    for (ilist::iterator it = begin();
+	 it != end(); ++it) {
+      (*it)->print_nc_output(s);
+      s << endl;
+    }
+  }
+
   bool gprog::operator==(const gprog& other) const {
     if (other.size() != this->size()) {
       cout << "WRONG SIZE!" << endl;
