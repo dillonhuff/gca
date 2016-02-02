@@ -218,6 +218,7 @@ public:
   double safe_height;
   double material_depth;
   double cut_depth;
+  double push_depth;
   point start_loc;
   point start_orient;
 };
@@ -256,15 +257,13 @@ void from_to_with_G0_height(gprog* p,
 void append_pass_code(gprog* p,
 		      point current_loc,
 		      point current_orient,
-		      const vector<cut*> cut_pass) {
-  double safe_height = 0.35;
-  double material_depth = 0.09;
-  double push_depth = 0.005;
-  double align_depth = material_depth - push_depth;
+		      const vector<cut*> cut_pass,
+		      cut_params params) {
+  double align_depth = params.material_depth - params.push_depth;
   point next_orient = cut_pass.front()->end - cut_pass.front()->start;
   point next_loc = cut_pass.front()->start;
   if (!within_eps(current_orient, next_orient)) {
-    from_to_with_G0_drag_knife(safe_height,
+    from_to_with_G0_drag_knife(params.safe_height,
 			       align_depth,
 			       p,
 			       current_loc,
@@ -272,7 +271,7 @@ void append_pass_code(gprog* p,
 			       next_loc,
 			       next_orient);
   } else {
-    from_to_with_G0_height(p, current_loc, cut_pass.front()->start, safe_height);
+    from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height);
   }
   for (int j = 0; j < cut_pass.size(); j++) {
     point next_loc = cut_pass[j]->end;
@@ -281,26 +280,28 @@ void append_pass_code(gprog* p,
   }
 }
 
-void append_cut_group_code(gprog* p, const vector<vector<cut*> > cut_passes) {
-  point current_loc = point(0, 0, 0);
-  point current_orient = point(1, 0, 0);
+void append_cut_group_code(gprog* p,
+			   const vector<vector<cut*> > cut_passes,
+			   cut_params params) {
+  point current_loc = params.start_loc;
+  point current_orient = params.start_orient;
   for (unsigned i = 0; i < cut_passes.size(); i++) {
     vector<cut*> cut_pass = cut_passes[i];
     append_pass_code(p,
 		     current_loc,
 		     current_orient,
-		     cut_pass);
+		     cut_pass,
+		     params);
     current_loc = cut_pass.back()->end;
     current_orient = cut_pass.back()->end - cut_pass.back()->start;
   }
 }
 
-void make_cut_group_passes(double material_depth,
-			   double cut_depth,
+void make_cut_group_passes(cut_params params,
 			   const vector<cut*>& current_group,
 			   vector<vector<cut*> >& cut_group_passes) {
-  assert(cut_depth < material_depth);
-  double depth = material_depth - cut_depth;
+  assert(params.cut_depth < params.material_depth);
+  double depth = params.material_depth - params.cut_depth;
   while (true) {
     vector<cut*> new_pass;
     for (unsigned i = 0; i < current_group.size(); i++) {
@@ -312,7 +313,7 @@ void make_cut_group_passes(double material_depth,
     if (depth == 0.0) {
       break;
     }
-    depth = max(0.0, depth - cut_depth);
+    depth = max(0.0, depth - params.cut_depth);
   }
 }
 
@@ -329,12 +330,11 @@ void append_cut_code(const dxf_listener& l, gprog* p, cut_params params) {
   vector<vector<cut*> > cut_group_passes;
   for (unsigned j = 0; j < cut_groups.size(); j++) {
     vector<cut*> current_group = cut_groups[j];
-    make_cut_group_passes(params.material_depth,
-			  params.cut_depth,
+    make_cut_group_passes(params,
 			  current_group,
 			  cut_group_passes);
   }
-  append_cut_group_code(p, cut_group_passes);
+  append_cut_group_code(p, cut_group_passes, params);
 }
 
 void append_drill_code(const vector<hole_punch*>& punches, gprog* p,
@@ -401,6 +401,7 @@ int main(int argc, char** argv) {
   params.safe_height = 0.35;
   params.material_depth = 0.09;
   params.cut_depth = 0.05;
+  params.push_depth = 0.005;
   params.start_loc = point(0, 0, 0);
   params.start_orient = point(1, 0, 0);
   
