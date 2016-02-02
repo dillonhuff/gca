@@ -1772,6 +1772,33 @@ test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
+test/spline_tests.o: test/spline_tests.cpp.o
+
+.PHONY : test/spline_tests.o
+
+# target to build an object file
+test/spline_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.o
+.PHONY : test/spline_tests.cpp.o
+
+test/spline_tests.i: test/spline_tests.cpp.i
+
+.PHONY : test/spline_tests.i
+
+# target to preprocess a source file
+test/spline_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.i
+.PHONY : test/spline_tests.cpp.i
+
+test/spline_tests.s: test/spline_tests.cpp.s
+
+.PHONY : test/spline_tests.s
+
+# target to generate assembly for a file
+test/spline_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.s
+.PHONY : test/spline_tests.cpp.s
+
 test/transformer_tests.o: test/transformer_tests.cpp.o
 
 .PHONY : test/transformer_tests.o
@@ -1924,6 +1951,9 @@ help:
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"
+	@echo "... test/spline_tests.o"
+	@echo "... test/spline_tests.i"
+	@echo "... test/spline_tests.s"
 	@echo "... test/transformer_tests.o"
 	@echo "... test/transformer_tests.i"
 	@echo "... test/transformer_tests.s"

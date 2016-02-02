@@ -1,6 +1,7 @@
 #ifndef GCA_CIRCULAR_ARC_H
 #define GCA_CIRCULAR_ARC_H
 
+#include "core/arena_allocator.h"
 #include "synthesis/cut.h"
 
 namespace gca {
@@ -18,6 +19,11 @@ namespace gca {
 	return within_eps(start, ci.start) && within_eps(end, ci.end) && within_eps(start_offset, ci.start_offset);
       }
       return false;
+    }
+
+    cut* shift(point sh) const {
+      circular_arc* mem = allocate<circular_arc>();
+      return new (mem) circular_arc(start + sh, end + sh, start_offset);
     }
 
     inline bool is_circular_arc() const { return true; }

@@ -11,6 +11,7 @@ namespace gca {
   cut(point s, point e) : start(s), end(e) {}
 
     virtual bool operator==(const cut& other) const = 0;
+    virtual cut* shift(point shift) const = 0;
     virtual inline bool is_linear_cut() const { return false; }
     virtual inline bool is_circular_arc() const { return false; }
     virtual inline bool is_hole_punch() const { return true; }

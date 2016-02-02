@@ -1,6 +1,7 @@
 #ifndef GCA_HOLE_PUNCH_H
 #define GCA_HOLE_PUNCH_H
 
+#include "core/arena_allocator.h"
 #include "synthesis/cut.h"
 
 namespace gca {
@@ -12,6 +13,11 @@ namespace gca {
 
     inline bool is_hole_punch() const { return true; }
 
+    cut* shift(point sh) const {
+      hole_punch* mem = allocate<hole_punch>();
+      return new (mem) hole_punch(start + sh, radius);
+    }
+    
     bool operator==(const cut& other) const {
       if (other.is_hole_punch()) {
 	const hole_punch& other_hp = static_cast<const hole_punch&>(other);

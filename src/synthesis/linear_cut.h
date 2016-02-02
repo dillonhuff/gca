@@ -1,6 +1,7 @@
 #ifndef GCA_LINEAR_CUT_H
 #define GCA_LINEAR_CUT_H
 
+#include "core/arena_allocator.h"
 #include "geometry/point.h"
 #include "synthesis/cut.h"
 
@@ -17,6 +18,11 @@ namespace gca {
 	return res;
       }
       return false;
+    }
+
+    cut* shift(point sh) const {
+      linear_cut* mem = allocate<linear_cut>();
+      return new (mem) linear_cut(start + sh, end + sh);
     }
 
     inline bool is_linear_cut() const { return true; }

@@ -33,7 +33,11 @@ public:
   }
 
   virtual void addSpline(const DL_SplineData& data) {
-    cout << "Splines are not supported" << endl;
+    printf("SPLINE\n");
+    printf("\tDEGREE:                 %d\n", data.degree);
+    printf("\tNUM KNOTS:              %d\n", data.nKnots);
+    printf("\tNUM CONTROL POINTS:     %d\n", data.nControl);
+    printAttributes();    
   }
 	
   virtual void addControlPoint(const DL_ControlPointData& data) {
