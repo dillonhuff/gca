@@ -258,18 +258,6 @@ void collect_adjacent_cuts(const vector<cut*>& cuts,
   }
 }
 
-void from_to_with_G0_height(gprog* p,
-			    point current_loc,
-			    point next_loc,
-			    double safe_height) {
-  g0_instr* pull_up_instr = mk_G0(current_loc.x, current_loc.y, safe_height);
-  g0_instr* move_xy_instr = mk_G0(next_loc.x, next_loc.y, safe_height);
-  g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
-  p->push_back(pull_up_instr);
-  p->push_back(move_xy_instr);
-  p->push_back(push_down_instr);
-}
-
 void append_pass_code(gprog* p,
 		      point current_loc,
 		      point current_orient,
@@ -387,25 +375,6 @@ void append_drill_code(const vector<hole_punch*>& punches, gprog* p,
 			   params.safe_height);
     current_loc = punch->end;
   }
-}
-
-void append_drill_header(gprog* p) {
-  p->push_back(mk_G90());
-  p->push_back(mk_m5_instr());
-  p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-  p->push_back(mk_t_instr(2));
-  p->push_back(mk_s_instr(16000));
-  p->push_back(mk_m3_instr());
-  p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-  p->push_back(mk_f_instr(4, "XY"));
-  p->push_back(mk_f_instr(50, "Z"));
-}
-
-void append_drag_knife_transfer(gprog* p) {
-  p->push_back(mk_t_instr(6));
-  p->push_back(mk_s_instr(0));
-  p->push_back(mk_f_instr(5, "XY"));
-  p->push_back(mk_f_instr(5, "Z"));
 }
 
 gprog* dxf_to_gcode(char* file, cut_params params) {

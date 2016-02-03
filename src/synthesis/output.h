@@ -34,6 +34,16 @@ namespace gca {
   
   gprog* initial_gprog();
   gprog* append_footer(gprog* p);
+
+  void append_drill_header(gprog* p);
+
+  void append_drag_knife_transfer(gprog* p);
+
+  void from_to_with_G0_height(gprog* p,
+			      point current_loc,
+			      point next_loc,
+			      double safe_height);
+
 }
 
 #endif
