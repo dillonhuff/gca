@@ -23,11 +23,8 @@ public:
   int current_polyline_n;
   int polyline_vertices_left;
   point last_vertex;
-  int spline_degree;
   int num_knots;
   int num_control_points;
-  vector<point> control_points;
-  vector<double> knots;
 
   virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
 
@@ -46,10 +43,9 @@ public:
     printf("\tNUM CONTROL POINTS:     %d\n", data.nControl);
     printAttributes();
     assert(data.nKnots == data.nControl + data.degree + 1);
-    spline_degree = data.degree;    
     num_knots = data.nKnots;
     num_control_points = data.nControl;
-    splines.push_back(mk_b_spline(spline_degree));
+    splines.push_back(mk_b_spline(data.degree));
   }
 
   virtual void addControlPoint(const DL_ControlPointData& data) {
@@ -337,8 +333,30 @@ void make_cut_group_passes(cut_params params,
   }
 }
 
+void append_spline(const b_spline* s,
+		   vector<vector<cut*> >& cut_groups) {
+  unsigned points_per_spline = 100;
+  vector<cut*> spline_cuts;
+  double last = 0.0;
+  double inc = 1.0 / points_per_spline;
+  for (unsigned i = 1; i < points_per_spline; i++) {
+    double next = last + inc;
+    spline_cuts.push_back(mk_linear_cut(s->eval(last), s->eval(next)));
+    last = next;
+  }
+  cut_groups.push_back(spline_cuts);
+}
+
+void append_splines(const vector<b_spline*>& splines,
+		    vector<vector<cut*> >& cut_groups) {
+  for (unsigned i = 0; i < splines.size(); i++) {
+    append_spline(splines[i], cut_groups);
+  }
+}
+
 void append_cut_code(const dxf_listener& l, gprog* p, cut_params params) {
   vector<vector<cut*> > cut_groups;
+  append_splines(l.splines, cut_groups);
   unsigned i = 0;
   while (i < l.cuts.size()) {
     vector<cut*> cut_group;

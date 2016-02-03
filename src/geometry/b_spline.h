@@ -28,7 +28,7 @@ namespace gca {
     inline unsigned num_control_points() { return control_points.size(); }
     inline unsigned num_knots() { return knots.size(); }
 
-    point eval(double v) {
+    point eval(double v) const {
       point res = point(0, 0, 0);
       for (unsigned i = 0; i < control_points.size(); i++) {
 	res = res + basis(i, degree, v) * control_points[i];
@@ -36,7 +36,7 @@ namespace gca {
       return res;
     }
 
-    double basis(int i, int k, double x) {
+    double basis(int i, int k, double x) const {
       if (k == 0) {
 	double ti = knots[i];
 	double tip1 = knots[i+1];
