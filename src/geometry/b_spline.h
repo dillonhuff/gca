@@ -16,7 +16,7 @@ namespace gca {
     vector<double> knots;
 
     double basis(int i, int k, double x) {
-      if (k == 1) {
+      if (k == 0) {
 	double ti = knots[i];
 	double tip1 = knots[i+1];
 	if (ti <= x && x <= tip1) {
@@ -24,8 +24,13 @@ namespace gca {
 	}
 	return 0;
       }
-      assert(false);
+      double bl_c = basis(i, k - 1, x);
+      double bl = bl_c == 0.0 ? 0.0 : (x - knots[i]) / (knots[i+k] - knots[i]);
+      double br_c = basis(i + 1, k - 1, x);
+      double br = br_c == 0.0 ? 0.0 : (knots[i + k + 1] - x) / (knots[i + k + 1] - knots[i + 1]);
+      return bl + br;
     }
+
   public:
     b_spline(int degreep,
 	     const vector<point>& control_pointsp,

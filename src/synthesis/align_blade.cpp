@@ -15,15 +15,10 @@ namespace gca {
 			    point circle_end,
 			    point current_orient,
 			    double rad) {
-    cout << "Desired " << desired_orient << endl;
-    cout << "Current " << current_orient << endl;
     double theta = angle_between(desired_orient, current_orient);
-    cout << "angle between desired and current orient = " << theta << endl;
     point ef = rad*desired_orient.normalize();
     point circle_center = circle_end - ef;
-    cout << "Computed circle center: " << circle_center << endl;
     point circle_start_off = -1*ef.rotate_z(theta);
-    cout << "circle start offset " << circle_start_off << endl;
     point circle_start = circle_center - circle_start_off;
     if (!within_eps(circle_start_off.len(), rad, 0.00001)) {
       cout << "incorrect center offset: " << circle_start_off << endl;

@@ -47,7 +47,7 @@ public:
   }
 	
   virtual void addKnot(const DL_KnotData& data) {
-    printf("KNOT    %6.3f\n", data.k);
+    printf("KNOT    %6.4f\n", data.k);
     printAttributes();
   }
 
