@@ -171,5 +171,9 @@ namespace gca {
     hole_punch* mem = allocate<hole_punch>();
     return new (mem) hole_punch(point(x, y, z), r);
   }
-  
+
+  b_spline* mk_b_spline(int degree) {
+    b_spline* mem = allocate<b_spline>();
+    return new (mem) b_spline(degree);
+  }
 }

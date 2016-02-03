@@ -16,6 +16,26 @@ namespace gca {
     vector<double> knots;
 
   public:
+  b_spline(int degreep) : degree(degreep) {}
+    
+  b_spline(int degreep,
+	   const vector<point>& control_pointsp,
+	   const vector<double>& knotsp) :
+    degree(degreep), control_points(control_pointsp), knots(knotsp) {}
+
+    inline void push_knot(double k) { knots.push_back(k); }
+    inline void push_control_point(point p) { control_points.push_back(p); }
+    inline unsigned num_control_points() { return control_points.size(); }
+    inline unsigned num_knots() { return knots.size(); }
+
+    point eval(double v) {
+      point res = point(0, 0, 0);
+      for (unsigned i = 0; i < control_points.size(); i++) {
+	res = res + basis(i, degree, v) * control_points[i];
+      }
+      return res;
+    }
+
     double basis(int i, int k, double x) {
       if (k == 0) {
 	double ti = knots[i];
@@ -33,19 +53,8 @@ namespace gca {
       return res;
     }
 
-    b_spline(int degreep,
-	     const vector<point>& control_pointsp,
-	     const vector<double>& knotsp) :
-    degree(degreep), control_points(control_pointsp), knots(knotsp) {}
-
-    point eval(double v) {
-      point res = point(0, 0, 0);
-      for (unsigned i = 0; i < control_points.size(); i++) {
-	res = res + basis(i, degree, v) * control_points[i];
-      }
-      return res;
-    }
   };
+
 }
 
 #endif

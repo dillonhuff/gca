@@ -18,9 +18,16 @@ public:
 
   vector<cut*> cuts;
 
+  vector<b_spline*> splines;
+
   int current_polyline_n;
   int polyline_vertices_left;
   point last_vertex;
+  int spline_degree;
+  int num_knots;
+  int num_control_points;
+  vector<point> control_points;
+  vector<double> knots;
 
   virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
 
@@ -37,18 +44,27 @@ public:
     printf("\tDEGREE:                 %d\n", data.degree);
     printf("\tNUM KNOTS:              %d\n", data.nKnots);
     printf("\tNUM CONTROL POINTS:     %d\n", data.nControl);
-    printAttributes();    
+    printAttributes();
+    assert(data.nKnots == data.nControl + data.degree + 1);
+    spline_degree = data.degree;    
+    num_knots = data.nKnots;
+    num_control_points = data.nControl;
+    splines.push_back(mk_b_spline(spline_degree));
   }
-	
+
   virtual void addControlPoint(const DL_ControlPointData& data) {
     printf("CONTROL POINT    (%6.3f, %6.3f, %6.3f)\n",
            data.x, data.y, data.z);
     printAttributes();
+    assert(splines.back()->num_control_points() < num_control_points);
+    splines.back()->push_control_point(point(data.x, data.y, data.z));
   }
 	
   virtual void addKnot(const DL_KnotData& data) {
     printf("KNOT    %6.4f\n", data.k);
     printAttributes();
+    assert(splines.back()->num_knots() < num_knots);
+    splines.back()->push_knot(data.k);
   }
 
   virtual void addMText(const DL_MTextData& data) {
