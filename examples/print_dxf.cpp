@@ -446,6 +446,8 @@ int main(int argc, char** argv) {
   gprog* p = dxf_to_gcode(argv[1], params);
 
   cout << "-- FINAL GCODE PROGRAM" << endl;
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
   p->print_nc_output(cout);
   return 0;
 }
