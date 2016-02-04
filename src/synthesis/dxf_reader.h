@@ -76,7 +76,8 @@ namespace gca {
     virtual void addHatchLoop(const DL_HatchLoopData& data) { assert(false); }
     virtual void addHatchEdge(const DL_HatchEdgeData& data) { assert(false); }
     virtual void addComment(const char* comment) { assert(false); }
-
+    void add3dFace(const DL_3dFaceData& data) { assert(false); }
+    virtual void endSequence() { assert(false); }
 
     virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
     virtual void addBlock(const DL_BlockData& data) {}
@@ -89,8 +90,6 @@ namespace gca {
     virtual void setVariableInt(const char* key, int value, int code) {}
     virtual void setVariableDouble(const char* key, double value, int code) {}
 	
-    virtual void endSequence() { assert(false); }
-
     void setAttributes(const DL_Attributes& attrib) {
       attributes = attrib;
     }
@@ -170,11 +169,6 @@ namespace gca {
       }
       last_vertex = v;    
       polyline_vertices_left--;
-    }
-
-    void add3dFace(const DL_3dFaceData& data) {
-      cout << "ERROR: 3d faces are not supported" << endl;
-      assert(false);
     }
 
     void printAttributes() {

@@ -34,7 +34,6 @@ namespace gca {
   
   gprog* initial_gprog();
   gprog* append_footer(gprog* p);
-
   void append_drill_header(gprog* p);
 
   void append_drag_knife_transfer(gprog* p);

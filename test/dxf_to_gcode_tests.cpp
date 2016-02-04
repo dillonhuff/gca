@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "checkers/forbidden_tool_checker.h"
 #include "synthesis/dxf_to_gcode.h"
+#include "synthesis/output.h"
 
 namespace gca {
 
@@ -64,5 +65,39 @@ namespace gca {
       permitted_tools.push_back(6);
       REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 0);
     }
+
+    SECTION("Produces some code") {
+      gprog c;
+      gprog* r = append_footer(&c);
+      REQUIRE(p->size() > r->size());
+    }
   }
+
+    TEST_CASE("Drill 2 holes") {
+      arena_allocator a;
+      set_system_allocator(&a);
+
+      cut_params params;
+      params.safe_height = 0.35;
+      params.material_depth = 0.09;
+      params.cut_depth = 0.05;
+      params.push_depth = 0.005;
+      params.start_loc = point(0, 0, 0);
+      params.start_orient = point(1, 0, 0);
+
+      vector<cut*> lines;
+      vector<hole_punch*> holes;
+      holes.push_back(mk_hole_punch(1, 1, 1, 0.125));
+      holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
+      vector<b_spline*> splines;
+      shape_layout l(lines, holes, splines);
+
+      gprog* p = shape_layout_to_gcode(l, params);
+
+      SECTION("Two cut groups in drill toolpath") {
+	toolpath dt = drill_toolpath(l, params);
+	REQUIRE(dt.cut_groups.size() == 2);
+      }
+    }
+
 }

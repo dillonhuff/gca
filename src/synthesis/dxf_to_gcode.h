@@ -31,6 +31,15 @@ namespace gca {
     lines(linesp), holes(holesp), splines(splinesp) {}
   };
 
+  class toolpath {
+  public:
+    int tool_no;
+    vector<cut_group> cut_groups;
+  };
+
+  toolpath drill_toolpath(const shape_layout& shapes_to_cut,
+			  cut_params params);
+
   void group_adjacent_cuts(const vector<cut*>& cuts,
 			   vector<cut_group>& cut_groups,
 			   double max_orientation_change);
