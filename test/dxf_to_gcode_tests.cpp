@@ -27,9 +27,14 @@ namespace gca {
       group_adjacent_cuts(l.lines, cgs, 30.0);
       unsigned nc = num_cuts(cgs);
       unsigned correct = l.lines.size();
-      cout << "Num cuts = " << nc << endl;
-      cout << "Correct = " << correct << endl;
       REQUIRE(nc == correct);
+    }
+
+    SECTION("Each rectangle cut is its own cut group") {
+      vector<cut_group> cgs;
+      group_adjacent_cuts(l.lines, cgs, 30.0);
+      unsigned correct = l.lines.size();
+      REQUIRE(cgs.size() == correct);
     }
   }
 }

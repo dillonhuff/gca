@@ -12,6 +12,14 @@ namespace gca {
   linear_cut(point sp, point ep) :
     cut(sp, ep) {}
 
+    point final_orient() const {
+      return end - start;
+    }
+    
+    point initial_orient() const {
+      return end - start;
+    }
+
     bool operator==(const cut& other) const {
       if (other.is_linear_cut()) {
 	bool res = within_eps(start, other.start) && within_eps(end, other.end);
