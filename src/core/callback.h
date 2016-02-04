@@ -67,6 +67,10 @@ namespace gca {
       return call_default(p, i, is);
     }
 
+    virtual T call_F(gprog* p, int i, f_instr* is) {
+      return call_default(p, i, is);
+    }
+    
     virtual T call_default(gprog* p, int i, instr* is) = 0;
 
     virtual T call(gprog* p, int i, instr* is) {
@@ -109,6 +113,9 @@ namespace gca {
       } else if (is->is_S()) {
 	s_instr* mi = static_cast<s_instr*>(is);
 	return call_S(p, i, mi);
+      } else if (is->is_f_instr()) {
+	f_instr* mi = static_cast<f_instr*>(is);
+	return call_F(p, i, mi);
       } else {
 	cout << "Unsupported instruction: " << *is << endl;
 	assert(false);

@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "checkers/forbidden_tool_checker.h"
 #include "synthesis/dxf_to_gcode.h"
 
 namespace gca {
@@ -30,11 +31,38 @@ namespace gca {
       REQUIRE(nc == correct);
     }
 
-    SECTION("Each rectangle cut is its own cut group") {
+    SECTION("Each cut is its own cut group") {
       vector<cut_group> cgs;
       group_adjacent_cuts(l.lines, cgs, 30.0);
       unsigned correct = l.lines.size();
       REQUIRE(cgs.size() == correct);
+    }
+  }
+
+  TEST_CASE("Existing shape layout") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    cut_params params;
+    params.safe_height = 0.35;
+    params.material_depth = 0.09;
+    params.cut_depth = 0.05;
+    params.push_depth = 0.005;
+    params.start_loc = point(0, 0, 0);
+    params.start_orient = point(1, 0, 0);
+
+    vector<cut*> lines;
+    lines.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
+    vector<hole_punch*> holes;
+    vector<b_spline*> splines;
+    shape_layout l(lines, holes, splines);
+
+    gprog* p = shape_layout_to_gcode(l, params);
+
+    SECTION("No use of drill when there are no hole punches") {
+      vector<int> permitted_tools;
+      permitted_tools.push_back(6);
+      REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 0);
     }
   }
 }

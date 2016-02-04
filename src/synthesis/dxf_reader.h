@@ -22,16 +22,6 @@ namespace gca {
     int num_knots;
     int num_control_points;
 
-    virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
-
-    virtual void addBlock(const DL_BlockData& data) {
-      cout << "Adding block" << endl;
-    }
-
-    virtual void endBlock() {
-      cout << "End of block" << endl;
-    }
-
     virtual void addSpline(const DL_SplineData& data) {
       printf("SPLINE\n");
       printf("\tDEGREE:                 %d\n", data.degree);
@@ -57,10 +47,6 @@ namespace gca {
       printAttributes();
       assert(splines.back()->num_knots() < num_knots);
       splines.back()->push_knot(data.k);
-    }
-
-    virtual void addMText(const DL_MTextData& data) {
-      cout << "ERROR: Multitext are not handled" << endl;
     }
 
     virtual void addEllipse(const DL_EllipseData& data) { assert(false); }
@@ -92,10 +78,11 @@ namespace gca {
     virtual void addComment(const char* comment) { assert(false); }
 
 
-    virtual void endEntity() {
-      cout << "End entity" << endl;
-    }
-    
+    virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
+    virtual void addBlock(const DL_BlockData& data) {}
+    virtual void endBlock() {}
+    virtual void endEntity() {}
+    virtual void addMText(const DL_MTextData& data) {}
     virtual void setVariableVector(const char* key, 
 				   double v1, double v2, double v3, int code) {}
     virtual void setVariableString(const char* key, const char* value, int code) {}

@@ -38,6 +38,9 @@ namespace gca {
   shape_layout read_dxf(const char* file);
 
   gprog* dxf_to_gcode(char* file, cut_params params);
+
+  gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
+			       cut_params params);
 }
 
 #endif

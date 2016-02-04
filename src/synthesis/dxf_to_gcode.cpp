@@ -180,16 +180,23 @@ namespace gca {
     return shapes_to_cut;
   }
 
-  gprog* dxf_to_gcode(char* file, cut_params params) {
-    shape_layout shapes_to_cut = read_dxf(file);
+  gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
+			       cut_params params) {
     gprog* p = mk_gprog();
-    append_drill_header(p);
-    append_drill_code(shapes_to_cut.holes, p, params);
+    if (shapes_to_cut.holes.size() > 0) {
+      append_drill_header(p);
+      append_drill_code(shapes_to_cut.holes, p, params);
+    }
     append_drag_knife_transfer(p);
     append_cut_code(shapes_to_cut.lines,
 		    shapes_to_cut.splines, p, params);
     gprog* r = append_footer(p);
     return r;
+  }
+  
+  gprog* dxf_to_gcode(char* file, cut_params params) {
+    shape_layout shapes_to_cut = read_dxf(file);
+    return shape_layout_to_gcode(shapes_to_cut, params);
   }
 
 }
