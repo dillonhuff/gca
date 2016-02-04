@@ -1724,6 +1724,33 @@ test/cut_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_tests.cpp.s
 .PHONY : test/cut_tests.cpp.s
 
+test/dxf_to_gcode_tests.o: test/dxf_to_gcode_tests.cpp.o
+
+.PHONY : test/dxf_to_gcode_tests.o
+
+# target to build an object file
+test/dxf_to_gcode_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.o
+.PHONY : test/dxf_to_gcode_tests.cpp.o
+
+test/dxf_to_gcode_tests.i: test/dxf_to_gcode_tests.cpp.i
+
+.PHONY : test/dxf_to_gcode_tests.i
+
+# target to preprocess a source file
+test/dxf_to_gcode_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.i
+.PHONY : test/dxf_to_gcode_tests.cpp.i
+
+test/dxf_to_gcode_tests.s: test/dxf_to_gcode_tests.cpp.s
+
+.PHONY : test/dxf_to_gcode_tests.s
+
+# target to generate assembly for a file
+test/dxf_to_gcode_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.s
+.PHONY : test/dxf_to_gcode_tests.cpp.s
+
 test/line_tests.o: test/line_tests.cpp.o
 
 .PHONY : test/line_tests.o
@@ -2002,6 +2029,9 @@ help:
 	@echo "... test/cut_tests.o"
 	@echo "... test/cut_tests.i"
 	@echo "... test/cut_tests.s"
+	@echo "... test/dxf_to_gcode_tests.o"
+	@echo "... test/dxf_to_gcode_tests.i"
+	@echo "... test/dxf_to_gcode_tests.s"
 	@echo "... test/line_tests.o"
 	@echo "... test/line_tests.i"
 	@echo "... test/line_tests.s"

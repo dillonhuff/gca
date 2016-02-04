@@ -7,6 +7,8 @@
 
 namespace gca {
 
+  typedef vector<cut*> cut_group;
+  
   class cut_params {
   public:
     double safe_height;
@@ -16,6 +18,24 @@ namespace gca {
     point start_loc;
     point start_orient;
   };
+
+  class shape_layout {
+  public:
+    vector<cut*> lines;
+    vector<hole_punch*> holes;
+    vector<b_spline*> splines;
+
+  shape_layout(const vector<cut*>& linesp,
+	       const vector<hole_punch*>& holesp,
+	       const vector<b_spline*>& splinesp) :
+    lines(linesp), holes(holesp), splines(splinesp) {}
+  };
+
+  void group_adjacent_cuts(const vector<cut*>& cuts,
+			   vector<cut_group>& cut_groups,
+			   double max_orientation_change);
+
+  shape_layout read_dxf(const char* file);
 
   gprog* dxf_to_gcode(char* file, cut_params params);
 }

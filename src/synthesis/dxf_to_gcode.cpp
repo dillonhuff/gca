@@ -6,8 +6,6 @@ using namespace std;
 
 namespace gca {
   
-  typedef vector<cut*> cut_group;
-
   void collect_adjacent_cuts(const vector<cut*>& cuts,
 			     vector<cut*>& cut_group,
 			     unsigned i) {
@@ -111,18 +109,25 @@ namespace gca {
     }
   }
 
-  void append_cut_code(const dxf_reader& l, gprog* p, cut_params params) {
-    vector<cut_group> cut_groups;
-    append_splines(l.splines, cut_groups);
+  void group_adjacent_cuts(const vector<cut*>& cuts,
+			   vector<cut_group>& cut_groups,
+			   double max_orientation_change) {
     unsigned i = 0;
-    cout << "Num cuts: " << l.cuts.size() << endl;
-    while (i < l.cuts.size()) {
+    while (i < cuts.size()) {
       cut_group cut_g;
-      collect_adjacent_cuts(l.cuts, cut_g, i);
+      collect_adjacent_cuts(cuts, cut_g, i);
       assert(cut_g.size() > 0);
       cut_groups.push_back(cut_g);
       i += cut_g.size();
     }
+  }
+  
+  void append_cut_code(const vector<cut*>& lines,
+		       const vector<b_spline*>& splines,
+		       gprog* p, cut_params params) {
+    vector<cut_group> cut_groups;
+    append_splines(splines, cut_groups);
+    group_adjacent_cuts(lines, cut_groups, 30.0);
     cout << "Num cut groups = " << cut_groups.size() << endl;
     vector<cut_group> cut_group_passes;
     for (unsigned j = 0; j < cut_groups.size(); j++) {
@@ -149,21 +154,30 @@ namespace gca {
     }
   }
 
-  gprog* dxf_to_gcode(char* file, cut_params params) {
+  shape_layout read_dxf(const char* file) {
     dxf_reader* listener = new dxf_reader();
     DL_Dxf* dxf = new DL_Dxf();
     if (!dxf->in(file, listener)) {
       std::cerr << file << " could not be opened.\n";
-      return NULL;
+      assert(false);
     }
     delete dxf;
+    shape_layout shapes_to_cut(listener->cuts,
+			       listener->hole_punches,
+			       listener->splines);
+    delete listener;
+    return shapes_to_cut;
+  }
+
+  gprog* dxf_to_gcode(char* file, cut_params params) {
+    shape_layout shapes_to_cut = read_dxf(file);
     gprog* p = mk_gprog();
     append_drill_header(p);
-    append_drill_code(listener->hole_punches, p, params);
+    append_drill_code(shapes_to_cut.holes, p, params);
     append_drag_knife_transfer(p);
-    append_cut_code(*listener, p, params);
+    append_cut_code(shapes_to_cut.lines,
+		    shapes_to_cut.splines, p, params);
     gprog* r = append_footer(p);
-    delete listener;
     return r;
   }
 

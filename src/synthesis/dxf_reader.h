@@ -97,21 +97,10 @@ namespace gca {
     }
     
     virtual void setVariableVector(const char* key, 
-				   double v1, double v2, double v3, int code) {
-      cout << "Set variable vector" << endl;
-    }
-	
-    virtual void setVariableString(const char* key, const char* value, int code) {
-      cout << "Setting variable string" << endl;
-    }
-	
-    virtual void setVariableInt(const char* key, int value, int code) {
-      cout << "Set variable int" << endl;
-    }
-	
-    virtual void setVariableDouble(const char* key, double value, int code) {
-      cout << "Set variable double" << endl;
-    }
+				   double v1, double v2, double v3, int code) {}
+    virtual void setVariableString(const char* key, const char* value, int code) {}
+    virtual void setVariableInt(const char* key, int value, int code) {}
+    virtual void setVariableDouble(const char* key, double value, int code) {}
 	
     virtual void endSequence() { assert(false); }
 
