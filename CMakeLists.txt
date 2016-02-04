@@ -43,6 +43,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/linear_cut.h
 	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
+	    ./src/synthesis/dxf_to_gcode.h
 	    ./src/system/bmp_output.h
 	    ./src/transformers/abs_to_rel.h
 	    ./src/transformers/feed_changer.h
@@ -60,6 +61,7 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/geometry/point.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
+	 ./src/synthesis/dxf_to_gcode.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/system/bmp_output.cpp
