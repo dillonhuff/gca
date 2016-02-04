@@ -75,23 +75,6 @@ namespace gca {
     }
   }
 
-  void append_cut_group_code(gprog* p,
-			     const vector<cut_group> cut_passes,
-			     cut_params params) {
-    point current_loc = params.start_loc;
-    point current_orient = params.start_orient;
-    for (unsigned i = 0; i < cut_passes.size(); i++) {
-      vector<cut*> cut_pass = cut_passes[i];
-      append_pass_code(p,
-		       current_loc,
-		       current_orient,
-		       cut_pass,
-		       params);
-      current_loc = cut_pass.back()->end;
-      current_orient = cut_pass.back()->end - cut_pass.back()->start;
-    }
-  }
-
   void make_cut_group_passes(cut_params params,
 			     const vector<cut*>& current_group,
 			     vector<cut_group>& cut_group_passes) {
@@ -131,53 +114,6 @@ namespace gca {
     for (unsigned i = 0; i < splines.size(); i++) {
       append_spline(splines[i], cut_groups);
     }
-  }
-
-  void append_cut_code(const vector<cut*>& lines,
-		       const vector<b_spline*>& splines,
-		       gprog* p, cut_params params) {
-    vector<cut_group> cut_groups;
-    append_splines(splines, cut_groups);
-    group_adjacent_cuts(lines, cut_groups, 30.0);
-    cout << "Num cut groups = " << cut_groups.size() << endl;
-    vector<cut_group> cut_group_passes;
-    for (unsigned j = 0; j < cut_groups.size(); j++) {
-      vector<cut*> current_group = cut_groups[j];
-      make_cut_group_passes(params,
-			    current_group,
-			    cut_group_passes);
-    }
-    append_cut_group_code(p, cut_group_passes, params);
-  }
-
-  void append_drill_code(const vector<hole_punch*>& punches,
-			 gprog* p,
-			 cut_params params) {
-    point current_loc = params.start_loc;
-    for (unsigned i = 0; i < punches.size(); i++) {
-      hole_punch* punch = punches[i];
-      point next_loc = punch->start;
-      from_to_with_G0_height(p,
-			     current_loc,
-			     next_loc,
-			     params.safe_height);
-      current_loc = punch->end;
-    }
-  }
-
-  shape_layout read_dxf(const char* file) {
-    dxf_reader* listener = new dxf_reader();
-    DL_Dxf* dxf = new DL_Dxf();
-    if (!dxf->in(file, listener)) {
-      std::cerr << file << " could not be opened.\n";
-      assert(false);
-    }
-    delete dxf;
-    shape_layout shapes_to_cut(listener->cuts,
-			       listener->hole_punches,
-			       listener->splines);
-    delete listener;
-    return shapes_to_cut;
   }
 
   toolpath drill_toolpath(const shape_layout& shapes_to_cut,
@@ -237,7 +173,7 @@ namespace gca {
       }
     }
   }
-  
+
   void append_drill_toolpath(const toolpath& t, gprog& p, cut_params params) {
     const vector<cut_group>& cgs = t.cut_groups;
     cut* last_cut = NULL;
@@ -252,9 +188,21 @@ namespace gca {
   }
 
   void append_drag_knife_toolpath(const toolpath& t, gprog& p, cut_params params) {
-    append_cut_group_code(&p, t.cut_groups, params);
+    point current_loc = params.start_loc;
+    point current_orient = params.start_orient;
+    vector<cut_group> cut_passes = t.cut_groups;
+    for (unsigned i = 0; i < cut_passes.size(); i++) {
+      vector<cut*> cut_pass = cut_passes[i];
+      append_pass_code(&p,
+		       current_loc,
+		       current_orient,
+		       cut_pass,
+		       params);
+      current_loc = cut_pass.back()->end;
+      current_orient = cut_pass.back()->end - cut_pass.back()->start;
+    }
   }
-  
+
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     gprog* p = mk_gprog();
@@ -270,11 +218,6 @@ namespace gca {
     }
     gprog* r = append_footer(p);
     return r;
-  }
-  
-  gprog* dxf_to_gcode(char* file, cut_params params) {
-    shape_layout shapes_to_cut = read_dxf(file);
-    return shape_layout_to_gcode(shapes_to_cut, params);
   }
 
 }

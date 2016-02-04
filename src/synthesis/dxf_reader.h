@@ -4,6 +4,7 @@
 #include "core/context.h"
 #include "dxflib/dl_dxf.h"
 #include "dxflib/dl_creationadapter.h"
+#include "synthesis/shape_layout.h"
 
 namespace gca {
 
@@ -194,6 +195,8 @@ namespace gca {
       printf(" Type: %s\n", attributes.getLineType().c_str());
     }  
   };
+
+  shape_layout read_dxf(const char* file);
 
 }
 

@@ -65,12 +65,12 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/synthesis/dxf_to_gcode.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
+	 ./src/synthesis/dxf_reader.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/transformers/scale_xyz.cpp
 	 ./src/transformers/scale_xyz.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
-	 
 
 SET(SRCS ${CPPS} ${HEADERS})
 
