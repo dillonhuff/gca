@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "synthesis/dxf_to_gcode.h"
+#include "synthesis/dxf_reader.h"
 
 using namespace gca;
 

@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "checkers/forbidden_tool_checker.h"
 #include "synthesis/dxf_to_gcode.h"
+#include "synthesis/dxf_reader.h"
 #include "synthesis/output.h"
 
 namespace gca {
@@ -99,5 +100,25 @@ namespace gca {
 	REQUIRE(dt.cut_groups.size() == 2);
       }
     }
+
+    TEST_CASE("Safety check files") {
+      arena_allocator a;
+      set_system_allocator(&a);
+
+      cut_params params;
+      params.safe_height = 0.35;
+      params.material_depth = 0.09;
+      params.cut_depth = 0.05;
+      params.push_depth = 0.005;
+      params.start_loc = point(0, 0, 0);
+      params.start_orient = point(1, 0, 0);
+      
+      string file_name = "/Users/dillon/CppWorkspace/gca/test/dxf-files/12-inch-spiral.DXF";
+      SECTION("spiral is safe") {
+	gprog* p = dxf_to_gcode(file_name.c_str(), params);
+      }
+
+    }
+
 
 }
