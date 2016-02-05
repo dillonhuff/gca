@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "checkers/forbidden_tool_checker.h"
+#include "checkers/unsafe_spindle_checker.h"
 #include "synthesis/dxf_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/output.h"
@@ -114,8 +115,13 @@ namespace gca {
       params.start_orient = point(1, 0, 0);
       
       string file_name = "/Users/dillon/CppWorkspace/gca/test/dxf-files/12-inch-spiral.DXF";
+
+      vector<int> no_spindle_tools;
+      no_spindle_tools.push_back(6);
+      
       SECTION("spiral is safe") {
 	gprog* p = dxf_to_gcode(file_name.c_str(), params);
+	REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
       }
 
     }

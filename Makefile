@@ -683,6 +683,66 @@ src/checkers/forbidden_tool_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/forbidden_tool_checker.cpp.s
 .PHONY : src/checkers/forbidden_tool_checker.cpp.s
 
+src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
+
+.PHONY : src/checkers/unsafe_spindle_checker.o
+
+# target to build an object file
+src/checkers/unsafe_spindle_checker.cpp.o:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/unsafe_spindle_checker.cpp.o
+.PHONY : src/checkers/unsafe_spindle_checker.cpp.o
+
+src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
+
+.PHONY : src/checkers/unsafe_spindle_checker.i
+
+# target to preprocess a source file
+src/checkers/unsafe_spindle_checker.cpp.i:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/unsafe_spindle_checker.cpp.i
+.PHONY : src/checkers/unsafe_spindle_checker.cpp.i
+
+src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
+
+.PHONY : src/checkers/unsafe_spindle_checker.s
+
+# target to generate assembly for a file
+src/checkers/unsafe_spindle_checker.cpp.s:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/unsafe_spindle_checker.cpp.s
+.PHONY : src/checkers/unsafe_spindle_checker.cpp.s
+
 src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
 
 .PHONY : src/core/arena_allocator.o
@@ -2092,6 +2152,9 @@ help:
 	@echo "... src/checkers/forbidden_tool_checker.o"
 	@echo "... src/checkers/forbidden_tool_checker.i"
 	@echo "... src/checkers/forbidden_tool_checker.s"
+	@echo "... src/checkers/unsafe_spindle_checker.o"
+	@echo "... src/checkers/unsafe_spindle_checker.i"
+	@echo "... src/checkers/unsafe_spindle_checker.s"
 	@echo "... src/core/arena_allocator.o"
 	@echo "... src/core/arena_allocator.i"
 	@echo "... src/core/arena_allocator.s"

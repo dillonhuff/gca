@@ -166,6 +166,8 @@ namespace gca {
   }
 
   void append_drag_knife_transfer(gprog* p) {
+    p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    p->push_back(mk_m5_instr());
     p->push_back(mk_t_instr(6));
     p->push_back(mk_s_instr(0));
     p->push_back(mk_f_instr(5, "XY"));

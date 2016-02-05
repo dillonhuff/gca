@@ -59,6 +59,7 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/core/pass.cpp
 	 ./src/core/value.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
+	 ./src/checkers/unsafe_spindle_checker.cpp
 	 ./src/geometry/point.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
