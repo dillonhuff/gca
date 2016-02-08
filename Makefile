@@ -1823,6 +1823,66 @@ src/transformers/scale_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.s
 .PHONY : src/transformers/scale_xyz.cpp.s
 
+src/transformers/shift_xyz.o: src/transformers/shift_xyz.cpp.o
+
+.PHONY : src/transformers/shift_xyz.o
+
+# target to build an object file
+src/transformers/shift_xyz.cpp.o:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/shift_xyz.cpp.o
+.PHONY : src/transformers/shift_xyz.cpp.o
+
+src/transformers/shift_xyz.i: src/transformers/shift_xyz.cpp.i
+
+.PHONY : src/transformers/shift_xyz.i
+
+# target to preprocess a source file
+src/transformers/shift_xyz.cpp.i:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/shift_xyz.cpp.i
+.PHONY : src/transformers/shift_xyz.cpp.i
+
+src/transformers/shift_xyz.s: src/transformers/shift_xyz.cpp.s
+
+.PHONY : src/transformers/shift_xyz.s
+
+# target to generate assembly for a file
+src/transformers/shift_xyz.cpp.s:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/shift_xyz.cpp.s
+.PHONY : src/transformers/shift_xyz.cpp.s
+
 test/analysis_tests.o: test/analysis_tests.cpp.o
 
 .PHONY : test/analysis_tests.o
@@ -2209,6 +2269,9 @@ help:
 	@echo "... src/transformers/scale_xyz.o"
 	@echo "... src/transformers/scale_xyz.i"
 	@echo "... src/transformers/scale_xyz.s"
+	@echo "... src/transformers/shift_xyz.o"
+	@echo "... src/transformers/shift_xyz.i"
+	@echo "... src/transformers/shift_xyz.s"
 	@echo "... test/analysis_tests.o"
 	@echo "... test/analysis_tests.i"
 	@echo "... test/analysis_tests.s"

@@ -70,6 +70,7 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/transformers/scale_xyz.cpp
 	 ./src/transformers/scale_xyz.cpp
+	 ./src/transformers/shift_xyz.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
 

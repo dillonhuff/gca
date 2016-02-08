@@ -174,7 +174,6 @@ namespace gca {
     p->push_back(mk_f_instr(5, "Z"));
   }
 
-
   void from_to_with_G0_height(gprog* p,
 			      point current_loc,
 			      point next_loc,
