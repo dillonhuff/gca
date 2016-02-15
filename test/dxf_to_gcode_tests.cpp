@@ -101,7 +101,6 @@ namespace gca {
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
-	cout << *p;
 	REQUIRE(sections.size() == 2);
       }
 
@@ -135,9 +134,44 @@ namespace gca {
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
+	REQUIRE(sections.size() == 2);
+      }
+    }
+
+    SECTION("One spline") {
+      vector<point> control_points;
+      control_points.push_back(point(1, 0, 0));
+      control_points.push_back(point(2, 0, 0));
+      
+      vector<double> knots;
+      knots.push_back(0.0);
+      knots.push_back(0.0);
+      knots.push_back(1.0);
+      knots.push_back(1.0);
+
+      int degree = 1;
+      b_spline s(degree, control_points, knots);
+      splines.push_back(&s);
+      shape_layout l(lines, holes, splines);
+
+      SECTION("Drill and drag knife produces code") {
+	params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+	gprog* p = shape_layout_to_gcode(l, params);
+	vector<cut_section> sections;
+	extract_cuts(p, sections);
 	cout << *p;
 	REQUIRE(sections.size() == 2);
       }
+
+      SECTION("Drill only produces code") {
+	params.tools = ToolOptions::DRILL_ONLY;
+	gprog* p = shape_layout_to_gcode(l, params);
+	vector<cut_section> sections;
+	extract_cuts(p, sections);
+	cout << *p;
+	REQUIRE(sections.size() == 2);
+      }
+
     }
   }
 

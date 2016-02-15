@@ -134,7 +134,7 @@ namespace gca {
   toolpath drill_cut_toolpath(const shape_layout& shapes_to_cut,
 			      cut_params params) {
     toolpath t;
-    t.tool_no = 6;
+    t.tool_no = 2;
     vector<cut_group> cut_groups;
     append_splines(shapes_to_cut.splines, cut_groups);
     group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
