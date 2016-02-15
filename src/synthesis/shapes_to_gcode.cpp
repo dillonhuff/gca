@@ -189,6 +189,7 @@ namespace gca {
       cut* ci = cg[i];
       if (ci->is_hole_punch()) {
       } else if (ci->is_linear_cut()) {
+	p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z));
       } else {
 	assert(false);
       }
