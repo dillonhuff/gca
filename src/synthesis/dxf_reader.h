@@ -11,6 +11,10 @@ namespace gca {
   class dxf_reader : public DL_CreationAdapter {
   public:
 
+    bool log;
+
+  dxf_reader(bool plog) : log(plog) {}
+
     vector<hole_punch*> hole_punches;
 
     vector<cut*> cuts;
@@ -24,11 +28,13 @@ namespace gca {
     int num_control_points;
 
     virtual void addSpline(const DL_SplineData& data) {
-      printf("SPLINE\n");
-      printf("\tDEGREE:                 %d\n", data.degree);
-      printf("\tNUM KNOTS:              %d\n", data.nKnots);
-      printf("\tNUM CONTROL POINTS:     %d\n", data.nControl);
-      printAttributes();
+      if (log) {
+	printf("SPLINE\n");
+	printf("\tDEGREE:                 %d\n", data.degree);
+	printf("\tNUM KNOTS:              %d\n", data.nKnots);
+	printf("\tNUM CONTROL POINTS:     %d\n", data.nControl);
+	printAttributes();
+      }
       assert(data.nKnots == data.nControl + data.degree + 1);
       num_knots = data.nKnots;
       num_control_points = data.nControl;
@@ -36,16 +42,20 @@ namespace gca {
     }
 
     virtual void addControlPoint(const DL_ControlPointData& data) {
-      printf("CONTROL POINT    (%6.3f, %6.3f, %6.3f)\n",
-	     data.x, data.y, data.z);
-      printAttributes();
+      if (log) {
+	printf("CONTROL POINT    (%6.3f, %6.3f, %6.3f)\n",
+	       data.x, data.y, data.z);
+	printAttributes();
+      }
       assert(splines.back()->num_control_points() < num_control_points);
       splines.back()->push_control_point(point(data.x, data.y, data.z));
     }
 	
     virtual void addKnot(const DL_KnotData& data) {
-      printf("KNOT    %6.4f\n", data.k);
-      printAttributes();
+      if (log) {
+	printf("KNOT    %6.4f\n", data.k);
+	printAttributes();
+      }
       assert(splines.back()->num_knots() < num_knots);
       splines.back()->push_knot(data.k);
     }
@@ -109,20 +119,26 @@ namespace gca {
     }
   
     void addLayer(const DL_LayerData& data) {
-      printf("LAYER: %s flags: %d\n", data.name.c_str(), data.flags);
-      printAttributes();
+      if (log) {
+	printf("LAYER: %s flags: %d\n", data.name.c_str(), data.flags);
+	printAttributes();
+      }
     }
 
     void addPoint(const DL_PointData& data) {
-      printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
-	     data.x, data.y, data.z);
-      printAttributes();
+      if (log) {
+	printf("POINT    (%6.3f, %6.3f, %6.3f)\n",
+	       data.x, data.y, data.z);
+	printAttributes();
+      }
     }
 
     void addLine(const DL_LineData& data) {
-      printf("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
-	     data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
-      printAttributes();
+      if (log) {
+	printf("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
+	       data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
+	printAttributes();
+      }
       assert(data.z1 == 0);
       assert(data.z2 == 0);
       point s(data.x1, data.y1, data.z1);
@@ -131,28 +147,34 @@ namespace gca {
     }
 
     void addArc(const DL_ArcData& data) {
-      printf("ARC      (%6.3f, %6.3f, %6.3f) %6.3f, %6.3f, %6.3f\n",
-	     data.cx, data.cy, data.cz,
-	     data.radius, data.angle1, data.angle2);
-      printAttributes();
+      if (log) {
+	printf("ARC      (%6.3f, %6.3f, %6.3f) %6.3f, %6.3f, %6.3f\n",
+	       data.cx, data.cy, data.cz,
+	       data.radius, data.angle1, data.angle2);
+	printAttributes();
+      }
     }
 
     void addCircle(const DL_CircleData& data) {
-      printf("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
-	     data.cx, data.cy, data.cz,
-	     data.radius);
-      printAttributes();
+      if (log) {
+	printf("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
+	       data.cx, data.cy, data.cz,
+	       data.radius);
+	printAttributes();
+      }
       assert(data.cz == 0);
       hole_punches.push_back(mk_hole_punch(data.cx, data.cy, data.cz, data.radius));
     }
 
     void addPolyline(const DL_PolylineData& data) {
-      printf("POLYLINE \n");
-      printf("\t MVERTICES: %d\n", data.number);
-      printf("\t MVERTICES: %d\n", data.m);
-      printf("\t NVERTICES: %d\n", data.n);
-      printf("flags: %d\n", (int)data.flags);
-      printAttributes();
+      if (log) {
+	printf("POLYLINE \n");
+	printf("\t MVERTICES: %d\n", data.number);
+	printf("\t MVERTICES: %d\n", data.m);
+	printf("\t NVERTICES: %d\n", data.n);
+	printf("flags: %d\n", (int)data.flags);
+	printAttributes();
+      }
       assert(data.m == 0);
       assert(data.n == 0);
       current_polyline_n = data.n;
@@ -160,10 +182,12 @@ namespace gca {
     }
 
     void addVertex(const DL_VertexData& data) {
-      printf("VERTEX   (%6.3f, %6.3f, %6.3f) %6.3f\n",
-	     data.x, data.y, data.z,
-	     data.bulge);
-      printAttributes();
+      if (log) {
+	printf("VERTEX   (%6.3f, %6.3f, %6.3f) %6.3f\n",
+	       data.x, data.y, data.z,
+	       data.bulge);
+	printAttributes();
+      }
       point v(data.x, data.y, data.z);
       if (polyline_vertices_left < current_polyline_n) {
 	cuts.push_back(mk_linear_cut(last_vertex, v));
@@ -196,7 +220,7 @@ namespace gca {
     }  
   };
 
-  shape_layout read_dxf(const char* file);
+  shape_layout read_dxf(const char* file, bool log=false);
 
   gprog* dxf_to_gcode(const char* file, cut_params params);
 

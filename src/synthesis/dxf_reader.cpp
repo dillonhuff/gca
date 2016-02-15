@@ -3,8 +3,8 @@
 
 namespace gca {
 
-  shape_layout read_dxf(const char* file) {
-    dxf_reader* listener = new dxf_reader();
+  shape_layout read_dxf(const char* file, bool log) {
+    dxf_reader* listener = new dxf_reader(log);
     DL_Dxf* dxf = new DL_Dxf();
     if (!dxf->in(file, listener)) {
       std::cerr << file << " could not be opened.\n";
