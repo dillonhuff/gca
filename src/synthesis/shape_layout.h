@@ -20,6 +20,9 @@ namespace gca {
     lines(linesp), holes(holesp), splines(splinesp) {}
   };
 
+  enum ToolOptions { DRILL_ONLY = 0,
+		     DRILL_AND_DRAG_KNIFE };
+  
   class cut_params {
   public:
     double safe_height;
@@ -28,6 +31,7 @@ namespace gca {
     double push_depth;
     point start_loc;
     point start_orient;
+    ToolOptions tools;
   };
 
 }

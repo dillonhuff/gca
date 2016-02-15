@@ -131,6 +131,26 @@ namespace gca {
     return t;
   }
 
+  toolpath drill_cut_toolpath(const shape_layout& shapes_to_cut,
+			      cut_params params) {
+    toolpath t;
+    t.tool_no = 6;
+    vector<cut_group> cut_groups;
+    append_splines(shapes_to_cut.splines, cut_groups);
+    group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
+
+    vector<cut_group> cut_group_passes;
+    for (unsigned j = 0; j < cut_groups.size(); j++) {
+      vector<cut*> current_group = cut_groups[j];
+      make_cut_group_passes(params,
+			    current_group,
+			    cut_group_passes);
+    }
+
+    t.cut_groups = cut_group_passes;
+    return t;
+  }
+
   toolpath drag_knife_toolpath(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     toolpath t;
@@ -168,6 +188,7 @@ namespace gca {
     for (unsigned i = 0; i < cg.size(); i++) {
       cut* ci = cg[i];
       if (ci->is_hole_punch()) {
+      } else if (ci->is_linear_cut()) {
       } else {
 	assert(false);
       }
@@ -211,10 +232,19 @@ namespace gca {
       append_drill_header(p);
       append_drill_toolpath(dt, *p, params);
     }
-    toolpath kt = drag_knife_toolpath(shapes_to_cut, params);
-    if (kt.cut_groups.size() > 0) {
-      append_drag_knife_transfer(p);
-      append_drag_knife_toolpath(kt, *p, params);
+    if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE) {
+      toolpath kt = drag_knife_toolpath(shapes_to_cut, params);
+      if (kt.cut_groups.size() > 0) {
+	append_drag_knife_transfer(p);
+	append_drag_knife_toolpath(kt, *p, params);
+      }
+    } else if (params.tools == ToolOptions::DRILL_ONLY) {
+      toolpath drill_cuts = drill_cut_toolpath(shapes_to_cut, params);
+      if (drill_cuts.cut_groups.size() > 0) {
+	append_drill_toolpath(drill_cuts, *p, params);
+      }
+    } else {
+      assert(false);
     }
     gprog* r = append_footer(p);
     return r;
