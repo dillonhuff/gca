@@ -16,7 +16,7 @@ namespace gca {
     vector<cut_group> cut_groups;
   };
 
-  toolpath drill_toolpath(const shape_layout& shapes_to_cut,
+  toolpath drill_toolpath(const vector<hole_punch*>& holes,
 			  cut_params params);
 
   void group_adjacent_cuts(const vector<cut*>& cuts,

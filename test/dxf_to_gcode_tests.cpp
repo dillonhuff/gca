@@ -198,7 +198,7 @@ namespace gca {
     gprog* p = shape_layout_to_gcode(l, params);
 
     SECTION("Two cut groups in drill toolpath") {
-      toolpath dt = drill_toolpath(l, params);
+      toolpath dt = drill_toolpath(holes, params);
       REQUIRE(dt.cut_groups.size() == 2);
     }
   }

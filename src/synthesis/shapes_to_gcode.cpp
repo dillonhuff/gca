@@ -116,10 +116,9 @@ namespace gca {
     }
   }
 
-  toolpath drill_toolpath(const shape_layout& shapes_to_cut,
+  toolpath drill_toolpath(const vector<hole_punch*>& holes,
 			  cut_params params) {
     toolpath t;
-    vector<hole_punch*> holes = shapes_to_cut.holes;
     vector<cut_group> punch_groups;
     for (unsigned i = 0; i < holes.size(); i++) {
       cut_group one_hole;
@@ -131,14 +130,11 @@ namespace gca {
     return t;
   }
 
-  toolpath drill_cut_toolpath(const shape_layout& shapes_to_cut,
-			      cut_params params) {
+  toolpath cut_toolpath(int tool_number,
+			const vector<cut_group>& cut_groups,
+			cut_params params) {
     toolpath t;
-    t.tool_no = 2;
-    vector<cut_group> cut_groups;
-    append_splines(shapes_to_cut.splines, cut_groups);
-    group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
-
+    t.tool_no = tool_number;
     vector<cut_group> cut_group_passes;
     for (unsigned j = 0; j < cut_groups.size(); j++) {
       vector<cut*> current_group = cut_groups[j];
@@ -151,25 +147,22 @@ namespace gca {
     return t;
   }
 
-  toolpath drag_knife_toolpath(const shape_layout& shapes_to_cut,
-			       cut_params params) {
-    toolpath t;
-    t.tool_no = 6;
-    vector<cut_group> cut_groups;
-    append_splines(shapes_to_cut.splines, cut_groups);
-    group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
+  // toolpath drag_knife_toolpath(const vector<cut_group>& cut_groups,
+  // 			       cut_params params) {
+  //   toolpath t;
+  //   t.tool_no = 6;
 
-    vector<cut_group> cut_group_passes;
-    for (unsigned j = 0; j < cut_groups.size(); j++) {
-      vector<cut*> current_group = cut_groups[j];
-      make_cut_group_passes(params,
-			    current_group,
-			    cut_group_passes);
-    }
+  //   vector<cut_group> cut_group_passes;
+  //   for (unsigned j = 0; j < cut_groups.size(); j++) {
+  //     vector<cut*> current_group = cut_groups[j];
+  //     make_cut_group_passes(params,
+  // 			    current_group,
+  // 			    cut_group_passes);
+  //   }
 
-    t.cut_groups = cut_group_passes;
-    return t;
-  }
+  //   t.cut_groups = cut_group_passes;
+  //   return t;
+  // }
 
   void move_to_next_cut(cut* last,
 			cut* next,
@@ -228,19 +221,24 @@ namespace gca {
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     gprog* p = mk_gprog();
-    toolpath dt = drill_toolpath(shapes_to_cut, params);
+    toolpath dt = drill_toolpath(shapes_to_cut.holes, params);
     if (dt.cut_groups.size() > 0) {
       append_drill_header(p);
       append_drill_toolpath(dt, *p, params);
     }
+    vector<cut*> lines_to_cut = shapes_to_cut.lines;
+    vector<cut_group> cut_groups;
+    append_splines(shapes_to_cut.splines, cut_groups);
+    group_adjacent_cuts(lines_to_cut, cut_groups, 30.0);
+    
     if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE) {
-      toolpath kt = drag_knife_toolpath(shapes_to_cut, params);
+      toolpath kt = cut_toolpath(6, cut_groups, params);
       if (kt.cut_groups.size() > 0) {
 	append_drag_knife_transfer(p);
 	append_drag_knife_toolpath(kt, *p, params);
       }
     } else if (params.tools == ToolOptions::DRILL_ONLY) {
-      toolpath drill_cuts = drill_cut_toolpath(shapes_to_cut, params);
+      toolpath drill_cuts = cut_toolpath(2, cut_groups, params);
       if (drill_cuts.cut_groups.size() > 0) {
 	append_drill_toolpath(drill_cuts, *p, params);
       }
