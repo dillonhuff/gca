@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
-#include "synthesis/dxf_to_gcode.h"
+#include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/output.h"
 

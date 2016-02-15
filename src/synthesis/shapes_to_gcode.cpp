@@ -1,6 +1,6 @@
 #include "core/context.h"
 #include "synthesis/dxf_reader.h"
-#include "synthesis/dxf_to_gcode.h"
+#include "synthesis/shapes_to_gcode.h"
 
 using namespace std;
 

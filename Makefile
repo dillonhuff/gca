@@ -1583,66 +1583,6 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
-src/synthesis/dxf_to_gcode.o: src/synthesis/dxf_to_gcode.cpp.o
-
-.PHONY : src/synthesis/dxf_to_gcode.o
-
-# target to build an object file
-src/synthesis/dxf_to_gcode.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_to_gcode.cpp.o
-.PHONY : src/synthesis/dxf_to_gcode.cpp.o
-
-src/synthesis/dxf_to_gcode.i: src/synthesis/dxf_to_gcode.cpp.i
-
-.PHONY : src/synthesis/dxf_to_gcode.i
-
-# target to preprocess a source file
-src/synthesis/dxf_to_gcode.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_to_gcode.cpp.i
-.PHONY : src/synthesis/dxf_to_gcode.cpp.i
-
-src/synthesis/dxf_to_gcode.s: src/synthesis/dxf_to_gcode.cpp.s
-
-.PHONY : src/synthesis/dxf_to_gcode.s
-
-# target to generate assembly for a file
-src/synthesis/dxf_to_gcode.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_to_gcode.cpp.s
-.PHONY : src/synthesis/dxf_to_gcode.cpp.s
-
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -1702,6 +1642,66 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.s
 .PHONY : src/synthesis/output.cpp.s
+
+src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
+
+.PHONY : src/synthesis/shapes_to_gcode.o
+
+# target to build an object file
+src/synthesis/shapes_to_gcode.cpp.o:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.o
+.PHONY : src/synthesis/shapes_to_gcode.cpp.o
+
+src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
+
+.PHONY : src/synthesis/shapes_to_gcode.i
+
+# target to preprocess a source file
+src/synthesis/shapes_to_gcode.cpp.i:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.i
+.PHONY : src/synthesis/shapes_to_gcode.cpp.i
+
+src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
+
+.PHONY : src/synthesis/shapes_to_gcode.s
+
+# target to generate assembly for a file
+src/synthesis/shapes_to_gcode.cpp.s:
+	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.s
+.PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
 src/system/bmp_output.o: src/system/bmp_output.cpp.o
 
@@ -2257,12 +2257,12 @@ help:
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"
-	@echo "... src/synthesis/dxf_to_gcode.o"
-	@echo "... src/synthesis/dxf_to_gcode.i"
-	@echo "... src/synthesis/dxf_to_gcode.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"
+	@echo "... src/synthesis/shapes_to_gcode.o"
+	@echo "... src/synthesis/shapes_to_gcode.i"
+	@echo "... src/synthesis/shapes_to_gcode.s"
 	@echo "... src/system/bmp_output.o"
 	@echo "... src/system/bmp_output.i"
 	@echo "... src/system/bmp_output.s"
