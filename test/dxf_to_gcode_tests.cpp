@@ -43,7 +43,6 @@ namespace gca {
     }
   }
 
-
   TEST_CASE("Safety check files") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -68,7 +67,7 @@ namespace gca {
     }
   }
   
-  TEST_CASE("Existing shape layout") {
+  TEST_CASE("Cut shape layout") {
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -159,7 +158,6 @@ namespace gca {
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
-	cout << *p;
 	REQUIRE(sections.size() == 2);
       }
 
@@ -168,36 +166,19 @@ namespace gca {
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
-	cout << *p;
 	REQUIRE(sections.size() == 2);
       }
-
     }
-  }
 
-  TEST_CASE("Drill 2 holes") {
-    arena_allocator a;
-    set_system_allocator(&a);
+    SECTION("Drill 2 holes") {
+      params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+      holes.push_back(mk_hole_punch(1, 1, 1, 0.125));
+      holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
+      vector<b_spline*> splines;
+      shape_layout l(lines, holes, splines);
 
-    cut_params params;
-    params.safe_height = 0.35;
-    params.material_depth = 0.09;
-    params.cut_depth = 0.05;
-    params.push_depth = 0.005;
-    params.start_loc = point(0, 0, 0);
-    params.start_orient = point(1, 0, 0);
-    params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+      gprog* p = shape_layout_to_gcode(l, params);
 
-    vector<cut*> lines;
-    vector<hole_punch*> holes;
-    holes.push_back(mk_hole_punch(1, 1, 1, 0.125));
-    holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
-    vector<b_spline*> splines;
-    shape_layout l(lines, holes, splines);
-
-    gprog* p = shape_layout_to_gcode(l, params);
-
-    SECTION("Two cut groups in drill toolpath") {
       toolpath dt = drill_toolpath(holes, params);
       REQUIRE(dt.cut_groups.size() == 2);
     }

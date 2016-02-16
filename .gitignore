@@ -26,3 +26,5 @@ CMakeFiles/*
 cmake_install.cmake
 TriangulateTerrainMap.app/*
 DataAnimationSubclass.app/*
+12-inch-spiral.DXF
+12-inch-spiral.nc
