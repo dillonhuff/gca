@@ -22,13 +22,13 @@ namespace gca {
     }
 
     SECTION("One G1 move down") {
-      gprog* p = parse_gprog("G1 X0 Y0 Z5");
       region r(10, 10, 10, 0.01);
       r.set_height(0, 10, 0, 10, 10);
       r.set_machine_x_offset(5);
       r.set_machine_y_offset(5);
       double tool_diameter = 1.0;
       cylindrical_bit t(tool_diameter);
+      gprog* p = parse_gprog("G1 X0 Y0 Z5");
       simulate_mill(*p, r, t);
       double tr = tool_diameter / 2.0;
       double correct_volume = M_PI*tr*tr*5;
@@ -38,60 +38,45 @@ namespace gca {
       REQUIRE(within_eps(actual, correct_volume, 0.01));
     }
 
-    SECTION("Move through whole workpiece") {
-      gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3");
+    SECTION("Simulation") {
       region r(5, 5, 5, 0.01);
-      r.set_height(2, 3, 2, 4, 5);
       r.set_machine_x_offset(1);
       r.set_machine_y_offset(3);
       double tool_diameter = 1.0;
       cylindrical_bit t(tool_diameter);
-      simulate_mill(*p, r, t);
-      double correct_volume = tool_diameter*2*1;
-      double actual = r.volume_removed();
-      cout << "-- Correct: " << correct_volume << endl;
-      cout << "-- Actual: " << actual << endl;
-      REQUIRE(within_eps(actual, correct_volume, 0.01));
-    }
+      
+      SECTION("Move through whole workpiece") {
+	gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3");
+	r.set_height(2, 3, 2, 4, 5);
+	simulate_mill(*p, r, t);
+	double correct_volume = tool_diameter*2*1;
+	double actual = r.volume_removed();
+	cout << "-- Correct: " << correct_volume << endl;
+	cout << "-- Actual: " << actual << endl;
+	REQUIRE(within_eps(actual, correct_volume, 0.01));
+      }
 
-    SECTION("Move through whole workpiece then move back and stop") {
-      gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3 G0 X-3.0 M2");
-      region r(5, 5, 5, 0.01);
-      r.set_height(2, 3, 2, 4, 5);
-      r.set_machine_x_offset(1);
-      r.set_machine_y_offset(3);
-      double tool_diameter = 1.0;
-      cylindrical_bit t(tool_diameter);
-      simulate_mill(*p, r, t);
-      double correct_volume = tool_diameter*2*1;
-      double actual = r.volume_removed();
-      cout << "-- Correct: " << correct_volume << endl;
-      cout << "-- Actual: " << actual << endl;
-      REQUIRE(within_eps(actual, correct_volume, 0.01));
-    }
+      SECTION("Move through whole workpiece then move back and stop") {
+	gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3 G0 X-3.0 M2");
+	r.set_height(2, 3, 2, 4, 5);
+	simulate_mill(*p, r, t);
+	double correct_volume = tool_diameter*2*1;
+	double actual = r.volume_removed();
+	cout << "-- Correct: " << correct_volume << endl;
+	cout << "-- Actual: " << actual << endl;
+	REQUIRE(within_eps(actual, correct_volume, 0.01));
+      }
 
-    SECTION("Diagonal cut over nothing") {
-      gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3 Y-0.1");
-      region r(5, 5, 5, 0.01);
-      r.set_height(2, 3, 2, 4, 1);
-      r.set_machine_x_offset(1);
-      r.set_machine_y_offset(3);
-      double tool_diameter = 1.0;
-      cylindrical_bit t(tool_diameter);
-      simulate_mill(*p, r, t);
-      double correct_volume = 0.0;
-      double actual = r.volume_removed();
-      cout << "-- Correct: " << correct_volume << endl;
-      cout << "-- Actual: " << actual << endl;
-      REQUIRE(within_eps(actual, correct_volume, 0.01));
-    }
-
-    SECTION("Move out of bounds in X direction") {
-      // gprog* p = parse_gprog("G0 X19");
-      // region r(7, 10, 4, 0.01);
-      // cylindrical_bit t(1);
-      // sim_res res = simulate_mill(*p, r, t);
-      // REQUIRE(GCA_SIM_OUT_OF_BOUNDS);
+      SECTION("Diagonal cut over nothing") {
+	gprog* p = parse_gprog("G0 X0 Y0 Z2 G91 G1 X3 Y-0.1");
+	r.set_height(2, 3, 2, 4, 1);
+	simulate_mill(*p, r, t);
+	double correct_volume = 0.0;
+	double actual = r.volume_removed();
+	cout << "-- Correct: " << correct_volume << endl;
+	cout << "-- Actual: " << actual << endl;
+	REQUIRE(within_eps(actual, correct_volume, 0.01));
+      }
     }
   }
 }

@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named DataAnimationSubclass
-
-# Build rule for target.
-DataAnimationSubclass: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 DataAnimationSubclass
-.PHONY : DataAnimationSubclass
-
-# fast build rule for target.
-DataAnimationSubclass/fast:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/build
-.PHONY : DataAnimationSubclass/fast
-
-#=============================================================================
 # Target rules for targets named all-tests
 
 # Build rule for target.
@@ -265,33 +252,6 @@ z-abstract: cmake_check_build_system
 z-abstract/fast:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/build
 .PHONY : z-abstract/fast
-
-examples/DataAnimationSubclass.o: examples/DataAnimationSubclass.cpp.o
-
-.PHONY : examples/DataAnimationSubclass.o
-
-# target to build an object file
-examples/DataAnimationSubclass.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/examples/DataAnimationSubclass.cpp.o
-.PHONY : examples/DataAnimationSubclass.cpp.o
-
-examples/DataAnimationSubclass.i: examples/DataAnimationSubclass.cpp.i
-
-.PHONY : examples/DataAnimationSubclass.i
-
-# target to preprocess a source file
-examples/DataAnimationSubclass.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/examples/DataAnimationSubclass.cpp.i
-.PHONY : examples/DataAnimationSubclass.cpp.i
-
-examples/DataAnimationSubclass.s: examples/DataAnimationSubclass.cpp.s
-
-.PHONY : examples/DataAnimationSubclass.s
-
-# target to generate assembly for a file
-examples/DataAnimationSubclass.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/examples/DataAnimationSubclass.cpp.s
-.PHONY : examples/DataAnimationSubclass.cpp.s
 
 examples/bmp_prog.o: examples/bmp_prog.cpp.o
 
@@ -569,7 +529,6 @@ src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
 # target to build an object file
 src/analysis/extract_cuts.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.o
@@ -589,7 +548,6 @@ src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
 
 # target to preprocess a source file
 src/analysis/extract_cuts.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.i
@@ -609,7 +567,6 @@ src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
 
 # target to generate assembly for a file
 src/analysis/extract_cuts.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.s
@@ -629,7 +586,6 @@ src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
 
 # target to build an object file
 src/checkers/forbidden_tool_checker.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/forbidden_tool_checker.cpp.o
@@ -649,7 +605,6 @@ src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
 
 # target to preprocess a source file
 src/checkers/forbidden_tool_checker.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/forbidden_tool_checker.cpp.i
@@ -669,7 +624,6 @@ src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
 
 # target to generate assembly for a file
 src/checkers/forbidden_tool_checker.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/forbidden_tool_checker.cpp.s
@@ -689,7 +643,6 @@ src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
 
 # target to build an object file
 src/checkers/unsafe_spindle_checker.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.o
@@ -709,7 +662,6 @@ src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
 
 # target to preprocess a source file
 src/checkers/unsafe_spindle_checker.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.i
@@ -729,7 +681,6 @@ src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
 
 # target to generate assembly for a file
 src/checkers/unsafe_spindle_checker.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.s
@@ -749,7 +700,6 @@ src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
 
 # target to build an object file
 src/core/arena_allocator.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.o
@@ -769,7 +719,6 @@ src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
 
 # target to preprocess a source file
 src/core/arena_allocator.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.i
@@ -789,7 +738,6 @@ src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
 
 # target to generate assembly for a file
 src/core/arena_allocator.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.s
@@ -809,7 +757,6 @@ src/core/context.o: src/core/context.cpp.o
 
 # target to build an object file
 src/core/context.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.o
@@ -829,7 +776,6 @@ src/core/context.i: src/core/context.cpp.i
 
 # target to preprocess a source file
 src/core/context.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.i
@@ -849,7 +795,6 @@ src/core/context.s: src/core/context.cpp.s
 
 # target to generate assembly for a file
 src/core/context.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.s
@@ -869,7 +814,6 @@ src/core/gprog.o: src/core/gprog.cpp.o
 
 # target to build an object file
 src/core/gprog.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.o
@@ -889,7 +833,6 @@ src/core/gprog.i: src/core/gprog.cpp.i
 
 # target to preprocess a source file
 src/core/gprog.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.i
@@ -909,7 +852,6 @@ src/core/gprog.s: src/core/gprog.cpp.s
 
 # target to generate assembly for a file
 src/core/gprog.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.s
@@ -929,7 +871,6 @@ src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
 
 # target to build an object file
 src/core/instrs/instr.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.o
@@ -949,7 +890,6 @@ src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
 
 # target to preprocess a source file
 src/core/instrs/instr.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.i
@@ -969,7 +909,6 @@ src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
 
 # target to generate assembly for a file
 src/core/instrs/instr.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.s
@@ -989,7 +928,6 @@ src/core/parser.o: src/core/parser.cpp.o
 
 # target to build an object file
 src/core/parser.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.o
@@ -1009,7 +947,6 @@ src/core/parser.i: src/core/parser.cpp.i
 
 # target to preprocess a source file
 src/core/parser.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.i
@@ -1029,7 +966,6 @@ src/core/parser.s: src/core/parser.cpp.s
 
 # target to generate assembly for a file
 src/core/parser.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.s
@@ -1049,7 +985,6 @@ src/core/pass.o: src/core/pass.cpp.o
 
 # target to build an object file
 src/core/pass.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.o
@@ -1069,7 +1004,6 @@ src/core/pass.i: src/core/pass.cpp.i
 
 # target to preprocess a source file
 src/core/pass.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.i
@@ -1089,7 +1023,6 @@ src/core/pass.s: src/core/pass.cpp.s
 
 # target to generate assembly for a file
 src/core/pass.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.s
@@ -1109,7 +1042,6 @@ src/core/value.o: src/core/value.cpp.o
 
 # target to build an object file
 src/core/value.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.o
@@ -1129,7 +1061,6 @@ src/core/value.i: src/core/value.cpp.i
 
 # target to preprocess a source file
 src/core/value.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.i
@@ -1149,7 +1080,6 @@ src/core/value.s: src/core/value.cpp.s
 
 # target to generate assembly for a file
 src/core/value.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.s
@@ -1169,7 +1099,6 @@ src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
 
 # target to build an object file
 src/dxflib/dl_dxf.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_dxf.cpp.o
@@ -1189,7 +1118,6 @@ src/dxflib/dl_dxf.i: src/dxflib/dl_dxf.cpp.i
 
 # target to preprocess a source file
 src/dxflib/dl_dxf.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_dxf.cpp.i
@@ -1209,7 +1137,6 @@ src/dxflib/dl_dxf.s: src/dxflib/dl_dxf.cpp.s
 
 # target to generate assembly for a file
 src/dxflib/dl_dxf.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_dxf.cpp.s
@@ -1229,7 +1156,6 @@ src/dxflib/dl_writer_ascii.o: src/dxflib/dl_writer_ascii.cpp.o
 
 # target to build an object file
 src/dxflib/dl_writer_ascii.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_writer_ascii.cpp.o
@@ -1249,7 +1175,6 @@ src/dxflib/dl_writer_ascii.i: src/dxflib/dl_writer_ascii.cpp.i
 
 # target to preprocess a source file
 src/dxflib/dl_writer_ascii.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_writer_ascii.cpp.i
@@ -1269,7 +1194,6 @@ src/dxflib/dl_writer_ascii.s: src/dxflib/dl_writer_ascii.cpp.s
 
 # target to generate assembly for a file
 src/dxflib/dl_writer_ascii.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_writer_ascii.cpp.s
@@ -1289,7 +1213,6 @@ src/geometry/point.o: src/geometry/point.cpp.o
 
 # target to build an object file
 src/geometry/point.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.o
@@ -1309,7 +1232,6 @@ src/geometry/point.i: src/geometry/point.cpp.i
 
 # target to preprocess a source file
 src/geometry/point.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.i
@@ -1329,7 +1251,6 @@ src/geometry/point.s: src/geometry/point.cpp.s
 
 # target to generate assembly for a file
 src/geometry/point.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.s
@@ -1349,7 +1270,6 @@ src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 # target to build an object file
 src/simulators/mill_tool.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.o
@@ -1369,7 +1289,6 @@ src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
 
 # target to preprocess a source file
 src/simulators/mill_tool.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.i
@@ -1389,7 +1308,6 @@ src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
 
 # target to generate assembly for a file
 src/simulators/mill_tool.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.s
@@ -1409,7 +1327,6 @@ src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
 
 # target to build an object file
 src/simulators/sim_mill.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.o
@@ -1429,7 +1346,6 @@ src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
 
 # target to preprocess a source file
 src/simulators/sim_mill.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.i
@@ -1449,7 +1365,6 @@ src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
 
 # target to generate assembly for a file
 src/simulators/sim_mill.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.s
@@ -1469,7 +1384,6 @@ src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
 
 # target to build an object file
 src/synthesis/align_blade.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.o
@@ -1489,7 +1403,6 @@ src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
 
 # target to preprocess a source file
 src/synthesis/align_blade.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.i
@@ -1509,7 +1422,6 @@ src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
 
 # target to generate assembly for a file
 src/synthesis/align_blade.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.s
@@ -1529,7 +1441,6 @@ src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
 
 # target to build an object file
 src/synthesis/dxf_reader.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_reader.cpp.o
@@ -1549,7 +1460,6 @@ src/synthesis/dxf_reader.i: src/synthesis/dxf_reader.cpp.i
 
 # target to preprocess a source file
 src/synthesis/dxf_reader.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_reader.cpp.i
@@ -1569,7 +1479,6 @@ src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
 
 # target to generate assembly for a file
 src/synthesis/dxf_reader.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_reader.cpp.s
@@ -1589,7 +1498,6 @@ src/synthesis/output.o: src/synthesis/output.cpp.o
 
 # target to build an object file
 src/synthesis/output.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.o
@@ -1609,7 +1517,6 @@ src/synthesis/output.i: src/synthesis/output.cpp.i
 
 # target to preprocess a source file
 src/synthesis/output.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.i
@@ -1629,7 +1536,6 @@ src/synthesis/output.s: src/synthesis/output.cpp.s
 
 # target to generate assembly for a file
 src/synthesis/output.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.s
@@ -1649,7 +1555,6 @@ src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
 
 # target to build an object file
 src/synthesis/shapes_to_gcode.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.o
@@ -1669,7 +1574,6 @@ src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
 
 # target to preprocess a source file
 src/synthesis/shapes_to_gcode.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.i
@@ -1689,7 +1593,6 @@ src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
 
 # target to generate assembly for a file
 src/synthesis/shapes_to_gcode.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.s
@@ -1709,7 +1612,6 @@ src/system/bmp_output.o: src/system/bmp_output.cpp.o
 
 # target to build an object file
 src/system/bmp_output.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.o
@@ -1729,7 +1631,6 @@ src/system/bmp_output.i: src/system/bmp_output.cpp.i
 
 # target to preprocess a source file
 src/system/bmp_output.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.i
@@ -1749,7 +1650,6 @@ src/system/bmp_output.s: src/system/bmp_output.cpp.s
 
 # target to generate assembly for a file
 src/system/bmp_output.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.s
@@ -1769,7 +1669,6 @@ src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
 
 # target to build an object file
 src/transformers/scale_xyz.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.o
@@ -1789,7 +1688,6 @@ src/transformers/scale_xyz.i: src/transformers/scale_xyz.cpp.i
 
 # target to preprocess a source file
 src/transformers/scale_xyz.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.i
@@ -1809,7 +1707,6 @@ src/transformers/scale_xyz.s: src/transformers/scale_xyz.cpp.s
 
 # target to generate assembly for a file
 src/transformers/scale_xyz.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.s
@@ -1829,7 +1726,6 @@ src/transformers/shift_xyz.o: src/transformers/shift_xyz.cpp.o
 
 # target to build an object file
 src/transformers/shift_xyz.cpp.o:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.o
@@ -1849,7 +1745,6 @@ src/transformers/shift_xyz.i: src/transformers/shift_xyz.cpp.i
 
 # target to preprocess a source file
 src/transformers/shift_xyz.cpp.i:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.i
@@ -1869,7 +1764,6 @@ src/transformers/shift_xyz.s: src/transformers/shift_xyz.cpp.s
 
 # target to generate assembly for a file
 src/transformers/shift_xyz.cpp.s:
-	$(MAKE) -f CMakeFiles/DataAnimationSubclass.dir/build.make CMakeFiles/DataAnimationSubclass.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.s
@@ -2170,12 +2064,8 @@ help:
 	@echo "... print-knife-hacks"
 	@echo "... hole-optimizer"
 	@echo "... z-abstract"
-	@echo "... DataAnimationSubclass"
 	@echo "... bmp-prog"
 	@echo "... print-strap"
-	@echo "... examples/DataAnimationSubclass.o"
-	@echo "... examples/DataAnimationSubclass.i"
-	@echo "... examples/DataAnimationSubclass.s"
 	@echo "... examples/bmp_prog.o"
 	@echo "... examples/bmp_prog.i"
 	@echo "... examples/bmp_prog.s"

@@ -60,47 +60,6 @@ namespace gca {
       splines.back()->push_knot(data.k);
     }
 
-    virtual void addEllipse(const DL_EllipseData& data) { assert(false); }
-    virtual void addTrace(const DL_TraceData& data) { assert(false); }
-    virtual void addSolid(const DL_SolidData& data) { assert(false); }
-    virtual void addMTextChunk(const char* text) { assert(false); }
-    virtual void addText(const DL_TextData& data) { assert(false); }
-    virtual void addDimAlign(const DL_DimensionData& data,
-			     const DL_DimAlignedData& edata) { assert(false); }
-    virtual void addDimLinear(const DL_DimensionData& data,
-			      const DL_DimLinearData& edata) { assert(false); }
-    virtual void addDimRadial(const DL_DimensionData& data,
-			      const DL_DimRadialData& edata) { assert(false); }
-    virtual void addDimDiametric(const DL_DimensionData& data,
-				 const DL_DimDiametricData& edata) { assert(false); }
-    virtual void addDimAngular(const DL_DimensionData& data,
-			       const DL_DimAngularData& edata) { assert(false); }
-    virtual void addDimAngular3P(const DL_DimensionData& data,
-				 const DL_DimAngular3PData& edata) { assert(false); }
-    virtual void addDimOrdinate(const DL_DimensionData& data,
-				const DL_DimOrdinateData& edata) { assert(false); }
-    virtual void addLeader(const DL_LeaderData& data) { assert(false); }
-    virtual void addLeaderVertex(const DL_LeaderVertexData& data) { assert(false); }
-    virtual void addHatch(const DL_HatchData& data) { assert(false); }
-    virtual void addImage(const DL_ImageData& data) { assert(false); }
-    virtual void linkImage(const DL_ImageDefData& data) { assert(false); }
-    virtual void addHatchLoop(const DL_HatchLoopData& data) { assert(false); }
-    virtual void addHatchEdge(const DL_HatchEdgeData& data) { assert(false); }
-    virtual void addComment(const char* comment) { assert(false); }
-    void add3dFace(const DL_3dFaceData& data) { assert(false); }
-    virtual void endSequence() { assert(false); }
-
-    virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
-    virtual void addBlock(const DL_BlockData& data) {}
-    virtual void endBlock() {}
-    virtual void endEntity() {}
-    virtual void addMText(const DL_MTextData& data) {}
-    virtual void setVariableVector(const char* key, 
-				   double v1, double v2, double v3, int code) {}
-    virtual void setVariableString(const char* key, const char* value, int code) {}
-    virtual void setVariableInt(const char* key, int value, int code) {}
-    virtual void setVariableDouble(const char* key, double value, int code) {}
-	
     void setAttributes(const DL_Attributes& attrib) {
       attributes = attrib;
     }
@@ -217,7 +176,48 @@ namespace gca {
 	printf("%d", attributes.getWidth());
       }
       printf(" Type: %s\n", attributes.getLineType().c_str());
-    }  
+    }
+    virtual void addEllipse(const DL_EllipseData& data) { assert(false); }
+    virtual void addTrace(const DL_TraceData& data) { assert(false); }
+    virtual void addSolid(const DL_SolidData& data) { assert(false); }
+    virtual void addMTextChunk(const char* text) { assert(false); }
+    virtual void addText(const DL_TextData& data) { assert(false); }
+    virtual void addDimAlign(const DL_DimensionData& data,
+			     const DL_DimAlignedData& edata) { assert(false); }
+    virtual void addDimLinear(const DL_DimensionData& data,
+			      const DL_DimLinearData& edata) { assert(false); }
+    virtual void addDimRadial(const DL_DimensionData& data,
+			      const DL_DimRadialData& edata) { assert(false); }
+    virtual void addDimDiametric(const DL_DimensionData& data,
+				 const DL_DimDiametricData& edata) { assert(false); }
+    virtual void addDimAngular(const DL_DimensionData& data,
+			       const DL_DimAngularData& edata) { assert(false); }
+    virtual void addDimAngular3P(const DL_DimensionData& data,
+				 const DL_DimAngular3PData& edata) { assert(false); }
+    virtual void addDimOrdinate(const DL_DimensionData& data,
+				const DL_DimOrdinateData& edata) { assert(false); }
+    virtual void addLeader(const DL_LeaderData& data) { assert(false); }
+    virtual void addLeaderVertex(const DL_LeaderVertexData& data) { assert(false); }
+    virtual void addHatch(const DL_HatchData& data) { assert(false); }
+    virtual void addImage(const DL_ImageData& data) { assert(false); }
+    virtual void linkImage(const DL_ImageDefData& data) { assert(false); }
+    virtual void addHatchLoop(const DL_HatchLoopData& data) { assert(false); }
+    virtual void addHatchEdge(const DL_HatchEdgeData& data) { assert(false); }
+    virtual void addComment(const char* comment) { assert(false); }
+    void add3dFace(const DL_3dFaceData& data) { assert(false); }
+    virtual void endSequence() { assert(false); }
+
+    virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
+    virtual void addBlock(const DL_BlockData& data) {}
+    virtual void endBlock() {}
+    virtual void endEntity() {}
+    virtual void addMText(const DL_MTextData& data) {}
+    virtual void setVariableVector(const char* key, 
+				   double v1, double v2, double v3, int code) {}
+    virtual void setVariableString(const char* key, const char* value, int code) {}
+    virtual void setVariableInt(const char* key, int value, int code) {}
+    virtual void setVariableDouble(const char* key, double value, int code) {}
+
   };
 
   shape_layout read_dxf(const char* file, bool log=false);
