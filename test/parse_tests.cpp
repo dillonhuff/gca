@@ -5,6 +5,7 @@
 #include "catch.hpp"
 #include "core/gprog.h"
 #include "core/parser.h"
+#include "system/settings.h"
 
 namespace gca {
 
@@ -127,7 +128,7 @@ namespace gca {
     }
 
     SECTION("Read and parse file") {
-      string fn = "/home/probotix/CppWorkspace/gca/test/test_1.txt";
+      string fn = project_path + string("gca/test/test_1.txt");
       gprog* p = read_file(fn);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(mk_lit(0.0), mk_lit(0.0), mk_lit(-1.5), mk_omitted()));
@@ -138,7 +139,7 @@ namespace gca {
     }
 
     SECTION("Read and parse real CNC file") {
-      string fn = "/home/probotix/CppWorkspace/gca/test/drill1.tap";
+      string fn = project_path + string("gca/test/drill1.tap");
       gprog* p = read_file(fn);
       REQUIRE((p->size() == 61));
     }

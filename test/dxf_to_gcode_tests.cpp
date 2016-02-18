@@ -5,6 +5,7 @@
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/output.h"
+#include "system/settings.h"
 
 namespace gca {
 
@@ -19,8 +20,9 @@ namespace gca {
   TEST_CASE("Read rectangle file") {
     arena_allocator a;
     set_system_allocator(&a);
-    
-    string file_name = "/home/probotix/CppWorkspace/gca/test/dxf-files/rect-2inx3in.DXF";
+
+    string file_name = project_path + string("gca/test/dxf-files/rect-2inx3in.DXF");
+    //    string file_name = "/home/probotix/CppWorkspace/gca/test/dxf-files/rect-2inx3in.DXF";
     shape_layout l = read_dxf(file_name.c_str());
     
     SECTION("All cuts parsed") {
@@ -56,7 +58,7 @@ namespace gca {
     params.start_orient = point(1, 0, 0);
     params.tools = DRILL_AND_DRAG_KNIFE;
     
-    string file_name = "/home/probotix/CppWorkspace/gca/test/dxf-files/12-inch-spiral.DXF";
+    string file_name = project_path + string("gca/test/dxf-files/12-inch-spiral.DXF");
 
     vector<int> no_spindle_tools;
     no_spindle_tools.push_back(6);
