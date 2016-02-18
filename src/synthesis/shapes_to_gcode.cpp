@@ -221,10 +221,12 @@ namespace gca {
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     gprog* p = mk_gprog();
-    toolpath dt = drill_toolpath(shapes_to_cut.holes, params);
-    if (dt.cut_groups.size() > 0) {
-      append_drill_header(p);
-      append_drill_toolpath(dt, *p, params);
+    if (params.tools != DRAG_KNIFE_ONLY) {
+      toolpath dt = drill_toolpath(shapes_to_cut.holes, params);
+      if (dt.cut_groups.size() > 0) {
+	append_drill_header(p);
+	append_drill_toolpath(dt, *p, params);
+      }
     }
     vector<cut*> lines_to_cut = shapes_to_cut.lines;
     vector<cut_group> cut_groups;

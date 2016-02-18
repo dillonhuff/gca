@@ -143,6 +143,13 @@ namespace gca {
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);	
       }
+
+      SECTION("DRAG_KNIFE_ONLY on means only the drag knife is used") {
+	params.tools = ToolOptions::DRAG_KNIFE_ONLY;
+	gprog* p = shape_layout_to_gcode(l, params);
+	cout << *p;
+	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
+      }
     }
 
     SECTION("One spline") {
