@@ -55,6 +55,10 @@ namespace gca {
     
   g91_instr* mk_G91();
   g90_instr* mk_G90();
+  g20_instr* mk_G20();
+  g21_instr* mk_G21();
+  g64_instr* mk_G64();
+  
     
   g53_instr* mk_G53(value* x, value* y, value* z);
 

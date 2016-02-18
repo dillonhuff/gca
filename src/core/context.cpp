@@ -160,7 +160,20 @@ namespace gca {
   g90_instr* mk_G90() {
     return new (allocate<g90_instr>()) g90_instr();
   }
-    
+
+  g20_instr* mk_G20() {
+    return new (allocate<g20_instr>()) g20_instr();
+  }
+  
+  g21_instr* mk_G21() {
+    return new (allocate<g21_instr>()) g21_instr();
+  }
+  
+  g64_instr* mk_G64() {
+    return new (allocate<g64_instr>()) g64_instr();
+  }
+  
+  
   g53_instr* mk_G53(value* x, value* y, value* z) {
     g53_instr* mem = allocate<g53_instr>();
     return new (mem) g53_instr(x, y, z, mk_omitted());

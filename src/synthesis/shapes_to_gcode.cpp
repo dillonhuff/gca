@@ -251,5 +251,4 @@ namespace gca {
     gprog* r = append_footer(p);
     return r;
   }
-
 }

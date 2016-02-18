@@ -63,6 +63,27 @@ namespace gca {
     void print(ostream& s) const { s << "M3"; }
     bool operator==(const instr& other) const { return other.is_M3(); }
   };
+
+  class g20_instr : public instr {
+  public:
+    inline bool is_G20() const { return true; }
+    void print(ostream& s) const { s << "G20"; }
+    bool operator==(const instr& other) const { return other.is_G20(); }
+  };
+
+  class g21_instr : public instr {
+  public:
+    inline bool is_G21() const { return true; }
+    void print(ostream& s) const { s << "G21"; }
+    bool operator==(const instr& other) const { return other.is_G21(); }
+  };
+
+  class g64_instr : public instr {
+  public:
+    inline bool is_G64() const { return true; }
+    void print(ostream& s) const { s << "G64"; }
+    bool operator==(const instr& other) const { return other.is_G64(); }
+  };
   
   class g90_instr : public instr {
   public:
