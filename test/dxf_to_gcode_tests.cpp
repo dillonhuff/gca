@@ -135,6 +135,14 @@ namespace gca {
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
       }
+
+      SECTION("Drag knife only produces code for linear cuts") {
+	params.tools = ToolOptions::DRAG_KNIFE_ONLY;
+	gprog* p = shape_layout_to_gcode(l, params);
+	vector<cut_section> sections;
+	extract_cuts(p, sections);
+	REQUIRE(sections.size() == 2);	
+      }
     }
 
     SECTION("One spline") {

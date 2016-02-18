@@ -11,132 +11,115 @@
 
 namespace gca {
 
-  TEST_CASE("Feed changer with G0") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = parse_gprog("G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
-    value* initial_feedrate = mk_lit(2.0);
-    value* new_feedrate = mk_lit(5.0);
-    gprog* correct = parse_gprog("G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
-    REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
-  }
-  
-  TEST_CASE("Feed changer") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    value* initial_feedrate = mk_lit(1.0);
-    p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
-    value* new_feedrate = mk_lit(4.0);
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
-    REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
-  }
-
-  TEST_CASE("Feed changer relative coordinates") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    value* initial_feedrate = mk_lit(1.0);
-    p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
-    value* new_feedrate = mk_lit(4.0);
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
-    REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
-  }
-
-  TEST_CASE("Feed changer with variables") {
+  TEST_CASE("Transformer tests") {
     arena_allocator a;
     set_system_allocator(&a);
-    gprog* p = parse_gprog("G1 F15 X1.0 Y1.0 Z2.0");
-    lit* init_f = mk_lit(15.0);
-    var* new_f = mk_var(1);
-    value* default_val = mk_lit(13);
-    gprog* correct = parse_gprog("#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
-    REQUIRE(*generalize_feeds(p, default_val, init_f, new_f) == *correct);
-  }
+
+    SECTION("Feed changer with G0") {
+      gprog* p = parse_gprog("G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
+      value* initial_feedrate = mk_lit(2.0);
+      value* new_feedrate = mk_lit(5.0);
+      gprog* correct = parse_gprog("G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
+      REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
+    }
   
-  TEST_CASE("No irrelevant G0 moves") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    p->push_back(mk_G0(point(1.0, 1.0, 1.0)));
-    REQUIRE(*filter_G0_moves(p) == *p);
-  }
+    SECTION("Feed changer") {
+      gprog* p = mk_gprog();
+      value* initial_feedrate = mk_lit(1.0);
+      p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
+      value* new_feedrate = mk_lit(4.0);
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
+      REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
+    }
 
-  TEST_CASE("g0_filter no G0 moves") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    p->push_back(mk_G1(1.0, 2.0, 2.0));
-    REQUIRE(*filter_G0_moves(p) == *p);
-  }
+    SECTION("Feed changer relative coordinates") {
+      gprog* p = mk_gprog();
+      value* initial_feedrate = mk_lit(1.0);
+      p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
+      value* new_feedrate = mk_lit(4.0);
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
+      REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
+    }
 
-  TEST_CASE("g0_filter dont remove G1") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    p->push_back(mk_G0(point(1.0, 2.0, 2.0)));
-    p->push_back(mk_G1(1.0, 2.0, 2.0));
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G0(point(1.0, 2.0, 2.0)));
-    correct->push_back(mk_G1(1.0, 2.0, 2.0));
-    REQUIRE(*filter_G0_moves(p) == *correct);
-  }
+    SECTION("Feed changer with variables") {
+      gprog* p = parse_gprog("G1 F15 X1.0 Y1.0 Z2.0");
+      lit* init_f = mk_lit(15.0);
+      var* new_f = mk_var(1);
+      value* default_val = mk_lit(13);
+      gprog* correct = parse_gprog("#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
+      REQUIRE(*generalize_feeds(p, default_val, init_f, new_f) == *correct);
+    }
+  
+    SECTION("No irrelevant G0 moves") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G0(point(1.0, 1.0, 1.0)));
+      REQUIRE(*filter_G0_moves(p) == *p);
+    }
 
-  TEST_CASE("g0_filter several pointless moves") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    p->push_back(mk_G0(1.0, 2.0, 2.0));
-    p->push_back(mk_G0(1.0, 2.0, 2.0));
-    p->push_back(mk_G0(1.0, 2.0, 2.0));
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G0(1.0, 2.0, 2.0));
-    REQUIRE(*filter_G0_moves(p) == *correct);
-  }
+    SECTION("g0_filter no G0 moves") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G1(1.0, 2.0, 2.0));
+      REQUIRE(*filter_G0_moves(p) == *p);
+    }
 
-  TEST_CASE("g0_filter several pointless moves with G1, M2") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    gprog* p = mk_gprog();
-    p->push_back(mk_G0(1.0, 2.0, -2.0));
-    p->push_back(mk_G0(1.0, 2.0, 0.0));
-    p->push_back(mk_G0(1.0, 2.0, -2.00000001));
-    p->push_back(mk_G1(1.0, 2.0, 2.0));
-    p->push_back(mk_m2_instr());
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G0(1.0, 2.0, -2.00000001));
-    correct->push_back(mk_G1(1.0, 2.0, 2.0));
-    correct->push_back(mk_m2_instr());
-    REQUIRE(*filter_G0_moves(p) == *correct);
-  }
+    SECTION("g0_filter dont remove G1") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G0(point(1.0, 2.0, 2.0)));
+      p->push_back(mk_G1(1.0, 2.0, 2.0));
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G0(point(1.0, 2.0, 2.0)));
+      correct->push_back(mk_G1(1.0, 2.0, 2.0));
+      REQUIRE(*filter_G0_moves(p) == *correct);
+    }
 
-  TEST_CASE("g0_filter starting on G1") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    p->push_back(mk_G1(1, 1, 1));
-    p->push_back(mk_G0(1, 1, 1));
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G1(1, 1, 1));
-    REQUIRE(*filter_G0_moves(p) == *correct);
-  }
+    SECTION("g0_filter several pointless moves") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G0(1.0, 2.0, 2.0));
+      p->push_back(mk_G0(1.0, 2.0, 2.0));
+      p->push_back(mk_G0(1.0, 2.0, 2.0));
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G0(1.0, 2.0, 2.0));
+      REQUIRE(*filter_G0_moves(p) == *correct);
+    }
 
-  TEST_CASE("g0_filter starting on G1 multiple instructions") {
-    arena_allocator a;
-    set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    p->push_back(mk_G1(1, 1, 0));
-    p->push_back(mk_G1(1, 1, 1));
-    p->push_back(mk_G0(1, 2, 0));
-    p->push_back(mk_G0(1, 1, 1));
-    p->push_back(mk_G1(2, 3, 3));
-    gprog* correct = mk_gprog();
-    correct->push_back(mk_G1(1, 1, 0));
-    correct->push_back(mk_G1(1, 1, 1));
-    correct->push_back(mk_G1(2, 3, 3));
-    REQUIRE(*filter_G0_moves(p) == *correct);
+    SECTION("g0_filter several pointless moves with G1, M2") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G0(1.0, 2.0, -2.0));
+      p->push_back(mk_G0(1.0, 2.0, 0.0));
+      p->push_back(mk_G0(1.0, 2.0, -2.00000001));
+      p->push_back(mk_G1(1.0, 2.0, 2.0));
+      p->push_back(mk_m2_instr());
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G0(1.0, 2.0, -2.00000001));
+      correct->push_back(mk_G1(1.0, 2.0, 2.0));
+      correct->push_back(mk_m2_instr());
+      REQUIRE(*filter_G0_moves(p) == *correct);
+    }
+
+    SECTION("g0_filter starting on G1") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G1(1, 1, 1));
+      p->push_back(mk_G0(1, 1, 1));
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G1(1, 1, 1));
+      REQUIRE(*filter_G0_moves(p) == *correct);
+    }
+
+    SECTION("g0_filter starting on G1 multiple instructions") {
+      gprog* p = mk_gprog();
+      p->push_back(mk_G1(1, 1, 0));
+      p->push_back(mk_G1(1, 1, 1));
+      p->push_back(mk_G0(1, 2, 0));
+      p->push_back(mk_G0(1, 1, 1));
+      p->push_back(mk_G1(2, 3, 3));
+      gprog* correct = mk_gprog();
+      correct->push_back(mk_G1(1, 1, 0));
+      correct->push_back(mk_G1(1, 1, 1));
+      correct->push_back(mk_G1(2, 3, 3));
+      REQUIRE(*filter_G0_moves(p) == *correct);
+    }
   }
   
   TEST_CASE("abs -> rel conversion") {
@@ -314,5 +297,4 @@ namespace gca {
       REQUIRE(*r == *correct);
     }
   }
-  
 }

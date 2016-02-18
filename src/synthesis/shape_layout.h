@@ -21,6 +21,7 @@ namespace gca {
   };
 
   enum ToolOptions { DRILL_ONLY = 0,
+		     DRAG_KNIFE_ONLY, 
 		     DRILL_AND_DRAG_KNIFE };
   
   class cut_params {

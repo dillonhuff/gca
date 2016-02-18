@@ -231,7 +231,8 @@ namespace gca {
     append_splines(shapes_to_cut.splines, cut_groups);
     group_adjacent_cuts(lines_to_cut, cut_groups, 30.0);
 
-    if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE) {
+    if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE ||
+	params.tools == ToolOptions::DRAG_KNIFE_ONLY) {
       toolpath kt = cut_toolpath(6, cut_groups, params);
       if (kt.cut_groups.size() > 0) {
 	append_drag_knife_transfer(p);
