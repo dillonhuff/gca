@@ -49,12 +49,13 @@ namespace gca {
       print(s);
     }
 
+    virtual inline bool is_G() const { return is_G0() || is_G1() || is_G2() || is_G53() || is_G90() || is_G91(); }
+    virtual inline bool is_M() const { return is_M3() || is_M5() || is_M2() || is_M30(); }
+
     virtual inline bool is_M3() const { return false; }
     virtual inline bool is_M5() const { return false; }
     virtual inline bool is_M2() const { return false; }
-    virtual inline bool is_M30() const { return false; }
-    virtual inline bool is_G() const { return is_G0() || is_G1() || is_G2() || is_G53() || is_G90() || is_G91(); }
-    virtual inline bool is_M() const { return is_M3() || is_M5() || is_M2() || is_M30(); }
+    virtual inline bool is_M30() const { return false; }    
     virtual inline bool is_F() const { return false; }
     virtual inline bool is_S() const { return false; }
     virtual inline bool is_T() const { return false; }

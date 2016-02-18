@@ -119,6 +119,7 @@ namespace gca {
   toolpath drill_toolpath(const vector<hole_punch*>& holes,
 			  cut_params params) {
     toolpath t;
+    t.tool_no = 2;
     vector<cut_group> punch_groups;
     for (unsigned i = 0; i < holes.size(); i++) {
       cut_group one_hole;
@@ -146,23 +147,6 @@ namespace gca {
     t.cut_groups = cut_group_passes;
     return t;
   }
-
-  // toolpath drag_knife_toolpath(const vector<cut_group>& cut_groups,
-  // 			       cut_params params) {
-  //   toolpath t;
-  //   t.tool_no = 6;
-
-  //   vector<cut_group> cut_group_passes;
-  //   for (unsigned j = 0; j < cut_groups.size(); j++) {
-  //     vector<cut*> current_group = cut_groups[j];
-  //     make_cut_group_passes(params,
-  // 			    current_group,
-  // 			    cut_group_passes);
-  //   }
-
-  //   t.cut_groups = cut_group_passes;
-  //   return t;
-  // }
 
   void move_to_next_cut(cut* last,
 			cut* next,
@@ -207,7 +191,7 @@ namespace gca {
     point current_orient = params.start_orient;
     vector<cut_group> cut_passes = t.cut_groups;
     for (unsigned i = 0; i < cut_passes.size(); i++) {
-      vector<cut*> cut_pass = cut_passes[i];
+      cut_group cut_pass = cut_passes[i];
       append_pass_code(&p,
 		       current_loc,
 		       current_orient,
@@ -218,7 +202,7 @@ namespace gca {
     }
   }
 
-  void append_hole_code(const vector<hole_punch*> holes,
+  void append_hole_code(const vector<hole_punch*>& holes,
 			gprog* p,
 			const cut_params& params) {
     if (params.tools != DRAG_KNIFE_ONLY) {
@@ -230,9 +214,13 @@ namespace gca {
     }
   }
 
-  void append_line_code(const shape_layout& shapes_to_cut,
-			gprog* p,
+  void create_toolpaths(const shape_layout& shapes_to_cut,
+			vector<toolpath>& toolpaths,
 			const cut_params& params) {
+    if (params.tools != DRAG_KNIFE_ONLY) {
+      toolpaths.push_back(drill_toolpath(shapes_to_cut.holes, params));
+    }
+
     vector<cut*> lines_to_cut = shapes_to_cut.lines;
     vector<cut_group> cut_groups;
     append_splines(shapes_to_cut.splines, cut_groups);
@@ -240,26 +228,59 @@ namespace gca {
 
     if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE ||
 	params.tools == ToolOptions::DRAG_KNIFE_ONLY) {
-      toolpath kt = cut_toolpath(6, cut_groups, params);
-      if (kt.cut_groups.size() > 0) {
-	append_drag_knife_transfer(p);
-	append_drag_knife_toolpath(kt, *p, params);
-      }
+      toolpaths.push_back(cut_toolpath(6, cut_groups, params));
     } else if (params.tools == ToolOptions::DRILL_ONLY) {
-      toolpath drill_cuts = cut_toolpath(2, cut_groups, params);
-      if (drill_cuts.cut_groups.size() > 0) {
-	append_drill_toolpath(drill_cuts, *p, params);
-      }
+      toolpaths.push_back(cut_toolpath(2, cut_groups, params));
     } else {
       assert(false);
+    }
+  }
+
+  // TODO: Add actual sorting by tool number
+  void append_toolpaths(const vector<toolpath>& toolpaths,
+			gprog& p,
+			const cut_params& params) {
+    int num_drill_toolpaths = 0;
+    int num_drag_knife_toolpaths = 0;
+    for (unsigned i = 0; i < toolpaths.size(); i++) {
+      int tool_no = toolpaths[i].tool_no;
+      int num_cuts = toolpaths[i].cut_groups.size();
+      if (num_cuts > 0) {
+	if (tool_no == 6) {
+	  num_drag_knife_toolpaths++;
+	} else if (tool_no == 2) {
+	  num_drill_toolpaths++;
+	} else {
+	  assert(false);
+	}
+      }
+    }
+
+    if (num_drill_toolpaths > 0) {
+      append_drill_header(&p);
+      for (unsigned i = 0; i < toolpaths.size(); i++) {
+	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 2) {
+	  append_drill_toolpath(toolpaths[i], p, params);
+	}
+      }
+    }
+
+    if (num_drag_knife_toolpaths > 0) {
+      append_drag_knife_transfer(&p);
+      for (unsigned i = 0; i < toolpaths.size(); i++) {
+	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 6) {
+	  append_drag_knife_toolpath(toolpaths[i], p, params);
+	}
+      }
     }
   }
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
+    vector<toolpath> toolpaths;
+    create_toolpaths(shapes_to_cut, toolpaths, params);
     gprog* p = mk_gprog();
-    append_hole_code(shapes_to_cut.holes, p, params);
-    append_line_code(shapes_to_cut, p, params);
+    append_toolpaths(toolpaths, *p, params);
     gprog* r = append_footer(p);
     return r;
   }

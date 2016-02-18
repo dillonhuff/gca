@@ -93,6 +93,7 @@ namespace gca {
 
       SECTION("No use of drill when there are no hole punches") {
 	permitted_tools.push_back(6);
+	cout << *p;
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 0);
       }
 
