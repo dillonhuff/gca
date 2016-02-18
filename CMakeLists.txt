@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 2.6)
-#SET(CMAKE_C_COMPILER "/usr/bin/gcc")
-#SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
+IF (APPLE)
+ELSE()
+
+SET(CMAKE_C_COMPILER "/usr/bin/gcc")
+SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
+ENDIF()
 
 project(gca)
 
