@@ -115,7 +115,7 @@ namespace gca {
       double align_depth = 0.143;
 
 
-      gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_1.nc");
+      gprog* correct = read_file("/home/probotix/CppWorkspace/gca/test/nc-files/align_test_1.nc");
       gprog* p = mk_gprog();
       point sp(15.791066, 0.859332, 0.075000);
       point last_pos(16.005220, 0.588386, 0.075000);
@@ -146,7 +146,7 @@ namespace gca {
       double align_depth = 0.143;
 
       
-      gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_2.nc");
+      gprog* correct = read_file("/home/probotix/CppWorkspace/gca/test/nc-files/align_test_2.nc");
       gprog* p = mk_gprog();
       point sp(15.791066, 0.859332, 0.000000);
       point last_pos(16.005220, 0.588386, 0.000000);
@@ -177,7 +177,7 @@ namespace gca {
       double safe_height = 0.31;
       double align_depth = 0.103;
 
-      gprog* correct = read_file("/Users/dillon/CppWorkspace/gca/test/nc-files/align_test_3.nc");
+      gprog* correct = read_file("/home/probotix/CppWorkspace/gca/test/nc-files/align_test_3.nc");
       gprog* p = mk_gprog();
       point sp(-1.732718, -32.033215, 0.055000);
       point last_pos(-1.561738, -32.249390, 0.055000);
