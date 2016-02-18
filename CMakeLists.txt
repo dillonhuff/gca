@@ -10,8 +10,7 @@ ENDIF()
 
 project(gca)
 
-#SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++98 -pedantic -I./src -I./test -Wall -Werror -g")
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++0x -I./src -I./test")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++0x -I./src -I./test -Werror")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
