@@ -34,7 +34,7 @@ namespace gca {
       params.push_depth = 0.005;
       params.start_loc = point(0, 0, 0);
       params.start_orient = point(1, 0, 0);
-      params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+      params.tools = DRILL_AND_DRAG_KNIFE;
 
       vector<cut*> lines;
       vector<hole_punch*> holes;

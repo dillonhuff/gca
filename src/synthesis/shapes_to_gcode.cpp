@@ -202,18 +202,6 @@ namespace gca {
     }
   }
 
-  void append_hole_code(const vector<hole_punch*>& holes,
-			gprog* p,
-			const cut_params& params) {
-    if (params.tools != DRAG_KNIFE_ONLY) {
-      toolpath dt = drill_toolpath(holes, params);
-      if (dt.cut_groups.size() > 0) {
-	append_drill_header(p);
-	append_drill_toolpath(dt, *p, params);
-      }
-    }
-  }
-
   void create_toolpaths(const shape_layout& shapes_to_cut,
 			vector<toolpath>& toolpaths,
 			const cut_params& params) {
@@ -226,17 +214,17 @@ namespace gca {
     append_splines(shapes_to_cut.splines, cut_groups);
     group_adjacent_cuts(lines_to_cut, cut_groups, 30.0);
 
-    if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE ||
-	params.tools == ToolOptions::DRAG_KNIFE_ONLY) {
+    if (params.tools == DRILL_AND_DRAG_KNIFE ||
+	params.tools == DRAG_KNIFE_ONLY) {
       toolpaths.push_back(cut_toolpath(6, cut_groups, params));
-    } else if (params.tools == ToolOptions::DRILL_ONLY) {
+    } else if (params.tools == DRILL_ONLY) {
       toolpaths.push_back(cut_toolpath(2, cut_groups, params));
     } else {
       assert(false);
     }
   }
 
-  // TODO: Add actual sorting by tool number
+  // TODO: Change to actual sorting by tool number
   void append_toolpaths(const vector<toolpath>& toolpaths,
 			gprog& p,
 			const cut_params& params) {

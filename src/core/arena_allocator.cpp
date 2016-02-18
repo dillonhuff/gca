@@ -15,4 +15,4 @@ namespace gca {
     return to_alloc;
   }
   
-};
+}
