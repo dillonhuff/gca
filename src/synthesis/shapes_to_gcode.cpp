@@ -68,7 +68,7 @@ namespace gca {
     } else {
       from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height);
     }
-    for (int j = 0; j < cut_pass.size(); j++) {
+    for (unsigned j = 0; j < cut_pass.size(); j++) {
       point next_loc = cut_pass[j]->end;
       instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
       p->push_back(move_instr);
@@ -226,10 +226,10 @@ namespace gca {
     append_splines(shapes_to_cut.splines, cut_groups);
     group_adjacent_cuts(lines_to_cut, cut_groups, 30.0);
 
-    if (params.tools == ToolOptions::DRILL_AND_DRAG_KNIFE ||
-	params.tools == ToolOptions::DRAG_KNIFE_ONLY) {
+    if (params.tools == DRILL_AND_DRAG_KNIFE ||
+	params.tools == DRAG_KNIFE_ONLY) {
       toolpaths.push_back(cut_toolpath(6, cut_groups, params));
-    } else if (params.tools == ToolOptions::DRILL_ONLY) {
+    } else if (params.tools == DRILL_ONLY) {
       toolpaths.push_back(cut_toolpath(2, cut_groups, params));
     } else {
       assert(false);

@@ -23,7 +23,7 @@ bool duplicate_ignoring_z(cut_section& p1, cut_section& p2) {
   if (p1.p->size() != p2.p->size()) {
     return false;
   }
-  for (int i = 0; i < p1.p->size(); i++) {
+  for (unsigned i = 0; i < p1.p->size(); i++) {
     instr* is1 = (*(p1.p))[i];
     assert(is1->is_G1());
     g1_instr* mi1 = static_cast<g1_instr*>(is1);
@@ -44,7 +44,7 @@ bool duplicate_ignoring_z(cut_section& p1, cut_section& p2) {
 }
 
 bool no_duplicates(cut_section& section, vector<cut_section>& already_merged) {
-  for (int i = 0; i < already_merged.size(); i++) {
+  for (unsigned i = 0; i < already_merged.size(); i++) {
     if (duplicate_ignoring_z(section, already_merged[i])) {
       return false;
     }
@@ -54,7 +54,7 @@ bool no_duplicates(cut_section& section, vector<cut_section>& already_merged) {
 
 void merge_cut_sections(vector<cut_section>& g1_sections,
 			vector<cut_section>& merged_cuts) {
-  for (int i = 0; i < g1_sections.size(); i++) {
+  for (unsigned i = 0; i < g1_sections.size(); i++) {
     cut_section sec = g1_sections[i];
     if (no_duplicates(sec, merged_cuts)) {
       merged_cuts.push_back(sec);
@@ -70,7 +70,7 @@ gprog* generate_drag_knife_code(double safe_height,
   point last_section_end_pos = start_pos;
   point last_section_end_orientation = start_orient;
   gprog* res = initial_gprog();
-  for (int i = 0; i < sections.size(); i++) {
+  for (unsigned i = 0; i < sections.size(); i++) {
     cut_section sec = sections[i];    
     cout << "[ section starting at " << sec.start << " ]" << endl;
     cout << "[ section of size " << (sec.p)->size() << " ]" << endl;
@@ -81,7 +81,7 @@ gprog* generate_drag_knife_code(double safe_height,
 			       last_section_end_orientation,
 			       sec.start,
 			       sec.start_orientation());
-    for (int j = 0; j < (sec.p)->size(); j++) {
+    for (unsigned j = 0; j < (sec.p)->size(); j++) {
       res->push_back((*(sec.p))[j]);
     }
     last_section_end_pos = sec.end_pos();

@@ -20,7 +20,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
     
-    string file_name = "/Users/dillon/CppWorkspace/gca/test/dxf-files/rect-2inx3in.DXF";
+    string file_name = "/home/probotix/CppWorkspace/gca/test/dxf-files/rect-2inx3in.DXF";
     shape_layout l = read_dxf(file_name.c_str());
     
     SECTION("All cuts parsed") {
@@ -54,9 +54,9 @@ namespace gca {
     params.push_depth = 0.005;
     params.start_loc = point(0, 0, 0);
     params.start_orient = point(1, 0, 0);
-    params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+    params.tools = DRILL_AND_DRAG_KNIFE;
     
-    string file_name = "/Users/dillon/CppWorkspace/gca/test/dxf-files/12-inch-spiral.DXF";
+    string file_name = "/home/probotix/CppWorkspace/gca/test/dxf-files/12-inch-spiral.DXF";
 
     vector<int> no_spindle_tools;
     no_spindle_tools.push_back(6);
@@ -86,7 +86,7 @@ namespace gca {
     vector<int> permitted_tools;
 
     SECTION("No hole punches") {
-      params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+      params.tools = DRILL_AND_DRAG_KNIFE;
       lines.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
       shape_layout l(lines, holes, splines);
       gprog* p = shape_layout_to_gcode(l, params);
@@ -118,19 +118,19 @@ namespace gca {
       shape_layout l(lines, holes, splines);
       
       SECTION("With drill and drag knife") {
-	params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+	params.tools = DRILL_AND_DRAG_KNIFE;
 	gprog* p = shape_layout_to_gcode(l, params);
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 2);
       }
 
       SECTION("With drill only") {
-	params.tools = ToolOptions::DRILL_ONLY;
+	params.tools = DRILL_ONLY;
 	gprog* p = shape_layout_to_gcode(l, params);
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
       }
 
       SECTION("Drill produces code for linear cuts") {
-	params.tools = ToolOptions::DRILL_ONLY;
+	params.tools = DRILL_ONLY;
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
@@ -138,7 +138,7 @@ namespace gca {
       }
 
       SECTION("Drag knife only produces code for linear cuts") {
-	params.tools = ToolOptions::DRAG_KNIFE_ONLY;
+	params.tools = DRAG_KNIFE_ONLY;
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
@@ -146,7 +146,7 @@ namespace gca {
       }
 
       SECTION("DRAG_KNIFE_ONLY on means only the drag knife is used") {
-	params.tools = ToolOptions::DRAG_KNIFE_ONLY;
+	params.tools = DRAG_KNIFE_ONLY;
 	gprog* p = shape_layout_to_gcode(l, params);
 	cout << *p;
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
@@ -170,7 +170,7 @@ namespace gca {
       shape_layout l(lines, holes, splines);
 
       SECTION("Drill and drag knife produces code") {
-	params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+	params.tools = DRILL_AND_DRAG_KNIFE;
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
@@ -178,7 +178,7 @@ namespace gca {
       }
 
       SECTION("Drill only produces code") {
-	params.tools = ToolOptions::DRILL_ONLY;
+	params.tools = DRILL_ONLY;
 	gprog* p = shape_layout_to_gcode(l, params);
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
@@ -187,7 +187,7 @@ namespace gca {
     }
 
     SECTION("Drill 2 holes") {
-      params.tools = ToolOptions::DRILL_AND_DRAG_KNIFE;
+      params.tools = DRILL_AND_DRAG_KNIFE;
       holes.push_back(mk_hole_punch(1, 1, 1, 0.125));
       holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
       vector<b_spline*> splines;

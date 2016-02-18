@@ -9,7 +9,7 @@
 using namespace gca;
 
 void find_z_values(set<double>& z_values, gprog* p) {
-  for (int i = 0; i < p->size(); i++) {
+  for (unsigned i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
     if (is->is_move_instr()) {
       move_instr* mi = static_cast<move_instr*>(is);
@@ -35,7 +35,7 @@ gprog* generalize_zs(set<double>& z_values, gprog* p) {
     r->push_back(mk_assign(v, mk_lit(*it)));
     i++;
   }
-  for (int j = 0; j < p->size(); j++) {
+  for (unsigned j = 0; j < p->size(); j++) {
     instr *is = (*p)[j];
     if (is->is_move_instr()) {
       move_instr* mi = static_cast<move_instr*>(is);

@@ -15,7 +15,7 @@ namespace gca {
     SECTION("Parse empty string") {
       string s = "";
       gprog* p = parse_gprog(s);
-      REQUIRE(p != NULL);
+      REQUIRE((p != NULL));
     }
 
     SECTION("Parse M2 line") {
@@ -23,8 +23,8 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      REQUIRE(p->size() == 1);
-      REQUIRE(*p == *correct);
+      REQUIRE((p->size() == 1));
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse M30 line") {
@@ -32,7 +32,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_m30_instr());
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse G00 line, no spaces") {
@@ -40,7 +40,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(point(12.0, 8.0, -4.5)));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }    
     
     SECTION("Parse G00 line, all 12.0") {
@@ -48,7 +48,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(point(12.0, 12.0, 12.0)));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
     
    SECTION("Parse G00 line") {
@@ -56,7 +56,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(point(30.0, 12.0, -1.5)));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse G1 line") {
@@ -64,7 +64,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(mk_lit(32.0), mk_lit(-6.0), mk_lit(-1.5), mk_omitted()));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse G1 line with defaults") {
@@ -73,7 +73,7 @@ namespace gca {
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(mk_lit(2.75), mk_lit(8), mk_lit(0)));
       correct->push_back(mk_G1(mk_omitted(), mk_omitted(), mk_lit(-1.5), mk_omitted()));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse G0 line with defaults") {
@@ -82,7 +82,7 @@ namespace gca {
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(mk_lit(2.75), mk_lit(8.0), mk_lit(0.0), mk_omitted()));
       correct->push_back(mk_G0(mk_omitted(), mk_omitted(), mk_lit(-1.5)));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
     
     SECTION("Parse G1 line with front feedrate") {
@@ -90,7 +90,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(0.0, 0.0, 0.0, 4.0));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse G1 line with back feedrate") {
@@ -98,7 +98,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(0.0, 0.0, 0.0, 4.0));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
     
     SECTION("Parse Multi-line GCODE") {
@@ -108,7 +108,7 @@ namespace gca {
       correct->push_back(mk_G1(mk_lit(1.0), mk_lit(0.0), mk_lit(-1.5), mk_omitted()));
       correct->push_back(mk_G0(mk_lit(12.5), mk_omitted(), mk_omitted()));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse Multi-line GCODE with comments") {
@@ -123,7 +123,7 @@ namespace gca {
       correct->push_back(mk_comment('(', ')', " f"));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
       correct->push_back(mk_comment('(', ')', "Comment G1 X0.0"));
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Read and parse file") {
@@ -134,13 +134,13 @@ namespace gca {
       correct->push_back(mk_G0(point(12.5, 1.5, 0)));
       correct->push_back(mk_G1(mk_lit(18.0), mk_lit(1.5), mk_lit(-0.25), mk_omitted()));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Read and parse real CNC file") {
       string fn = "/Users/dillon/CppWorkspace/gca/test/drill1.tap";
       gprog* p = read_file(fn);
-      REQUIRE(p->size() == 61);
+      REQUIRE((p->size() == 61));
     }
     
   }
@@ -154,7 +154,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G91());
-      REQUIRE(*p == *correct);
+      REQUIRE((*p == *correct));
     }
 
     SECTION("Parse G91 and change to relative") {
@@ -163,7 +163,7 @@ namespace gca {
       gprog* correct = mk_gprog();
       correct->push_back(mk_G91());
       correct->push_back(mk_G0(1.0, 0.0, 0.0));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse multi line relative code") {
@@ -174,7 +174,7 @@ namespace gca {
       correct->push_back(mk_G0(1.0, 1.0, 1.0));
       correct->push_back(mk_G0(mk_omitted(), mk_lit(0.5), mk_omitted()));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse G53") {
@@ -182,7 +182,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G53(mk_lit(3), mk_lit(2), mk_lit(1)));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse G53 with default position") {
@@ -191,21 +191,21 @@ namespace gca {
       gprog* correct = mk_gprog();
       correct->push_back(mk_G90());
       correct->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(1)));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse F instruction") {
       gprog* p = parse_gprog("F15 XY");
       gprog* correct = mk_gprog();
       correct->push_back(mk_f_instr(15, "XY"));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse F instruction not all") {
       gprog* p = parse_gprog("F15 XYZ");
       gprog* incorrect = mk_gprog();
       incorrect->push_back(mk_f_instr(15, "XY"));
-      REQUIRE(*p != *incorrect);
+      REQUIRE(((*p) != (*incorrect)));
     }
     
   }
@@ -219,7 +219,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_assign(mk_var(1), mk_lit(14)));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse variable coordinate") {
@@ -227,7 +227,7 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = mk_gprog();
       correct->push_back(mk_G0(mk_var(1025), mk_lit(2.5), mk_lit(3)));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
   }
 
@@ -242,7 +242,7 @@ namespace gca {
       correct->push_back(mk_G2(mk_lit(1), mk_lit(2), mk_lit(3),
 				 mk_lit(-2.0), mk_lit(0.15), mk_omitted(),
 				 mk_omitted()));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("G3 IK") {
@@ -251,7 +251,7 @@ namespace gca {
       correct->push_back(mk_G3(mk_lit(1), mk_lit(2), mk_lit(3),
 				 mk_lit(-2.0), mk_omitted(), mk_lit(0.15),
 				 mk_omitted()));
-      REQUIRE(*p == *correct);
+      REQUIRE(((*p) == (*correct)));
     }
     
   }

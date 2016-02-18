@@ -1,10 +1,13 @@
+#include "core/parser.h"
+
 #include <algorithm>
 #include <cctype>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <streambuf>
 
-#include "core/parser.h"
+
 
 namespace gca {
 
@@ -270,9 +273,10 @@ namespace gca {
   }
 
   gprog* read_file(string file_name) {
-    ifstream t(file_name);
-    string str((istreambuf_iterator<char>(t)),
-	       istreambuf_iterator<char>());
+    //ifstream t(file_name);
+    string str = "";
+    // string str((istreambuf_iterator<char>(t)),
+    // 	       istreambuf_iterator<char>());
     return parse_gprog(str);
   }
 

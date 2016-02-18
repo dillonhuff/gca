@@ -23,7 +23,7 @@ namespace gca {
 
   vector<linear_cut*> lines_to_cuts(vector<line>& lines, double cutter_width) {
     vector<linear_cut*> cuts;
-    for (int i = 0; i < lines.size(); i++) {
+    for (unsigned i = 0; i < lines.size(); i++) {
       linear_cut* res = line_to_cut(lines[i], cutter_width);
       linear_cut* down = vertical_cut_to(res);
       cuts.push_back(down);
@@ -49,7 +49,7 @@ namespace gca {
   gprog* gcode_for_cuts(vector<linear_cut*>& cuts) {
     point current_loc = point(0, 0, 0);
     gprog* p = mk_gprog();
-    for (int i = 0; i < cuts.size(); i++) {
+    for (unsigned i = 0; i < cuts.size(); i++) {
       from_to_with_G0(p, current_loc, cuts[i]->start);
       from_to_with_G1(p, cuts[i]->start, cuts[i]->end);
       current_loc = cuts[i]->end;
@@ -90,7 +90,7 @@ namespace gca {
   }
 
   void insert_sink_cuts(double l, vector<linear_cut*>& cuts, vector<linear_cut*>& dest) {
-    for (int i = 0; i < cuts.size(); i++) {
+    for (unsigned i = 0; i < cuts.size(); i++) {
       dest.push_back(sink_cut(cuts[i], l));
       dest.push_back(cuts[i]);
     }
