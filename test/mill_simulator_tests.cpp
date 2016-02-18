@@ -35,7 +35,7 @@ namespace gca {
       double actual = r.volume_removed();
       cout << "-- Correct: " << correct_volume << endl;
       cout << "-- Actual: " << actual << endl;
-      REQUIRE(within_eps(actual, correct_volume, 0.01));
+      REQUIRE(within_eps(actual, correct_volume, 0.05));
     }
 
     SECTION("Simulation") {
@@ -53,7 +53,7 @@ namespace gca {
 	double actual = r.volume_removed();
 	cout << "-- Correct: " << correct_volume << endl;
 	cout << "-- Actual: " << actual << endl;
-	REQUIRE(within_eps(actual, correct_volume, 0.01));
+	REQUIRE(within_eps(actual, correct_volume, 0.05));
       }
 
       SECTION("Move through whole workpiece then move back and stop") {
@@ -64,7 +64,7 @@ namespace gca {
 	double actual = r.volume_removed();
 	cout << "-- Correct: " << correct_volume << endl;
 	cout << "-- Actual: " << actual << endl;
-	REQUIRE(within_eps(actual, correct_volume, 0.01));
+	REQUIRE(within_eps(actual, correct_volume, 0.05));
       }
 
       SECTION("Diagonal cut over nothing") {
@@ -75,7 +75,7 @@ namespace gca {
 	double actual = r.volume_removed();
 	cout << "-- Correct: " << correct_volume << endl;
 	cout << "-- Actual: " << actual << endl;
-	REQUIRE(within_eps(actual, correct_volume, 0.01));
+	REQUIRE(within_eps(actual, correct_volume, 0.05));
       }
     }
   }

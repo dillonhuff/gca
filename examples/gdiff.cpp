@@ -22,7 +22,7 @@ void summarize_diffs(vector<diff*>& old_diffs, vector<diff*>& new_diffs) {
   }
   diff* cd = old_diffs[0];
   new_diffs.push_back(cd);
-  for (int i = 1; i < old_diffs.size(); i++) {
+  for (unsigned i = 1; i < old_diffs.size(); i++) {
     diff* nd = old_diffs[i];
     if (!cd->same_effect(*nd)) {
       cd = nd;
@@ -59,11 +59,11 @@ void diff_gprogs(vector<diff*>& diffs, gprog* p1, gprog* p2) {
   }
   bool p1_larger = p1->size() > p2->size();
   if (p1_larger) {
-    for (int j = i; j < p1->size(); j++ ) {
+    for (unsigned j = i; j < p1->size(); j++ ) {
       diffs.push_back(new gca::remove((*p1)[j]));
     }
   } else {
-    for (int j = i; j < p2->size(); j++ ) {
+    for (unsigned j = i; j < p2->size(); j++ ) {
       diffs.push_back(new gca::append((*p2)[j]));
     }    
   }
@@ -80,7 +80,7 @@ bool is_toolpath_start(instr* i) {
 
 void split_toolpaths(vector<gprog*>& tps, gprog* p) {
   gprog* t = mk_gprog();
-  for (int i = 0; i < p->size(); i++) {
+  for (unsigned i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
     if (is_toolpath_start(is)) {
       if (t->size() > 0) {
@@ -103,7 +103,7 @@ void compute_diff_summary(vector<diff*>& diff_summary, gprog* tp1, gprog* tp2) {
 
 void show_diff_summary(int section_num, vector<diff*>& diff_summary) {
   cout << "========== Section " << section_num << endl;
-  for (int j = 0; j < diff_summary.size(); j++) {
+  for (unsigned j = 0; j < diff_summary.size(); j++) {
     cout << "\t" << *diff_summary[j] << endl;
   }
 }
@@ -114,7 +114,7 @@ void gdiff_programs(gprog* p1, gprog* p2) {
   vector<gprog*> toolpaths2;
   split_toolpaths(toolpaths2, p2);
   assert(toolpaths1.size() == toolpaths2.size());
-  for (int i = 0; i < toolpaths1.size(); i++) {
+  for (unsigned i = 0; i < toolpaths1.size(); i++) {
     vector<diff*> diff_summary;
     compute_diff_summary(diff_summary, toolpaths1[i], toolpaths2[i]);
     show_diff_summary(i, diff_summary);

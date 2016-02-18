@@ -2,6 +2,7 @@
 #define GCA_ARENA_ALLOCATOR_H
 
 #include <cassert>
+#include <cstdlib>
 #include <vector>
 
 using namespace std;

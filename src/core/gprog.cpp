@@ -7,7 +7,7 @@ namespace gca {
   void gprog::all_positions_starting_at(point start, vector<point>& positions) {
     positions.push_back(start);
     orientation ori = GCA_ABSOLUTE;
-    for (int i = 1; i < size() + 1; i++) {
+    for (unsigned i = 1; i < size() + 1; i++) {
       instr* next = instrs[i-1];
       if (next->is_G()) {
 	move_instr mnext = *(static_cast<move_instr*>(next));
@@ -55,7 +55,7 @@ namespace gca {
       cout << "WRONG SIZE!" << endl;
       return false;
     }
-    for (int i = 0; i < size(); i++) {
+    for (unsigned i = 0; i < size(); i++) {
       if (*(other.instrs[i]) != *(instrs[i])) {
 	cout << "Instrs not equal!" << endl;
 	cout << *(other.instrs[i]) << endl;

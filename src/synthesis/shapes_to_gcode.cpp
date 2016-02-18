@@ -68,7 +68,7 @@ namespace gca {
     } else {
       from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height);
     }
-    for (int j = 0; j < cut_pass.size(); j++) {
+    for (unsigned j = 0; j < cut_pass.size(); j++) {
       point next_loc = cut_pass[j]->end;
       instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
       p->push_back(move_instr);

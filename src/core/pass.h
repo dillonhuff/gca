@@ -20,7 +20,7 @@ namespace gca {
     
   public:
     gprog* p;
-    int i;
+    unsigned i;
     int num_warns;
 
   pass() : num_warns(0) {}

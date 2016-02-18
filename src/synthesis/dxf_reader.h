@@ -24,8 +24,8 @@ namespace gca {
     int current_polyline_n;
     int polyline_vertices_left;
     point last_vertex;
-    int num_knots;
-    int num_control_points;
+    unsigned num_knots;
+    unsigned num_control_points;
 
     virtual void addSpline(const DL_SplineData& data) {
       if (log) {

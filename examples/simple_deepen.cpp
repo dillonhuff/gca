@@ -87,7 +87,7 @@ public:
 // Main driver function for deepening
 gprog* deepen(gprog* p, deepen_callback& f) {
   gprog* r = new (allocate<gprog>()) gprog();
-  for (int i = 0; i < p->size(); i++) {
+  for (unsigned i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
     instr* deepened_is = f.call(p, i, is);
     r->push_back(deepened_is);
@@ -102,8 +102,8 @@ int main(int argc, char** argv) {
   }
   arena_allocator a;
   set_system_allocator(&a);
-  double old_depth = stod(argv[1]);
-  double new_depth = stod(argv[2]);
+  double old_depth = atof(argv[1]);
+  double new_depth = atof(argv[2]);
   deepen_callback call(old_depth, new_depth);
   string file = argv[3];
   gprog* p = read_file(file);

@@ -15,14 +15,14 @@ namespace gca {
 
     SECTION("Extra instruction checker one warning") {
       gprog* p = parse_gprog("G91 G91");
-      REQUIRE(check_for_extra_instructions(p, GCA_ABSOLUTE) == 1);
+      REQUIRE((check_for_extra_instructions(p, GCA_ABSOLUTE) == 1));
     }
 
     SECTION("Program bounds checker true") {
       gprog* p = mk_gprog();
       p->push_back(mk_G0(12.5, -10.3, 0.0));
       p->push_back(mk_m2_instr());
-      REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 30, -20, -10, -5.0, 2.0) == 0);
+      REQUIRE((check_bounds(p, GCA_ABSOLUTE, 0, 30, -20, -10, -5.0, 2.0) == 0));
     }
 
     SECTION("Program bounds checker false") {

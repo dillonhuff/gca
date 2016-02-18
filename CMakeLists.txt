@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 2.6)
-SET(CMAKE_C_COMPILER "/usr/bin/clang")
-SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+#SET(CMAKE_C_COMPILER "/usr/bin/gcc")
+#SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
 project(gca)
 
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++98 -pedantic -I./src -I./test -Wall -Werror -g")
+#SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++98 -pedantic -I./src -I./test -Wall -Werror -g")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++0x -I./src -I./test")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 

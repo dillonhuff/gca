@@ -31,7 +31,7 @@ namespace gca {
 
   void extract_cuts(gprog* p, vector<cut_section>& g1_sections) {
     pass* s = mk_pos_pass(point(0, 0, 0));  
-    int i = 0;
+    unsigned i = 0;
     bool last_was_g1 = false;  
     gprog* current = mk_gprog();
     point last_start = point(0, 0, 0);

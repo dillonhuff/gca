@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
   
   gprog* p = read_file(file);
   vector<point> hole_locations;
-  for (int i = 0; i < p->size(); i++) {
+  for (unsigned i = 0; i < p->size(); i++) {
     instr* is = (*p)[i];
     if (is->is_G1()) {
       move_instr* mi = static_cast<move_instr*>(is);
@@ -58,21 +58,21 @@ int main(int argc, char** argv) {
   }
 
   int* pts = static_cast<int*>(malloc(sizeof(int)*hole_locations.size()));
-  for (int i = 0; i < hole_locations.size(); i++) {
+  for (unsigned i = 0; i < hole_locations.size(); i++) {
     pts[i] = i;
   }
 
   double** distance = static_cast<double**>(malloc(sizeof(double*)*hole_locations.size()));
-  for (int i = 0; i < hole_locations.size(); i++) {
+  for (unsigned i = 0; i < hole_locations.size(); i++) {
     distance[i] = static_cast<double*>(malloc(sizeof(double*)*hole_locations.size()));
-    for (int j = 0; j < hole_locations.size(); j++) {
+    for (unsigned j = 0; j < hole_locations.size(); j++) {
       distance[i][j] = abs((hole_locations[i] - hole_locations[j]).len());
     }
   }
 
   int* res = opt2(pts, distance, hole_locations.size());
   gprog* r = mk_gprog();
-  for (int i = 0; i < hole_locations.size(); i++) {
+  for (unsigned i = 0; i < hole_locations.size(); i++) {
     point pt = hole_locations[res[i]];
     r->push_back(mk_G1(pt.x, pt.y, pt.z, mk_omitted()));
     if (i < hole_locations.size() - 1) {

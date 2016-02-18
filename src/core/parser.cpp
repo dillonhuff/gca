@@ -1,10 +1,13 @@
+#include "core/parser.h"
+
 #include <algorithm>
 #include <cctype>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <streambuf>
 
-#include "core/parser.h"
+
 
 namespace gca {
 

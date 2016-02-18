@@ -1,6 +1,8 @@
 #ifndef GCA_UNSAFE_SPINDLE_CHECKER_H
 #define GCA_UNSAFE_SPINDLE_CHECKER_H
 
+#include <algorithm>
+
 #include "core/callback.h"
 #include "core/gprog.h"
 

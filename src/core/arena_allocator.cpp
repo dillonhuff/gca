@@ -1,5 +1,4 @@
 #include <cstdlib>
-
 #include "core/arena_allocator.h"
 
 namespace gca {
