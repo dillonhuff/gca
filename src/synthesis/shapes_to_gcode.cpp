@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <numeric>
 
 #include "core/context.h"
 #include "synthesis/dxf_reader.h"
@@ -229,36 +230,80 @@ namespace gca {
   bool not_valid_drill_toolpath(const toolpath& t) { return !(t.tool_no == 2 && t.cut_groups.size() > 0); }
 
   bool not_valid_drag_knife_toolpath(const toolpath& t) { return !(t.tool_no == 6 && t.cut_groups.size() > 0); }
+
+  int get_tool_no(const toolpath& t) { return t.tool_no; }
+
+  int toolpath_transition(int next, int previous) {
+    return previous == next ? -1 : next;
+  }
+
+  int cmp_tools(const toolpath& l, const toolpath& r) {
+    return l.tool_no < r.tool_no;
+  }
+
+  bool toolpath_is_empty(const toolpath& t) {
+    return t.cut_groups.size() == 0;
+  }
   
-  // TODO: Change to actual sorting by tool number
-  void append_toolpaths(const vector<toolpath>& toolpaths,
+  void append_toolpaths(vector<toolpath>& toolpaths,
 			gprog& p,
 			const cut_params& params) {
-    vector<toolpath> drill_toolpaths;
-    remove_copy_if(toolpaths.begin(),
-		   toolpaths.end(),
-		   back_inserter(drill_toolpaths),
-		   not_valid_drill_toolpath);
+    toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty),
+		    toolpaths.end());
+    stable_sort(toolpaths.begin(), toolpaths.end(), cmp_tools);
+    vector<int> active_tools(toolpaths.size());
+    transform(toolpaths.begin(), toolpaths.end(), active_tools.begin(), get_tool_no);
+    
+    vector<int> transitions(active_tools.size());
+    adjacent_difference(active_tools.begin(),
+    			active_tools.end(),
+    			transitions.begin(),
+    			toolpath_transition);
 
-    if (drill_toolpaths.size() > 0) {
-      append_drill_header(&p);
-      for (unsigned i = 0; i < drill_toolpaths.size(); i++) {
-	append_drill_toolpath(drill_toolpaths[i], p, params);
+    for (unsigned i = 0; i < toolpaths.size(); i++) {
+      int trans = transitions[i];
+      if (trans == -1) {
+      } else if (trans == 2) {
+	append_drill_header(&p);
+      } else if (trans == 6) {
+	append_drag_knife_transfer(&p);
+      } else {
+	assert(false);
+      }
+      if (toolpaths[i].tool_no == 2) {
+	append_drill_toolpath(toolpaths[i], p, params);
+      } else if (toolpaths[i].tool_no == 6) {
+	append_drag_knife_toolpath(toolpaths[i], p, params);
+      } else {
+	assert(false);
       }
     }
+    
+    // vector<toolpath> drill_toolpaths;
+    // remove_copy_if(toolpaths.begin(),
+    // 		   toolpaths.end(),
+    // 		   back_inserter(drill_toolpaths),
+    // 		   not_valid_drill_toolpath);
 
-    vector<toolpath> drag_knife_toolpaths;
-    remove_copy_if(toolpaths.begin(),
-		   toolpaths.end(),
-		   back_inserter(drag_knife_toolpaths),
-		   not_valid_drag_knife_toolpath);
+    // if (drill_toolpaths.size() > 0) {
+    //   append_drill_header(&p);
+    //   for (unsigned i = 0; i < drill_toolpaths.size(); i++) {
+    // 	append_drill_toolpath(drill_toolpaths[i], p, params);
+    //   }
+    // }
 
-    if (drag_knife_toolpaths.size() > 0) {
-      append_drag_knife_transfer(&p);
-      for (unsigned i = 0; i < drag_knife_toolpaths.size(); i++) {
-	append_drag_knife_toolpath(drag_knife_toolpaths[i], p, params);
-      }
-    }
+    // vector<toolpath> drag_knife_toolpaths;
+    // remove_copy_if(toolpaths.begin(),
+    // 		   toolpaths.end(),
+    // 		   back_inserter(drag_knife_toolpaths),
+    // 		   not_valid_drag_knife_toolpath);
+
+    // if (drag_knife_toolpaths.size() > 0) {
+    //   append_drag_knife_transfer(&p);
+    //   for (unsigned i = 0; i < drag_knife_toolpaths.size(); i++) {
+    // 	append_drag_knife_toolpath(drag_knife_toolpaths[i], p, params);
+    //   }
+    // }
   }
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
