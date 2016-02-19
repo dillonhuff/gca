@@ -7,8 +7,6 @@
 #include <iostream>
 #include <streambuf>
 
-
-
 namespace gca {
 
   void ignore_comment_with_delimiters(char sc, char ec, size_t* i, const string& s) {

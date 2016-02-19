@@ -139,13 +139,10 @@ namespace gca {
     }
 
     SECTION("Read and parse real CNC file") {
-      cout << "READING REAL CNC FILE" << endl;
       string fn = project_path + string("gca/test/drill1.tap");
       gprog* p = read_file(fn);
-      cout << *p;
       REQUIRE((p->size() == 61));
     }
-    
   }
 
   TEST_CASE("Parse GCODE with relative coordinates") {

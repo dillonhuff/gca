@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "core/context.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/shapes_to_gcode.h"
@@ -224,41 +226,53 @@ namespace gca {
     }
   }
 
+  bool valid_drill_toolpath(toolpath t) {
+    return t.tool_no == 2 && t.cut_groups.size() > 0;
+  }
+
+  bool valid_drag_knife_toolpath(toolpath t) {
+    return t.tool_no == 6 && t.cut_groups.size() > 0;
+  }
+  
   // TODO: Change to actual sorting by tool number
   void append_toolpaths(const vector<toolpath>& toolpaths,
 			gprog& p,
 			const cut_params& params) {
-    int num_drill_toolpaths = 0;
-    int num_drag_knife_toolpaths = 0;
-    for (unsigned i = 0; i < toolpaths.size(); i++) {
-      int tool_no = toolpaths[i].tool_no;
-      int num_cuts = toolpaths[i].cut_groups.size();
-      if (num_cuts > 0) {
-	if (tool_no == 6) {
-	  num_drag_knife_toolpaths++;
-	} else if (tool_no == 2) {
-	  num_drill_toolpaths++;
-	} else {
-	  assert(false);
-	}
-      }
-    }
+    int num_drill_toolpaths = count_if(toolpaths.begin(),
+				       toolpaths.end(),
+				       valid_drill_toolpath);
+    int num_drag_knife_toolpaths = count_if(toolpaths.begin(),
+					    toolpaths.end(),
+					    valid_drag_knife_toolpath);
+    // for (unsigned i = 0; i < toolpaths.size(); i++) {
+    //   int tool_no = toolpaths[i].tool_no;
+    //   int num_cuts = toolpaths[i].cut_groups.size();
+    //   if (num_cuts > 0) {
+    // 	if (tool_no == 6) {
+    // 	  num_drag_knife_toolpaths++;
+    // 	} else if (tool_no == 2) {
+    // 	  num_drill_toolpaths++;
+    // 	} else {
+    // 	  assert(false);
+    // 	}
+    //   }
+    // }
 
     if (num_drill_toolpaths > 0) {
       append_drill_header(&p);
       for (unsigned i = 0; i < toolpaths.size(); i++) {
-	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 2) {
-	  append_drill_toolpath(toolpaths[i], p, params);
-	}
+    	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 2) {
+    	  append_drill_toolpath(toolpaths[i], p, params);
+    	}
       }
     }
 
     if (num_drag_knife_toolpaths > 0) {
       append_drag_knife_transfer(&p);
       for (unsigned i = 0; i < toolpaths.size(); i++) {
-	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 6) {
-	  append_drag_knife_toolpath(toolpaths[i], p, params);
-	}
+    	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 6) {
+    	  append_drag_knife_toolpath(toolpaths[i], p, params);
+    	}
       }
     }
   }
