@@ -227,10 +227,6 @@ namespace gca {
     }
   }
 
-  bool not_valid_drill_toolpath(const toolpath& t) { return !(t.tool_no == 2 && t.cut_groups.size() > 0); }
-
-  bool not_valid_drag_knife_toolpath(const toolpath& t) { return !(t.tool_no == 6 && t.cut_groups.size() > 0); }
-
   int get_tool_no(const toolpath& t) { return t.tool_no; }
 
   int toolpath_transition(int next, int previous) {
@@ -244,7 +240,28 @@ namespace gca {
   bool toolpath_is_empty(const toolpath& t) {
     return t.cut_groups.size() == 0;
   }
-  
+
+  void append_transition_if_needed(int trans, gprog& p) {
+    if (trans == -1) {
+    } else if (trans == 2) {
+      append_drill_header(&p);
+    } else if (trans == 6) {
+      append_drag_knife_transfer(&p);
+    } else {
+      assert(false);
+    }
+  }
+
+  void append_toolpath_code(const toolpath& t, gprog& p, const cut_params& params) {
+    if (t.tool_no == 2) {
+      append_drill_toolpath(t, p, params);
+    } else if (t.tool_no == 6) {
+      append_drag_knife_toolpath(t, p, params);
+    } else {
+      assert(false);
+    }
+  }
+
   void append_toolpaths(vector<toolpath>& toolpaths,
 			gprog& p,
 			const cut_params& params) {
@@ -261,49 +278,9 @@ namespace gca {
     			toolpath_transition);
 
     for (unsigned i = 0; i < toolpaths.size(); i++) {
-      int trans = transitions[i];
-      if (trans == -1) {
-      } else if (trans == 2) {
-	append_drill_header(&p);
-      } else if (trans == 6) {
-	append_drag_knife_transfer(&p);
-      } else {
-	assert(false);
-      }
-      if (toolpaths[i].tool_no == 2) {
-	append_drill_toolpath(toolpaths[i], p, params);
-      } else if (toolpaths[i].tool_no == 6) {
-	append_drag_knife_toolpath(toolpaths[i], p, params);
-      } else {
-	assert(false);
-      }
+      append_transition_if_needed(transitions[i], p);
+      append_toolpath_code(toolpaths[i], p, params);
     }
-    
-    // vector<toolpath> drill_toolpaths;
-    // remove_copy_if(toolpaths.begin(),
-    // 		   toolpaths.end(),
-    // 		   back_inserter(drill_toolpaths),
-    // 		   not_valid_drill_toolpath);
-
-    // if (drill_toolpaths.size() > 0) {
-    //   append_drill_header(&p);
-    //   for (unsigned i = 0; i < drill_toolpaths.size(); i++) {
-    // 	append_drill_toolpath(drill_toolpaths[i], p, params);
-    //   }
-    // }
-
-    // vector<toolpath> drag_knife_toolpaths;
-    // remove_copy_if(toolpaths.begin(),
-    // 		   toolpaths.end(),
-    // 		   back_inserter(drag_knife_toolpaths),
-    // 		   not_valid_drag_knife_toolpath);
-
-    // if (drag_knife_toolpaths.size() > 0) {
-    //   append_drag_knife_transfer(&p);
-    //   for (unsigned i = 0; i < drag_knife_toolpaths.size(); i++) {
-    // 	append_drag_knife_toolpath(drag_knife_toolpaths[i], p, params);
-    //   }
-    // }
   }
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
