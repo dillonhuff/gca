@@ -54,10 +54,10 @@ namespace gca {
   void append_pass_code(gprog* p,
 			point current_loc,
 			point current_orient,
-			const vector<cut*> cut_pass,
+			const vector<cut*>& cut_pass,
 			cut_params params) {
     double align_depth = params.material_depth - params.push_depth;
-    point next_orient = cut_pass.front()->end - cut_pass.front()->start;
+    point next_orient = cut_pass.front()->initial_orient();
     point next_loc = cut_pass.front()->start;
     if (!within_eps(current_orient, next_orient)) {
       from_to_with_G0_drag_knife(params.safe_height,
@@ -226,53 +226,37 @@ namespace gca {
     }
   }
 
-  bool valid_drill_toolpath(toolpath t) {
-    return t.tool_no == 2 && t.cut_groups.size() > 0;
-  }
+  bool not_valid_drill_toolpath(const toolpath& t) { return !(t.tool_no == 2 && t.cut_groups.size() > 0); }
 
-  bool valid_drag_knife_toolpath(toolpath t) {
-    return t.tool_no == 6 && t.cut_groups.size() > 0;
-  }
+  bool not_valid_drag_knife_toolpath(const toolpath& t) { return !(t.tool_no == 6 && t.cut_groups.size() > 0); }
   
   // TODO: Change to actual sorting by tool number
   void append_toolpaths(const vector<toolpath>& toolpaths,
 			gprog& p,
 			const cut_params& params) {
-    int num_drill_toolpaths = count_if(toolpaths.begin(),
-				       toolpaths.end(),
-				       valid_drill_toolpath);
-    int num_drag_knife_toolpaths = count_if(toolpaths.begin(),
-					    toolpaths.end(),
-					    valid_drag_knife_toolpath);
-    // for (unsigned i = 0; i < toolpaths.size(); i++) {
-    //   int tool_no = toolpaths[i].tool_no;
-    //   int num_cuts = toolpaths[i].cut_groups.size();
-    //   if (num_cuts > 0) {
-    // 	if (tool_no == 6) {
-    // 	  num_drag_knife_toolpaths++;
-    // 	} else if (tool_no == 2) {
-    // 	  num_drill_toolpaths++;
-    // 	} else {
-    // 	  assert(false);
-    // 	}
-    //   }
-    // }
+    vector<toolpath> drill_toolpaths;
+    remove_copy_if(toolpaths.begin(),
+		   toolpaths.end(),
+		   back_inserter(drill_toolpaths),
+		   not_valid_drill_toolpath);
 
-    if (num_drill_toolpaths > 0) {
+    if (drill_toolpaths.size() > 0) {
       append_drill_header(&p);
-      for (unsigned i = 0; i < toolpaths.size(); i++) {
-    	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 2) {
-    	  append_drill_toolpath(toolpaths[i], p, params);
-    	}
+      for (unsigned i = 0; i < drill_toolpaths.size(); i++) {
+	append_drill_toolpath(drill_toolpaths[i], p, params);
       }
     }
 
-    if (num_drag_knife_toolpaths > 0) {
+    vector<toolpath> drag_knife_toolpaths;
+    remove_copy_if(toolpaths.begin(),
+		   toolpaths.end(),
+		   back_inserter(drag_knife_toolpaths),
+		   not_valid_drag_knife_toolpath);
+
+    if (drag_knife_toolpaths.size() > 0) {
       append_drag_knife_transfer(&p);
-      for (unsigned i = 0; i < toolpaths.size(); i++) {
-    	if (toolpaths[i].cut_groups.size() > 0 && toolpaths[i].tool_no == 6) {
-    	  append_drag_knife_toolpath(toolpaths[i], p, params);
-    	}
+      for (unsigned i = 0; i < drag_knife_toolpaths.size(); i++) {
+	append_drag_knife_toolpath(drag_knife_toolpaths[i], p, params);
       }
     }
   }
