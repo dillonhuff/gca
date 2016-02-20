@@ -14,7 +14,7 @@ namespace gca {
 
     bool continuous(const cut* last_cut, const cut* next_cut) {
       if (!within_eps(last_cut->end, next_cut->start)) {
-      	return false;;
+      	return false;
       }
       double theta = angle_between(last_cut->final_orient(), next_cut->initial_orient());
       return theta <= max_orientation_change;
