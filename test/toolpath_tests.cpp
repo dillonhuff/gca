@@ -21,6 +21,12 @@ namespace gca {
     vector<cut*> cuts;
     vector<cut_group> cgs;
 
+    SECTION("One cut") {
+      cuts.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
+      group_adjacent_cuts(cuts, cgs, 30.0);
+      REQUIRE(cgs.size() == 1);
+    }
+    
     SECTION("Several non-continuous lines") {
       cuts.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
       cuts.push_back(mk_linear_cut(point(1, 0, 0), point(1, 1, 0)));
