@@ -60,9 +60,8 @@ namespace gca {
   point extend_back(point start, point end, double l);
   bool within_eps(const point& l, const point& r, double eps=0.0000001);
   bool within_eps(double l, double r, double eps=0.0000001);
-
+  double angle_between(point u, point v);
   ostream& operator<<(ostream& s, const point& p);
-  
 }
 
 #endif

@@ -6,11 +6,6 @@
 
 namespace gca {
 
-  double angle_between(point u, point v) {
-    double rads = acos((u.dot(v)) / (u.len() * v.len()));
-    return (180.0/M_PI)*rads;
-  }
-
   circular_arc align_coords(point desired_orient,
 			    point circle_end,
 			    point current_orient,

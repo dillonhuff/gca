@@ -1,6 +1,8 @@
 #ifndef GCA_CUT_H
 #define GCA_CUT_H
 
+#include <cassert>
+
 #include "geometry/point.h"
 
 namespace gca {

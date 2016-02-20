@@ -38,6 +38,11 @@ namespace gca {
   point operator*(double a, const point& p) {
     return point(a*p.x, a*p.y, a*p.z);
   }
+
+  double angle_between(point u, point v) {
+    double rads = acos((u.dot(v)) / (u.len() * v.len()));
+    return (180.0/M_PI)*rads;
+  }
   
   ostream& operator<<(ostream& s, const point& p) {
     p.print(s);

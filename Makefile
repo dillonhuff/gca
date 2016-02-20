@@ -1606,6 +1606,63 @@ src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
+src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
+
+.PHONY : src/synthesis/toolpath.o
+
+# target to build an object file
+src/synthesis/toolpath.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/toolpath.cpp.o
+.PHONY : src/synthesis/toolpath.cpp.o
+
+src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
+
+.PHONY : src/synthesis/toolpath.i
+
+# target to preprocess a source file
+src/synthesis/toolpath.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/toolpath.cpp.i
+.PHONY : src/synthesis/toolpath.cpp.i
+
+src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
+
+.PHONY : src/synthesis/toolpath.s
+
+# target to generate assembly for a file
+src/synthesis/toolpath.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/toolpath.cpp.s
+.PHONY : src/synthesis/toolpath.cpp.s
+
 src/system/bmp_output.o: src/system/bmp_output.cpp.o
 
 .PHONY : src/system/bmp_output.o
@@ -2077,6 +2134,33 @@ test/spline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.s
 .PHONY : test/spline_tests.cpp.s
 
+test/toolpath_tests.o: test/toolpath_tests.cpp.o
+
+.PHONY : test/toolpath_tests.o
+
+# target to build an object file
+test/toolpath_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_tests.cpp.o
+.PHONY : test/toolpath_tests.cpp.o
+
+test/toolpath_tests.i: test/toolpath_tests.cpp.i
+
+.PHONY : test/toolpath_tests.i
+
+# target to preprocess a source file
+test/toolpath_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_tests.cpp.i
+.PHONY : test/toolpath_tests.cpp.i
+
+test/toolpath_tests.s: test/toolpath_tests.cpp.s
+
+.PHONY : test/toolpath_tests.s
+
+# target to generate assembly for a file
+test/toolpath_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_tests.cpp.s
+.PHONY : test/toolpath_tests.cpp.s
+
 test/transformer_tests.o: test/transformer_tests.cpp.o
 
 .PHONY : test/transformer_tests.o
@@ -2210,6 +2294,9 @@ help:
 	@echo "... src/synthesis/shapes_to_gcode.o"
 	@echo "... src/synthesis/shapes_to_gcode.i"
 	@echo "... src/synthesis/shapes_to_gcode.s"
+	@echo "... src/synthesis/toolpath.o"
+	@echo "... src/synthesis/toolpath.i"
+	@echo "... src/synthesis/toolpath.s"
 	@echo "... src/system/bmp_output.o"
 	@echo "... src/system/bmp_output.i"
 	@echo "... src/system/bmp_output.s"
@@ -2249,6 +2336,9 @@ help:
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"
+	@echo "... test/toolpath_tests.o"
+	@echo "... test/toolpath_tests.i"
+	@echo "... test/toolpath_tests.s"
 	@echo "... test/transformer_tests.o"
 	@echo "... test/transformer_tests.i"
 	@echo "... test/transformer_tests.s"

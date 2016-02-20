@@ -6,8 +6,6 @@
 
 namespace gca {
 
-  double angle_between(point u, point v);
-
   circular_arc align_coords(point desired_dir,
 			    point desired_pos,
 			    point current_dir,

@@ -8,49 +8,6 @@
 using namespace std;
 
 namespace gca {
-
-  bool continuous_cuts(const cut& last_cut,
-		       const cut& next_cut,
-		       double max_orientation_change) {
-    if (!within_eps(last_cut.end, next_cut.start)) {
-      return false;
-    }
-    double theta = angle_between(last_cut.final_orient(), next_cut.initial_orient());
-    return theta <= max_orientation_change;
-  }
-  
-  void collect_adjacent_cuts(const vector<cut*>& cuts,
-			     vector<cut*>& cut_group,
-			     unsigned i,
-			     double max_orientation_change) {
-    cut_group.push_back(cuts[i]);
-    if (cuts.size() == i - 1) {
-      return;
-    }
-    unsigned j = i;
-    while (j < cuts.size() - 1) {
-      cut* last_cut = cuts[j];
-      cut* next_cut = cuts[j + 1];
-      if (!continuous_cuts(*last_cut, *next_cut, max_orientation_change)) {
-	break;
-      }
-      cut_group.push_back(cuts[j]);
-      j++;
-    }
-  }
-
-  void group_adjacent_cuts(const vector<cut*>& cuts,
-			   vector<cut_group>& cut_groups,
-			   double max_orientation_change) {
-    unsigned i = 0;
-    while (i < cuts.size()) {
-      cut_group cut_g;
-      collect_adjacent_cuts(cuts, cut_g, i, max_orientation_change);
-      assert(cut_g.size() > 0);
-      cut_groups.push_back(cut_g);
-      i += cut_g.size();
-    }
-  }
     
   void append_pass_code(gprog* p,
 			point current_loc,
@@ -212,10 +169,9 @@ namespace gca {
       toolpaths.push_back(drill_toolpath(shapes_to_cut.holes, params));
     }
 
-    vector<cut*> lines_to_cut = shapes_to_cut.lines;
     vector<cut_group> cut_groups;
     append_splines(shapes_to_cut.splines, cut_groups);
-    group_adjacent_cuts(lines_to_cut, cut_groups, 30.0);
+    group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
 
     if (params.tools == DRILL_AND_DRAG_KNIFE ||
 	params.tools == DRAG_KNIFE_ONLY) {
