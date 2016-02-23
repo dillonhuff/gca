@@ -137,7 +137,7 @@ namespace gca {
     if (m == CAMASTER) {
       p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
       p->push_back(mk_m5_instr());
-    } else if (m == PROBOTIX_VK90_MK2_VFD) {
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
       p->push_back(mk_m2_instr());
     } else {
       assert(false);
@@ -157,7 +157,7 @@ namespace gca {
       r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
       r->push_back(mk_f_instr(5, "XY"));
       r->push_back(mk_f_instr(5, "Z"));
-    } else if (m == PROBOTIX_VK90_MK2_VFD) {
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
       r->push_back(mk_G90());
     } else {
       assert(false);
@@ -176,7 +176,7 @@ namespace gca {
       p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
       p->push_back(mk_f_instr(4, "XY"));
       p->push_back(mk_f_instr(50, "Z"));
-    } else if (m == PROBOTIX_VK90_MK2_VFD) {
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
       p->push_back(mk_G90());
     } else {
       assert(false);

@@ -7,8 +7,82 @@
 
 using namespace gca;
 
+void letter_lines(vector<cut*>& lines,
+		  char letter,
+		  double x_init,
+		  double y_init,
+		  double letter_width,
+		  double eps) {
+  double xi = x_init;
+  double xm = x_init + (letter_width / 2.0);
+  double xl = x_init + letter_width;
 
-int main() {
+  double yi = y_init;
+  double ym = y_init - (letter_width / 2.0);
+  double yl = y_init - letter_width;
+
+  point p0 = point(xi, yi, 0);
+  point p1 = point(xm, yi, 0);
+  point p2 = point(xl, yi, 0);
+  
+  point p3 = point(xi, ym, 0);
+  point p4 = point(xm, ym, 0);
+  point p5 = point(xl, ym, 0);
+  
+  point p6 = point(xi, yl, 0);
+  point p7 = point(xm, yl, 0);
+  point p8 = point(xl, yl, 0);
+  
+  switch (letter) {
+  case ('H'):
+    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(mk_linear_cut(p3, p5));
+    lines.push_back(mk_linear_cut(p2, p8));
+    break;
+  case ('E'):
+    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(mk_linear_cut(p0, p2));
+    lines.push_back(mk_linear_cut(p3, p5));
+    lines.push_back(mk_linear_cut(p6, p8));
+    break;
+  case('L'):
+    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(mk_linear_cut(p6, p8));
+    break;    
+  case('O'):
+    lines.push_back(mk_linear_cut(p0, p2));
+    lines.push_back(mk_linear_cut(p2, p8));
+    lines.push_back(mk_linear_cut(p8, p6));
+    lines.push_back(mk_linear_cut(p6, p0));
+    break;    
+  case ('\0'):
+    break;
+  default:
+    assert(false);
+  }
+}
+
+void draw_string(const string& s,
+		 vector<cut*>& lines) {
+  double x_init = 7.5;
+  double y_init = 7.5;
+  double letter_width = 0.5;
+  double eps = 0.1;
+  for (unsigned i = 0; i < s.size(); i++) {
+    letter_lines(lines,
+		 s[i],
+		 x_init + i*(eps + letter_width),
+		 y_init,
+		 letter_width,
+		 eps);
+  }
+}
+
+
+int main(int argc, char** argv) {
+  assert(argc == 2);
+  string to_draw = argv[1];
+  
   arena_allocator a;
   set_system_allocator(&a);
 
@@ -21,11 +95,11 @@ int main() {
   params.default_feedrate = 20;
   params.one_pass_only = true;
   params.pass_depth = -4.05;
+  params.target_machine = PROBOTIX_V90_MK2_VFD;
   params.tools = DRILL_ONLY;
 
   vector<cut*> lines;
-  lines.push_back(mk_linear_cut(point(8.3, 7.6, 0), point(8.5, 8.1, 0)));
-  lines.push_back(mk_linear_cut(point(8.5, 8.1, 0), point(8.75, 7.2, 0)));
+  draw_string(to_draw, lines);
   vector<hole_punch*> holes;
   vector<b_spline*> splines;
   shape_layout l(lines, holes, splines);
@@ -40,8 +114,8 @@ int main() {
   vector<int> permitted_tools;
   check_for_forbidden_tool_changes(permitted_tools, p);
   check_bounds(p, GCA_ABSOLUTE,
-	       7, 9,
-	       7, 9,
+	       4, 12,
+	       5, 10,
 	       -4.1, -0.05);
   return 0;
 }

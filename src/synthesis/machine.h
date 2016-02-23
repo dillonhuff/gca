@@ -5,7 +5,7 @@ namespace gca {
 
   enum machine_name {
     CAMASTER = 0,
-    PROBOTIX_VK90_MK2_VFD
+    PROBOTIX_V90_MK2_VFD
   };
 }
 
