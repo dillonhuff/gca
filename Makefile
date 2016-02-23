@@ -1385,6 +1385,33 @@ test/checker_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/checker_tests.cpp.s
 .PHONY : test/checker_tests.cpp.s
 
+test/circular_arc_tests.o: test/circular_arc_tests.cpp.o
+
+.PHONY : test/circular_arc_tests.o
+
+# target to build an object file
+test/circular_arc_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.o
+.PHONY : test/circular_arc_tests.cpp.o
+
+test/circular_arc_tests.i: test/circular_arc_tests.cpp.i
+
+.PHONY : test/circular_arc_tests.i
+
+# target to preprocess a source file
+test/circular_arc_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.i
+.PHONY : test/circular_arc_tests.cpp.i
+
+test/circular_arc_tests.s: test/circular_arc_tests.cpp.s
+
+.PHONY : test/circular_arc_tests.s
+
+# target to generate assembly for a file
+test/circular_arc_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.s
+.PHONY : test/circular_arc_tests.cpp.s
+
 test/cut_tests.o: test/cut_tests.cpp.o
 
 .PHONY : test/cut_tests.o
@@ -1735,6 +1762,9 @@ help:
 	@echo "... test/checker_tests.o"
 	@echo "... test/checker_tests.i"
 	@echo "... test/checker_tests.s"
+	@echo "... test/circular_arc_tests.o"
+	@echo "... test/circular_arc_tests.i"
+	@echo "... test/circular_arc_tests.s"
 	@echo "... test/cut_tests.o"
 	@echo "... test/cut_tests.i"
 	@echo "... test/cut_tests.s"

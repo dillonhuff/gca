@@ -35,7 +35,8 @@ namespace gca {
     }
 
     virtual point initial_orient() const {
-      return (end - start).rotate_z(90).normalize();
+      double theta = dir == CLOCKWISE ? 90 : -90;
+      return (end - start).rotate_z(theta).normalize();
     }
 
     inline bool is_circular_arc() const { return true; }

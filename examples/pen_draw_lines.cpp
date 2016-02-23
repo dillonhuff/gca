@@ -11,8 +11,7 @@ void letter_lines(vector<cut*>& lines,
 		  char letter,
 		  double x_init,
 		  double y_init,
-		  double letter_width,
-		  double eps) {
+		  double letter_width) {
   double xi = x_init;
   double xm = x_init + (letter_width / 2.0);
   double xl = x_init + letter_width;
@@ -94,8 +93,7 @@ void draw_string(double x_init,
 		 s[i],
 		 x_init + i*(eps + letter_width),
 		 y_init,
-		 letter_width,
-		 eps);
+		 letter_width);
   }
 }
 
