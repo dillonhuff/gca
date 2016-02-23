@@ -55,10 +55,12 @@ void letter_lines(vector<cut*>& lines,
     lines.push_back(mk_linear_cut(p6, p8));
     break;
   case('O'):
-    lines.push_back(mk_linear_cut(p0, p2));
-    lines.push_back(mk_linear_cut(p2, p8));
-    lines.push_back(mk_linear_cut(p8, p6));
-    lines.push_back(mk_linear_cut(p6, p0));
+    lines.push_back(circular_arc::make(p3, p5, p4 - p3, CLOCKWISE));
+    lines.push_back(circular_arc::make(p5, p3, p4 - p5, CLOCKWISE));
+    // lines.push_back(mk_linear_cut(p0, p2));
+    // lines.push_back(mk_linear_cut(p2, p8));
+    // lines.push_back(mk_linear_cut(p8, p6));
+    // lines.push_back(mk_linear_cut(p6, p0));
     break;
   case('R'):
     lines.push_back(mk_linear_cut(p0, p6));

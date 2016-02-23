@@ -21,7 +21,8 @@ namespace gca {
       cout << "rad = " << rad << endl;
       assert(false);
     }
-    return circular_arc(circle_start, circle_end, circle_start_off);
+    // TODO: Set arc direction here
+    return circular_arc(circle_start, circle_end, circle_start_off, CLOCKWISE);
   }
 
   move_instr* circular_arc_to_gcode(circular_arc ca) {

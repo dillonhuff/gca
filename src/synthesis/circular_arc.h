@@ -6,12 +6,22 @@
 
 namespace gca {
 
+  enum direction {
+    CLOCKWISE = 0,
+    COUNTERCLOCKWISE };
+
   class circular_arc : public cut {
   public:
     point start_offset;
+    direction dir;
 
-  circular_arc(point sp, point ep, point so) :
-    cut(sp, ep), start_offset(so) {}
+  circular_arc(point sp, point ep, point so, direction pdir) :
+    cut(sp, ep), start_offset(so), dir(pdir) {}
+
+    static circular_arc* make(point sp, point ep, point offset, direction dir) {
+      circular_arc* mem = allocate<circular_arc>();
+      return new (mem) circular_arc(sp, ep, offset, dir);
+    }
 
     bool operator==(const cut& other) const {
       if (other.is_circular_arc()) {
@@ -23,7 +33,7 @@ namespace gca {
 
     cut* shift(point sh) const {
       circular_arc* mem = allocate<circular_arc>();
-      return new (mem) circular_arc(start + sh, end + sh, start_offset);
+      return new (mem) circular_arc(start + sh, end + sh, start_offset, dir);
     }
 
     inline bool is_circular_arc() const { return true; }

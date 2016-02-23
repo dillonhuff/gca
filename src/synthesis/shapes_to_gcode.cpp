@@ -42,8 +42,14 @@ namespace gca {
       vector<cut*> new_pass;
       for (unsigned i = 0; i < current_group.size(); i++) {
 	cut* ct = current_group[i];
-	assert(ct->is_linear_cut());
-	new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
+	if (ct->is_linear_cut()) {
+	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
+	} else if (ct->is_circular_arc()) {
+	  circular_arc* arc = static_cast<circular_arc*>(ct);
+	  new_pass.push_back(circular_arc::make(arc->start, arc->end, arc->start_offset, arc->dir));
+	} else {
+	  assert(false);
+	}
       }
       cut_group_passes.push_back(new_pass);
       
