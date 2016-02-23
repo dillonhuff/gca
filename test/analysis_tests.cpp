@@ -34,6 +34,7 @@ namespace gca {
       params.push_depth = 0.005;
       params.start_loc = point(0, 0, 0);
       params.start_orient = point(1, 0, 0);
+      params.target_machine = CAMASTER;
       params.tools = DRILL_AND_DRAG_KNIFE;
 
       vector<cut*> lines;

@@ -7,6 +7,7 @@
 #include "core/gprog.h"
 #include "geometry/line.h"
 #include "synthesis/linear_cut.h"
+#include "synthesis/machine.h"
 
 using namespace std;
 
@@ -32,10 +33,9 @@ namespace gca {
 
   void from_to_with_G0(gprog* p, point from, point to);
   
-  gprog* initial_gprog();
-  gprog* append_footer(gprog* p);
-  void append_drill_header(gprog* p);
-
+  gprog* initial_gprog(machine_name m);
+  gprog* append_footer(gprog* p, machine_name m);
+  void append_drill_header(gprog* p, machine_name m);
   void append_drag_knife_transfer(gprog* p);
 
   void from_to_with_G0_height(gprog* p,

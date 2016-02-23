@@ -208,10 +208,10 @@ namespace gca {
     return t.cut_groups.size() == 0;
   }
 
-  void append_transition_if_needed(int trans, gprog& p) {
+  void append_transition_if_needed(int trans, gprog& p, const cut_params& params) {
     if (trans == -1) {
     } else if (trans == 2) {
-      append_drill_header(&p);
+      append_drill_header(&p, params.target_machine);
     } else if (trans == 6) {
       append_drag_knife_transfer(&p);
     } else {
@@ -245,7 +245,7 @@ namespace gca {
     			toolpath_transition);
 
     for (unsigned i = 0; i < toolpaths.size(); i++) {
-      append_transition_if_needed(transitions[i], p);
+      append_transition_if_needed(transitions[i], p, params);
       append_toolpath_code(toolpaths[i], p, params);
     }
   }
@@ -256,7 +256,7 @@ namespace gca {
     create_toolpaths(shapes_to_cut, toolpaths, params);
     gprog* p = mk_gprog();
     append_toolpaths(toolpaths, *p, params);
-    gprog* r = append_footer(p);
+    gprog* r = append_footer(p, params.target_machine);
     return r;
   }
 }

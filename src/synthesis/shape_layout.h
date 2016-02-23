@@ -5,6 +5,7 @@
 #include "geometry/b_spline.h"
 #include "synthesis/cut.h"
 #include "synthesis/hole_punch.h"
+#include "synthesis/machine.h"
 
 namespace gca {
 
@@ -35,7 +36,12 @@ namespace gca {
     double default_feedrate;
     bool one_pass_only;
     double pass_depth;
+    machine_name target_machine;
     ToolOptions tools;
+
+    cut_params() {
+      one_pass_only = false;
+    }
   };
 
 }
