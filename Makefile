@@ -1121,6 +1121,48 @@ src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
+src/synthesis/spline_sampling.o: src/synthesis/spline_sampling.cpp.o
+
+.PHONY : src/synthesis/spline_sampling.o
+
+# target to build an object file
+src/synthesis/spline_sampling.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/spline_sampling.cpp.o
+.PHONY : src/synthesis/spline_sampling.cpp.o
+
+src/synthesis/spline_sampling.i: src/synthesis/spline_sampling.cpp.i
+
+.PHONY : src/synthesis/spline_sampling.i
+
+# target to preprocess a source file
+src/synthesis/spline_sampling.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/spline_sampling.cpp.i
+.PHONY : src/synthesis/spline_sampling.cpp.i
+
+src/synthesis/spline_sampling.s: src/synthesis/spline_sampling.cpp.s
+
+.PHONY : src/synthesis/spline_sampling.s
+
+# target to generate assembly for a file
+src/synthesis/spline_sampling.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/spline_sampling.cpp.s
+.PHONY : src/synthesis/spline_sampling.cpp.s
+
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
 
 .PHONY : src/synthesis/toolpath.o
@@ -1741,6 +1783,9 @@ help:
 	@echo "... src/synthesis/shapes_to_gcode.o"
 	@echo "... src/synthesis/shapes_to_gcode.i"
 	@echo "... src/synthesis/shapes_to_gcode.s"
+	@echo "... src/synthesis/spline_sampling.o"
+	@echo "... src/synthesis/spline_sampling.i"
+	@echo "... src/synthesis/spline_sampling.s"
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"
