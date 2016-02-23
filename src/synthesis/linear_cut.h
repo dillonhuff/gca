@@ -12,6 +12,11 @@ namespace gca {
   linear_cut(point sp, point ep) :
     cut(sp, ep) {}
 
+    static linear_cut* make(point sp, point ep) {
+      linear_cut* mem = allocate<linear_cut>();
+      return new (mem) linear_cut(sp, ep);
+    }
+
     point final_orient() const {
       return end - start;
     }

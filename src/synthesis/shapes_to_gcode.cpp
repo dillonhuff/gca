@@ -4,7 +4,7 @@
 #include "core/context.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/shapes_to_gcode.h"
-#include "synthesis/spline_sampling.h"
+#include "synthesis/shapes_to_toolpaths.h"
 
 using namespace std;
 
@@ -20,12 +20,12 @@ namespace gca {
     point next_loc = cut_pass.front()->start;
     if (!within_eps(current_orient, next_orient)) {
       from_to_with_G0_drag_knife(params.safe_height,
-				 align_depth,
-				 p,
-				 current_loc,
-				 current_orient,
-				 next_loc,
-				 next_orient);
+      				 align_depth,
+      				 p,
+      				 current_loc,
+      				 current_orient,
+      				 next_loc,
+      				 next_orient);
     } else {
       from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height, mk_lit(params.default_feedrate));
     }
@@ -34,79 +34,6 @@ namespace gca {
       instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, params.default_feedrate);
       p->push_back(move_instr);
     }
-  }
-
-  // TODO: This is horrible. Need to add more tests and pull it apart
-  void make_cut_group_passes(cut_params params,
-			     const vector<cut*>& current_group,
-			     vector<cut_group>& cut_group_passes) {
-    if  (params.one_pass_only) {
-      vector<cut*> new_pass;
-      for (unsigned i = 0; i < current_group.size(); i++) {
-	cut* ct = current_group[i];
-	if (ct->is_linear_cut()) {
-	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
-	} else if (ct->is_circular_arc()) {
-	  circular_arc* arc = static_cast<circular_arc*>(ct);
-	  point s = arc->start;
-	  s.z = params.pass_depth;
-	  point e = arc->end;
-	  e.z = params.pass_depth;
-	  new_pass.push_back(circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl));
-	} else {
-	  assert(false);
-	}
-      }
-      cut_group_passes.push_back(new_pass);
-      
-    } else {
-      assert(params.cut_depth < params.material_depth);
-      double depth = params.material_depth - params.cut_depth;
-      while (true) {
-	vector<cut*> new_pass;
-	for (unsigned i = 0; i < current_group.size(); i++) {
-	  cut* ct = current_group[i];
-	  assert(ct->is_linear_cut());
-	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth)));
-	}
-	cut_group_passes.push_back(new_pass);
-	if (depth == 0.0) {
-	  break;
-	}
-	depth = max(0.0, depth - params.cut_depth);
-      }
-    }
-  }
-
-  toolpath drill_toolpath(const vector<hole_punch*>& holes,
-			  cut_params params) {
-    toolpath t;
-    t.tool_no = 2;
-    vector<cut_group> punch_groups;
-    for (unsigned i = 0; i < holes.size(); i++) {
-      cut_group one_hole;
-      one_hole.push_back(holes[i]);
-      punch_groups.push_back(one_hole);
-    }
-    t.cut_groups = punch_groups;
-    return t;
-  }
-
-  toolpath cut_toolpath(int tool_number,
-			const vector<cut_group>& cut_groups,
-			cut_params params) {
-    toolpath t;
-    t.tool_no = tool_number;
-    vector<cut_group> cut_group_passes;
-    for (unsigned j = 0; j < cut_groups.size(); j++) {
-      vector<cut*> current_group = cut_groups[j];
-      make_cut_group_passes(params,
-			    current_group,
-			    cut_group_passes);
-    }
-
-    t.cut_groups = cut_group_passes;
-    return t;
   }
 
   void move_to_next_cut(cut* last,
@@ -121,7 +48,7 @@ namespace gca {
     }
     if (!within_eps(last_loc, next->start)) {
       from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
-			     mk_lit(params.default_feedrate));
+      			     mk_lit(params.default_feedrate));
     }
   }
 
@@ -187,27 +114,6 @@ namespace gca {
     }
   }
 
-  void create_toolpaths(const shape_layout& shapes_to_cut,
-			vector<toolpath>& toolpaths,
-			const cut_params& params) {
-    if (params.tools != DRAG_KNIFE_ONLY) {
-      toolpaths.push_back(drill_toolpath(shapes_to_cut.holes, params));
-    }
-
-    vector<cut_group> cut_groups;
-    append_splines(shapes_to_cut.splines, cut_groups);
-    group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
-
-    if (params.tools == DRILL_AND_DRAG_KNIFE ||
-	params.tools == DRAG_KNIFE_ONLY) {
-      toolpaths.push_back(cut_toolpath(6, cut_groups, params));
-    } else if (params.tools == DRILL_ONLY) {
-      toolpaths.push_back(cut_toolpath(2, cut_groups, params));
-    } else {
-      assert(false);
-    }
-  }
-
   int get_tool_no(const toolpath& t) { return t.tool_no; }
 
   int toolpath_transition(int next, int previous) {
@@ -221,7 +127,7 @@ namespace gca {
   bool toolpath_is_empty(const toolpath& t) {
     return t.cut_groups.size() == 0;
   }
-
+  
   void append_transition_if_needed(int trans, gprog& p, const cut_params& params) {
     if (trans == -1) {
     } else if (trans == 2) {
@@ -266,8 +172,7 @@ namespace gca {
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
-    vector<toolpath> toolpaths;
-    create_toolpaths(shapes_to_cut, toolpaths, params);
+    vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
     gprog* p = mk_gprog();
     append_toolpaths(toolpaths, *p, params);
     gprog* r = append_footer(p, params.target_machine);

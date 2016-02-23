@@ -25,6 +25,7 @@ SET(TEST_FILES test/parse_tests.cpp
 	       test/analysis_tests.cpp
 	       test/spline_tests.cpp
 	       test/dxf_to_gcode_tests.cpp
+	       test/shapes_to_toolpaths_tests.cpp
 	       test/toolpath_tests.cpp)
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
@@ -88,6 +89,7 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/synthesis/shapes_to_gcode.cpp
 	 ./src/synthesis/toolpath.cpp
 	 ./src/synthesis/spline_sampling.cpp
+	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
 	 ./src/transformers/scale_xyz.cpp

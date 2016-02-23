@@ -1121,6 +1121,48 @@ src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
+src/synthesis/shapes_to_toolpaths.o: src/synthesis/shapes_to_toolpaths.cpp.o
+
+.PHONY : src/synthesis/shapes_to_toolpaths.o
+
+# target to build an object file
+src/synthesis/shapes_to_toolpaths.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+.PHONY : src/synthesis/shapes_to_toolpaths.cpp.o
+
+src/synthesis/shapes_to_toolpaths.i: src/synthesis/shapes_to_toolpaths.cpp.i
+
+.PHONY : src/synthesis/shapes_to_toolpaths.i
+
+# target to preprocess a source file
+src/synthesis/shapes_to_toolpaths.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+.PHONY : src/synthesis/shapes_to_toolpaths.cpp.i
+
+src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
+
+.PHONY : src/synthesis/shapes_to_toolpaths.s
+
+# target to generate assembly for a file
+src/synthesis/shapes_to_toolpaths.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+.PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
+
 src/synthesis/spline_sampling.o: src/synthesis/spline_sampling.cpp.o
 
 .PHONY : src/synthesis/spline_sampling.o
@@ -1616,6 +1658,33 @@ test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
+test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
+
+.PHONY : test/shapes_to_toolpaths_tests.o
+
+# target to build an object file
+test/shapes_to_toolpaths_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/shapes_to_toolpaths_tests.cpp.o
+.PHONY : test/shapes_to_toolpaths_tests.cpp.o
+
+test/shapes_to_toolpaths_tests.i: test/shapes_to_toolpaths_tests.cpp.i
+
+.PHONY : test/shapes_to_toolpaths_tests.i
+
+# target to preprocess a source file
+test/shapes_to_toolpaths_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/shapes_to_toolpaths_tests.cpp.i
+.PHONY : test/shapes_to_toolpaths_tests.cpp.i
+
+test/shapes_to_toolpaths_tests.s: test/shapes_to_toolpaths_tests.cpp.s
+
+.PHONY : test/shapes_to_toolpaths_tests.s
+
+# target to generate assembly for a file
+test/shapes_to_toolpaths_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/shapes_to_toolpaths_tests.cpp.s
+.PHONY : test/shapes_to_toolpaths_tests.cpp.s
+
 test/spline_tests.o: test/spline_tests.cpp.o
 
 .PHONY : test/spline_tests.o
@@ -1783,6 +1852,9 @@ help:
 	@echo "... src/synthesis/shapes_to_gcode.o"
 	@echo "... src/synthesis/shapes_to_gcode.i"
 	@echo "... src/synthesis/shapes_to_gcode.s"
+	@echo "... src/synthesis/shapes_to_toolpaths.o"
+	@echo "... src/synthesis/shapes_to_toolpaths.i"
+	@echo "... src/synthesis/shapes_to_toolpaths.s"
 	@echo "... src/synthesis/spline_sampling.o"
 	@echo "... src/synthesis/spline_sampling.i"
 	@echo "... src/synthesis/spline_sampling.s"
@@ -1828,6 +1900,9 @@ help:
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"
+	@echo "... test/shapes_to_toolpaths_tests.o"
+	@echo "... test/shapes_to_toolpaths_tests.i"
+	@echo "... test/shapes_to_toolpaths_tests.s"
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"
