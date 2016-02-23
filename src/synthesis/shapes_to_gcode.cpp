@@ -128,8 +128,10 @@ namespace gca {
     } else {
       last_loc = last->end;
     }
-    from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
-			   mk_lit(params.default_feedrate));
+    if (!within_eps(last_loc, next->start)) {
+      from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
+			     mk_lit(params.default_feedrate));
+    }
   }
 
   void add_drill_cuts(const cut_group& cg, gprog& p, const cut_params& params) {

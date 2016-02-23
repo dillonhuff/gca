@@ -34,27 +34,49 @@ void letter_lines(vector<cut*>& lines,
   point p8 = point(xl, yl, 0);
   
   switch (letter) {
-  case ('H'):
+  case ('D'):
     lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p3, p5));
-    lines.push_back(mk_linear_cut(p2, p8));
-    break;
+    lines.push_back(mk_linear_cut(p6, p5));
+    lines.push_back(mk_linear_cut(p5, p0));
+    break;    
   case ('E'):
     lines.push_back(mk_linear_cut(p0, p6));
     lines.push_back(mk_linear_cut(p0, p2));
     lines.push_back(mk_linear_cut(p3, p5));
     lines.push_back(mk_linear_cut(p6, p8));
     break;
+  case ('H'):
+    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(mk_linear_cut(p3, p5));
+    lines.push_back(mk_linear_cut(p2, p8));
+    break;
   case('L'):
     lines.push_back(mk_linear_cut(p0, p6));
     lines.push_back(mk_linear_cut(p6, p8));
-    break;    
+    break;
   case('O'):
     lines.push_back(mk_linear_cut(p0, p2));
     lines.push_back(mk_linear_cut(p2, p8));
     lines.push_back(mk_linear_cut(p8, p6));
     lines.push_back(mk_linear_cut(p6, p0));
-    break;    
+    break;
+  case('R'):
+    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(mk_linear_cut(p3, p8));
+    lines.push_back(mk_linear_cut(p3, p5));
+    lines.push_back(mk_linear_cut(p5, p2));
+    lines.push_back(mk_linear_cut(p2, p0));
+    break;
+  case('W'):
+    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(mk_linear_cut(p6, p1));
+    lines.push_back(mk_linear_cut(p1, p8));
+    lines.push_back(mk_linear_cut(p8, p2));
+    break;
+  case('\"'):
+    break;
+  case(' '):
+    break;
   case ('\0'):
     break;
   default:
@@ -62,10 +84,10 @@ void letter_lines(vector<cut*>& lines,
   }
 }
 
-void draw_string(const string& s,
+void draw_string(double x_init,
+		 double y_init,
+		 const string& s,
 		 vector<cut*>& lines) {
-  double x_init = 7.5;
-  double y_init = 7.5;
   double letter_width = 0.5;
   double eps = 0.1;
   for (unsigned i = 0; i < s.size(); i++) {
@@ -86,12 +108,15 @@ int main(int argc, char** argv) {
   arena_allocator a;
   set_system_allocator(&a);
 
+  double x_init = 5.5;
+  double y_init = 7.5;
+
   cut_params params;
   params.safe_height = -3.75;
   params.material_depth = 0.011;
   params.cut_depth = 0.01;
   params.push_depth = 0.005;
-  params.start_loc = point(8.3, 7.6, 0);
+  params.start_loc = point(x_init, y_init, 0.0);
   params.default_feedrate = 20;
   params.one_pass_only = true;
   params.pass_depth = -4.05;
@@ -99,7 +124,7 @@ int main(int argc, char** argv) {
   params.tools = DRILL_ONLY;
 
   vector<cut*> lines;
-  draw_string(to_draw, lines);
+  draw_string(x_init, y_init, to_draw, lines);
   vector<hole_punch*> holes;
   vector<b_spline*> splines;
   shape_layout l(lines, holes, splines);
