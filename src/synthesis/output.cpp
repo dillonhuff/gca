@@ -134,35 +134,35 @@ namespace gca {
   }
 
   gprog* append_footer(gprog* p) {
-    p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    p->push_back(mk_m5_instr());
+    //p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    p->push_back(mk_m2_instr());
     return p;
   }
 
   gprog* initial_gprog() {
     gprog* r = mk_gprog();
     r->push_back(mk_G90());
-    r->push_back(mk_m5_instr());
-    r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    r->push_back(mk_t_instr(6));
-    r->push_back(mk_s_instr(0));
-    r->push_back(mk_m3_instr());
-    r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    r->push_back(mk_f_instr(5, "XY"));
-    r->push_back(mk_f_instr(5, "Z"));
+    //r->push_back(mk_m5_instr());
+    //r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    //r->push_back(mk_t_instr(6));
+    //r->push_back(mk_s_instr(0));
+    //r->push_back(mk_m3_instr());
+    //r->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    //r->push_back(mk_f_instr(5, "XY"));
+    //r->push_back(mk_f_instr(5, "Z"));
     return r;
   }
 
   void append_drill_header(gprog* p) {
     p->push_back(mk_G90());
-    p->push_back(mk_m5_instr());
-    p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    p->push_back(mk_t_instr(2));
-    p->push_back(mk_s_instr(16000));
-    p->push_back(mk_m3_instr());
-    p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
-    p->push_back(mk_f_instr(4, "XY"));
-    p->push_back(mk_f_instr(50, "Z"));
+    //p->push_back(mk_m5_instr());
+    //p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    //p->push_back(mk_t_instr(2));
+    //p->push_back(mk_s_instr(16000));
+    //p->push_back(mk_m3_instr());
+    //p->push_back(mk_G53(mk_omitted(), mk_omitted(), mk_lit(0.0)));
+    //p->push_back(mk_f_instr(4, "XY"));
+    //p->push_back(mk_f_instr(50, "Z"));
   }
 
   void append_drag_knife_transfer(gprog* p) {
@@ -177,10 +177,11 @@ namespace gca {
   void from_to_with_G0_height(gprog* p,
 			      point current_loc,
 			      point next_loc,
-			      double safe_height) {
+			      double safe_height,
+			      value* feedrate) {
     g0_instr* pull_up_instr = mk_G0(current_loc.x, current_loc.y, safe_height);
     g0_instr* move_xy_instr = mk_G0(next_loc.x, next_loc.y, safe_height);
-    g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
+    g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, feedrate);
     p->push_back(pull_up_instr);
     p->push_back(move_xy_instr);
     p->push_back(push_down_instr);

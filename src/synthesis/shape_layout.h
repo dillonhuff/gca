@@ -32,6 +32,9 @@ namespace gca {
     double push_depth;
     point start_loc;
     point start_orient;
+    double default_feedrate;
+    bool one_pass_only;
+    double pass_depth;
     ToolOptions tools;
   };
 

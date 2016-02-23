@@ -34,7 +34,6 @@ namespace gca {
 			   vector<cut_group>& cut_groups,
 			   double max_orientation_change) {
     cut_appender ca(max_orientation_change, cut_groups);
-    size_t old = cut_groups.size();
     for_each(cuts.begin(), cuts.end(), ca);
   }
 

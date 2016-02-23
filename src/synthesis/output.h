@@ -41,8 +41,8 @@ namespace gca {
   void from_to_with_G0_height(gprog* p,
 			      point current_loc,
 			      point next_loc,
-			      double safe_height);
-
+			      double safe_height,
+			      value* feedrate);
 }
 
 #endif

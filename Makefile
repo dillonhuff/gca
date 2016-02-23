@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /Users/dillon/CppWorkspace/gca
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/opt/local/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/opt/local/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -124,32 +124,6 @@ all-tests/fast:
 .PHONY : all-tests/fast
 
 #=============================================================================
-# Target rules for targets named bmp-prog
-
-# Build rule for target.
-bmp-prog: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 bmp-prog
-.PHONY : bmp-prog
-
-# fast build rule for target.
-bmp-prog/fast:
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/build
-.PHONY : bmp-prog/fast
-
-#=============================================================================
-# Target rules for targets named extract-g1-paths
-
-# Build rule for target.
-extract-g1-paths: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 extract-g1-paths
-.PHONY : extract-g1-paths
-
-# fast build rule for target.
-extract-g1-paths/fast:
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/build
-.PHONY : extract-g1-paths/fast
-
-#=============================================================================
 # Target rules for targets named gdiff
 
 # Build rule for target.
@@ -176,17 +150,17 @@ hello-world/fast:
 .PHONY : hello-world/fast
 
 #=============================================================================
-# Target rules for targets named hole-optimizer
+# Target rules for targets named pen-draw-lines
 
 # Build rule for target.
-hole-optimizer: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hole-optimizer
-.PHONY : hole-optimizer
+pen-draw-lines: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pen-draw-lines
+.PHONY : pen-draw-lines
 
 # fast build rule for target.
-hole-optimizer/fast:
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/build
-.PHONY : hole-optimizer/fast
+pen-draw-lines/fast:
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/build
+.PHONY : pen-draw-lines/fast
 
 #=============================================================================
 # Target rules for targets named print-dxf
@@ -202,32 +176,6 @@ print-dxf/fast:
 .PHONY : print-dxf/fast
 
 #=============================================================================
-# Target rules for targets named print-knife-hacks
-
-# Build rule for target.
-print-knife-hacks: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 print-knife-hacks
-.PHONY : print-knife-hacks
-
-# fast build rule for target.
-print-knife-hacks/fast:
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/build
-.PHONY : print-knife-hacks/fast
-
-#=============================================================================
-# Target rules for targets named print-strap
-
-# Build rule for target.
-print-strap: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 print-strap
-.PHONY : print-strap
-
-# fast build rule for target.
-print-strap/fast:
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/build
-.PHONY : print-strap/fast
-
-#=============================================================================
 # Target rules for targets named simple-deepen
 
 # Build rule for target.
@@ -239,73 +187,6 @@ simple-deepen: cmake_check_build_system
 simple-deepen/fast:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/build
 .PHONY : simple-deepen/fast
-
-#=============================================================================
-# Target rules for targets named z-abstract
-
-# Build rule for target.
-z-abstract: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 z-abstract
-.PHONY : z-abstract
-
-# fast build rule for target.
-z-abstract/fast:
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/build
-.PHONY : z-abstract/fast
-
-examples/bmp_prog.o: examples/bmp_prog.cpp.o
-
-.PHONY : examples/bmp_prog.o
-
-# target to build an object file
-examples/bmp_prog.cpp.o:
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/examples/bmp_prog.cpp.o
-.PHONY : examples/bmp_prog.cpp.o
-
-examples/bmp_prog.i: examples/bmp_prog.cpp.i
-
-.PHONY : examples/bmp_prog.i
-
-# target to preprocess a source file
-examples/bmp_prog.cpp.i:
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/examples/bmp_prog.cpp.i
-.PHONY : examples/bmp_prog.cpp.i
-
-examples/bmp_prog.s: examples/bmp_prog.cpp.s
-
-.PHONY : examples/bmp_prog.s
-
-# target to generate assembly for a file
-examples/bmp_prog.cpp.s:
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/examples/bmp_prog.cpp.s
-.PHONY : examples/bmp_prog.cpp.s
-
-examples/extract_g1_paths.o: examples/extract_g1_paths.cpp.o
-
-.PHONY : examples/extract_g1_paths.o
-
-# target to build an object file
-examples/extract_g1_paths.cpp.o:
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/examples/extract_g1_paths.cpp.o
-.PHONY : examples/extract_g1_paths.cpp.o
-
-examples/extract_g1_paths.i: examples/extract_g1_paths.cpp.i
-
-.PHONY : examples/extract_g1_paths.i
-
-# target to preprocess a source file
-examples/extract_g1_paths.cpp.i:
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/examples/extract_g1_paths.cpp.i
-.PHONY : examples/extract_g1_paths.cpp.i
-
-examples/extract_g1_paths.s: examples/extract_g1_paths.cpp.s
-
-.PHONY : examples/extract_g1_paths.s
-
-# target to generate assembly for a file
-examples/extract_g1_paths.cpp.s:
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/examples/extract_g1_paths.cpp.s
-.PHONY : examples/extract_g1_paths.cpp.s
 
 examples/gdiff.o: examples/gdiff.cpp.o
 
@@ -361,32 +242,32 @@ examples/hello_world.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/examples/hello_world.cpp.s
 .PHONY : examples/hello_world.cpp.s
 
-examples/hole_optimizer.o: examples/hole_optimizer.cpp.o
+examples/pen_draw_lines.o: examples/pen_draw_lines.cpp.o
 
-.PHONY : examples/hole_optimizer.o
+.PHONY : examples/pen_draw_lines.o
 
 # target to build an object file
-examples/hole_optimizer.cpp.o:
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/examples/hole_optimizer.cpp.o
-.PHONY : examples/hole_optimizer.cpp.o
+examples/pen_draw_lines.cpp.o:
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/examples/pen_draw_lines.cpp.o
+.PHONY : examples/pen_draw_lines.cpp.o
 
-examples/hole_optimizer.i: examples/hole_optimizer.cpp.i
+examples/pen_draw_lines.i: examples/pen_draw_lines.cpp.i
 
-.PHONY : examples/hole_optimizer.i
+.PHONY : examples/pen_draw_lines.i
 
 # target to preprocess a source file
-examples/hole_optimizer.cpp.i:
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/examples/hole_optimizer.cpp.i
-.PHONY : examples/hole_optimizer.cpp.i
+examples/pen_draw_lines.cpp.i:
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/examples/pen_draw_lines.cpp.i
+.PHONY : examples/pen_draw_lines.cpp.i
 
-examples/hole_optimizer.s: examples/hole_optimizer.cpp.s
+examples/pen_draw_lines.s: examples/pen_draw_lines.cpp.s
 
-.PHONY : examples/hole_optimizer.s
+.PHONY : examples/pen_draw_lines.s
 
 # target to generate assembly for a file
-examples/hole_optimizer.cpp.s:
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/examples/hole_optimizer.cpp.s
-.PHONY : examples/hole_optimizer.cpp.s
+examples/pen_draw_lines.cpp.s:
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/examples/pen_draw_lines.cpp.s
+.PHONY : examples/pen_draw_lines.cpp.s
 
 examples/print_dxf.o: examples/print_dxf.cpp.o
 
@@ -415,60 +296,6 @@ examples/print_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/examples/print_dxf.cpp.s
 .PHONY : examples/print_dxf.cpp.s
 
-examples/print_knife_hacks.o: examples/print_knife_hacks.cpp.o
-
-.PHONY : examples/print_knife_hacks.o
-
-# target to build an object file
-examples/print_knife_hacks.cpp.o:
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/examples/print_knife_hacks.cpp.o
-.PHONY : examples/print_knife_hacks.cpp.o
-
-examples/print_knife_hacks.i: examples/print_knife_hacks.cpp.i
-
-.PHONY : examples/print_knife_hacks.i
-
-# target to preprocess a source file
-examples/print_knife_hacks.cpp.i:
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/examples/print_knife_hacks.cpp.i
-.PHONY : examples/print_knife_hacks.cpp.i
-
-examples/print_knife_hacks.s: examples/print_knife_hacks.cpp.s
-
-.PHONY : examples/print_knife_hacks.s
-
-# target to generate assembly for a file
-examples/print_knife_hacks.cpp.s:
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/examples/print_knife_hacks.cpp.s
-.PHONY : examples/print_knife_hacks.cpp.s
-
-examples/print_strap.o: examples/print_strap.cpp.o
-
-.PHONY : examples/print_strap.o
-
-# target to build an object file
-examples/print_strap.cpp.o:
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/examples/print_strap.cpp.o
-.PHONY : examples/print_strap.cpp.o
-
-examples/print_strap.i: examples/print_strap.cpp.i
-
-.PHONY : examples/print_strap.i
-
-# target to preprocess a source file
-examples/print_strap.cpp.i:
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/examples/print_strap.cpp.i
-.PHONY : examples/print_strap.cpp.i
-
-examples/print_strap.s: examples/print_strap.cpp.s
-
-.PHONY : examples/print_strap.s
-
-# target to generate assembly for a file
-examples/print_strap.cpp.s:
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/examples/print_strap.cpp.s
-.PHONY : examples/print_strap.cpp.s
-
 examples/simple_deepen.o: examples/simple_deepen.cpp.o
 
 .PHONY : examples/simple_deepen.o
@@ -496,33 +323,6 @@ examples/simple_deepen.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/examples/simple_deepen.cpp.s
 .PHONY : examples/simple_deepen.cpp.s
 
-examples/z_abstract.o: examples/z_abstract.cpp.o
-
-.PHONY : examples/z_abstract.o
-
-# target to build an object file
-examples/z_abstract.cpp.o:
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.o
-.PHONY : examples/z_abstract.cpp.o
-
-examples/z_abstract.i: examples/z_abstract.cpp.i
-
-.PHONY : examples/z_abstract.i
-
-# target to preprocess a source file
-examples/z_abstract.cpp.i:
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.i
-.PHONY : examples/z_abstract.cpp.i
-
-examples/z_abstract.s: examples/z_abstract.cpp.s
-
-.PHONY : examples/z_abstract.s
-
-# target to generate assembly for a file
-examples/z_abstract.cpp.s:
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/examples/z_abstract.cpp.s
-.PHONY : examples/z_abstract.cpp.s
-
 src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
 .PHONY : src/analysis/extract_cuts.o
@@ -530,16 +330,11 @@ src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 # target to build an object file
 src/analysis/extract_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.o
 .PHONY : src/analysis/extract_cuts.cpp.o
 
 src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
@@ -549,16 +344,11 @@ src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
 # target to preprocess a source file
 src/analysis/extract_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.i
 .PHONY : src/analysis/extract_cuts.cpp.i
 
 src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
@@ -568,16 +358,11 @@ src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
 # target to generate assembly for a file
 src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
 src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
@@ -587,16 +372,11 @@ src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
 # target to build an object file
 src/checkers/forbidden_tool_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/forbidden_tool_checker.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/forbidden_tool_checker.cpp.o
 .PHONY : src/checkers/forbidden_tool_checker.cpp.o
 
 src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
@@ -606,16 +386,11 @@ src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
 # target to preprocess a source file
 src/checkers/forbidden_tool_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/forbidden_tool_checker.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/forbidden_tool_checker.cpp.i
 .PHONY : src/checkers/forbidden_tool_checker.cpp.i
 
 src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
@@ -625,16 +400,11 @@ src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
 # target to generate assembly for a file
 src/checkers/forbidden_tool_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/forbidden_tool_checker.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/forbidden_tool_checker.cpp.s
 .PHONY : src/checkers/forbidden_tool_checker.cpp.s
 
 src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
@@ -644,16 +414,11 @@ src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
 # target to build an object file
 src/checkers/unsafe_spindle_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/unsafe_spindle_checker.cpp.o
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.o
 
 src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
@@ -663,16 +428,11 @@ src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
 # target to preprocess a source file
 src/checkers/unsafe_spindle_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/unsafe_spindle_checker.cpp.i
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.i
 
 src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
@@ -682,16 +442,11 @@ src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
 # target to generate assembly for a file
 src/checkers/unsafe_spindle_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/checkers/unsafe_spindle_checker.cpp.s
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.s
 
 src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
@@ -701,16 +456,11 @@ src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
 # target to build an object file
 src/core/arena_allocator.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.o
 .PHONY : src/core/arena_allocator.cpp.o
 
 src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
@@ -720,16 +470,11 @@ src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
 # target to preprocess a source file
 src/core/arena_allocator.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.i
 .PHONY : src/core/arena_allocator.cpp.i
 
 src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
@@ -739,16 +484,11 @@ src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
 # target to generate assembly for a file
 src/core/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/arena_allocator.cpp.s
 .PHONY : src/core/arena_allocator.cpp.s
 
 src/core/context.o: src/core/context.cpp.o
@@ -758,16 +498,11 @@ src/core/context.o: src/core/context.cpp.o
 # target to build an object file
 src/core/context.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/context.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/context.cpp.o
 .PHONY : src/core/context.cpp.o
 
 src/core/context.i: src/core/context.cpp.i
@@ -777,16 +512,11 @@ src/core/context.i: src/core/context.cpp.i
 # target to preprocess a source file
 src/core/context.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/context.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/context.cpp.i
 .PHONY : src/core/context.cpp.i
 
 src/core/context.s: src/core/context.cpp.s
@@ -796,16 +526,11 @@ src/core/context.s: src/core/context.cpp.s
 # target to generate assembly for a file
 src/core/context.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/context.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/context.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/context.cpp.s
 .PHONY : src/core/context.cpp.s
 
 src/core/gprog.o: src/core/gprog.cpp.o
@@ -815,16 +540,11 @@ src/core/gprog.o: src/core/gprog.cpp.o
 # target to build an object file
 src/core/gprog.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.o
 .PHONY : src/core/gprog.cpp.o
 
 src/core/gprog.i: src/core/gprog.cpp.i
@@ -834,16 +554,11 @@ src/core/gprog.i: src/core/gprog.cpp.i
 # target to preprocess a source file
 src/core/gprog.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.i
 .PHONY : src/core/gprog.cpp.i
 
 src/core/gprog.s: src/core/gprog.cpp.s
@@ -853,16 +568,11 @@ src/core/gprog.s: src/core/gprog.cpp.s
 # target to generate assembly for a file
 src/core/gprog.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/gprog.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/gprog.cpp.s
 .PHONY : src/core/gprog.cpp.s
 
 src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
@@ -872,16 +582,11 @@ src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
 # target to build an object file
 src/core/instrs/instr.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.o
 .PHONY : src/core/instrs/instr.cpp.o
 
 src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
@@ -891,16 +596,11 @@ src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
 # target to preprocess a source file
 src/core/instrs/instr.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.i
 .PHONY : src/core/instrs/instr.cpp.i
 
 src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
@@ -910,16 +610,11 @@ src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
 # target to generate assembly for a file
 src/core/instrs/instr.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/instrs/instr.cpp.s
 .PHONY : src/core/instrs/instr.cpp.s
 
 src/core/parser.o: src/core/parser.cpp.o
@@ -929,16 +624,11 @@ src/core/parser.o: src/core/parser.cpp.o
 # target to build an object file
 src/core/parser.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.o
 .PHONY : src/core/parser.cpp.o
 
 src/core/parser.i: src/core/parser.cpp.i
@@ -948,16 +638,11 @@ src/core/parser.i: src/core/parser.cpp.i
 # target to preprocess a source file
 src/core/parser.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.i
 .PHONY : src/core/parser.cpp.i
 
 src/core/parser.s: src/core/parser.cpp.s
@@ -967,16 +652,11 @@ src/core/parser.s: src/core/parser.cpp.s
 # target to generate assembly for a file
 src/core/parser.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/parser.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/parser.cpp.s
 .PHONY : src/core/parser.cpp.s
 
 src/core/pass.o: src/core/pass.cpp.o
@@ -986,16 +666,11 @@ src/core/pass.o: src/core/pass.cpp.o
 # target to build an object file
 src/core/pass.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.o
 .PHONY : src/core/pass.cpp.o
 
 src/core/pass.i: src/core/pass.cpp.i
@@ -1005,16 +680,11 @@ src/core/pass.i: src/core/pass.cpp.i
 # target to preprocess a source file
 src/core/pass.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.i
 .PHONY : src/core/pass.cpp.i
 
 src/core/pass.s: src/core/pass.cpp.s
@@ -1024,16 +694,11 @@ src/core/pass.s: src/core/pass.cpp.s
 # target to generate assembly for a file
 src/core/pass.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/pass.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/pass.cpp.s
 .PHONY : src/core/pass.cpp.s
 
 src/core/value.o: src/core/value.cpp.o
@@ -1043,16 +708,11 @@ src/core/value.o: src/core/value.cpp.o
 # target to build an object file
 src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.o
 .PHONY : src/core/value.cpp.o
 
 src/core/value.i: src/core/value.cpp.i
@@ -1062,16 +722,11 @@ src/core/value.i: src/core/value.cpp.i
 # target to preprocess a source file
 src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.i
 .PHONY : src/core/value.cpp.i
 
 src/core/value.s: src/core/value.cpp.s
@@ -1081,16 +736,11 @@ src/core/value.s: src/core/value.cpp.s
 # target to generate assembly for a file
 src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/core/value.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/core/value.cpp.s
 .PHONY : src/core/value.cpp.s
 
 src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
@@ -1100,16 +750,11 @@ src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
 # target to build an object file
 src/dxflib/dl_dxf.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/dxflib/dl_dxf.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/dxflib/dl_dxf.cpp.o
 .PHONY : src/dxflib/dl_dxf.cpp.o
 
 src/dxflib/dl_dxf.i: src/dxflib/dl_dxf.cpp.i
@@ -1119,16 +764,11 @@ src/dxflib/dl_dxf.i: src/dxflib/dl_dxf.cpp.i
 # target to preprocess a source file
 src/dxflib/dl_dxf.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/dxflib/dl_dxf.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/dxflib/dl_dxf.cpp.i
 .PHONY : src/dxflib/dl_dxf.cpp.i
 
 src/dxflib/dl_dxf.s: src/dxflib/dl_dxf.cpp.s
@@ -1138,16 +778,11 @@ src/dxflib/dl_dxf.s: src/dxflib/dl_dxf.cpp.s
 # target to generate assembly for a file
 src/dxflib/dl_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/dxflib/dl_dxf.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/dxflib/dl_dxf.cpp.s
 .PHONY : src/dxflib/dl_dxf.cpp.s
 
 src/dxflib/dl_writer_ascii.o: src/dxflib/dl_writer_ascii.cpp.o
@@ -1157,16 +792,11 @@ src/dxflib/dl_writer_ascii.o: src/dxflib/dl_writer_ascii.cpp.o
 # target to build an object file
 src/dxflib/dl_writer_ascii.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/dxflib/dl_writer_ascii.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/dxflib/dl_writer_ascii.cpp.o
 .PHONY : src/dxflib/dl_writer_ascii.cpp.o
 
 src/dxflib/dl_writer_ascii.i: src/dxflib/dl_writer_ascii.cpp.i
@@ -1176,16 +806,11 @@ src/dxflib/dl_writer_ascii.i: src/dxflib/dl_writer_ascii.cpp.i
 # target to preprocess a source file
 src/dxflib/dl_writer_ascii.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/dxflib/dl_writer_ascii.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/dxflib/dl_writer_ascii.cpp.i
 .PHONY : src/dxflib/dl_writer_ascii.cpp.i
 
 src/dxflib/dl_writer_ascii.s: src/dxflib/dl_writer_ascii.cpp.s
@@ -1195,16 +820,11 @@ src/dxflib/dl_writer_ascii.s: src/dxflib/dl_writer_ascii.cpp.s
 # target to generate assembly for a file
 src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/dxflib/dl_writer_ascii.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
 src/geometry/point.o: src/geometry/point.cpp.o
@@ -1214,16 +834,11 @@ src/geometry/point.o: src/geometry/point.cpp.o
 # target to build an object file
 src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.o
 .PHONY : src/geometry/point.cpp.o
 
 src/geometry/point.i: src/geometry/point.cpp.i
@@ -1233,16 +848,11 @@ src/geometry/point.i: src/geometry/point.cpp.i
 # target to preprocess a source file
 src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.i
 .PHONY : src/geometry/point.cpp.i
 
 src/geometry/point.s: src/geometry/point.cpp.s
@@ -1252,16 +862,11 @@ src/geometry/point.s: src/geometry/point.cpp.s
 # target to generate assembly for a file
 src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/geometry/point.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/geometry/point.cpp.s
 .PHONY : src/geometry/point.cpp.s
 
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
@@ -1271,16 +876,11 @@ src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 # target to build an object file
 src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.o
 .PHONY : src/simulators/mill_tool.cpp.o
 
 src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
@@ -1290,16 +890,11 @@ src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
 # target to preprocess a source file
 src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.i
 .PHONY : src/simulators/mill_tool.cpp.i
 
 src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
@@ -1309,16 +904,11 @@ src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
 # target to generate assembly for a file
 src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/mill_tool.cpp.s
 .PHONY : src/simulators/mill_tool.cpp.s
 
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
@@ -1328,16 +918,11 @@ src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
 # target to build an object file
 src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.o
 .PHONY : src/simulators/sim_mill.cpp.o
 
 src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
@@ -1347,16 +932,11 @@ src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
 # target to preprocess a source file
 src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.i
 .PHONY : src/simulators/sim_mill.cpp.i
 
 src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
@@ -1366,16 +946,11 @@ src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
 # target to generate assembly for a file
 src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
 src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
@@ -1385,16 +960,11 @@ src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
 # target to build an object file
 src/synthesis/align_blade.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.o
 .PHONY : src/synthesis/align_blade.cpp.o
 
 src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
@@ -1404,16 +974,11 @@ src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
 # target to preprocess a source file
 src/synthesis/align_blade.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.i
 .PHONY : src/synthesis/align_blade.cpp.i
 
 src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
@@ -1423,16 +988,11 @@ src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
 # target to generate assembly for a file
 src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
 src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
@@ -1442,16 +1002,11 @@ src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
 # target to build an object file
 src/synthesis/dxf_reader.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/dxf_reader.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_reader.cpp.o
 .PHONY : src/synthesis/dxf_reader.cpp.o
 
 src/synthesis/dxf_reader.i: src/synthesis/dxf_reader.cpp.i
@@ -1461,16 +1016,11 @@ src/synthesis/dxf_reader.i: src/synthesis/dxf_reader.cpp.i
 # target to preprocess a source file
 src/synthesis/dxf_reader.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/dxf_reader.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_reader.cpp.i
 .PHONY : src/synthesis/dxf_reader.cpp.i
 
 src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
@@ -1480,16 +1030,11 @@ src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
 # target to generate assembly for a file
 src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/dxf_reader.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
 src/synthesis/output.o: src/synthesis/output.cpp.o
@@ -1499,16 +1044,11 @@ src/synthesis/output.o: src/synthesis/output.cpp.o
 # target to build an object file
 src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.o
 .PHONY : src/synthesis/output.cpp.o
 
 src/synthesis/output.i: src/synthesis/output.cpp.i
@@ -1518,16 +1058,11 @@ src/synthesis/output.i: src/synthesis/output.cpp.i
 # target to preprocess a source file
 src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.i
 .PHONY : src/synthesis/output.cpp.i
 
 src/synthesis/output.s: src/synthesis/output.cpp.s
@@ -1537,16 +1072,11 @@ src/synthesis/output.s: src/synthesis/output.cpp.s
 # target to generate assembly for a file
 src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/output.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/output.cpp.s
 .PHONY : src/synthesis/output.cpp.s
 
 src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
@@ -1556,16 +1086,11 @@ src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
 # target to build an object file
 src/synthesis/shapes_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.o
 .PHONY : src/synthesis/shapes_to_gcode.cpp.o
 
 src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
@@ -1575,16 +1100,11 @@ src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
 # target to preprocess a source file
 src/synthesis/shapes_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.i
 .PHONY : src/synthesis/shapes_to_gcode.cpp.i
 
 src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
@@ -1594,16 +1114,11 @@ src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
 # target to generate assembly for a file
 src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
@@ -1613,16 +1128,11 @@ src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
 # target to build an object file
 src/synthesis/toolpath.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/toolpath.cpp.o
 .PHONY : src/synthesis/toolpath.cpp.o
 
 src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
@@ -1632,16 +1142,11 @@ src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
 # target to preprocess a source file
 src/synthesis/toolpath.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/toolpath.cpp.i
 .PHONY : src/synthesis/toolpath.cpp.i
 
 src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
@@ -1651,16 +1156,11 @@ src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
 # target to generate assembly for a file
 src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/synthesis/toolpath.cpp.s
 .PHONY : src/synthesis/toolpath.cpp.s
 
 src/system/bmp_output.o: src/system/bmp_output.cpp.o
@@ -1670,16 +1170,11 @@ src/system/bmp_output.o: src/system/bmp_output.cpp.o
 # target to build an object file
 src/system/bmp_output.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.o
 .PHONY : src/system/bmp_output.cpp.o
 
 src/system/bmp_output.i: src/system/bmp_output.cpp.i
@@ -1689,16 +1184,11 @@ src/system/bmp_output.i: src/system/bmp_output.cpp.i
 # target to preprocess a source file
 src/system/bmp_output.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.i
 .PHONY : src/system/bmp_output.cpp.i
 
 src/system/bmp_output.s: src/system/bmp_output.cpp.s
@@ -1708,16 +1198,11 @@ src/system/bmp_output.s: src/system/bmp_output.cpp.s
 # target to generate assembly for a file
 src/system/bmp_output.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/bmp_output.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/bmp_output.cpp.s
 .PHONY : src/system/bmp_output.cpp.s
 
 src/system/settings.o: src/system/settings.cpp.o
@@ -1727,16 +1212,11 @@ src/system/settings.o: src/system/settings.cpp.o
 # target to build an object file
 src/system/settings.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/settings.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/settings.cpp.o
 .PHONY : src/system/settings.cpp.o
 
 src/system/settings.i: src/system/settings.cpp.i
@@ -1746,16 +1226,11 @@ src/system/settings.i: src/system/settings.cpp.i
 # target to preprocess a source file
 src/system/settings.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/settings.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/settings.cpp.i
 .PHONY : src/system/settings.cpp.i
 
 src/system/settings.s: src/system/settings.cpp.s
@@ -1765,16 +1240,11 @@ src/system/settings.s: src/system/settings.cpp.s
 # target to generate assembly for a file
 src/system/settings.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/system/settings.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/system/settings.cpp.s
 .PHONY : src/system/settings.cpp.s
 
 src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
@@ -1784,16 +1254,11 @@ src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
 # target to build an object file
 src/transformers/scale_xyz.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.o
 .PHONY : src/transformers/scale_xyz.cpp.o
 
 src/transformers/scale_xyz.i: src/transformers/scale_xyz.cpp.i
@@ -1803,16 +1268,11 @@ src/transformers/scale_xyz.i: src/transformers/scale_xyz.cpp.i
 # target to preprocess a source file
 src/transformers/scale_xyz.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.i
 .PHONY : src/transformers/scale_xyz.cpp.i
 
 src/transformers/scale_xyz.s: src/transformers/scale_xyz.cpp.s
@@ -1822,16 +1282,11 @@ src/transformers/scale_xyz.s: src/transformers/scale_xyz.cpp.s
 # target to generate assembly for a file
 src/transformers/scale_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/scale_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/scale_xyz.cpp.s
 .PHONY : src/transformers/scale_xyz.cpp.s
 
 src/transformers/shift_xyz.o: src/transformers/shift_xyz.cpp.o
@@ -1841,16 +1296,11 @@ src/transformers/shift_xyz.o: src/transformers/shift_xyz.cpp.o
 # target to build an object file
 src/transformers/shift_xyz.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/shift_xyz.cpp.o
 .PHONY : src/transformers/shift_xyz.cpp.o
 
 src/transformers/shift_xyz.i: src/transformers/shift_xyz.cpp.i
@@ -1860,16 +1310,11 @@ src/transformers/shift_xyz.i: src/transformers/shift_xyz.cpp.i
 # target to preprocess a source file
 src/transformers/shift_xyz.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/shift_xyz.cpp.i
 .PHONY : src/transformers/shift_xyz.cpp.i
 
 src/transformers/shift_xyz.s: src/transformers/shift_xyz.cpp.s
@@ -1879,16 +1324,11 @@ src/transformers/shift_xyz.s: src/transformers/shift_xyz.cpp.s
 # target to generate assembly for a file
 src/transformers/shift_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/bmp-prog.dir/build.make CMakeFiles/bmp-prog.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/extract-g1-paths.dir/build.make CMakeFiles/extract-g1-paths.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/hole-optimizer.dir/build.make CMakeFiles/hole-optimizer.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/print-knife-hacks.dir/build.make CMakeFiles/print-knife-hacks.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/print-strap.dir/build.make CMakeFiles/print-strap.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/z-abstract.dir/build.make CMakeFiles/z-abstract.dir/src/transformers/shift_xyz.cpp.s
 .PHONY : src/transformers/shift_xyz.cpp.s
 
 test/analysis_tests.o: test/analysis_tests.cpp.o
@@ -2194,49 +1634,29 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... all-tests"
-	@echo "... print-dxf"
 	@echo "... edit_cache"
+	@echo "... rebuild_cache"
+	@echo "... print-dxf"
 	@echo "... gdiff"
-	@echo "... extract-g1-paths"
+	@echo "... pen-draw-lines"
 	@echo "... hello-world"
 	@echo "... simple-deepen"
-	@echo "... print-knife-hacks"
-	@echo "... hole-optimizer"
-	@echo "... z-abstract"
-	@echo "... bmp-prog"
-	@echo "... print-strap"
-	@echo "... examples/bmp_prog.o"
-	@echo "... examples/bmp_prog.i"
-	@echo "... examples/bmp_prog.s"
-	@echo "... examples/extract_g1_paths.o"
-	@echo "... examples/extract_g1_paths.i"
-	@echo "... examples/extract_g1_paths.s"
+	@echo "... all-tests"
 	@echo "... examples/gdiff.o"
 	@echo "... examples/gdiff.i"
 	@echo "... examples/gdiff.s"
 	@echo "... examples/hello_world.o"
 	@echo "... examples/hello_world.i"
 	@echo "... examples/hello_world.s"
-	@echo "... examples/hole_optimizer.o"
-	@echo "... examples/hole_optimizer.i"
-	@echo "... examples/hole_optimizer.s"
+	@echo "... examples/pen_draw_lines.o"
+	@echo "... examples/pen_draw_lines.i"
+	@echo "... examples/pen_draw_lines.s"
 	@echo "... examples/print_dxf.o"
 	@echo "... examples/print_dxf.i"
 	@echo "... examples/print_dxf.s"
-	@echo "... examples/print_knife_hacks.o"
-	@echo "... examples/print_knife_hacks.i"
-	@echo "... examples/print_knife_hacks.s"
-	@echo "... examples/print_strap.o"
-	@echo "... examples/print_strap.i"
-	@echo "... examples/print_strap.s"
 	@echo "... examples/simple_deepen.o"
 	@echo "... examples/simple_deepen.i"
 	@echo "... examples/simple_deepen.s"
-	@echo "... examples/z_abstract.o"
-	@echo "... examples/z_abstract.i"
-	@echo "... examples/z_abstract.s"
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"

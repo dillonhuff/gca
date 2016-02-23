@@ -28,7 +28,6 @@ namespace gca {
     lit* frp = new (v) lit(feed_rate);
     return new (mem) g1_instr(mk_lit(x), mk_lit(y), mk_lit(z), frp);
   }
-
   
   g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate) {
     g1_instr* mem = allocate<g1_instr>();

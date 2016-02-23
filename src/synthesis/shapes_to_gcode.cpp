@@ -26,11 +26,11 @@ namespace gca {
 				 next_loc,
 				 next_orient);
     } else {
-      from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height);
+      from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height, mk_lit(params.default_feedrate));
     }
     for (unsigned j = 0; j < cut_pass.size(); j++) {
       point next_loc = cut_pass[j]->end;
-      instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, mk_omitted());
+      instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, params.default_feedrate);
       p->push_back(move_instr);
     }
   }
@@ -38,20 +38,31 @@ namespace gca {
   void make_cut_group_passes(cut_params params,
 			     const vector<cut*>& current_group,
 			     vector<cut_group>& cut_group_passes) {
-    assert(params.cut_depth < params.material_depth);
-    double depth = params.material_depth - params.cut_depth;
-    while (true) {
+    if  (params.one_pass_only) {
       vector<cut*> new_pass;
       for (unsigned i = 0; i < current_group.size(); i++) {
 	cut* ct = current_group[i];
 	assert(ct->is_linear_cut());
-	new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth)));
+	new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
       }
       cut_group_passes.push_back(new_pass);
-      if (depth == 0.0) {
-	break;
+      
+    } else {
+      assert(params.cut_depth < params.material_depth);
+      double depth = params.material_depth - params.cut_depth;
+      while (true) {
+	vector<cut*> new_pass;
+	for (unsigned i = 0; i < current_group.size(); i++) {
+	  cut* ct = current_group[i];
+	  assert(ct->is_linear_cut());
+	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth)));
+	}
+	cut_group_passes.push_back(new_pass);
+	if (depth == 0.0) {
+	  break;
+	}
+	depth = max(0.0, depth - params.cut_depth);
       }
-      depth = max(0.0, depth - params.cut_depth);
     }
   }
 
@@ -86,7 +97,6 @@ namespace gca {
       one_hole.push_back(holes[i]);
       punch_groups.push_back(one_hole);
     }
-    
     t.cut_groups = punch_groups;
     return t;
   }
@@ -118,7 +128,8 @@ namespace gca {
     } else {
       last_loc = last->end;
     }
-    from_to_with_G0_height(&p, last_loc, next->start, params.safe_height);
+    from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
+			   mk_lit(params.default_feedrate));
   }
 
   void add_drill_cuts(const cut_group& cg, gprog& p, const cut_params& params) {
@@ -126,7 +137,7 @@ namespace gca {
       cut* ci = cg[i];
       if (ci->is_hole_punch()) {
       } else if (ci->is_linear_cut()) {
-	p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z));
+	p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, params.default_feedrate));
       } else {
 	assert(false);
       }
