@@ -8,8 +8,9 @@ namespace gca {
   class g2_instr : public circular_arc_instr {
   public:
     g2_instr(value* xp, value* yp, value* zp,
-		      value* ip, value* jp, value* kp,
-	     value* frp) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp) {}
+	     value* ip, value* jp, value* kp,
+	     value* frp,
+	     plane pl) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp, pl) {}
 
     virtual inline bool is_G2() const { return true; }    
     virtual inline bool is_g2_instr() const { return true; }

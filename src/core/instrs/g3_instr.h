@@ -9,7 +9,8 @@ namespace gca {
   public:
   g3_instr(value* xp, value* yp, value* zp,
 	   value* ip, value* jp, value* kp,
-	   value* frp) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp) {}
+	   value* frp,
+	   plane pl) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp, pl) {}
 
     virtual inline bool is_G3() const { return true; }
     virtual inline bool is_g3_instr() const { return true; }

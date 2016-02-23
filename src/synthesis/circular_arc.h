@@ -2,25 +2,23 @@
 #define GCA_CIRCULAR_ARC_H
 
 #include "core/arena_allocator.h"
+#include "geometry/direction.h"
 #include "synthesis/cut.h"
 
 namespace gca {
-
-  enum direction {
-    CLOCKWISE = 0,
-    COUNTERCLOCKWISE };
 
   class circular_arc : public cut {
   public:
     point start_offset;
     direction dir;
+    plane pl;
 
-  circular_arc(point sp, point ep, point so, direction pdir) :
-    cut(sp, ep), start_offset(so), dir(pdir) {}
+  circular_arc(point sp, point ep, point so, direction pdir, plane ppl) :
+    cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {}
 
-    static circular_arc* make(point sp, point ep, point offset, direction dir) {
+    static circular_arc* make(point sp, point ep, point offset, direction dir, plane pl) {
       circular_arc* mem = allocate<circular_arc>();
-      return new (mem) circular_arc(sp, ep, offset, dir);
+      return new (mem) circular_arc(sp, ep, offset, dir, pl);
     }
 
     bool operator==(const cut& other) const {
@@ -33,7 +31,11 @@ namespace gca {
 
     cut* shift(point sh) const {
       circular_arc* mem = allocate<circular_arc>();
-      return new (mem) circular_arc(start + sh, end + sh, start_offset, dir);
+      return new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
+    }
+
+    virtual point initial_orient() const {
+      return (end - start).rotate_z(90).normalize();
     }
 
     inline bool is_circular_arc() const { return true; }

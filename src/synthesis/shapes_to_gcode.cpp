@@ -46,7 +46,11 @@ namespace gca {
 	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
 	} else if (ct->is_circular_arc()) {
 	  circular_arc* arc = static_cast<circular_arc*>(ct);
-	  new_pass.push_back(circular_arc::make(arc->start, arc->end, arc->start_offset, arc->dir));
+	  point s = arc->start;
+	  s.z = params.pass_depth;
+	  point e = arc->end;
+	  e.z = params.pass_depth;
+	  new_pass.push_back(circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl));
 	} else {
 	  assert(false);
 	}
@@ -146,6 +150,27 @@ namespace gca {
       if (ci->is_hole_punch()) {
       } else if (ci->is_linear_cut()) {
 	p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, params.default_feedrate));
+      } else if (ci->is_circular_arc()) {
+	circular_arc* arc = static_cast<circular_arc*>(ci);
+	if (arc->dir == CLOCKWISE) {
+	  p.push_back(mk_G2(mk_lit(arc->end.x),
+			    mk_lit(arc->end.y),
+			    mk_lit(params.pass_depth),
+			    mk_lit(arc->start_offset.x),
+			    mk_lit(arc->start_offset.y),
+			    mk_lit(arc->start_offset.z),
+			    mk_lit(params.default_feedrate)));
+	} else if (arc->dir == COUNTERCLOCKWISE) {
+	  p.push_back(mk_G3(mk_lit(arc->end.x),
+			    mk_lit(arc->end.y),
+			    mk_lit(params.pass_depth),
+			    mk_lit(arc->start_offset.x),
+			    mk_lit(arc->start_offset.y),
+			    mk_lit(arc->start_offset.z),
+			    mk_lit(params.default_feedrate)));
+	} else {
+	  assert(false);
+	}
       } else {
 	assert(false);
       }

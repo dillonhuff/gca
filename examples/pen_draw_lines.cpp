@@ -36,8 +36,9 @@ void letter_lines(vector<cut*>& lines,
   switch (letter) {
   case ('D'):
     lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p6, p5));
-    lines.push_back(mk_linear_cut(p5, p0));
+    lines.push_back(circular_arc::make(p6, p0, p3 - p6, COUNTERCLOCKWISE, XY));
+    // lines.push_back(mk_linear_cut(p6, p5));
+    // lines.push_back(mk_linear_cut(p5, p0));
     break;    
   case ('E'):
     lines.push_back(mk_linear_cut(p0, p6));
@@ -55,12 +56,8 @@ void letter_lines(vector<cut*>& lines,
     lines.push_back(mk_linear_cut(p6, p8));
     break;
   case('O'):
-    lines.push_back(circular_arc::make(p3, p5, p4 - p3, CLOCKWISE));
-    lines.push_back(circular_arc::make(p5, p3, p4 - p5, CLOCKWISE));
-    // lines.push_back(mk_linear_cut(p0, p2));
-    // lines.push_back(mk_linear_cut(p2, p8));
-    // lines.push_back(mk_linear_cut(p8, p6));
-    // lines.push_back(mk_linear_cut(p6, p0));
+    lines.push_back(circular_arc::make(p3, p5, p4 - p3, CLOCKWISE, XY));
+    lines.push_back(circular_arc::make(p5, p3, p4 - p5, CLOCKWISE, XY));
     break;
   case('R'):
     lines.push_back(mk_linear_cut(p0, p6));
@@ -111,7 +108,7 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   double x_init = 5.5;
-  double y_init = 7.5;
+  double y_init = 6.5;
 
   cut_params params;
   params.safe_height = -3.75;

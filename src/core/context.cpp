@@ -39,18 +39,20 @@ namespace gca {
     return new (mem) g1_instr(mk_lit(x), mk_lit(y), mk_lit(z), feed_rate);
   }
 
+  // TODO: Add plane parameter
   g2_instr* mk_G2(value* x, value* y, value* z,
 		  value* i, value* j, value* k,
 		  value* feed_rate) {
     g2_instr* mem = allocate<g2_instr>();
-    return new (mem) g2_instr(x, y, z, i, j, k, feed_rate);
+    return new (mem) g2_instr(x, y, z, i, j, k, feed_rate, XY);
   }
 
+  // TODO: Add plane parameter
   g3_instr* mk_G3(value* x, value* y, value* z,
 		  value* i, value* j, value* k,
 		  value* feed_rate) {
     g3_instr* mem = allocate<g3_instr>();
-    return new (mem) g3_instr(x, y, z, i, j, k, feed_rate);
+    return new (mem) g3_instr(x, y, z, i, j, k, feed_rate, XY);
   }
   
   g0_instr* mk_G0(double x, double y, double z) {

@@ -22,7 +22,7 @@ namespace gca {
       assert(false);
     }
     // TODO: Set arc direction here
-    return circular_arc(circle_start, circle_end, circle_start_off, CLOCKWISE);
+    return circular_arc(circle_start, circle_end, circle_start_off, CLOCKWISE, XY);
   }
 
   move_instr* circular_arc_to_gcode(circular_arc ca) {
