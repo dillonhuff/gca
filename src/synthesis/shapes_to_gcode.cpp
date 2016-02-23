@@ -120,10 +120,6 @@ namespace gca {
     return previous == next ? -1 : next;
   }
 
-  int cmp_tools(const toolpath& l, const toolpath& r) {
-    return l.tool_no < r.tool_no;
-  }
-
   bool toolpath_is_empty(const toolpath& t) {
     return t.cut_groups.size() == 0;
   }
@@ -153,8 +149,7 @@ namespace gca {
 			gprog& p,
 			const cut_params& params) {
     toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty),
-		    toolpaths.end());
-    stable_sort(toolpaths.begin(), toolpaths.end(), cmp_tools);
+    		    toolpaths.end());
     vector<int> active_tools(toolpaths.size());
     transform(toolpaths.begin(), toolpaths.end(), active_tools.begin(), get_tool_no);
     

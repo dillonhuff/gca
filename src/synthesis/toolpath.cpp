@@ -30,11 +30,16 @@ namespace gca {
     }
   };
 
+  void non_empty(const cut_group& cg) {
+    assert(cg.size() > 0);
+  }
+
   void group_adjacent_cuts(const vector<cut*>& cuts,
 			   vector<cut_group>& cut_groups,
 			   double max_orientation_change) {
     cut_appender ca(max_orientation_change, cut_groups);
     for_each(cuts.begin(), cuts.end(), ca);
+    for_each(cut_groups.begin(), cut_groups.end(), non_empty);
   }
 
 }

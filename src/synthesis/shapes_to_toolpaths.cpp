@@ -65,18 +65,14 @@ namespace gca {
   }
 
   toolpath cut_toolpath(int tool_number,
-			const vector<cut_group>& cut_groups,
+			const cut_group& current_group,
 			cut_params params) {
     toolpath t;
     t.tool_no = tool_number;
     vector<cut_group> cut_group_passes;
-    for (unsigned j = 0; j < cut_groups.size(); j++) {
-      vector<cut*> current_group = cut_groups[j];
-      make_cut_group_passes(params,
-			    current_group,
-			    cut_group_passes);
-    }
-
+    make_cut_group_passes(params,
+			  current_group,
+			  cut_group_passes);
     t.cut_groups = cut_group_passes;
     return t;
   }
@@ -91,22 +87,27 @@ namespace gca {
     append_splines(shapes_to_cut.splines, cut_groups);
     group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
 
+    int tool_no;
     if (params.tools == DRILL_AND_DRAG_KNIFE ||
 	params.tools == DRAG_KNIFE_ONLY) {
-      toolpaths.push_back(cut_toolpath(6, cut_groups, params));
+      tool_no = 6;
     } else if (params.tools == DRILL_ONLY) {
-      toolpaths.push_back(cut_toolpath(2, cut_groups, params));
+      tool_no = 2;
     } else {
       assert(false);
+    }
+    for (vector<cut_group>::iterator it = cut_groups.begin();
+	 it != cut_groups.end(); ++it) {
+      toolpaths.push_back(cut_toolpath(tool_no, *it, params));
     }
     return toolpaths;
   }
 
-  // TODO: Get rid of duplicated functions in shapes_to_gcode
-  int cmp_tools_2(const toolpath& l, const toolpath& r) {
+  int cmp_tools(const toolpath& l, const toolpath& r) {
     return l.tool_no < r.tool_no;
   }
 
+  // TODO: Get rid of duplicated functions in shapes_to_gcode
   bool toolpath_is_empty_2(const toolpath& t) {
     return t.cut_groups.size() == 0;
   }
@@ -120,8 +121,8 @@ namespace gca {
 				 const cut_params& params) {
     vector<toolpath> toolpaths = shape_toolpaths(shapes_to_cut, params);
     toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty_2),
-		    toolpaths.end());
-    stable_sort(toolpaths.begin(), toolpaths.end(), cmp_tools_2);
+    		    toolpaths.end());
+    stable_sort(toolpaths.begin(), toolpaths.end(), cmp_tools);
     vector<toolpath> transitions(toolpaths.size());
     adjacent_difference(toolpaths.begin(),
 			toolpaths.end(),
