@@ -72,7 +72,7 @@ namespace gca {
       				 current_orient,
       				 next_loc,
       				 next_orient);
-    } else {
+    } else if (!within_eps(current_loc, next_loc)) {
       from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
     }
   }
@@ -175,6 +175,7 @@ namespace gca {
       append_transition_if_needed(transitions[i], p, params);
       next_cut = cuts[i];
       move_to_next_cut(last_cut, next_cut, p, params);
+      append_cut(next_cut, p, params);
       last_cut = cuts[i];
     }
   }
