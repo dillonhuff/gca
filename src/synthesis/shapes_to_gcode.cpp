@@ -12,8 +12,8 @@ using namespace std;
 namespace gca {
 
   vector<cut*> move_to_next_cut_dn(cut* last_cut,
-			   cut* next_cut,
-			   cut_params params) {
+				   cut* next_cut,
+				   cut_params params) {
     point current_loc;
     point current_orient;
     if (last_cut == NULL || last_cut->tool_no != next_cut->tool_no) {
@@ -30,19 +30,13 @@ namespace gca {
     vector<cut*> tcuts;
     if (!within_eps(current_orient, next_orient)) {
       tcuts = from_to_with_G0_drag_knife(params.safe_height,
-						      align_depth,
-						      current_loc,
-						      current_orient,
-						      next_loc,
-						      next_orient);
-      // for (unsigned i = 0; i < tcuts.size(); i++) {
-      // 	append_cut(tcuts[i], p, params);
-      // }      
+					 align_depth,
+					 current_loc,
+					 current_orient,
+					 next_loc,
+					 next_orient);
     } else if (!within_eps(current_loc, next_loc)) {
       tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
-      // for (unsigned i = 0; i < tcuts.size(); i++) {
-      // 	append_cut(tcuts[i], p, params);
-      // }      
     }
     return tcuts;
   }
@@ -55,9 +49,6 @@ namespace gca {
     vector<cut*> tcuts;
     if (!within_eps(current_loc, next_cut->start)) {
       tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
-      // for (unsigned i = 0; i < tcuts.size(); i++) {
-      // 	append_cut(tcuts[i], p, params);
-      // }
     }
     return tcuts;
   }
@@ -107,14 +98,10 @@ namespace gca {
     			active_tools.end(),
     			transitions.begin(),
     			toolpath_transition);
-    cut* last_cut = NULL;
-    cut* next_cut = NULL;
+
     for (unsigned i = 0; i < cuts.size(); i++) {
       append_transition_if_needed(transitions[i], p, params);
-      next_cut = cuts[i];
-      //move_to_next_cut(last_cut, next_cut, p, params);
-      append_cut(next_cut, p, params);
-      last_cut = cuts[i];
+      append_cut(cuts[i], p, params);
     }
   }
   
@@ -153,12 +140,24 @@ namespace gca {
     }
     return all_cuts;
   }
+
+  bool cuts_are_adjacent(const vector<cut*>& cuts) {
+    for (unsigned i = 0; i < cuts.size() - 1; i++) {
+      if (!within_eps(cuts[i]->end, cuts[i+1]->start) &&
+	  cuts[i]->tool_no == cuts[i+1]->tool_no) {
+	cout << "Error: " << cuts[i]->end << " and " << endl;
+	cout << cuts[i+1]->start << " are not adjacent" << endl;
+      }
+    }
+    return true;
+  }
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
     vector<cut*> cuts = flatten_toolpaths(toolpaths);
     vector<cut*> all_cuts = insert_transitions(cuts, params);
+    assert(cuts_are_adjacent(all_cuts));
     gprog* p = mk_gprog();
     append_cuts_gcode(all_cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);
