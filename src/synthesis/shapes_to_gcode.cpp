@@ -99,18 +99,20 @@ namespace gca {
   }
 
   void append_drag_knife_toolpath(const toolpath& t, gprog& p, cut_params params) {
+    const vector<cut_group>& cgs = t.cut_groups;
+    cut* last_cut = NULL;
+    cut* next_cut = NULL;
     point current_loc = params.start_loc;
     point current_orient = params.start_orient;
-    vector<cut_group> cut_passes = t.cut_groups;
-    for (unsigned i = 0; i < cut_passes.size(); i++) {
-      cut_group cut_pass = cut_passes[i];
+    for (unsigned i = 0; i < cgs.size(); i++) {
+      cut_group cg = cgs[i];
       append_pass_code(&p,
 		       current_loc,
 		       current_orient,
-		       cut_pass,
+		       cg,
 		       params);
-      current_loc = cut_pass.back()->end;
-      current_orient = cut_pass.back()->end - cut_pass.back()->start;
+      current_loc = cg.back()->end;
+      current_orient = cg.back()->end - cg.back()->start;
     }
   }
 
