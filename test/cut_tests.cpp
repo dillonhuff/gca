@@ -175,7 +175,6 @@ namespace gca {
       // G1 X-1.561737 Y-32.249390 Z0.000000
       // G1 X-1.872044 Y-31.853912 Z0.000000
 
-
       double safe_height = 0.31;
       double align_depth = 0.103;
 

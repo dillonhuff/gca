@@ -47,16 +47,9 @@ namespace gca {
 			   cut* next_cut,
 			   gprog& p,
 			   cut_params params) {
-    point current_loc;
-    point current_orient;
-    if (last_cut == NULL) {
-      current_loc = params.start_loc;
-      current_orient = params.start_orient;
-    } else {
-      current_loc = last_cut->end;
-      current_orient = last_cut->final_orient();
-    }
-    
+    point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
+    point current_orient = last_cut == NULL ? params.start_orient : last_cut->final_orient();
+
     double align_depth = params.material_depth - params.push_depth;
     point next_orient = next_cut->initial_orient();
     point next_loc = next_cut->start;
@@ -77,13 +70,7 @@ namespace gca {
 			      cut* next_cut,
 			      gprog& p,
 			      const cut_params& params) {
-    point current_loc;
-    point current_orient;
-    if (last_cut == NULL) {
-      current_loc = params.start_loc;
-    } else {
-      current_loc = last_cut->end;
-    }
+    point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
     
     if (!within_eps(current_loc, next_cut->start)) {
       from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height,
@@ -96,6 +83,7 @@ namespace gca {
 			cut* next_cut,
 			gprog& p,
 			const cut_params& params) {
+    point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
     if (tool_no == 2) {
       move_to_next_cut_drill(last_cut, next_cut, p, params);
     } else if (tool_no == 6) {

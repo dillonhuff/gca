@@ -92,6 +92,18 @@ namespace gca {
       }
     }
 
+    SECTION("3 separate lines, no hole punches") {
+      lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
+      lines.push_back(linear_cut::make(point(0, 2, 0), point(1, 6, 0)));
+      lines.push_back(linear_cut::make(point(-3, 2, 0), point(0, 2, 0)));
+      
+      shape_layout l(lines, holes, splines);
+      gprog* p = shape_layout_to_gcode(l, params);
+      vector<cut_section> sections;
+      extract_cuts(p, sections);
+      REQUIRE(sections.size() == 6);
+    }
+
     SECTION("Lines and hole punches") {
       lines.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
       holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
