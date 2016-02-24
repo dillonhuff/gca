@@ -194,8 +194,7 @@ namespace gca {
     p->push_back(mk_f_instr(5, "Z"));
   }
 
-  vector<cut*> from_to_with_G0_height(gprog* p,
-				      point current_loc,
+  vector<cut*> from_to_with_G0_height(point current_loc,
 				      point next_loc,
 				      double safe_height,
 				      value* feedrate) {
@@ -208,12 +207,6 @@ namespace gca {
     cuts.push_back(safe_move::make(safe_up, safe_next));
     cuts.push_back(linear_cut::make(safe_next, next_loc));
     return cuts;
-    //g0_instr* pull_up_instr = mk_G0(current_loc.x, current_loc.y, safe_height);
-    //g0_instr* move_xy_instr = mk_G0(next_loc.x, next_loc.y, safe_height);
-    //g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, feedrate);
-    //p->push_back(pull_up_instr);
-    //p->push_back(move_xy_instr);
-    //p->push_back(push_down_instr);
   }
 
 }

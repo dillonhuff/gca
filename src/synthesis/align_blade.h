@@ -13,7 +13,6 @@ namespace gca {
 
   vector<cut*> from_to_with_G0_drag_knife(double safe_height,
 					  double align_depth,
-					  gprog* p,
 					  point last_pos,
 					  point last_orient,
 					  point next_pos,

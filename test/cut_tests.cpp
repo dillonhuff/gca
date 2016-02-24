@@ -127,7 +127,6 @@ namespace gca {
       point next_orient = np - next_pos;
       vector<cut*> cuts = from_to_with_G0_drag_knife(safe_height,
 						     align_depth,
-						     p,
 						     last_pos,
 						     last_orient,
 						     next_pos,
@@ -166,7 +165,6 @@ namespace gca {
       point next_orient = np - next_pos;
       vector<cut*> cuts = from_to_with_G0_drag_knife(safe_height,
 						     align_depth,
-						     p,
 						     last_pos,
 						     last_orient,
 						     next_pos,
@@ -200,7 +198,6 @@ namespace gca {
       point next_orient = np - next_pos;
       vector<cut*> cuts = from_to_with_G0_drag_knife(safe_height,
 						     align_depth,
-						     p,
 						     last_pos,
 						     last_orient,
 						     next_pos,

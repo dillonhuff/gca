@@ -31,7 +31,6 @@ namespace gca {
     if (!within_eps(current_orient, next_orient)) {
       vector<cut*> tcuts = from_to_with_G0_drag_knife(params.safe_height,
 						      align_depth,
-						      &p,
 						      current_loc,
 						      current_orient,
 						      next_loc,
@@ -40,7 +39,7 @@ namespace gca {
 	append_cut(tcuts[i], p, params);
       }      
     } else if (!within_eps(current_loc, next_loc)) {
-      vector<cut*> tcuts = from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      vector<cut*> tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
       for (unsigned i = 0; i < tcuts.size(); i++) {
 	append_cut(tcuts[i], p, params);
       }      
@@ -54,7 +53,7 @@ namespace gca {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
     
     if (!within_eps(current_loc, next_cut->start)) {
-      vector<cut*> tcuts = from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      vector<cut*> tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
       for (unsigned i = 0; i < tcuts.size(); i++) {
 	append_cut(tcuts[i], p, params);
       }

@@ -38,8 +38,7 @@ namespace gca {
   void append_drill_header(gprog* p, machine_name m);
   void append_drag_knife_transfer(gprog* p);
 
-  vector<cut*> from_to_with_G0_height(gprog* p,
-				      point current_loc,
+  vector<cut*> from_to_with_G0_height(point current_loc,
 				      point next_loc,
 				      double safe_height,
 				      value* feedrate);
