@@ -33,7 +33,9 @@ namespace gca {
 
     cut* shift(point sh) const {
       safe_move* mem = allocate<safe_move>();
-      return new (mem) safe_move(start + sh, end + sh);
+      safe_move* m = new (mem) safe_move(start + sh, end + sh);
+      m->tool_no = tool_no;
+      return m;
     }
 
     inline bool is_safe_move() const { return true; }

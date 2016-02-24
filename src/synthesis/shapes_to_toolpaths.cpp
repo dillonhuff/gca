@@ -57,7 +57,14 @@ namespace gca {
     vector<cut_group> punch_groups;
     for (unsigned i = 0; i < holes.size(); i++) {
       cut_group one_hole;
-      one_hole.push_back(holes[i]);
+      if (params.one_pass_only) {
+	hole_punch* h = holes[i];
+	hole_punch* nh = hole_punch::make(point(h->start.x, h->start.y, params.pass_depth), h->radius);
+	nh->tool_no = h->tool_no;
+	one_hole.push_back(nh);
+      } else {
+	one_hole.push_back(holes[i]);
+      }
       punch_groups.push_back(one_hole);
     }
     t.cut_groups = punch_groups;
@@ -107,8 +114,7 @@ namespace gca {
     return l.tool_no < r.tool_no;
   }
 
-  // TODO: Get rid of duplicated functions in shapes_to_gcode
-  bool toolpath_is_empty_2(const toolpath& t) {
+  bool toolpath_is_empty(const toolpath& t) {
     return t.cut_groups.size() == 0;
   }
 
@@ -120,22 +126,10 @@ namespace gca {
   vector<toolpath> cut_toolpaths(const shape_layout& shapes_to_cut,
 				 const cut_params& params) {
     vector<toolpath> toolpaths = shape_toolpaths(shapes_to_cut, params);
-    toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty_2),
+    toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty),
     		    toolpaths.end());
     stable_sort(toolpaths.begin(), toolpaths.end(), cmp_tools);
     return toolpaths;
-    // vector<toolpath> transitions(toolpaths.size());
-    // adjacent_difference(toolpaths.begin(),
-    // 			toolpaths.end(),
-    // 			transitions.begin(),
-    // 			transition_toolpath);
-    // vector<toolpath> result;
-    // for (unsigned i = 0; i < toolpaths.size() - 1; i++) {
-    //   result.push_back(toolpaths[i]);
-    //   result.push_back(transitions[i]);
-    // }
-    // result.push_back(toolpaths[toolpaths.size() - 1]);
-    // return result;
   }
 
 }

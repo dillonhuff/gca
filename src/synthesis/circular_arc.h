@@ -31,7 +31,9 @@ namespace gca {
 
     cut* shift(point sh) const {
       circular_arc* mem = allocate<circular_arc>();
-      return new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
+      circular_arc* arc = new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
+      arc->tool_no = tool_no;
+      return arc;
     }
 
     virtual point initial_orient() const {

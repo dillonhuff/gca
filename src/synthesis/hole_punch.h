@@ -11,11 +11,19 @@ namespace gca {
     double radius;
   hole_punch(point center, double rp) : cut(center, center), radius(rp) {}
 
+    static hole_punch* make(point center, double rad) {
+      hole_punch* mem = allocate<hole_punch>();
+      hole_punch* hole = new (mem) hole_punch(center, rad);
+      return hole;
+    }
+
     inline bool is_hole_punch() const { return true; }
 
     cut* shift(point sh) const {
       hole_punch* mem = allocate<hole_punch>();
-      return new (mem) hole_punch(start + sh, radius);
+      hole_punch* hole = new (mem) hole_punch(start + sh, radius);
+      hole->tool_no = tool_no;
+      return hole;
     }
     
     bool operator==(const cut& other) const {

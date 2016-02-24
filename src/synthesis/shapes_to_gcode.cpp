@@ -72,10 +72,6 @@ namespace gca {
     return previous == next ? -1 : next;
   }
 
-  bool toolpath_is_empty(const toolpath& t) {
-    return t.cut_groups.size() == 0;
-  }
-  
   void append_transition_if_needed(int trans, gprog& p, const cut_params& params) {
     if (trans == -1) {
     } else if (trans == 2) {
@@ -151,15 +147,26 @@ namespace gca {
     }
     return true;
   }
-  
+
+  vector<cut*> shift_cuts(const vector<cut*>& cuts, point p) {
+    vector<cut*> shifted_cuts;
+    for (vector<cut*>::const_iterator it = cuts.begin();
+	 it != cuts.end(); ++it) {
+      shifted_cuts.push_back((*it)->shift(p));
+    }
+    return shifted_cuts;
+  }
+
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
-			       cut_params params) {
+			       cut_params params,
+			       point shift) {
     vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
     vector<cut*> cuts = flatten_toolpaths(toolpaths);
     vector<cut*> all_cuts = insert_transitions(cuts, params);
     assert(cuts_are_adjacent(all_cuts));
+    vector<cut*> shifted_cuts = shift_cuts(all_cuts, shift);
     gprog* p = mk_gprog();
-    append_cuts_gcode(all_cuts, *p, params);
+    append_cuts_gcode(shifted_cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);
     return r;
   }

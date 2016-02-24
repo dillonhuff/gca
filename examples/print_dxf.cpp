@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <iostream>
 
+#include "checkers/bounds_checker.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 
@@ -17,19 +18,27 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   cut_params params;
-  params.safe_height = 0.35;
-  params.material_depth = 0.09;
-  params.cut_depth = 0.05;
-  params.push_depth = 0.005;
+  params.default_feedrate = 20;
+  params.safe_height = -3.75;
+  params.one_pass_only = true;
+  params.pass_depth = -4.05;
   params.start_loc = point(0, 0, 0);
   params.start_orient = point(1, 0, 0);
-  params.tools = DRILL_AND_DRAG_KNIFE;
+  params.tools = DRILL_ONLY;
+  params.target_machine = PROBOTIX_V90_MK2_VFD;
 
-  gprog* p = dxf_to_gcode(argv[1], params);
+  point shift(7.5, 7.5, 0);
+  gprog* p = dxf_to_gcode(argv[1], params, shift);
 
   cout << "-- FINAL GCODE PROGRAM" << endl;
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
   p->print_nc_output(cout);
+
+  int num_warns = check_bounds(p, GCA_ABSOLUTE,
+			       1, 15,
+			       1, 15,
+			       -4.1, -0.05);
+  cout << "Num warnings: " << num_warns << endl;
   return 0;
 }

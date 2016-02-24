@@ -35,7 +35,9 @@ namespace gca {
 
     cut* shift(point sh) const {
       linear_cut* mem = allocate<linear_cut>();
-      return new (mem) linear_cut(start + sh, end + sh);
+      linear_cut* c = new (mem) linear_cut(start + sh, end + sh);
+      c->tool_no = tool_no;
+      return c;
     }
 
     inline bool is_linear_cut() const { return true; }

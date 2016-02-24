@@ -215,18 +215,16 @@ namespace gca {
     params.tools = DRILL_ONLY;
 
     vector<cut*> lines;
-    lines.push_back(linear_cut::make(point(-2, 3, 0), point(1, 3, 0)));
+    lines.push_back(linear_cut::make(point(2, 3, 0), point(1, 3, 0)));
     vector<hole_punch*> holes;
     vector<b_spline*> splines;
     shape_layout l(lines, holes, splines);
 
     SECTION("Inside safe machine bounds") {
       gprog* p = shape_layout_to_gcode(l, params);
-      cout << "Probotix prog: " << endl;
-      cout << *p;
       REQUIRE(check_bounds(p, GCA_ABSOLUTE,
-			   -4, 12,
-			   2, 10,
+			   1, 12,
+			   1, 10,
 			   -4.1, -0.05) == 0);
       
     }
