@@ -25,20 +25,6 @@ namespace gca {
     return circle_move_instr;
   }
 
-  void append_cut(cut* ci, gprog& p, const cut_params& params) {
-    if (ci->is_hole_punch()) {
-    } else if (ci->is_linear_cut()) {
-      p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, params.default_feedrate));
-    } else if (ci->is_circular_arc()) {
-      circular_arc* arc = static_cast<circular_arc*>(ci);
-      p.push_back(circular_arc_to_gcode(*arc));
-    } else if (ci->is_safe_move()) {
-      p.push_back(mk_G0(ci->end));
-    } else {
-      assert(false);
-    }    
-  }
-
   void append_cut(cut* ci, gprog& p) {
     if (ci->is_hole_punch()) {
     } else if (ci->is_linear_cut()) {

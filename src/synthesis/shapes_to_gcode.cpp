@@ -101,7 +101,7 @@ namespace gca {
 
     for (unsigned i = 0; i < cuts.size(); i++) {
       append_transition_if_needed(transitions[i], p, params);
-      append_cut(cuts[i], p, params);
+      append_cut(cuts[i], p);
     }
   }
   
