@@ -40,13 +40,6 @@ namespace gca {
     }    
   }
 
-  void append_cuts(const cut_group& cg, gprog& p, const cut_params& params) {
-    for (unsigned i = 0; i < cg.size(); i++) {
-      cut* ci = cg[i];
-      append_cut(ci, p, params);
-    }
-  }
-  
   void move_to_next_cut_dn(cut* last_cut,
 			   cut* next_cut,
 			   gprog& p,
@@ -122,39 +115,6 @@ namespace gca {
       append_drag_knife_transfer(&p);
     } else {
       assert(false);
-    }
-  }
-
-  void append_toolpath_code(const toolpath& t, gprog& p, const cut_params& params) {
-    const vector<cut_group>& cgs = t.cut_groups;
-    cut* last_cut = NULL;
-    cut* next_cut = NULL;
-    for (unsigned i = 0; i < cgs.size(); i++) {
-      cut_group cg = cgs[i];
-      next_cut = cg.front();
-      move_to_next_cut(last_cut, next_cut, p, params);
-      append_cuts(cg, p, params);
-      last_cut = cg.back();
-    }
-  }
-
-  void append_toolpaths(vector<toolpath>& toolpaths,
-			gprog& p,
-			const cut_params& params) {
-    toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty),
-    		    toolpaths.end());
-    vector<int> active_tools(toolpaths.size());
-    transform(toolpaths.begin(), toolpaths.end(), active_tools.begin(), get_tool_no);
-    
-    vector<int> transitions(active_tools.size());
-    adjacent_difference(active_tools.begin(),
-    			active_tools.end(),
-    			transitions.begin(),
-    			toolpath_transition);
-
-    for (unsigned i = 0; i < toolpaths.size(); i++) {
-      append_transition_if_needed(transitions[i], p, params);
-      append_toolpath_code(toolpaths[i], p, params);
     }
   }
 
