@@ -9,50 +9,8 @@
 using namespace std;
 
 namespace gca {
-    
-  void append_pass_code(gprog* p,
-			point current_loc,
-			point current_orient,
-			const vector<cut*>& cut_pass,
-			cut_params params) {
-    double align_depth = params.material_depth - params.push_depth;
-    point next_orient = cut_pass.front()->initial_orient();
-    point next_loc = cut_pass.front()->start;
-    if (!within_eps(current_orient, next_orient)) {
-      from_to_with_G0_drag_knife(params.safe_height,
-      				 align_depth,
-      				 p,
-      				 current_loc,
-      				 current_orient,
-      				 next_loc,
-      				 next_orient);
-    } else {
-      from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height, mk_lit(params.default_feedrate));
-    }
-    for (unsigned j = 0; j < cut_pass.size(); j++) {
-      point next_loc = cut_pass[j]->end;
-      instr* move_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, params.default_feedrate);
-      p->push_back(move_instr);
-    }
-  }
 
-  void move_to_next_cut(cut* last,
-			cut* next,
-			gprog& p,
-			const cut_params& params) {
-    point last_loc;
-    if (last == NULL) {
-      last_loc = params.start_loc;
-    } else {
-      last_loc = last->end;
-    }
-    if (!within_eps(last_loc, next->start)) {
-      from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
-      			     mk_lit(params.default_feedrate));
-    }
-  }
-
-  void add_drill_cuts(const cut_group& cg, gprog& p, const cut_params& params) {
+  void append_cuts(const cut_group& cg, gprog& p, const cut_params& params) {
     for (unsigned i = 0; i < cg.size(); i++) {
       cut* ci = cg[i];
       if (ci->is_hole_punch()) {
@@ -84,6 +42,43 @@ namespace gca {
       }
     }
   }
+  
+  void append_pass_code(gprog* p,
+			point current_loc,
+			point current_orient,
+			const vector<cut*>& cut_pass,
+			cut_params params) {
+    double align_depth = params.material_depth - params.push_depth;
+    point next_orient = cut_pass.front()->initial_orient();
+    point next_loc = cut_pass.front()->start;
+    if (!within_eps(current_orient, next_orient)) {
+      from_to_with_G0_drag_knife(params.safe_height,
+      				 align_depth,
+      				 p,
+      				 current_loc,
+      				 current_orient,
+      				 next_loc,
+      				 next_orient);
+    } else {
+      from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height, mk_lit(params.default_feedrate));
+    }
+  }
+
+  void move_to_next_cut(cut* last,
+			cut* next,
+			gprog& p,
+			const cut_params& params) {
+    point last_loc;
+    if (last == NULL) {
+      last_loc = params.start_loc;
+    } else {
+      last_loc = last->end;
+    }
+    if (!within_eps(last_loc, next->start)) {
+      from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
+      			     mk_lit(params.default_feedrate));
+    }
+  }
 
   void append_drill_toolpath(const toolpath& t, gprog& p, cut_params params) {
     const vector<cut_group>& cgs = t.cut_groups;
@@ -93,7 +88,7 @@ namespace gca {
       cut_group cg = cgs[i];
       next_cut = cg.front();
       move_to_next_cut(last_cut, next_cut, p, params);
-      add_drill_cuts(cg, p, params);
+      append_cuts(cg, p, params);
       last_cut = cg.back();
     }
   }
@@ -111,6 +106,7 @@ namespace gca {
 		       current_orient,
 		       cg,
 		       params);
+      append_cuts(cg, p, params);
       current_loc = cg.back()->end;
       current_orient = cg.back()->end - cg.back()->start;
     }
