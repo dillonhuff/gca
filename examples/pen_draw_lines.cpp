@@ -36,8 +36,6 @@ void letter_lines(vector<cut*>& lines,
   case ('D'):
     lines.push_back(mk_linear_cut(p0, p6));
     lines.push_back(circular_arc::make(p6, p0, p3 - p6, COUNTERCLOCKWISE, XY));
-    // lines.push_back(mk_linear_cut(p6, p5));
-    // lines.push_back(mk_linear_cut(p5, p0));
     break;    
   case ('E'):
     lines.push_back(mk_linear_cut(p0, p6));

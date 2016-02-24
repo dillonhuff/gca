@@ -365,6 +365,48 @@ src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
+src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
+
+.PHONY : src/checkers/bounds_checker.o
+
+# target to build an object file
+src/checkers/bounds_checker.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/bounds_checker.cpp.o
+.PHONY : src/checkers/bounds_checker.cpp.o
+
+src/checkers/bounds_checker.i: src/checkers/bounds_checker.cpp.i
+
+.PHONY : src/checkers/bounds_checker.i
+
+# target to preprocess a source file
+src/checkers/bounds_checker.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/bounds_checker.cpp.i
+.PHONY : src/checkers/bounds_checker.cpp.i
+
+src/checkers/bounds_checker.s: src/checkers/bounds_checker.cpp.s
+
+.PHONY : src/checkers/bounds_checker.s
+
+# target to generate assembly for a file
+src/checkers/bounds_checker.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/bounds_checker.cpp.s
+.PHONY : src/checkers/bounds_checker.cpp.s
+
 src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
 
 .PHONY : src/checkers/forbidden_tool_checker.o
@@ -1840,6 +1882,9 @@ help:
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"
+	@echo "... src/checkers/bounds_checker.o"
+	@echo "... src/checkers/bounds_checker.i"
+	@echo "... src/checkers/bounds_checker.s"
 	@echo "... src/checkers/forbidden_tool_checker.o"
 	@echo "... src/checkers/forbidden_tool_checker.i"
 	@echo "... src/checkers/forbidden_tool_checker.s"

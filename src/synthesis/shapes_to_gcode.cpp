@@ -123,7 +123,7 @@ namespace gca {
     return cuts;
   }
 
-  vector<cut*> insert_transitions(const vector<cut*> cuts,
+  vector<cut*> insert_transitions(const vector<cut*>& cuts,
 				  const cut_params& params) {
     vector<cut*> all_cuts;
     cut* last_cut = NULL;
@@ -163,4 +163,5 @@ namespace gca {
     gprog* r = append_footer(p, params.target_machine);
     return r;
   }
+
 }

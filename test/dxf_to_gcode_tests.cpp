@@ -1,5 +1,6 @@
 #include "analysis/extract_cuts.h"
 #include "catch.hpp"
+#include "checkers/bounds_checker.h"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
 #include "synthesis/shapes_to_gcode.h"
@@ -191,6 +192,43 @@ namespace gca {
 
       toolpath dt = drill_toolpath(holes, params);
       REQUIRE(dt.cut_groups.size() == 2);
+    }
+  }
+
+  TEST_CASE("Probotix, drill only gcode") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    double x_init = 5.5;
+    double y_init = 6.5;
+    
+    cut_params params;
+    params.safe_height = -3.75;
+    params.material_depth = 0.011;
+    params.cut_depth = 0.01;
+    params.push_depth = 0.005;
+    params.start_loc = point(x_init, y_init, 0.0);
+    params.default_feedrate = 20;
+    params.one_pass_only = true;
+    params.pass_depth = -4.05;
+    params.target_machine = PROBOTIX_V90_MK2_VFD;
+    params.tools = DRILL_ONLY;
+
+    vector<cut*> lines;
+    lines.push_back(linear_cut::make(point(-2, 3, 0), point(1, 3, 0)));
+    vector<hole_punch*> holes;
+    vector<b_spline*> splines;
+    shape_layout l(lines, holes, splines);
+
+    SECTION("Inside safe machine bounds") {
+      gprog* p = shape_layout_to_gcode(l, params);
+      cout << "Probotix prog: " << endl;
+      cout << *p;
+      REQUIRE(check_bounds(p, GCA_ABSOLUTE,
+			   -4, 12,
+			   2, 10,
+			   -4.1, -0.05) == 0);
+      
     }
   }
 

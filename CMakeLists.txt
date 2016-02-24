@@ -78,6 +78,7 @@ SET(CPPS ./src/core/arena_allocator.cpp
 	 ./src/core/parser.cpp
 	 ./src/core/pass.cpp
 	 ./src/core/value.cpp
+	 ./src/checkers/bounds_checker.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
 	 ./src/geometry/point.cpp
