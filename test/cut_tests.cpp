@@ -117,7 +117,7 @@ namespace gca {
       double align_depth = 0.143;
 
       string test_path = project_path + string("gca/test/nc-files/align_test_1.nc");
-      gprog* correct = read_file(test_path);//"/home/probotix/CppWorkspace/gca/test/nc-files/align_test_1.nc");
+      gprog* correct = read_file(test_path);
       gprog* p = mk_gprog();
       point sp(15.791066, 0.859332, 0.075000);
       point last_pos(16.005220, 0.588386, 0.075000);

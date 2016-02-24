@@ -11,9 +11,8 @@ using namespace std;
 
 namespace gca {
 
-  void move_to_next_cut_dn(cut* last_cut,
+  vector<cut*> move_to_next_cut_dn(cut* last_cut,
 			   cut* next_cut,
-			   gprog& p,
 			   cut_params params) {
     point current_loc;
     point current_orient;
@@ -28,47 +27,49 @@ namespace gca {
     double align_depth = params.material_depth - params.push_depth;
     point next_orient = next_cut->initial_orient();
     point next_loc = next_cut->start;
+    vector<cut*> tcuts;
     if (!within_eps(current_orient, next_orient)) {
-      vector<cut*> tcuts = from_to_with_G0_drag_knife(params.safe_height,
+      tcuts = from_to_with_G0_drag_knife(params.safe_height,
 						      align_depth,
 						      current_loc,
 						      current_orient,
 						      next_loc,
 						      next_orient);
-      for (unsigned i = 0; i < tcuts.size(); i++) {
-	append_cut(tcuts[i], p, params);
-      }      
+      // for (unsigned i = 0; i < tcuts.size(); i++) {
+      // 	append_cut(tcuts[i], p, params);
+      // }      
     } else if (!within_eps(current_loc, next_loc)) {
-      vector<cut*> tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
-      for (unsigned i = 0; i < tcuts.size(); i++) {
-	append_cut(tcuts[i], p, params);
-      }      
+      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      // for (unsigned i = 0; i < tcuts.size(); i++) {
+      // 	append_cut(tcuts[i], p, params);
+      // }      
     }
+    return tcuts;
   }
 
-  void move_to_next_cut_drill(cut* last_cut,
-			      cut* next_cut,
-			      gprog& p,
-			      const cut_params& params) {
+  vector<cut*> move_to_next_cut_drill(cut* last_cut,
+				      cut* next_cut,
+				      const cut_params& params) {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
-    
+
+    vector<cut*> tcuts;
     if (!within_eps(current_loc, next_cut->start)) {
-      vector<cut*> tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
-      for (unsigned i = 0; i < tcuts.size(); i++) {
-	append_cut(tcuts[i], p, params);
-      }
+      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      // for (unsigned i = 0; i < tcuts.size(); i++) {
+      // 	append_cut(tcuts[i], p, params);
+      // }
     }
+    return tcuts;
   }
 
-  void move_to_next_cut(cut* last_cut,
-			cut* next_cut,
-			gprog& p,
-			const cut_params& params) {
+  vector<cut*> move_to_next_cut(cut* last_cut,
+				cut* next_cut,
+				const cut_params& params) {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
     if (next_cut->tool_no == 2) {
-      move_to_next_cut_drill(last_cut, next_cut, p, params);
+      return move_to_next_cut_drill(last_cut, next_cut, params);
     } else if (next_cut->tool_no == 6) {
-      move_to_next_cut_dn(last_cut, next_cut, p, params);
+      return move_to_next_cut_dn(last_cut, next_cut, params);
     } else {
       assert(false);
     }
@@ -111,7 +112,7 @@ namespace gca {
     for (unsigned i = 0; i < cuts.size(); i++) {
       append_transition_if_needed(transitions[i], p, params);
       next_cut = cuts[i];
-      move_to_next_cut(last_cut, next_cut, p, params);
+      //move_to_next_cut(last_cut, next_cut, p, params);
       append_cut(next_cut, p, params);
       last_cut = cuts[i];
     }
@@ -134,13 +135,32 @@ namespace gca {
     }
     return cuts;
   }
+
+  vector<cut*> insert_transitions(const vector<cut*> cuts,
+				  const cut_params& params) {
+    vector<cut*> all_cuts;
+    cut* last_cut = NULL;
+    cut* next_cut = NULL;
+    for (unsigned i = 0; i < cuts.size(); i++) {
+      next_cut = cuts[i];
+      vector<cut*> transition = move_to_next_cut(last_cut, next_cut, params);
+      for (unsigned j = 0; j < transition.size(); j++) {
+	transition[j]->tool_no = next_cut->tool_no;
+      }
+      all_cuts.insert(all_cuts.end(), transition.begin(), transition.end());
+      all_cuts.push_back(next_cut);
+      last_cut = cuts[i];
+    }
+    return all_cuts;
+  }
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
     vector<cut*> cuts = flatten_toolpaths(toolpaths);
+    vector<cut*> all_cuts = insert_transitions(cuts, params);
     gprog* p = mk_gprog();
-    append_cuts_gcode(cuts, *p, params);
+    append_cuts_gcode(all_cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);
     return r;
   }
