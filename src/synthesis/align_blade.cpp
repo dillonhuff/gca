@@ -26,24 +26,6 @@ namespace gca {
     return circular_arc(circle_start, circle_end, circle_start_off, CLOCKWISE, XY);
   }
 
-  move_instr* circular_arc_to_gcode(circular_arc ca) {
-    point sv = ca.center_to_start_vec();
-    point ev = ca.center_to_end_vec();
-    double angle = atan2(ev.y, ev.x) - atan2(sv.y, sv.x);
-    move_instr* circle_move_instr;
-    if (angle < 0) {
-      circle_move_instr = mk_G2(mk_lit(ca.end.x), mk_lit(ca.end.y), mk_omitted(),
-				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), mk_omitted(),
-				mk_omitted());
-    } else {
-      circle_move_instr = mk_G3(mk_lit(ca.end.x), mk_lit(ca.end.y), mk_omitted(),
-				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), mk_omitted(),
-				mk_omitted());
-
-    }
-    return circle_move_instr;
-  }
-
   vector<cut*> from_to_with_G0_drag_knife(double safe_height,
 					  double align_depth,
 					  gprog* p,

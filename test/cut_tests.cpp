@@ -4,6 +4,7 @@
 #include "core/context.h"
 #include "core/parser.h"
 #include "synthesis/align_blade.h"
+#include "synthesis/cut_to_gcode.h"
 #include "synthesis/output.h"
 #include "system/settings.h"
 
@@ -124,13 +125,20 @@ namespace gca {
       point next_pos(16.005220, 81.460030, 0.000000);
       point np(15.791067, 81.189087, 0.000000);
       point next_orient = np - next_pos;
-      from_to_with_G0_drag_knife(safe_height,
-    				 align_depth,
-    				 p,
-    				 last_pos,
-    				 last_orient,
-    				 next_pos,
-    				 next_orient);
+      vector<cut*> cuts = from_to_with_G0_drag_knife(safe_height,
+						     align_depth,
+						     p,
+						     last_pos,
+						     last_orient,
+						     next_pos,
+						     next_orient);
+      for (unsigned i = 0; i < cuts.size(); i++) {
+	append_cut(cuts[i], *p);
+      }
+      cout << "Actual: " << endl;
+      cout << *p;
+      cout << "Correct: " << endl;
+      cout << *correct;
       REQUIRE(*p == *correct);
     }
 
@@ -156,13 +164,16 @@ namespace gca {
       point next_pos(20.299999, 4.024209, 0.075000);
       point np(20.104019, 4.272543, 0.075000);
       point next_orient = np - next_pos;
-      from_to_with_G0_drag_knife(safe_height,
-				 align_depth,
-				 p,
-				 last_pos,
-				 last_orient,
-				 next_pos,
-				 next_orient);
+      vector<cut*> cuts = from_to_with_G0_drag_knife(safe_height,
+						     align_depth,
+						     p,
+						     last_pos,
+						     last_orient,
+						     next_pos,
+						     next_orient);
+      for (unsigned i = 0; i < cuts.size(); i++) {
+	append_cut(cuts[i], *p);
+      }
       REQUIRE(*p == *correct);
     }
 
@@ -187,13 +198,16 @@ namespace gca {
       point next_pos(-1.561737, -32.249390, 0.000000);
       point np(-1.872044, -31.853912, 0.000000);
       point next_orient = np - next_pos;
-      from_to_with_G0_drag_knife(safe_height,
-				 align_depth,
-				 p,
-				 last_pos,
-				 last_orient,
-				 next_pos,
-				 next_orient);
+      vector<cut*> cuts = from_to_with_G0_drag_knife(safe_height,
+						     align_depth,
+						     p,
+						     last_pos,
+						     last_orient,
+						     next_pos,
+						     next_orient);
+      for (unsigned i = 0; i < cuts.size(); i++) {
+	append_cut(cuts[i], *p);
+      }
       REQUIRE(*p == *correct);      
     }
   }

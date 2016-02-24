@@ -995,6 +995,48 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
+src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
+
+.PHONY : src/synthesis/cut_to_gcode.o
+
+# target to build an object file
+src/synthesis/cut_to_gcode.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut_to_gcode.cpp.o
+.PHONY : src/synthesis/cut_to_gcode.cpp.o
+
+src/synthesis/cut_to_gcode.i: src/synthesis/cut_to_gcode.cpp.i
+
+.PHONY : src/synthesis/cut_to_gcode.i
+
+# target to preprocess a source file
+src/synthesis/cut_to_gcode.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut_to_gcode.cpp.i
+.PHONY : src/synthesis/cut_to_gcode.cpp.i
+
+src/synthesis/cut_to_gcode.s: src/synthesis/cut_to_gcode.cpp.s
+
+.PHONY : src/synthesis/cut_to_gcode.s
+
+# target to generate assembly for a file
+src/synthesis/cut_to_gcode.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut_to_gcode.cpp.s
+.PHONY : src/synthesis/cut_to_gcode.cpp.s
+
 src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
 
 .PHONY : src/synthesis/dxf_reader.o
@@ -1843,6 +1885,9 @@ help:
 	@echo "... src/synthesis/align_blade.o"
 	@echo "... src/synthesis/align_blade.i"
 	@echo "... src/synthesis/align_blade.s"
+	@echo "... src/synthesis/cut_to_gcode.o"
+	@echo "... src/synthesis/cut_to_gcode.i"
+	@echo "... src/synthesis/cut_to_gcode.s"
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"

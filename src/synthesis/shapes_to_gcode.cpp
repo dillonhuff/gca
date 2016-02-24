@@ -2,6 +2,7 @@
 #include <numeric>
 
 #include "core/context.h"
+#include "synthesis/cut_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
@@ -9,38 +10,6 @@
 using namespace std;
 
 namespace gca {
-
-  void append_cut(cut* ci, gprog& p, const cut_params& params) {
-    if (ci->is_hole_punch()) {
-    } else if (ci->is_linear_cut()) {
-      p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, params.default_feedrate));
-    } else if (ci->is_circular_arc()) {
-      circular_arc* arc = static_cast<circular_arc*>(ci);
-      if (arc->dir == CLOCKWISE) {
-	p.push_back(mk_G2(mk_lit(arc->end.x),
-			  mk_lit(arc->end.y),
-			  mk_lit(params.pass_depth),
-			  mk_lit(arc->start_offset.x),
-			  mk_lit(arc->start_offset.y),
-			  mk_lit(arc->start_offset.z),
-			  mk_lit(params.default_feedrate)));
-      } else if (arc->dir == COUNTERCLOCKWISE) {
-	p.push_back(mk_G3(mk_lit(arc->end.x),
-			  mk_lit(arc->end.y),
-			  mk_lit(params.pass_depth),
-			  mk_lit(arc->start_offset.x),
-			  mk_lit(arc->start_offset.y),
-			  mk_lit(arc->start_offset.z),
-			  mk_lit(params.default_feedrate)));
-      } else {
-	assert(false);
-      }
-    } else if (ci->is_safe_move()) {
-      p.push_back(mk_G0(ci->end));
-    } else {
-      assert(false);
-    }    
-  }
 
   void move_to_next_cut_dn(cut* last_cut,
 			   cut* next_cut,
