@@ -40,7 +40,7 @@ namespace gca {
 	lines.push_back(linear_cut::make(point(5, 0, 0), point(6, 0, 0)));
 	shape_layout l(lines, holes, splines);
 	toolpaths = cut_toolpaths(l, params);
-	REQUIRE(toolpaths.size() == 3);
+	REQUIRE(toolpaths.size() == 2);
       }
     }
   }

@@ -123,18 +123,19 @@ namespace gca {
     toolpaths.erase(remove_if(toolpaths.begin(), toolpaths.end(), toolpath_is_empty_2),
     		    toolpaths.end());
     stable_sort(toolpaths.begin(), toolpaths.end(), cmp_tools);
-    vector<toolpath> transitions(toolpaths.size());
-    adjacent_difference(toolpaths.begin(),
-			toolpaths.end(),
-			transitions.begin(),
-			transition_toolpath);
-    vector<toolpath> result;
-    for (unsigned i = 0; i < toolpaths.size() - 1; i++) {
-      result.push_back(toolpaths[i]);
-      result.push_back(transitions[i]);
-    }
-    result.push_back(toolpaths[toolpaths.size() - 1]);
-    return result;
+    return toolpaths;
+    // vector<toolpath> transitions(toolpaths.size());
+    // adjacent_difference(toolpaths.begin(),
+    // 			toolpaths.end(),
+    // 			transitions.begin(),
+    // 			transition_toolpath);
+    // vector<toolpath> result;
+    // for (unsigned i = 0; i < toolpaths.size() - 1; i++) {
+    //   result.push_back(toolpaths[i]);
+    //   result.push_back(transitions[i]);
+    // }
+    // result.push_back(toolpaths[toolpaths.size() - 1]);
+    // return result;
   }
 
 }
