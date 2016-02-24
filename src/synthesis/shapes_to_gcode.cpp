@@ -35,6 +35,8 @@ namespace gca {
       } else {
 	assert(false);
       }
+    } else if (ci->is_safe_move()) {
+      p.push_back(mk_G0(ci->end));
     } else {
       assert(false);
     }    
@@ -66,7 +68,10 @@ namespace gca {
       				 next_loc,
       				 next_orient);
     } else if (!within_eps(current_loc, next_loc)) {
-      from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      vector<cut*> tcuts = from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      for (unsigned i = 0; i < tcuts.size(); i++) {
+	append_cut(tcuts[i], p, params);
+      }      
     }
   }
 
@@ -77,8 +82,10 @@ namespace gca {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
     
     if (!within_eps(current_loc, next_cut->start)) {
-      from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height,
-      			     mk_lit(params.default_feedrate));
+      vector<cut*> tcuts = from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      for (unsigned i = 0; i < tcuts.size(); i++) {
+	append_cut(tcuts[i], p, params);
+      }
     }
   }
 
@@ -96,8 +103,7 @@ namespace gca {
     }
   }
 
-  int get_tool_no(const toolpath& t) { return t.tool_no; }
-  int get_tool_no_cut(const cut* t) { return t->tool_no; }
+  int get_tool_no(const cut* t) { return t->tool_no; }
 
   int toolpath_transition(int next, int previous) {
     return previous == next ? -1 : next;
@@ -122,7 +128,7 @@ namespace gca {
 			 gprog& p,
 			 const cut_params& params) {
     vector<int> active_tools(cuts.size());
-    transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no_cut);
+    transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no);
     
     vector<int> transitions(active_tools.size());
     adjacent_difference(active_tools.begin(),

@@ -1,6 +1,8 @@
 #include <cmath>
 
-#include "output.h"
+#include "synthesis/linear_cut.h"
+#include "synthesis/output.h"
+#include "synthesis/safe_move.h"
 
 namespace gca {
 
@@ -192,17 +194,26 @@ namespace gca {
     p->push_back(mk_f_instr(5, "Z"));
   }
 
-  void from_to_with_G0_height(gprog* p,
-			      point current_loc,
-			      point next_loc,
-			      double safe_height,
-			      value* feedrate) {
-    g0_instr* pull_up_instr = mk_G0(current_loc.x, current_loc.y, safe_height);
-    g0_instr* move_xy_instr = mk_G0(next_loc.x, next_loc.y, safe_height);
-    g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, feedrate);
-    p->push_back(pull_up_instr);
-    p->push_back(move_xy_instr);
-    p->push_back(push_down_instr);
+  vector<cut*> from_to_with_G0_height(gprog* p,
+				      point current_loc,
+				      point next_loc,
+				      double safe_height,
+				      value* feedrate) {
+    point safe_up = current_loc;
+    safe_up.z = safe_height;
+    point safe_next = next_loc;
+    safe_next.z = safe_height;
+    vector<cut*> cuts;
+    cuts.push_back(safe_move::make(current_loc, safe_up));
+    cuts.push_back(safe_move::make(safe_up, safe_next));
+    cuts.push_back(linear_cut::make(safe_next, next_loc));
+    return cuts;
+    //g0_instr* pull_up_instr = mk_G0(current_loc.x, current_loc.y, safe_height);
+    //g0_instr* move_xy_instr = mk_G0(next_loc.x, next_loc.y, safe_height);
+    //g1_instr* push_down_instr = mk_G1(next_loc.x, next_loc.y, next_loc.z, feedrate);
+    //p->push_back(pull_up_instr);
+    //p->push_back(move_xy_instr);
+    //p->push_back(push_down_instr);
   }
 
 }
