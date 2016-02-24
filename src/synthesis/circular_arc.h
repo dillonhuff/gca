@@ -39,6 +39,10 @@ namespace gca {
       return (end - start).rotate_z(theta).normalize();
     }
 
+    virtual point final_orient() const {
+      return initial_orient().rotate_z(180);
+    }
+    
     inline bool is_circular_arc() const { return true; }
     
     inline point center_to_start_vec() const { return -1 * start_offset; }

@@ -43,72 +43,65 @@ namespace gca {
     }
   }
   
-  void append_pass_code(gprog* p,
-			point current_loc,
-			point current_orient,
-			const vector<cut*>& cut_pass,
-			cut_params params) {
+  void move_to_next_cut_dn(cut* last_cut,
+			   cut* next_cut,
+			   gprog& p,
+			   cut_params params) {
+    point current_loc;
+    point current_orient;
+    if (last_cut == NULL) {
+      current_loc = params.start_loc;
+      current_orient = params.start_orient;
+    } else {
+      current_loc = last_cut->end;
+      current_orient = last_cut->final_orient();
+    }
+    
     double align_depth = params.material_depth - params.push_depth;
-    point next_orient = cut_pass.front()->initial_orient();
-    point next_loc = cut_pass.front()->start;
+    point next_orient = next_cut->initial_orient();
+    point next_loc = next_cut->start;
     if (!within_eps(current_orient, next_orient)) {
       from_to_with_G0_drag_knife(params.safe_height,
       				 align_depth,
-      				 p,
+      				 &p,
       				 current_loc,
       				 current_orient,
       				 next_loc,
       				 next_orient);
     } else {
-      from_to_with_G0_height(p, current_loc, cut_pass.front()->start, params.safe_height, mk_lit(params.default_feedrate));
+      from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
     }
   }
 
-  void move_to_next_cut(cut* last,
-			cut* next,
-			gprog& p,
-			const cut_params& params) {
-    point last_loc;
-    if (last == NULL) {
-      last_loc = params.start_loc;
+  void move_to_next_cut_drill(cut* last_cut,
+			      cut* next_cut,
+			      gprog& p,
+			      const cut_params& params) {
+    point current_loc;
+    point current_orient;
+    if (last_cut == NULL) {
+      current_loc = params.start_loc;
     } else {
-      last_loc = last->end;
+      current_loc = last_cut->end;
     }
-    if (!within_eps(last_loc, next->start)) {
-      from_to_with_G0_height(&p, last_loc, next->start, params.safe_height,
+    
+    if (!within_eps(current_loc, next_cut->start)) {
+      from_to_with_G0_height(&p, current_loc, next_cut->start, params.safe_height,
       			     mk_lit(params.default_feedrate));
     }
   }
 
-  void append_drill_toolpath(const toolpath& t, gprog& p, cut_params params) {
-    const vector<cut_group>& cgs = t.cut_groups;
-    cut* last_cut = NULL;
-    cut* next_cut = NULL;
-    for (unsigned i = 0; i < cgs.size(); i++) {
-      cut_group cg = cgs[i];
-      next_cut = cg.front();
-      move_to_next_cut(last_cut, next_cut, p, params);
-      append_cuts(cg, p, params);
-      last_cut = cg.back();
-    }
-  }
-
-  void append_drag_knife_toolpath(const toolpath& t, gprog& p, cut_params params) {
-    const vector<cut_group>& cgs = t.cut_groups;
-    cut* last_cut = NULL;
-    cut* next_cut = NULL;
-    point current_loc = params.start_loc;
-    point current_orient = params.start_orient;
-    for (unsigned i = 0; i < cgs.size(); i++) {
-      cut_group cg = cgs[i];
-      append_pass_code(&p,
-		       current_loc,
-		       current_orient,
-		       cg,
-		       params);
-      append_cuts(cg, p, params);
-      current_loc = cg.back()->end;
-      current_orient = cg.back()->end - cg.back()->start;
+  void move_to_next_cut(int tool_no,
+			cut* last_cut,
+			cut* next_cut,
+			gprog& p,
+			const cut_params& params) {
+    if (tool_no == 2) {
+      move_to_next_cut_drill(last_cut, next_cut, p, params);
+    } else if (tool_no == 6) {
+      move_to_next_cut_dn(last_cut, next_cut, p, params);
+    } else {
+      assert(false);
     }
   }
 
@@ -134,12 +127,15 @@ namespace gca {
   }
 
   void append_toolpath_code(const toolpath& t, gprog& p, const cut_params& params) {
-    if (t.tool_no == 2) {
-      append_drill_toolpath(t, p, params);
-    } else if (t.tool_no == 6) {
-      append_drag_knife_toolpath(t, p, params);
-    } else {
-      assert(false);
+    const vector<cut_group>& cgs = t.cut_groups;
+    cut* last_cut = NULL;
+    cut* next_cut = NULL;
+    for (unsigned i = 0; i < cgs.size(); i++) {
+      cut_group cg = cgs[i];
+      next_cut = cg.front();
+      move_to_next_cut(t.tool_no, last_cut, next_cut, p, params);
+      append_cuts(cg, p, params);
+      last_cut = cg.back();
     }
   }
 
