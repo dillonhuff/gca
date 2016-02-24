@@ -10,6 +10,8 @@ namespace gca {
   class cut {
   public:
     point start, end;
+    int tool_no;
+    
   cut(point s, point e) : start(s), end(e) {}
 
     virtual point final_orient() const { assert(false); }

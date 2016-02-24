@@ -10,36 +10,40 @@ using namespace std;
 
 namespace gca {
 
-  void append_cuts(const cut_group& cg, gprog& p, const cut_params& params) {
-    for (unsigned i = 0; i < cg.size(); i++) {
-      cut* ci = cg[i];
-      if (ci->is_hole_punch()) {
-      } else if (ci->is_linear_cut()) {
-	p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, params.default_feedrate));
-      } else if (ci->is_circular_arc()) {
-	circular_arc* arc = static_cast<circular_arc*>(ci);
-	if (arc->dir == CLOCKWISE) {
-	  p.push_back(mk_G2(mk_lit(arc->end.x),
-			    mk_lit(arc->end.y),
-			    mk_lit(params.pass_depth),
-			    mk_lit(arc->start_offset.x),
-			    mk_lit(arc->start_offset.y),
-			    mk_lit(arc->start_offset.z),
-			    mk_lit(params.default_feedrate)));
-	} else if (arc->dir == COUNTERCLOCKWISE) {
-	  p.push_back(mk_G3(mk_lit(arc->end.x),
-			    mk_lit(arc->end.y),
-			    mk_lit(params.pass_depth),
-			    mk_lit(arc->start_offset.x),
-			    mk_lit(arc->start_offset.y),
-			    mk_lit(arc->start_offset.z),
-			    mk_lit(params.default_feedrate)));
-	} else {
-	  assert(false);
-	}
+  void append_cut(cut* ci, gprog& p, const cut_params& params) {
+    if (ci->is_hole_punch()) {
+    } else if (ci->is_linear_cut()) {
+      p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, params.default_feedrate));
+    } else if (ci->is_circular_arc()) {
+      circular_arc* arc = static_cast<circular_arc*>(ci);
+      if (arc->dir == CLOCKWISE) {
+	p.push_back(mk_G2(mk_lit(arc->end.x),
+			  mk_lit(arc->end.y),
+			  mk_lit(params.pass_depth),
+			  mk_lit(arc->start_offset.x),
+			  mk_lit(arc->start_offset.y),
+			  mk_lit(arc->start_offset.z),
+			  mk_lit(params.default_feedrate)));
+      } else if (arc->dir == COUNTERCLOCKWISE) {
+	p.push_back(mk_G3(mk_lit(arc->end.x),
+			  mk_lit(arc->end.y),
+			  mk_lit(params.pass_depth),
+			  mk_lit(arc->start_offset.x),
+			  mk_lit(arc->start_offset.y),
+			  mk_lit(arc->start_offset.z),
+			  mk_lit(params.default_feedrate)));
       } else {
 	assert(false);
       }
+    } else {
+      assert(false);
+    }    
+  }
+
+  void append_cuts(const cut_group& cg, gprog& p, const cut_params& params) {
+    for (unsigned i = 0; i < cg.size(); i++) {
+      cut* ci = cg[i];
+      append_cut(ci, p, params);
     }
   }
   
@@ -47,8 +51,15 @@ namespace gca {
 			   cut* next_cut,
 			   gprog& p,
 			   cut_params params) {
-    point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
-    point current_orient = last_cut == NULL ? params.start_orient : last_cut->final_orient();
+    point current_loc;
+    point current_orient;
+    if (last_cut == NULL || last_cut->tool_no != next_cut->tool_no) {
+      current_loc = params.start_loc;
+      current_orient = params.start_orient;
+    } else {
+      current_loc = last_cut->end;
+      current_orient = last_cut->final_orient();
+    }
 
     double align_depth = params.material_depth - params.push_depth;
     point next_orient = next_cut->initial_orient();
@@ -78,15 +89,14 @@ namespace gca {
     }
   }
 
-  void move_to_next_cut(int tool_no,
-			cut* last_cut,
+  void move_to_next_cut(cut* last_cut,
 			cut* next_cut,
 			gprog& p,
 			const cut_params& params) {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
-    if (tool_no == 2) {
+    if (next_cut->tool_no == 2) {
       move_to_next_cut_drill(last_cut, next_cut, p, params);
-    } else if (tool_no == 6) {
+    } else if (next_cut->tool_no == 6) {
       move_to_next_cut_dn(last_cut, next_cut, p, params);
     } else {
       assert(false);
@@ -94,6 +104,7 @@ namespace gca {
   }
 
   int get_tool_no(const toolpath& t) { return t.tool_no; }
+  int get_tool_no_cut(const cut* t) { return t->tool_no; }
 
   int toolpath_transition(int next, int previous) {
     return previous == next ? -1 : next;
@@ -121,7 +132,7 @@ namespace gca {
     for (unsigned i = 0; i < cgs.size(); i++) {
       cut_group cg = cgs[i];
       next_cut = cg.front();
-      move_to_next_cut(t.tool_no, last_cut, next_cut, p, params);
+      move_to_next_cut(last_cut, next_cut, p, params);
       append_cuts(cg, p, params);
       last_cut = cg.back();
     }
@@ -146,12 +157,52 @@ namespace gca {
       append_toolpath_code(toolpaths[i], p, params);
     }
   }
+
+  void append_cuts_gcode(const vector<cut*>& cuts,
+			 gprog& p,
+			 const cut_params& params) {
+    vector<int> active_tools(cuts.size());
+    transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no_cut);
+    
+    vector<int> transitions(active_tools.size());
+    adjacent_difference(active_tools.begin(),
+    			active_tools.end(),
+    			transitions.begin(),
+    			toolpath_transition);
+    cut* last_cut = NULL;
+    cut* next_cut = NULL;
+    for (unsigned i = 0; i < cuts.size(); i++) {
+      append_transition_if_needed(transitions[i], p, params);
+      next_cut = cuts[i];
+      move_to_next_cut(last_cut, next_cut, p, params);
+      last_cut = cuts[i];
+    }
+  }
+  
+  vector<cut*> flatten_toolpaths(const vector<toolpath>& toolpaths) {
+    vector<cut*> cuts;
+    for (vector<toolpath>::const_iterator it = toolpaths.begin();
+	 it != toolpaths.end(); ++it) {
+      const toolpath& t = *it;
+      for (vector<cut_group>::const_iterator jt = t.cut_groups.begin();
+	   jt != t.cut_groups.end(); ++jt) {
+	const cut_group& g = *jt;
+	for (cut_group::const_iterator kt = g.begin(); kt != g.end(); ++kt) {
+	  cut* cut = *kt;
+	  cut->tool_no = t.tool_no;
+	  cuts.push_back(cut);
+	}
+      }
+    }
+    return cuts;
+  }
   
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
+    vector<cut*> cuts = flatten_toolpaths(toolpaths);
     gprog* p = mk_gprog();
-    append_toolpaths(toolpaths, *p, params);
+    append_cuts_gcode(cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);
     return r;
   }
