@@ -120,8 +120,6 @@ namespace gca {
   }
 
   bool cuts_are_adjacent(const vector<cut*>& cuts) {
-    cout << "Size = " << cuts.size() << endl;
-
     if (cuts.size() > 0) {
       for (unsigned i = 0; i < cuts.size() - 1; i++) {
 	cut* current = cuts[i];

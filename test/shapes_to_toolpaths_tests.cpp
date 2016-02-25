@@ -22,7 +22,7 @@ namespace gca {
     vector<hole_punch*> holes;
     vector<b_spline*> splines;
 
-    vector<toolpath> toolpaths;
+    vector<cut*> cuts;
 
     SECTION("Drill and drag knife") {
       
@@ -31,16 +31,16 @@ namespace gca {
       SECTION("1 toolpath") {
 	lines.push_back(linear_cut::make(point(1, 0, 0), point(2, 0, 0)));
 	shape_layout l(lines, holes, splines);
-	toolpaths = cut_toolpaths(l, params);
-	REQUIRE(toolpaths.size() == 1);
+	cuts = shape_cuts(l, params);
+	REQUIRE(cuts.size() == 2);
       }
       
       SECTION("3 toolpaths") {
 	lines.push_back(linear_cut::make(point(1, 0, 0), point(2, 0, 0)));
 	lines.push_back(linear_cut::make(point(5, 0, 0), point(6, 0, 0)));
 	shape_layout l(lines, holes, splines);
-	toolpaths = cut_toolpaths(l, params);
-	REQUIRE(toolpaths.size() == 2);
+	cuts = shape_cuts(l, params);
+	REQUIRE(cuts.size() == 4);
       }
     }
   }
