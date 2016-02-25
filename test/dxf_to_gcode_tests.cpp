@@ -4,6 +4,7 @@
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
 #include "synthesis/shapes_to_gcode.h"
+#include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/output.h"
 #include "system/settings.h"
@@ -190,8 +191,8 @@ namespace gca {
 
       gprog* p = shape_layout_to_gcode(l, params);
 
-      toolpath dt = drill_toolpath(holes, params);
-      REQUIRE(dt.cut_groups.size() == 2);
+      vector<cut*> dt = shape_cuts(l, params);
+      REQUIRE(dt.size() == 2);
     }
   }
 

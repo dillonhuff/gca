@@ -8,47 +8,55 @@
 
 namespace gca {
 
+  void make_pass(int tool_number,
+		 double depth,
+		 const cut_params& params,
+		 const vector<cut*>& current_group,
+		 vector<cut_group>& cut_group_passes) {
+    vector<cut*> new_pass;
+    for (unsigned i = 0; i < current_group.size(); i++) {
+      cut* ct = current_group[i];
+      if (ct->is_linear_cut()) {
+	linear_cut* lct = linear_cut::make(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth));
+	lct->tool_no = tool_number;
+	new_pass.push_back(lct);
+      } else if (ct->is_circular_arc()) {
+	circular_arc* arc = static_cast<circular_arc*>(ct);
+	point s = arc->start;
+	s.z = params.pass_depth;
+	point e = arc->end;
+	e.z = params.pass_depth;
+	circular_arc* ct = circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl);
+	ct->tool_no = tool_number;
+	new_pass.push_back(ct);
+      } else {
+	assert(false);
+      }
+    }
+    cut_group_passes.push_back(new_pass);
+  }		 
+
   // TODO: This is horrible. Need to add more tests and pull it apart
   void make_cut_group_passes(int tool_number,
-			     cut_params params,
+			     const cut_params& params,
 			     const vector<cut*>& current_group,
 			     vector<cut_group>& cut_group_passes) {
     cout << "Current group size = " << current_group.size() << endl;
     if  (params.one_pass_only) {
-      vector<cut*> new_pass;
-      for (unsigned i = 0; i < current_group.size(); i++) {
-      	cut* ct = current_group[i];
-      	if (ct->is_linear_cut()) {
-	  linear_cut* lct = linear_cut::make(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth));
-	  lct->tool_no = tool_number;
-      	  new_pass.push_back(lct);
-      	} else if (ct->is_circular_arc()) {
-      	  circular_arc* arc = static_cast<circular_arc*>(ct);
-      	  point s = arc->start;
-      	  s.z = params.pass_depth;
-      	  point e = arc->end;
-      	  e.z = params.pass_depth;
-	  circular_arc* ct = circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl);
-	  ct->tool_no = tool_number;
-      	  new_pass.push_back(ct);
-      	} else {
-      	  assert(false);
-      	}
-      }
-      cut_group_passes.push_back(new_pass);
+      make_pass(tool_number,
+		params.pass_depth,
+		params,
+		current_group,
+		cut_group_passes);
     } else {
       assert(params.cut_depth < params.material_depth);
       double depth = params.material_depth - params.cut_depth;
       while (true) {
-	vector<cut*> new_pass;
-	for (unsigned i = 0; i < current_group.size(); i++) {
-	  cut* ct = current_group[i];
-	  assert(ct->is_linear_cut());
-	  linear_cut* lc = linear_cut::make(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth));
-	  lc->tool_no = tool_number;
-	  new_pass.push_back(lc);
-	}
-	cut_group_passes.push_back(new_pass);
+	make_pass(tool_number,
+		  depth,
+		  params,
+		  current_group,
+		  cut_group_passes);	
 	if (depth == 0.0) {
 	  break;
 	}
@@ -57,27 +65,6 @@ namespace gca {
     }
   }
   
-  toolpath drill_toolpath(const vector<hole_punch*>& holes,
-			  cut_params params) {
-    toolpath t;
-    t.tool_no = 2;
-    vector<cut_group> punch_groups;
-    for (unsigned i = 0; i < holes.size(); i++) {
-      cut_group one_hole;
-      if (params.one_pass_only) {
-	hole_punch* h = holes[i];
-	hole_punch* nh = hole_punch::make(point(h->start.x, h->start.y, params.pass_depth), h->radius);
-	nh->tool_no = h->tool_no;
-	one_hole.push_back(nh);
-      } else {
-	one_hole.push_back(holes[i]);
-      }
-      punch_groups.push_back(one_hole);
-    }
-    t.cut_groups = punch_groups;
-    return t;
-  }
-
   vector<cut*> hole_cuts(const vector<hole_punch*>& holes,
 		     cut_params params) {
     vector<cut*> cuts;

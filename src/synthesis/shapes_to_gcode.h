@@ -9,9 +9,6 @@
 
 namespace gca {
 
-  toolpath drill_toolpath(const vector<hole_punch*>& holes,
-			  cut_params params);
-
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params,
 			       point shift=point(0, 0, 0),

@@ -28,19 +28,28 @@ namespace gca {
       
       params.tools = DRILL_AND_DRAG_KNIFE;
       
-      SECTION("1 toolpath") {
+      SECTION("2 cuts") {
 	lines.push_back(linear_cut::make(point(1, 0, 0), point(2, 0, 0)));
 	shape_layout l(lines, holes, splines);
 	cuts = shape_cuts(l, params);
 	REQUIRE(cuts.size() == 2);
       }
       
-      SECTION("3 toolpaths") {
+      SECTION("4 cuts") {
 	lines.push_back(linear_cut::make(point(1, 0, 0), point(2, 0, 0)));
 	lines.push_back(linear_cut::make(point(5, 0, 0), point(6, 0, 0)));
 	shape_layout l(lines, holes, splines);
 	cuts = shape_cuts(l, params);
 	REQUIRE(cuts.size() == 4);
+      }
+
+      SECTION("1 cut") {
+	lines.push_back(linear_cut::make(point(1, 0, 0), point(3, 4, 0)));
+	shape_layout l(lines, holes, splines);
+	params.one_pass_only = true;
+	params.pass_depth = -4.05;
+	cuts = shape_cuts(l, params);
+	REQUIRE(cuts.size() == 1);
       }
     }
   }
