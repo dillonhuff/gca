@@ -14,14 +14,14 @@ namespace gca {
   
   g0_instr* mk_G0(point p) {
     g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), omitted::make());
+    return new (mem) g0_instr(lit::make(p.x), lit::make(p.y), lit::make(p.z), omitted::make());
   }
     
   g1_instr* mk_G1(double x, double y, double z, double feed_rate) {
     g1_instr* mem = allocate<g1_instr>();
     lit* v = allocate<lit>();
     lit* frp = new (v) lit(feed_rate);
-    return new (mem) g1_instr(mk_lit(x), mk_lit(y), mk_lit(z), frp);
+    return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), frp);
   }
   
   g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate) {
@@ -31,7 +31,7 @@ namespace gca {
     
   g1_instr* mk_G1(double x, double y, double z, value* feed_rate) {
     g1_instr* mem = allocate<g1_instr>();
-    return new (mem) g1_instr(mk_lit(x), mk_lit(y), mk_lit(z), feed_rate);
+    return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), feed_rate);
   }
 
   // TODO: Add plane parameter
@@ -52,7 +52,7 @@ namespace gca {
   
   g0_instr* mk_G0(double x, double y, double z) {
     g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(mk_lit(x), mk_lit(y), mk_lit(z), omitted::make());
+    return new (mem) g0_instr(lit::make(x), lit::make(y), lit::make(z), omitted::make());
   }
 
   g0_instr* mk_G0(value* x, value* y, value* z) {

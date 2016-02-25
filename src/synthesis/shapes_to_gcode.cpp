@@ -36,7 +36,7 @@ namespace gca {
 					 next_loc,
 					 next_orient);
     } else if (!within_eps(current_loc, next_loc)) {
-      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, lit::make(params.default_feedrate));
     }
     return tcuts;
   }
@@ -48,7 +48,7 @@ namespace gca {
 
     vector<cut*> tcuts;
     if (!within_eps(current_loc, next_cut->start)) {
-      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, mk_lit(params.default_feedrate));
+      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, lit::make(params.default_feedrate));
     }
     return tcuts;
   }
@@ -169,7 +169,7 @@ namespace gca {
     if (params.set_default_feedrate) {
       for (vector<cut*>::iterator it = shifted_cuts.begin();
 	     it != shifted_cuts.end(); ++it) {
-	(*it)->feedrate = mk_lit(params.default_feedrate);
+	(*it)->feedrate = lit::make(params.default_feedrate);
       }
     }
     gprog* p = mk_gprog();

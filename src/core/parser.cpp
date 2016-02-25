@@ -86,10 +86,10 @@ namespace gca {
       if (s[*i] == '#') {
 	parse_char('#', i, s);
 	int val = parse_int(i, s);
-	return mk_var(val);
+	return var::make(val);
       } else {
 	double d = parse_double(i, s);
-	return mk_lit(d);
+	return lit::make(d);
       }
     }
     return omitted::make();
@@ -250,7 +250,7 @@ namespace gca {
     } else if (next_char == '#') {
       parse_char('=', i, s);
       double e = parse_double(i, s);
-      is = mk_assign(mk_var(val), mk_lit(e));
+      is = mk_assign(var::make(val), lit::make(e));
     } else {
       cout << "Cannot parse string: " << s.substr(*i) << endl;
       assert(false);

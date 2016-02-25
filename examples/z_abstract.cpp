@@ -30,9 +30,9 @@ gprog* generalize_zs(set<double>& z_values, gprog* p) {
   int i = 1;
   for (set<double>::iterator it = z_values.begin();
        it != z_values.end(); ++it) {
-    var* v = mk_var(i);
-    new_vars[*it] = mk_var(i);
-    r->push_back(mk_assign(v, mk_lit(*it)));
+    var* v = var::make(i);
+    new_vars[*it] = var::make(i);
+    r->push_back(mk_assign(v, lit::make(*it)));
     i++;
   }
   for (unsigned j = 0; j < p->size(); j++) {

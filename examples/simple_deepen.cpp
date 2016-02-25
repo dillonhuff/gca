@@ -77,7 +77,7 @@ public:
       double z = get_z(mi);
       double deeper_z = deepen_z(z, old_depth, new_depth);
       move_instr* mi_cpy = static_cast<move_instr*>(mk_instr_cpy(mi));
-      mi_cpy->set_z(mk_lit(deeper_z));
+      mi_cpy->set_z(lit::make(deeper_z));
       return mi_cpy;
     }
   }

@@ -17,7 +17,7 @@ namespace gca {
       }
       assert(v->is_lit());
       lit* l = static_cast<lit*>(v);
-      return mk_lit(s + l->v);
+      return lit::make(s + l->v);
     }
 
     instr* shift_move(move_instr* is) {

@@ -18,13 +18,8 @@ namespace gca {
     virtual inline bool is_lit() const { return false; }
     virtual inline bool is_var() const { return false; }
     
-    virtual bool operator==(const value& other) const {
-      assert(false);
-    }
-    
-    virtual void print(ostream& other) const {
-      assert(false);
-    }
+    virtual bool operator==(const value& other) const = 0;    
+    virtual void print(ostream& other) const = 0;
 
     virtual void print_eps(ostream& s, double eps) const {
       print(s);
@@ -36,6 +31,11 @@ namespace gca {
     double v;
 
   lit(double vp) : v(vp) {}
+
+    static lit* make(double vp) {
+      lit* mem = allocate<lit>();
+      return new (mem) lit(vp);
+    }
     
     virtual inline bool is_lit() const { return true; }
 
@@ -66,6 +66,11 @@ namespace gca {
 
   var(int np) : n(np) {}
 
+    static var* make(int np) {
+      var* mem = allocate<var>();
+      return new (mem) var(np);
+    }
+    
     virtual inline bool is_var() const { return true; }
 
     virtual bool operator==(const value& other) const {
@@ -85,6 +90,7 @@ namespace gca {
       omitted* mem = allocate<omitted>();
       return new (mem) omitted();
     }
+
     virtual inline bool is_omitted() const { return true; }
     
     virtual bool operator==(const value& other) const {
