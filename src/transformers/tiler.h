@@ -25,7 +25,7 @@ namespace gca {
 	int j = 0;
 	int num_copied = 0;
 	while (j < rp->size() && !((*rp)[j]->is_end_instr())) {
-	  instr* cpy = mk_instr_cpy((*rp)[j]);
+	  instr* cpy = (*rp)[j]->copy();
 	  new_p->push_back(cpy);
 	  num_copied++;
 	  j++;

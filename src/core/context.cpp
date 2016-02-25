@@ -2,44 +2,6 @@
 
 namespace gca {
 
-  instr* mk_instr_cpy(instr* i) {
-    instr* new_i;
-    if (i->is_move_instr()) {
-      if (i->is_G0()) {
-	g0_instr* mi = static_cast<g0_instr*>(i);
-	g0_instr* mem = allocate<g0_instr>();
-	g0_instr* new_i_m = new (mem) g0_instr(mi);
-	new_i = static_cast<instr*>(new_i_m);	
-      } else if (i->is_G1()) {
-	g1_instr* mi = static_cast<g1_instr*>(i);
-	g1_instr* mem = allocate<g1_instr>();
-	g1_instr* new_i_m = new (mem) g1_instr(mi);
-	new_i = static_cast<instr*>(new_i_m);		
-      } else if (i->is_G53()) {
-	g53_instr* mi = static_cast<g53_instr*>(i);
-	g53_instr* mem = allocate<g53_instr>();
-	g53_instr* new_i_m = new (mem) g53_instr(mi);
-	new_i = static_cast<instr*>(new_i_m);
-      } else if (i->is_g2_instr()) {
-	g2_instr* gi = static_cast<g2_instr*>(i);
-	new_i = g2_instr::make(gi->get_x(), gi->get_y(), gi->get_z(),
-		      gi->i, gi->j, gi->k,
-		      gi->feed_rate);
-      } else if (i->is_g3_instr()) {
-	g3_instr* gi = static_cast<g3_instr*>(i);
-	new_i = g3_instr::make(gi->get_x(), gi->get_y(), gi->get_z(),
-		      gi->i, gi->j, gi->k,
-		      gi->feed_rate);
-      } else {
-	cout << "ERROR: DO NOT SUPPORT " << *i << endl;
-	assert(false);
-      }
-    } else {
-      new_i = i->copy();
-    }
-    return new_i;
-  }
-
   assign_instr* mk_assign(var* v, value* e) {
     assign_instr* mem = allocate<assign_instr>();
     return new (mem) assign_instr(v, e);
