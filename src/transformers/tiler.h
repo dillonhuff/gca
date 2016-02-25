@@ -31,8 +31,8 @@ namespace gca {
 	  j++;
 	}
 	if (i != num_copies - 1 && num_copied > 0) {
-	  new_p->push_back(mk_G0(0, 0, diff.z));
-	  new_p->push_back(mk_G0(diff.x, diff.y, 0));
+	  new_p->push_back(g0_instr::make(0, 0, diff.z));
+	  new_p->push_back(g0_instr::make(diff.x, diff.y, 0));
 	}
       }
       new_p->push_back(mk_m2_instr());

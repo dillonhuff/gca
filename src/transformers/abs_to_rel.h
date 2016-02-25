@@ -21,7 +21,7 @@ namespace gca {
       if (os->current == GCA_ABSOLUTE) {
 	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point diff = ps->diff;
-	p->push_back(mk_G0(diff));
+	p->push_back(g0_instr::make(diff));
       }
     }
 

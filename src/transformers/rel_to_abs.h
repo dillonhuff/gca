@@ -21,7 +21,7 @@ namespace gca {
       if (os->current == GCA_RELATIVE) {
 	position_state* ps = get_state<position_state>(GCA_POSITION_STATE);
 	point after = ps->after;
-	p->push_back(mk_G0(after));
+	p->push_back(g0_instr::make(after));
       }
     }
 

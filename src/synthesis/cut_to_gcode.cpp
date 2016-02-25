@@ -33,7 +33,7 @@ namespace gca {
       circular_arc* arc = static_cast<circular_arc*>(ci);
       p.push_back(circular_arc_to_gcode(*arc));
     } else if (ci->is_safe_move()) {
-      p.push_back(mk_G0(ci->end));
+      p.push_back(g0_instr::make(ci->end));
     } else {
       assert(false);
     }    

@@ -35,9 +35,9 @@ namespace gca {
   }
   
   void from_to_with_G0(gprog* p, point from, point to) {
-    instr* pull_up_instr = mk_G0(point(from.x, from.y, 0.0));
-    instr* move_instr = mk_G0(point(to.x, to.y, 0.0));
-    instr* push_down_instr = mk_G0(to);
+    instr* pull_up_instr = g0_instr::make(point(from.x, from.y, 0.0));
+    instr* move_instr = g0_instr::make(point(to.x, to.y, 0.0));
+    instr* push_down_instr = g0_instr::make(to);
     p->push_back(pull_up_instr);
     p->push_back(move_instr);
     p->push_back(push_down_instr);

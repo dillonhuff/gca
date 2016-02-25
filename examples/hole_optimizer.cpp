@@ -77,8 +77,8 @@ int main(int argc, char** argv) {
     r->push_back(mk_G1(pt.x, pt.y, pt.z, omitted::make()));
     if (i < hole_locations.size() - 1) {
       point next = hole_locations[res[i+1]];
-      r->push_back(mk_G0(pt.x, pt.y, 0.35));
-      r->push_back(mk_G0(next.x, next.y, 0.35));
+      r->push_back(g0_instr::make(pt.x, pt.y, 0.35));
+      r->push_back(g0_instr::make(next.x, next.y, 0.35));
     }
   }
   cout << *r;

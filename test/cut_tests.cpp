@@ -20,13 +20,13 @@ namespace gca {
       cuts.push_back(s);
       gprog* res = gcode_for_cuts(cuts);
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_G0(point(0, 0, -1)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, -1)));
       correct->push_back(mk_G1(0, 3, -1));
-      correct->push_back(mk_G0(point(0, 3, 0)));
-      correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_G0(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 3, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(mk_m2_instr());
       REQUIRE(*res == *correct);
     }
@@ -39,17 +39,17 @@ namespace gca {
       cuts.push_back(s2);
       gprog* res = gcode_for_cuts(cuts);
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_G0(point(0, 0, -1)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, -1)));
       correct->push_back(mk_G1(0, 3, -1));
-      correct->push_back(mk_G0(point(0, 3, 0)));
-      correct->push_back(mk_G0(point(5, 3, 0)));
-      correct->push_back(mk_G0(point(5, 3, -4)));
+      correct->push_back(g0_instr::make(point(0, 3, 0)));
+      correct->push_back(g0_instr::make(point(5, 3, 0)));
+      correct->push_back(g0_instr::make(point(5, 3, -4)));
       correct->push_back(mk_G1(7, 2, -4));
-      correct->push_back(mk_G0(point(7, 2, 0)));
-      correct->push_back(mk_G0(point(0, 0, 0)));
-      correct->push_back(mk_G0(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(7, 2, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
+      correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(mk_m2_instr());
       REQUIRE(*res == *correct);      
     }

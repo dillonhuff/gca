@@ -121,7 +121,7 @@ namespace gca {
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(p, i, s, &xv, &yv, &zv);
-    return mk_G0(xv, yv, zv);
+    return g0_instr::make(xv, yv, zv);
   }
 
   instr* parse_G2(gprog* p, size_t* i, const string& s) {

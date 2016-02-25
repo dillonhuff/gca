@@ -10,10 +10,6 @@
 
 namespace gca {
 
-  var* mk_var(int v);
-  
-  lit* mk_lit(double v);
-
   g0_instr* mk_G0(point p);  
   g0_instr* mk_G0(double x, double y, double z);
   g0_instr* mk_G0(value* x, value* y, value* z);

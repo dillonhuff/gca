@@ -54,7 +54,7 @@ namespace gca {
   
     SECTION("No irrelevant G0 moves") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G0(point(1.0, 1.0, 1.0)));
+      p->push_back(g0_instr::make(point(1.0, 1.0, 1.0)));
       REQUIRE(*filter_G0_moves(p) == *p);
     }
 
@@ -66,33 +66,33 @@ namespace gca {
 
     SECTION("g0_filter dont remove G1") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G0(point(1.0, 2.0, 2.0)));
+      p->push_back(g0_instr::make(point(1.0, 2.0, 2.0)));
       p->push_back(mk_G1(1.0, 2.0, 2.0));
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G0(point(1.0, 2.0, 2.0)));
+      correct->push_back(g0_instr::make(point(1.0, 2.0, 2.0)));
       correct->push_back(mk_G1(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter several pointless moves") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G0(1.0, 2.0, 2.0));
-      p->push_back(mk_G0(1.0, 2.0, 2.0));
-      p->push_back(mk_G0(1.0, 2.0, 2.0));
+      p->push_back(g0_instr::make(1.0, 2.0, 2.0));
+      p->push_back(g0_instr::make(1.0, 2.0, 2.0));
+      p->push_back(g0_instr::make(1.0, 2.0, 2.0));
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G0(1.0, 2.0, 2.0));
+      correct->push_back(g0_instr::make(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter several pointless moves with G1, M2") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G0(1.0, 2.0, -2.0));
-      p->push_back(mk_G0(1.0, 2.0, 0.0));
-      p->push_back(mk_G0(1.0, 2.0, -2.00000001));
+      p->push_back(g0_instr::make(1.0, 2.0, -2.0));
+      p->push_back(g0_instr::make(1.0, 2.0, 0.0));
+      p->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
       p->push_back(mk_G1(1.0, 2.0, 2.0));
       p->push_back(mk_m2_instr());
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G0(1.0, 2.0, -2.00000001));
+      correct->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
       correct->push_back(mk_G1(1.0, 2.0, 2.0));
       correct->push_back(mk_m2_instr());
       REQUIRE(*filter_G0_moves(p) == *correct);
@@ -101,7 +101,7 @@ namespace gca {
     SECTION("g0_filter starting on G1") {
       gprog* p = mk_gprog();
       p->push_back(mk_G1(1, 1, 1));
-      p->push_back(mk_G0(1, 1, 1));
+      p->push_back(g0_instr::make(1, 1, 1));
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(1, 1, 1));
       REQUIRE(*filter_G0_moves(p) == *correct);
@@ -111,8 +111,8 @@ namespace gca {
       gprog* p = mk_gprog();
       p->push_back(mk_G1(1, 1, 0));
       p->push_back(mk_G1(1, 1, 1));
-      p->push_back(mk_G0(1, 2, 0));
-      p->push_back(mk_G0(1, 1, 1));
+      p->push_back(g0_instr::make(1, 2, 0));
+      p->push_back(g0_instr::make(1, 1, 1));
       p->push_back(mk_G1(2, 3, 3));
       gprog* correct = mk_gprog();
       correct->push_back(mk_G1(1, 1, 0));
@@ -131,8 +131,8 @@ namespace gca {
     abs_to_rel f(GCA_ABSOLUTE);
 
     SECTION("abs -> rel 1 instruction is the same") {
-      p->push_back(mk_G0(1.0, 1.0, 1.0));
-      correct->push_back(mk_G0(1.0, 1.0, 1.0));
+      p->push_back(g0_instr::make(1.0, 1.0, 1.0));
+      correct->push_back(g0_instr::make(1.0, 1.0, 1.0));
       r = f.apply(p);
       REQUIRE(*r == *correct);
     }
@@ -146,9 +146,9 @@ namespace gca {
     
     SECTION("abs -> rel 2 instructions") {
       p->push_back(mk_G1(1.0, 0, 0));
-      p->push_back(mk_G0(2.0, 3.5, 8));
+      p->push_back(g0_instr::make(2.0, 3.5, 8));
       correct->push_back(mk_G1(1.0, 0, 0, 1.0));
-      correct->push_back(mk_G0(1.0, 3.5, 8));
+      correct->push_back(g0_instr::make(1.0, 3.5, 8));
       r = f.apply(p);
       REQUIRE(*r == *correct);
     }
@@ -174,17 +174,17 @@ namespace gca {
 
     SECTION("One G0 instruction is the same") {
       p->push_back(mk_G91());
-      p->push_back(mk_G0(point(1.0, 2.0, 3.0)));
-      correct->push_back(mk_G0(point(1.0, 2.0, 3.0)));
+      p->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
+      correct->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
       r = f.apply(p);
       REQUIRE(*r == *correct);
     }
 
     SECTION("Two instructions instructions") {
       p->push_back(mk_G91());
-      p->push_back(mk_G0(point(1.0, 2.0, 3.0)));
+      p->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
       p->push_back(mk_G1(-2.0, 2.0, -10.0, 2.5));
-      correct->push_back(mk_G0(point(1.0, 2.0, 3.0)));
+      correct->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
       correct->push_back(mk_G1(-1.0, 4.0, -7.0, 2.5));
       r = f.apply(p);
       REQUIRE(*r == *correct);
@@ -236,15 +236,15 @@ namespace gca {
       correct->push_back(mk_G1(1, 0, 0, 1.0));
       correct->push_back(mk_G1(0, -1, 0, 1.0));
 
-      correct->push_back(mk_G0(0, 0, -depth));
-      correct->push_back(mk_G0(d1.x, d1.y, 0));
+      correct->push_back(g0_instr::make(0, 0, -depth));
+      correct->push_back(g0_instr::make(d1.x, d1.y, 0));
 
       correct->push_back(mk_G1(0, 0, depth, 1.0));
       correct->push_back(mk_G1(1, 0, 0, 1.0));
       correct->push_back(mk_G1(0, -1, 0, 1.0));
 
-      correct->push_back(mk_G0(0, 0, -depth));
-      correct->push_back(mk_G0(d1.x, d1.y, 0));
+      correct->push_back(g0_instr::make(0, 0, -depth));
+      correct->push_back(g0_instr::make(d1.x, d1.y, 0));
 
       correct->push_back(mk_G1(0, 0, depth, 1.0));
       correct->push_back(mk_G1(1, 0, 0, 1.0));

@@ -115,6 +115,21 @@ namespace gca {
   g0_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g0_instr(g0_instr* i) : move_instr(i) {}
 
+    static g0_instr* make(point p) {
+      g0_instr* mem = allocate<g0_instr>();
+      return new (mem) g0_instr(lit::make(p.x), lit::make(p.y), lit::make(p.z), omitted::make());
+    }
+
+    static g0_instr* make(double x, double y, double z) {
+      g0_instr* mem = allocate<g0_instr>();
+      return new (mem) g0_instr(lit::make(x), lit::make(y), lit::make(z), omitted::make());
+    }
+
+    static g0_instr* make(value* x, value* y, value* z) {
+      g0_instr* mem = allocate<g0_instr>();
+      return new (mem) g0_instr(x, y, z, omitted::make());
+    }
+        
     virtual inline bool is_G0() const { return true; }
 
     void print(ostream& s) const {
@@ -136,7 +151,7 @@ namespace gca {
   public:
   g1_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g1_instr(g1_instr* i) : move_instr(i) {}
-    
+
     virtual inline bool is_G1() const { return true; }
     void print(ostream& s) const {
       cout << "G1 ";

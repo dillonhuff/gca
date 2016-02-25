@@ -2,21 +2,21 @@
 
 namespace gca {
   
-  var* mk_var(int v) {
-    var* vr = allocate<var>();
-    return new (vr) var(v);
-  }
-
-  lit* mk_lit(double v) {
-    lit* l = allocate<lit>();
-    return new (l) lit(v);
-  }
-  
   g0_instr* mk_G0(point p) {
     g0_instr* mem = allocate<g0_instr>();
     return new (mem) g0_instr(lit::make(p.x), lit::make(p.y), lit::make(p.z), omitted::make());
   }
-    
+
+  g0_instr* mk_G0(double x, double y, double z) {
+    g0_instr* mem = allocate<g0_instr>();
+    return new (mem) g0_instr(lit::make(x), lit::make(y), lit::make(z), omitted::make());
+  }
+
+  g0_instr* mk_G0(value* x, value* y, value* z) {
+    g0_instr* mem = allocate<g0_instr>();
+    return new (mem) g0_instr(x, y, z, omitted::make());
+  }
+
   g1_instr* mk_G1(double x, double y, double z, double feed_rate) {
     g1_instr* mem = allocate<g1_instr>();
     lit* v = allocate<lit>();
@@ -50,16 +50,6 @@ namespace gca {
     return new (mem) g3_instr(x, y, z, i, j, k, feed_rate, XY);
   }
   
-  g0_instr* mk_G0(double x, double y, double z) {
-    g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(lit::make(x), lit::make(y), lit::make(z), omitted::make());
-  }
-
-  g0_instr* mk_G0(value* x, value* y, value* z) {
-    g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(x, y, z, omitted::make());
-  }
-      
   instr* mk_instr_cpy(instr* i) {
     instr* new_i;
     if (i->is_move_instr()) {
