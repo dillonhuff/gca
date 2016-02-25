@@ -17,7 +17,7 @@ namespace gca {
       for (unsigned i = 0; i < current_group.size(); i++) {
 	cut* ct = current_group[i];
 	if (ct->is_linear_cut()) {
-	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
+	  new_pass.push_back(linear_cut::make(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
 	} else if (ct->is_circular_arc()) {
 	  circular_arc* arc = static_cast<circular_arc*>(ct);
 	  point s = arc->start;
@@ -39,7 +39,7 @@ namespace gca {
 	for (unsigned i = 0; i < current_group.size(); i++) {
 	  cut* ct = current_group[i];
 	  assert(ct->is_linear_cut());
-	  new_pass.push_back(mk_linear_cut(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth)));
+	  new_pass.push_back(linear_cut::make(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth)));
 	}
 	cut_group_passes.push_back(new_pass);
 	if (depth == 0.0) {

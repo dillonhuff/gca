@@ -103,10 +103,10 @@ namespace gca {
     return new_i;
   }
           
-  linear_cut* mk_linear_cut(point start, point end) {
-    linear_cut* mem = allocate<linear_cut>();
-    return new (mem) linear_cut(start, end);
-  }
+  // linear_cut* mk_linear_cut(point start, point end) {
+  //   linear_cut* mem = allocate<linear_cut>();
+  //   return new (mem) linear_cut(start, end);
+  // }
 
 
   assign_instr* mk_assign(var* v, value* e) {

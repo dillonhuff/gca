@@ -34,7 +34,7 @@ namespace gca {
 
   instr* mk_instr_cpy(instr* i);
 
-  linear_cut* mk_linear_cut(point start, point end);
+  //linear_cut* mk_linear_cut(point start, point end);
 
   assign_instr* mk_assign(var* v, value* e);
     

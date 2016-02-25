@@ -14,13 +14,13 @@ namespace gca {
     point ep = l.end + v;
     point sr = extend_back(sp, ep, w);
     point er = extend_back(ep, sp, w);
-    return mk_linear_cut(sr, er);
+    return linear_cut::make(sr, er);
   }
 
   linear_cut* vertical_cut_to(linear_cut* ct) {
     point start(ct->start.x, ct->start.y, 0);
     point end(ct->start);
-    return mk_linear_cut(start, end);
+    return linear_cut::make(start, end);
   }
 
   vector<linear_cut*> lines_to_cuts(vector<line>& lines, double cutter_width) {
@@ -69,9 +69,9 @@ namespace gca {
     double y_pos = yd > 0;
     if (xd == 0) {
       if (y_pos) {
-	return mk_linear_cut(point(s->start.x, s->start.y - l, 0), s->start);
+	return linear_cut::make(point(s->start.x, s->start.y - l, 0), s->start);
       } else {
-	return mk_linear_cut(point(s->start.x, s->start.y + l, 0), s->start);
+	return linear_cut::make(point(s->start.x, s->start.y + l, 0), s->start);
       }
     }
     double m = yd / xd;
@@ -88,7 +88,7 @@ namespace gca {
     } else {
       ys = s->start.y + abs(b);
     }
-    return mk_linear_cut(point(xs, ys, 0), s->start);
+    return linear_cut::make(point(xs, ys, 0), s->start);
   }
 
   void insert_sink_cuts(double l, vector<linear_cut*>& cuts, vector<linear_cut*>& dest) {
@@ -104,7 +104,7 @@ namespace gca {
     point c_left = left;
     point c_right = right;
     for (int i = 1; i <= num_cuts; i++) {
-      cuts.push_back(mk_linear_cut(c_left, c_right));
+      cuts.push_back(linear_cut::make(c_left, c_right));
       // Reverse cut directions
       point temp = c_left;
       c_left = c_right + shift;

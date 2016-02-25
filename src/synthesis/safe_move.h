@@ -38,6 +38,13 @@ namespace gca {
       return m;
     }
 
+    cut* scale(double s) const {
+      safe_move* mem = allocate<safe_move>();
+      safe_move* m = new (mem) safe_move(s*start, s*end);
+      m->tool_no = tool_no;
+      return m;
+    }
+    
     inline bool is_safe_move() const { return true; }
     
   };

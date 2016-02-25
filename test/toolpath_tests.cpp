@@ -22,15 +22,15 @@ namespace gca {
     vector<cut_group> cgs;
 
     SECTION("One cut") {
-      cuts.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
+      cuts.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
       group_adjacent_cuts(cuts, cgs, 30.0);
       REQUIRE(cgs.size() == 1);
     }
     
     SECTION("Several non-continuous lines") {
-      cuts.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
-      cuts.push_back(mk_linear_cut(point(1, 0, 0), point(1, 1, 0)));
-      cuts.push_back(mk_linear_cut(point(2, 0, 0), point(3, 2, 0)));
+      cuts.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
+      cuts.push_back(linear_cut::make(point(1, 0, 0), point(1, 1, 0)));
+      cuts.push_back(linear_cut::make(point(2, 0, 0), point(3, 2, 0)));
 
       SECTION("No cuts lost in cut group creation") {
 	group_adjacent_cuts(cuts, cgs, 30.0);
@@ -47,17 +47,17 @@ namespace gca {
     }
 
     SECTION("One cut group with multiple cuts") {
-      cuts.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
-      cuts.push_back(mk_linear_cut(point(1, 0, 0), point(2, 0, 0)));
+      cuts.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
+      cuts.push_back(linear_cut::make(point(1, 0, 0), point(2, 0, 0)));
 
       group_adjacent_cuts(cuts, cgs, 30.0);
       REQUIRE(cgs.size() == 1);
     }
 
     SECTION("2 distinct adjacent groups") {
-      cuts.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
-      cuts.push_back(mk_linear_cut(point(1, 0, 0), point(2, 0.05, 0)));
-      cuts.push_back(mk_linear_cut(point(2, 0, 0), point(3, 2, 0)));
+      cuts.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
+      cuts.push_back(linear_cut::make(point(1, 0, 0), point(2, 0.05, 0)));
+      cuts.push_back(linear_cut::make(point(2, 0, 0), point(3, 2, 0)));
       
       group_adjacent_cuts(cuts, cgs, 30.0);
 

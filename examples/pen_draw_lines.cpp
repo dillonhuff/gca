@@ -34,40 +34,40 @@ void letter_lines(vector<cut*>& lines,
   
   switch (letter) {
   case ('D'):
-    lines.push_back(mk_linear_cut(p0, p6));
+    lines.push_back(linear_cut::make(p0, p6));
     lines.push_back(circular_arc::make(p6, p0, p3 - p6, COUNTERCLOCKWISE, XY));
     break;    
   case ('E'):
-    lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p0, p2));
-    lines.push_back(mk_linear_cut(p3, p5));
-    lines.push_back(mk_linear_cut(p6, p8));
+    lines.push_back(linear_cut::make(p0, p6));
+    lines.push_back(linear_cut::make(p0, p2));
+    lines.push_back(linear_cut::make(p3, p5));
+    lines.push_back(linear_cut::make(p6, p8));
     break;
   case ('H'):
-    lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p3, p5));
-    lines.push_back(mk_linear_cut(p2, p8));
+    lines.push_back(linear_cut::make(p0, p6));
+    lines.push_back(linear_cut::make(p3, p5));
+    lines.push_back(linear_cut::make(p2, p8));
     break;
   case('L'):
-    lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p6, p8));
+    lines.push_back(linear_cut::make(p0, p6));
+    lines.push_back(linear_cut::make(p6, p8));
     break;
   case('O'):
     lines.push_back(circular_arc::make(p3, p5, p4 - p3, CLOCKWISE, XY));
     lines.push_back(circular_arc::make(p5, p3, p4 - p5, CLOCKWISE, XY));
     break;
   case('R'):
-    lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p3, p8));
-    lines.push_back(mk_linear_cut(p3, p5));
-    lines.push_back(mk_linear_cut(p5, p2));
-    lines.push_back(mk_linear_cut(p2, p0));
+    lines.push_back(linear_cut::make(p0, p6));
+    lines.push_back(linear_cut::make(p3, p8));
+    lines.push_back(linear_cut::make(p3, p5));
+    lines.push_back(linear_cut::make(p5, p2));
+    lines.push_back(linear_cut::make(p2, p0));
     break;
   case('W'):
-    lines.push_back(mk_linear_cut(p0, p6));
-    lines.push_back(mk_linear_cut(p6, p1));
-    lines.push_back(mk_linear_cut(p1, p8));
-    lines.push_back(mk_linear_cut(p8, p2));
+    lines.push_back(linear_cut::make(p0, p6));
+    lines.push_back(linear_cut::make(p6, p1));
+    lines.push_back(linear_cut::make(p1, p8));
+    lines.push_back(linear_cut::make(p8, p2));
     break;
   case('\"'):
     break;

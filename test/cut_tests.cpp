@@ -15,7 +15,7 @@ namespace gca {
     set_system_allocator(&a);
 
     SECTION("GCODE from one cut") {
-      linear_cut* s = mk_linear_cut(point(0, 0, -1), point(0, 3, -1));
+      linear_cut* s = linear_cut::make(point(0, 0, -1), point(0, 3, -1));
       vector<linear_cut*> cuts;
       cuts.push_back(s);
       gprog* res = gcode_for_cuts(cuts);
@@ -32,8 +32,8 @@ namespace gca {
     }
 
     SECTION("GCODE for adjacent cuts") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(0, 3, -1));
-      linear_cut* s2 = mk_linear_cut(point(5, 3, -4), point(7, 2, -4));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(0, 3, -1));
+      linear_cut* s2 = linear_cut::make(point(5, 3, -4), point(7, 2, -4));
       vector<linear_cut*> cuts;
       cuts.push_back(s1);
       cuts.push_back(s2);
@@ -61,48 +61,48 @@ namespace gca {
     set_system_allocator(&a);
 
     SECTION("X axis sink") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(1, 0, -1));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(1, 0, -1));
       linear_cut* sink = sink_cut(s1, 1.0);
-      linear_cut* correct = mk_linear_cut(point(-1, 0, 0), point(0, 0, -1));
+      linear_cut* correct = linear_cut::make(point(-1, 0, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
 
     SECTION("Y axis sink") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(0, 1, -1));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(0, 1, -1));
       linear_cut* sink = sink_cut(s1, 1.0);
-      linear_cut* correct = mk_linear_cut(point(0, -1, 0), point(0, 0, -1));
+      linear_cut* correct = linear_cut::make(point(0, -1, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
 
     SECTION("Mixed axis sink q1") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(1, 1, -1));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(1, 1, -1));
       linear_cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
-      linear_cut* correct = mk_linear_cut(point(-v, -v, 0), point(0, 0, -1));
+      linear_cut* correct = linear_cut::make(point(-v, -v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
     
     SECTION("Mixed axis sink q2") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(-1, 1, -1));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(-1, 1, -1));
       linear_cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
-      linear_cut* correct = mk_linear_cut(point(v, -v, 0), point(0, 0, -1));
+      linear_cut* correct = linear_cut::make(point(v, -v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
 
     SECTION("Mixed axis sink q3") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(-1, -1, -1));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(-1, -1, -1));
       linear_cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
-      linear_cut* correct = mk_linear_cut(point(v, v, 0), point(0, 0, -1));
+      linear_cut* correct = linear_cut::make(point(v, v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
 
     SECTION("Mixed axis sink q4") {
-      linear_cut* s1 = mk_linear_cut(point(0, 0, -1), point(1, -1, -1));
+      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(1, -1, -1));
       linear_cut* sink = sink_cut(s1, 1.0);
       double v = sqrt(1.0/2.0);
-      linear_cut* correct = mk_linear_cut(point(-v, v, 0), point(0, 0, -1));
+      linear_cut* correct = linear_cut::make(point(-v, v, 0), point(0, 0, -1));
       REQUIRE(*sink == *correct);
     }
   }

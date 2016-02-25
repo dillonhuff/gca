@@ -40,6 +40,13 @@ namespace gca {
       return c;
     }
 
+    cut* scale(double s) const {
+      linear_cut* mem = allocate<linear_cut>();
+      linear_cut* c = new (mem) linear_cut(s*start, s*end);
+      c->tool_no = tool_no;
+      return c;
+    }
+    
     inline bool is_linear_cut() const { return true; }
     
   };

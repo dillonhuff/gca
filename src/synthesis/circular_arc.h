@@ -36,6 +36,13 @@ namespace gca {
       return arc;
     }
 
+    cut* scale(double s) const {
+      circular_arc* mem = allocate<circular_arc>();
+      circular_arc* arc = new (mem) circular_arc(s*start, s*end, s*start_offset, dir, pl);
+      arc->tool_no = tool_no;
+      return arc;
+    }
+    
     virtual point initial_orient() const {
       double theta = dir == CLOCKWISE ? 90 : -90;
       return (end - start).rotate_z(theta).normalize();

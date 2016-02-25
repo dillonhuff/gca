@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 
+#include "core/arena_allocator.h"
 #include "geometry/point.h"
 
 using namespace std;
@@ -79,6 +80,11 @@ namespace gca {
   };
 
   class omitted : public value {
+  public:
+    static omitted* make() {
+      omitted* mem = allocate<omitted>();
+      return new (mem) omitted();
+    }
     virtual inline bool is_omitted() const { return true; }
     
     virtual bool operator==(const value& other) const {

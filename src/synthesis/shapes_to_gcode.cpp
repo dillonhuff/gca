@@ -148,23 +148,30 @@ namespace gca {
     return true;
   }
 
-  vector<cut*> shift_cuts(const vector<cut*>& cuts, point p) {
+  vector<cut*> shift_and_scale_cuts(const vector<cut*>& cuts, point p, double s) {
     vector<cut*> shifted_cuts;
     for (vector<cut*>::const_iterator it = cuts.begin();
 	 it != cuts.end(); ++it) {
-      shifted_cuts.push_back((*it)->shift(p));
+      shifted_cuts.push_back((*it)->shift(p)->scale(s));
     }
     return shifted_cuts;
   }
 
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params,
-			       point shift) {
+			       point shift,
+			       double scale) {
     vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
     vector<cut*> cuts = flatten_toolpaths(toolpaths);
     vector<cut*> all_cuts = insert_transitions(cuts, params);
     assert(cuts_are_adjacent(all_cuts));
-    vector<cut*> shifted_cuts = shift_cuts(all_cuts, shift);
+    vector<cut*> shifted_cuts = shift_and_scale_cuts(all_cuts, shift, scale);
+    if (params.set_default_feedrate) {
+      for (vector<cut*>::iterator it = shifted_cuts.begin();
+	     it != shifted_cuts.end(); ++it) {
+	(*it)->feedrate = mk_lit(params.default_feedrate);
+      }
+    }
     gprog* p = mk_gprog();
     append_cuts_gcode(shifted_cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);

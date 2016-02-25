@@ -70,7 +70,7 @@ namespace gca {
 
     SECTION("No hole punches") {
       params.tools = DRILL_AND_DRAG_KNIFE;
-      lines.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
+      lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
       shape_layout l(lines, holes, splines);
       gprog* p = shape_layout_to_gcode(l, params);
 
@@ -108,7 +108,7 @@ namespace gca {
     }
 
     SECTION("Lines and hole punches") {
-      lines.push_back(mk_linear_cut(point(0, 0, 0), point(1, 0, 0)));
+      lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
       holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
       
       shape_layout l(lines, holes, splines);

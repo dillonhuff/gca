@@ -102,7 +102,7 @@ namespace gca {
       assert(data.z2 == 0);
       point s(data.x1, data.y1, data.z1);
       point e(data.x2, data.y2, data.z2);
-      cuts.push_back(mk_linear_cut(s, e));
+      cuts.push_back(linear_cut::make(s, e));
     }
 
     void addArc(const DL_ArcData& data) {
@@ -149,7 +149,7 @@ namespace gca {
       }
       point v(data.x, data.y, data.z);
       if (polyline_vertices_left < current_polyline_n) {
-	cuts.push_back(mk_linear_cut(last_vertex, v));
+	cuts.push_back(linear_cut::make(last_vertex, v));
       }
       last_vertex = v;    
       polyline_vertices_left--;
@@ -222,7 +222,7 @@ namespace gca {
 
   shape_layout read_dxf(const char* file, bool log=false);
 
-  gprog* dxf_to_gcode(const char* file, cut_params params, point p=point(0, 0, 0));
+  gprog* dxf_to_gcode(const char* file, cut_params params, point p=point(0, 0, 0), double scale=1.0);
 
 }
 

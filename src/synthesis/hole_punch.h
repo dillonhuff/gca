@@ -25,6 +25,13 @@ namespace gca {
       hole->tool_no = tool_no;
       return hole;
     }
+
+    cut* scale(double s) const {
+      hole_punch* mem = allocate<hole_punch>();
+      hole_punch* hole = new (mem) hole_punch(s*start, s*radius);
+      hole->tool_no = tool_no;
+      return hole;
+    }
     
     bool operator==(const cut& other) const {
       if (other.is_hole_punch()) {

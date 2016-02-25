@@ -11,7 +11,7 @@ namespace gca {
     double inc = 1.0 / points_per_spline;
     for (unsigned i = 1; i < points_per_spline; i++) {
       double next = last + inc;
-      spline_cuts.push_back(mk_linear_cut(s->eval(last), s->eval(next)));
+      spline_cuts.push_back(linear_cut::make(s->eval(last), s->eval(next)));
       last = next;
     }
     cut_groups.push_back(spline_cuts);
