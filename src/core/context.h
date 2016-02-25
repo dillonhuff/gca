@@ -10,8 +10,6 @@
 
 namespace gca {
 
-  omitted* mk_omitted();
-
   var* mk_var(int v);
   
   lit* mk_lit(double v);
@@ -33,8 +31,6 @@ namespace gca {
 		  value* feed_rate);
 
   instr* mk_instr_cpy(instr* i);
-
-  //linear_cut* mk_linear_cut(point start, point end);
 
   assign_instr* mk_assign(var* v, value* e);
     

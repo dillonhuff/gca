@@ -13,13 +13,13 @@ namespace gca {
     double angle = atan2(ev.y, ev.x) - atan2(sv.y, sv.x);
     move_instr* circle_move_instr;
     if (angle < 0) {
-      circle_move_instr = mk_G2(mk_lit(ca.end.x), mk_lit(ca.end.y), mk_omitted(),
-				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), mk_omitted(),
-				mk_omitted());
+      circle_move_instr = mk_G2(mk_lit(ca.end.x), mk_lit(ca.end.y), omitted::make(),
+				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), omitted::make(),
+				omitted::make());
     } else {
-      circle_move_instr = mk_G3(mk_lit(ca.end.x), mk_lit(ca.end.y), mk_omitted(),
-				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), mk_omitted(),
-				mk_omitted());
+      circle_move_instr = mk_G3(mk_lit(ca.end.x), mk_lit(ca.end.y), omitted::make(),
+				mk_lit(ca.start_offset.x), mk_lit(ca.start_offset.y), omitted::make(),
+				omitted::make());
 
     }
     return circle_move_instr;

@@ -2,11 +2,6 @@
 
 namespace gca {
   
-  omitted* mk_omitted() {
-    omitted* mem = allocate<omitted>();
-    return new (mem) omitted();
-  }
-
   var* mk_var(int v) {
     var* vr = allocate<var>();
     return new (vr) var(v);
@@ -19,7 +14,7 @@ namespace gca {
   
   g0_instr* mk_G0(point p) {
     g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), mk_omitted());
+    return new (mem) g0_instr(mk_lit(p.x), mk_lit(p.y), mk_lit(p.z), omitted::make());
   }
     
   g1_instr* mk_G1(double x, double y, double z, double feed_rate) {
@@ -57,12 +52,12 @@ namespace gca {
   
   g0_instr* mk_G0(double x, double y, double z) {
     g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(mk_lit(x), mk_lit(y), mk_lit(z), mk_omitted());
+    return new (mem) g0_instr(mk_lit(x), mk_lit(y), mk_lit(z), omitted::make());
   }
 
   g0_instr* mk_G0(value* x, value* y, value* z) {
     g0_instr* mem = allocate<g0_instr>();
-    return new (mem) g0_instr(x, y, z, mk_omitted());
+    return new (mem) g0_instr(x, y, z, omitted::make());
   }
       
   instr* mk_instr_cpy(instr* i) {
@@ -102,11 +97,6 @@ namespace gca {
     }
     return new_i;
   }
-          
-  // linear_cut* mk_linear_cut(point start, point end) {
-  //   linear_cut* mem = allocate<linear_cut>();
-  //   return new (mem) linear_cut(start, end);
-  // }
 
 
   assign_instr* mk_assign(var* v, value* e) {
@@ -177,7 +167,7 @@ namespace gca {
   
   g53_instr* mk_G53(value* x, value* y, value* z) {
     g53_instr* mem = allocate<g53_instr>();
-    return new (mem) g53_instr(x, y, z, mk_omitted());
+    return new (mem) g53_instr(x, y, z, omitted::make());
   }
 
   hole_punch* mk_hole_punch(double x, double y, double z, double r) {

@@ -92,7 +92,7 @@ namespace gca {
 	return mk_lit(d);
       }
     }
-    return mk_omitted();
+    return omitted::make();
   }
   
   void parse_position_values(gprog* p, size_t* i, const string& s,
@@ -103,7 +103,7 @@ namespace gca {
   }
 
   instr* parse_G1(gprog* p, size_t* i, const string& s) {
-    value* default_feedrate = mk_omitted();
+    value* default_feedrate = omitted::make();
     value* fr = parse_option_value('F', i, s);
     value* xv = NULL;
     value* yv = NULL;
@@ -126,7 +126,7 @@ namespace gca {
 
   instr* parse_G2(gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
-    value* default_feedrate = mk_omitted();
+    value* default_feedrate = omitted::make();
     value* fr = parse_option_value('F', i, s);    
     value* xv = NULL;
     value* yv = NULL;
@@ -143,7 +143,7 @@ namespace gca {
 
   instr* parse_G3(gprog* p, size_t* i, const string& s) {
     ignore_whitespace(i, s);
-    value* default_feedrate = mk_omitted();
+    value* default_feedrate = omitted::make();
     value* fr = parse_option_value('F', i, s);    
     value* xv = NULL;
     value* yv = NULL;
