@@ -105,8 +105,7 @@ namespace gca {
     if  (params.one_pass_only) {
       depths.push_back(params.pass_depth);
     } else {
-      assert(params.cut_depth < params.material_depth);
-      double depth = params.material_depth - params.cut_depth;
+      double depth = max(0.0, params.material_depth - params.cut_depth);
       while (true) {
 	depths.push_back(depth);
 	if (depth == 0.0) {

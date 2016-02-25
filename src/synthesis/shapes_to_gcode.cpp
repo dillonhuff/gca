@@ -138,7 +138,8 @@ namespace gca {
     vector<cut*> shifted_cuts;
     for (vector<cut*>::const_iterator it = cuts.begin();
 	 it != cuts.end(); ++it) {
-      shifted_cuts.push_back((*it)->shift(p)->scale(s));
+      // TODO: Fix this horrible hack
+      shifted_cuts.push_back((*it)->shift(point(0, 0, -4.05))->scale(s));
     }
     return shifted_cuts;
   }

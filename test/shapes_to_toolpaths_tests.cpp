@@ -47,7 +47,7 @@ namespace gca {
     SECTION("Probotix, drill only") {
       params.safe_height = 0.35;
       params.material_depth = 0.011;
-      params.cut_depth = 0.01;
+      params.cut_depth = 0.05;
       params.start_loc = point(0, 0, 0);
       params.start_orient = point(1, 0, 0);
       params.target_machine = PROBOTIX_V90_MK2_VFD;
