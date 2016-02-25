@@ -23,7 +23,7 @@ namespace gca {
     per_instr_state(tp) {
       initial_feedrate = initial_feedratep;
       new_feedrate = new_feedratep;
-      p = mk_gprog();
+      p = gprog::make();
     }
 
   feed_changer_state(pass& tp,
@@ -33,7 +33,7 @@ namespace gca {
     per_instr_state(tp) {
       initial_feedrate = initial_feedratep;
       new_feedrate = new_feedratep;
-      p = mk_gprog();
+      p = gprog::make();
       p->push_back(mk_assign(new_feedratep, default_val));
     }
     

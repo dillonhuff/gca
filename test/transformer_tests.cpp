@@ -24,21 +24,21 @@ namespace gca {
     }
   
     SECTION("Feed changer") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       value* initial_feedrate = lit::make(1.0);
       p->push_back(g1_instr::make(1.0, 1.0, 1.0, initial_feedrate));
       value* new_feedrate = lit::make(4.0);
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(1.0, 1.0, 1.0, new_feedrate));
       REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
     }
 
     SECTION("Feed changer relative coordinates") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       value* initial_feedrate = lit::make(1.0);
       p->push_back(g1_instr::make(1.0, 1.0, 1.0, initial_feedrate));
       value* new_feedrate = lit::make(4.0);
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(1.0, 1.0, 1.0, new_feedrate));
       REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
     }
@@ -53,45 +53,45 @@ namespace gca {
     }
   
     SECTION("No irrelevant G0 moves") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g0_instr::make(point(1.0, 1.0, 1.0)));
       REQUIRE(*filter_G0_moves(p) == *p);
     }
 
     SECTION("g0_filter no G0 moves") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g1_instr::make(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *p);
     }
 
     SECTION("g0_filter dont remove G1") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g0_instr::make(point(1.0, 2.0, 2.0)));
       p->push_back(g1_instr::make(1.0, 2.0, 2.0));
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g0_instr::make(point(1.0, 2.0, 2.0)));
       correct->push_back(g1_instr::make(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter several pointless moves") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g0_instr::make(1.0, 2.0, 2.0));
       p->push_back(g0_instr::make(1.0, 2.0, 2.0));
       p->push_back(g0_instr::make(1.0, 2.0, 2.0));
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g0_instr::make(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter several pointless moves with G1, M2") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g0_instr::make(1.0, 2.0, -2.0));
       p->push_back(g0_instr::make(1.0, 2.0, 0.0));
       p->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
       p->push_back(g1_instr::make(1.0, 2.0, 2.0));
       p->push_back(mk_m2_instr());
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
       correct->push_back(g1_instr::make(1.0, 2.0, 2.0));
       correct->push_back(mk_m2_instr());
@@ -99,22 +99,22 @@ namespace gca {
     }
 
     SECTION("g0_filter starting on G1") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g1_instr::make(1, 1, 1));
       p->push_back(g0_instr::make(1, 1, 1));
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(1, 1, 1));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter starting on G1 multiple instructions") {
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       p->push_back(g1_instr::make(1, 1, 0));
       p->push_back(g1_instr::make(1, 1, 1));
       p->push_back(g0_instr::make(1, 2, 0));
       p->push_back(g0_instr::make(1, 1, 1));
       p->push_back(g1_instr::make(2, 3, 3));
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(1, 1, 0));
       correct->push_back(g1_instr::make(1, 1, 1));
       correct->push_back(g1_instr::make(2, 3, 3));
@@ -125,9 +125,9 @@ namespace gca {
   TEST_CASE("abs -> rel conversion") {
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = mk_gprog();
-    gprog* r = mk_gprog();
-    gprog* correct = mk_gprog();
+    gprog* p = gprog::make();
+    gprog* r = gprog::make();
+    gprog* correct = gprog::make();
     abs_to_rel f(GCA_ABSOLUTE);
 
     SECTION("abs -> rel 1 instruction is the same") {
@@ -159,9 +159,9 @@ namespace gca {
     
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = mk_gprog();
+    gprog* p = gprog::make();
     gprog* r;
-    gprog* correct = mk_gprog();
+    gprog* correct = gprog::make();
     rel_to_abs f(GCA_ABSOLUTE);
 
     SECTION("One M2 instruction is the same") {
@@ -195,9 +195,9 @@ namespace gca {
     
     arena_allocator a;
     set_system_allocator(&a);    
-    gprog* p = mk_gprog();
+    gprog* p = gprog::make();
     gprog* r;
-    gprog* correct = mk_gprog();
+    gprog* correct = gprog::make();
 
     SECTION("No op program") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));

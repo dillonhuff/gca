@@ -19,7 +19,7 @@ namespace gca {
       vector<linear_cut*> cuts;
       cuts.push_back(s);
       gprog* res = gcode_for_cuts(cuts);
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(g0_instr::make(point(0, 0, -1)));
@@ -38,7 +38,7 @@ namespace gca {
       cuts.push_back(s1);
       cuts.push_back(s2);
       gprog* res = gcode_for_cuts(cuts);
-      gprog* correct = mk_gprog();
+      gprog* correct = gprog::make();
       correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(g0_instr::make(point(0, 0, -1)));
@@ -118,7 +118,7 @@ namespace gca {
 
       string test_path = project_path + string("gca/test/nc-files/align_test_1.nc");
       gprog* correct = read_file(test_path);
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       point sp(15.791066, 0.859332, 0.075000);
       point last_pos(16.005220, 0.588386, 0.075000);
       point last_orient = last_pos - sp;
@@ -156,7 +156,7 @@ namespace gca {
 
       string test_path = project_path + string("gca/test/nc-files/align_test_2.nc");
       gprog* correct = read_file(test_path);
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       point sp(15.791066, 0.859332, 0.000000);
       point last_pos(16.005220, 0.588386, 0.000000);
       point last_orient = last_pos - sp;
@@ -189,7 +189,7 @@ namespace gca {
 
       string test_path = project_path + string("gca/test/nc-files/align_test_3.nc");
       gprog* correct = read_file(test_path);
-      gprog* p = mk_gprog();
+      gprog* p = gprog::make();
       point sp(-1.732718, -32.033215, 0.055000);
       point last_pos(-1.561738, -32.249390, 0.055000);
       point last_orient = last_pos - sp;

@@ -172,7 +172,7 @@ namespace gca {
 	(*it)->feedrate = lit::make(params.default_feedrate);
       }
     }
-    gprog* p = mk_gprog();
+    gprog* p = gprog::make();
     append_cuts_gcode(shifted_cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);
     return r;

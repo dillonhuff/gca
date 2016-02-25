@@ -13,7 +13,7 @@ namespace gca {
 
   abs_to_rel_state(pass& tp) :
     per_instr_state(tp) {
-      p = mk_gprog();
+      p = gprog::make();
     }
 
     void update_G0(move_instr& ist) {

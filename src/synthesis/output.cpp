@@ -50,7 +50,7 @@ namespace gca {
   
   gprog* gcode_for_cuts(vector<linear_cut*>& cuts) {
     point current_loc = point(0, 0, 0);
-    gprog* p = mk_gprog();
+    gprog* p = gprog::make();
     for (unsigned i = 0; i < cuts.size(); i++) {
       from_to_with_G0(p, current_loc, cuts[i]->start);
       from_to_with_G1(p, cuts[i]->start, cuts[i]->end);
@@ -148,7 +148,7 @@ namespace gca {
   }
   
   gprog* initial_gprog(machine_name m) {
-    gprog* r = mk_gprog();
+    gprog* r = gprog::make();
     if (m == CAMASTER) {
       r->push_back(mk_G90());
       r->push_back(mk_m5_instr());

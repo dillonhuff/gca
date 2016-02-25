@@ -259,7 +259,7 @@ namespace gca {
   }
   
   gprog* parse_gprog(const string& s) {
-    gprog* p = mk_gprog();
+    gprog* p = gprog::make();
     string::size_type i = 0;
     while (i < s.size()) {
       ignore_whitespace(&i, s);

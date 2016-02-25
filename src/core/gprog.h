@@ -17,6 +17,10 @@ namespace gca {
     ilist instrs;
 
   public:
+    static gprog* make() {
+      return new (allocate<gprog>()) gprog();
+    }
+
     ilist::iterator begin() { return instrs.begin(); }
     ilist::iterator end() { return instrs.end(); }
 

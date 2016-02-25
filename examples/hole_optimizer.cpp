@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
   }
 
   int* res = opt2(pts, distance, hole_locations.size());
-  gprog* r = mk_gprog();
+  gprog* r = gprog::make();
   for (unsigned i = 0; i < hole_locations.size(); i++) {
     point pt = hole_locations[res[i]];
     r->push_back(g1_instr::make(pt.x, pt.y, pt.z, omitted::make()));

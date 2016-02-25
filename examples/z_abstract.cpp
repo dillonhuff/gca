@@ -25,7 +25,7 @@ void find_z_values(set<double>& z_values, gprog* p) {
 }
 
 gprog* generalize_zs(set<double>& z_values, gprog* p) {
-  gprog* r = mk_gprog();
+  gprog* r = gprog::make();
   map<double, var*> new_vars;
   int i = 1;
   for (set<double>::iterator it = z_values.begin();

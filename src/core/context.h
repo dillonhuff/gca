@@ -16,11 +16,6 @@ namespace gca {
     
   gprog* mk_gprog();
 
-  m2_instr* mk_m2_instr();
-  m30_instr* mk_m30_instr();
-  m5_instr* mk_m5_instr();
-  m3_instr* mk_m3_instr();
-
   t_instr* mk_t_instr(int val);
 
   s_instr* mk_s_instr(int val);
@@ -28,7 +23,11 @@ namespace gca {
   f_instr* mk_f_instr(int val, string s);
 
   comment* mk_comment(char ld, char rd, string t);
-    
+
+  m2_instr* mk_m2_instr();
+  m30_instr* mk_m30_instr();
+  m5_instr* mk_m5_instr();
+  m3_instr* mk_m3_instr();
   g91_instr* mk_G91();
   g90_instr* mk_G90();
   g20_instr* mk_G20();

@@ -37,7 +37,7 @@ namespace gca {
   };
 
   gprog* scale_xyz(double x_s, double y_s, double z_s, gprog& p) {
-    gprog* r = mk_gprog();
+    gprog* r = gprog::make();
     scale_callback c(x_s, y_s, z_s);
     for (unsigned i = 0; i < p.size(); i++) {
       r->push_back(c.call(&p, i, p[i]));

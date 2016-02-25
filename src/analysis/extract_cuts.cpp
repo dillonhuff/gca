@@ -33,7 +33,7 @@ namespace gca {
     pass* s = mk_pos_pass(point(0, 0, 0));  
     unsigned i = 0;
     bool last_was_g1 = false;  
-    gprog* current = mk_gprog();
+    gprog* current = gprog::make();
     point last_start = point(0, 0, 0);
     while (i < p->size()) {
       instr* ist = (*p)[i];
@@ -46,7 +46,7 @@ namespace gca {
 	  g1_sections.push_back(cut_section(last_start, current));
 	}
 	last_start = get_before(s);
-	current = mk_gprog();
+	current = gprog::make();
 	current->push_back(ist);
       } else {
 	last_was_g1 = false;

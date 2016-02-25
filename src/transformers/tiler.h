@@ -19,7 +19,7 @@ namespace gca {
       gprog* rp;
       abs_to_rel atr(def);
       rp = atr.apply(p);
-      gprog* new_p = mk_gprog();
+      gprog* new_p = gprog::make();
       new_p->push_back(mk_G91());
       for (int i = 0; i < num_copies; i++) {
 	int j = 0;

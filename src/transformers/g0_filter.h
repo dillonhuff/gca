@@ -30,7 +30,7 @@ namespace gca {
     int j;
 
   g0_filter_state(pass& tp) : per_instr_state(tp) {
-      p = mk_gprog();
+      p = gprog::make();
       j = 0;
     }
 
