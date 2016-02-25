@@ -10,10 +10,6 @@
 
 namespace gca {
 
-  g0_instr* mk_G0(point p);  
-  g0_instr* mk_G0(double x, double y, double z);
-  g0_instr* mk_G0(value* x, value* y, value* z);
-      
   g1_instr* mk_G1(double x, double y, double z, double feed_rate=1.0);
   g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate);
   g1_instr* mk_G1(double x, double y, double z, value* feed_rate);

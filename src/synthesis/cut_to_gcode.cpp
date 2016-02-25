@@ -28,7 +28,7 @@ namespace gca {
   void append_cut(cut* ci, gprog& p) {
     if (ci->is_hole_punch()) {
     } else if (ci->is_linear_cut()) {
-      p.push_back(mk_G1(ci->end.x, ci->end.y, ci->end.z, ci->feedrate));
+      p.push_back(g1_instr::make(ci->end.x, ci->end.y, ci->end.z, ci->feedrate));
     } else if (ci->is_circular_arc()) {
       circular_arc* arc = static_cast<circular_arc*>(ci);
       p.push_back(circular_arc_to_gcode(*arc));

@@ -26,20 +26,20 @@ namespace gca {
     SECTION("Feed changer") {
       gprog* p = mk_gprog();
       value* initial_feedrate = lit::make(1.0);
-      p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
+      p->push_back(g1_instr::make(1.0, 1.0, 1.0, initial_feedrate));
       value* new_feedrate = lit::make(4.0);
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
+      correct->push_back(g1_instr::make(1.0, 1.0, 1.0, new_feedrate));
       REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
     }
 
     SECTION("Feed changer relative coordinates") {
       gprog* p = mk_gprog();
       value* initial_feedrate = lit::make(1.0);
-      p->push_back(mk_G1(1.0, 1.0, 1.0, initial_feedrate));
+      p->push_back(g1_instr::make(1.0, 1.0, 1.0, initial_feedrate));
       value* new_feedrate = lit::make(4.0);
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G1(1.0, 1.0, 1.0, new_feedrate));
+      correct->push_back(g1_instr::make(1.0, 1.0, 1.0, new_feedrate));
       REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
     }
 
@@ -60,17 +60,17 @@ namespace gca {
 
     SECTION("g0_filter no G0 moves") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G1(1.0, 2.0, 2.0));
+      p->push_back(g1_instr::make(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *p);
     }
 
     SECTION("g0_filter dont remove G1") {
       gprog* p = mk_gprog();
       p->push_back(g0_instr::make(point(1.0, 2.0, 2.0)));
-      p->push_back(mk_G1(1.0, 2.0, 2.0));
+      p->push_back(g1_instr::make(1.0, 2.0, 2.0));
       gprog* correct = mk_gprog();
       correct->push_back(g0_instr::make(point(1.0, 2.0, 2.0)));
-      correct->push_back(mk_G1(1.0, 2.0, 2.0));
+      correct->push_back(g1_instr::make(1.0, 2.0, 2.0));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
@@ -89,35 +89,35 @@ namespace gca {
       p->push_back(g0_instr::make(1.0, 2.0, -2.0));
       p->push_back(g0_instr::make(1.0, 2.0, 0.0));
       p->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
-      p->push_back(mk_G1(1.0, 2.0, 2.0));
+      p->push_back(g1_instr::make(1.0, 2.0, 2.0));
       p->push_back(mk_m2_instr());
       gprog* correct = mk_gprog();
       correct->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
-      correct->push_back(mk_G1(1.0, 2.0, 2.0));
+      correct->push_back(g1_instr::make(1.0, 2.0, 2.0));
       correct->push_back(mk_m2_instr());
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter starting on G1") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G1(1, 1, 1));
+      p->push_back(g1_instr::make(1, 1, 1));
       p->push_back(g0_instr::make(1, 1, 1));
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G1(1, 1, 1));
+      correct->push_back(g1_instr::make(1, 1, 1));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
     SECTION("g0_filter starting on G1 multiple instructions") {
       gprog* p = mk_gprog();
-      p->push_back(mk_G1(1, 1, 0));
-      p->push_back(mk_G1(1, 1, 1));
+      p->push_back(g1_instr::make(1, 1, 0));
+      p->push_back(g1_instr::make(1, 1, 1));
       p->push_back(g0_instr::make(1, 2, 0));
       p->push_back(g0_instr::make(1, 1, 1));
-      p->push_back(mk_G1(2, 3, 3));
+      p->push_back(g1_instr::make(2, 3, 3));
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G1(1, 1, 0));
-      correct->push_back(mk_G1(1, 1, 1));
-      correct->push_back(mk_G1(2, 3, 3));
+      correct->push_back(g1_instr::make(1, 1, 0));
+      correct->push_back(g1_instr::make(1, 1, 1));
+      correct->push_back(g1_instr::make(2, 3, 3));
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
   }
@@ -145,9 +145,9 @@ namespace gca {
     }
     
     SECTION("abs -> rel 2 instructions") {
-      p->push_back(mk_G1(1.0, 0, 0));
+      p->push_back(g1_instr::make(1.0, 0, 0));
       p->push_back(g0_instr::make(2.0, 3.5, 8));
-      correct->push_back(mk_G1(1.0, 0, 0, 1.0));
+      correct->push_back(g1_instr::make(1.0, 0, 0, 1.0));
       correct->push_back(g0_instr::make(1.0, 3.5, 8));
       r = f.apply(p);
       REQUIRE(*r == *correct);
@@ -183,9 +183,9 @@ namespace gca {
     SECTION("Two instructions instructions") {
       p->push_back(mk_G91());
       p->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
-      p->push_back(mk_G1(-2.0, 2.0, -10.0, 2.5));
+      p->push_back(g1_instr::make(-2.0, 2.0, -10.0, 2.5));
       correct->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
-      correct->push_back(mk_G1(-1.0, 4.0, -7.0, 2.5));
+      correct->push_back(g1_instr::make(-1.0, 4.0, -7.0, 2.5));
       r = f.apply(p);
       REQUIRE(*r == *correct);
     }    
@@ -222,9 +222,9 @@ namespace gca {
       point start = point(0, 0, 0);
       point shift = point(2, 0, 0);
       tiler t(3, start, shift);
-      p->push_back(mk_G1(0, 0, depth));
-      p->push_back(mk_G1(1, 0, depth));
-      p->push_back(mk_G1(1, -1, depth));
+      p->push_back(g1_instr::make(0, 0, depth));
+      p->push_back(g1_instr::make(1, 0, depth));
+      p->push_back(g1_instr::make(1, -1, depth));
       p->push_back(mk_m2_instr());
       point e1 = point(1, -1, depth);
       point s1 = point(2, 0, depth);
@@ -232,23 +232,23 @@ namespace gca {
       
       correct->push_back(mk_G91());
 
-      correct->push_back(mk_G1(0, 0, depth, 1.0));
-      correct->push_back(mk_G1(1, 0, 0, 1.0));
-      correct->push_back(mk_G1(0, -1, 0, 1.0));
+      correct->push_back(g1_instr::make(0, 0, depth, 1.0));
+      correct->push_back(g1_instr::make(1, 0, 0, 1.0));
+      correct->push_back(g1_instr::make(0, -1, 0, 1.0));
 
       correct->push_back(g0_instr::make(0, 0, -depth));
       correct->push_back(g0_instr::make(d1.x, d1.y, 0));
 
-      correct->push_back(mk_G1(0, 0, depth, 1.0));
-      correct->push_back(mk_G1(1, 0, 0, 1.0));
-      correct->push_back(mk_G1(0, -1, 0, 1.0));
+      correct->push_back(g1_instr::make(0, 0, depth, 1.0));
+      correct->push_back(g1_instr::make(1, 0, 0, 1.0));
+      correct->push_back(g1_instr::make(0, -1, 0, 1.0));
 
       correct->push_back(g0_instr::make(0, 0, -depth));
       correct->push_back(g0_instr::make(d1.x, d1.y, 0));
 
-      correct->push_back(mk_G1(0, 0, depth, 1.0));
-      correct->push_back(mk_G1(1, 0, 0, 1.0));
-      correct->push_back(mk_G1(0, -1, 0, 1.0));
+      correct->push_back(g1_instr::make(0, 0, depth, 1.0));
+      correct->push_back(g1_instr::make(1, 0, 0, 1.0));
+      correct->push_back(g1_instr::make(0, -1, 0, 1.0));
       
       correct->push_back(mk_m2_instr());
       

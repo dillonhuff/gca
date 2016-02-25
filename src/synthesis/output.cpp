@@ -44,7 +44,7 @@ namespace gca {
   }
 
   void from_to_with_G1(gprog* p, point from, point to) {
-    instr* move_instr = mk_G1(to.x, to.y, to.z);
+    instr* move_instr = g1_instr::make(to.x, to.y, to.z);
     p->push_back(move_instr);
   }
   

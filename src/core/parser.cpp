@@ -112,7 +112,7 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value('F', i, s);
     }
-    return mk_G1(xv, yv, zv, fr);
+    return g1_instr::make(xv, yv, zv, fr);
   }
 
   instr* parse_G0(gprog* p, size_t* i, const string& s) {

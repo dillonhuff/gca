@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
   gprog* r = mk_gprog();
   for (unsigned i = 0; i < hole_locations.size(); i++) {
     point pt = hole_locations[res[i]];
-    r->push_back(mk_G1(pt.x, pt.y, pt.z, omitted::make()));
+    r->push_back(g1_instr::make(pt.x, pt.y, pt.z, omitted::make()));
     if (i < hole_locations.size() - 1) {
       point next = hole_locations[res[i+1]];
       r->push_back(g0_instr::make(pt.x, pt.y, 0.35));

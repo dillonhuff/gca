@@ -152,6 +152,28 @@ namespace gca {
   g1_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g1_instr(g1_instr* i) : move_instr(i) {}
 
+    static g1_instr* make(double x, double y, double z) {
+      g1_instr* mem = allocate<g1_instr>();
+      return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), lit::make(1.0));
+    }
+    
+    static g1_instr* make(double x, double y, double z, double feed_rate) {
+      g1_instr* mem = allocate<g1_instr>();
+      lit* v = allocate<lit>();
+      lit* frp = new (v) lit(feed_rate);
+      return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), frp);
+    }
+  
+    static g1_instr* make(value* x, value* y, value* z, value* feed_rate) {
+      g1_instr* mem = allocate<g1_instr>();
+      return new (mem) g1_instr(x, y, z, feed_rate);
+    }
+    
+    static g1_instr* make(double x, double y, double z, value* feed_rate) {
+      g1_instr* mem = allocate<g1_instr>();
+      return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), feed_rate);
+    }
+    
     virtual inline bool is_G1() const { return true; }
     void print(ostream& s) const {
       cout << "G1 ";
