@@ -101,24 +101,6 @@ namespace gca {
     }
   }
   
-  vector<cut*> flatten_toolpaths(const vector<toolpath>& toolpaths) {
-    vector<cut*> cuts;
-    for (vector<toolpath>::const_iterator it = toolpaths.begin();
-	 it != toolpaths.end(); ++it) {
-      const toolpath& t = *it;
-      for (vector<cut_group>::const_iterator jt = t.cut_groups.begin();
-	   jt != t.cut_groups.end(); ++jt) {
-	const cut_group& g = *jt;
-	for (cut_group::const_iterator kt = g.begin(); kt != g.end(); ++kt) {
-	  cut* cut = *kt;
-	  cut->tool_no = t.tool_no;
-	  cuts.push_back(cut);
-	}
-      }
-    }
-    return cuts;
-  }
-
   vector<cut*> insert_transitions(const vector<cut*>& cuts,
 				  const cut_params& params) {
     vector<cut*> all_cuts;
@@ -138,11 +120,17 @@ namespace gca {
   }
 
   bool cuts_are_adjacent(const vector<cut*>& cuts) {
-    for (unsigned i = 0; i < cuts.size() - 1; i++) {
-      if (!within_eps(cuts[i]->end, cuts[i+1]->start) &&
-	  cuts[i]->tool_no == cuts[i+1]->tool_no) {
-	cout << "Error: " << cuts[i]->end << " and " << endl;
-	cout << cuts[i+1]->start << " are not adjacent" << endl;
+    cout << "Size = " << cuts.size() << endl;
+
+    if (cuts.size() > 0) {
+      for (unsigned i = 0; i < cuts.size() - 1; i++) {
+	cut* current = cuts[i];
+	cut* next = cuts[i+1];
+	if (!within_eps(current->end, next->start) &&
+	    current->tool_no == next->tool_no) {
+	  cout << "Error: " << current->end << " and " << endl;
+	  cout << next->start << " are not adjacent" << endl;
+	}
       }
     }
     return true;
@@ -161,8 +149,7 @@ namespace gca {
 			       cut_params params,
 			       point shift,
 			       double scale) {
-    vector<toolpath> toolpaths = cut_toolpaths(shapes_to_cut, params);
-    vector<cut*> cuts = flatten_toolpaths(toolpaths);
+    vector<cut*> cuts = shape_cuts(shapes_to_cut, params);
     vector<cut*> all_cuts = insert_transitions(cuts, params);
     assert(cuts_are_adjacent(all_cuts));
     vector<cut*> shifted_cuts = shift_and_scale_cuts(all_cuts, shift, scale);

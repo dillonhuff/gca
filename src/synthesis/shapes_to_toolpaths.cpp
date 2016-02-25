@@ -15,22 +15,21 @@ namespace gca {
     if  (params.one_pass_only) {
       vector<cut*> new_pass;
       for (unsigned i = 0; i < current_group.size(); i++) {
-	cut* ct = current_group[i];
-	if (ct->is_linear_cut()) {
-	  new_pass.push_back(linear_cut::make(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
-	} else if (ct->is_circular_arc()) {
-	  circular_arc* arc = static_cast<circular_arc*>(ct);
-	  point s = arc->start;
-	  s.z = params.pass_depth;
-	  point e = arc->end;
-	  e.z = params.pass_depth;
-	  new_pass.push_back(circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl));
-	} else {
-	  assert(false);
-	}
+      	cut* ct = current_group[i];
+      	if (ct->is_linear_cut()) {
+      	  new_pass.push_back(linear_cut::make(point(ct->start.x, ct->start.y, params.pass_depth), point(ct->end.x, ct->end.y, params.pass_depth)));
+      	} else if (ct->is_circular_arc()) {
+      	  circular_arc* arc = static_cast<circular_arc*>(ct);
+      	  point s = arc->start;
+      	  s.z = params.pass_depth;
+      	  point e = arc->end;
+      	  e.z = params.pass_depth;
+      	  new_pass.push_back(circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl));
+      	} else {
+      	  assert(false);
+      	}
       }
       cut_group_passes.push_back(new_pass);
-      
     } else {
       assert(params.cut_depth < params.material_depth);
       double depth = params.material_depth - params.cut_depth;
@@ -85,7 +84,7 @@ namespace gca {
   }
 
   vector<toolpath> shape_toolpaths(const shape_layout& shapes_to_cut,
-				 const cut_params& params) {
+				   const cut_params& params) {
     vector<toolpath> toolpaths;
     if (params.tools != DRAG_KNIFE_ONLY) {
       toolpaths.push_back(drill_toolpath(shapes_to_cut.holes, params));
@@ -122,7 +121,7 @@ namespace gca {
     toolpath t;
     return t;
   }
-  
+
   vector<toolpath> cut_toolpaths(const shape_layout& shapes_to_cut,
 				 const cut_params& params) {
     vector<toolpath> toolpaths = shape_toolpaths(shapes_to_cut, params);
@@ -132,4 +131,69 @@ namespace gca {
     return toolpaths;
   }
 
+  vector<cut*> flatten_toolpaths(const vector<toolpath>& toolpaths) {
+    vector<cut*> cuts;
+    for (vector<toolpath>::const_iterator it = toolpaths.begin();
+	 it != toolpaths.end(); ++it) {
+      const toolpath& t = *it;
+      for (vector<cut_group>::const_iterator jt = t.cut_groups.begin();
+	   jt != t.cut_groups.end(); ++jt) {
+	const cut_group& g = *jt;
+	for (cut_group::const_iterator kt = g.begin(); kt != g.end(); ++kt) {
+	  cut* cut = *kt;
+	  cut->tool_no = t.tool_no;
+	  cuts.push_back(cut);
+	}
+      }
+    }
+    return cuts;
+  }
+
+  vector<cut*> hole_cuts(const vector<hole_punch*>& holes,
+		     cut_params params) {
+    vector<cut*> cuts;
+    for (unsigned i = 0; i < holes.size(); i++) {
+      if (params.one_pass_only) {
+    	hole_punch* h = holes[i];
+    	hole_punch* nh = hole_punch::make(point(h->start.x, h->start.y, params.pass_depth), h->radius);
+    	nh->tool_no = 2;
+    	cuts.push_back(nh);
+      } else {
+	hole_punch* h = holes[i];
+    	hole_punch* nh = hole_punch::make(h->start, h->radius);
+    	nh->tool_no = 2;
+    	cuts.push_back(nh);
+      }
+    }
+    return cuts;
+  }
+  
+  vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
+			  const cut_params& params) {
+    vector<cut*> cuts;
+    if (params.tools != DRAG_KNIFE_ONLY) {
+      vector<cut*> dcs = hole_cuts(shapes_to_cut.holes, params);
+      cuts.insert(cuts.end(), dcs.begin(), dcs.end());
+    }
+    return cuts;
+    // vector<cut_group> cut_groups;
+    // append_splines(shapes_to_cut.splines, cut_groups);
+    // group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
+
+    // int tool_no;
+    // if (params.tools == DRILL_AND_DRAG_KNIFE ||
+    // 	params.tools == DRAG_KNIFE_ONLY) {
+    //   tool_no = 6;
+    // } else if (params.tools == DRILL_ONLY) {
+    //   tool_no = 2;
+    // } else {
+    //   assert(false);
+    // }
+    // for (vector<cut_group>::iterator it = cut_groups.begin();
+    // 	 it != cut_groups.end(); ++it) {
+    //   toolpaths.push_back(cut_toolpath(tool_no, *it, params));
+    // }
+    // return flatten_toolpaths(toolpaths);
+  }
+  
 }

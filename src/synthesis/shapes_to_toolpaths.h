@@ -8,6 +8,10 @@ namespace gca {
 
   vector<toolpath> cut_toolpaths(const shape_layout& shapes,
 				 const cut_params& params);
+  
+  vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
+			  const cut_params& params);
+  
 }
 
 #endif
