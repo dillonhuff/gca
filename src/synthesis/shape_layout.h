@@ -34,6 +34,8 @@ namespace gca {
     point start_loc;
     point start_orient;
     double default_feedrate;
+    double machine_z_zero;
+    bool machine_z_is_inverted;
     bool one_pass_only;
     bool set_default_feedrate;
     double pass_depth;
@@ -43,6 +45,8 @@ namespace gca {
     cut_params() {
       one_pass_only = false;
       set_default_feedrate = false;
+      machine_z_is_inverted = false;
+      machine_z_zero = 0.0;
     }
   };
 

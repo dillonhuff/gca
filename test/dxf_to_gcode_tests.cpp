@@ -204,14 +204,13 @@ namespace gca {
     double y_init = 6.5;
     
     cut_params params;
-    params.safe_height = -3.75;
+    params.safe_height = 0.35;
     params.material_depth = 0.011;
     params.cut_depth = 0.01;
-    params.push_depth = 0.005;
     params.start_loc = point(x_init, y_init, 0.0);
     params.default_feedrate = 20;
-    params.one_pass_only = true;
-    params.pass_depth = -4.05;
+    params.machine_z_is_inverted = true;
+    params.machine_z_zero = -4.05;
     params.target_machine = PROBOTIX_V90_MK2_VFD;
     params.tools = DRILL_ONLY;
 
