@@ -24,9 +24,9 @@ namespace gca {
       } else if (ct->is_circular_arc()) {
 	circular_arc* arc = static_cast<circular_arc*>(ct);
 	point s = arc->start;
-	s.z = params.pass_depth;
+	s.z = depth;
 	point e = arc->end;
-	e.z = params.pass_depth;
+	e.z = depth;
 	circular_arc* ct = circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl);
 	ct->tool_no = tool_number;
 	new_pass.push_back(ct);
@@ -56,17 +56,17 @@ namespace gca {
 		     cut_params params) {
     vector<cut*> cuts;
     for (unsigned i = 0; i < holes.size(); i++) {
-      if (params.one_pass_only) {
-    	hole_punch* h = holes[i];
-    	hole_punch* nh = hole_punch::make(point(h->start.x, h->start.y, params.pass_depth), h->radius);
-    	nh->tool_no = 2;
-    	cuts.push_back(nh);
-      } else {
+      // if (params.one_pass_only) {
+      // 	hole_punch* h = holes[i];
+      // 	hole_punch* nh = hole_punch::make(point(h->start.x, h->start.y, params.pass_depth), h->radius);
+      // 	nh->tool_no = 2;
+      // 	cuts.push_back(nh);
+      //      } else {
 	hole_punch* h = holes[i];
     	hole_punch* nh = hole_punch::make(h->start, h->radius);
     	nh->tool_no = 2;
     	cuts.push_back(nh);
-      }
+	//      }
     }
     return cuts;
   }
@@ -102,17 +102,13 @@ namespace gca {
 
   vector<double> cut_depths(const cut_params& params) {
     vector<double> depths;
-    if  (params.one_pass_only) {
-      depths.push_back(params.pass_depth);
-    } else {
-      double depth = max(0.0, params.material_depth - params.cut_depth);
-      while (true) {
-	depths.push_back(depth);
-	if (depth == 0.0) {
-	  break;
-	}
-	depth = max(0.0, depth - params.cut_depth);
+    double depth = max(0.0, params.material_depth - params.cut_depth);
+    while (true) {
+      depths.push_back(depth);
+      if (depth == 0.0) {
+	break;
       }
+      depth = max(0.0, depth - params.cut_depth);
     }
     return depths;
   }

@@ -23,9 +23,10 @@ int main(int argc, char** argv) {
   cut_params params;
   params.default_feedrate = 30;
   params.set_default_feedrate = true;
+  // TODO: Fix this after world -> machine coordinate conversion is finished
   params.safe_height = -3.75/scale;
-  params.one_pass_only = true;
-  params.pass_depth = -4.05/scale;
+  params.machine_z_is_inverted = true;
+  params.machine_z_zero = -4.05/scale;
   params.start_loc = point(1, 1, 0);
   params.start_orient = point(1, 0, 0);
   params.tools = DRILL_ONLY;
