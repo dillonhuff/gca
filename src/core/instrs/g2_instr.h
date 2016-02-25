@@ -7,11 +7,19 @@ namespace gca {
 
   class g2_instr : public circular_arc_instr {
   public:
-    g2_instr(value* xp, value* yp, value* zp,
-	     value* ip, value* jp, value* kp,
-	     value* frp,
-	     plane pl) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp, pl) {}
+  g2_instr(value* xp, value* yp, value* zp,
+	   value* ip, value* jp, value* kp,
+	   value* frp,
+	   plane pl) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp, pl) {}
 
+    // TODO: Add plane parameter
+    static g2_instr* make(value* x, value* y, value* z,
+			  value* i, value* j, value* k,
+			  value* feed_rate) {
+      g2_instr* mem = allocate<g2_instr>();
+      return new (mem) g2_instr(x, y, z, i, j, k, feed_rate, XY);
+    }
+    
     virtual inline bool is_G2() const { return true; }    
     virtual inline bool is_g2_instr() const { return true; }
 

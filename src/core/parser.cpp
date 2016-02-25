@@ -138,7 +138,7 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value('F', i, s);
     }    
-    return mk_G2(xv, yv, zv, iv, jv, kv, fr);
+    return g2_instr::make(xv, yv, zv, iv, jv, kv, fr);
   }
 
   instr* parse_G3(gprog* p, size_t* i, const string& s) {
@@ -155,7 +155,7 @@ namespace gca {
     if (*default_feedrate == *fr) {
       fr = parse_option_value('F', i, s);
     }    
-    return mk_G3(xv, yv, zv, iv, jv, kv, fr);
+    return g3_instr::make(xv, yv, zv, iv, jv, kv, fr);
   }
   
   instr* parse_G53(gprog* p, size_t* i, const string& s) {

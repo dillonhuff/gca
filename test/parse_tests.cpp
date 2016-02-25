@@ -239,7 +239,7 @@ namespace gca {
     SECTION("G2 IJ") {
       gprog* p = parse_gprog("G02 X1.0 Y2.0 Z3.0 I-2.0 J0.15");
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G2(lit::make(1), lit::make(2), lit::make(3),
+      correct->push_back(g2_instr::make(lit::make(1), lit::make(2), lit::make(3),
 				 lit::make(-2.0), lit::make(0.15), omitted::make(),
 				 omitted::make()));
       REQUIRE(((*p) == (*correct)));
@@ -248,7 +248,7 @@ namespace gca {
     SECTION("G3 IK") {
       gprog* p = parse_gprog("G3 X1.0 Y2.0 Z3.0 I-2.0 K0.15");
       gprog* correct = mk_gprog();
-      correct->push_back(mk_G3(lit::make(1), lit::make(2), lit::make(3),
+      correct->push_back(g3_instr::make(lit::make(1), lit::make(2), lit::make(3),
 				 lit::make(-2.0), omitted::make(), lit::make(0.15),
 				 omitted::make()));
       REQUIRE(((*p) == (*correct)));

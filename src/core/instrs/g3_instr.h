@@ -12,6 +12,15 @@ namespace gca {
 	   value* frp,
 	   plane pl) : circular_arc_instr(xp, yp, zp, ip, jp, kp, frp, pl) {}
 
+    // TODO: Add plane parameter
+    static g3_instr* make(value* x, value* y, value* z,
+			  value* i, value* j, value* k,
+			  value* feed_rate) {
+      g3_instr* mem = allocate<g3_instr>();
+      return new (mem) g3_instr(x, y, z, i, j, k, feed_rate, XY);
+    }
+  
+    
     virtual inline bool is_G3() const { return true; }
     virtual inline bool is_g3_instr() const { return true; }
 

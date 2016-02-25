@@ -10,18 +10,6 @@
 
 namespace gca {
 
-  g1_instr* mk_G1(double x, double y, double z, double feed_rate=1.0);
-  g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate);
-  g1_instr* mk_G1(double x, double y, double z, value* feed_rate);
-  
-  g2_instr* mk_G2(value* x, value* y, value* z,
-		  value* i, value* j, value* k,
-		  value* feed_rate);  
-
-  g3_instr* mk_G3(value* x, value* y, value* z,
-		  value* i, value* j, value* k,
-		  value* feed_rate);
-
   instr* mk_instr_cpy(instr* i);
 
   assign_instr* mk_assign(var* v, value* e);

@@ -1,40 +1,7 @@
 #include "core/context.h"
 
 namespace gca {
-  
-  g1_instr* mk_G1(double x, double y, double z, double feed_rate) {
-    g1_instr* mem = allocate<g1_instr>();
-    lit* v = allocate<lit>();
-    lit* frp = new (v) lit(feed_rate);
-    return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), frp);
-  }
-  
-  g1_instr* mk_G1(value* x, value* y, value* z, value* feed_rate) {
-    g1_instr* mem = allocate<g1_instr>();
-    return new (mem) g1_instr(x, y, z, feed_rate);
-  }
-    
-  g1_instr* mk_G1(double x, double y, double z, value* feed_rate) {
-    g1_instr* mem = allocate<g1_instr>();
-    return new (mem) g1_instr(lit::make(x), lit::make(y), lit::make(z), feed_rate);
-  }
 
-  // TODO: Add plane parameter
-  g2_instr* mk_G2(value* x, value* y, value* z,
-		  value* i, value* j, value* k,
-		  value* feed_rate) {
-    g2_instr* mem = allocate<g2_instr>();
-    return new (mem) g2_instr(x, y, z, i, j, k, feed_rate, XY);
-  }
-
-  // TODO: Add plane parameter
-  g3_instr* mk_G3(value* x, value* y, value* z,
-		  value* i, value* j, value* k,
-		  value* feed_rate) {
-    g3_instr* mem = allocate<g3_instr>();
-    return new (mem) g3_instr(x, y, z, i, j, k, feed_rate, XY);
-  }
-  
   instr* mk_instr_cpy(instr* i) {
     instr* new_i;
     if (i->is_move_instr()) {
@@ -55,12 +22,12 @@ namespace gca {
 	new_i = static_cast<instr*>(new_i_m);
       } else if (i->is_g2_instr()) {
 	g2_instr* gi = static_cast<g2_instr*>(i);
-	new_i = mk_G2(gi->get_x(), gi->get_y(), gi->get_z(),
+	new_i = g2_instr::make(gi->get_x(), gi->get_y(), gi->get_z(),
 		      gi->i, gi->j, gi->k,
 		      gi->feed_rate);
       } else if (i->is_g3_instr()) {
 	g3_instr* gi = static_cast<g3_instr*>(i);
-	new_i = mk_G3(gi->get_x(), gi->get_y(), gi->get_z(),
+	new_i = g3_instr::make(gi->get_x(), gi->get_y(), gi->get_z(),
 		      gi->i, gi->j, gi->k,
 		      gi->feed_rate);
       } else {
@@ -138,7 +105,6 @@ namespace gca {
   g64_instr* mk_G64() {
     return new (allocate<g64_instr>()) g64_instr();
   }
-  
   
   g53_instr* mk_G53(value* x, value* y, value* z) {
     g53_instr* mem = allocate<g53_instr>();
