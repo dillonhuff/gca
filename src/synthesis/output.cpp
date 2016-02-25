@@ -58,7 +58,7 @@ namespace gca {
     }
     point final_loc = point(0, 0, 0);
     from_to_with_G0(p, current_loc, final_loc);
-    p->push_back(mk_m2_instr());
+    p->push_back(m2_instr::make());
     return p;
   }
 
@@ -140,7 +140,7 @@ namespace gca {
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(mk_m5_instr());
     } else if (m == PROBOTIX_V90_MK2_VFD) {
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
     } else {
       assert(false);
     }
@@ -155,7 +155,7 @@ namespace gca {
       r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       r->push_back(mk_t_instr(6));
       r->push_back(mk_s_instr(0));
-      r->push_back(mk_m3_instr());
+      r->push_back(m3_instr::make());
       r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       r->push_back(mk_f_instr(5, "XY"));
       r->push_back(mk_f_instr(5, "Z"));
@@ -174,7 +174,7 @@ namespace gca {
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(mk_t_instr(2));
       p->push_back(mk_s_instr(16000));
-      p->push_back(mk_m3_instr());
+      p->push_back(m3_instr::make());
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(mk_f_instr(4, "XY"));
       p->push_back(mk_f_instr(50, "Z"));

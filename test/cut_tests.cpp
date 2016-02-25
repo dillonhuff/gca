@@ -27,7 +27,7 @@ namespace gca {
       correct->push_back(g0_instr::make(point(0, 3, 0)));
       correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(mk_m2_instr());
+      correct->push_back(m2_instr::make());
       REQUIRE(*res == *correct);
     }
 
@@ -50,7 +50,7 @@ namespace gca {
       correct->push_back(g0_instr::make(point(7, 2, 0)));
       correct->push_back(g0_instr::make(point(0, 0, 0)));
       correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(mk_m2_instr());
+      correct->push_back(m2_instr::make());
       REQUIRE(*res == *correct);      
     }
   }

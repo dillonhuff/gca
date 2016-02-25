@@ -21,14 +21,14 @@ namespace gca {
     SECTION("Program bounds checker true") {
       gprog* p = gprog::make();
       p->push_back(g0_instr::make(12.5, -10.3, 0.0));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       REQUIRE((check_bounds(p, GCA_ABSOLUTE, 0, 30, -20, -10, -5.0, 2.0) == 0));
     }
 
     SECTION("Program bounds checker false") {
       gprog* p = gprog::make();
       p->push_back(g1_instr::make(12.5, -10.3, 0.0));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, -10, 0.0, 2.0)  == 1);
     }
 
@@ -57,7 +57,7 @@ namespace gca {
     SECTION("g0_move_checker several instructions no mistake") {
       gprog* p = gprog::make();
       p->push_back(g1_instr::make(2.0, 2.0, 1.0));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 0);
     }
 
@@ -69,7 +69,7 @@ namespace gca {
     SECTION("g0_move_checker several instructions relative mistake") {
       gprog* p = gprog::make();
       p->push_back(g0_instr::make(0.0, 2.0, 1.0));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       REQUIRE(check_for_diagonal_G0_moves(p, GCA_ABSOLUTE) == 1);
     }
   }

@@ -226,13 +226,13 @@ namespace gca {
     int val = parse_int(i, s);
     if (next_char == 'M') {
       if (val == 2) {
-	is = mk_m2_instr();
+	is = m2_instr::make();
       } else if (val == 30) {
 	is = mk_m30_instr();
       } else if (val == 5) {
 	is = mk_m5_instr();
       } else if (val == 3) {
-	is = mk_m3_instr();
+	is = m3_instr::make();
       } else {
 	cout << "M value not supported " << val << endl;
 	assert(false);

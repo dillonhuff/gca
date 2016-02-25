@@ -90,11 +90,11 @@ namespace gca {
       p->push_back(g0_instr::make(1.0, 2.0, 0.0));
       p->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
       p->push_back(g1_instr::make(1.0, 2.0, 2.0));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       gprog* correct = gprog::make();
       correct->push_back(g0_instr::make(1.0, 2.0, -2.00000001));
       correct->push_back(g1_instr::make(1.0, 2.0, 2.0));
-      correct->push_back(mk_m2_instr());
+      correct->push_back(m2_instr::make());
       REQUIRE(*filter_G0_moves(p) == *correct);
     }
 
@@ -138,8 +138,8 @@ namespace gca {
     }
 
     SECTION("abs -> rel 1 m instruction is the same") {
-      p->push_back(mk_m2_instr());
-      correct->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
+      correct->push_back(m2_instr::make());
       r = f.apply(p);
       REQUIRE(*r == *correct);
     }
@@ -166,8 +166,8 @@ namespace gca {
 
     SECTION("One M2 instruction is the same") {
       p->push_back(mk_G91());
-      p->push_back(mk_m2_instr());
-      correct->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
+      correct->push_back(m2_instr::make());
       r = f.apply(p);
       REQUIRE(*r == *correct);
     }
@@ -201,9 +201,9 @@ namespace gca {
 
     SECTION("No op program") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       correct->push_back(mk_G91());
-      correct->push_back(mk_m2_instr());
+      correct->push_back(m2_instr::make());
       r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
@@ -212,7 +212,7 @@ namespace gca {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
       p->push_back(mk_m30_instr());
       correct->push_back(mk_G91());
-      correct->push_back(mk_m2_instr());
+      correct->push_back(m2_instr::make());
       r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
     }
@@ -225,7 +225,7 @@ namespace gca {
       p->push_back(g1_instr::make(0, 0, depth));
       p->push_back(g1_instr::make(1, 0, depth));
       p->push_back(g1_instr::make(1, -1, depth));
-      p->push_back(mk_m2_instr());
+      p->push_back(m2_instr::make());
       point e1 = point(1, -1, depth);
       point s1 = point(2, 0, depth);
       point d1 = s1 - e1;
@@ -250,7 +250,7 @@ namespace gca {
       correct->push_back(g1_instr::make(1, 0, 0, 1.0));
       correct->push_back(g1_instr::make(0, -1, 0, 1.0));
       
-      correct->push_back(mk_m2_instr());
+      correct->push_back(m2_instr::make());
       
       r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
