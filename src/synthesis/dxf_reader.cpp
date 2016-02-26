@@ -18,9 +18,9 @@ namespace gca {
     return shapes_to_cut;
   }
 
-  gprog* dxf_to_gcode(const char* file, cut_params params, point shift, double scale) {
+  gprog* dxf_to_gcode(const char* file, cut_params params) {
     shape_layout shapes_to_cut = read_dxf(file, false);
-    return shape_layout_to_gcode(shapes_to_cut, params, shift, scale);
+    return shape_layout_to_gcode(shapes_to_cut, params);
   }
 
 }

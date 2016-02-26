@@ -138,19 +138,18 @@ namespace gca {
     vector<cut*> shifted_cuts;
     for (vector<cut*>::const_iterator it = cuts.begin();
 	 it != cuts.end(); ++it) {
-      // TODO: Fix this horrible hack
-      shifted_cuts.push_back((*it)->shift(point(0, 0, -4.05))->scale(s));
+      shifted_cuts.push_back((*it)->shift(p)->scale(s));
     }
     return shifted_cuts;
   }
 
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
-			       cut_params params,
-			       point shift,
-			       double scale) {
+			       cut_params params) {
     vector<cut*> cuts = shape_cuts(shapes_to_cut, params);
     vector<cut*> all_cuts = insert_transitions(cuts, params);
     assert(cuts_are_adjacent(all_cuts));
+    double scale = 1.0;
+    point shift(0, 0, params.machine_z_zero);
     vector<cut*> shifted_cuts = shift_and_scale_cuts(all_cuts, shift, scale);
     if (params.set_default_feedrate) {
       for (vector<cut*>::iterator it = shifted_cuts.begin();

@@ -17,22 +17,18 @@ int main(int argc, char** argv) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  point shift(10, 10, 0);
-  double scale = 0.5;
-
   cut_params params;
   params.default_feedrate = 30;
   params.set_default_feedrate = true;
-  // TODO: Fix this after world -> machine coordinate conversion is finished
-  params.safe_height = -3.75/scale;
+  params.safe_height = -3.75;
   params.machine_z_is_inverted = true;
-  params.machine_z_zero = -4.05/scale;
+  params.machine_z_zero = -4.05;
   params.start_loc = point(1, 1, 0);
   params.start_orient = point(1, 0, 0);
   params.tools = DRILL_ONLY;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
 
-  gprog* p = dxf_to_gcode(argv[1], params, shift, scale);
+  gprog* p = dxf_to_gcode(argv[1], params);
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

@@ -228,6 +228,15 @@ namespace gca {
 			   -4.1, -0.05) == 0);
       
     }
+
+    SECTION("Inside safe bounds with different machine_z_zero") {
+      params.machine_z_zero = -1.0;
+      gprog* p = shape_layout_to_gcode(l, params);
+      REQUIRE(check_bounds(p, GCA_ABSOLUTE,
+			   1, 12,
+			   1, 10,
+			   -2.1, -0.05) == 0);  
+    }
   }
 
 }

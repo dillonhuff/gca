@@ -10,9 +10,7 @@
 namespace gca {
 
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
-			       cut_params params,
-			       point shift=point(0, 0, 0),
-			       double scale=1.0);
+			       cut_params params);
 }
 
 #endif

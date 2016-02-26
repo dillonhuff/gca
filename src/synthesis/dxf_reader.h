@@ -222,7 +222,7 @@ namespace gca {
 
   shape_layout read_dxf(const char* file, bool log=false);
 
-  gprog* dxf_to_gcode(const char* file, cut_params params, point p=point(0, 0, 0), double scale=1.0);
+  gprog* dxf_to_gcode(const char* file, cut_params params);
 
 }
 
