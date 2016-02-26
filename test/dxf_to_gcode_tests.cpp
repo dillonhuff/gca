@@ -49,6 +49,39 @@ namespace gca {
       REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
     }
   }
+
+  TEST_CASE("12 inch spiral splines are contiguous") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    cut_params params;
+    params.default_feedrate = 30;
+    params.set_default_feedrate = true;
+    params.material_depth = 0.09;
+    params.cut_depth = 0.05;
+    params.safe_height = 0.25;
+    params.machine_z_zero = -4.05;
+    params.start_loc = point(1, 1, 0);
+    params.start_orient = point(1, 0, 0);
+    params.tools = DRAG_KNIFE_ONLY;
+    params.target_machine = PROBOTIX_V90_MK2_VFD;
+
+    string file_name =
+      project_path + string("gca/test/dxf-files/12-inch-spiral.DXF");
+
+    shape_layout lp = read_dxf(file_name.c_str());
+
+    SECTION("2 paths for splines") {
+      vector<cut*> lines;
+      vector<hole_punch*> holes;
+      shape_layout l(lines, holes, lp.splines);
+      gprog* p = shape_layout_to_gcode(l, params);
+
+      vector<cut_section> sections;
+      extract_cuts(p, sections);
+      REQUIRE(sections.size() == 2);      
+    }
+  }
   
   TEST_CASE("Cut shape layout") {
     arena_allocator a;

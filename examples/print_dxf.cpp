@@ -20,12 +20,13 @@ int main(int argc, char** argv) {
   cut_params params;
   params.default_feedrate = 30;
   params.set_default_feedrate = true;
-  params.safe_height = -3.75;
-  params.machine_z_is_inverted = true;
+  params.material_depth = 0.09;
+  params.cut_depth = 0.05;
+  params.safe_height = 0.25;
   params.machine_z_zero = -4.05;
   params.start_loc = point(1, 1, 0);
   params.start_orient = point(1, 0, 0);
-  params.tools = DRILL_ONLY;
+  params.tools = DRAG_KNIFE_ONLY;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
 
   gprog* p = dxf_to_gcode(argv[1], params);

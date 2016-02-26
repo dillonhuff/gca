@@ -35,6 +35,7 @@ namespace gca {
     point start_orient;
     double default_feedrate;
     double machine_z_zero;
+    double max_orientation_diff;
     bool machine_z_is_inverted;
     bool set_default_feedrate;
     machine_name target_machine;
@@ -44,6 +45,7 @@ namespace gca {
       set_default_feedrate = false;
       machine_z_is_inverted = false;
       machine_z_zero = 0.0;
+      max_orientation_diff = 15.0;
     }
   };
 

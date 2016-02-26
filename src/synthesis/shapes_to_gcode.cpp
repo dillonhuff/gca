@@ -28,7 +28,7 @@ namespace gca {
     point next_orient = next_cut->initial_orient();
     point next_loc = next_cut->start;
     vector<cut*> tcuts;
-    if (!within_eps(current_orient, next_orient)) {
+    if (!within_eps(current_orient, next_orient, params.max_orientation_diff)) {
       tcuts = from_to_with_G0_drag_knife(params.safe_height,
 					 align_depth,
 					 current_loc,
