@@ -50,6 +50,10 @@ namespace gca {
     }
   }
 
+  bool instr_is_forbidden_on_V90(const instr* i) {
+    return i->is_F() || i->is_T() || i->is_G53();
+  }
+
   TEST_CASE("12 inch spiral splines are contiguous") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -70,16 +74,19 @@ namespace gca {
       project_path + string("gca/test/dxf-files/12-inch-spiral.DXF");
 
     shape_layout lp = read_dxf(file_name.c_str());
+    vector<cut*> lines;
+    vector<hole_punch*> holes;
+    shape_layout l(lines, holes, lp.splines);
+    gprog* p = shape_layout_to_gcode(l, params);
 
     SECTION("2 paths for splines") {
-      vector<cut*> lines;
-      vector<hole_punch*> holes;
-      shape_layout l(lines, holes, lp.splines);
-      gprog* p = shape_layout_to_gcode(l, params);
-
       vector<cut_section> sections;
       extract_cuts(p, sections);
       REQUIRE(sections.size() == 2);      
+    }
+
+    SECTION("No standalone feedrate instructions, G53 moves, or toolchanges") {
+      REQUIRE(count_if(p->begin(), p->end(), instr_is_forbidden_on_V90) == 0);
     }
   }
   

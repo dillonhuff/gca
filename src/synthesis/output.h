@@ -36,7 +36,7 @@ namespace gca {
   gprog* initial_gprog(machine_name m);
   gprog* append_footer(gprog* p, machine_name m);
   void append_drill_header(gprog* p, machine_name m);
-  void append_drag_knife_transfer(gprog* p);
+  void append_drag_knife_transfer(gprog* p, machine_name m);
 
   vector<cut*> from_to_with_G0_height(point current_loc,
 				      point next_loc,

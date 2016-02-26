@@ -185,13 +185,22 @@ namespace gca {
     }
   }
 
-  void append_drag_knife_transfer(gprog* p) {
-    p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
-    p->push_back(mk_m5_instr());
-    p->push_back(mk_t_instr(6));
-    p->push_back(mk_s_instr(0));
-    p->push_back(mk_f_instr(5, "XY"));
-    p->push_back(mk_f_instr(5, "Z"));
+  void append_drag_knife_transfer(gprog* p, machine_name m) {
+    if (m == CAMASTER) {
+      p->push_back(mk_G90());
+      p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
+      p->push_back(mk_m5_instr());
+      p->push_back(mk_t_instr(6));
+      p->push_back(mk_s_instr(0));
+      p->push_back(mk_f_instr(5, "XY"));
+      p->push_back(mk_f_instr(5, "Z"));
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
+      p->push_back(mk_G90());
+      p->push_back(mk_m5_instr());
+      p->push_back(mk_s_instr(0));
+    } else {
+      assert(false);
+    }
   }
 
   vector<cut*> from_to_with_G0_height(point current_loc,

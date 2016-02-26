@@ -77,7 +77,7 @@ namespace gca {
     } else if (trans == 2) {
       append_drill_header(&p, params.target_machine);
     } else if (trans == 6) {
-      append_drag_knife_transfer(&p);
+      append_drag_knife_transfer(&p, params.target_machine);
     } else {
       assert(false);
     }
