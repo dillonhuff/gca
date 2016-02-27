@@ -46,6 +46,13 @@ namespace gca {
     }
     
     inline bool is_safe_move() const { return true; }
+
+    virtual cut* copy() const {
+      safe_move* c = safe_move::make(start, end);
+      c->tool_no = tool_no;
+      c->feedrate = feedrate;
+      return c;
+    }
     
   };
   

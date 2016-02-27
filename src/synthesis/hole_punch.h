@@ -40,6 +40,13 @@ namespace gca {
       }
       return false;
     }
+
+    virtual cut* copy() const {
+      hole_punch* h = hole_punch::make(start, radius);
+      h->tool_no = tool_no;
+      h->feedrate = feedrate;
+      return h;
+    }
   };
 }
 

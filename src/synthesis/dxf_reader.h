@@ -38,7 +38,7 @@ namespace gca {
       assert(data.nKnots == data.nControl + data.degree + 1);
       num_knots = data.nKnots;
       num_control_points = data.nControl;
-      splines.push_back(mk_b_spline(data.degree));
+      splines.push_back(b_spline::make(data.degree));
     }
 
     virtual void addControlPoint(const DL_ControlPointData& data) {

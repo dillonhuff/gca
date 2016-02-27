@@ -6,9 +6,46 @@
 #include "synthesis/align_blade.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/output.h"
+#include "synthesis/safe_move.h"
 #include "system/settings.h"
 
 namespace gca {
+
+  TEST_CASE("Copying cuts") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    cut* s;
+    cut* c;
+
+    SECTION("Copy preserves feedrate for safe move") {
+      s = safe_move::make(point(1, 0, 0), point(1, 0, 0));
+      s->feedrate = lit::make(1.0);
+      c = s->copy();
+      REQUIRE(*(c->feedrate) == *(s->feedrate));
+    }
+    
+    SECTION("Copy preserves feedrate for linear cut") {
+      s = linear_cut::make(point(1, 0, 0), point(1, 0, 0));
+      s->feedrate = lit::make(1.0);
+      c = s->copy();
+      REQUIRE(*(c->feedrate) == *(s->feedrate));
+    }
+
+    SECTION("Copy preserves feedrate for circular arc") {
+      s = circular_arc::make(point(1, 0, 0), point(1, 0, 0), point(1, 1, 1), CLOCKWISE, YZ);
+      s->feedrate = lit::make(1.0);
+      c = s->copy();
+      REQUIRE(*(c->feedrate) == *(s->feedrate));
+    }
+
+    SECTION("Copy preserves feedrate for hole punch") {
+      s = hole_punch::make(point(1, 1, 1), 2.3);
+      s->feedrate = lit::make(1.0);
+      c = s->copy();
+      REQUIRE(*(c->feedrate) == *(s->feedrate));
+    }
+  }
   
   TEST_CASE("Cut to GCODE") {
     arena_allocator a;

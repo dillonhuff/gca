@@ -48,6 +48,13 @@ namespace gca {
     }
     
     inline bool is_linear_cut() const { return true; }
+
+    virtual cut* copy() const {
+      linear_cut* l = linear_cut::make(start, end);
+      l->tool_no = tool_no;
+      l->feedrate = feedrate;
+      return l;
+    }
     
   };
 

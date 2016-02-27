@@ -57,6 +57,13 @@ namespace gca {
     inline point center_to_start_vec() const { return -1 * start_offset; }
     inline point center_to_end_vec() const { return end - center(); }
     inline point center() const { return start + start_offset; }
+
+    virtual cut* copy() const {
+      circular_arc* arc = circular_arc::make(start, end, start_offset, dir, pl);
+      arc->tool_no = tool_no;
+      arc->feedrate = feedrate;
+      return arc;
+    }
   };
 
 }

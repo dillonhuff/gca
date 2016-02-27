@@ -22,14 +22,11 @@ namespace gca {
 	lct->tool_no = tool_number;
 	new_pass.push_back(lct);
       } else if (ct->is_circular_arc()) {
-	circular_arc* arc = static_cast<circular_arc*>(ct);
-	point s = arc->start;
-	s.z = depth;
-	point e = arc->end;
-	e.z = depth;
-	circular_arc* ct = circular_arc::make(s, e, arc->start_offset, arc->dir, arc->pl);
-	ct->tool_no = tool_number;
-	new_pass.push_back(ct);
+	cut* arc = ct->copy();
+	arc->start.z = depth;
+	arc->end.z = depth;
+	arc->tool_no = tool_number;
+	new_pass.push_back(arc);
       } else {
 	assert(false);
       }
@@ -56,17 +53,10 @@ namespace gca {
 		     cut_params params) {
     vector<cut*> cuts;
     for (unsigned i = 0; i < holes.size(); i++) {
-      // if (params.one_pass_only) {
-      // 	hole_punch* h = holes[i];
-      // 	hole_punch* nh = hole_punch::make(point(h->start.x, h->start.y, params.pass_depth), h->radius);
-      // 	nh->tool_no = 2;
-      // 	cuts.push_back(nh);
-      //      } else {
-	hole_punch* h = holes[i];
-    	hole_punch* nh = hole_punch::make(h->start, h->radius);
-    	nh->tool_no = 2;
-    	cuts.push_back(nh);
-	//      }
+      hole_punch* h = holes[i];
+      hole_punch* nh = hole_punch::make(h->start, h->radius);
+      nh->tool_no = 2;
+      cuts.push_back(nh);
     }
     return cuts;
   }

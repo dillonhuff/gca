@@ -38,8 +38,4 @@ namespace gca {
     return new (mem) g53_instr(x, y, z, omitted::make());
   }
 
-  b_spline* mk_b_spline(int degree) {
-    b_spline* mem = allocate<b_spline>();
-    return new (mem) b_spline(degree);
-  }
 }

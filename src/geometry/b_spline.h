@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "core/arena_allocator.h"
 #include "geometry/point.h"
 
 using namespace std;
@@ -22,6 +23,11 @@ namespace gca {
 	   const vector<point>& control_pointsp,
 	   const vector<double>& knotsp) :
     degree(degreep), control_points(control_pointsp), knots(knotsp) {}
+
+    static b_spline* make(int deg) {
+      b_spline* mem = allocate<b_spline>();
+      return new (mem) b_spline(deg);
+    }
 
     inline void push_knot(double k) { knots.push_back(k); }
     inline void push_control_point(point p) { control_points.push_back(p); }

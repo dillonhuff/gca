@@ -1,7 +1,7 @@
 #ifndef GCA_CONTEXT_H
 #define GCA_CONTEXT_H
 
-#include "arena_allocator.h"
+#include "core/arena_allocator.h"
 #include "core/gprog.h"
 #include "core/instrs/all.h"
 #include "geometry/b_spline.h"
@@ -23,8 +23,6 @@ namespace gca {
   
     
   g53_instr* mk_G53(value* x, value* y, value* z);
-
-  b_spline* mk_b_spline(int degree);
 
 }
 
