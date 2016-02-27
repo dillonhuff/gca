@@ -238,9 +238,9 @@ namespace gca {
 	assert(false);
       }
     } else if (next_char == 'T') {
-      is = mk_t_instr(val);
+      is = t_instr::make(val);
     } else if (next_char == 'S') {
-      is = mk_s_instr(val);
+      is = s_instr::make(val);
     } else if (next_char == 'F') {
       ignore_whitespace(i, s);
       string str = parse_coord_letters(i, s);

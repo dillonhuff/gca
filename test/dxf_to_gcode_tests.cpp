@@ -122,8 +122,6 @@ namespace gca {
 
       SECTION("Drill produces code for linear cuts") {
 	gprog* p = shape_layout_to_gcode(l, params);
-	cout << "Drill produces code for linear cuts program: " << endl;
-	cout << *p;
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);

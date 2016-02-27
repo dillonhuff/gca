@@ -134,10 +134,6 @@ namespace gca {
       for (unsigned i = 0; i < cuts.size(); i++) {
 	append_cut(cuts[i], *p);
       }
-      cout << "Actual: " << endl;
-      cout << *p;
-      cout << "Correct: " << endl;
-      cout << *correct;
       REQUIRE(*p == *correct);
     }
 

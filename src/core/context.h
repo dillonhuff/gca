@@ -12,10 +12,6 @@ namespace gca {
 
   assign_instr* mk_assign(var* v, value* e);
     
-  t_instr* mk_t_instr(int val);
-
-  s_instr* mk_s_instr(int val);
-
   f_instr* mk_f_instr(int val, string s);
 
   comment* mk_comment(char ld, char rd, string t);

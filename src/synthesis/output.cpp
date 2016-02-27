@@ -153,8 +153,8 @@ namespace gca {
       r->push_back(mk_G90());
       r->push_back(mk_m5_instr());
       r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
-      r->push_back(mk_t_instr(6));
-      r->push_back(mk_s_instr(0));
+      r->push_back(t_instr::make(6));
+      r->push_back(s_instr::make(0));
       r->push_back(m3_instr::make());
       r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       r->push_back(mk_f_instr(5, "XY"));
@@ -172,8 +172,8 @@ namespace gca {
       p->push_back(mk_G90());
       p->push_back(mk_m5_instr());
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
-      p->push_back(mk_t_instr(2));
-      p->push_back(mk_s_instr(16000));
+      p->push_back(t_instr::make(2));
+      p->push_back(s_instr::make(16000));
       p->push_back(m3_instr::make());
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(mk_f_instr(4, "XY"));
@@ -190,14 +190,14 @@ namespace gca {
       p->push_back(mk_G90());
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(mk_m5_instr());
-      p->push_back(mk_t_instr(6));
-      p->push_back(mk_s_instr(0));
+      p->push_back(t_instr::make(6));
+      p->push_back(s_instr::make(0));
       p->push_back(mk_f_instr(5, "XY"));
       p->push_back(mk_f_instr(5, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       p->push_back(mk_G90());
       p->push_back(mk_m5_instr());
-      p->push_back(mk_s_instr(0));
+      p->push_back(s_instr::make(0));
     } else {
       assert(false);
     }

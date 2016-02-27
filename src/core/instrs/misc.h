@@ -10,7 +10,7 @@ namespace gca {
     int num;
 
   t_instr(int n) : num(n) {}
-
+    static t_instr* make(int n) { return new (allocate<t_instr>()) t_instr(n); }
     inline bool is_T() const { return true; }
     void print(ostream& s) const { s << "T" << num; }
     bool operator==(const instr& other) const {
@@ -25,7 +25,7 @@ namespace gca {
     int num;
 
   s_instr(int n) : num(n) {}
-
+    static s_instr* make(int n) { return new (allocate<s_instr>()) s_instr(n); }
     inline bool is_S() const { return true; }
     void print(ostream& s) const { s << "S" << num; }
     bool operator==(const instr& other) const {
