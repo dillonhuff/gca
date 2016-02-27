@@ -148,7 +148,7 @@ namespace gca {
 
     SECTION("Lines and hole punches") {
       lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
-      holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
+      holes.push_back(hole_punch::make(point(2, 2, 2), 0.125));
       
       shape_layout l(lines, holes, splines);
       
@@ -222,8 +222,8 @@ namespace gca {
 
     SECTION("Drill 2 holes") {
       params.tools = DRILL_AND_DRAG_KNIFE;
-      holes.push_back(mk_hole_punch(1, 1, 1, 0.125));
-      holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
+      holes.push_back(hole_punch::make(point(1, 1, 1), 0.125));
+      holes.push_back(hole_punch::make(point(2, 2, 2), 0.125));
       vector<b_spline*> splines;
       shape_layout l(lines, holes, splines);
 

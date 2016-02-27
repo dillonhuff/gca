@@ -230,7 +230,7 @@ namespace gca {
       } else if (val == 30) {
 	is = m30_instr::make();
       } else if (val == 5) {
-	is = mk_m5_instr();
+	is = m5_instr::make();
       } else if (val == 3) {
 	is = m3_instr::make();
       } else {

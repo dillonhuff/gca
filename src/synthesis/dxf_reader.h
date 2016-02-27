@@ -122,7 +122,7 @@ namespace gca {
 	printAttributes();
       }
       assert(data.cz == 0);
-      hole_punches.push_back(mk_hole_punch(data.cx, data.cy, data.cz, data.radius));
+      hole_punches.push_back(hole_punch::make(point(data.cx, data.cy, data.cz), data.radius));
     }
 
     void addPolyline(const DL_PolylineData& data) {

@@ -39,7 +39,7 @@ namespace gca {
 
       vector<cut*> lines;
       vector<hole_punch*> holes;
-      holes.push_back(mk_hole_punch(2, 2, 2, 0.125));
+      holes.push_back(hole_punch::make(point(2, 2, 2), 0.125));
       vector<b_spline*> splines;
       shape_layout l(lines, holes, splines);
       

@@ -17,10 +17,6 @@ namespace gca {
     return new (mem) comment(ld, rd, t);
   }
 
-  m5_instr* mk_m5_instr() {
-    return new (allocate<m5_instr>()) m5_instr();
-  }
-
   g91_instr* mk_G91() {
     return new (allocate<g91_instr>()) g91_instr();
   }
@@ -40,11 +36,6 @@ namespace gca {
   g53_instr* mk_G53(value* x, value* y, value* z) {
     g53_instr* mem = allocate<g53_instr>();
     return new (mem) g53_instr(x, y, z, omitted::make());
-  }
-
-  hole_punch* mk_hole_punch(double x, double y, double z, double r) {
-    hole_punch* mem = allocate<hole_punch>();
-    return new (mem) hole_punch(point(x, y, z), r);
   }
 
   b_spline* mk_b_spline(int degree) {

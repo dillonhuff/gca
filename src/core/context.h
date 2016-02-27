@@ -16,7 +16,6 @@ namespace gca {
 
   comment* mk_comment(char ld, char rd, string t);
 
-  m5_instr* mk_m5_instr();
   g91_instr* mk_G91();
   g20_instr* mk_G20();
   g21_instr* mk_G21();
@@ -24,8 +23,6 @@ namespace gca {
   
     
   g53_instr* mk_G53(value* x, value* y, value* z);
-
-  hole_punch* mk_hole_punch(double x, double y, double z, double r);
 
   b_spline* mk_b_spline(int degree);
 
