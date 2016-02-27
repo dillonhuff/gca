@@ -108,6 +108,7 @@ add_executable(simple-deepen examples/simple_deepen.cpp ${SRCS})
 add_executable(hello-world examples/hello_world.cpp ${SRCS})
 add_executable(pen-draw-lines examples/pen_draw_lines.cpp ${SRCS})
 add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
+add_executable(cut-rect examples/cut_rect.cpp ${SRCS})
 
 #add_executable(extract-g1-paths examples/extract_g1_paths.cpp ${SRCS})
 #add_executable(bmp-prog examples/bmp_prog.cpp ${SRCS})

@@ -45,7 +45,7 @@ namespace gca {
       set_default_feedrate = false;
       machine_z_is_inverted = false;
       machine_z_zero = 0.0;
-      max_orientation_diff = 15.0;
+      max_orientation_diff = 15;
     }
   };
 
