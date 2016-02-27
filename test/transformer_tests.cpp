@@ -210,7 +210,7 @@ namespace gca {
 
     SECTION("No move instructions") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
-      p->push_back(mk_m30_instr());
+      p->push_back(m30_instr::make());
       correct->push_back(mk_G91());
       correct->push_back(m2_instr::make());
       r = t.apply(p, GCA_ABSOLUTE);

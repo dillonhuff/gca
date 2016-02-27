@@ -16,10 +16,8 @@ namespace gca {
 
   comment* mk_comment(char ld, char rd, string t);
 
-  m30_instr* mk_m30_instr();
   m5_instr* mk_m5_instr();
   g91_instr* mk_G91();
-  g90_instr* mk_G90();
   g20_instr* mk_G20();
   g21_instr* mk_G21();
   g64_instr* mk_G64();

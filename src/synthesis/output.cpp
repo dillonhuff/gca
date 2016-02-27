@@ -150,7 +150,7 @@ namespace gca {
   gprog* initial_gprog(machine_name m) {
     gprog* r = gprog::make();
     if (m == CAMASTER) {
-      r->push_back(mk_G90());
+      r->push_back(g90_instr::make());
       r->push_back(mk_m5_instr());
       r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       r->push_back(t_instr::make(6));
@@ -160,7 +160,7 @@ namespace gca {
       r->push_back(mk_f_instr(5, "XY"));
       r->push_back(mk_f_instr(5, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
-      r->push_back(mk_G90());
+      r->push_back(g90_instr::make());
     } else {
       assert(false);
     }
@@ -169,7 +169,7 @@ namespace gca {
 
   void append_drill_header(gprog* p, machine_name m) {
     if (m == CAMASTER) {
-      p->push_back(mk_G90());
+      p->push_back(g90_instr::make());
       p->push_back(mk_m5_instr());
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(t_instr::make(2));
@@ -179,7 +179,7 @@ namespace gca {
       p->push_back(mk_f_instr(4, "XY"));
       p->push_back(mk_f_instr(50, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
-      p->push_back(mk_G90());
+      p->push_back(g90_instr::make());
     } else {
       assert(false);
     }
@@ -187,7 +187,7 @@ namespace gca {
 
   void append_drag_knife_transfer(gprog* p, machine_name m) {
     if (m == CAMASTER) {
-      p->push_back(mk_G90());
+      p->push_back(g90_instr::make());
       p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(mk_m5_instr());
       p->push_back(t_instr::make(6));
@@ -195,7 +195,7 @@ namespace gca {
       p->push_back(mk_f_instr(5, "XY"));
       p->push_back(mk_f_instr(5, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
-      p->push_back(mk_G90());
+      p->push_back(g90_instr::make());
       p->push_back(mk_m5_instr());
       p->push_back(s_instr::make(0));
     } else {

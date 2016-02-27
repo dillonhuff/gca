@@ -32,7 +32,7 @@ namespace gca {
       string s = "M30";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_m30_instr());
+      correct->push_back(m30_instr::make());
       REQUIRE((*p == *correct));
     }
 
@@ -189,7 +189,7 @@ namespace gca {
       string s = "G90 G53 Z1.0";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_G90());
+      correct->push_back(g90_instr::make());
       correct->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(1)));
       REQUIRE(((*p) == (*correct)));
     }

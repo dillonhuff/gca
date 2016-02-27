@@ -195,7 +195,7 @@ namespace gca {
     } else if (val == 91) {
       is = mk_G91();
     } else if (val == 90) {
-      is = mk_G90();
+      is = g90_instr::make();
     } else if (val == 53) {
       is = parse_G53(p, i, s);
     } else if (val == 2) {
@@ -228,7 +228,7 @@ namespace gca {
       if (val == 2) {
 	is = m2_instr::make();
       } else if (val == 30) {
-	is = mk_m30_instr();
+	is = m30_instr::make();
       } else if (val == 5) {
 	is = mk_m5_instr();
       } else if (val == 3) {

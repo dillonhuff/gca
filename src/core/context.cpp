@@ -17,20 +17,12 @@ namespace gca {
     return new (mem) comment(ld, rd, t);
   }
 
-  m30_instr* mk_m30_instr() {
-    return new (allocate<m30_instr>()) m30_instr();
-  }
-
   m5_instr* mk_m5_instr() {
     return new (allocate<m5_instr>()) m5_instr();
   }
 
   g91_instr* mk_G91() {
     return new (allocate<g91_instr>()) g91_instr();
-  }
-
-  g90_instr* mk_G90() {
-    return new (allocate<g90_instr>()) g90_instr();
   }
 
   g20_instr* mk_G20() {
