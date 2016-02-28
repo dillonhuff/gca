@@ -101,7 +101,7 @@ namespace gca {
       REQUIRE(count_if(p->begin(), p->end(), g1_feedrate_omitted) == 0);
     }
   }
-  
+
   TEST_CASE("Cut shape layout") {
     arena_allocator a;
     set_system_allocator(&a);

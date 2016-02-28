@@ -26,7 +26,6 @@ namespace gca {
       } else {
 	assert(false);
       }
-      cut_with_depth->tool_no = tool_number;      
       new_pass.push_back(cut_with_depth);
     }
     cut_group_passes.push_back(new_pass);
@@ -49,10 +48,7 @@ namespace gca {
 			 const cut_params& params) {
     vector<cut*> cuts;
     for (unsigned i = 0; i < holes.size(); i++) {
-      hole_punch* h = holes[i];
-      hole_punch* nh = hole_punch::make(h->start, h->radius);
-      nh->tool_no = 2;
-      cuts.push_back(nh);
+      cuts.push_back(holes[i]);
     }
     return cuts;
   }
@@ -98,6 +94,18 @@ namespace gca {
     return depths;
   }
 
+  void set_tool_nos(int tool_no,
+		    const vector<cut*>& cuts) {
+    for (vector<cut*>::const_iterator it = cuts.begin(); it != cuts.end(); ++it) {
+      cut* c = *it;
+      if (c->is_hole_punch()) {
+	c->tool_no = 2;
+      } else {
+	c->tool_no = tool_no;
+      }
+    }
+  }
+
   vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
 			  const cut_params& params) {
     vector<cut*> cuts;
@@ -119,7 +127,8 @@ namespace gca {
       vector<cut*> ct = line_cuts(tool_no, *it, depths, params);
       cuts.insert(cuts.end(), ct.begin(), ct.end());
     }
-    
+
+    set_tool_nos(tool_no, cuts);
     return cuts;
   }
 
