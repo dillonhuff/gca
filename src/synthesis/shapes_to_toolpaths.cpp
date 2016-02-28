@@ -10,32 +10,29 @@ namespace gca {
 
   void make_pass(int tool_number,
 		 double depth,
-		 const cut_params& params,
 		 const vector<cut*>& current_group,
 		 vector<cut_group>& cut_group_passes) {
     vector<cut*> new_pass;
     for (unsigned i = 0; i < current_group.size(); i++) {
       cut* ct = current_group[i];
+      cut* cut_with_depth;
       assert(ct->start.z == 0.0 && ct->end.z == 0.0);
       if (ct->is_linear_cut()) {
-	linear_cut* lct = linear_cut::make(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth));
-	lct->tool_no = tool_number;
-	new_pass.push_back(lct);
+	cut_with_depth = linear_cut::make(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth));
       } else if (ct->is_circular_arc()) {
-	cut* arc = ct->copy();
-	arc->start.z = depth;
-	arc->end.z = depth;
-	arc->tool_no = tool_number;
-	new_pass.push_back(arc);
+	cut_with_depth = ct->copy();
+	cut_with_depth->start.z = depth;
+	cut_with_depth->end.z = depth;
       } else {
 	assert(false);
       }
+      cut_with_depth->tool_no = tool_number;      
+      new_pass.push_back(cut_with_depth);
     }
     cut_group_passes.push_back(new_pass);
   }		 
 
   void make_cut_group_passes(int tool_number,
-			     const cut_params& params,
 			     const vector<double>& depths,
 			     const vector<cut*>& current_group,
 			     vector<cut_group>& cut_group_passes) {
@@ -43,14 +40,13 @@ namespace gca {
 	 it != depths.end(); ++it) {
       make_pass(tool_number,
 		*it,
-		params,
 		current_group,
 		cut_group_passes);	
     }
   }
   
   vector<cut*> hole_cuts(const vector<hole_punch*>& holes,
-		     cut_params params) {
+			 const cut_params& params) {
     vector<cut*> cuts;
     for (unsigned i = 0; i < holes.size(); i++) {
       hole_punch* h = holes[i];
@@ -64,10 +60,9 @@ namespace gca {
   vector<cut*> line_cuts(int tool_number,
 			 const cut_group& current_group,
 			 const vector<double> depths,
-			 cut_params params) {
+			 const cut_params& params) {
     vector<cut_group> cut_group_passes;
     make_cut_group_passes(tool_number,
-			  params,
 			  depths,
 			  current_group,
 			  cut_group_passes);
@@ -112,6 +107,9 @@ namespace gca {
     }
     vector<cut_group> cut_groups;
     append_splines(shapes_to_cut.splines, cut_groups);
+    // TODO: Grouping of adjacent cuts should really be done as
+    // part of cut scheduling, which should be done after all
+    // cuts are created
     group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
 
     int tool_no = select_tool(params.tools);
@@ -124,5 +122,5 @@ namespace gca {
     
     return cuts;
   }
-  
+
 }

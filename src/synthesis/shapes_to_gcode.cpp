@@ -143,6 +143,16 @@ namespace gca {
     return shifted_cuts;
   }
 
+  void set_feedrates(vector<cut*>& cuts,
+		     const cut_params& params) {
+    if (params.set_default_feedrate) {
+      for (vector<cut*>::iterator it = cuts.begin();
+    	     it != cuts.end(); ++it) {
+    	(*it)->feedrate = lit::make(params.default_feedrate);
+      }
+    }    
+  }
+
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
     vector<cut*> cuts = shape_cuts(shapes_to_cut, params);
@@ -151,12 +161,7 @@ namespace gca {
     double scale = 1.0;
     point shift(0, 0, params.machine_z_zero);
     vector<cut*> shifted_cuts = shift_and_scale_cuts(all_cuts, shift, scale);
-    if (params.set_default_feedrate) {
-      for (vector<cut*>::iterator it = shifted_cuts.begin();
-	     it != shifted_cuts.end(); ++it) {
-	(*it)->feedrate = lit::make(params.default_feedrate);
-      }
-    }
+    set_feedrates(shifted_cuts, params);
     gprog* p = gprog::make();
     append_cuts_gcode(shifted_cuts, *p, params);
     gprog* r = append_footer(p, params.target_machine);
