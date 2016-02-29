@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "synthesis/schedule_cuts.h"
 
 namespace gca {
@@ -8,11 +10,11 @@ namespace gca {
     return l->start.z > r->start.z;
   }
 
-  struct remove_test {
-    const vector<cut*>& to_remove;
-    remove_test(const vector<cut*>& pto_remove) : to_remove(pto_remove) {}
+  struct elem_test {
+    const vector<cut*>& elems;
+    elem_test(const vector<cut*>& pelems) : elems(pelems) {}
     bool operator()(const cut* t) {
-      return find(to_remove.begin(), to_remove.end(), t) != to_remove.end();
+      return find(elems.begin(), elems.end(), t) != elems.end();
     }
   };
 
@@ -24,11 +26,12 @@ namespace gca {
     }
   }
 
-  vector<cut*> contiguous_chain(const vector<cut*>& cuts) {
+  vector<cut*> contiguous_chain(vector<cut*>::const_iterator it,
+				vector<cut*>::const_iterator e) {
     cut* last_cut = NULL;
     cut* next_cut = NULL;
     vector<cut*> cont_chain;
-    for (vector<cut*>::const_iterator it = cuts.begin(); it != cuts.end(); ++it) {
+    for (; it != e; ++it) {
       next_cut = *it;
       if (last_cut == NULL || are_contiguous(last_cut, next_cut)) {
 	cont_chain.push_back(next_cut);
@@ -39,16 +42,14 @@ namespace gca {
   }
 
   vector<cut*> schedule_cuts(const vector<cut*>& cuts) {
-    vector<cut*> scuts = cuts;
-    vector<cut*> scheduled_cuts;
-    while (scuts.size() > 0) {
-      vector<cut*> next_chain = contiguous_chain(scuts);
-      scheduled_cuts.insert(scheduled_cuts.end(),
-      			    next_chain.begin(), next_chain.end());
-      remove_test rt(next_chain);      
-      scuts.erase(remove_if(scuts.begin(), scuts.end(), rt), scuts.end());
+    vector<cut*> scheduled_cuts = cuts;
+    vector<cut*>::iterator it = scheduled_cuts.begin();
+    while (it < scheduled_cuts.end()) {
+      vector<cut*> next_chain = contiguous_chain(it, scheduled_cuts.end());
+      elem_test rt(next_chain);
+      stable_partition(it, scheduled_cuts.end(), rt);
+      it += next_chain.size();
     }
-    //stable_sort(scheduled_cuts.begin(), scheduled_cuts.end(), cmp_z);
     return scheduled_cuts;
   }
 
