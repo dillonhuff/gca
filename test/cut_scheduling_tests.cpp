@@ -48,6 +48,23 @@ namespace gca {
       correct.push_back(linear_cut::make(point(1, 1, -0.3), point(1, 3, -0.3)));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
+
+    SECTION("2 passes where the cuts are not adjacent") {
+      cuts.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1)));
+      cuts.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3)));
+      cuts.push_back(linear_cut::make(point(2, 3, -0.1), point(3, 5, -0.1)));
+      cuts.push_back(linear_cut::make(point(2, 3, -0.3), point(3, 5, -0.3)));
+      actual = schedule_cuts(cuts);
+      cout << "Actual:" << endl;
+      cout << actual << endl;
+      correct.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1)));
+      correct.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3)));
+      correct.push_back(linear_cut::make(point(2, 3, -0.1), point(3, 5, -0.1)));
+      correct.push_back(linear_cut::make(point(2, 3, -0.3), point(3, 5, -0.3)));
+      cout << "Correct:" << endl;
+      cout << correct << endl;      
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
   }
   
 }
