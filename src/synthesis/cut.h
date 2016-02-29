@@ -27,9 +27,12 @@ namespace gca {
     virtual cut* shift(point shift) const = 0;
     virtual cut* scale(double s) const = 0;
     virtual cut* copy() const = 0;
+    virtual void print(ostream& other) const = 0;
     
   };
-    
+
+  ostream& operator<<(ostream& stream, const cut& c);
+  ostream& operator<<(ostream& stream, const vector<cut*>& c);
 
 }
 

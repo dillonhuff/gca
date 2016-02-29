@@ -53,6 +53,10 @@ namespace gca {
       c->feedrate = feedrate;
       return c;
     }
+
+    void print(ostream& other) const {
+      other << "SAFE MOVE: " << start << " -> " << end;
+    }
     
   };
   

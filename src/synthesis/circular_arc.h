@@ -64,6 +64,13 @@ namespace gca {
       arc->feedrate = feedrate;
       return arc;
     }
+
+    void print(ostream& other) const {
+      other << "CIRCULAR ARC: " << start << " -> " << end;
+      other << " offset: " << start_offset;
+      other << " dir: " << dir;
+    }
+
   };
 
 }

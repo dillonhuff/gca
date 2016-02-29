@@ -1128,6 +1128,51 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
+src/synthesis/cut.o: src/synthesis/cut.cpp.o
+
+.PHONY : src/synthesis/cut.o
+
+# target to build an object file
+src/synthesis/cut.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut.cpp.o
+.PHONY : src/synthesis/cut.cpp.o
+
+src/synthesis/cut.i: src/synthesis/cut.cpp.i
+
+.PHONY : src/synthesis/cut.i
+
+# target to preprocess a source file
+src/synthesis/cut.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut.cpp.i
+.PHONY : src/synthesis/cut.cpp.i
+
+src/synthesis/cut.s: src/synthesis/cut.cpp.s
+
+.PHONY : src/synthesis/cut.s
+
+# target to generate assembly for a file
+src/synthesis/cut.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut.cpp.s
+.PHONY : src/synthesis/cut.cpp.s
+
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
 
 .PHONY : src/synthesis/cut_to_gcode.o
@@ -1262,6 +1307,51 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.s
 .PHONY : src/synthesis/output.cpp.s
+
+src/synthesis/schedule_cuts.o: src/synthesis/schedule_cuts.cpp.o
+
+.PHONY : src/synthesis/schedule_cuts.o
+
+# target to build an object file
+src/synthesis/schedule_cuts.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/schedule_cuts.cpp.o
+.PHONY : src/synthesis/schedule_cuts.cpp.o
+
+src/synthesis/schedule_cuts.i: src/synthesis/schedule_cuts.cpp.i
+
+.PHONY : src/synthesis/schedule_cuts.i
+
+# target to preprocess a source file
+src/synthesis/schedule_cuts.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/schedule_cuts.cpp.i
+.PHONY : src/synthesis/schedule_cuts.cpp.i
+
+src/synthesis/schedule_cuts.s: src/synthesis/schedule_cuts.cpp.s
+
+.PHONY : src/synthesis/schedule_cuts.s
+
+# target to generate assembly for a file
+src/synthesis/schedule_cuts.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/schedule_cuts.cpp.s
+.PHONY : src/synthesis/schedule_cuts.cpp.s
 
 src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
 
@@ -1704,6 +1794,33 @@ test/circular_arc_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.s
 .PHONY : test/circular_arc_tests.cpp.s
 
+test/cut_scheduling_tests.o: test/cut_scheduling_tests.cpp.o
+
+.PHONY : test/cut_scheduling_tests.o
+
+# target to build an object file
+test/cut_scheduling_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_scheduling_tests.cpp.o
+.PHONY : test/cut_scheduling_tests.cpp.o
+
+test/cut_scheduling_tests.i: test/cut_scheduling_tests.cpp.i
+
+.PHONY : test/cut_scheduling_tests.i
+
+# target to preprocess a source file
+test/cut_scheduling_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_scheduling_tests.cpp.i
+.PHONY : test/cut_scheduling_tests.cpp.i
+
+test/cut_scheduling_tests.s: test/cut_scheduling_tests.cpp.s
+
+.PHONY : test/cut_scheduling_tests.s
+
+# target to generate assembly for a file
+test/cut_scheduling_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_scheduling_tests.cpp.s
+.PHONY : test/cut_scheduling_tests.cpp.s
+
 test/cut_tests.o: test/cut_tests.cpp.o
 
 .PHONY : test/cut_tests.o
@@ -2058,6 +2175,9 @@ help:
 	@echo "... src/synthesis/align_blade.o"
 	@echo "... src/synthesis/align_blade.i"
 	@echo "... src/synthesis/align_blade.s"
+	@echo "... src/synthesis/cut.o"
+	@echo "... src/synthesis/cut.i"
+	@echo "... src/synthesis/cut.s"
 	@echo "... src/synthesis/cut_to_gcode.o"
 	@echo "... src/synthesis/cut_to_gcode.i"
 	@echo "... src/synthesis/cut_to_gcode.s"
@@ -2067,6 +2187,9 @@ help:
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"
+	@echo "... src/synthesis/schedule_cuts.o"
+	@echo "... src/synthesis/schedule_cuts.i"
+	@echo "... src/synthesis/schedule_cuts.s"
 	@echo "... src/synthesis/shapes_to_gcode.o"
 	@echo "... src/synthesis/shapes_to_gcode.i"
 	@echo "... src/synthesis/shapes_to_gcode.s"
@@ -2100,6 +2223,9 @@ help:
 	@echo "... test/circular_arc_tests.o"
 	@echo "... test/circular_arc_tests.i"
 	@echo "... test/circular_arc_tests.s"
+	@echo "... test/cut_scheduling_tests.o"
+	@echo "... test/cut_scheduling_tests.i"
+	@echo "... test/cut_scheduling_tests.s"
 	@echo "... test/cut_tests.o"
 	@echo "... test/cut_tests.i"
 	@echo "... test/cut_tests.s"

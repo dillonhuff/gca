@@ -47,6 +47,11 @@ namespace gca {
       h->feedrate = feedrate;
       return h;
     }
+
+    void print(ostream& other) const {
+      other << "HOLE PUNCH: " << start << " RADIUS: " << radius;
+    }
+
   };
 }
 

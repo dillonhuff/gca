@@ -127,7 +127,6 @@ namespace gca {
       vector<cut*> ct = line_cuts(tool_no, *it, depths, params);
       cuts.insert(cuts.end(), ct.begin(), ct.end());
     }
-
     set_tool_nos(tool_no, cuts);
     return cuts;
   }

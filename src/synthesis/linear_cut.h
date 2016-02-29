@@ -55,6 +55,10 @@ namespace gca {
       l->feedrate = feedrate;
       return l;
     }
+
+    void print(ostream& other) const {
+      other << "LINEAR CUT: " << start << " -> " << end;
+    }
     
   };
 
