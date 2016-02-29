@@ -4,6 +4,7 @@
 #include "core/context.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/dxf_reader.h"
+#include "synthesis/schedule_cuts.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
 
@@ -155,7 +156,8 @@ namespace gca {
 
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       cut_params params) {
-    vector<cut*> cuts = shape_cuts(shapes_to_cut, params);
+    vector<cut*> scuts = shape_cuts(shapes_to_cut, params);
+    vector<cut*> cuts = schedule_cuts(scuts);
     vector<cut*> all_cuts = insert_transitions(cuts, params);
     assert(cuts_are_adjacent(all_cuts));
     double scale = 1.0;

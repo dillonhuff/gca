@@ -115,9 +115,6 @@ namespace gca {
     }
     vector<cut_group> cut_groups;
     append_splines(shapes_to_cut.splines, cut_groups);
-    // TODO: Grouping of adjacent cuts should really be done as
-    // part of cut scheduling, which should be done after all
-    // cuts are created
     group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
 
     tool_name tool_no = select_tool(params.tools);

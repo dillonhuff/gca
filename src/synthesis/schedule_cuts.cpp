@@ -19,11 +19,7 @@ namespace gca {
   };
 
   bool are_contiguous(const cut* last, const cut* next) {
-    if (last->is_linear_cut() && next->is_linear_cut()) {
-      return within_eps(last->end, next->start);
-    } else {
-      assert(false);
-    }
+    return within_eps(last->end, next->start);
   }
 
   vector<cut*> contiguous_chain(vector<cut*>::const_iterator it,
