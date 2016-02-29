@@ -44,7 +44,7 @@ namespace gca {
       actual = schedule_cuts(cuts);
       correct.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1)));
       correct.push_back(linear_cut::make(point(1, 1, -0.1), point(1, 3, -0.1)));
-      correct.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3)));      
+      correct.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3)));
       correct.push_back(linear_cut::make(point(1, 1, -0.3), point(1, 3, -0.3)));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }

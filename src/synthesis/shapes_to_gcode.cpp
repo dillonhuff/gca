@@ -57,26 +57,26 @@ namespace gca {
 				cut* next_cut,
 				const cut_params& params) {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
-    if (next_cut->tool_no == 2) {
+    if (next_cut->tool_no == DRILL) {
       return move_to_next_cut_drill(last_cut, next_cut, params);
-    } else if (next_cut->tool_no == 6) {
+    } else if (next_cut->tool_no == DRAG_KNIFE) {
       return move_to_next_cut_dn(last_cut, next_cut, params);
     } else {
       assert(false);
     }
   }
 
-  int get_tool_no(const cut* t) { return t->tool_no; }
+  tool_name get_tool_no(const cut* t) { return t->tool_no; }
 
-  int toolpath_transition(int next, int previous) {
-    return previous == next ? -1 : next;
+  tool_name toolpath_transition(tool_name next, tool_name previous) {
+    return previous == next ? NO_TOOL : next;
   }
 
-  void append_transition_if_needed(int trans, gprog& p, const cut_params& params) {
-    if (trans == -1) {
-    } else if (trans == 2) {
+  void append_transition_if_needed(tool_name trans, gprog& p, const cut_params& params) {
+    if (trans == NO_TOOL) {
+    } else if (trans == DRILL) {
       append_drill_header(&p, params.target_machine);
-    } else if (trans == 6) {
+    } else if (trans == DRAG_KNIFE) {
       append_drag_knife_transfer(&p, params.target_machine);
     } else {
       assert(false);
@@ -86,10 +86,10 @@ namespace gca {
   void append_cuts_gcode(const vector<cut*>& cuts,
 			 gprog& p,
 			 const cut_params& params) {
-    vector<int> active_tools(cuts.size());
+    vector<tool_name> active_tools(cuts.size());
     transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no);
     
-    vector<int> transitions(active_tools.size());
+    vector<tool_name> transitions(active_tools.size());
     adjacent_difference(active_tools.begin(),
     			active_tools.end(),
     			transitions.begin(),

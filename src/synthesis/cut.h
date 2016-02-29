@@ -5,13 +5,14 @@
 
 #include "core/value.h"
 #include "geometry/point.h"
+#include "synthesis/machine.h"
 
 namespace gca {
 
   class cut {
   public:
     point start, end;
-    int tool_no;
+    tool_name tool_no;
     value* feedrate;
     
   cut(point s, point e) : start(s), end(e), feedrate(omitted::make()) {}

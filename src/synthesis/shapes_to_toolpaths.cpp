@@ -70,12 +70,12 @@ namespace gca {
     return cuts;
   }
 
-  int select_tool(ToolOptions tools) {
+  tool_name select_tool(ToolOptions tools) {
     if (tools == DRILL_AND_DRAG_KNIFE ||
     	tools == DRAG_KNIFE_ONLY) {
-      return 6;
+      return DRAG_KNIFE;
     } else if (tools == DRILL_ONLY) {
-      return 2;
+      return DRILL;
     } else {
       assert(false);
     }
@@ -94,12 +94,12 @@ namespace gca {
     return depths;
   }
 
-  void set_tool_nos(int tool_no,
+  void set_tool_nos(tool_name tool_no,
 		    const vector<cut*>& cuts) {
     for (vector<cut*>::const_iterator it = cuts.begin(); it != cuts.end(); ++it) {
       cut* c = *it;
       if (c->is_hole_punch()) {
-	c->tool_no = 2;
+	c->tool_no = DRILL;
       } else {
 	c->tool_no = tool_no;
       }
@@ -120,7 +120,7 @@ namespace gca {
     // cuts are created
     group_adjacent_cuts(shapes_to_cut.lines, cut_groups, 30.0);
 
-    int tool_no = select_tool(params.tools);
+    tool_name tool_no = select_tool(params.tools);
     vector<double> depths = cut_depths(params);
     for (vector<cut_group>::iterator it = cut_groups.begin();
     	 it != cut_groups.end(); ++it) {
