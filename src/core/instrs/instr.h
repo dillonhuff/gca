@@ -6,7 +6,6 @@
 
 #include "geometry/point.h"
 
-
 using namespace std;
 
 namespace gca {
@@ -16,10 +15,6 @@ namespace gca {
     GCA_RELATIVE = 1,
     GCA_NONE
   };
-
-  //typedef int orientation;
-  typedef int instr_class;
-  typedef int instr_val;
 
   class instr {
   public:
