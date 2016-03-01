@@ -50,7 +50,14 @@ namespace gca {
     }
   }
 
-  bool instrs_eq(instr* l, instr* r) { return *l == *r; }
+  bool instrs_eq(instr* l, instr* r) {
+    bool res = *l == *r;
+    if (!res) {
+      cout << "instrs not equal: ";
+      cout << *l << "\t" << *r << endl;
+    }
+    return res;
+  }
 
   bool gprog::operator==(const gprog& other) const {
     if (other.size() != this->size()) {

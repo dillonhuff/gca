@@ -49,9 +49,9 @@ namespace gca {
     }
 
     cut* scale(double s) const {
-      linear_cut* mem = allocate<linear_cut>();
-      linear_cut* c = new (mem) linear_cut(s*start, s*end);
-      c->tool_no = tool_no;
+      cut* c = copy();
+      c->start = s*c->start;
+      c->end = s*c->end;
       return c;
     }
     
