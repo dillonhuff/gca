@@ -19,6 +19,7 @@ namespace gca {
   };
 
   bool are_contiguous(const cut* last, const cut* next) {
+    // TODO: Tune this magic number to the actual drag knife value
     double max_orientation_change = 15;
     if (last->tool_no != next->tool_no) {
       return false;

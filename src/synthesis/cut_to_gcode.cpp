@@ -14,12 +14,12 @@ namespace gca {
     move_instr* circle_move_instr;
     if (angle < 0) {
       circle_move_instr = g2_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), omitted::make(),
-				lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
-				omitted::make());
+					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
+					 omitted::make());
     } else {
       circle_move_instr = g3_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), omitted::make(),
-				lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
-				omitted::make());
+					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
+					 omitted::make());
 
     }
     return circle_move_instr;
