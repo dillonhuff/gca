@@ -1,5 +1,6 @@
 #include "analysis/gcode_to_cuts.h"
 #include "core/basic_states.h"
+#include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
 
 namespace gca {
@@ -16,6 +17,10 @@ namespace gca {
       ps.update(i);
       if (i->is_G0()) {
 	cuts.push_back(safe_move::make(pos_state.before, pos_state.after));
+      } else if (i->is_G1()) {
+	linear_cut* c = linear_cut::make(pos_state.before, pos_state.after);
+	c->feedrate = lit::make(i->feed_rate);
+	cuts.push_back(c);
       }
     }
     return cuts;
