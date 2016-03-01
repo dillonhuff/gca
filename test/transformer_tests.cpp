@@ -271,17 +271,22 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    SECTION("No moves") {
+    SECTION("No moves, PROBOTIX") {
       gprog* p = parse_gprog("M2");
       gprog* r = scale_xyz(2.0, 1.0, 3.0, *p);
       gprog* correct = parse_gprog("M2");
       REQUIRE(*r == *correct);
     }
 
-    SECTION("G0 and G1") {
-      gprog* p = parse_gprog("G90 G0 X2.0 Y-1.0 Z0.0 G1 X1.0 Y2.0 Z3.0");
+    SECTION("G0 and G1, PROBOTIX") {
+      gprog* p = parse_gprog("G90 M5 S0 G0 X2.0 Y-1.0 Z0.0 G1 F9 X1.0 Y2.0 Z3.0 M2");
       gprog* r = scale_xyz(2.0, 3.0, 1.0, *p);
-      gprog* correct = parse_gprog("G90 G0 X4.0 Y-3.0 Z0.0 G1 X2.0 Y6.0 Z3.0");
+      gprog* correct = parse_gprog("G90 M5 S0 G0 X4.0 Y-3.0 Z0.0 G1 F9 X2.0 Y6.0 Z3.0 M2");
+      cout << "Input " << endl;
+      cout << *p << endl;      
+      
+      cout << "Actual " << endl;
+      cout << *r << endl;      
       REQUIRE(*r == *correct);
     }
   }

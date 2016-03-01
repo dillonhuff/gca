@@ -4,6 +4,7 @@
 #include "core/gprog.h"
 #include "core/instrs/instr.h"
 #include "synthesis/cut.h"
+#include "synthesis/machine.h"
 
 namespace gca {
 
@@ -11,6 +12,7 @@ namespace gca {
     orientation initial_coord_orient;
     point initial_pos;
     point initial_orient;
+    tool_name initial_tool;
   };
 
   vector<cut*> gcode_to_cuts(const gprog& p, const gcode_settings& settings);

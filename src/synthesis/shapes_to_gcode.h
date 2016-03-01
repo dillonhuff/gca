@@ -11,6 +11,8 @@ namespace gca {
 
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       const cut_params& params);
+
+  gprog* gcode_for_cuts(const vector<cut*>& cuts, const cut_params& params);  
 }
 
 #endif

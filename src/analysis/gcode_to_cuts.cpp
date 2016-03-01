@@ -15,11 +15,13 @@ namespace gca {
     for (ilist::const_iterator it = p.begin(); it != p.end(); ++it) {
       instr* i = *it;
       ps.update(i);
+      cout << "i = " << *i << endl;
       if (i->is_G0()) {
-	cuts.push_back(safe_move::make(pos_state.before, pos_state.after));
+	cuts.push_back(safe_move::make(pos_state.before, pos_state.after, settings.initial_tool));
       } else if (i->is_G1()) {
-	linear_cut* c = linear_cut::make(pos_state.before, pos_state.after);
-	c->feedrate = lit::make(i->feed_rate);
+	g1_instr* g1i = static_cast<g1_instr*>(i);
+	linear_cut* c = linear_cut::make(pos_state.before, pos_state.after, settings.initial_tool);
+	c->feedrate = g1i->feed_rate;
 	cuts.push_back(c);
       }
     }

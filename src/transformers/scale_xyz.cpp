@@ -1,4 +1,6 @@
+#include "analysis/gcode_to_cuts.h"
 #include "core/context.h"
+#include "synthesis/shapes_to_gcode.h"
 #include "transformers/scale_xyz.h"
 
 namespace gca {
@@ -37,12 +39,20 @@ namespace gca {
   };
 
   gprog* scale_xyz(double x_s, double y_s, double z_s, gprog& p) {
-    gprog* r = gprog::make();
-    scale_callback c(x_s, y_s, z_s);
-    for (unsigned i = 0; i < p.size(); i++) {
-      r->push_back(c.call(&p, i, p[i]));
-    }
-    return r;
+    gcode_settings s;
+    s.initial_coord_orient = GCA_ABSOLUTE;
+    s.initial_pos = point(0, 0, 0);
+    s.initial_tool = DRAG_KNIFE;
+    vector<cut*> cuts = gcode_to_cuts(p, s);
+    cut_params c;
+    c.target_machine = PROBOTIX_V90_MK2_VFD;
+    return gcode_for_cuts(cuts, c);
+    // gprog* r = gprog::make();
+    // scale_callback c(x_s, y_s, z_s);
+    // for (unsigned i = 0; i < p.size(); i++) {
+    //   r->push_back(c.call(&p, i, p[i]));
+    // }
+    // return r;
   }
   
 }

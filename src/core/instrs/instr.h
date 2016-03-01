@@ -18,8 +18,6 @@ namespace gca {
 
   class instr {
   public:
-    double feed_rate;
-
     virtual instr* copy() const { assert(false); }
 
     virtual inline bool is_g3_instr() const { return false; }

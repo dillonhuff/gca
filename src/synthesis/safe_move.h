@@ -10,11 +10,19 @@ namespace gca {
   safe_move(point sp, point ep) :
     cut(sp, ep) {}
 
+  safe_move(point sp, point ep, tool_name t) :
+    cut(sp, ep, t) {}
+    
     static safe_move* make(point sp, point ep) {
       safe_move* mem = allocate<safe_move>();
       return new (mem) safe_move(sp, ep);
     }
 
+    static safe_move* make(point sp, point ep, tool_name t) {
+      safe_move* mem = allocate<safe_move>();
+      return new (mem) safe_move(sp, ep, t);
+    }
+    
     point final_orient() const {
       return end - start;
     }

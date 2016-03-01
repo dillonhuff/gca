@@ -65,7 +65,7 @@ namespace gca {
     }
 
     void print(ostream& other) const {
-      other << "LINEAR CUT: " << start << " -> " << end;
+      other << "LINEAR CUT: F" << *feedrate << " " << start << " -> " << end;
     }
     
   };
