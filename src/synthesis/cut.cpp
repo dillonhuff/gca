@@ -14,4 +14,8 @@ namespace gca {
     return stream;
   }
 
+  bool cmp_cuts(const cut* l, const cut* r) {
+    return (*l) == (*r);
+  }
+
 }

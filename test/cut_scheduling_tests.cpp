@@ -11,10 +11,6 @@ using namespace std;
 
 namespace gca {
 
-  bool cmp_cuts(const cut* l, const cut* r) {
-    return (*l) == (*r);
-  }
-
   TEST_CASE("Schedule lines") {
     arena_allocator a;
     set_system_allocator(&a);

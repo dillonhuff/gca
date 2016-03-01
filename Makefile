@@ -408,6 +408,51 @@ src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
+src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
+
+.PHONY : src/analysis/gcode_to_cuts.o
+
+# target to build an object file
+src/analysis/gcode_to_cuts.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/gcode_to_cuts.cpp.o
+.PHONY : src/analysis/gcode_to_cuts.cpp.o
+
+src/analysis/gcode_to_cuts.i: src/analysis/gcode_to_cuts.cpp.i
+
+.PHONY : src/analysis/gcode_to_cuts.i
+
+# target to preprocess a source file
+src/analysis/gcode_to_cuts.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/gcode_to_cuts.cpp.i
+.PHONY : src/analysis/gcode_to_cuts.cpp.i
+
+src/analysis/gcode_to_cuts.s: src/analysis/gcode_to_cuts.cpp.s
+
+.PHONY : src/analysis/gcode_to_cuts.s
+
+# target to generate assembly for a file
+src/analysis/gcode_to_cuts.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/gcode_to_cuts.cpp.s
+.PHONY : src/analysis/gcode_to_cuts.cpp.s
+
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
 
 .PHONY : src/checkers/bounds_checker.o
@@ -1875,6 +1920,33 @@ test/dxf_to_gcode_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.s
 .PHONY : test/dxf_to_gcode_tests.cpp.s
 
+test/gcode_to_cuts_tests.o: test/gcode_to_cuts_tests.cpp.o
+
+.PHONY : test/gcode_to_cuts_tests.o
+
+# target to build an object file
+test/gcode_to_cuts_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.o
+.PHONY : test/gcode_to_cuts_tests.cpp.o
+
+test/gcode_to_cuts_tests.i: test/gcode_to_cuts_tests.cpp.i
+
+.PHONY : test/gcode_to_cuts_tests.i
+
+# target to preprocess a source file
+test/gcode_to_cuts_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.i
+.PHONY : test/gcode_to_cuts_tests.cpp.i
+
+test/gcode_to_cuts_tests.s: test/gcode_to_cuts_tests.cpp.s
+
+.PHONY : test/gcode_to_cuts_tests.s
+
+# target to generate assembly for a file
+test/gcode_to_cuts_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.s
+.PHONY : test/gcode_to_cuts_tests.cpp.s
+
 test/line_tests.o: test/line_tests.cpp.o
 
 .PHONY : test/line_tests.o
@@ -2127,6 +2199,9 @@ help:
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"
+	@echo "... src/analysis/gcode_to_cuts.o"
+	@echo "... src/analysis/gcode_to_cuts.i"
+	@echo "... src/analysis/gcode_to_cuts.s"
 	@echo "... src/checkers/bounds_checker.o"
 	@echo "... src/checkers/bounds_checker.i"
 	@echo "... src/checkers/bounds_checker.s"
@@ -2232,6 +2307,9 @@ help:
 	@echo "... test/dxf_to_gcode_tests.o"
 	@echo "... test/dxf_to_gcode_tests.i"
 	@echo "... test/dxf_to_gcode_tests.s"
+	@echo "... test/gcode_to_cuts_tests.o"
+	@echo "... test/gcode_to_cuts_tests.i"
+	@echo "... test/gcode_to_cuts_tests.s"
 	@echo "... test/line_tests.o"
 	@echo "... test/line_tests.i"
 	@echo "... test/line_tests.s"

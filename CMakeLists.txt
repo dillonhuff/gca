@@ -27,7 +27,8 @@ SET(TEST_FILES test/parse_tests.cpp
 	       test/dxf_to_gcode_tests.cpp
 	       test/shapes_to_toolpaths_tests.cpp
 	       test/toolpath_tests.cpp
-	       test/cut_scheduling_tests.cpp)
+	       test/cut_scheduling_tests.cpp
+	       test/gcode_to_cuts_tests.cpp)
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
@@ -72,7 +73,8 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/transformers/rel_to_abs.h
 	    ./src/transformers/tiler.h)
 
-SET(CPPS ./src/core/arena_allocator.cpp
+SET(CPPS ./src/analysis/gcode_to_cuts.cpp
+	 ./src/core/arena_allocator.cpp
 	 ./src/core/context.cpp
 	 ./src/core/gprog.cpp
 	 ./src/core/instrs/instr.cpp

@@ -37,6 +37,8 @@ namespace gca {
   ostream& operator<<(ostream& stream, const cut& c);
   ostream& operator<<(ostream& stream, const vector<cut*>& c);
 
+  bool cmp_cuts(const cut* l, const cut* r);
+
 }
 
 

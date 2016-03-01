@@ -6,21 +6,18 @@
 
 #include "geometry/point.h"
 
-#define GCA_M 0
-#define GCA_G 1
-#define GCA_T 2
-#define GCA_S 3
-#define GCA_F 4
-
-#define GCA_ABSOLUTE 0
-#define GCA_RELATIVE 1
-#define GCA_NONE 2
 
 using namespace std;
 
 namespace gca {
 
-  typedef int orientation;
+  enum orientation {
+    GCA_ABSOLUTE = 0,
+    GCA_RELATIVE = 1,
+    GCA_NONE
+  };
+
+  //typedef int orientation;
   typedef int instr_class;
   typedef int instr_val;
 
