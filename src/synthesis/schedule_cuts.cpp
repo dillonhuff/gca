@@ -19,6 +19,9 @@ namespace gca {
   };
 
   bool are_contiguous(const cut* last, const cut* next) {
+    if (last->tool_no != next->tool_no) {
+      return false;
+    }
     return within_eps(last->end, next->start);
   }
 
