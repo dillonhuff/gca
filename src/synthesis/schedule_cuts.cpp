@@ -37,7 +37,17 @@ namespace gca {
     return cont_chain;
   }
 
+
+  bool is_hole_punch(const cut* c) {
+    return c->is_hole_punch();
+  }
+  
+  void has_tool(const cut* c) {
+    assert(c->tool_no == DRILL || c->tool_no == DRAG_KNIFE);
+  }
+  
   vector<cut*> schedule_cuts(const vector<cut*>& cuts) {
+    for_each(cuts.begin(), cuts.end(), has_tool);
     vector<cut*> scheduled_cuts = cuts;
     vector<cut*>::iterator it = scheduled_cuts.begin();
     while (it < scheduled_cuts.end()) {
@@ -46,6 +56,7 @@ namespace gca {
       stable_partition(it, scheduled_cuts.end(), rt);
       it += next_chain.size();
     }
+    stable_partition(scheduled_cuts.begin(), scheduled_cuts.end(), is_hole_punch);
     return scheduled_cuts;
   }
 

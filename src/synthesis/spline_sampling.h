@@ -7,9 +7,9 @@
 
 namespace gca {
   
-    void append_splines(const vector<b_spline*>& splines,
-			vector<cut_group>& cut_groups);
-
+  void append_splines(const vector<b_spline*>& splines,
+		      vector<cut*>& cut_groups);
+  
 }
 
 #endif

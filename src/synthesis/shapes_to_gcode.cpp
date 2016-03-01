@@ -107,15 +107,17 @@ namespace gca {
     vector<cut*> all_cuts;
     cut* last_cut = NULL;
     cut* next_cut = NULL;
-    for (unsigned i = 0; i < cuts.size(); i++) {
-      next_cut = cuts[i];
+    for (vector<cut*>::const_iterator it = cuts.begin();
+	 it != cuts.end(); ++it) {
+      next_cut = *it; //cuts[i];
       vector<cut*> transition = move_to_next_cut(last_cut, next_cut, params);
-      for (unsigned j = 0; j < transition.size(); j++) {
-	transition[j]->tool_no = next_cut->tool_no;
+      for (vector<cut*>::iterator jt = transition.begin();
+	   jt != transition.end(); ++jt) {
+	(*jt)->tool_no = next_cut->tool_no;
       }
       all_cuts.insert(all_cuts.end(), transition.begin(), transition.end());
       all_cuts.push_back(next_cut);
-      last_cut = cuts[i];
+      last_cut = *it; //cuts[i];
     }
     return all_cuts;
   }

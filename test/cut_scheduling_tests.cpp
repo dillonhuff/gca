@@ -3,6 +3,7 @@
 
 #include "catch.hpp"
 #include "synthesis/cut.h"
+#include "synthesis/hole_punch.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/schedule_cuts.h"
 
@@ -59,6 +60,15 @@ namespace gca {
       correct.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3)));
       correct.push_back(linear_cut::make(point(2, 3, -0.1), point(3, 5, -0.1)));
       correct.push_back(linear_cut::make(point(2, 3, -0.3), point(3, 5, -0.3)));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
+
+    SECTION("Holes first") {
+      cuts.push_back(linear_cut::make(point(1, 1, -0.1), point(2, 2, -0.2)));
+      cuts.push_back(hole_punch::make(point(3, 3, -0.1), 0.125));
+      actual = schedule_cuts(cuts);
+      correct.push_back(hole_punch::make(point(3, 3, -0.1), 0.125));      
+      correct.push_back(linear_cut::make(point(1, 1, -0.1), point(2, 2, -0.2)));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
   }
