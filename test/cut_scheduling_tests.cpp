@@ -84,6 +84,20 @@ namespace gca {
       correct.push_back(linear_cut::make(point(1, 1, -0.3), point(1, 3, -0.3), DRAG_KNIFE));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
     }
+
+    SECTION("2 pass drag knife code that should not be grouped") {
+      cuts.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1), DRAG_KNIFE));
+      cuts.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3), DRAG_KNIFE));
+      cuts.push_back(linear_cut::make(point(1, 1, -0.1), point(1, 3, -0.1), DRAG_KNIFE));
+      cuts.push_back(linear_cut::make(point(1, 1, -0.3), point(1, 3, -0.3), DRAG_KNIFE));
+      actual = schedule_cuts(cuts);
+      correct.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1), DRAG_KNIFE));
+      correct.push_back(linear_cut::make(point(0, 0, -0.3), point(1, 1, -0.3), DRAG_KNIFE));
+      correct.push_back(linear_cut::make(point(1, 1, -0.1), point(1, 3, -0.1), DRAG_KNIFE));
+      correct.push_back(linear_cut::make(point(1, 1, -0.3), point(1, 3, -0.3), DRAG_KNIFE));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
+    
   }
   
 }

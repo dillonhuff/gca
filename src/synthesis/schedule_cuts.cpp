@@ -19,7 +19,15 @@ namespace gca {
   };
 
   bool are_contiguous(const cut* last, const cut* next) {
+    double max_orientation_change = 15;
     if (last->tool_no != next->tool_no) {
+      return false;
+    }
+    if (next->tool_no == DRAG_KNIFE &&
+	!within_eps(angle_between(last->final_orient(),
+				  next->initial_orient()),
+		    0,
+		    max_orientation_change)) {
       return false;
     }
     return within_eps(last->end, next->start);
