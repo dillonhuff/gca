@@ -34,7 +34,7 @@ namespace gca {
       (*i)++;
     }
     parse_char(ec, i, s);
-    return mk_comment(sc, ec, text);
+    return comment::make(sc, ec, text);
   }
   
   void ignore_comment(size_t* i, const string& s) {
@@ -163,7 +163,7 @@ namespace gca {
     value* yv = NULL;
     value* zv = NULL;
     parse_position_values(p, i, s, &xv, &yv, &zv);
-    return mk_G53(xv, yv, zv);
+    return g53_instr::make(xv, yv, zv);
   }
 
   string parse_option_char(size_t* i, const string& s, char t) {
@@ -193,7 +193,7 @@ namespace gca {
     } else if (val == 1) {
       is = parse_G1(p, i, s);
     } else if (val == 91) {
-      is = mk_G91();
+      is = g91_instr::make();
     } else if (val == 90) {
       is = g90_instr::make();
     } else if (val == 53) {
@@ -244,13 +244,13 @@ namespace gca {
     } else if (next_char == 'F') {
       ignore_whitespace(i, s);
       string str = parse_coord_letters(i, s);
-      is = mk_f_instr(val, str);
+      is = f_instr::make(val, str);
     } else if (next_char == 'G') {
       is = parse_ginstr(p, val, i, s);
     } else if (next_char == '#') {
       parse_char('=', i, s);
       double e = parse_double(i, s);
-      is = mk_assign(var::make(val), lit::make(e));
+      is = assign_instr::make(var::make(val), lit::make(e));
     } else {
       cout << "Cannot parse string: " << s.substr(*i) << endl;
       assert(false);

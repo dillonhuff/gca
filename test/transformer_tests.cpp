@@ -164,7 +164,7 @@ namespace gca {
     rel_to_abs f(GCA_ABSOLUTE);
 
     SECTION("One M2 instruction is the same") {
-      p->push_back(mk_G91());
+      p->push_back(g91_instr::make());
       p->push_back(m2_instr::make());
       correct->push_back(m2_instr::make());
       r = f.apply(p);
@@ -172,7 +172,7 @@ namespace gca {
     }
 
     SECTION("One G0 instruction is the same") {
-      p->push_back(mk_G91());
+      p->push_back(g91_instr::make());
       p->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
       correct->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
       r = f.apply(p);
@@ -180,7 +180,7 @@ namespace gca {
     }
 
     SECTION("Two instructions instructions") {
-      p->push_back(mk_G91());
+      p->push_back(g91_instr::make());
       p->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
       p->push_back(g1_instr::make(-2.0, 2.0, -10.0, 2.5));
       correct->push_back(g0_instr::make(point(1.0, 2.0, 3.0)));
@@ -201,7 +201,7 @@ namespace gca {
     SECTION("No op program") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
       p->push_back(m2_instr::make());
-      correct->push_back(mk_G91());
+      correct->push_back(g91_instr::make());
       correct->push_back(m2_instr::make());
       r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
@@ -210,7 +210,7 @@ namespace gca {
     SECTION("No move instructions") {
       tiler t(2, point(1, 0, 0), point(1, 0, 0));
       p->push_back(m30_instr::make());
-      correct->push_back(mk_G91());
+      correct->push_back(g91_instr::make());
       correct->push_back(m2_instr::make());
       r = t.apply(p, GCA_ABSOLUTE);
       REQUIRE(*r == *correct);
@@ -229,7 +229,7 @@ namespace gca {
       point s1 = point(2, 0, depth);
       point d1 = s1 - e1;
       
-      correct->push_back(mk_G91());
+      correct->push_back(g91_instr::make());
 
       correct->push_back(g1_instr::make(0, 0, depth, 1.0));
       correct->push_back(g1_instr::make(1, 0, 0, 1.0));

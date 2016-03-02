@@ -20,7 +20,7 @@ namespace gca {
       abs_to_rel atr(def);
       rp = atr.apply(p);
       gprog* new_p = gprog::make();
-      new_p->push_back(mk_G91());
+      new_p->push_back(g91_instr::make());
       for (int i = 0; i < num_copies; i++) {
 	int j = 0;
 	int num_copied = 0;

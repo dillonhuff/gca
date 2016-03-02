@@ -117,13 +117,13 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(lit::make(0.0), lit::make(2.75), lit::make(-1.5), omitted::make()));
-      correct->push_back(mk_comment('(', ')', "comment 1"));
+      correct->push_back(comment::make('(', ')', "comment 1"));
       correct->push_back(g0_instr::make(lit::make(12.5), omitted::make(), omitted::make()));
-      correct->push_back(mk_comment('(', ')', "Comment \n number 2"));
-      correct->push_back(mk_comment('(', ')', "s"));
-      correct->push_back(mk_comment('(', ')', " f"));
+      correct->push_back(comment::make('(', ')', "Comment \n number 2"));
+      correct->push_back(comment::make('(', ')', "s"));
+      correct->push_back(comment::make('(', ')', " f"));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      correct->push_back(mk_comment('(', ')', "Comment G1 X0.0"));
+      correct->push_back(comment::make('(', ')', "Comment G1 X0.0"));
       REQUIRE((*p == *correct));
     }
 
@@ -153,7 +153,7 @@ namespace gca {
       string s = "G91\n";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_G91());
+      correct->push_back(g91_instr::make());
       REQUIRE((*p == *correct));
     }
 
@@ -161,7 +161,7 @@ namespace gca {
       string s = "G91 G0 X1.0 Y0.0 Z0.0\n";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_G91());
+      correct->push_back(g91_instr::make());
       correct->push_back(g0_instr::make(1.0, 0.0, 0.0));
       REQUIRE(((*p) == (*correct)));
     }
@@ -170,7 +170,7 @@ namespace gca {
       string s = "G91\nG0 X1.0 Y1.0 Z1.0\nG0 Y0.5\nM2";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_G91());
+      correct->push_back(g91_instr::make());
       correct->push_back(g0_instr::make(1.0, 1.0, 1.0));
       correct->push_back(g0_instr::make(omitted::make(), lit::make(0.5), omitted::make()));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
@@ -181,7 +181,7 @@ namespace gca {
       string s = "G53 X3.0 Y2.0 Z1.0";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_G53(lit::make(3), lit::make(2), lit::make(1)));
+      correct->push_back(g53_instr::make(lit::make(3), lit::make(2), lit::make(1)));
       REQUIRE(((*p) == (*correct)));
     }
 
@@ -190,21 +190,21 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
       correct->push_back(g90_instr::make());
-      correct->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(1)));
+      correct->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(1)));
       REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse F instruction") {
       gprog* p = parse_gprog("F15 XY");
       gprog* correct = gprog::make();
-      correct->push_back(mk_f_instr(15, "XY"));
+      correct->push_back(f_instr::make(15, "XY"));
       REQUIRE(((*p) == (*correct)));
     }
 
     SECTION("Parse F instruction not all") {
       gprog* p = parse_gprog("F15 XYZ");
       gprog* incorrect = gprog::make();
-      incorrect->push_back(mk_f_instr(15, "XY"));
+      incorrect->push_back(f_instr::make(15, "XY"));
       REQUIRE(((*p) != (*incorrect)));
     }
     
@@ -218,7 +218,7 @@ namespace gca {
       string s = "#1=14";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
-      correct->push_back(mk_assign(var::make(1), lit::make(14)));
+      correct->push_back(assign_instr::make(var::make(1), lit::make(14)));
       REQUIRE(((*p) == (*correct)));
     }
 

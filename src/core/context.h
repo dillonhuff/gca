@@ -10,20 +10,6 @@
 
 namespace gca {
 
-  assign_instr* mk_assign(var* v, value* e);
-    
-  f_instr* mk_f_instr(int val, string s);
-
-  comment* mk_comment(char ld, char rd, string t);
-
-  g91_instr* mk_G91();
-  g20_instr* mk_G20();
-  g21_instr* mk_G21();
-  g64_instr* mk_G64();
-  
-    
-  g53_instr* mk_G53(value* x, value* y, value* z);
-
 }
 
 #endif

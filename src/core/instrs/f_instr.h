@@ -13,6 +13,11 @@ namespace gca {
       axes = s;
     }
 
+    static f_instr* make(int val, string s) {
+      f_instr* mem = allocate<f_instr>();
+      return new (mem) f_instr(val, s);
+    }
+
     inline bool is_f_instr() const { return true; }
     inline bool is_F() const { return true; }
     virtual bool operator==(const instr& i) const {

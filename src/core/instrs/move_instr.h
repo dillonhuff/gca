@@ -195,6 +195,12 @@ namespace gca {
   public:
   g53_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
   g53_instr(g53_instr* i) : move_instr(i) {}
+
+    static g53_instr* make(value* x, value* y, value* z) {
+      g53_instr* mem = allocate<g53_instr>();
+      return new (mem) g53_instr(x, y, z, omitted::make());
+    }
+
     
     virtual inline bool is_G53() const { return true; }
     

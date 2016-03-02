@@ -137,7 +137,7 @@ namespace gca {
 
   gprog* append_footer(gprog* p, machine_name m) {
     if (m == CAMASTER) {
-      p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
+      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(m5_instr::make());
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       p->push_back(m2_instr::make());
@@ -152,13 +152,13 @@ namespace gca {
     if (m == CAMASTER) {
       r->push_back(g90_instr::make());
       r->push_back(m5_instr::make());
-      r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
+      r->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
       r->push_back(t_instr::make(6));
       r->push_back(s_instr::make(0));
       r->push_back(m3_instr::make());
-      r->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
-      r->push_back(mk_f_instr(5, "XY"));
-      r->push_back(mk_f_instr(5, "Z"));
+      r->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
+      r->push_back(f_instr::make(5, "XY"));
+      r->push_back(f_instr::make(5, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       r->push_back(g90_instr::make());
     } else {
@@ -171,13 +171,13 @@ namespace gca {
     if (m == CAMASTER) {
       p->push_back(g90_instr::make());
       p->push_back(m5_instr::make());
-      p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
+      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(t_instr::make(2));
       p->push_back(s_instr::make(16000));
       p->push_back(m3_instr::make());
-      p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
-      p->push_back(mk_f_instr(4, "XY"));
-      p->push_back(mk_f_instr(50, "Z"));
+      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
+      p->push_back(f_instr::make(4, "XY"));
+      p->push_back(f_instr::make(50, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       p->push_back(g90_instr::make());
     } else {
@@ -188,12 +188,12 @@ namespace gca {
   void append_drag_knife_transfer(gprog* p, machine_name m) {
     if (m == CAMASTER) {
       p->push_back(g90_instr::make());
-      p->push_back(mk_G53(omitted::make(), omitted::make(), lit::make(0.0)));
+      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
       p->push_back(m5_instr::make());
       p->push_back(t_instr::make(6));
       p->push_back(s_instr::make(0));
-      p->push_back(mk_f_instr(5, "XY"));
-      p->push_back(mk_f_instr(5, "Z"));
+      p->push_back(f_instr::make(5, "XY"));
+      p->push_back(f_instr::make(5, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       p->push_back(g90_instr::make());
       p->push_back(m5_instr::make());
