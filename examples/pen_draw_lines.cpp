@@ -29,7 +29,7 @@ void letter_lines(vector<cut*>& lines,
   point p5 = point(xl, ym, 0);
   
   point p6 = point(xi, yl, 0);
-  point p7 = point(xm, yl, 0);
+  //point p7 = point(xm, yl, 0);
   point p8 = point(xl, yl, 0);
   
   switch (letter) {

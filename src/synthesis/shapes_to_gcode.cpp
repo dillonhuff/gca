@@ -57,7 +57,6 @@ namespace gca {
   vector<cut*> move_to_next_cut(cut* last_cut,
 				cut* next_cut,
 				const cut_params& params) {
-    point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
     if (next_cut->tool_no == DRILL) {
       return move_to_next_cut_drill(last_cut, next_cut, params);
     } else if (next_cut->tool_no == DRAG_KNIFE) {

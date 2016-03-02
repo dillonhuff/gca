@@ -10,7 +10,7 @@ ENDIF()
 
 project(gca)
 
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++98 -pedantic -I./src -I./test -Werror")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++98 -pedantic -I./src -I./test -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -115,13 +115,6 @@ add_executable(hello-world examples/hello_world.cpp ${SRCS})
 add_executable(pen-draw-lines examples/pen_draw_lines.cpp ${SRCS})
 add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 add_executable(cut-rect examples/cut_rect.cpp ${SRCS})
-
-#add_executable(extract-g1-paths examples/extract_g1_paths.cpp ${SRCS})
-#add_executable(bmp-prog examples/bmp_prog.cpp ${SRCS})
-#add_executable(print-strap examples/print_strap.cpp ${SRCS})
-#add_executable(z-abstract examples/z_abstract.cpp ${SRCS})
-#add_executable(hole-optimizer examples/hole_optimizer.cpp ${SRCS})
-#add_executable(print-knife-hacks examples/print_knife_hacks.cpp ${SRCS})
 
 ######### VTK Example ##########
 
