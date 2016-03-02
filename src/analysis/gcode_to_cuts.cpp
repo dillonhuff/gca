@@ -1,6 +1,7 @@
 #include "analysis/gcode_to_cuts.h"
 #include "core/basic_states.h"
 #include "core/callback.h"
+#include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
 
@@ -31,6 +32,42 @@ namespace gca {
     cut* call_G1(gprog* p, int i, g1_instr* is) {
       linear_cut* c = linear_cut::make(pos_state.before, pos_state.after, settings.initial_tool);
       c->feedrate = is->feed_rate;
+      return c;
+    }
+
+    cut* call_G3(gprog* p, int i, g3_instr* is) {
+      circular_arc* c;
+      point offset;
+      if (!is->k->is_lit()) {
+	offset = point (is->get_i_val(),
+			is->get_j_val(),
+			0);
+	c = circular_arc::make(pos_state.before,
+			       pos_state.after,
+			       offset,
+			       COUNTERCLOCKWISE,
+			       XY);
+      } else {
+	assert(false);
+      }
+      return c;
+    }
+    
+    cut* call_G2(gprog* p, int i, g2_instr* is) {
+      circular_arc* c;
+      point offset;
+      if (!is->k->is_lit()) {
+	offset = point (is->get_i_val(),
+			is->get_j_val(),
+			0);
+	c = circular_arc::make(pos_state.before,
+			       pos_state.after,
+			       offset,
+			       CLOCKWISE,
+			       XY);
+      } else {
+	assert(false);
+      }
       return c;
     }
 

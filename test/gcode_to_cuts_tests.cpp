@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "core/arena_allocator.h"
 #include "core/parser.h"
+#include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
 
@@ -40,7 +41,35 @@ namespace gca {
       lc->feedrate = lit::make(20);
       correct.push_back(lc);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
-
     }
+
+    SECTION("Safe move and circular arc clockwise in XY plane") {
+      gprog* p = parse_gprog("G90 G0 X1 Y1 Z1 G2 F12.5 X3 Y4.5 Z1 I2.0 J3.0");
+      actual = gcode_to_cuts(*p, s);
+      correct.push_back(safe_move::make(point(0, 0, 0), point(1, 1, 1)));
+      circular_arc* arc = circular_arc::make(point(1, 1, 1),
+					     point(3, 4.5, 1),
+					     point(2, 3, 0),
+					     CLOCKWISE,
+					     XY);
+      arc->feedrate = lit::make(12.5);
+      correct.push_back(arc);
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
+    }
+
+    SECTION("Safe move and circular arc counterclockwise in XY plane") {
+      gprog* p = parse_gprog("G90 G0 X1 Y1 Z1 G3 F12.5 X3 Y4.5 Z1 I2.0 J3.0");
+      actual = gcode_to_cuts(*p, s);
+      correct.push_back(safe_move::make(point(0, 0, 0), point(1, 1, 1)));
+      circular_arc* arc = circular_arc::make(point(1, 1, 1),
+					     point(3, 4.5, 1),
+					     point(2, 3, 0),
+					     COUNTERCLOCKWISE,
+					     XY);
+      arc->feedrate = lit::make(12.5);
+      correct.push_back(arc);
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
+    }
+
   }
 }
