@@ -1,3 +1,4 @@
+#include "core/instrs/all.h"
 #include "transformers/feed_changer.h"
 
 namespace gca {
