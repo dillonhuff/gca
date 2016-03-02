@@ -15,7 +15,7 @@ namespace gca {
     tool_name initial_tool;
   };
 
-  vector<cut*> gcode_to_cuts(const gprog& p, const gcode_settings& settings);
+  vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings);
 }
 
 #endif

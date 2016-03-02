@@ -9,10 +9,13 @@ namespace gca {
     class callback {
   public:
     virtual T call(gprog* p, int i, instr* is) = 0;
+    T operator()(gprog* p, int i, instr* is) {
+      return call(p, i, is);
+    }
   };
 
   template<typename T>
-    class per_instr_callback : callback<T> {
+    class per_instr_callback : public callback<T> {
   public:
 
     virtual T call_G0(gprog* p, int i, g0_instr* is) {

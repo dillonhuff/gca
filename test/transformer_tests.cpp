@@ -282,11 +282,6 @@ namespace gca {
       gprog* p = parse_gprog("G90 M5 S0 G0 X2.0 Y-1.0 Z0.0 G1 F9 X1.0 Y2.0 Z3.0 M2");
       gprog* r = scale_xyz(3.0, *p);
       gprog* correct = parse_gprog("G90 M5 S0 G0 X6.0 Y-3.0 Z0.0 G1 F9 X3.0 Y6.0 Z9.0 M2");
-      cout << "Input " << endl;
-      cout << *p << endl;      
-      
-      cout << "Actual " << endl;
-      cout << *r << endl;      
       REQUIRE(*r == *correct);
     }
   }
