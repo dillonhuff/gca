@@ -1,5 +1,4 @@
 #include "analysis/gcode_to_cuts.h"
-#include "core/context.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "transformers/shift_xyz.h"
 

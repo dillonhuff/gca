@@ -1668,6 +1668,51 @@ src/system/settings.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.s
 .PHONY : src/system/settings.cpp.s
 
+src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
+
+.PHONY : src/transformers/feed_changer.o
+
+# target to build an object file
+src/transformers/feed_changer.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.o
+.PHONY : src/transformers/feed_changer.cpp.o
+
+src/transformers/feed_changer.i: src/transformers/feed_changer.cpp.i
+
+.PHONY : src/transformers/feed_changer.i
+
+# target to preprocess a source file
+src/transformers/feed_changer.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.i
+.PHONY : src/transformers/feed_changer.cpp.i
+
+src/transformers/feed_changer.s: src/transformers/feed_changer.cpp.s
+
+.PHONY : src/transformers/feed_changer.s
+
+# target to generate assembly for a file
+src/transformers/feed_changer.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.s
+.PHONY : src/transformers/feed_changer.cpp.s
+
 src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
 
 .PHONY : src/transformers/scale_xyz.o
@@ -2283,6 +2328,9 @@ help:
 	@echo "... src/system/settings.o"
 	@echo "... src/system/settings.i"
 	@echo "... src/system/settings.s"
+	@echo "... src/transformers/feed_changer.o"
+	@echo "... src/transformers/feed_changer.i"
+	@echo "... src/transformers/feed_changer.s"
 	@echo "... src/transformers/scale_xyz.o"
 	@echo "... src/transformers/scale_xyz.i"
 	@echo "... src/transformers/scale_xyz.s"

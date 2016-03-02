@@ -102,6 +102,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/transformers/scale_xyz.cpp
 	 ./src/transformers/scale_xyz.cpp
 	 ./src/transformers/shift_xyz.cpp
+	 ./src/transformers/feed_changer.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
 

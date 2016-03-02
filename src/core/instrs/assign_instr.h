@@ -1,3 +1,4 @@
+#include "core/arena_allocator.h"
 #include "core/instrs/instr.h"
 #include "core/value.h"
 
@@ -10,6 +11,11 @@ namespace gca {
 
   assign_instr(var* vp, value* ep) :
     v(vp), e(ep) {}
+
+    static assign_instr* make(var* vp, value* ep) {
+      assign_instr* mem = allocate<assign_instr>();
+      return new (mem) assign_instr(vp, ep);
+    }
 
     virtual inline bool is_assign_instr() const { return true; }
 

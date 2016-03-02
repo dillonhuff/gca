@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include "core/context.h"
 #include "core/parser.h"
 #include "transformers/abs_to_rel.h"
 #include "transformers/feed_changer.h"
