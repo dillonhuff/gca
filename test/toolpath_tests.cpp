@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "core/arena_allocator.h"
 #include "core/context.h"
+#include "synthesis/linear_cut.h"
 #include "synthesis/toolpath.h"
 
 namespace gca {

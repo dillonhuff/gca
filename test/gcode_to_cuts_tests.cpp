@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "core/arena_allocator.h"
 #include "core/parser.h"
+#include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
 
 namespace gca {

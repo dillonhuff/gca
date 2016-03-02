@@ -3,6 +3,7 @@
 
 #include "core/context.h"
 #include "synthesis/circular_arc.h"
+#include "synthesis/linear_cut.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/spline_sampling.h"
 

@@ -2,8 +2,10 @@
 #define GCA_DXF_READER_H
 
 #include "core/context.h"
+#include "core/gprog.h"
 #include "dxflib/dl_dxf.h"
 #include "dxflib/dl_creationadapter.h"
+#include "synthesis/linear_cut.h"
 #include "synthesis/shape_layout.h"
 
 namespace gca {
