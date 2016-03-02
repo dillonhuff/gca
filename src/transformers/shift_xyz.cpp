@@ -1,50 +1,24 @@
-#include "transformers/shift_xyz.h"
-
+#include "analysis/gcode_to_cuts.h"
 #include "core/context.h"
-#include "transformers/scale_xyz.h"
+#include "synthesis/shapes_to_gcode.h"
+#include "transformers/shift_xyz.h"
 
 namespace gca {
 
-  class shift_callback : public per_instr_callback<instr*> {
-  public:
-    double x_s, y_s, z_s;
-
-    shift_callback(double x, double y, double z) : x_s(x), y_s(y), z_s(z) {}
-
-    value* shift_value(double s, value* v) {
-      if (v->is_omitted()) {
-	return v;
-      }
-      assert(v->is_lit());
-      lit* l = static_cast<lit*>(v);
-      return lit::make(s + l->v);
-    }
-
-    instr* shift_move(move_instr* is) {
-      value* new_x = shift_value(x_s, is->get_x());
-      value* new_y = shift_value(y_s, is->get_y());
-      value* new_z = shift_value(z_s, is->get_z());
-      move_instr* new_is = static_cast<move_instr*>(is->copy());
-      new_is->set_x(new_x);
-      new_is->set_y(new_y);
-      new_is->set_z(new_z);
-      return new_is;
-    }
-    
-    instr* call_G0(gprog* p, int i, g0_instr* is) { return shift_move(is); }
-    instr* call_G1(gprog* p, int i, g1_instr* is) { return shift_move(is); }
-    instr* call_G90(gprog* p, int i, g90_instr* is) { return is; }
-    instr* call_M2(gprog* p, int i, m2_instr* is) { return is; }
-    instr* call_default(gprog* p, int i, instr* is) { assert(false); }
-  };
-
   gprog* shift_xyz(double x_s, double y_s, double z_s, gprog& p) {
-    gprog* r = gprog::make();
-    shift_callback c(x_s, y_s, z_s);
-    for (unsigned i = 0; i < p.size(); i++) {
-      r->push_back(c.call(&p, i, p[i]));
+    point sf(x_s, y_s, z_s);
+    gcode_settings s;
+    s.initial_coord_orient = GCA_ABSOLUTE;
+    s.initial_pos = point(0, 0, 0);
+    s.initial_tool = DRAG_KNIFE;
+    vector<cut*> cuts = gcode_to_cuts(p, s);
+    cut_params c;
+    c.target_machine = PROBOTIX_V90_MK2_VFD;
+    vector<cut*> scaled_cuts;
+    for (vector<cut*>::iterator it = cuts.begin(); it != cuts.end(); ++it) {
+      scaled_cuts.push_back((*it)->shift(sf));
     }
-    return r;
+    return gcode_for_cuts(scaled_cuts, c);
   }
   
 }

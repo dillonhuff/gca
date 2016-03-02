@@ -291,9 +291,9 @@ namespace gca {
     set_system_allocator(&a);
 
     SECTION("One instruction") {
-      gprog* p = parse_gprog("G90 G1 X1.0 Y-1.0 Z2.0");
+      gprog* p = parse_gprog("G90 M5 S0 G1 X1.0 Y-1.0 Z2.0 M2");
       gprog* r = shift_xyz(1.0, 3.0, 1.5, *p);
-      gprog* correct = parse_gprog("G90 G1 X2.0 Y2.0 Z3.5");
+      gprog* correct = parse_gprog("G90 M5 S0 G1 X2.0 Y2.0 Z3.5 M2");
       REQUIRE(*r == *correct);
     }
   }
