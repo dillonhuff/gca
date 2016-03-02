@@ -633,51 +633,6 @@ src/core/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.s
 .PHONY : src/core/arena_allocator.cpp.s
 
-src/core/context.o: src/core/context.cpp.o
-
-.PHONY : src/core/context.o
-
-# target to build an object file
-src/core/context.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/context.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.o
-.PHONY : src/core/context.cpp.o
-
-src/core/context.i: src/core/context.cpp.i
-
-.PHONY : src/core/context.i
-
-# target to preprocess a source file
-src/core/context.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/context.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.i
-.PHONY : src/core/context.cpp.i
-
-src/core/context.s: src/core/context.cpp.s
-
-.PHONY : src/core/context.s
-
-# target to generate assembly for a file
-src/core/context.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/context.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/context.cpp.s
-.PHONY : src/core/context.cpp.s
-
 src/core/gprog.o: src/core/gprog.cpp.o
 
 .PHONY : src/core/gprog.o
@@ -2259,9 +2214,6 @@ help:
 	@echo "... src/core/arena_allocator.o"
 	@echo "... src/core/arena_allocator.i"
 	@echo "... src/core/arena_allocator.s"
-	@echo "... src/core/context.o"
-	@echo "... src/core/context.i"
-	@echo "... src/core/context.s"
 	@echo "... src/core/gprog.o"
 	@echo "... src/core/gprog.i"
 	@echo "... src/core/gprog.s"

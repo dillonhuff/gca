@@ -75,7 +75,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/core/arena_allocator.cpp
-	 ./src/core/context.cpp
 	 ./src/core/gprog.cpp
 	 ./src/core/instrs/instr.cpp
 	 ./src/core/parser.cpp
