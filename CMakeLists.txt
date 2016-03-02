@@ -37,7 +37,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/core/arena_allocator.h
 	    ./src/core/basic_states.h
 	    ./src/core/callback.h
-	    ./src/core/context.h
 	    ./src/core/gprog.h
 	    ./src/core/instrs/all.h
 	    ./src/core/instrs/assign_instr.h
@@ -114,6 +113,7 @@ add_executable(hello-world examples/hello_world.cpp ${SRCS})
 add_executable(pen-draw-lines examples/pen_draw_lines.cpp ${SRCS})
 add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 add_executable(cut-rect examples/cut_rect.cpp ${SRCS})
+add_executable(misc examples/misc.cpp ${SRCS})
 
 ######### VTK Example ##########
 

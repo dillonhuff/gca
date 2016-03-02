@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "catch.hpp"
+#include "synthesis/circular_arc.h"
 #include "synthesis/cut.h"
 #include "synthesis/hole_punch.h"
 #include "synthesis/linear_cut.h"
@@ -93,7 +94,24 @@ namespace gca {
       correct.push_back(linear_cut::make(point(1, 1, -0.3), point(1, 3, -0.3), DRAG_KNIFE));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
-    
+
+    SECTION("Scheduling an arc") {
+      cuts.push_back(circular_arc::make(point(1, 1, -0.1),
+					point(2, 1, -0.1),
+					point(0.5, 1, -0.1),
+					CLOCKWISE,
+					XY));
+      cuts.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1), DRILL));
+      cuts.push_back(linear_cut::make(point(2, 1, -0.1), point(4, 5, -0.1), DRILL));
+      actual = schedule_cuts(cuts);
+      cuts.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1), DRILL));
+      cuts.push_back(circular_arc::make(point(1, 1, -0.1),
+					point(2, 1, -0.1),
+					point(0.5, 1, -0.1),
+					CLOCKWISE,
+					XY));
+      cuts.push_back(linear_cut::make(point(2, 1, -0.1), point(4, 5, -0.1), DRILL));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
   }
-  
 }
