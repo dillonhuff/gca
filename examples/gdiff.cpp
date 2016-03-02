@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "core/context.h"
+
 #include "core/parser.h"
 #include "diffs/all.h"
 

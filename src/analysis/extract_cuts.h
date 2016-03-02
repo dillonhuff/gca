@@ -2,7 +2,7 @@
 #define GCA_EXTRACT_CUTS_H
 
 #include "core/basic_states.h"
-#include "core/context.h"
+
 #include "core/gprog.h"
 #include "core/pass.h"
 #include "geometry/point.h"

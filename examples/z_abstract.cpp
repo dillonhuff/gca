@@ -3,7 +3,7 @@
 #include <map>
 #include <set>
 
-#include "core/context.h"
+
 #include "core/parser.h"
 
 using namespace gca;

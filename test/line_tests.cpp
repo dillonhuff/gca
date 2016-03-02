@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "core/context.h"
+
 #include "geometry/line.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/output.h"

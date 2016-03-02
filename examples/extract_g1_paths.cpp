@@ -4,7 +4,7 @@
 #include "analysis/extract_cuts.h"
 #include "core/basic_states.h"
 #include "core/callback.h"
-#include "core/context.h"
+
 #include "core/parser.h"
 #include "synthesis/align_blade.h"
 #include "synthesis/output.h"

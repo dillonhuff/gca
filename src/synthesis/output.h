@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "core/context.h"
+
 #include "core/gprog.h"
 #include "geometry/line.h"
 #include "synthesis/linear_cut.h"

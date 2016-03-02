@@ -4,7 +4,7 @@
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/g0_move_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
-#include "core/context.h"
+
 #include "core/parser.h"
 
 namespace gca {

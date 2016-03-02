@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "core/callback.h"
-#include "core/context.h"
+
 #include "core/parser.h"
 
 using namespace gca;

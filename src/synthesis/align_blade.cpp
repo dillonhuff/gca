@@ -1,7 +1,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "core/context.h"
+
 #include "synthesis/align_blade.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"

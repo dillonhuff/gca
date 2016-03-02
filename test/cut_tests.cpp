@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "catch.hpp"
-#include "core/context.h"
+
 #include "core/parser.h"
 #include "synthesis/align_blade.h"
 #include "synthesis/cut_to_gcode.h"

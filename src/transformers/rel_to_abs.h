@@ -2,7 +2,7 @@
 #define GCA_REL_TO_ABS_H
 
 #include "core/basic_states.h"
-#include "core/context.h"
+
 #include "core/pass.h"
 
 namespace gca {

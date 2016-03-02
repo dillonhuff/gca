@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include "core/context.h"
+
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/schedule_cuts.h"

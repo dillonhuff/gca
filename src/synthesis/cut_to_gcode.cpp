@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "core/context.h"
+
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/safe_move.h"
