@@ -66,21 +66,25 @@ namespace gca {
 
   vector<cut_group*> group_cuts(const vector<cut*>& cuts) {
     vector<cut_group*> groups;
-    vector<cut*>::const_iterator it = cuts.begin();
-    while (it < cuts.end()) {
-      cut_group next_chain = contiguous_chain(it, cuts.end());
-      elem_test rt(next_chain);
+    vector<cut*> cts = cuts;
+    while (cts.size() > 0) {
+      cut_group next_chain = contiguous_chain(cts.begin(), cts.end());
       groups.push_back(new (allocate<cut_group>()) cut_group());
       groups.back()->insert(groups.back()->end(),
 			    next_chain.begin(),
 			    next_chain.end());
-      it += next_chain.size();
+      elem_test t(next_chain);
+      cts.erase(remove_if(cts.begin(), cts.end(), t), cts.end());
     }
     return groups;
   }
 
   vector<cut*> concat_cut_groups(const vector<cut_group*>& groups) {
     vector<cut*> cuts;
+    for (vector<cut_group*>::const_iterator it = groups.begin();
+	 it != groups.end(); ++it) {
+      cuts.insert(cuts.end(), (*it)->begin(), (*it)->end());
+    }
     return cuts;
   }
 
@@ -90,6 +94,7 @@ namespace gca {
     schedule_cut_groups(groups);
     vector<cut*> scheduled_cuts = concat_cut_groups(groups);
     stable_partition(scheduled_cuts.begin(), scheduled_cuts.end(), is_hole_punch);
+    assert(scheduled_cuts.size() == cuts.size());
     return scheduled_cuts;
   }
 
