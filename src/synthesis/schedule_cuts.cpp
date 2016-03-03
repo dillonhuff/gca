@@ -52,7 +52,6 @@ namespace gca {
     return cont_chain;
   }
 
-
   bool is_hole_punch(const cut* c) {
     return c->is_hole_punch();
   }
@@ -61,7 +60,19 @@ namespace gca {
     assert(c->tool_no == DRILL || c->tool_no == DRAG_KNIFE);
   }
 
+  bool represents_polygon(const cut_group* r) {
+    return within_eps(r->front()->start, r->back()->end);
+  }
+
+  bool poly_contains(const cut_group* l, const cut_group* r) {
+    if (!represents_polygon(r)) {
+      return false;
+    }
+    return true;
+  }
+  
   void schedule_cut_groups(vector<cut_group*>& groups) {
+    stable_sort(groups.begin(), groups.end(), poly_contains);
   }
 
   vector<cut_group*> group_cuts(const vector<cut*>& cuts) {
@@ -73,8 +84,7 @@ namespace gca {
       groups.back()->insert(groups.back()->end(),
 			    next_chain.begin(),
 			    next_chain.end());
-      elem_test t(next_chain);
-      cts.erase(remove_if(cts.begin(), cts.end(), t), cts.end());
+      cts.erase(remove_if(cts.begin(), cts.end(), elem_test(next_chain)), cts.end());
     }
     return groups;
   }

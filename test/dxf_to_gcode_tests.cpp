@@ -45,8 +45,8 @@ namespace gca {
     no_spindle_tools.push_back(6);
       
     SECTION("spiral is safe") {
-      //gprog* p = dxf_to_gcode(file_name.c_str(), params);
-      //REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
+      gprog* p = dxf_to_gcode(file_name.c_str(), params);
+      REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
     }
   }
 
@@ -85,21 +85,21 @@ namespace gca {
     vector<cut*> lines;
     vector<hole_punch*> holes;
     shape_layout l(lines, holes, lp.splines);
-    // gprog* p = shape_layout_to_gcode(l, params);
+    gprog* p = shape_layout_to_gcode(l, params);
 
-    // SECTION("2 paths for splines") {
-    //   vector<cut_section> sections;
-    //   extract_cuts(p, sections);
-    //   REQUIRE(sections.size() == 2);      
-    // }
+    SECTION("2 paths for splines") {
+      vector<cut_section> sections;
+      extract_cuts(p, sections);
+      REQUIRE(sections.size() == 2);      
+    }
 
-    // SECTION("No standalone feedrate instructions, G53 moves, or toolchanges") {
-    //   REQUIRE(count_if(p->begin(), p->end(), instr_is_forbidden_on_V90) == 0);
-    // }
+    SECTION("No standalone feedrate instructions, G53 moves, or toolchanges") {
+      REQUIRE(count_if(p->begin(), p->end(), instr_is_forbidden_on_V90) == 0);
+    }
 
-    // SECTION("All G1s have a feedrate") {
-    //   REQUIRE(count_if(p->begin(), p->end(), g1_feedrate_omitted) == 0);
-    // }
+    SECTION("All G1s have a feedrate") {
+      REQUIRE(count_if(p->begin(), p->end(), g1_feedrate_omitted) == 0);
+    }
   }
 
   TEST_CASE("Cut shape layout") {
