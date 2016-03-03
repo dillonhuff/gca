@@ -18,11 +18,20 @@ namespace gca {
       assert(within_eps((center() - start).len(), (center() - end).len()));
     }
 
+  circular_arc(point sp, point ep, point so, direction pdir, plane ppl, tool_name tn) : cut(sp, ep, tn), start_offset(so), dir(pdir), pl(ppl)  {
+      assert(within_eps((center() - start).len(), (center() - end).len()));
+    }
+    
     static circular_arc* make(point sp, point ep, point offset, direction dir, plane pl) {
       circular_arc* mem = allocate<circular_arc>();
       return new (mem) circular_arc(sp, ep, offset, dir, pl);
     }
 
+    static circular_arc* make(point sp, point ep, point offset, direction dir, plane pl, tool_name tn) {
+      circular_arc* mem = allocate<circular_arc>();
+      return new (mem) circular_arc(sp, ep, offset, dir, pl, tn);
+    }
+    
     bool operator==(const cut& other) const {
       if (other.is_circular_arc()) {
 	const circular_arc& ci = static_cast<const circular_arc&>(other);

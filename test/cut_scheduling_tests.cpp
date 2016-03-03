@@ -12,7 +12,7 @@ using namespace std;
 
 namespace gca {
 
-  TEST_CASE("Schedule lines") {
+  TEST_CASE("Schedule cuts") {
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -95,7 +95,7 @@ namespace gca {
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 
-    SECTION("Scheduling an arc") {
+    SECTION("One arc and 2 cuts") {
       cuts.push_back(circular_arc::make(point(1, 1, -0.1),
 					point(2, 1, -0.1),
 					point(0.5, 1, -0.1),
@@ -114,27 +114,78 @@ namespace gca {
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 
-    SECTION("Scheduling concentric circles") {
-      cuts.push_back(circular_arc::make(point(2, 1, -0.1),
-					point(4, 1, -0.1),
-					point(1, 0, -0.1),
-					CLOCKWISE,
-					XY));
-      cuts.push_back(circular_arc::make(point(4, 1, -0.1),
-					point(2, 1, -0.1),
-					point(-1, 0, -0.1),
-					CLOCKWISE,
-					XY));
+    SECTION("Concentric triangles") {
+      cuts.push_back(linear_cut::make(point(0, 0, -1), point(10, 0, -1), DRILL));
+      cuts.push_back(linear_cut::make(point(10, 0, -1), point(10, 10, -1), DRILL));
+      cuts.push_back(linear_cut::make(point(10, 10, -1), point(0, 0, -1), DRILL));
+
+      cuts.push_back(linear_cut::make(point(1, 1, -1), point(9, 1, -1), DRILL));
+      cuts.push_back(linear_cut::make(point(9, 1, -1), point(9, 9, -1), DRILL));
+      cuts.push_back(linear_cut::make(point(9, 9, -1), point(1, 1, -1), DRILL));
+
+      actual = schedule_cuts(cuts);
+
+      correct.push_back(linear_cut::make(point(1, 1, -1), point(9, 1, -1), DRILL));
+      correct.push_back(linear_cut::make(point(9, 1, -1), point(9, 9, -1), DRILL));
+      correct.push_back(linear_cut::make(point(9, 9, -1), point(1, 1, -1), DRILL));
+
+      correct.push_back(linear_cut::make(point(0, 0, -1), point(10, 0, -1), DRILL));
+      correct.push_back(linear_cut::make(point(10, 0, -1), point(10, 10, -1), DRILL));
+      correct.push_back(linear_cut::make(point(10, 10, -1), point(0, 0, -1), DRILL));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
+
+    SECTION("Concentric circles") {
       cuts.push_back(circular_arc::make(point(1, 1, -0.1),
 					point(7, 1, -0.1),
 					point(3, 0, -0.1),
 					CLOCKWISE,
-					XY));
+					XY,
+					DRILL));
       cuts.push_back(circular_arc::make(point(7, 1, -0.1),
 					point(1, 1, -0.1),
 					point(-3, 0, -0.1),
 					CLOCKWISE,
-					XY));
+					XY,
+					DRILL));
+      cuts.push_back(circular_arc::make(point(2, 1, -0.1),
+					point(4, 1, -0.1),
+					point(1, 0, -0.1),
+					CLOCKWISE,
+					XY,
+					DRILL));
+      cuts.push_back(circular_arc::make(point(4, 1, -0.1),
+					point(2, 1, -0.1),
+					point(-1, 0, -0.1),
+					CLOCKWISE,
+					XY,
+					DRILL));
+      actual = schedule_cuts(cuts);
+      correct.push_back(circular_arc::make(point(2, 1, -0.1),
+					   point(4, 1, -0.1),
+					   point(1, 0, -0.1),
+					   CLOCKWISE,
+					   XY,
+					   DRILL));
+      correct.push_back(circular_arc::make(point(4, 1, -0.1),
+					   point(2, 1, -0.1),
+					   point(-1, 0, -0.1),
+					   CLOCKWISE,
+					   XY,
+					   DRILL));
+      correct.push_back(circular_arc::make(point(1, 1, -0.1),
+					   point(7, 1, -0.1),
+					   point(3, 0, -0.1),
+					   CLOCKWISE,
+					   XY,
+					   DRILL));
+      correct.push_back(circular_arc::make(point(7, 1, -0.1),
+					   point(1, 1, -0.1),
+					   point(-3, 0, -0.1),
+					   CLOCKWISE,
+					   XY,
+					   DRILL));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
   }
 }

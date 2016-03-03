@@ -1,8 +1,11 @@
 #include <algorithm>
 
+#include "core/arena_allocator.h"
 #include "synthesis/schedule_cuts.h"
 
 namespace gca {
+
+  typedef vector<cut*> cut_group;
 
   bool cmp_z(const cut* l, const cut* r) {
     assert(within_eps(l->start.z, l->end.z));
@@ -57,17 +60,35 @@ namespace gca {
   void has_tool(const cut* c) {
     assert(c->tool_no == DRILL || c->tool_no == DRAG_KNIFE);
   }
-  
-  vector<cut*> schedule_cuts(const vector<cut*>& cuts) {
-    for_each(cuts.begin(), cuts.end(), has_tool);
-    vector<cut*> scheduled_cuts = cuts;
-    vector<cut*>::iterator it = scheduled_cuts.begin();
-    while (it < scheduled_cuts.end()) {
-      vector<cut*> next_chain = contiguous_chain(it, scheduled_cuts.end());
+
+  void schedule_cut_groups(vector<cut_group*>& groups) {
+  }
+
+  vector<cut_group*> group_cuts(const vector<cut*>& cuts) {
+    vector<cut_group*> groups;
+    vector<cut*>::const_iterator it = cuts.begin();
+    while (it < cuts.end()) {
+      cut_group next_chain = contiguous_chain(it, cuts.end());
       elem_test rt(next_chain);
-      stable_partition(it, scheduled_cuts.end(), rt);
+      groups.push_back(new (allocate<cut_group>()) cut_group());
+      groups.back()->insert(groups.back()->end(),
+			    next_chain.begin(),
+			    next_chain.end());
       it += next_chain.size();
     }
+    return groups;
+  }
+
+  vector<cut*> concat_cut_groups(const vector<cut_group*>& groups) {
+    vector<cut*> cuts;
+    return cuts;
+  }
+
+  vector<cut*> schedule_cuts(const vector<cut*>& cuts) {
+    for_each(cuts.begin(), cuts.end(), has_tool);
+    vector<cut_group*> groups = group_cuts(cuts);
+    schedule_cut_groups(groups);
+    vector<cut*> scheduled_cuts = concat_cut_groups(groups);
     stable_partition(scheduled_cuts.begin(), scheduled_cuts.end(), is_hole_punch);
     return scheduled_cuts;
   }
