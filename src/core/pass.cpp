@@ -1,4 +1,4 @@
-#include "pass.h"
+#include "core/pass.h"
 
 namespace gca {
 

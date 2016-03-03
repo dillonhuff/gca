@@ -1795,6 +1795,54 @@ src/transformers/feed_changer.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.s
 .PHONY : src/transformers/feed_changer.cpp.s
 
+src/transformers/g0_filter.o: src/transformers/g0_filter.cpp.o
+
+.PHONY : src/transformers/g0_filter.o
+
+# target to build an object file
+src/transformers/g0_filter.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/g0_filter.cpp.o
+.PHONY : src/transformers/g0_filter.cpp.o
+
+src/transformers/g0_filter.i: src/transformers/g0_filter.cpp.i
+
+.PHONY : src/transformers/g0_filter.i
+
+# target to preprocess a source file
+src/transformers/g0_filter.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/g0_filter.cpp.i
+.PHONY : src/transformers/g0_filter.cpp.i
+
+src/transformers/g0_filter.s: src/transformers/g0_filter.cpp.s
+
+.PHONY : src/transformers/g0_filter.s
+
+# target to generate assembly for a file
+src/transformers/g0_filter.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/g0_filter.cpp.s
+.PHONY : src/transformers/g0_filter.cpp.s
+
 src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
 
 .PHONY : src/transformers/scale_xyz.o
@@ -2420,6 +2468,9 @@ help:
 	@echo "... src/transformers/feed_changer.o"
 	@echo "... src/transformers/feed_changer.i"
 	@echo "... src/transformers/feed_changer.s"
+	@echo "... src/transformers/g0_filter.o"
+	@echo "... src/transformers/g0_filter.i"
+	@echo "... src/transformers/g0_filter.s"
 	@echo "... src/transformers/scale_xyz.o"
 	@echo "... src/transformers/scale_xyz.i"
 	@echo "... src/transformers/scale_xyz.s"

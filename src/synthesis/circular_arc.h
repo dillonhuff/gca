@@ -14,7 +14,9 @@ namespace gca {
     plane pl;
 
   circular_arc(point sp, point ep, point so, direction pdir, plane ppl) :
-    cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {}
+    cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {
+      assert(within_eps((center() - start).len(), (center() - end).len()));
+    }
 
     static circular_arc* make(point sp, point ep, point offset, direction dir, plane pl) {
       circular_arc* mem = allocate<circular_arc>();

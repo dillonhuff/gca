@@ -113,5 +113,28 @@ namespace gca {
       cuts.push_back(linear_cut::make(point(2, 1, -0.1), point(4, 5, -0.1), DRILL));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
+
+    SECTION("Scheduling concentric circles") {
+      cuts.push_back(circular_arc::make(point(2, 1, -0.1),
+					point(4, 1, -0.1),
+					point(1, 0, -0.1),
+					CLOCKWISE,
+					XY));
+      cuts.push_back(circular_arc::make(point(4, 1, -0.1),
+					point(2, 1, -0.1),
+					point(-1, 0, -0.1),
+					CLOCKWISE,
+					XY));
+      cuts.push_back(circular_arc::make(point(1, 1, -0.1),
+					point(7, 1, -0.1),
+					point(3, 0, -0.1),
+					CLOCKWISE,
+					XY));
+      cuts.push_back(circular_arc::make(point(7, 1, -0.1),
+					point(1, 1, -0.1),
+					point(-3, 0, -0.1),
+					CLOCKWISE,
+					XY));
+    }
   }
 }

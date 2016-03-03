@@ -1,7 +1,6 @@
 #ifndef GCA_SHAPE_READER_H
 #define GCA_SHAPE_READER_H
 
-
 #include "geometry/b_spline.h"
 #include "synthesis/cut.h"
 #include "synthesis/hole_punch.h"
