@@ -4,17 +4,15 @@
 namespace gca {
 
   shape_layout read_dxf(const char* file, bool log) {
-    dxf_reader* listener = new dxf_reader(log);
-    DL_Dxf* dxf = new DL_Dxf();
+    dxf_reader* listener = new (allocate<dxf_reader>()) dxf_reader(log);
+    DL_Dxf* dxf = new (allocate<DL_Dxf>()) DL_Dxf();
     if (!dxf->in(file, listener)) {
       std::cerr << file << " could not be opened.\n";
       assert(false);
     }
-    delete dxf;
     shape_layout shapes_to_cut(listener->cuts,
 			       listener->hole_punches,
 			       listener->splines);
-    delete listener;
     return shapes_to_cut;
   }
 
