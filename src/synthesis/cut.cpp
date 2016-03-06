@@ -15,7 +15,18 @@ namespace gca {
   }
 
   bool cmp_cuts(const cut* l, const cut* r) {
-    return (*l) == (*r);
+    bool res = (*l) == (*r);
+    if (!res) {
+      cout << "Not equal: " << *l << endl;
+      cout << "         : " << *r << endl;
+    }
+    return res;
+  }
+
+  bool same_cut_properties(const cut& l, const cut& r) {
+    return (*(l.spindle_speed) == *(r.spindle_speed)) &&
+      (*(l.feedrate) == *(r.feedrate)) &&
+      (l.tool_no == r.tool_no);
   }
 
 }

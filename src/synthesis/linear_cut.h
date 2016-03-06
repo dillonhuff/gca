@@ -34,6 +34,9 @@ namespace gca {
     }
 
     bool operator==(const cut& other) const {
+      if (!same_cut_properties(*this, other)) {
+	return false;
+      }
       if (other.is_linear_cut()) {
 	bool res = within_eps(start, other.start) && within_eps(end, other.end);
 	return res;
@@ -64,10 +67,7 @@ namespace gca {
       return l;
     }
 
-    void print(ostream& other) const {
-      other << "LINEAR CUT: F" << *feedrate << " " << start << " -> " << end;
-    }
-    
+    void print(ostream& other) const;    
   };
 
 }

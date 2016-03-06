@@ -95,6 +95,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
+	 ./src/synthesis/linear_cut.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
 	 ./src/transformers/scale_xyz.cpp

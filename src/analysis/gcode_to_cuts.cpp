@@ -12,6 +12,7 @@ namespace gca {
     const gcode_settings& settings;    
     orientation_state orient_state;
     position_state pos_state;
+    value* current_spindle_speed;
 
     cuts_callback(const gcode_settings& psettings) :
       settings(psettings),
@@ -19,6 +20,12 @@ namespace gca {
       pos_state(ps, settings.initial_pos) {
       ps.add_state(GCA_POSITION_STATE, &pos_state);
       ps.add_state(GCA_ORIENTATION_STATE, &orient_state);
+      current_spindle_speed = omitted::make();
+    }
+
+    cut* call_S(gprog* p, int i, s_instr* is) {
+      current_spindle_speed = lit::make(is->num);
+      return NULL;
     }
 
     cut* call_default(gprog* p, int i, instr* is) {
@@ -26,12 +33,15 @@ namespace gca {
     }
 
     cut* call_G0(gprog* p, int i, g0_instr* is) {
-      return safe_move::make(pos_state.before, pos_state.after, settings.initial_tool);
+      safe_move* c = safe_move::make(pos_state.before, pos_state.after, settings.initial_tool);
+      c->spindle_speed = current_spindle_speed;
+      return c;
     }
 
     cut* call_G1(gprog* p, int i, g1_instr* is) {
       linear_cut* c = linear_cut::make(pos_state.before, pos_state.after, settings.initial_tool);
       c->feedrate = is->feed_rate;
+      c->spindle_speed = current_spindle_speed;
       return c;
     }
 
@@ -47,6 +57,7 @@ namespace gca {
 			       offset,
 			       COUNTERCLOCKWISE,
 			       XY);
+	c->spindle_speed = current_spindle_speed;
       } else {
 	assert(false);
       }
@@ -65,6 +76,7 @@ namespace gca {
 			       offset,
 			       CLOCKWISE,
 			       XY);
+	c->spindle_speed = current_spindle_speed;
       } else {
 	assert(false);
       }
@@ -75,8 +87,17 @@ namespace gca {
       ps.update(i);
     }
   };
+
+  bool drill_with_spindle_off(const cut* c) {
+    return !(!(c->tool_no == DRILL) || (!c->spindle_speed->is_omitted()));
+  }
+
+  void sanity_check_speeds(const vector<cut*>& cuts) {
+    assert(count_if(cuts.begin(), cuts.end(), drill_with_spindle_off) == 0);
+  }
   
   vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings) {
+    assert(settings.sanity_check());
     cuts_callback c(settings);
     vector<cut*> cuts;
     int i = 0;
@@ -88,7 +109,12 @@ namespace gca {
       }
       i++;
     }
+    sanity_check_speeds(cuts);
     return cuts;
+  }
+
+  bool gcode_settings::sanity_check() const {
+    return initial_tool == DRILL || initial_tool == DRAG_KNIFE;
   }
   
 }

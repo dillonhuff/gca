@@ -1363,6 +1363,54 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
+src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
+
+.PHONY : src/synthesis/linear_cut.o
+
+# target to build an object file
+src/synthesis/linear_cut.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/linear_cut.cpp.o
+.PHONY : src/synthesis/linear_cut.cpp.o
+
+src/synthesis/linear_cut.i: src/synthesis/linear_cut.cpp.i
+
+.PHONY : src/synthesis/linear_cut.i
+
+# target to preprocess a source file
+src/synthesis/linear_cut.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/linear_cut.cpp.i
+.PHONY : src/synthesis/linear_cut.cpp.i
+
+src/synthesis/linear_cut.s: src/synthesis/linear_cut.cpp.s
+
+.PHONY : src/synthesis/linear_cut.s
+
+# target to generate assembly for a file
+src/synthesis/linear_cut.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/linear_cut.cpp.s
+.PHONY : src/synthesis/linear_cut.cpp.s
+
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -2441,6 +2489,9 @@ help:
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"
+	@echo "... src/synthesis/linear_cut.o"
+	@echo "... src/synthesis/linear_cut.i"
+	@echo "... src/synthesis/linear_cut.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"

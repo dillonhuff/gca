@@ -62,7 +62,7 @@ namespace gca {
 
     SECTION("Holes first") {
       cuts.push_back(linear_cut::make(point(1, 1, -0.1), point(2, 2, -0.2), DRILL));
-      cuts.push_back(hole_punch::make(point(3, 3, -0.1), 0.125));
+      cuts.push_back(hole_punch::make(point(3, 3, -0.1), 0.125, DRILL));
       actual = schedule_cuts(cuts);
       correct.push_back(hole_punch::make(point(3, 3, -0.1), 0.125));      
       correct.push_back(linear_cut::make(point(1, 1, -0.1), point(2, 2, -0.2), DRILL));
@@ -100,7 +100,8 @@ namespace gca {
 					point(2, 1, -0.1),
 					point(0.5, 1, -0.1),
 					CLOCKWISE,
-					XY));
+					XY,
+					DRILL));
       cuts.push_back(linear_cut::make(point(0, 0, -0.1), point(1, 1, -0.1), DRILL));
       cuts.push_back(linear_cut::make(point(2, 1, -0.1), point(4, 5, -0.1), DRILL));
       actual = schedule_cuts(cuts);
@@ -109,7 +110,8 @@ namespace gca {
 					point(2, 1, -0.1),
 					point(0.5, 1, -0.1),
 					CLOCKWISE,
-					XY));
+					XY,
+					DRILL));
       cuts.push_back(linear_cut::make(point(2, 1, -0.1), point(4, 5, -0.1), DRILL));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }

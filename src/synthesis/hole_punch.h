@@ -10,6 +10,7 @@ namespace gca {
   public:
     double radius;
   hole_punch(point center, double rp) : cut(center, center), radius(rp) {}
+  hole_punch(point center, double rp, tool_name t) : cut(center, center, t), radius(rp) {}
 
     static hole_punch* make(point center, double rad) {
       hole_punch* mem = allocate<hole_punch>();
@@ -17,6 +18,11 @@ namespace gca {
       return hole;
     }
 
+    static hole_punch* make(point center, double rad, tool_name t) {
+      hole_punch* mem = allocate<hole_punch>();
+      return new (mem) hole_punch(center, rad, t);
+    }
+    
     inline bool is_hole_punch() const { return true; }
 
     cut* shift(point sh) const {
