@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <numeric>
 
-
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/schedule_cuts.h"
@@ -89,15 +88,12 @@ namespace gca {
     vector<tool_name> active_tools(cuts.size());
     transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no);
     
-    vector<tool_name> transitions(active_tools.size());
-    adjacent_difference(active_tools.begin(),
-    			active_tools.end(),
-    			transitions.begin(),
-    			toolpath_transition);
-
+    cut* next_cut = NULL;
+    cut* last_cut = NULL;
     for (unsigned i = 0; i < cuts.size(); i++) {
-      append_transition_if_needed(transitions[i], p, params);
-      append_cut(cuts[i], p);
+      next_cut = cuts[i];
+      append_cut_with_settings(last_cut, next_cut, p, params);
+      last_cut = next_cut;
     }
   }
   

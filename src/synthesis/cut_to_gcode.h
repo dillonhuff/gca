@@ -7,7 +7,11 @@
 
 namespace gca {
 
-  void append_cut(cut* ci, gprog& p);
+  void append_cut(const cut* ci, gprog& p);
+  void append_cut_with_settings(const cut* last,
+				const cut* next,
+				gprog& p,
+				const cut_params& params);
 }
 
 #endif
