@@ -288,7 +288,7 @@ namespace gca {
     } else if (next_char == 'G') {
       int val = parse_int(s);
       is = parse_ginstr(p, val, s);
-      *g_register = val;
+      if (val == 0 || val == 1 || val == 2 || val == 3) { *g_register = val; }
     } else if (next_char == '#') {
       int val = parse_int(s);
       parse_char('=', s);
@@ -304,7 +304,7 @@ namespace gca {
     }
     return is;
   }
-  
+
   gprog* parse_gprog_line(int* g_register, parse_state& s) {
     gprog* p = gprog::make();
     while (s.chars_left()) {

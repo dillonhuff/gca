@@ -235,7 +235,6 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-
     SECTION("G2 IJ") {
       gprog* p = parse_gprog("G02 X1.0 Y2.0 Z3.0 I-2.0 J0.15");
       gprog* correct = gprog::make();
@@ -253,6 +252,10 @@ namespace gca {
 				 omitted::make()));
       REQUIRE(((*p) == (*correct)));
     }
+  }
+  TEST_CASE("Miscellaneous control instructions") {
+    arena_allocator a;
+    set_system_allocator(&a);
 
     SECTION("G21 G64 P.1 S6000 M4") {
       gprog* p = parse_gprog("G21 G64 P.1 S6000 M4");
@@ -279,8 +282,13 @@ namespace gca {
       correct.push_back(g43_instr::make(lit::make(2)));
       REQUIRE(correct == *p);
     }
+  }
 
-    SECTION("Multiple lines using the same G register") {
+  TEST_CASE("Multiple lines using the same G register") {
+    arena_allocator a;
+    set_system_allocator(&a);
+	
+    SECTION("2 G0s in a row") {
       gprog* p = parse_gprog("G0 X1 Y1 Z4\n X3 Y4 Z2");
       gprog correct;
       correct.push_back(g0_instr::make(lit::make(1),
@@ -291,7 +299,20 @@ namespace gca {
 				       lit::make(2)));
       REQUIRE(correct == *p);
     }
-    
+
+    SECTION("2 G1s in a row with feedrate") {
+      gprog* p = parse_gprog("G1 X2 Y2 Z2 \n Z3");
+      gprog correct;
+      correct.push_back(g1_instr::make(lit::make(2),
+				       lit::make(2),
+				       lit::make(2),
+				       omitted::make()));
+      correct.push_back(g1_instr::make(omitted::make(),
+				       omitted::make(),
+				       lit::make(3),
+				       omitted::make()));
+      REQUIRE(correct == *p);
+    }
   }
 
 }
