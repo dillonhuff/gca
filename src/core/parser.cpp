@@ -225,6 +225,8 @@ namespace gca {
       is = parse_G64(p, s);
     } else if (val == 43) {
       is = parse_G43(p, s);
+    } else if (val == 18) {
+      is = g18_instr::make();
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);
@@ -281,7 +283,7 @@ namespace gca {
       int val = parse_int(s);
       is = s_instr::make(val);
     } else if (next_char == 'F') {
-      int val = parse_int(s);
+      double val = parse_double(s);
       ignore_whitespace(s);
       string str = parse_coord_letters(s);
       is = f_instr::make(val, str);
@@ -306,6 +308,7 @@ namespace gca {
   }
 
   gprog* parse_gprog_line(int* g_register, parse_state& s) {
+    cout << "Line: " << s.remaining() << endl;
     gprog* p = gprog::make();
     while (s.chars_left()) {
       ignore_whitespace(s);
