@@ -113,13 +113,13 @@ namespace gca {
     }
 
     SECTION("Parse Multi-line GCODE with comments") {
-      string s = "G1 X0.0 Y2.75 Z-1.5 (comment 1)\nG0X12.5 (Comment \n number 2) (s) \n( f)M2 \n(Comment G1 X0.0)";
+      string s = "G1 X0.0 Y2.75 Z-1.5 (comment 1)\nG0X12.5 (Comment number 2) (s) \n( f)M2 \n(Comment G1 X0.0)";
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(lit::make(0.0), lit::make(2.75), lit::make(-1.5), omitted::make()));
       correct->push_back(comment::make('(', ')', "comment 1"));
       correct->push_back(g0_instr::make(lit::make(12.5), omitted::make(), omitted::make()));
-      correct->push_back(comment::make('(', ')', "Comment \n number 2"));
+      correct->push_back(comment::make('(', ')', "Comment number 2"));
       correct->push_back(comment::make('(', ')', "s"));
       correct->push_back(comment::make('(', ')', " f"));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
@@ -277,6 +277,18 @@ namespace gca {
       gprog* p = parse_gprog("G43 H02");
       gprog correct;
       correct.push_back(g43_instr::make(lit::make(2)));
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("Multiple lines using the same G register") {
+      gprog* p = parse_gprog("G0 X1 Y1 Z4\n X3 Y4 Z2");
+      gprog correct;
+      correct.push_back(g0_instr::make(lit::make(1),
+				       lit::make(1),
+				       lit::make(4)));
+      correct.push_back(g0_instr::make(lit::make(3),
+				       lit::make(4),
+				       lit::make(2)));
       REQUIRE(correct == *p);
     }
     

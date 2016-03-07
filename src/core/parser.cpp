@@ -1,11 +1,12 @@
-#include "core/parser.h"
-
 #include <algorithm>
 #include <cctype>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <streambuf>
+
+#include "core/parser.h"
 
 namespace gca {
 
@@ -196,7 +197,8 @@ namespace gca {
   }
 
   instr* parse_ginstr(gprog* p,
-		      int val, size_t* i, const string& s) {
+		      int val,
+		      size_t* i, const string& s) {
     instr* is;
     if (val == 0) {
       is = parse_G0(p, i, s);
@@ -226,7 +228,8 @@ namespace gca {
     return is;
   }
 
-  instr* parse_next_instr(gprog* p,
+  instr* parse_next_instr(int* g_register,
+			  gprog* p,
 			  size_t* i,
 			  const string& s) {
     instr* is;
@@ -239,8 +242,8 @@ namespace gca {
       return is;
     }
     (*i)++;
-    int val = parse_int(i, s);
     if (next_char == 'M') {
+      int val = parse_int(i, s);
       if (val == 2) {
 	is = m2_instr::make();
       } else if (val == 30) {
@@ -262,19 +265,32 @@ namespace gca {
 	assert(false);
       }
     } else if (next_char == 'T') {
+      int val = parse_int(i, s);
       is = t_instr::make(val);
     } else if (next_char == 'S') {
+      int val = parse_int(i, s);
       is = s_instr::make(val);
     } else if (next_char == 'F') {
+      int val = parse_int(i, s);
       ignore_whitespace(i, s);
       string str = parse_coord_letters(i, s);
       is = f_instr::make(val, str);
     } else if (next_char == 'G') {
+      int val = parse_int(i, s);
       is = parse_ginstr(p, val, i, s);
+      *g_register = val;
     } else if (next_char == '#') {
+      int val = parse_int(i, s);
       parse_char('=', i, s);
       double e = parse_double(i, s);
       is = assign_instr::make(var::make(val), lit::make(e));
+    } else if (next_char == 'Z' || next_char == 'X' || next_char == 'Y') {
+      (*i)--;
+      assert(g_register != NULL);
+      
+      is = parse_ginstr(p, *g_register, i, s);
+      cout << "Substr " << s.substr(*i) << endl;
+      cout << "Parsed g instr " << *is << endl;
     } else {
       cout << "Cannot parse string: " << s.substr(*i) << endl;
       assert(false);
@@ -282,14 +298,28 @@ namespace gca {
     return is;
   }
   
-  gprog* parse_gprog(const string& s) {
+  gprog* parse_gprog_line(int* g_register, const string& s) {
     gprog* p = gprog::make();
     string::size_type i = 0;
     while (i < s.size()) {
       ignore_whitespace(&i, s);
       if (i >= s.size()) { break; }
-      instr* is = parse_next_instr(p, &i, s);
+      instr* is = parse_next_instr(g_register, p, &i, s);
       p->push_back(is);
+    }
+    return p;
+  }
+
+  gprog* parse_gprog(const string& s) {
+    gprog* p = gprog::make();
+    stringstream ss(s);
+    string ln;
+    int* g_register = new int;
+    while (getline(ss, ln, '\n')) {
+      gprog* r = parse_gprog_line(g_register, ln);
+      for (ilist::iterator it = r->begin(); it != r->end(); ++it) {
+	p->push_back(*it);
+      }
     }
     return p;
   }
