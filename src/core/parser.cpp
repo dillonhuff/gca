@@ -171,6 +171,11 @@ namespace gca {
     return g64_instr::make(pv);
   }
 
+  instr* parse_G43(gprog* p, size_t* i, const string& s) {
+    value* pv = parse_option_value('H', i, s);
+    return g43_instr::make(pv);
+  }
+  
   string parse_option_char(size_t* i, const string& s, char t) {
     if (s[*i] == t) {
       (*i)++;
@@ -211,6 +216,8 @@ namespace gca {
       is = g21_instr::make();
     } else if (val == 64) {
       is = parse_G64(p, i, s);
+    } else if (val == 43) {
+      is = parse_G43(p, i, s);
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);

@@ -127,6 +127,17 @@ namespace gca {
     void print(ostream& s) const { s << "G64"; }
     bool operator==(const instr& other) const { return other.is_G64(); }
   };
+
+  class g43_instr : public instr {
+  public:
+    value* p;
+  g43_instr() : p(omitted::make()) {}
+  g43_instr(value* pp) : p(pp) {}
+    static g43_instr* make(value* pp) { return new (allocate<g43_instr>()) g43_instr(pp); }
+    inline bool is_G43() const { return true; }
+    void print(ostream& s) const { s << "G43"; }
+    bool operator==(const instr& other) const { return other.is_G43(); }
+  };
   
   class g90_instr : public instr {
   public:

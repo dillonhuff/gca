@@ -272,6 +272,13 @@ namespace gca {
       correct.push_back(m9_instr::make());
       REQUIRE(correct == *p);
     }
+
+    SECTION("G43 H02") {
+      gprog* p = parse_gprog("G43 H02");
+      gprog correct;
+      correct.push_back(g43_instr::make(lit::make(2)));
+      REQUIRE(correct == *p);
+    }
     
   }
 
