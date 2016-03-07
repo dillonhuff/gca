@@ -51,6 +51,46 @@ namespace gca {
     bool operator==(const instr& other) const { return other.is_M2(); }
   };
 
+  class m3_instr : public instr {
+  public:
+    static m3_instr* make() { return new (allocate<m3_instr>()) m3_instr(); }
+    inline bool is_M3() const { return true; }
+    void print(ostream& s) const { s << "M3"; }
+    bool operator==(const instr& other) const { return other.is_M3(); }
+  };
+
+  class m4_instr : public instr {
+  public:
+    static m4_instr* make() { return new (allocate<m4_instr>()) m4_instr(); }
+    inline bool is_M4() const { return true; }
+    void print(ostream& s) const { s << "M4"; }
+    bool operator==(const instr& other) const { return other.is_M4(); }
+  };
+
+  class m7_instr : public instr {
+  public:
+    static m7_instr* make() { return new (allocate<m7_instr>()) m7_instr(); }
+    inline bool is_M7() const { return true; }
+    void print(ostream& s) const { s << "M7"; }
+    bool operator==(const instr& other) const { return other.is_M7(); }
+  };
+
+  class m8_instr : public instr {
+  public:
+    static m8_instr* make() { return new (allocate<m8_instr>()) m8_instr(); }
+    inline bool is_M8() const { return true; }
+    void print(ostream& s) const { s << "M8"; }
+    bool operator==(const instr& other) const { return other.is_M8(); }
+  };
+
+  class m9_instr : public instr {
+  public:
+    static m9_instr* make() { return new (allocate<m9_instr>()) m9_instr(); }
+    inline bool is_M9() const { return true; }
+    void print(ostream& s) const { s << "M9"; }
+    bool operator==(const instr& other) const { return other.is_M9(); }
+  };
+
   class m30_instr : public instr {
   public:
     static m30_instr* make() { return new (allocate<m30_instr>()) m30_instr(); }
@@ -58,14 +98,6 @@ namespace gca {
     void print(ostream& s) const { s << "M30"; }
     inline bool is_end_instr() const { return true; }
     bool operator==(const instr& other) const { return other.is_M30(); }
-  };
-
-  class m3_instr : public instr {
-  public:
-    static m3_instr* make() { return new (allocate<m3_instr>()) m3_instr(); }
-    inline bool is_M3() const { return true; }
-    void print(ostream& s) const { s << "M3"; }
-    bool operator==(const instr& other) const { return other.is_M3(); }
   };
 
   class g20_instr : public instr {
@@ -86,7 +118,11 @@ namespace gca {
 
   class g64_instr : public instr {
   public:
+    value* p;
+  g64_instr() : p(omitted::make()) {}
+  g64_instr(value* pp) : p(pp) {}
     static g64_instr* make() { return new (allocate<g64_instr>()) g64_instr(); }
+    static g64_instr* make(value* pp) { return new (allocate<g64_instr>()) g64_instr(pp); }
     inline bool is_G64() const { return true; }
     void print(ostream& s) const { s << "G64"; }
     bool operator==(const instr& other) const { return other.is_G64(); }

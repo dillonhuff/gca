@@ -166,6 +166,11 @@ namespace gca {
     return g53_instr::make(xv, yv, zv);
   }
 
+  instr* parse_G64(gprog* p, size_t* i, const string& s) {
+    value* pv = parse_option_value('P', i, s);
+    return g64_instr::make(pv);
+  }
+
   string parse_option_char(size_t* i, const string& s, char t) {
     if (s[*i] == t) {
       (*i)++;
@@ -202,6 +207,10 @@ namespace gca {
       is = parse_G2(p, i, s);
     } else if (val == 3) {
       is = parse_G3(p, i, s);
+    } else if (val == 21) {
+      is = g21_instr::make();
+    } else if (val == 64) {
+      is = parse_G64(p, i, s);
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);
@@ -233,6 +242,14 @@ namespace gca {
 	is = m5_instr::make();
       } else if (val == 3) {
 	is = m3_instr::make();
+      } else if (val == 4) {
+	is = m4_instr::make();
+      } else if (val == 7) {
+	is = m7_instr::make();
+      } else if (val == 8) {
+	is = m8_instr::make();
+      } else if (val == 9) {
+	is = m9_instr::make();
       } else {
 	cout << "M value not supported " << val << endl;
 	assert(false);

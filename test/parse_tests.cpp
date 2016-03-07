@@ -253,6 +253,25 @@ namespace gca {
 				 omitted::make()));
       REQUIRE(((*p) == (*correct)));
     }
+
+    SECTION("G21 G64 P.1 S6000 M4") {
+      gprog* p = parse_gprog("G21 G64 P.1 S6000 M4");
+      gprog correct;
+      correct.push_back(g21_instr::make());
+      correct.push_back(g64_instr::make(lit::make(0.1)));
+      correct.push_back(s_instr::make(6000));
+      correct.push_back(m4_instr::make());
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("Coolant instructions: M7 M8 M9") {
+      gprog* p = parse_gprog("M7 M8 M9");
+      gprog correct;
+      correct.push_back(m7_instr::make());
+      correct.push_back(m8_instr::make());
+      correct.push_back(m9_instr::make());
+      REQUIRE(correct == *p);
+    }
     
   }
 

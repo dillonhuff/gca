@@ -8,6 +8,9 @@ int main(int argc, char** argv) {
     cout << "Usage: gdiff <gcode_file_path>" << endl;
     return 0;
   }
+
+  arena_allocator a;
+  set_system_allocator(&a);
   string file = argv[1];
   
   gprog* p = read_file(file);
