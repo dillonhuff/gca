@@ -225,8 +225,12 @@ namespace gca {
       is = parse_G64(p, s);
     } else if (val == 43) {
       is = parse_G43(p, s);
+    } else if (val == 17) {
+      is = g17_instr::make();
     } else if (val == 18) {
       is = g18_instr::make();
+    } else if (val == 19) {
+      is = g19_instr::make();
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);

@@ -100,12 +100,28 @@ namespace gca {
     bool operator==(const instr& other) const { return other.is_M30(); }
   };
 
+  class g17_instr : public instr {
+  public:
+    static g17_instr* make() { return new (allocate<g17_instr>()) g17_instr(); }
+    inline bool is_G17() const { return true; }
+    void print(ostream& s) const { s << "G17"; }
+    bool operator==(const instr& other) const { return other.is_G17(); }
+  };
+
   class g18_instr : public instr {
   public:
     static g18_instr* make() { return new (allocate<g18_instr>()) g18_instr(); }
     inline bool is_G18() const { return true; }
     void print(ostream& s) const { s << "G18"; }
     bool operator==(const instr& other) const { return other.is_G18(); }
+  };
+  
+  class g19_instr : public instr {
+  public:
+    static g19_instr* make() { return new (allocate<g19_instr>()) g19_instr(); }
+    inline bool is_G19() const { return true; }
+    void print(ostream& s) const { s << "G19"; }
+    bool operator==(const instr& other) const { return other.is_G19(); }
   };
   
   class g20_instr : public instr {

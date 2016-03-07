@@ -257,18 +257,22 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    SECTION("G18 G21 G64 P.1 S6000 M4") {
-      gprog* p = parse_gprog("G18 G21 G64 P.1 S6000 M4");
+    SECTION("G21 G64 P.1 S6000 M4") {
+      gprog* p = parse_gprog("G21 G64 P.1 S6000 M4");
       gprog correct;
-      correct.push_back(g18_instr::make());
       correct.push_back(g21_instr::make());
       correct.push_back(g64_instr::make(lit::make(0.1)));
       correct.push_back(s_instr::make(6000));
       correct.push_back(m4_instr::make());
-      cout << "Actual: " << endl;
-      cout << *p;
-      cout << "Correct: " << endl;
-      cout << correct;
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("Plane selection instructions") {
+      gprog* p = parse_gprog("G17 G18 G19");
+      gprog correct;
+      correct.push_back(g17_instr::make());
+      correct.push_back(g18_instr::make());
+      correct.push_back(g19_instr::make());
       REQUIRE(correct == *p);
     }
 

@@ -57,7 +57,9 @@ namespace gca {
     virtual inline bool is_G1() const { return false; }
     virtual inline bool is_G2() const { return false; }
     virtual inline bool is_G3() const { return false; }
-    virtual inline bool is_G18() const { return false; }    
+    virtual inline bool is_G17() const { return false; }
+    virtual inline bool is_G18() const { return false; }
+    virtual inline bool is_G19() const { return false; }    
     virtual inline bool is_G20() const { return false; }
     virtual inline bool is_G21() const { return false; }
     virtual inline bool is_G43() const { return false; }    
