@@ -32,6 +32,9 @@ namespace gca {
     }
 
     bool operator==(const cut& other) const {
+      if (!same_cut_properties(*this, other)) {
+	return false;
+      }
       if (other.is_safe_move()) {
 	bool res = within_eps(start, other.start) && within_eps(end, other.end);
 	return res;
@@ -70,7 +73,18 @@ namespace gca {
     }
 
     void print(ostream& other) const {
-      other << "SAFE MOVE: " << start << " -> " << end;
+      other << "SAFE MOVE: " << tool_no << " ";
+      if (!feedrate->is_omitted()) {
+	other << "F" << *feedrate << " ";
+      } else {
+	other << "<F omitted> ";
+      }
+      if (!spindle_speed->is_omitted()) {
+	other << "S" << *spindle_speed << " ";
+      } else {
+	other << "<S omitted> ";
+      }
+      other << start << " -> " << end;
     }
     
   };

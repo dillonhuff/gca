@@ -322,6 +322,16 @@ namespace gca {
 				       omitted::make()));
       REQUIRE(correct == *p);
     }
+
+    SECTION("G2 with feedrate") {
+      gprog* p = parse_gprog("G2 F12.5 X3 Y4.5 Z1 I1.0 J1.75");
+      gprog correct;
+      g2_instr* arc = g2_instr::make(lit::make(3), lit::make(4.5), lit::make(1),
+				     lit::make(1.0), lit::make(1.75), omitted::make(),
+				     lit::make(12.5));
+      correct.push_back(arc);
+      REQUIRE(correct == *p);
+    }
   }
 
 }

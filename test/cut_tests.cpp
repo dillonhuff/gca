@@ -18,32 +18,32 @@ namespace gca {
     cut* s;
     cut* c;
 
-    SECTION("Copy preserves feedrate for safe move") {
-      s = safe_move::make(point(1, 0, 0), point(1, 0, 0));
+    SECTION("Copy preserves info for safe move") {
+      s = safe_move::make(point(1, 0, 0), point(1, 0, 0), DRILL);
       s->feedrate = lit::make(1.0);
       c = s->copy();
-      REQUIRE(*(c->feedrate) == *(s->feedrate));
+      REQUIRE(*c == *s);
     }
     
-    SECTION("Copy preserves feedrate for linear cut") {
-      s = linear_cut::make(point(1, 0, 0), point(1, 0, 0));
+    SECTION("Copy preserves info for linear cut") {
+      s = linear_cut::make(point(1, 0, 0), point(1, 0, 0), DRAG_KNIFE);
       s->feedrate = lit::make(1.0);
       c = s->copy();
-      REQUIRE(*(c->feedrate) == *(s->feedrate));
+      REQUIRE(*c == *s);
     }
 
-    SECTION("Copy preserves feedrate for circular arc") {
-      s = circular_arc::make(point(1, 0, 0), point(1, 0, 0), point(1, 1, 1), CLOCKWISE, YZ);
+    SECTION("Copy preserves info for circular arc") {
+      s = circular_arc::make(point(1, 0, 0), point(1, 0, 0), point(1, 1, 1), CLOCKWISE, YZ, DRILL);
       s->feedrate = lit::make(1.0);
       c = s->copy();
-      REQUIRE(*(c->feedrate) == *(s->feedrate));
+      REQUIRE(*c == *s);
     }
 
-    SECTION("Copy preserves feedrate for hole punch") {
-      s = hole_punch::make(point(1, 1, 1), 2.3);
+    SECTION("Copy preserves info for hole punch") {
+      s = hole_punch::make(point(1, 1, 1), 2.3, DRILL);
       s->feedrate = lit::make(1.0);
       c = s->copy();
-      REQUIRE(*(c->feedrate) == *(s->feedrate));
+      REQUIRE(*c == *s);
     }
   }
   

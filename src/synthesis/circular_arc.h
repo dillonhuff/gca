@@ -33,6 +33,9 @@ namespace gca {
     }
     
     bool operator==(const cut& other) const {
+      if (!same_cut_properties(*this, other)) {
+	return false;
+      }
       if (other.is_circular_arc()) {
 	const circular_arc& ci = static_cast<const circular_arc&>(other);
 	return within_eps(start, ci.start) && within_eps(end, ci.end) && within_eps(start_offset, ci.start_offset);
@@ -85,7 +88,17 @@ namespace gca {
     }
 
     void print(ostream& other) const {
-      other << "CIRCULAR ARC: " << start << " -> " << end;
+      other << "CIRCULAR ARC: " << tool_no << " ";
+      if (!feedrate->is_omitted()) {
+	other << "F" << *feedrate << " ";
+      } else {
+	other << "<F omitted> ";
+      }
+      if (!spindle_speed->is_omitted()) {
+	other << "S" << *spindle_speed << " ";
+      } else {
+	other << "<S omitted> ";
+      }
       other << " offset: " << start_offset;
       other << " dir: " << dir;
     }

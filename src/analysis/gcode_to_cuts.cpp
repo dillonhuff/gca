@@ -66,6 +66,7 @@ namespace gca {
 			       COUNTERCLOCKWISE,
 			       XY);
 	c->spindle_speed = current_spindle_speed;
+	c->feedrate = is->feed_rate;
 	c->tool_no = current_tool;
       } else {
 	assert(false);
@@ -86,6 +87,7 @@ namespace gca {
 			       CLOCKWISE,
 			       XY);
 	c->spindle_speed = current_spindle_speed;
+	c->feedrate = is->feed_rate;
 	c->tool_no = current_tool;
       } else {
 	assert(false);

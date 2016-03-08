@@ -64,7 +64,7 @@ namespace gca {
       cuts.push_back(linear_cut::make(point(1, 1, -0.1), point(2, 2, -0.2), DRILL));
       cuts.push_back(hole_punch::make(point(3, 3, -0.1), 0.125, DRILL));
       actual = schedule_cuts(cuts);
-      correct.push_back(hole_punch::make(point(3, 3, -0.1), 0.125));      
+      correct.push_back(hole_punch::make(point(3, 3, -0.1), 0.125, DRILL));
       correct.push_back(linear_cut::make(point(1, 1, -0.1), point(2, 2, -0.2), DRILL));
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
