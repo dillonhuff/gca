@@ -30,6 +30,7 @@ namespace gca {
     virtual bool operator==(const cut& other) const = 0;
     virtual cut* shift(point shift) const = 0;
     virtual cut* scale(double s) const = 0;
+    virtual cut* scale_xy(double s) const = 0;
     virtual cut* copy() const = 0;
     virtual void print(ostream& other) const = 0;
   };

@@ -38,6 +38,14 @@ namespace gca {
       hole->tool_no = tool_no;
       return hole;
     }
+
+    cut* scale_xy(double s) const {
+      hole_punch* m = static_cast<hole_punch*>(copy());
+      m->start = point(s*start.x, s*start.y, start.z);
+      m->end = point(s*end.x, s*end.y, end.z);
+      m->radius = s*radius;
+      return m;
+    }
     
     bool operator==(const cut& other) const {
       if (other.is_hole_punch()) {

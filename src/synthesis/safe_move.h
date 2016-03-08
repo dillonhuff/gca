@@ -52,7 +52,14 @@ namespace gca {
       m->tool_no = tool_no;
       return m;
     }
-    
+
+    cut* scale_xy(double s) const {
+      safe_move* m = static_cast<safe_move*>(copy());
+      m->start = point(s*start.x, s*start.y, start.z);
+      m->end = point(s*end.x, s*end.y, end.z);
+      return m;
+    }
+
     inline bool is_safe_move() const { return true; }
 
     virtual cut* copy() const {

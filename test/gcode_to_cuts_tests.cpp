@@ -91,6 +91,44 @@ namespace gca {
       correct.push_back(arc);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
-    
   }
+
+  TEST_CASE("GCODE to cuts CAMASTER") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<cut*> actual;
+    vector<cut*> correct;
+
+    gcode_settings s;
+    s.initial_coord_orient = GCA_ABSOLUTE;
+    s.initial_tool = DRILL;
+    s.initial_pos = point(0, 0, 0);
+    s.initial_orient = point(1, 0, 0);
+
+    SECTION("Linear moves with spindle speed change") {
+      gprog* p = parse_gprog("G90 S2000 G1 X1 Y1 Z1 S1000 G1 X2 Y2 Z2");
+      actual = gcode_to_cuts(*p, s);
+      linear_cut* lc1 = linear_cut::make(point(0, 0, 0), point(1, 1, 1), DRILL);
+      lc1->spindle_speed = lit::make(2000);
+      correct.push_back(lc1);
+      linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2), DRILL);
+      lc2->spindle_speed = lit::make(1000);
+      correct.push_back(lc2);
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
+
+    SECTION("Linear moves with tool change") {
+      gprog* p = parse_gprog("G90 S2000 G1 X1 Y1 Z1 S1000 T6 G1 X2 Y2 Z2");
+      actual = gcode_to_cuts(*p, s);
+      linear_cut* lc1 = linear_cut::make(point(0, 0, 0), point(1, 1, 1), DRILL);
+      lc1->spindle_speed = lit::make(2000);
+      correct.push_back(lc1);
+      linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2), DRAG_KNIFE);
+      lc2->spindle_speed = lit::make(1000);
+      correct.push_back(lc2);
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+    }
+  }
+
 }

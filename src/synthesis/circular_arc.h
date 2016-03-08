@@ -53,6 +53,14 @@ namespace gca {
       arc->tool_no = tool_no;
       return arc;
     }
+
+    cut* scale_xy(double s) const {
+      circular_arc* m = static_cast<circular_arc*>(copy());
+      m->start = point(s*start.x, s*start.y, start.z);
+      m->end = point(s*end.x, s*end.y, end.z);
+      m->start_offset = point(s*start_offset.x, s*start_offset.y, start_offset.z);
+      return m;
+    }
     
     virtual point initial_orient() const {
       double theta = dir == CLOCKWISE ? 90 : -90;

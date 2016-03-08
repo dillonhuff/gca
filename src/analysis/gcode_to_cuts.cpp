@@ -13,6 +13,7 @@ namespace gca {
     orientation_state orient_state;
     position_state pos_state;
     value* current_spindle_speed;
+    tool_name current_tool;
 
     cuts_callback(const gcode_settings& psettings) :
       settings(psettings),
@@ -21,10 +22,17 @@ namespace gca {
       ps.add_state(GCA_POSITION_STATE, &pos_state);
       ps.add_state(GCA_ORIENTATION_STATE, &orient_state);
       current_spindle_speed = omitted::make();
+      current_tool = settings.initial_tool;
     }
 
     cut* call_S(gprog* p, int i, s_instr* is) {
       current_spindle_speed = lit::make(is->num);
+      return NULL;
+    }
+
+    cut* call_T(gprog* p, int i, t_instr* is) {
+      assert(is->num == 6 || is->num == 2);
+      current_tool = is->num == 6 ? DRAG_KNIFE : DRILL;
       return NULL;
     }
 
@@ -33,13 +41,13 @@ namespace gca {
     }
 
     cut* call_G0(gprog* p, int i, g0_instr* is) {
-      safe_move* c = safe_move::make(pos_state.before, pos_state.after, settings.initial_tool);
+      safe_move* c = safe_move::make(pos_state.before, pos_state.after, current_tool);
       c->spindle_speed = current_spindle_speed;
       return c;
     }
 
     cut* call_G1(gprog* p, int i, g1_instr* is) {
-      linear_cut* c = linear_cut::make(pos_state.before, pos_state.after, settings.initial_tool);
+      linear_cut* c = linear_cut::make(pos_state.before, pos_state.after, current_tool);
       c->feedrate = is->feed_rate;
       c->spindle_speed = current_spindle_speed;
       return c;
@@ -58,6 +66,7 @@ namespace gca {
 			       COUNTERCLOCKWISE,
 			       XY);
 	c->spindle_speed = current_spindle_speed;
+	c->tool_no = current_tool;
       } else {
 	assert(false);
       }
@@ -77,6 +86,7 @@ namespace gca {
 			       CLOCKWISE,
 			       XY);
 	c->spindle_speed = current_spindle_speed;
+	c->tool_no = current_tool;
       } else {
 	assert(false);
       }

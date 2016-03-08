@@ -5,6 +5,8 @@
 #include "checkers/bounds_checker.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
+#include "transformers/scale_xyz.h"
+#include "transformers/shift_xyz.h"
 
 using namespace gca;
 
@@ -20,16 +22,19 @@ int main(int argc, char** argv) {
   cut_params params;
   params.default_feedrate = 30;
   params.set_default_feedrate = true;
-  params.material_depth = 0.09;
+  params.material_depth = 0.075;
+  params.push_depth = 0.00;
   params.cut_depth = 0.05;
-  params.safe_height = 0.25;
-  params.machine_z_zero = -4.05;
-  params.start_loc = point(1, 1, 0);
-  params.start_orient = point(1, 0, 0);
-  params.tools = DRILL_AND_DRAG_KNIFE;
-  params.target_machine = CAMASTER;
+  params.safe_height = 0.45;
+  params.machine_z_zero = -1.904;
+  params.start_loc = point(5, 5, 0);
+  params.start_orient = point(0, -1, 0);
+  params.tools = DRAG_KNIFE_ONLY;
+  params.target_machine = PROBOTIX_V90_MK2_VFD;
 
-  gprog* p = dxf_to_gcode(argv[1], params);
+  gprog* r = dxf_to_gcode(argv[1], params);
+  gprog* s = scale_xy(0.1, *r);
+  gprog* p = shift_xyz(8, 5, 0, *s);
   
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

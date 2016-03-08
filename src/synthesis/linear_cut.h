@@ -57,7 +57,14 @@ namespace gca {
       c->end = s*c->end;
       return c;
     }
-    
+
+    cut* scale_xy(double s) const {
+      linear_cut* m = static_cast<linear_cut*>(copy());
+      m->start = point(s*start.x, s*start.y, start.z);
+      m->end = point(s*end.x, s*end.y, end.z);
+      return m;
+    }
+
     inline bool is_linear_cut() const { return true; }
 
     virtual cut* copy() const {

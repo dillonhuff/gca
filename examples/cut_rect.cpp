@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
   params.push_depth = 0.00;
   params.cut_depth = 0.05;
   params.safe_height = 0.45;
-  params.machine_z_zero = -0.58;
+  params.machine_z_zero = -1.903;
   params.start_loc = point(5, 5, 0);
   params.start_orient = point(0, -1, 0);
   params.tools = DRAG_KNIFE_ONLY;
@@ -28,24 +28,24 @@ int main(int argc, char** argv) {
 
   vector<cut*> lines;
   // Add outer rectangle
-  point p0(5, 5, 0);
-  point p1(5, 7, 0);
-  point p2(7, 7, 0);
-  point p3(7, 5, 0);
+  point p0(5, 1.7, 0);
+  point p1(5, 3.7, 0);
+  point p2(7, 3.7, 0);
+  point p3(7, 1.7, 0);
   lines.push_back(linear_cut::make(p0, p1));
   lines.push_back(linear_cut::make(p1, p2));
   lines.push_back(linear_cut::make(p2, p3));
   lines.push_back(linear_cut::make(p3, p0));
 
-  // Add inner rectangle
-  point p4(5.5, 5.5, 0);
-  point p5(5.5, 6.5, 0);
-  point p6(6.5, 6.5, 0);
-  point p7(6.5, 5.5, 0);  
-  lines.push_back(linear_cut::make(p4, p5));
-  lines.push_back(linear_cut::make(p5, p6));
-  lines.push_back(linear_cut::make(p6, p7));
-  lines.push_back(linear_cut::make(p7, p4));
+  // // Add inner rectangle
+  // point p4(5.5, 5.5, 0);
+  // point p5(5.5, 6.5, 0);
+  // point p6(6.5, 6.5, 0);
+  // point p7(6.5, 5.5, 0);  
+  // lines.push_back(linear_cut::make(p4, p5));
+  // lines.push_back(linear_cut::make(p5, p6));
+  // lines.push_back(linear_cut::make(p6, p7));
+  // lines.push_back(linear_cut::make(p7, p4));
 
   vector<hole_punch*> holes;
   vector<b_spline*> splines;

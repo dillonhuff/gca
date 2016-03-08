@@ -6,7 +6,8 @@
 namespace gca {
 
   gprog* scale_xyz(double s, gprog& p);
-  
+
+  gprog* scale_xy(double sf, gprog& p);  
 }
 
 #endif
