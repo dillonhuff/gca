@@ -9,19 +9,18 @@
 namespace gca {
 
   move_instr* circular_arc_to_gcode(circular_arc ca) {
-    point sv = ca.center_to_start_vec();
-    point ev = ca.center_to_end_vec();
-    double angle = atan2(ev.y, ev.x) - atan2(sv.y, sv.x);
     move_instr* circle_move_instr;
-    if (angle < 0) {
-      circle_move_instr = g2_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), omitted::make(),
+    if (ca.dir == CLOCKWISE) {
+      circle_move_instr = g2_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), lit::make(ca.end.z),
 					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
-					 omitted::make());
-    } else {
-      circle_move_instr = g3_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), omitted::make(),
+					 ca.feedrate);
+    } else if (ca.dir == COUNTERCLOCKWISE) {
+      circle_move_instr = g3_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), lit::make(ca.end.z),
 					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
-					 omitted::make());
+					 ca.feedrate);
 
+    } else {
+      assert(false);
     }
     return circle_move_instr;
   }

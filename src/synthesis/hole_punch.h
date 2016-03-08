@@ -26,8 +26,7 @@ namespace gca {
     inline bool is_hole_punch() const { return true; }
 
     cut* shift(point sh) const {
-      //hole_punch* mem = allocate<hole_punch>();
-      hole_punch* hole = static_cast<hole_punch*>(copy()); //new (mem) hole_punch(start + sh, radius);
+      hole_punch* hole = static_cast<hole_punch*>(copy());
       hole->start = start + sh;
       hole->end = end + sh;
       hole->tool_no = tool_no;

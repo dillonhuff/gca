@@ -301,10 +301,10 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    SECTION("One instruction") {
-      gprog* p = parse_gprog("G90 M5 S0 G1 F20 X1.0 Y-1.0 Z2.0 M2");
+    SECTION("One linear move and one circular arc") {
+      gprog* p = parse_gprog("G90 M5 S0 G1 F20 X1.0 Y-1.0 Z2.0 G2 F21 X3.0 Y-1.0 Z2.0 I1.0 J0.0 M2");
       gprog* r = shift_xyz(1.0, 3.0, 1.5, *scale_xy(1.0, *p));
-      gprog* correct = parse_gprog("G90 M5 S0 G1 F20 X2.0 Y2.0 Z3.5 M2");
+      gprog* correct = parse_gprog("G90 M5 S0 G1 F20 X2.0 Y2.0 Z3.5 G2 F21 X4.0 Y2.0 Z3.5 I1.0 J0.0 M2");
       REQUIRE(*r == *correct);
     }
   }

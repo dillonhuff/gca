@@ -23,8 +23,16 @@ namespace gca {
       cout << "rad = " << rad << endl;
       assert(false);
     }
-    // TODO: Set arc direction here
-    return circular_arc(circle_start, circle_end, circle_start_off, CLOCKWISE, XY);
+    circular_arc ca = circular_arc(circle_start, circle_end, circle_start_off, CLOCKWISE, XY);
+    point sv = ca.center_to_start_vec();
+    point ev = ca.center_to_end_vec();
+    double angle = atan2(ev.y, ev.x) - atan2(sv.y, sv.x);
+    if (angle < 0) {
+      ca.dir = CLOCKWISE;
+    } else {
+      ca.dir = COUNTERCLOCKWISE;
+    }
+    return ca;
   }
 
   vector<cut*> from_to_with_G0_drag_knife(double safe_height,

@@ -38,21 +38,24 @@ namespace gca {
       }
       if (other.is_circular_arc()) {
 	const circular_arc& ci = static_cast<const circular_arc&>(other);
-	return within_eps(start, ci.start) && within_eps(end, ci.end) && within_eps(start_offset, ci.start_offset);
+	return pl == ci.pl && dir == ci.dir && within_eps(start, ci.start) && within_eps(end, ci.end) && within_eps(start_offset, ci.start_offset);
       }
       return false;
     }
 
     cut* shift(point sh) const {
-      circular_arc* mem = allocate<circular_arc>();
-      circular_arc* arc = new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
-      arc->tool_no = tool_no;
+      //circular_arc* mem = allocate<circular_arc>();
+      circular_arc* arc = static_cast<circular_arc*>(copy()); // new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
+      arc->start = start + sh;
+      arc->end = end + sh;
       return arc;
     }
 
     cut* scale(double s) const {
-      circular_arc* mem = allocate<circular_arc>();
-      circular_arc* arc = new (mem) circular_arc(s*start, s*end, s*start_offset, dir, pl);
+      circular_arc* arc = static_cast<circular_arc*>(copy());
+      arc->start = s*start;
+      arc->end = s*end;
+      arc->start_offset = s*start_offset;
       arc->tool_no = tool_no;
       return arc;
     }
