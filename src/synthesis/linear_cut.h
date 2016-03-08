@@ -71,6 +71,7 @@ namespace gca {
       linear_cut* l = linear_cut::make(start, end);
       l->tool_no = tool_no;
       l->feedrate = feedrate;
+      l->spindle_speed = spindle_speed;
       return l;
     }
 

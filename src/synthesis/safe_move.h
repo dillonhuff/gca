@@ -69,6 +69,7 @@ namespace gca {
       safe_move* c = safe_move::make(start, end);
       c->tool_no = tool_no;
       c->feedrate = feedrate;
+      c->spindle_speed = spindle_speed;
       return c;
     }
 

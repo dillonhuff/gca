@@ -84,6 +84,7 @@ namespace gca {
       circular_arc* arc = circular_arc::make(start, end, start_offset, dir, pl);
       arc->tool_no = tool_no;
       arc->feedrate = feedrate;
+      arc->spindle_speed = spindle_speed;
       return arc;
     }
 

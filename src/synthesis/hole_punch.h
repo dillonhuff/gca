@@ -62,6 +62,7 @@ namespace gca {
       hole_punch* h = hole_punch::make(start, radius);
       h->tool_no = tool_no;
       h->feedrate = feedrate;
+      h->spindle_speed = spindle_speed;
       return h;
     }
 
