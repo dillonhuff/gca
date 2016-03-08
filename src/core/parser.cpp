@@ -312,7 +312,6 @@ namespace gca {
   }
 
   gprog* parse_gprog_line(int* g_register, parse_state& s) {
-    cout << "Line: " << s.remaining() << endl;
     gprog* p = gprog::make();
     while (s.chars_left()) {
       ignore_whitespace(s);
