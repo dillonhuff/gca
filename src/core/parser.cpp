@@ -10,15 +10,17 @@
 
 namespace gca {
 
-  struct parse_state {
+  template<typename T>
+  struct parse_stream {
     size_t i;
-    const string& s;
+    vector<T> s;
 
-    parse_state(const string& sp) : s(sp) {
+    template<typename R>
+    parse_stream<T>(R v) : s(v.begin(), v.end()) {
       i = 0;
     }
 
-    char next_char() {
+    char next() {
       return s[i];
     }
 
@@ -26,35 +28,50 @@ namespace gca {
       return i < s.size();
     }
 
-    parse_state& operator++(int) {
+    parse_stream<T>& operator++(int) {
       i++;
       return *this;
     }
 
-    parse_state& operator--(int) {
+    parse_stream<T>& operator--(int) {
       i--;
       return *this;
     }
 
-    string remaining() const {
-      return s.substr(i);
+    typename vector<T>::iterator end() {
+      return s.end();
     }
+
+    typename vector<T>::iterator begin() {
+      return s.end();
+    }
+    
+    typename vector<T>::iterator remaining() {
+      return s.begin() + i;
+    }
+
   };
 
+  typedef parse_stream<char> parse_state;
+
+  string string_remaining(parse_state& ps) {
+    return string(ps.remaining(), ps.end());
+  }
+
   void parse_char(char c, parse_state& s) {
-    if (s.next_char() == c) {
+    if (s.next() == c) {
       s++;
       return;
     }
-    cout << "Cannot parse char " << c << " from string " << s.remaining() << endl;
+    cout << "Cannot parse char " << c << " from string " << string_remaining(s) << endl;
     assert(false);
   }
   
   comment* parse_comment_with_delimiters(char sc, char ec, parse_state& s) {
     string text = "";
     parse_char(sc, s);
-    while (s.next_char() != ec) {
-      text += s.next_char();
+    while (s.next() != ec) {
+      text += s.next();
       s++;
     }
     parse_char(ec, s);
@@ -62,33 +79,33 @@ namespace gca {
   }
 
   void ignore_whitespace(parse_state& s) {
-    while (s.chars_left() && isspace(s.next_char())) { s++; }
+    while (s.chars_left() && isspace(s.next())) { s++; }
   }
 
   double parse_double(parse_state& s) {
     size_t j = s.i;
-    double v = stod(s.remaining(), &j);
+    double v =stod(string_remaining(s), &j);
     s.i += j;
     return v;
   }
 
   int parse_int(parse_state& s) {
     size_t j = s.i;
-    int v = stoi(s.remaining(), &j);
+    int v = stoi(string_remaining(s), &j);
     s.i += j;
     return v;
   }
 
   double parse_coordinate(char c, parse_state& s) {
     ignore_whitespace(s);
-    assert(s.next_char() == c);
+    assert(s.next() == c);
     s++;
     return parse_double(s);
   }
 
   double parse_option_coordinate(char c, parse_state& s, double def=0.0) {
     ignore_whitespace(s);
-    if (s.next_char() == c) {
+    if (s.next() == c) {
       s++;
       return parse_double(s);
     }
@@ -97,9 +114,9 @@ namespace gca {
 
   value* parse_option_value(char v, parse_state& s) {
     ignore_whitespace(s);
-    if (s.next_char() == v) {
+    if (s.next() == v) {
       parse_char(v, s);
-      if (s.next_char() == '#') {
+      if (s.next() == '#') {
 	parse_char('#', s);
 	int val = parse_int(s);
 	return var::make(val);
@@ -183,7 +200,7 @@ namespace gca {
   }
   
   string parse_option_char(parse_state& s, char t) {
-    if (s.next_char() == t) {
+    if (s.next() == t) {
       s++;
       char str[2];
       str[0] = t;
@@ -268,44 +285,44 @@ namespace gca {
 			  gprog* p,
 			  parse_state& s) {
     instr* is;
-    char next_char = s.next_char();
-    if (next_char == '(') {
+    char next = s.next();
+    if (next == '(') {
       is = parse_comment_with_delimiters('(', ')', s);
       return is;
-    } else if (next_char == '[') {
+    } else if (next == '[') {
       is = parse_comment_with_delimiters('[', ']', s);
       return is;
     }
     s++;
-    if (next_char == 'M') {
+    if (next == 'M') {
       int val = parse_int(s);
       return parse_m_instr(val, p, s);
-    } else if (next_char == 'T') {
+    } else if (next == 'T') {
       int val = parse_int(s);
       is = t_instr::make(val);
-    } else if (next_char == 'S') {
+    } else if (next == 'S') {
       int val = parse_int(s);
       is = s_instr::make(val);
-    } else if (next_char == 'F') {
+    } else if (next == 'F') {
       double val = parse_double(s);
       ignore_whitespace(s);
       string str = parse_coord_letters(s);
       is = f_instr::make(val, str);
-    } else if (next_char == 'G') {
+    } else if (next == 'G') {
       int val = parse_int(s);
       is = parse_ginstr(p, val, s);
       if (val == 0 || val == 1 || val == 2 || val == 3) { *g_register = val; }
-    } else if (next_char == '#') {
+    } else if (next == '#') {
       int val = parse_int(s);
       parse_char('=', s);
       double e = parse_double(s);
       is = assign_instr::make(var::make(val), lit::make(e));
-    } else if (next_char == 'Z' || next_char == 'X' || next_char == 'Y') {
+    } else if (next == 'Z' || next == 'X' || next == 'Y') {
       s--;
       assert(g_register != NULL);
       is = parse_ginstr(p, *g_register, s);
     } else {
-      cout << "Cannot parse string: " << s.remaining() << endl;
+      cout << "Cannot parse string: " << string_remaining(s) << endl;
       assert(false);
     }
     return is;
