@@ -286,6 +286,106 @@ namespace gca {
     }
     
   };
+
+  class g81_instr : public move_instr {
+  public:
+    bool return_to_r;
+    value* a;
+    value* r;
+    value* l;
+
+    g81_instr(bool return_to_rp,
+	      value* xp, value* yp, value* zp,
+	      value* ap,
+	      value* rp,
+	      value* lp,
+	      value* frp) : move_instr(xp, yp, zp, frp),
+			    return_to_r(return_to_rp), a(ap), r(rp), l(lp) {}
+    g81_instr(g81_instr* i) : move_instr(i) {}
+
+    static g81_instr* make(bool return_to_rp,
+			   value* xp, value* yp, value* zp,
+			   value* ap,
+			   value* rp,
+			   value* lp,
+			   value* frp) {
+      g81_instr* mem = allocate<g81_instr>();
+      return new (mem) g81_instr(return_to_rp,
+				 xp, yp, zp,
+				 ap, rp, lp,
+				 frp);
+    }
+
+    
+    virtual inline bool is_G81() const { return true; }
+    
+    void print(ostream& s) const {
+      cout << "G81 ";
+      print_move_data(s, 0.000001);
+    }
+
+    bool operator==(const instr& other) const {
+      if (!other.is_G81()) {
+	return false;
+      }
+      const g81_instr& ci = static_cast<const g81_instr&>(other);
+      return same_pos_and_feed_rate(ci) &&
+	*(ci.a) == *(this->a) &&
+	*(ci.r) == *(this->r) &&
+	*(ci.l) == *(this->l);
+    }
+    
+  };
+
+  class g85_instr : public move_instr {
+  public:
+    bool return_to_r;
+    value* a;
+    value* r;
+    value* l;
+
+    g85_instr(bool return_to_rp,
+	      value* xp, value* yp, value* zp,
+	      value* ap,
+	      value* rp,
+	      value* lp,
+	      value* frp) : move_instr(xp, yp, zp, frp),
+			    return_to_r(return_to_rp), a(ap), r(rp), l(lp) {}
+    g85_instr(g85_instr* i) : move_instr(i) {}
+
+    static g85_instr* make(bool return_to_rp,
+			   value* xp, value* yp, value* zp,
+			   value* ap,
+			   value* rp,
+			   value* lp,
+			   value* frp) {
+      g85_instr* mem = allocate<g85_instr>();
+      return new (mem) g85_instr(return_to_rp,
+				 xp, yp, zp,
+				 ap, rp, lp,
+				 frp);
+    }
+
+    
+    virtual inline bool is_G85() const { return true; }
+    
+    void print(ostream& s) const {
+      cout << "G85 ";
+      print_move_data(s, 0.000001);
+    }
+
+    bool operator==(const instr& other) const {
+      if (!other.is_G85()) {
+	return false;
+      }
+      const g85_instr& ci = static_cast<const g85_instr&>(other);
+      return same_pos_and_feed_rate(ci) &&
+	*(ci.a) == *(this->a) &&
+	*(ci.r) == *(this->r) &&
+	*(ci.l) == *(this->l);
+    }
+    
+  };
   
 }
 

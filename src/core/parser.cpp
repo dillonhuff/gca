@@ -204,6 +204,34 @@ namespace gca {
 			   x, y, z,
 			   r, q, f);
   }
+
+  instr* parse_G81(gprog* p, parse_state& s) {
+    bool ret_r = !parse_option_value('G', s)->is_omitted();
+    value* x = parse_option_value('X', s);
+    value* y = parse_option_value('Y', s);
+    value* z = parse_option_value('Z', s);
+    value* a = parse_option_value('A', s);
+    value* r = parse_option_value('R', s);
+    value* l = parse_option_value('L', s);
+    value* f = parse_option_value('F', s);    
+    return g81_instr::make(ret_r,
+			   x, y, z,
+			   a, r, l, f);
+  }
+
+  instr* parse_G85(gprog* p, parse_state& s) {
+    bool ret_r = !parse_option_value('G', s)->is_omitted();
+    value* x = parse_option_value('X', s);
+    value* y = parse_option_value('Y', s);
+    value* z = parse_option_value('Z', s);
+    value* a = parse_option_value('A', s);
+    value* r = parse_option_value('R', s);
+    value* l = parse_option_value('L', s);
+    value* f = parse_option_value('F', s);    
+    return g85_instr::make(ret_r,
+			   x, y, z,
+			   a, r, l, f);
+  }
   
   instr* parse_G28(gprog* p, parse_state& s) {
     value* x = parse_option_value('X', s);
@@ -225,6 +253,16 @@ namespace gca {
   instr* parse_M97(gprog* p, parse_state& s) {
     value* pv = parse_option_value('P', s);
     return m97_instr::make(pv);
+  }
+
+  instr* parse_G41(gprog* p, parse_state& s) {
+    value* pv = parse_option_value('D', s);
+    return g41_instr::make(pv);
+  }
+
+  instr* parse_G42(gprog* p, parse_state& s) {
+    value* pv = parse_option_value('D', s);
+    return g42_instr::make(pv);
   }
   
   string parse_option_char(parse_state& s, char t) {
@@ -288,6 +326,14 @@ namespace gca {
       is = g19_instr::make();
     } else if (val == 83) {
       is = parse_G83(p, s);
+    } else if (val == 81) {
+      is = parse_G81(p, s);
+    } else if (val == 85) {
+      is = parse_G85(p, s);
+    } else if (val == 41) {
+      is = parse_G41(p, s);
+    } else if (val == 42) {
+      is = parse_G42(p, s);
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);
@@ -300,6 +346,10 @@ namespace gca {
     instr* is;
     if (val == 2) {
       is = m2_instr::make();
+    } else if (val == 0) {
+      is = m0_instr::make();
+    } else if (val == 1) {
+      is = m1_instr::make();
     } else if (val == 30) {
       is = m30_instr::make();
     } else if (val == 5) {
@@ -318,6 +368,8 @@ namespace gca {
       is = m6_instr::make();
     } else if (val == 97) {
       is = parse_M97(p, s);
+    } else if (val == 99) {
+      is = m99_instr::make();
     } else {
       cout << "M value not supported " << val << endl;
       assert(false);

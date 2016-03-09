@@ -34,8 +34,7 @@ void read_dir(const string& dir_name) {
       std::string str((std::istreambuf_iterator<char>(t)),
 		      std::istreambuf_iterator<char>());
       gprog* p = parse_gprog(str);
-      cout << "PARSED PROGRAM:" << endl;
-      cout << *p;
+      cout << "NUM INSTRUCTIONS: " << p->size() << endl;
     }
   }
 }

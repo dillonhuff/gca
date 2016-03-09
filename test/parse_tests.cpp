@@ -344,6 +344,52 @@ namespace gca {
 					lit::make(3)));
       REQUIRE(correct == *p);
     }
+
+    SECTION("G81") {
+      gprog* p = parse_gprog("G81 G98 X2.1469 Y2.234 Z-.628 R.1 F12.");
+      correct.push_back(g81_instr::make(false,
+					lit::make(2.1469),
+					lit::make(2.234),
+					lit::make(-0.628),
+					omitted::make(),
+					lit::make(0.1),
+					omitted::make(),
+					lit::make(12.0)));
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("G85") {
+      gprog* p = parse_gprog("G85 G98 X2.1469 Y2.234 Z-.628 R.1 F12.");
+      correct.push_back(g85_instr::make(false,
+					lit::make(2.1469),
+					lit::make(2.234),
+					lit::make(-0.628),
+					omitted::make(),
+					lit::make(0.1),
+					omitted::make(),
+					lit::make(12.0)));
+      REQUIRE(correct == *p);
+    }
+    
+    SECTION("M99") {
+      gprog* p = parse_gprog("M99");
+      correct.push_back(m99_instr::make());
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("G41 and 42") {
+      gprog* p = parse_gprog("G41 D52 G42 D17");
+      correct.push_back(g41_instr::make(lit::make(52)));
+      correct.push_back(g42_instr::make(lit::make(17)));
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("M0 and M1") {
+      gprog* p = parse_gprog("M01 M00");
+      correct.push_back(m1_instr::make());
+      correct.push_back(m0_instr::make());
+      REQUIRE(correct == *p);
+    }
   }
 
   TEST_CASE("Multiple lines using the same G register") {
