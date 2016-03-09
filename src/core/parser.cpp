@@ -79,7 +79,7 @@ namespace gca {
   }
 
   void ignore_whitespace(parse_state& s) {
-    while (s.chars_left() && isspace(s.next())) { s++; }
+    while (s.chars_left() && (isspace(s.next()) || s.next() == '%')) { s++; }
   }
 
   double parse_double(parse_state& s) {
@@ -189,6 +189,13 @@ namespace gca {
     return g53_instr::make(x, y, z);
   }
 
+  instr* parse_G28(gprog* p, parse_state& s) {
+    value* x = parse_option_value('X', s);
+    value* y = parse_option_value('Y', s);
+    value* z = parse_option_value('Z', s);
+    return g28_instr::make(x, y, z);
+  }
+  
   instr* parse_G64(gprog* p, parse_state& s) {
     value* pv = parse_option_value('P', s);
     return g64_instr::make(pv);
@@ -197,6 +204,11 @@ namespace gca {
   instr* parse_G43(gprog* p, parse_state& s) {
     value* pv = parse_option_value('H', s);
     return g43_instr::make(pv);
+  }
+
+  instr* parse_M97(gprog* p, parse_state& s) {
+    value* pv = parse_option_value('P', s);
+    return m97_instr::make(pv);
   }
   
   string parse_option_char(parse_state& s, char t) {
@@ -236,10 +248,20 @@ namespace gca {
       is = parse_G2(p, s);
     } else if (val == 3) {
       is = parse_G3(p, s);
+    } else if (val == 54) {
+      is = g54_instr::make();
+    } else if (val == 40) {
+      is = g40_instr::make();
+    } else if (val == 49) {
+      is = g49_instr::make();
+    } else if (val == 80) {
+      is = g80_instr::make();
     } else if (val == 21) {
       is = g21_instr::make();
     } else if (val == 64) {
       is = parse_G64(p, s);
+    } else if (val == 28) {
+      is = parse_G28(p, s);
     } else if (val == 43) {
       is = parse_G43(p, s);
     } else if (val == 17) {
@@ -274,6 +296,10 @@ namespace gca {
       is = m8_instr::make();
     } else if (val == 9) {
       is = m9_instr::make();
+    } else if (val == 6) {
+      is = m6_instr::make();
+    } else if (val == 97) {
+      is = parse_M97(p, s);
     } else {
       cout << "M value not supported " << val << endl;
       assert(false);
@@ -284,6 +310,8 @@ namespace gca {
   instr* parse_next_instr(int* g_register,
 			  gprog* p,
 			  parse_state& s) {
+    cout << "Parse next instr" << endl;
+    cout << "From string: " << string_remaining(s) << endl;
     instr* is;
     char next = s.next();
     if (next == '(') {
@@ -294,6 +322,14 @@ namespace gca {
       return is;
     }
     s++;
+    if (next == 'O') {
+      int val = parse_int(s);
+      return o_instr::make(val);
+    }
+    if (next == 'N') {
+      int val = parse_int(s);
+      return n_instr::make(val);      
+    }
     if (next == 'M') {
       int val = parse_int(s);
       return parse_m_instr(val, p, s);

@@ -20,6 +20,36 @@ namespace gca {
 
   };
 
+  class o_instr : public instr {
+  public:
+    int num;
+
+  o_instr(int n) : num(n) {}
+    static o_instr* make(int n) { return new (allocate<o_instr>()) o_instr(n); }
+    inline bool is_O() const { return true; }
+    void print(ostream& s) const { s << "O" << num; }
+    bool operator==(const instr& other) const {
+      return other.is_O() &&
+      static_cast<const o_instr&>(other).num == num;
+    }
+
+  };
+
+  class n_instr : public instr {
+  public:
+    int num;
+
+  n_instr(int n) : num(n) {}
+    static n_instr* make(int n) { return new (allocate<n_instr>()) n_instr(n); }
+    inline bool is_N() const { return true; }
+    void print(ostream& s) const { s << "N" << num; }
+    bool operator==(const instr& other) const {
+      return other.is_N() &&
+      static_cast<const n_instr&>(other).num == num;
+    }
+
+  };
+  
   class s_instr : public instr {
   public:
     int num;
@@ -100,6 +130,30 @@ namespace gca {
     bool operator==(const instr& other) const { return other.is_M30(); }
   };
 
+  class m6_instr : public instr {
+  public:
+    static m6_instr* make() { return new (allocate<m6_instr>()) m6_instr(); }
+    inline bool is_M6() const { return true; }
+    void print(ostream& s) const { s << "M6"; }
+    inline bool is_end_instr() const { return true; }
+    bool operator==(const instr& other) const { return other.is_M6(); }
+  };
+
+  class m97_instr : public instr {
+  public:
+    value* num;
+
+  m97_instr(value* n) : num(n) {}
+    static m97_instr* make(value* n) { return new (allocate<m97_instr>()) m97_instr(n); }
+    inline bool is_M97() const { return true; }
+    void print(ostream& s) const { s << "M97 P" << num; }
+    bool operator==(const instr& other) const {
+      return other.is_M97() &&
+	*(static_cast<const m97_instr&>(other).num) == *(num);
+    }
+
+  };
+  
   class g17_instr : public instr {
   public:
     static g17_instr* make() { return new (allocate<g17_instr>()) g17_instr(); }
@@ -132,6 +186,38 @@ namespace gca {
     bool operator==(const instr& other) const { return other.is_G20(); }
   };
 
+  class g54_instr : public instr {
+  public:
+    static g54_instr* make() { return new (allocate<g54_instr>()) g54_instr(); }
+    inline bool is_G54() const { return true; }
+    void print(ostream& s) const { s << "G54"; }
+    bool operator==(const instr& other) const { return other.is_G54(); }
+  };
+
+  class g40_instr : public instr {
+  public:
+    static g40_instr* make() { return new (allocate<g40_instr>()) g40_instr(); }
+    inline bool is_G40() const { return true; }
+    void print(ostream& s) const { s << "G40"; }
+    bool operator==(const instr& other) const { return other.is_G40(); }
+  };
+
+  class g49_instr : public instr {
+  public:
+    static g49_instr* make() { return new (allocate<g49_instr>()) g49_instr(); }
+    inline bool is_G49() const { return true; }
+    void print(ostream& s) const { s << "G49"; }
+    bool operator==(const instr& other) const { return other.is_G49(); }
+  };
+
+  class g80_instr : public instr {
+  public:
+    static g80_instr* make() { return new (allocate<g80_instr>()) g80_instr(); }
+    inline bool is_G80() const { return true; }
+    void print(ostream& s) const { s << "G80"; }
+    bool operator==(const instr& other) const { return other.is_G80(); }
+  };
+  
   class g21_instr : public instr {
   public:
     static g21_instr* make() { return new (allocate<g21_instr>()) g21_instr(); }

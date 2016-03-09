@@ -49,10 +49,14 @@ namespace gca {
     virtual inline bool is_M7() const { return false; }
     virtual inline bool is_M8() const { return false; }
     virtual inline bool is_M9() const { return false; }
+    virtual inline bool is_M6() const { return false; }
+    virtual inline bool is_M97() const { return false; }    
     virtual inline bool is_M30() const { return false; }    
     virtual inline bool is_F() const { return false; }
     virtual inline bool is_S() const { return false; }
     virtual inline bool is_T() const { return false; }
+    virtual inline bool is_O() const { return false; }
+    virtual inline bool is_N() const { return false; }
     virtual inline bool is_G0() const { return false; }
     virtual inline bool is_G1() const { return false; }
     virtual inline bool is_G2() const { return false; }
@@ -67,6 +71,11 @@ namespace gca {
     virtual inline bool is_G64() const { return false; }
     virtual inline bool is_G91() const { return false; }
     virtual inline bool is_G90() const { return false; }
+    virtual inline bool is_G54() const { return false; }
+    virtual inline bool is_G40() const { return false; }
+    virtual inline bool is_G49() const { return false; }
+    virtual inline bool is_G80() const { return false; }
+    virtual inline bool is_G28() const { return false; }
 
   };
 

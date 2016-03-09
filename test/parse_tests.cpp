@@ -257,9 +257,10 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
+    gprog correct;
+
     SECTION("G21 G64 P.1 S6000 M4") {
       gprog* p = parse_gprog("G21 G64 P.1 S6000 M4");
-      gprog correct;
       correct.push_back(g21_instr::make());
       correct.push_back(g64_instr::make(lit::make(0.1)));
       correct.push_back(s_instr::make(6000));
@@ -269,7 +270,6 @@ namespace gca {
 
     SECTION("Plane selection instructions") {
       gprog* p = parse_gprog("G17 G18 G19");
-      gprog correct;
       correct.push_back(g17_instr::make());
       correct.push_back(g18_instr::make());
       correct.push_back(g19_instr::make());
@@ -278,7 +278,6 @@ namespace gca {
 
     SECTION("Coolant instructions: M7 M8 M9") {
       gprog* p = parse_gprog("M7 M8 M9");
-      gprog correct;
       correct.push_back(m7_instr::make());
       correct.push_back(m8_instr::make());
       correct.push_back(m9_instr::make());
@@ -287,8 +286,50 @@ namespace gca {
 
     SECTION("G43 H02") {
       gprog* p = parse_gprog("G43 H02");
-      gprog correct;
       correct.push_back(g43_instr::make(lit::make(2)));
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("%\n \n % ") {
+      gprog* p = parse_gprog("%\n \n % ");
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("O1001") {
+      gprog* p = parse_gprog("O1001");
+      correct.push_back(o_instr::make(1001));
+      REQUIRE(correct == *p);
+    }
+    
+    SECTION("N102") {
+      gprog* p = parse_gprog("N102");
+      correct.push_back(n_instr::make(102));
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("G54 G17 G40 G49 G80 G90") {
+      gprog* p = parse_gprog("G54 G17 G40 G49 G80 G90");
+      correct.push_back(g54_instr::make());
+      correct.push_back(g17_instr::make());
+      correct.push_back(g40_instr::make());
+      correct.push_back(g49_instr::make());
+      correct.push_back(g80_instr::make());
+      correct.push_back(g90_instr::make());
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("G28") {
+      gprog* p = parse_gprog("G28 Z0.");
+      correct.push_back(g28_instr::make(omitted::make(),
+					omitted::make(),
+					lit::make(0)));
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("M6 M97 P136381") {
+      gprog* p = parse_gprog("M6 M97 P136381");
+      correct.push_back(m6_instr::make());
+      correct.push_back(m97_instr::make(lit::make(136381)));
       REQUIRE(correct == *p);
     }
   }

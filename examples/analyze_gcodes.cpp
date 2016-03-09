@@ -1,8 +1,12 @@
 #include <cassert>
 #include <dirent.h>
+#include <fstream>
 #include <iostream>
+#include <streambuf>
+#include <string>
 
 #include "core/arena_allocator.h"
+#include "core/parser.h"
 
 using namespace gca;
 using namespace std;
@@ -20,16 +24,19 @@ void read_dir(const string& dir_name) {
       string fname = ent->d_name;
       if (fname != "." && fname != "..") {
 	read_dir(dir_name + "/" + fname);
-	//cout << "Name: " << fname << endl;
       }
     }
     closedir(dir);
   } else {
     if (ends_with(dir_name, ".NCF")) {
       cout << dir_name << endl;
-      //	print_knife_hacks(read_file(dir_name + fname));
+      std::ifstream t(dir_name);
+      std::string str((std::istreambuf_iterator<char>(t)),
+		      std::istreambuf_iterator<char>());
+      gprog* p = parse_gprog(str);
+      cout << "PARSED PROGRAM:" << endl;
+      cout << *p;
     }
-    //cout << "Could not open directory: " << dir_name << endl;
   }
 }
 

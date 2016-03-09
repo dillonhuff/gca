@@ -112,8 +112,8 @@ namespace gca {
 
   class g0_instr : public move_instr {
   public:
-  g0_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
-  g0_instr(g0_instr* i) : move_instr(i) {}
+    g0_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
+    g0_instr(g0_instr* i) : move_instr(i) {}
 
     static g0_instr* make(point p) {
       g0_instr* mem = allocate<g0_instr>();
@@ -143,14 +143,14 @@ namespace gca {
     
     bool operator==(const instr& other) const {
       return other.is_G0() &&
-      same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+	same_pos_and_feed_rate(static_cast<const move_instr&>(other));
     }
   };
 
   class g1_instr : public move_instr {
   public:
-  g1_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
-  g1_instr(g1_instr* i) : move_instr(i) {}
+    g1_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
+    g1_instr(g1_instr* i) : move_instr(i) {}
 
     static g1_instr* make(double x, double y, double z) {
       g1_instr* mem = allocate<g1_instr>();
@@ -186,15 +186,15 @@ namespace gca {
     
     bool operator==(const instr& other) const {
       return other.is_G1() &&
-      same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+	same_pos_and_feed_rate(static_cast<const move_instr&>(other));
     }
     
   };
 
   class g53_instr : public move_instr {
   public:
-  g53_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
-  g53_instr(g53_instr* i) : move_instr(i) {}
+    g53_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
+    g53_instr(g53_instr* i) : move_instr(i) {}
 
     static g53_instr* make(value* x, value* y, value* z) {
       g53_instr* mem = allocate<g53_instr>();
@@ -211,7 +211,32 @@ namespace gca {
 
     bool operator==(const instr& other) const {
       return other.is_G53() &&
-      same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+	same_pos_and_feed_rate(static_cast<const move_instr&>(other));
+    }
+    
+  };
+
+  class g28_instr : public move_instr {
+  public:
+    g28_instr(value* xp, value* yp, value* zp, value* frp) : move_instr(xp, yp, zp, frp) {}
+    g28_instr(g28_instr* i) : move_instr(i) {}
+
+    static g28_instr* make(value* x, value* y, value* z) {
+      g28_instr* mem = allocate<g28_instr>();
+      return new (mem) g28_instr(x, y, z, omitted::make());
+    }
+
+    
+    virtual inline bool is_G28() const { return true; }
+    
+    void print(ostream& s) const {
+      cout << "G28 ";
+      print_move_data(s, 0.000001);
+    }
+
+    bool operator==(const instr& other) const {
+      return other.is_G28() &&
+	same_pos_and_feed_rate(static_cast<const move_instr&>(other));
     }
     
   };
