@@ -109,13 +109,11 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 SET(SRCS ${CPPS} ${HEADERS})
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
-add_executable(gdiff examples/gdiff.cpp ${SRCS})
-add_executable(simple-deepen examples/simple_deepen.cpp ${SRCS})
 add_executable(hello-world examples/hello_world.cpp ${SRCS})
-add_executable(pen-draw-lines examples/pen_draw_lines.cpp ${SRCS})
 add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 add_executable(cut-rect examples/cut_rect.cpp ${SRCS})
 add_executable(misc examples/misc.cpp ${SRCS})
+add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
 
 ######### VTK Example ##########
 

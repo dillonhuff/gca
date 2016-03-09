@@ -124,6 +124,19 @@ all-tests/fast:
 .PHONY : all-tests/fast
 
 #=============================================================================
+# Target rules for targets named analyze-gcodes
+
+# Build rule for target.
+analyze-gcodes: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 analyze-gcodes
+.PHONY : analyze-gcodes
+
+# fast build rule for target.
+analyze-gcodes/fast:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/build
+.PHONY : analyze-gcodes/fast
+
+#=============================================================================
 # Target rules for targets named cut-rect
 
 # Build rule for target.
@@ -135,19 +148,6 @@ cut-rect: cmake_check_build_system
 cut-rect/fast:
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/build
 .PHONY : cut-rect/fast
-
-#=============================================================================
-# Target rules for targets named gdiff
-
-# Build rule for target.
-gdiff: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gdiff
-.PHONY : gdiff
-
-# fast build rule for target.
-gdiff/fast:
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/build
-.PHONY : gdiff/fast
 
 #=============================================================================
 # Target rules for targets named hello-world
@@ -176,19 +176,6 @@ misc/fast:
 .PHONY : misc/fast
 
 #=============================================================================
-# Target rules for targets named pen-draw-lines
-
-# Build rule for target.
-pen-draw-lines: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 pen-draw-lines
-.PHONY : pen-draw-lines
-
-# fast build rule for target.
-pen-draw-lines/fast:
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/build
-.PHONY : pen-draw-lines/fast
-
-#=============================================================================
 # Target rules for targets named print-dxf
 
 # Build rule for target.
@@ -201,18 +188,32 @@ print-dxf/fast:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/build
 .PHONY : print-dxf/fast
 
-#=============================================================================
-# Target rules for targets named simple-deepen
+examples/analyze_gcodes.o: examples/analyze_gcodes.cpp.o
 
-# Build rule for target.
-simple-deepen: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 simple-deepen
-.PHONY : simple-deepen
+.PHONY : examples/analyze_gcodes.o
 
-# fast build rule for target.
-simple-deepen/fast:
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/build
-.PHONY : simple-deepen/fast
+# target to build an object file
+examples/analyze_gcodes.cpp.o:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.o
+.PHONY : examples/analyze_gcodes.cpp.o
+
+examples/analyze_gcodes.i: examples/analyze_gcodes.cpp.i
+
+.PHONY : examples/analyze_gcodes.i
+
+# target to preprocess a source file
+examples/analyze_gcodes.cpp.i:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.i
+.PHONY : examples/analyze_gcodes.cpp.i
+
+examples/analyze_gcodes.s: examples/analyze_gcodes.cpp.s
+
+.PHONY : examples/analyze_gcodes.s
+
+# target to generate assembly for a file
+examples/analyze_gcodes.cpp.s:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.s
+.PHONY : examples/analyze_gcodes.cpp.s
 
 examples/cut_rect.o: examples/cut_rect.cpp.o
 
@@ -240,33 +241,6 @@ examples/cut_rect.s: examples/cut_rect.cpp.s
 examples/cut_rect.cpp.s:
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.s
 .PHONY : examples/cut_rect.cpp.s
-
-examples/gdiff.o: examples/gdiff.cpp.o
-
-.PHONY : examples/gdiff.o
-
-# target to build an object file
-examples/gdiff.cpp.o:
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/examples/gdiff.cpp.o
-.PHONY : examples/gdiff.cpp.o
-
-examples/gdiff.i: examples/gdiff.cpp.i
-
-.PHONY : examples/gdiff.i
-
-# target to preprocess a source file
-examples/gdiff.cpp.i:
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/examples/gdiff.cpp.i
-.PHONY : examples/gdiff.cpp.i
-
-examples/gdiff.s: examples/gdiff.cpp.s
-
-.PHONY : examples/gdiff.s
-
-# target to generate assembly for a file
-examples/gdiff.cpp.s:
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/examples/gdiff.cpp.s
-.PHONY : examples/gdiff.cpp.s
 
 examples/hello_world.o: examples/hello_world.cpp.o
 
@@ -322,33 +296,6 @@ examples/misc.cpp.s:
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/examples/misc.cpp.s
 .PHONY : examples/misc.cpp.s
 
-examples/pen_draw_lines.o: examples/pen_draw_lines.cpp.o
-
-.PHONY : examples/pen_draw_lines.o
-
-# target to build an object file
-examples/pen_draw_lines.cpp.o:
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/examples/pen_draw_lines.cpp.o
-.PHONY : examples/pen_draw_lines.cpp.o
-
-examples/pen_draw_lines.i: examples/pen_draw_lines.cpp.i
-
-.PHONY : examples/pen_draw_lines.i
-
-# target to preprocess a source file
-examples/pen_draw_lines.cpp.i:
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/examples/pen_draw_lines.cpp.i
-.PHONY : examples/pen_draw_lines.cpp.i
-
-examples/pen_draw_lines.s: examples/pen_draw_lines.cpp.s
-
-.PHONY : examples/pen_draw_lines.s
-
-# target to generate assembly for a file
-examples/pen_draw_lines.cpp.s:
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/examples/pen_draw_lines.cpp.s
-.PHONY : examples/pen_draw_lines.cpp.s
-
 examples/print_dxf.o: examples/print_dxf.cpp.o
 
 .PHONY : examples/print_dxf.o
@@ -376,33 +323,6 @@ examples/print_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/examples/print_dxf.cpp.s
 .PHONY : examples/print_dxf.cpp.s
 
-examples/simple_deepen.o: examples/simple_deepen.cpp.o
-
-.PHONY : examples/simple_deepen.o
-
-# target to build an object file
-examples/simple_deepen.cpp.o:
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/examples/simple_deepen.cpp.o
-.PHONY : examples/simple_deepen.cpp.o
-
-examples/simple_deepen.i: examples/simple_deepen.cpp.i
-
-.PHONY : examples/simple_deepen.i
-
-# target to preprocess a source file
-examples/simple_deepen.cpp.i:
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/examples/simple_deepen.cpp.i
-.PHONY : examples/simple_deepen.cpp.i
-
-examples/simple_deepen.s: examples/simple_deepen.cpp.s
-
-.PHONY : examples/simple_deepen.s
-
-# target to generate assembly for a file
-examples/simple_deepen.cpp.s:
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/examples/simple_deepen.cpp.s
-.PHONY : examples/simple_deepen.cpp.s
-
 src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
 .PHONY : src/analysis/extract_cuts.o
@@ -410,13 +330,11 @@ src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 # target to build an object file
 src/analysis/extract_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.o
 .PHONY : src/analysis/extract_cuts.cpp.o
 
 src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
@@ -426,13 +344,11 @@ src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
 # target to preprocess a source file
 src/analysis/extract_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.i
 .PHONY : src/analysis/extract_cuts.cpp.i
 
 src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
@@ -442,13 +358,11 @@ src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
 # target to generate assembly for a file
 src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
 src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
@@ -458,13 +372,11 @@ src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
 # target to build an object file
 src/analysis/gcode_to_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/gcode_to_cuts.cpp.o
 .PHONY : src/analysis/gcode_to_cuts.cpp.o
 
 src/analysis/gcode_to_cuts.i: src/analysis/gcode_to_cuts.cpp.i
@@ -474,13 +386,11 @@ src/analysis/gcode_to_cuts.i: src/analysis/gcode_to_cuts.cpp.i
 # target to preprocess a source file
 src/analysis/gcode_to_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/gcode_to_cuts.cpp.i
 .PHONY : src/analysis/gcode_to_cuts.cpp.i
 
 src/analysis/gcode_to_cuts.s: src/analysis/gcode_to_cuts.cpp.s
@@ -490,13 +400,11 @@ src/analysis/gcode_to_cuts.s: src/analysis/gcode_to_cuts.cpp.s
 # target to generate assembly for a file
 src/analysis/gcode_to_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/analysis/gcode_to_cuts.cpp.s
 .PHONY : src/analysis/gcode_to_cuts.cpp.s
 
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
@@ -506,13 +414,11 @@ src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
 # target to build an object file
 src/checkers/bounds_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/bounds_checker.cpp.o
 .PHONY : src/checkers/bounds_checker.cpp.o
 
 src/checkers/bounds_checker.i: src/checkers/bounds_checker.cpp.i
@@ -522,13 +428,11 @@ src/checkers/bounds_checker.i: src/checkers/bounds_checker.cpp.i
 # target to preprocess a source file
 src/checkers/bounds_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/bounds_checker.cpp.i
 .PHONY : src/checkers/bounds_checker.cpp.i
 
 src/checkers/bounds_checker.s: src/checkers/bounds_checker.cpp.s
@@ -538,13 +442,11 @@ src/checkers/bounds_checker.s: src/checkers/bounds_checker.cpp.s
 # target to generate assembly for a file
 src/checkers/bounds_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/bounds_checker.cpp.s
 .PHONY : src/checkers/bounds_checker.cpp.s
 
 src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
@@ -554,13 +456,11 @@ src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
 # target to build an object file
 src/checkers/forbidden_tool_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/forbidden_tool_checker.cpp.o
 .PHONY : src/checkers/forbidden_tool_checker.cpp.o
 
 src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
@@ -570,13 +470,11 @@ src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
 # target to preprocess a source file
 src/checkers/forbidden_tool_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/forbidden_tool_checker.cpp.i
 .PHONY : src/checkers/forbidden_tool_checker.cpp.i
 
 src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
@@ -586,13 +484,11 @@ src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
 # target to generate assembly for a file
 src/checkers/forbidden_tool_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/forbidden_tool_checker.cpp.s
 .PHONY : src/checkers/forbidden_tool_checker.cpp.s
 
 src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
@@ -602,13 +498,11 @@ src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
 # target to build an object file
 src/checkers/unsafe_spindle_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.o
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.o
 
 src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
@@ -618,13 +512,11 @@ src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
 # target to preprocess a source file
 src/checkers/unsafe_spindle_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.i
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.i
 
 src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
@@ -634,13 +526,11 @@ src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
 # target to generate assembly for a file
 src/checkers/unsafe_spindle_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/checkers/unsafe_spindle_checker.cpp.s
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.s
 
 src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
@@ -650,13 +540,11 @@ src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
 # target to build an object file
 src/core/arena_allocator.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.o
 .PHONY : src/core/arena_allocator.cpp.o
 
 src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
@@ -666,13 +554,11 @@ src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
 # target to preprocess a source file
 src/core/arena_allocator.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.i
 .PHONY : src/core/arena_allocator.cpp.i
 
 src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
@@ -682,13 +568,11 @@ src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
 # target to generate assembly for a file
 src/core/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/arena_allocator.cpp.s
 .PHONY : src/core/arena_allocator.cpp.s
 
 src/core/gprog.o: src/core/gprog.cpp.o
@@ -698,13 +582,11 @@ src/core/gprog.o: src/core/gprog.cpp.o
 # target to build an object file
 src/core/gprog.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/gprog.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/gprog.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.o
 .PHONY : src/core/gprog.cpp.o
 
 src/core/gprog.i: src/core/gprog.cpp.i
@@ -714,13 +596,11 @@ src/core/gprog.i: src/core/gprog.cpp.i
 # target to preprocess a source file
 src/core/gprog.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/gprog.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/gprog.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.i
 .PHONY : src/core/gprog.cpp.i
 
 src/core/gprog.s: src/core/gprog.cpp.s
@@ -730,13 +610,11 @@ src/core/gprog.s: src/core/gprog.cpp.s
 # target to generate assembly for a file
 src/core/gprog.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/gprog.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/gprog.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/gprog.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/gprog.cpp.s
 .PHONY : src/core/gprog.cpp.s
 
 src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
@@ -746,13 +624,11 @@ src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
 # target to build an object file
 src/core/instrs/instr.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/instrs/instr.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.o
 .PHONY : src/core/instrs/instr.cpp.o
 
 src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
@@ -762,13 +638,11 @@ src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
 # target to preprocess a source file
 src/core/instrs/instr.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/instrs/instr.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.i
 .PHONY : src/core/instrs/instr.cpp.i
 
 src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
@@ -778,13 +652,11 @@ src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
 # target to generate assembly for a file
 src/core/instrs/instr.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/instrs/instr.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/instrs/instr.cpp.s
 .PHONY : src/core/instrs/instr.cpp.s
 
 src/core/parser.o: src/core/parser.cpp.o
@@ -794,13 +666,11 @@ src/core/parser.o: src/core/parser.cpp.o
 # target to build an object file
 src/core/parser.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/parser.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.o
 .PHONY : src/core/parser.cpp.o
 
 src/core/parser.i: src/core/parser.cpp.i
@@ -810,13 +680,11 @@ src/core/parser.i: src/core/parser.cpp.i
 # target to preprocess a source file
 src/core/parser.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/parser.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.i
 .PHONY : src/core/parser.cpp.i
 
 src/core/parser.s: src/core/parser.cpp.s
@@ -826,13 +694,11 @@ src/core/parser.s: src/core/parser.cpp.s
 # target to generate assembly for a file
 src/core/parser.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/parser.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/parser.cpp.s
 .PHONY : src/core/parser.cpp.s
 
 src/core/pass.o: src/core/pass.cpp.o
@@ -842,13 +708,11 @@ src/core/pass.o: src/core/pass.cpp.o
 # target to build an object file
 src/core/pass.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/pass.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.o
 .PHONY : src/core/pass.cpp.o
 
 src/core/pass.i: src/core/pass.cpp.i
@@ -858,13 +722,11 @@ src/core/pass.i: src/core/pass.cpp.i
 # target to preprocess a source file
 src/core/pass.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/pass.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.i
 .PHONY : src/core/pass.cpp.i
 
 src/core/pass.s: src/core/pass.cpp.s
@@ -874,13 +736,11 @@ src/core/pass.s: src/core/pass.cpp.s
 # target to generate assembly for a file
 src/core/pass.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/pass.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/pass.cpp.s
 .PHONY : src/core/pass.cpp.s
 
 src/core/value.o: src/core/value.cpp.o
@@ -890,13 +750,11 @@ src/core/value.o: src/core/value.cpp.o
 # target to build an object file
 src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.o
 .PHONY : src/core/value.cpp.o
 
 src/core/value.i: src/core/value.cpp.i
@@ -906,13 +764,11 @@ src/core/value.i: src/core/value.cpp.i
 # target to preprocess a source file
 src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.i
 .PHONY : src/core/value.cpp.i
 
 src/core/value.s: src/core/value.cpp.s
@@ -922,13 +778,11 @@ src/core/value.s: src/core/value.cpp.s
 # target to generate assembly for a file
 src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/core/value.cpp.s
 .PHONY : src/core/value.cpp.s
 
 src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
@@ -938,13 +792,11 @@ src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
 # target to build an object file
 src/dxflib/dl_dxf.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_dxf.cpp.o
 .PHONY : src/dxflib/dl_dxf.cpp.o
 
 src/dxflib/dl_dxf.i: src/dxflib/dl_dxf.cpp.i
@@ -954,13 +806,11 @@ src/dxflib/dl_dxf.i: src/dxflib/dl_dxf.cpp.i
 # target to preprocess a source file
 src/dxflib/dl_dxf.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_dxf.cpp.i
 .PHONY : src/dxflib/dl_dxf.cpp.i
 
 src/dxflib/dl_dxf.s: src/dxflib/dl_dxf.cpp.s
@@ -970,13 +820,11 @@ src/dxflib/dl_dxf.s: src/dxflib/dl_dxf.cpp.s
 # target to generate assembly for a file
 src/dxflib/dl_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_dxf.cpp.s
 .PHONY : src/dxflib/dl_dxf.cpp.s
 
 src/dxflib/dl_writer_ascii.o: src/dxflib/dl_writer_ascii.cpp.o
@@ -986,13 +834,11 @@ src/dxflib/dl_writer_ascii.o: src/dxflib/dl_writer_ascii.cpp.o
 # target to build an object file
 src/dxflib/dl_writer_ascii.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_writer_ascii.cpp.o
 .PHONY : src/dxflib/dl_writer_ascii.cpp.o
 
 src/dxflib/dl_writer_ascii.i: src/dxflib/dl_writer_ascii.cpp.i
@@ -1002,13 +848,11 @@ src/dxflib/dl_writer_ascii.i: src/dxflib/dl_writer_ascii.cpp.i
 # target to preprocess a source file
 src/dxflib/dl_writer_ascii.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_writer_ascii.cpp.i
 .PHONY : src/dxflib/dl_writer_ascii.cpp.i
 
 src/dxflib/dl_writer_ascii.s: src/dxflib/dl_writer_ascii.cpp.s
@@ -1018,13 +862,11 @@ src/dxflib/dl_writer_ascii.s: src/dxflib/dl_writer_ascii.cpp.s
 # target to generate assembly for a file
 src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
 src/geometry/point.o: src/geometry/point.cpp.o
@@ -1034,13 +876,11 @@ src/geometry/point.o: src/geometry/point.cpp.o
 # target to build an object file
 src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.o
 .PHONY : src/geometry/point.cpp.o
 
 src/geometry/point.i: src/geometry/point.cpp.i
@@ -1050,13 +890,11 @@ src/geometry/point.i: src/geometry/point.cpp.i
 # target to preprocess a source file
 src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.i
 .PHONY : src/geometry/point.cpp.i
 
 src/geometry/point.s: src/geometry/point.cpp.s
@@ -1066,13 +904,11 @@ src/geometry/point.s: src/geometry/point.cpp.s
 # target to generate assembly for a file
 src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/geometry/point.cpp.s
 .PHONY : src/geometry/point.cpp.s
 
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
@@ -1082,13 +918,11 @@ src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 # target to build an object file
 src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.o
 .PHONY : src/simulators/mill_tool.cpp.o
 
 src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
@@ -1098,13 +932,11 @@ src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
 # target to preprocess a source file
 src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.i
 .PHONY : src/simulators/mill_tool.cpp.i
 
 src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
@@ -1114,13 +946,11 @@ src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
 # target to generate assembly for a file
 src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/mill_tool.cpp.s
 .PHONY : src/simulators/mill_tool.cpp.s
 
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
@@ -1130,13 +960,11 @@ src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
 # target to build an object file
 src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.o
 .PHONY : src/simulators/sim_mill.cpp.o
 
 src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
@@ -1146,13 +974,11 @@ src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
 # target to preprocess a source file
 src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.i
 .PHONY : src/simulators/sim_mill.cpp.i
 
 src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
@@ -1162,13 +988,11 @@ src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
 # target to generate assembly for a file
 src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
 src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
@@ -1178,13 +1002,11 @@ src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
 # target to build an object file
 src/synthesis/align_blade.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.o
 .PHONY : src/synthesis/align_blade.cpp.o
 
 src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
@@ -1194,13 +1016,11 @@ src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
 # target to preprocess a source file
 src/synthesis/align_blade.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.i
 .PHONY : src/synthesis/align_blade.cpp.i
 
 src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
@@ -1210,13 +1030,11 @@ src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
 # target to generate assembly for a file
 src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
 src/synthesis/cut.o: src/synthesis/cut.cpp.o
@@ -1226,13 +1044,11 @@ src/synthesis/cut.o: src/synthesis/cut.cpp.o
 # target to build an object file
 src/synthesis/cut.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut.cpp.o
 .PHONY : src/synthesis/cut.cpp.o
 
 src/synthesis/cut.i: src/synthesis/cut.cpp.i
@@ -1242,13 +1058,11 @@ src/synthesis/cut.i: src/synthesis/cut.cpp.i
 # target to preprocess a source file
 src/synthesis/cut.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut.cpp.i
 .PHONY : src/synthesis/cut.cpp.i
 
 src/synthesis/cut.s: src/synthesis/cut.cpp.s
@@ -1258,13 +1072,11 @@ src/synthesis/cut.s: src/synthesis/cut.cpp.s
 # target to generate assembly for a file
 src/synthesis/cut.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut.cpp.s
 .PHONY : src/synthesis/cut.cpp.s
 
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
@@ -1274,13 +1086,11 @@ src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
 # target to build an object file
 src/synthesis/cut_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut_to_gcode.cpp.o
 .PHONY : src/synthesis/cut_to_gcode.cpp.o
 
 src/synthesis/cut_to_gcode.i: src/synthesis/cut_to_gcode.cpp.i
@@ -1290,13 +1100,11 @@ src/synthesis/cut_to_gcode.i: src/synthesis/cut_to_gcode.cpp.i
 # target to preprocess a source file
 src/synthesis/cut_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut_to_gcode.cpp.i
 .PHONY : src/synthesis/cut_to_gcode.cpp.i
 
 src/synthesis/cut_to_gcode.s: src/synthesis/cut_to_gcode.cpp.s
@@ -1306,13 +1114,11 @@ src/synthesis/cut_to_gcode.s: src/synthesis/cut_to_gcode.cpp.s
 # target to generate assembly for a file
 src/synthesis/cut_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/cut_to_gcode.cpp.s
 .PHONY : src/synthesis/cut_to_gcode.cpp.s
 
 src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
@@ -1322,13 +1128,11 @@ src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
 # target to build an object file
 src/synthesis/dxf_reader.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.o
 .PHONY : src/synthesis/dxf_reader.cpp.o
 
 src/synthesis/dxf_reader.i: src/synthesis/dxf_reader.cpp.i
@@ -1338,13 +1142,11 @@ src/synthesis/dxf_reader.i: src/synthesis/dxf_reader.cpp.i
 # target to preprocess a source file
 src/synthesis/dxf_reader.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.i
 .PHONY : src/synthesis/dxf_reader.cpp.i
 
 src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
@@ -1354,13 +1156,11 @@ src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
 # target to generate assembly for a file
 src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
 src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
@@ -1370,13 +1170,11 @@ src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
 # target to build an object file
 src/synthesis/linear_cut.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/linear_cut.cpp.o
 .PHONY : src/synthesis/linear_cut.cpp.o
 
 src/synthesis/linear_cut.i: src/synthesis/linear_cut.cpp.i
@@ -1386,13 +1184,11 @@ src/synthesis/linear_cut.i: src/synthesis/linear_cut.cpp.i
 # target to preprocess a source file
 src/synthesis/linear_cut.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/linear_cut.cpp.i
 .PHONY : src/synthesis/linear_cut.cpp.i
 
 src/synthesis/linear_cut.s: src/synthesis/linear_cut.cpp.s
@@ -1402,13 +1198,11 @@ src/synthesis/linear_cut.s: src/synthesis/linear_cut.cpp.s
 # target to generate assembly for a file
 src/synthesis/linear_cut.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/linear_cut.cpp.s
 .PHONY : src/synthesis/linear_cut.cpp.s
 
 src/synthesis/output.o: src/synthesis/output.cpp.o
@@ -1418,13 +1212,11 @@ src/synthesis/output.o: src/synthesis/output.cpp.o
 # target to build an object file
 src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.o
 .PHONY : src/synthesis/output.cpp.o
 
 src/synthesis/output.i: src/synthesis/output.cpp.i
@@ -1434,13 +1226,11 @@ src/synthesis/output.i: src/synthesis/output.cpp.i
 # target to preprocess a source file
 src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.i
 .PHONY : src/synthesis/output.cpp.i
 
 src/synthesis/output.s: src/synthesis/output.cpp.s
@@ -1450,13 +1240,11 @@ src/synthesis/output.s: src/synthesis/output.cpp.s
 # target to generate assembly for a file
 src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/output.cpp.s
 .PHONY : src/synthesis/output.cpp.s
 
 src/synthesis/schedule_cuts.o: src/synthesis/schedule_cuts.cpp.o
@@ -1466,13 +1254,11 @@ src/synthesis/schedule_cuts.o: src/synthesis/schedule_cuts.cpp.o
 # target to build an object file
 src/synthesis/schedule_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/schedule_cuts.cpp.o
 .PHONY : src/synthesis/schedule_cuts.cpp.o
 
 src/synthesis/schedule_cuts.i: src/synthesis/schedule_cuts.cpp.i
@@ -1482,13 +1268,11 @@ src/synthesis/schedule_cuts.i: src/synthesis/schedule_cuts.cpp.i
 # target to preprocess a source file
 src/synthesis/schedule_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/schedule_cuts.cpp.i
 .PHONY : src/synthesis/schedule_cuts.cpp.i
 
 src/synthesis/schedule_cuts.s: src/synthesis/schedule_cuts.cpp.s
@@ -1498,13 +1282,11 @@ src/synthesis/schedule_cuts.s: src/synthesis/schedule_cuts.cpp.s
 # target to generate assembly for a file
 src/synthesis/schedule_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/schedule_cuts.cpp.s
 .PHONY : src/synthesis/schedule_cuts.cpp.s
 
 src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
@@ -1514,13 +1296,11 @@ src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
 # target to build an object file
 src/synthesis/shapes_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.o
 .PHONY : src/synthesis/shapes_to_gcode.cpp.o
 
 src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
@@ -1530,13 +1310,11 @@ src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
 # target to preprocess a source file
 src/synthesis/shapes_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.i
 .PHONY : src/synthesis/shapes_to_gcode.cpp.i
 
 src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
@@ -1546,13 +1324,11 @@ src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
 # target to generate assembly for a file
 src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
 src/synthesis/shapes_to_toolpaths.o: src/synthesis/shapes_to_toolpaths.cpp.o
@@ -1562,13 +1338,11 @@ src/synthesis/shapes_to_toolpaths.o: src/synthesis/shapes_to_toolpaths.cpp.o
 # target to build an object file
 src/synthesis/shapes_to_toolpaths.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_toolpaths.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.o
 
 src/synthesis/shapes_to_toolpaths.i: src/synthesis/shapes_to_toolpaths.cpp.i
@@ -1578,13 +1352,11 @@ src/synthesis/shapes_to_toolpaths.i: src/synthesis/shapes_to_toolpaths.cpp.i
 # target to preprocess a source file
 src/synthesis/shapes_to_toolpaths.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_toolpaths.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.i
 
 src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
@@ -1594,13 +1366,11 @@ src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
 # target to generate assembly for a file
 src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_toolpaths.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
 
 src/synthesis/spline_sampling.o: src/synthesis/spline_sampling.cpp.o
@@ -1610,13 +1380,11 @@ src/synthesis/spline_sampling.o: src/synthesis/spline_sampling.cpp.o
 # target to build an object file
 src/synthesis/spline_sampling.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/spline_sampling.cpp.o
 .PHONY : src/synthesis/spline_sampling.cpp.o
 
 src/synthesis/spline_sampling.i: src/synthesis/spline_sampling.cpp.i
@@ -1626,13 +1394,11 @@ src/synthesis/spline_sampling.i: src/synthesis/spline_sampling.cpp.i
 # target to preprocess a source file
 src/synthesis/spline_sampling.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/spline_sampling.cpp.i
 .PHONY : src/synthesis/spline_sampling.cpp.i
 
 src/synthesis/spline_sampling.s: src/synthesis/spline_sampling.cpp.s
@@ -1642,13 +1408,11 @@ src/synthesis/spline_sampling.s: src/synthesis/spline_sampling.cpp.s
 # target to generate assembly for a file
 src/synthesis/spline_sampling.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/spline_sampling.cpp.s
 .PHONY : src/synthesis/spline_sampling.cpp.s
 
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
@@ -1658,13 +1422,11 @@ src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
 # target to build an object file
 src/synthesis/toolpath.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.o
 .PHONY : src/synthesis/toolpath.cpp.o
 
 src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
@@ -1674,13 +1436,11 @@ src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
 # target to preprocess a source file
 src/synthesis/toolpath.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.i
 .PHONY : src/synthesis/toolpath.cpp.i
 
 src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
@@ -1690,13 +1450,11 @@ src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
 # target to generate assembly for a file
 src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/synthesis/toolpath.cpp.s
 .PHONY : src/synthesis/toolpath.cpp.s
 
 src/system/bmp_output.o: src/system/bmp_output.cpp.o
@@ -1706,13 +1464,11 @@ src/system/bmp_output.o: src/system/bmp_output.cpp.o
 # target to build an object file
 src/system/bmp_output.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/bmp_output.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.o
 .PHONY : src/system/bmp_output.cpp.o
 
 src/system/bmp_output.i: src/system/bmp_output.cpp.i
@@ -1722,13 +1478,11 @@ src/system/bmp_output.i: src/system/bmp_output.cpp.i
 # target to preprocess a source file
 src/system/bmp_output.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/bmp_output.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.i
 .PHONY : src/system/bmp_output.cpp.i
 
 src/system/bmp_output.s: src/system/bmp_output.cpp.s
@@ -1738,13 +1492,11 @@ src/system/bmp_output.s: src/system/bmp_output.cpp.s
 # target to generate assembly for a file
 src/system/bmp_output.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/bmp_output.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/bmp_output.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/bmp_output.cpp.s
 .PHONY : src/system/bmp_output.cpp.s
 
 src/system/settings.o: src/system/settings.cpp.o
@@ -1754,13 +1506,11 @@ src/system/settings.o: src/system/settings.cpp.o
 # target to build an object file
 src/system/settings.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.o
 .PHONY : src/system/settings.cpp.o
 
 src/system/settings.i: src/system/settings.cpp.i
@@ -1770,13 +1520,11 @@ src/system/settings.i: src/system/settings.cpp.i
 # target to preprocess a source file
 src/system/settings.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.i
 .PHONY : src/system/settings.cpp.i
 
 src/system/settings.s: src/system/settings.cpp.s
@@ -1786,13 +1534,11 @@ src/system/settings.s: src/system/settings.cpp.s
 # target to generate assembly for a file
 src/system/settings.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/system/settings.cpp.s
 .PHONY : src/system/settings.cpp.s
 
 src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
@@ -1802,13 +1548,11 @@ src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
 # target to build an object file
 src/transformers/feed_changer.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.o
 .PHONY : src/transformers/feed_changer.cpp.o
 
 src/transformers/feed_changer.i: src/transformers/feed_changer.cpp.i
@@ -1818,13 +1562,11 @@ src/transformers/feed_changer.i: src/transformers/feed_changer.cpp.i
 # target to preprocess a source file
 src/transformers/feed_changer.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.i
 .PHONY : src/transformers/feed_changer.cpp.i
 
 src/transformers/feed_changer.s: src/transformers/feed_changer.cpp.s
@@ -1834,13 +1576,11 @@ src/transformers/feed_changer.s: src/transformers/feed_changer.cpp.s
 # target to generate assembly for a file
 src/transformers/feed_changer.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/feed_changer.cpp.s
 .PHONY : src/transformers/feed_changer.cpp.s
 
 src/transformers/g0_filter.o: src/transformers/g0_filter.cpp.o
@@ -1850,13 +1590,11 @@ src/transformers/g0_filter.o: src/transformers/g0_filter.cpp.o
 # target to build an object file
 src/transformers/g0_filter.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/g0_filter.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/g0_filter.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/g0_filter.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/g0_filter.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/g0_filter.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/g0_filter.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/g0_filter.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/g0_filter.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/g0_filter.cpp.o
 .PHONY : src/transformers/g0_filter.cpp.o
 
 src/transformers/g0_filter.i: src/transformers/g0_filter.cpp.i
@@ -1866,13 +1604,11 @@ src/transformers/g0_filter.i: src/transformers/g0_filter.cpp.i
 # target to preprocess a source file
 src/transformers/g0_filter.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/g0_filter.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/g0_filter.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/g0_filter.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/g0_filter.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/g0_filter.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/g0_filter.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/g0_filter.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/g0_filter.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/g0_filter.cpp.i
 .PHONY : src/transformers/g0_filter.cpp.i
 
 src/transformers/g0_filter.s: src/transformers/g0_filter.cpp.s
@@ -1882,13 +1618,11 @@ src/transformers/g0_filter.s: src/transformers/g0_filter.cpp.s
 # target to generate assembly for a file
 src/transformers/g0_filter.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/g0_filter.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/g0_filter.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/g0_filter.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/g0_filter.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/g0_filter.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/g0_filter.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/g0_filter.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/g0_filter.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/g0_filter.cpp.s
 .PHONY : src/transformers/g0_filter.cpp.s
 
 src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
@@ -1898,13 +1632,11 @@ src/transformers/scale_xyz.o: src/transformers/scale_xyz.cpp.o
 # target to build an object file
 src/transformers/scale_xyz.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/scale_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/scale_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.o
 .PHONY : src/transformers/scale_xyz.cpp.o
 
 src/transformers/scale_xyz.i: src/transformers/scale_xyz.cpp.i
@@ -1914,13 +1646,11 @@ src/transformers/scale_xyz.i: src/transformers/scale_xyz.cpp.i
 # target to preprocess a source file
 src/transformers/scale_xyz.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/scale_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/scale_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.i
 .PHONY : src/transformers/scale_xyz.cpp.i
 
 src/transformers/scale_xyz.s: src/transformers/scale_xyz.cpp.s
@@ -1930,13 +1660,11 @@ src/transformers/scale_xyz.s: src/transformers/scale_xyz.cpp.s
 # target to generate assembly for a file
 src/transformers/scale_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/scale_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/scale_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/scale_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/scale_xyz.cpp.s
 .PHONY : src/transformers/scale_xyz.cpp.s
 
 src/transformers/shift_xyz.o: src/transformers/shift_xyz.cpp.o
@@ -1946,13 +1674,11 @@ src/transformers/shift_xyz.o: src/transformers/shift_xyz.cpp.o
 # target to build an object file
 src/transformers/shift_xyz.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/shift_xyz.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.o
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.o
 .PHONY : src/transformers/shift_xyz.cpp.o
 
 src/transformers/shift_xyz.i: src/transformers/shift_xyz.cpp.i
@@ -1962,13 +1688,11 @@ src/transformers/shift_xyz.i: src/transformers/shift_xyz.cpp.i
 # target to preprocess a source file
 src/transformers/shift_xyz.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/shift_xyz.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.i
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.i
 .PHONY : src/transformers/shift_xyz.cpp.i
 
 src/transformers/shift_xyz.s: src/transformers/shift_xyz.cpp.s
@@ -1978,13 +1702,11 @@ src/transformers/shift_xyz.s: src/transformers/shift_xyz.cpp.s
 # target to generate assembly for a file
 src/transformers/shift_xyz.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/shift_xyz.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/gdiff.dir/build.make CMakeFiles/gdiff.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/pen-draw-lines.dir/build.make CMakeFiles/pen-draw-lines.dir/src/transformers/shift_xyz.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/shift_xyz.cpp.s
-	$(MAKE) -f CMakeFiles/simple-deepen.dir/build.make CMakeFiles/simple-deepen.dir/src/transformers/shift_xyz.cpp.s
 .PHONY : src/transformers/shift_xyz.cpp.s
 
 test/analysis_tests.o: test/analysis_tests.cpp.o
@@ -2399,36 +2121,28 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... analyze-gcodes"
+	@echo "... misc"
 	@echo "... rebuild_cache"
 	@echo "... cut-rect"
 	@echo "... print-dxf"
-	@echo "... gdiff"
-	@echo "... pen-draw-lines"
 	@echo "... hello-world"
-	@echo "... misc"
-	@echo "... simple-deepen"
 	@echo "... all-tests"
+	@echo "... examples/analyze_gcodes.o"
+	@echo "... examples/analyze_gcodes.i"
+	@echo "... examples/analyze_gcodes.s"
 	@echo "... examples/cut_rect.o"
 	@echo "... examples/cut_rect.i"
 	@echo "... examples/cut_rect.s"
-	@echo "... examples/gdiff.o"
-	@echo "... examples/gdiff.i"
-	@echo "... examples/gdiff.s"
 	@echo "... examples/hello_world.o"
 	@echo "... examples/hello_world.i"
 	@echo "... examples/hello_world.s"
 	@echo "... examples/misc.o"
 	@echo "... examples/misc.i"
 	@echo "... examples/misc.s"
-	@echo "... examples/pen_draw_lines.o"
-	@echo "... examples/pen_draw_lines.i"
-	@echo "... examples/pen_draw_lines.s"
 	@echo "... examples/print_dxf.o"
 	@echo "... examples/print_dxf.i"
 	@echo "... examples/print_dxf.s"
-	@echo "... examples/simple_deepen.o"
-	@echo "... examples/simple_deepen.i"
-	@echo "... examples/simple_deepen.s"
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"
