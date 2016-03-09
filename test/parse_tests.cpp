@@ -332,6 +332,18 @@ namespace gca {
       correct.push_back(m97_instr::make(lit::make(136381)));
       REQUIRE(correct == *p);
     }
+
+    SECTION("G83") {
+      gprog* p = parse_gprog("G83 G99 X3.1587 Y4.2467 Z-.15 R.1 Q.0547 F3.");
+      correct.push_back(g83_instr::make(true,
+					lit::make(3.1587),
+					lit::make(4.2467),
+					lit::make(-0.15),
+					lit::make(0.1),
+					lit::make(0.0547),
+					lit::make(3)));
+      REQUIRE(correct == *p);
+    }
   }
 
   TEST_CASE("Multiple lines using the same G register") {

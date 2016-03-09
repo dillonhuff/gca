@@ -240,6 +240,52 @@ namespace gca {
     }
     
   };
+
+  class g83_instr : public move_instr {
+  public:
+    bool return_to_r;
+    value* r;
+    value* q;
+    g83_instr(bool return_to_rp,
+	      value* xp, value* yp, value* zp,
+	      value* rp,
+	      value* qp,
+	      value* frp) : move_instr(xp, yp, zp, frp),
+			    return_to_r(return_to_rp), r(rp), q(qp) {}
+    g83_instr(g83_instr* i) : move_instr(i) {}
+
+    static g83_instr* make(bool return_to_rp,
+			   value* xp, value* yp, value* zp,
+			   value* rp,
+			   value* qp,
+			   value* frp) {
+      g83_instr* mem = allocate<g83_instr>();
+      return new (mem) g83_instr(return_to_rp,
+				 xp, yp, zp,
+				 rp,
+				 qp,
+				 frp);
+    }
+
+    
+    virtual inline bool is_G83() const { return true; }
+    
+    void print(ostream& s) const {
+      cout << "G83 ";
+      print_move_data(s, 0.000001);
+    }
+
+    bool operator==(const instr& other) const {
+      if (!other.is_G83()) {
+	return false;
+      }
+      const g83_instr& ci = static_cast<const g83_instr&>(other);
+      return same_pos_and_feed_rate(ci) &&
+	*(ci.r) == *(this->r) &&
+	*(ci.q) == *(this->q);
+    }
+    
+  };
   
 }
 

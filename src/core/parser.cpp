@@ -114,6 +114,9 @@ namespace gca {
 
   value* parse_option_value(char v, parse_state& s) {
     ignore_whitespace(s);
+    if (s.chars_left() == 0) {
+      return omitted::make();
+    }
     if (s.next() == v) {
       parse_char(v, s);
       if (s.next() == '#') {
@@ -189,6 +192,19 @@ namespace gca {
     return g53_instr::make(x, y, z);
   }
 
+  instr* parse_G83(gprog* p, parse_state& s) {
+    bool ret_r = !parse_option_value('G', s)->is_omitted();
+    value* x = parse_option_value('X', s);
+    value* y = parse_option_value('Y', s);
+    value* z = parse_option_value('Z', s);
+    value* r = parse_option_value('R', s);
+    value* q = parse_option_value('Q', s);
+    value* f = parse_option_value('F', s);    
+    return g83_instr::make(ret_r,
+			   x, y, z,
+			   r, q, f);
+  }
+  
   instr* parse_G28(gprog* p, parse_state& s) {
     value* x = parse_option_value('X', s);
     value* y = parse_option_value('Y', s);
@@ -270,6 +286,8 @@ namespace gca {
       is = g18_instr::make();
     } else if (val == 19) {
       is = g19_instr::make();
+    } else if (val == 83) {
+      is = parse_G83(p, s);
     } else {
       cout << "Unrecognized instr code for instr letter: " << val << endl;
       assert(false);
@@ -310,8 +328,8 @@ namespace gca {
   instr* parse_next_instr(int* g_register,
 			  gprog* p,
 			  parse_state& s) {
-    cout << "Parse next instr" << endl;
-    cout << "From string: " << string_remaining(s) << endl;
+    //cout << "Parse next instr" << endl;
+    //cout << "From string: " << string_remaining(s) << endl;
     instr* is;
     char next = s.next();
     if (next == '(') {
