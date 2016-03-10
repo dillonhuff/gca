@@ -13,11 +13,6 @@ namespace gca {
   }
 
   int parse_i(parse_state& s) {
-    // bool is_neg = false;
-    // if (s.next() == '-') {
-    //   is_neg = true;
-    //   s++;
-    // }
     string digits = "";
     while (s.chars_left() && isdigit(s.next())) {
       digits += s.next();
@@ -27,11 +22,12 @@ namespace gca {
   }
 
   double parse_dbl(parse_state& s) {
-    if (s.next() == '-') { s++; }
-    while (s.chars_left() && isdigit(s.next())) { s++; }
-    if (s.next() == '.') { s++; }
-    while (s.chars_left() && isdigit(s.next())) { s++; }
-    return 1.0;
+    string text = "";
+    if (s.next() == '-') { text += s.next(); s++; }
+    while (s.chars_left() && isdigit(s.next())) { text += s.next(); s++; }
+    if (s.next() == '.') { text += s.next(); s++; }
+    while (s.chars_left() && isdigit(s.next())) { text += s.next(); s++; }
+    return atof(text.c_str());
   }
   
   value* parse_c_val(char c, parse_state& s) {
@@ -75,7 +71,6 @@ namespace gca {
     case 'p':
     case 'd':
     case 'l':
-      
       return lit::make(parse_i(s));
     default:
       cout << "Invalid c = " << c << endl;
