@@ -1982,6 +1982,33 @@ test/gcode_to_cuts_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.s
 .PHONY : test/gcode_to_cuts_tests.cpp.s
 
+test/lexer_tests.o: test/lexer_tests.cpp.o
+
+.PHONY : test/lexer_tests.o
+
+# target to build an object file
+test/lexer_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.o
+.PHONY : test/lexer_tests.cpp.o
+
+test/lexer_tests.i: test/lexer_tests.cpp.i
+
+.PHONY : test/lexer_tests.i
+
+# target to preprocess a source file
+test/lexer_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.i
+.PHONY : test/lexer_tests.cpp.i
+
+test/lexer_tests.s: test/lexer_tests.cpp.s
+
+.PHONY : test/lexer_tests.s
+
+# target to generate assembly for a file
+test/lexer_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.s
+.PHONY : test/lexer_tests.cpp.s
+
 test/line_tests.o: test/line_tests.cpp.o
 
 .PHONY : test/line_tests.o
@@ -2353,6 +2380,9 @@ help:
 	@echo "... test/gcode_to_cuts_tests.o"
 	@echo "... test/gcode_to_cuts_tests.i"
 	@echo "... test/gcode_to_cuts_tests.s"
+	@echo "... test/lexer_tests.o"
+	@echo "... test/lexer_tests.i"
+	@echo "... test/lexer_tests.s"
 	@echo "... test/line_tests.o"
 	@echo "... test/line_tests.i"
 	@echo "... test/line_tests.s"

@@ -34,9 +34,8 @@ void read_dir(const string& dir_name) {
       std::ifstream t(dir_name);
       std::string str((std::istreambuf_iterator<char>(t)),
 		      std::istreambuf_iterator<char>());
-      vector<token> p = lex_gprog(str);
-      //gprog* p = parse_gprog(str);
-      cout << "NUM INSTRUCTIONS: " << p.size() << endl;
+      vector<block> p = lex_gprog(str);
+      cout << "NUM BLOCKS: " << p.size() << endl;
     }
   }
 }

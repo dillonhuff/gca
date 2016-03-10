@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <streambuf>
@@ -80,28 +81,26 @@ namespace gca {
     }
   }
 
-  token parse_token(parse_state& s) {
+  token* parse_token(parse_state& s) {
     if (s.next() == '\n') {
       s++;
-      return newline();
+      return new (allocate<newline>()) newline();
     } else if (s.next() == '[') {
       parse_comment_with_delimiters('[', ']', s);
-      return cmt();
+      return new (allocate<cmt>()) cmt();
     } else if (s.next() == '(') {
       parse_comment_with_delimiters('(', ')', s);
-      return cmt();
+      return new (allocate<cmt>()) cmt();
     } else {
       char c = s.next();
       s++;
       value* v = parse_c_val(c, s);
-      icode ic(c, *v);
-      //cout << ic << endl;
-      return ic;
+      return new (allocate<icode>()) icode(c, *v);
     }
   }
 
-  vector<token> lex_gprog(const string& str) {
-    vector<token> ts;
+  block lex_gprog_line(const string& str) {
+    block ts;
     parse_state s(str);
     int i = 0;
     while (s.chars_left()) {
@@ -112,5 +111,32 @@ namespace gca {
       i++;
     }
     return ts;
+  }
+
+  vector<block> lex_gprog(const string& str) {
+    vector<block> blocks;
+    string::const_iterator line_start = str.begin();
+    string::const_iterator line_end;
+    while (line_end != str.end()) {
+      line_end = find(line_start, str.end(), '\n');
+      string line(line_start, line_end);
+      blocks.push_back(lex_gprog_line(line));
+    }
+    return blocks;
+  }
+
+  bool cmp_tokens(const token* l, const token* r)
+  { return (*l) == (*r); }
+
+  bool operator==(const block& l, const block& r) {
+    if (l.size() != r.size())
+      { return false; }
+    return equal(l.begin(), l.end(), r.begin(), cmp_tokens);
+  }
+
+  bool operator==(const vector<block>& l, const vector<block>& r) {
+    if (l.size() != r.size())
+      { return false; }
+    return equal(l.begin(), l.end(), r.begin());
   }
 }

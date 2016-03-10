@@ -13,11 +13,6 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    SECTION("Parse empty string") {
-      string s = "";
-      gprog* p = parse_gprog(s);
-      REQUIRE((p != NULL));
-    }
 
     SECTION("Parse M2 line") {
       string s = "M2";
