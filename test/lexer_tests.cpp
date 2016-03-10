@@ -14,6 +14,7 @@ namespace gca {
     SECTION("Lex empty string") {
       s = "";
       p = lex_gprog(s);
+      cout << p << endl;
       REQUIRE(p.size() == 0);
     }
 
@@ -24,6 +25,5 @@ namespace gca {
       correct.push_back(b);
       REQUIRE(p == correct);
     }
-
   }
 }

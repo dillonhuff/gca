@@ -8,11 +8,23 @@
 
 namespace gca {
 
-  ostream& operator<<(ostream& stream, const icode& ic) {
-    stream << ic.c << ic.v << endl;
+  ostream& operator<<(ostream& stream, const token& ic) {
+    ic.print(stream);
     return stream;
   }
 
+  ostream& operator<<(ostream& stream, const block& block) {
+    for (block::const_iterator it = block.begin(); it != block.end(); ++it)
+      { stream << **it << " "; }
+    return stream;
+  }
+
+  ostream& operator<<(ostream& stream, const vector<block>& blocks) {
+    for (vector<block>::const_iterator it = blocks.begin(); it != blocks.end(); ++it)
+      { stream << *it << endl; }
+    return stream;
+  }
+  
   int parse_i(parse_state& s) {
     string digits = "";
     while (s.chars_left() && isdigit(s.next())) {
@@ -104,12 +116,12 @@ namespace gca {
     parse_state s(str);
     int i = 0;
     while (s.chars_left()) {
-      if (i % 100000 == 0) { cout << "Instruction # " << i << endl; }
       ignore_whitespace(s);
       if (!s.chars_left()) { break; }
       ts.push_back(parse_token(s));
       i++;
     }
+    //cout << ts << endl;
     return ts;
   }
 
@@ -117,10 +129,13 @@ namespace gca {
     vector<block> blocks;
     string::const_iterator line_start = str.begin();
     string::const_iterator line_end;
-    while (line_end != str.end()) {
+    while (line_start < str.end()) {
       line_end = find(line_start, str.end(), '\n');
       string line(line_start, line_end);
-      blocks.push_back(lex_gprog_line(line));
+      //cout << "Line: " << line << endl;
+      if (line.size() > 0) { blocks.push_back(lex_gprog_line(line)); }
+      line_start += line.size() + 1;
+      //cout << "Line start: " << *line_start << endl;
     }
     return blocks;
   }

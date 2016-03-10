@@ -18,12 +18,15 @@ namespace gca {
   struct token {
     virtual bool operator==(const token& other) const = 0;
     virtual token_type tp() const = 0;
+    virtual void print(ostream& stream) const = 0;
   };
   
   struct newline : public token {
     virtual bool operator==(const token& other) const
     { return other.tp() == NEWLINE; }
     virtual token_type tp() const { return NEWLINE; }
+    virtual void print(ostream& stream) const
+    { stream << '\n'; }
   };
 
   struct cmt : public token {
@@ -36,6 +39,8 @@ namespace gca {
       return text == ci.text;
     }
     virtual token_type tp() const { return COMMENT; }
+    virtual void print(ostream& stream) const
+    { stream << text; }
   };
   
   struct icode : public token {
@@ -55,11 +60,15 @@ namespace gca {
       return c == ci.c && v == ci.v;
     }
     virtual token_type tp() const { return ICODE; }
+    virtual void print(ostream& stream) const
+    { stream << c << v; }
   };
 
   typedef vector<token*> block;
 
-  ostream& operator<<(ostream& stream, const icode& ic);
+  ostream& operator<<(ostream& stream, const token& ic);
+  ostream& operator<<(ostream& stream, const block& block);
+  ostream& operator<<(ostream& stream, const vector<block>& blocks);
 
   vector<block> lex_gprog(const string& s);
 
