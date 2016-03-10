@@ -117,13 +117,13 @@ namespace gca {
       gprog* p = parse_gprog(s);
       gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(lit::make(0.0), lit::make(2.75), lit::make(-1.5), omitted::make()));
-      correct->push_back(comment::make('(', ')', "comment 1"));
+      correct->push_back(comment::make('(', ')', "(comment 1)"));
       correct->push_back(g0_instr::make(lit::make(12.5), omitted::make(), omitted::make()));
-      correct->push_back(comment::make('(', ')', "Comment number 2"));
-      correct->push_back(comment::make('(', ')', "s"));
-      correct->push_back(comment::make('(', ')', " f"));
+      correct->push_back(comment::make('(', ')', "(Comment number 2)"));
+      correct->push_back(comment::make('(', ')', "(s)"));
+      correct->push_back(comment::make('(', ')', "( f)"));
       correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      correct->push_back(comment::make('(', ')', "Comment G1 X0.0"));
+      correct->push_back(comment::make('(', ')', "(Comment G1 X0.0)"));
       REQUIRE((*p == *correct));
     }
 
@@ -389,6 +389,12 @@ namespace gca {
       gprog* p = parse_gprog("M01 M00");
       correct.push_back(m1_instr::make());
       correct.push_back(m0_instr::make());
+      REQUIRE(correct == *p);
+    }
+
+    SECTION("Nested parens comment") {
+      gprog* p = parse_gprog("(())");
+      correct.push_back(comment::make('(', ')', "(())"));;
       REQUIRE(correct == *p);
     }
   }

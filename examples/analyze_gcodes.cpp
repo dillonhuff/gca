@@ -51,7 +51,11 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
-  // gprog* p = read_file("/Users/dillon/Documents/MattNorcia318/Gcode/Bottom.NCF");
-  // cout << *p << endl;
   read_dir(dir_name);
+  
+  // std::ifstream t("/Users/dillon/Documents//ME318-2/ME318/ME318/Term Project/Part 1/Mount Op 3.NCF");
+  // std::string str((std::istreambuf_iterator<char>(t)),
+  // 		  std::istreambuf_iterator<char>());
+  
+  // vector<token> ts = lex_gprog(str);
 }

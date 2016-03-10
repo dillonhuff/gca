@@ -282,7 +282,7 @@ namespace gca {
     instr* is;
     char next = s.next();
     if (next == '(') {
-      is =  comment::make('(', ')', parse_comment_with_delimiters('(', ')', s));
+      is = comment::make('(', ')', parse_comment_with_delimiters('(', ')', s));
       return is;
     } else if (next == '[') {
       is = comment::make('[', ']', parse_comment_with_delimiters('[', ']', s));

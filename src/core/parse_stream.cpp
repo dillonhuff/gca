@@ -16,18 +16,24 @@ namespace gca {
   }
   
   string parse_comment_with_delimiters(char sc, char ec, parse_state& s) {
+    int depth = 0;
     string text = "";
-    parse_char(sc, s);
-    while (s.next() != ec) {
+    do {
+      if (s.next() == sc) { depth++; }
+      else if (s.next() == ec) { depth--; }
       text += s.next();
       s++;
-    }
-    parse_char(ec, s);
+    } while (s.chars_left() && depth > 0);
+    // while (s.next() != ec) {
+    //   text += s.next();
+    //   s++;
+    // }
+    // parse_char(ec, s);
     return text;
   }
 
   void ignore_whitespace(parse_state& s) {
-    while (s.chars_left() && (isspace(s.next()) || s.next() == '%')) { s++; }
+    while (s.chars_left() && (isspace(s.next()) || s.next() == '%' || s.next() == '\r')) { s++; }
   }
 
   double parse_double(parse_state& s) {
