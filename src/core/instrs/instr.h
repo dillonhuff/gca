@@ -84,6 +84,7 @@ namespace gca {
     virtual inline bool is_G28() const { return false; }
     virtual inline bool is_G41() const { return false; }
     virtual inline bool is_G42() const { return false; }
+    virtual inline bool is_G73() const { return false; }
   };
 
   ostream& operator<<(ostream& stream, const instr& i);

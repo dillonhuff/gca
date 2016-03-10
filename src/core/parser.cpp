@@ -6,130 +6,10 @@
 #include <sstream>
 #include <streambuf>
 
+#include "core/parse_stream.h"
 #include "core/parser.h"
 
 namespace gca {
-
-  template<typename T>
-  struct parse_stream {
-    size_t i;
-    vector<T> s;
-
-    template<typename R>
-    parse_stream<T>(R v) : s(v.begin(), v.end()) {
-      i = 0;
-    }
-
-    char next() {
-      return s[i];
-    }
-
-    int chars_left() const {
-      return i < s.size();
-    }
-
-    parse_stream<T>& operator++(int) {
-      i++;
-      return *this;
-    }
-
-    parse_stream<T>& operator--(int) {
-      i--;
-      return *this;
-    }
-
-    typename vector<T>::iterator end() {
-      return s.end();
-    }
-
-    typename vector<T>::iterator begin() {
-      return s.end();
-    }
-    
-    typename vector<T>::iterator remaining() {
-      return s.begin() + i;
-    }
-
-  };
-
-  typedef parse_stream<char> parse_state;
-
-  string string_remaining(parse_state& ps) {
-    return string(ps.remaining(), ps.end());
-  }
-
-  void parse_char(char c, parse_state& s) {
-    if (s.next() == c) {
-      s++;
-      return;
-    }
-    cout << "Cannot parse char " << c << " from string " << string_remaining(s) << endl;
-    assert(false);
-  }
-  
-  comment* parse_comment_with_delimiters(char sc, char ec, parse_state& s) {
-    string text = "";
-    parse_char(sc, s);
-    while (s.next() != ec) {
-      text += s.next();
-      s++;
-    }
-    parse_char(ec, s);
-    return comment::make(sc, ec, text);
-  }
-
-  void ignore_whitespace(parse_state& s) {
-    while (s.chars_left() && (isspace(s.next()) || s.next() == '%')) { s++; }
-  }
-
-  double parse_double(parse_state& s) {
-    size_t j = s.i;
-    double v =stod(string_remaining(s), &j);
-    s.i += j;
-    return v;
-  }
-
-  int parse_int(parse_state& s) {
-    size_t j = s.i;
-    int v = stoi(string_remaining(s), &j);
-    s.i += j;
-    return v;
-  }
-
-  double parse_coordinate(char c, parse_state& s) {
-    ignore_whitespace(s);
-    assert(s.next() == c);
-    s++;
-    return parse_double(s);
-  }
-
-  double parse_option_coordinate(char c, parse_state& s, double def=0.0) {
-    ignore_whitespace(s);
-    if (s.next() == c) {
-      s++;
-      return parse_double(s);
-    }
-    return def;
-  }
-
-  value* parse_option_value(char v, parse_state& s) {
-    ignore_whitespace(s);
-    if (s.chars_left() == 0) {
-      return omitted::make();
-    }
-    if (s.next() == v) {
-      parse_char(v, s);
-      if (s.next() == '#') {
-	parse_char('#', s);
-	int val = parse_int(s);
-	return var::make(val);
-      } else {
-	double d = parse_double(s);
-	return lit::make(d);
-      }
-    }
-    return omitted::make();
-  }
   
   instr* parse_G1(gprog* p, parse_state& s) {
     value* default_feedrate = omitted::make();
@@ -232,6 +112,21 @@ namespace gca {
 			   x, y, z,
 			   a, r, l, f);
   }
+
+  instr* parse_G73(gprog* p, parse_state& s) {
+    bool ret_r = !parse_option_value('G', s)->is_omitted();
+    value* x = parse_option_value('X', s);
+    value* y = parse_option_value('Y', s);
+    value* z = parse_option_value('Z', s);
+    value* a = parse_option_value('A', s);
+    value* r = parse_option_value('R', s);
+    value* l = parse_option_value('L', s);
+    value* q = parse_option_value('Q', s);
+    value* f = parse_option_value('F', s);
+    return g73_instr::make(ret_r,
+			   x, y, z,
+			   a, r, l, q, f);
+  }
   
   instr* parse_G28(gprog* p, parse_state& s) {
     value* x = parse_option_value('X', s);
@@ -239,7 +134,7 @@ namespace gca {
     value* z = parse_option_value('Z', s);
     return g28_instr::make(x, y, z);
   }
-  
+
   instr* parse_G64(gprog* p, parse_state& s) {
     value* pv = parse_option_value('P', s);
     return g64_instr::make(pv);
@@ -252,7 +147,8 @@ namespace gca {
 
   instr* parse_M97(gprog* p, parse_state& s) {
     value* pv = parse_option_value('P', s);
-    return m97_instr::make(pv);
+    value* pl = parse_option_value('L', s);
+    return m97_instr::make(pv, pl);
   }
 
   instr* parse_G41(gprog* p, parse_state& s) {
@@ -330,6 +226,8 @@ namespace gca {
       is = parse_G81(p, s);
     } else if (val == 85) {
       is = parse_G85(p, s);
+    } else if (val == 73) {
+      is = parse_G73(p, s);
     } else if (val == 41) {
       is = parse_G41(p, s);
     } else if (val == 42) {
@@ -380,15 +278,14 @@ namespace gca {
   instr* parse_next_instr(int* g_register,
 			  gprog* p,
 			  parse_state& s) {
-    //cout << "Parse next instr" << endl;
-    //cout << "From string: " << string_remaining(s) << endl;
+    //cout << "Parse next instr from " << string_remaining(s) << endl;
     instr* is;
     char next = s.next();
     if (next == '(') {
-      is = parse_comment_with_delimiters('(', ')', s);
+      is =  comment::make('(', ')', parse_comment_with_delimiters('(', ')', s));
       return is;
     } else if (next == '[') {
-      is = parse_comment_with_delimiters('[', ']', s);
+      is = comment::make('[', ']', parse_comment_with_delimiters('[', ']', s));
       return is;
     }
     s++;

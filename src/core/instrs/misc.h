@@ -168,15 +168,23 @@ namespace gca {
   
   class m97_instr : public instr {
   public:
-    value* num;
+    value* p;
+    value* l;
 
-  m97_instr(value* n) : num(n) {}
-    static m97_instr* make(value* n) { return new (allocate<m97_instr>()) m97_instr(n); }
+    m97_instr(value* pp, value* pl) : p(pp), l(pl) {}
+    static m97_instr* make(value* n)
+    { return new (allocate<m97_instr>()) m97_instr(n, omitted::make()); }
+    static m97_instr* make(value* p, value* l)
+    { return new (allocate<m97_instr>()) m97_instr(p, l); }
+
     inline bool is_M97() const { return true; }
-    void print(ostream& s) const { s << "M97 P" << num; }
+    void print(ostream& s) const { s << "M97 P" << *p << "L " << *l; }
     bool operator==(const instr& other) const {
-      return other.is_M97() &&
-	*(static_cast<const m97_instr&>(other).num) == *(num);
+      if (other.is_M97()) {
+	const m97_instr& ci = static_cast<const m97_instr&>(other);
+	return *(ci.p) == *p && *(ci.l) == *l;
+      }
+      return false;
     }
 
   };

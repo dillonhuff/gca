@@ -326,10 +326,11 @@ namespace gca {
       REQUIRE(correct == *p);
     }
 
-    SECTION("M6 M97 P136381") {
-      gprog* p = parse_gprog("M6 M97 P136381");
+    SECTION("M6 and M97") {
+      gprog* p = parse_gprog("M6 M97 P136381 M97 P120 L34");
       correct.push_back(m6_instr::make());
-      correct.push_back(m97_instr::make(lit::make(136381)));
+      correct.push_back(m97_instr::make(lit::make(136381), omitted::make()));
+      correct.push_back(m97_instr::make(lit::make(120), lit::make(34)));
       REQUIRE(correct == *p);
     }
 

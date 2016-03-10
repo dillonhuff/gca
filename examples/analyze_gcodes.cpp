@@ -6,6 +6,7 @@
 #include <string>
 
 #include "core/arena_allocator.h"
+#include "core/lexer.h"
 #include "core/parser.h"
 
 using namespace gca;
@@ -33,8 +34,9 @@ void read_dir(const string& dir_name) {
       std::ifstream t(dir_name);
       std::string str((std::istreambuf_iterator<char>(t)),
 		      std::istreambuf_iterator<char>());
-      gprog* p = parse_gprog(str);
-      cout << "NUM INSTRUCTIONS: " << p->size() << endl;
+      vector<token> p = lex_gprog(str);
+      //gprog* p = parse_gprog(str);
+      cout << "NUM INSTRUCTIONS: " << p.size() << endl;
     }
   }
 }
@@ -49,5 +51,7 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
+  // gprog* p = read_file("/Users/dillon/Documents/MattNorcia318/Gcode/Bottom.NCF");
+  // cout << *p << endl;
   read_dir(dir_name);
 }

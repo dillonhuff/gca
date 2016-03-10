@@ -79,6 +79,8 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/core/parser.cpp
 	 ./src/core/pass.cpp
 	 ./src/core/value.cpp
+	 ./src/core/lexer.cpp
+	 ./src/core/parse_stream.cpp
 	 ./src/checkers/bounds_checker.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp

@@ -659,6 +659,90 @@ src/core/instrs/instr.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.s
 .PHONY : src/core/instrs/instr.cpp.s
 
+src/core/lexer.o: src/core/lexer.cpp.o
+
+.PHONY : src/core/lexer.o
+
+# target to build an object file
+src/core/lexer.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.o
+.PHONY : src/core/lexer.cpp.o
+
+src/core/lexer.i: src/core/lexer.cpp.i
+
+.PHONY : src/core/lexer.i
+
+# target to preprocess a source file
+src/core/lexer.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.i
+.PHONY : src/core/lexer.cpp.i
+
+src/core/lexer.s: src/core/lexer.cpp.s
+
+.PHONY : src/core/lexer.s
+
+# target to generate assembly for a file
+src/core/lexer.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.s
+.PHONY : src/core/lexer.cpp.s
+
+src/core/parse_stream.o: src/core/parse_stream.cpp.o
+
+.PHONY : src/core/parse_stream.o
+
+# target to build an object file
+src/core/parse_stream.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.o
+.PHONY : src/core/parse_stream.cpp.o
+
+src/core/parse_stream.i: src/core/parse_stream.cpp.i
+
+.PHONY : src/core/parse_stream.i
+
+# target to preprocess a source file
+src/core/parse_stream.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.i
+.PHONY : src/core/parse_stream.cpp.i
+
+src/core/parse_stream.s: src/core/parse_stream.cpp.s
+
+.PHONY : src/core/parse_stream.s
+
+# target to generate assembly for a file
+src/core/parse_stream.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.s
+.PHONY : src/core/parse_stream.cpp.s
+
 src/core/parser.o: src/core/parser.cpp.o
 
 .PHONY : src/core/parser.o
@@ -2167,6 +2251,12 @@ help:
 	@echo "... src/core/instrs/instr.o"
 	@echo "... src/core/instrs/instr.i"
 	@echo "... src/core/instrs/instr.s"
+	@echo "... src/core/lexer.o"
+	@echo "... src/core/lexer.i"
+	@echo "... src/core/lexer.s"
+	@echo "... src/core/parse_stream.o"
+	@echo "... src/core/parse_stream.i"
+	@echo "... src/core/parse_stream.s"
 	@echo "... src/core/parser.o"
 	@echo "... src/core/parser.i"
 	@echo "... src/core/parser.s"

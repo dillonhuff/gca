@@ -386,6 +386,61 @@ namespace gca {
     }
     
   };
+
+
+  class g73_instr : public move_instr {
+  public:
+    bool return_to_r;
+    value* a;
+    value* r;
+    value* l;
+    value* q;
+
+    g73_instr(bool return_to_rp,
+	      value* xp, value* yp, value* zp,
+	      value* ap,
+	      value* rp,
+	      value* lp,
+	      value* qp,
+	      value* frp) : move_instr(xp, yp, zp, frp),
+			    return_to_r(return_to_rp), a(ap), r(rp), l(lp), q(qp) {}
+    g73_instr(g73_instr* i) : move_instr(i) {}
+
+    static g73_instr* make(bool return_to_rp,
+			   value* xp, value* yp, value* zp,
+			   value* ap,
+			   value* rp,
+			   value* lp,
+			   value* qp,
+			   value* frp) {
+      g73_instr* mem = allocate<g73_instr>();
+      return new (mem) g73_instr(return_to_rp,
+				 xp, yp, zp,
+				 ap, rp, lp, qp,
+				 frp);
+    }
+
+    
+    virtual inline bool is_G73() const { return true; }
+    
+    void print(ostream& s) const {
+      cout << "G73 ";
+      print_move_data(s, 0.000001);
+    }
+
+    bool operator==(const instr& other) const {
+      if (!other.is_G73()) {
+	return false;
+      }
+      const g73_instr& ci = static_cast<const g73_instr&>(other);
+      return same_pos_and_feed_rate(ci) &&
+	*(ci.a) == *(this->a) &&
+	*(ci.r) == *(this->r) &&
+	*(ci.l) == *(this->l) &&
+	*(ci.q) == *(this->q);
+    }
+    
+  };
   
 }
 
