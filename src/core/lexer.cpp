@@ -84,7 +84,7 @@ namespace gca {
     case 'p':
     case 'd':
     case 'l':
-      return lit::make(parse_i(s));
+      return ilit::make(parse_i(s));
     default:
       cout << "Invalid c = " << c << endl;
       cout << "Inavlid c as int = " << ((int) c) << endl;
@@ -121,7 +121,6 @@ namespace gca {
       ts.push_back(parse_token(s));
       i++;
     }
-    //cout << ts << endl;
     return ts;
   }
 
@@ -132,10 +131,8 @@ namespace gca {
     while (line_start < str.end()) {
       line_end = find(line_start, str.end(), '\n');
       string line(line_start, line_end);
-      //cout << "Line: " << line << endl;
       if (line.size() > 0) { blocks.push_back(lex_gprog_line(line)); }
       line_start += line.size() + 1;
-      //cout << "Line start: " << *line_start << endl;
     }
     return blocks;
   }

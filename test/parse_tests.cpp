@@ -12,57 +12,7 @@ namespace gca {
   TEST_CASE("Parse GCODE with absolute coordinates") {
     arena_allocator a;
     set_system_allocator(&a);
-
-
-    SECTION("Parse M2 line") {
-      string s = "M2";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(new (allocate<m2_instr>()) m2_instr());
-      REQUIRE((p->size() == 1));
-      REQUIRE((*p == *correct));
-    }
-
-    SECTION("Parse M30 line") {
-      string s = "M30";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(m30_instr::make());
-      REQUIRE((*p == *correct));
-    }
-
-    SECTION("Parse G00 line, no spaces") {
-      string s = "G00X12.0Y8.0Z-4.5";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g0_instr::make(point(12.0, 8.0, -4.5)));
-      REQUIRE((*p == *correct));
-    }    
     
-    SECTION("Parse G00 line, all 12.0") {
-      string s = "G00 X12.0 Y12.0 Z12.0";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g0_instr::make(point(12.0, 12.0, 12.0)));
-      REQUIRE((*p == *correct));
-    }
-    
-   SECTION("Parse G00 line") {
-      string s = "G00 X30.0 Y12 Z-1.5";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g0_instr::make(point(30.0, 12.0, -1.5)));
-      REQUIRE((*p == *correct));
-    }
-
-    SECTION("Parse G1 line") {
-      string s = "G1 X32.0 Y-6.0 Z-1.5";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g1_instr::make(lit::make(32.0), lit::make(-6.0), lit::make(-1.5), omitted::make()));
-      REQUIRE((*p == *correct));
-    }
-
     SECTION("Parse G1 line with defaults") {
       string s = "G0 X2.75 Y8.0 Z0.0 G1 Z-1.5";
       gprog* p = parse_gprog(s);
@@ -78,22 +28,6 @@ namespace gca {
       gprog* correct = gprog::make();
       correct->push_back(g1_instr::make(lit::make(2.75), lit::make(8.0), lit::make(0.0), omitted::make()));
       correct->push_back(g0_instr::make(omitted::make(), omitted::make(), lit::make(-1.5)));
-      REQUIRE((*p == *correct));
-    }
-    
-    SECTION("Parse G1 line with front feedrate") {
-      string s = "G1 F4 X0.0 Y0.0 Z0.0";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g1_instr::make(0.0, 0.0, 0.0, 4.0));
-      REQUIRE((*p == *correct));
-    }
-
-    SECTION("Parse G1 line with back feedrate") {
-      string s = "G1 X0.0 Y0.0 Z0.0 F4";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g1_instr::make(0.0, 0.0, 0.0, 4.0));
       REQUIRE((*p == *correct));
     }
     
@@ -158,17 +92,6 @@ namespace gca {
       gprog* correct = gprog::make();
       correct->push_back(g91_instr::make());
       correct->push_back(g0_instr::make(1.0, 0.0, 0.0));
-      REQUIRE(((*p) == (*correct)));
-    }
-
-    SECTION("Parse multi line relative code") {
-      string s = "G91\nG0 X1.0 Y1.0 Z1.0\nG0 Y0.5\nM2";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g91_instr::make());
-      correct->push_back(g0_instr::make(1.0, 1.0, 1.0));
-      correct->push_back(g0_instr::make(omitted::make(), lit::make(0.5), omitted::make()));
-      correct->push_back(new (allocate<m2_instr>()) m2_instr());
       REQUIRE(((*p) == (*correct)));
     }
 
@@ -248,6 +171,7 @@ namespace gca {
       REQUIRE(((*p) == (*correct)));
     }
   }
+
   TEST_CASE("Miscellaneous control instructions") {
     arena_allocator a;
     set_system_allocator(&a);
