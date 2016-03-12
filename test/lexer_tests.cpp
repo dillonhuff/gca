@@ -14,7 +14,12 @@ namespace gca {
     SECTION("Lex empty string") {
       s = "";
       p = lex_gprog(s);
-      cout << p << endl;
+      REQUIRE(p.size() == 0);
+    }
+
+    SECTION("Lex empty lines") {
+      s = "\n \n%\n";
+      p = lex_gprog(s);
       REQUIRE(p.size() == 0);
     }
 

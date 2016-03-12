@@ -128,7 +128,12 @@ namespace gca {
     while (line_start < str.end()) {
       line_end = find(line_start, str.end(), '\n');
       string line(line_start, line_end);
-      if (line.size() > 0) { blocks.push_back(lex_gprog_line(line)); }
+      if (line.size() > 0) {
+	block b = lex_gprog_line(line);
+	if (b.size() > 0) {
+	  blocks.push_back(b);
+	}
+      }
       line_start += line.size() + 1;
     }
     return blocks;

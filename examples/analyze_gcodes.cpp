@@ -5,6 +5,7 @@
 #include <streambuf>
 #include <string>
 
+#include "analysis/unfold.h"
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
 #include "core/parser.h"
@@ -80,7 +81,9 @@ void read_dir(const string& dir_name) {
 		      std::istreambuf_iterator<char>());
       vector<block> p = lex_gprog(str);
       cout << "NUM BLOCKS: " << p.size() << endl;
-      print_canned_cycle_feedrates(p);
+      vector<block> uf = unfold_gprog(p);
+      cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
+      //print_canned_cycle_feedrates(p);
     }
   }
 }
