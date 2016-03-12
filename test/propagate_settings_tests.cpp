@@ -30,12 +30,16 @@ namespace gca {
       b2.push_back(icode::make('G', 0));
       b2.push_back(icode::make('X', 1.0));
       block b3;
-      b3.push_back(icode::make('G', 40));
       b3.push_back(icode::make('G', 0));
+      b3.push_back(icode::make('G', 40));
       b3.push_back(icode::make('G', 91));
       correct.push_back(b1);
       correct.push_back(b2);
       correct.push_back(b3);
+      cout << "Correct: " << endl;
+      cout << correct << endl;
+      cout << "Actual: " << endl;
+      cout << res << endl;
       REQUIRE(res == correct);
     }
   }
