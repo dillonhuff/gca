@@ -407,6 +407,48 @@ src/analysis/gcode_to_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
 .PHONY : src/analysis/gcode_to_cuts.cpp.s
 
+src/analysis/unfold.o: src/analysis/unfold.cpp.o
+
+.PHONY : src/analysis/unfold.o
+
+# target to build an object file
+src/analysis/unfold.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.o
+.PHONY : src/analysis/unfold.cpp.o
+
+src/analysis/unfold.i: src/analysis/unfold.cpp.i
+
+.PHONY : src/analysis/unfold.i
+
+# target to preprocess a source file
+src/analysis/unfold.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.i
+.PHONY : src/analysis/unfold.cpp.i
+
+src/analysis/unfold.s: src/analysis/unfold.cpp.s
+
+.PHONY : src/analysis/unfold.s
+
+# target to generate assembly for a file
+src/analysis/unfold.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.s
+.PHONY : src/analysis/unfold.cpp.s
+
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
 
 .PHONY : src/checkers/bounds_checker.o
@@ -2225,6 +2267,33 @@ test/transformer_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/transformer_tests.cpp.s
 .PHONY : test/transformer_tests.cpp.s
 
+test/unfold_tests.o: test/unfold_tests.cpp.o
+
+.PHONY : test/unfold_tests.o
+
+# target to build an object file
+test/unfold_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.o
+.PHONY : test/unfold_tests.cpp.o
+
+test/unfold_tests.i: test/unfold_tests.cpp.i
+
+.PHONY : test/unfold_tests.i
+
+# target to preprocess a source file
+test/unfold_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.i
+.PHONY : test/unfold_tests.cpp.i
+
+test/unfold_tests.s: test/unfold_tests.cpp.s
+
+.PHONY : test/unfold_tests.s
+
+# target to generate assembly for a file
+test/unfold_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.s
+.PHONY : test/unfold_tests.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -2260,6 +2329,9 @@ help:
 	@echo "... src/analysis/gcode_to_cuts.o"
 	@echo "... src/analysis/gcode_to_cuts.i"
 	@echo "... src/analysis/gcode_to_cuts.s"
+	@echo "... src/analysis/unfold.o"
+	@echo "... src/analysis/unfold.i"
+	@echo "... src/analysis/unfold.s"
 	@echo "... src/checkers/bounds_checker.o"
 	@echo "... src/checkers/bounds_checker.i"
 	@echo "... src/checkers/bounds_checker.s"
@@ -2407,6 +2479,9 @@ help:
 	@echo "... test/transformer_tests.o"
 	@echo "... test/transformer_tests.i"
 	@echo "... test/transformer_tests.s"
+	@echo "... test/unfold_tests.o"
+	@echo "... test/unfold_tests.i"
+	@echo "... test/unfold_tests.s"
 .PHONY : help
 
 

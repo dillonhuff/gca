@@ -10,8 +10,7 @@ using namespace std;
 namespace gca {
 
   enum token_type {
-    NEWLINE = 0,
-    COMMENT,
+    COMMENT = 0,
     ICODE
   };
 
@@ -21,25 +20,22 @@ namespace gca {
     virtual void print(ostream& stream) const = 0;
   };
   
-  struct newline : public token {
-    virtual bool operator==(const token& other) const
-    { return other.tp() == NEWLINE; }
-    virtual token_type tp() const { return NEWLINE; }
-    virtual void print(ostream& stream) const
-    { stream << '\n'; }
-  };
-
   struct cmt : public token {
     string text;
-    
-    virtual bool operator==(const token& other) const {
-      if (other.tp() != NEWLINE)
+
+    cmt(string textp) : text(textp) {}
+
+    static cmt* make(string textp)
+    { return new (allocate<cmt>()) cmt(textp); }
+
+    bool operator==(const token& other) const {
+      if (other.tp() != COMMENT)
 	{return false; }
       const cmt& ci = static_cast<const cmt&>(other);
       return text == ci.text;
     }
-    virtual token_type tp() const { return COMMENT; }
-    virtual void print(ostream& stream) const
+    token_type tp() const { return COMMENT; }
+    void print(ostream& stream) const
     { stream << text; }
   };
   
@@ -49,23 +45,28 @@ namespace gca {
 
     icode(char cp, const value& vp) : c(cp), v(vp) {}
 
-    static icode* make(char c, const value& v) {
-      return new (allocate<icode>()) icode(c, v);
-    }
+    static icode* make(char c, const value& v)
+    { return new (allocate<icode>()) icode(c, v); }
+    static icode* make(char c, double v)
+    { return new (allocate<icode>()) icode(c, *lit::make(v)); }
+    static icode* make(char c, int v)
+    { return new (allocate<icode>()) icode(c, *ilit::make(v)); }
     
-    virtual bool operator==(const token& other) const {
+    bool operator==(const token& other) const {
       if (other.tp() != ICODE)
 	{return false; }
       const icode& ci = static_cast<const icode&>(other);
       return c == ci.c && v == ci.v;
     }
-    virtual token_type tp() const { return ICODE; }
-    virtual void print(ostream& stream) const
+    token_type tp() const { return ICODE; }
+    void print(ostream& stream) const
     { stream << c << v; }
   };
 
   typedef vector<token*> block;
 
+  bool cmp_tokens(const token* l, const token* r);
+  
   ostream& operator<<(ostream& stream, const token& ic);
   ostream& operator<<(ostream& stream, const block& block);
   ostream& operator<<(ostream& stream, const vector<block>& blocks);

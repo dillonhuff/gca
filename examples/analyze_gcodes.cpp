@@ -12,6 +12,50 @@
 using namespace gca;
 using namespace std;
 
+struct cmp_token_to {
+  const token* t;
+  cmp_token_to(const token* tp) : t(tp) {}
+  bool operator()(const token* l) { return (*l) == (*t); }
+};
+
+bool is_canned_cycle(const token* t) {
+  vector<token*> canned;
+  canned.push_back(icode::make('G', 81));
+  canned.push_back(icode::make('G', 82));
+  canned.push_back(icode::make('G', 83));
+  canned.push_back(icode::make('G', 84));
+  canned.push_back(icode::make('G', 85));
+  return count_if(canned.begin(), canned.end(), cmp_token_to(t)) > 0;
+}
+
+bool is_feedrate(const token* t) {
+  if (t->tp() == ICODE) {
+    const icode* ic = static_cast<const icode*>(t);
+    return ic->c == 'F';
+  }
+  return false;
+}
+
+bool is_spindle_speed(const token* t) {
+  if (t->tp() == ICODE) {
+    const icode* ic = static_cast<const icode*>(t);
+    return ic->c == 'S' || ic->c == 'T';
+  } else if (t->tp() == COMMENT) {
+    return true;
+  }
+  return false;
+}
+
+void print_canned_feedrate(const block& b) {
+  if (count_if(b.begin(), b.end(), is_spindle_speed) > 0) {//is_feedrate) > 0) {//is_canned_cycle) > 0) {
+    cout << b << endl;
+  }
+}
+
+void print_canned_cycle_feedrates(const vector<block>& p) {
+  for_each(p.begin(), p.end(), print_canned_feedrate);
+}
+
 inline bool ends_with(string const& value, string const& ending) {
     if (ending.size() > value.size()) return false;
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
@@ -36,6 +80,7 @@ void read_dir(const string& dir_name) {
 		      std::istreambuf_iterator<char>());
       vector<block> p = lex_gprog(str);
       cout << "NUM BLOCKS: " << p.size() << endl;
+      print_canned_cycle_feedrates(p);
     }
   }
 }

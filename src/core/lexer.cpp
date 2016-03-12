@@ -94,15 +94,12 @@ namespace gca {
   }
 
   token* parse_token(parse_state& s) {
-    if (s.next() == '\n') {
-      s++;
-      return new (allocate<newline>()) newline();
-    } else if (s.next() == '[') {
-      parse_comment_with_delimiters('[', ']', s);
-      return new (allocate<cmt>()) cmt();
+    if (s.next() == '[') {
+      string cs = parse_comment_with_delimiters('[', ']', s);
+      return cmt::make(cs);
     } else if (s.next() == '(') {
-      parse_comment_with_delimiters('(', ')', s);
-      return new (allocate<cmt>()) cmt();
+      string cs = parse_comment_with_delimiters('(', ')', s);
+      return cmt::make(cs);
     } else {
       char c = s.next();
       s++;
@@ -139,7 +136,7 @@ namespace gca {
 
   bool cmp_tokens(const token* l, const token* r)
   { return (*l) == (*r); }
-
+  
   bool operator==(const block& l, const block& r) {
     if (l.size() != r.size())
       { return false; }

@@ -95,14 +95,6 @@ namespace gca {
       REQUIRE(((*p) == (*correct)));
     }
 
-    SECTION("Parse G53") {
-      string s = "G53 X3.0 Y2.0 Z1.0";
-      gprog* p = parse_gprog(s);
-      gprog* correct = gprog::make();
-      correct->push_back(g53_instr::make(lit::make(3), lit::make(2), lit::make(1)));
-      REQUIRE(((*p) == (*correct)));
-    }
-
     SECTION("Parse G53 with default position") {
       string s = "G90 G53 Z1.0";
       gprog* p = parse_gprog(s);
@@ -253,18 +245,6 @@ namespace gca {
       REQUIRE(correct == *p);
     }
 
-    SECTION("G83") {
-      gprog* p = parse_gprog("G83 G99 X3.1587 Y4.2467 Z-.15 R.1 Q.0547 F3.");
-      correct.push_back(g83_instr::make(true,
-					lit::make(3.1587),
-					lit::make(4.2467),
-					lit::make(-0.15),
-					lit::make(0.1),
-					lit::make(0.0547),
-					lit::make(3)));
-      REQUIRE(correct == *p);
-    }
-
     SECTION("G81") {
       gprog* p = parse_gprog("G81 G98 X2.1469 Y2.234 Z-.628 R.1 F12.");
       correct.push_back(g81_instr::make(false,
@@ -308,53 +288,6 @@ namespace gca {
       gprog* p = parse_gprog("M01 M00");
       correct.push_back(m1_instr::make());
       correct.push_back(m0_instr::make());
-      REQUIRE(correct == *p);
-    }
-
-    SECTION("Nested parens comment") {
-      gprog* p = parse_gprog("(())");
-      correct.push_back(comment::make('(', ')', "(())"));;
-      REQUIRE(correct == *p);
-    }
-  }
-
-  TEST_CASE("Multiple lines using the same G register") {
-    arena_allocator a;
-    set_system_allocator(&a);
-	
-    SECTION("2 G0s in a row") {
-      gprog* p = parse_gprog("G0 X1 Y1 Z4\n X3 Y4 Z2");
-      gprog correct;
-      correct.push_back(g0_instr::make(lit::make(1),
-				       lit::make(1),
-				       lit::make(4)));
-      correct.push_back(g0_instr::make(lit::make(3),
-				       lit::make(4),
-				       lit::make(2)));
-      REQUIRE(correct == *p);
-    }
-
-    SECTION("2 G1s in a row with feedrate") {
-      gprog* p = parse_gprog("G1 X2 Y2 Z2 \n Z3");
-      gprog correct;
-      correct.push_back(g1_instr::make(lit::make(2),
-				       lit::make(2),
-				       lit::make(2),
-				       omitted::make()));
-      correct.push_back(g1_instr::make(omitted::make(),
-				       omitted::make(),
-				       lit::make(3),
-				       omitted::make()));
-      REQUIRE(correct == *p);
-    }
-
-    SECTION("G2 with feedrate") {
-      gprog* p = parse_gprog("G2 F12.5 X3 Y4.5 Z1 I1.0 J1.75");
-      gprog correct;
-      g2_instr* arc = g2_instr::make(lit::make(3), lit::make(4.5), lit::make(1),
-				     lit::make(1.0), lit::make(1.75), omitted::make(),
-				     lit::make(12.5));
-      correct.push_back(arc);
       REQUIRE(correct == *p);
     }
   }
