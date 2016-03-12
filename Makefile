@@ -407,6 +407,48 @@ src/analysis/gcode_to_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
 .PHONY : src/analysis/gcode_to_cuts.cpp.s
 
+src/analysis/propagate_settings.o: src/analysis/propagate_settings.cpp.o
+
+.PHONY : src/analysis/propagate_settings.o
+
+# target to build an object file
+src/analysis/propagate_settings.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/propagate_settings.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/propagate_settings.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/propagate_settings.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/propagate_settings.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/propagate_settings.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/propagate_settings.cpp.o
+.PHONY : src/analysis/propagate_settings.cpp.o
+
+src/analysis/propagate_settings.i: src/analysis/propagate_settings.cpp.i
+
+.PHONY : src/analysis/propagate_settings.i
+
+# target to preprocess a source file
+src/analysis/propagate_settings.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/propagate_settings.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/propagate_settings.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/propagate_settings.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/propagate_settings.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/propagate_settings.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/propagate_settings.cpp.i
+.PHONY : src/analysis/propagate_settings.cpp.i
+
+src/analysis/propagate_settings.s: src/analysis/propagate_settings.cpp.s
+
+.PHONY : src/analysis/propagate_settings.s
+
+# target to generate assembly for a file
+src/analysis/propagate_settings.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/propagate_settings.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/propagate_settings.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/propagate_settings.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/propagate_settings.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/propagate_settings.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/propagate_settings.cpp.s
+.PHONY : src/analysis/propagate_settings.cpp.s
+
 src/analysis/unfold.o: src/analysis/unfold.cpp.o
 
 .PHONY : src/analysis/unfold.o
@@ -2159,6 +2201,33 @@ test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
+test/propagate_settings_tests.o: test/propagate_settings_tests.cpp.o
+
+.PHONY : test/propagate_settings_tests.o
+
+# target to build an object file
+test/propagate_settings_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/propagate_settings_tests.cpp.o
+.PHONY : test/propagate_settings_tests.cpp.o
+
+test/propagate_settings_tests.i: test/propagate_settings_tests.cpp.i
+
+.PHONY : test/propagate_settings_tests.i
+
+# target to preprocess a source file
+test/propagate_settings_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/propagate_settings_tests.cpp.i
+.PHONY : test/propagate_settings_tests.cpp.i
+
+test/propagate_settings_tests.s: test/propagate_settings_tests.cpp.s
+
+.PHONY : test/propagate_settings_tests.s
+
+# target to generate assembly for a file
+test/propagate_settings_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/propagate_settings_tests.cpp.s
+.PHONY : test/propagate_settings_tests.cpp.s
+
 test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
 
 .PHONY : test/shapes_to_toolpaths_tests.o
@@ -2329,6 +2398,9 @@ help:
 	@echo "... src/analysis/gcode_to_cuts.o"
 	@echo "... src/analysis/gcode_to_cuts.i"
 	@echo "... src/analysis/gcode_to_cuts.s"
+	@echo "... src/analysis/propagate_settings.o"
+	@echo "... src/analysis/propagate_settings.i"
+	@echo "... src/analysis/propagate_settings.s"
 	@echo "... src/analysis/unfold.o"
 	@echo "... src/analysis/unfold.i"
 	@echo "... src/analysis/unfold.s"
@@ -2467,6 +2539,9 @@ help:
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"
+	@echo "... test/propagate_settings_tests.o"
+	@echo "... test/propagate_settings_tests.i"
+	@echo "... test/propagate_settings_tests.s"
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"

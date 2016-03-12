@@ -49,13 +49,6 @@ namespace gca {
     return contains_end_instr;
   }
 
-  struct cmp_token_to {
-    const token* t;
-    cmp_token_to(const token* tp) : t(tp) {}
-    bool operator()(const token* l) { return (*l) == (*t); }
-  };
-
-  
   struct block_contains {
     token& ic;
     block_contains(token& icp) : ic(icp) {}

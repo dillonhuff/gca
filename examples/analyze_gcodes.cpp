@@ -47,8 +47,21 @@ bool is_spindle_speed(const token* t) {
   return false;
 }
 
+bool is_coord_system(const token* t) {
+  if (t->tp() == ICODE) {
+    const icode* ic = static_cast<const icode*>(t);
+    return ic->c == 'G' &&
+      (ic->v == ilit(54) ||
+       ic->v == ilit(55) ||
+       ic->v == ilit(56) ||
+       ic->v == ilit(57) ||
+       ic->v == ilit(58));
+  }
+  return false;
+}
+
 void print_canned_feedrate(const block& b) {
-  if (count_if(b.begin(), b.end(), is_spindle_speed) > 0) {//is_feedrate) > 0) {//is_canned_cycle) > 0) {
+  if (count_if(b.begin(), b.end(), is_coord_system) > 0) { //is_spindle_speed) > 0) {//is_feedrate) > 0) {//is_canned_cycle) > 0) {
     cout << b << endl;
   }
 }
@@ -83,7 +96,7 @@ void read_dir(const string& dir_name) {
       cout << "NUM BLOCKS: " << p.size() << endl;
       vector<block> uf = unfold_gprog(p);
       cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
-      //print_canned_cycle_feedrates(p);
+      print_canned_cycle_feedrates(uf);
     }
   }
 }

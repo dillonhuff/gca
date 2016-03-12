@@ -74,6 +74,12 @@ namespace gca {
   vector<block> lex_gprog(const string& s);
 
   bool operator==(const vector<block>& l, const vector<block>& r);
+
+  struct cmp_token_to {
+    const token* t;
+    cmp_token_to(const token* tp) : t(tp) {}
+    bool operator()(const token* l) { return (*l) == (*t); }
+  };
   
 }
 

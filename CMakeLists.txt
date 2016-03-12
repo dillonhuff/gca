@@ -16,6 +16,7 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/parse_tests.cpp
 	       test/lexer_tests.cpp
+	       test/propagate_settings_tests.cpp
 	       test/point_tests.cpp
 	       test/unfold_tests.cpp
 	       test/circular_arc_tests.cpp
@@ -75,6 +76,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/transformers/tiler.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
+	 ./src/analysis/propagate_settings.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/core/arena_allocator.cpp
 	 ./src/core/gprog.cpp
