@@ -63,9 +63,10 @@ namespace gca {
     { stream << c << v; }
   };
 
-  typedef vector<token*> block;
+  typedef token* tok;
+  typedef vector<tok> block;
 
-  bool cmp_tokens(const token* l, const token* r);
+  bool cmp_tokens(const tok l, const tok r);
   
   ostream& operator<<(ostream& stream, const token& ic);
   ostream& operator<<(ostream& stream, const block& block);
@@ -76,9 +77,9 @@ namespace gca {
   bool operator==(const vector<block>& l, const vector<block>& r);
 
   struct cmp_token_to {
-    const token* t;
-    cmp_token_to(const token* tp) : t(tp) {}
-    bool operator()(const token* l) { return (*l) == (*t); }
+    tok t;
+    cmp_token_to(tok tp) : t(tp) {}
+    bool operator()(tok l) { return (*l) == (*t); }
   };
   
 }

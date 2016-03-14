@@ -18,6 +18,21 @@ namespace gca {
       REQUIRE(res == correct);
     }
 
+    SECTION("O and N") {
+      p = lex_gprog("O1001 \n N2 \n N3");
+      res = propagate_settings(p);
+      block b1;
+      b1.push_back(icode::make('O', 1001));
+      block b2;
+      b2.push_back(icode::make('N', 2));
+      block b3;
+      b3.push_back(icode::make('N', 3));
+      correct.push_back(b1);
+      correct.push_back(b2);
+      correct.push_back(b3);
+      REQUIRE(res == correct);
+    }
+
     SECTION("G0") {
       p = lex_gprog("G90 G41\n G0 X1 \n G40 G91");
       res = propagate_settings(p);
@@ -36,10 +51,6 @@ namespace gca {
       correct.push_back(b1);
       correct.push_back(b2);
       correct.push_back(b3);
-      cout << "Correct: " << endl;
-      cout << correct << endl;
-      cout << "Actual: " << endl;
-      cout << res << endl;
       REQUIRE(res == correct);
     }
   }

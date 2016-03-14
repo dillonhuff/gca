@@ -5,6 +5,7 @@
 #include <streambuf>
 #include <string>
 
+#include "analysis/propagate_settings.h"
 #include "analysis/unfold.h"
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
@@ -13,14 +14,8 @@
 using namespace gca;
 using namespace std;
 
-struct cmp_token_to {
-  const token* t;
-  cmp_token_to(const token* tp) : t(tp) {}
-  bool operator()(const token* l) { return (*l) == (*t); }
-};
-
-bool is_canned_cycle(const token* t) {
-  vector<token*> canned;
+bool is_canned_cycle(const tok t) {
+  vector<tok> canned;
   canned.push_back(icode::make('G', 81));
   canned.push_back(icode::make('G', 82));
   canned.push_back(icode::make('G', 83));
@@ -29,7 +24,7 @@ bool is_canned_cycle(const token* t) {
   return count_if(canned.begin(), canned.end(), cmp_token_to(t)) > 0;
 }
 
-bool is_feedrate(const token* t) {
+bool is_feedrate(const tok t) {
   if (t->tp() == ICODE) {
     const icode* ic = static_cast<const icode*>(t);
     return ic->c == 'F';
@@ -37,7 +32,7 @@ bool is_feedrate(const token* t) {
   return false;
 }
 
-bool is_spindle_speed(const token* t) {
+bool is_spindle_speed(const tok t) {
   if (t->tp() == ICODE) {
     const icode* ic = static_cast<const icode*>(t);
     return ic->c == 'S' || ic->c == 'T';
@@ -47,7 +42,7 @@ bool is_spindle_speed(const token* t) {
   return false;
 }
 
-bool is_coord_system(const token* t) {
+bool is_coord_system(const tok t) {
   if (t->tp() == ICODE) {
     const icode* ic = static_cast<const icode*>(t);
     return ic->c == 'G' &&
@@ -96,7 +91,8 @@ void read_dir(const string& dir_name) {
       cout << "NUM BLOCKS: " << p.size() << endl;
       vector<block> uf = unfold_gprog(p);
       cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
-      print_canned_cycle_feedrates(uf);
+      vector<block> prop = propagate_settings(uf);
+      print_canned_cycle_feedrates(prop);
     }
   }
 }
