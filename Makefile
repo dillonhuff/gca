@@ -407,6 +407,48 @@ src/analysis/gcode_to_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
 .PHONY : src/analysis/gcode_to_cuts.cpp.s
 
+src/analysis/machine_state.o: src/analysis/machine_state.cpp.o
+
+.PHONY : src/analysis/machine_state.o
+
+# target to build an object file
+src/analysis/machine_state.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.o
+.PHONY : src/analysis/machine_state.cpp.o
+
+src/analysis/machine_state.i: src/analysis/machine_state.cpp.i
+
+.PHONY : src/analysis/machine_state.i
+
+# target to preprocess a source file
+src/analysis/machine_state.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.i
+.PHONY : src/analysis/machine_state.cpp.i
+
+src/analysis/machine_state.s: src/analysis/machine_state.cpp.s
+
+.PHONY : src/analysis/machine_state.s
+
+# target to generate assembly for a file
+src/analysis/machine_state.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.s
+.PHONY : src/analysis/machine_state.cpp.s
+
 src/analysis/propagate_settings.o: src/analysis/propagate_settings.cpp.o
 
 .PHONY : src/analysis/propagate_settings.o
@@ -2120,6 +2162,33 @@ test/line_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.s
 .PHONY : test/line_tests.cpp.s
 
+test/machine_state_tests.o: test/machine_state_tests.cpp.o
+
+.PHONY : test/machine_state_tests.o
+
+# target to build an object file
+test/machine_state_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.o
+.PHONY : test/machine_state_tests.cpp.o
+
+test/machine_state_tests.i: test/machine_state_tests.cpp.i
+
+.PHONY : test/machine_state_tests.i
+
+# target to preprocess a source file
+test/machine_state_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.i
+.PHONY : test/machine_state_tests.cpp.i
+
+test/machine_state_tests.s: test/machine_state_tests.cpp.s
+
+.PHONY : test/machine_state_tests.s
+
+# target to generate assembly for a file
+test/machine_state_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.s
+.PHONY : test/machine_state_tests.cpp.s
+
 test/mill_simulator_tests.o: test/mill_simulator_tests.cpp.o
 
 .PHONY : test/mill_simulator_tests.o
@@ -2398,6 +2467,9 @@ help:
 	@echo "... src/analysis/gcode_to_cuts.o"
 	@echo "... src/analysis/gcode_to_cuts.i"
 	@echo "... src/analysis/gcode_to_cuts.s"
+	@echo "... src/analysis/machine_state.o"
+	@echo "... src/analysis/machine_state.i"
+	@echo "... src/analysis/machine_state.s"
 	@echo "... src/analysis/propagate_settings.o"
 	@echo "... src/analysis/propagate_settings.i"
 	@echo "... src/analysis/propagate_settings.s"
@@ -2530,6 +2602,9 @@ help:
 	@echo "... test/line_tests.o"
 	@echo "... test/line_tests.i"
 	@echo "... test/line_tests.s"
+	@echo "... test/machine_state_tests.o"
+	@echo "... test/machine_state_tests.i"
+	@echo "... test/machine_state_tests.s"
 	@echo "... test/mill_simulator_tests.o"
 	@echo "... test/mill_simulator_tests.i"
 	@echo "... test/mill_simulator_tests.s"

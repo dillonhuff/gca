@@ -31,7 +31,8 @@ SET(TEST_FILES test/parse_tests.cpp
 	       test/shapes_to_toolpaths_tests.cpp
 	       test/toolpath_tests.cpp
 	       test/cut_scheduling_tests.cpp
-	       test/gcode_to_cuts_tests.cpp)
+	       test/gcode_to_cuts_tests.cpp
+	       test/machine_state_tests.cpp)
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
@@ -78,6 +79,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/propagate_settings.cpp
 	 ./src/analysis/unfold.cpp
+	 ./src/analysis/machine_state.cpp
 	 ./src/core/arena_allocator.cpp
 	 ./src/core/gprog.cpp
 	 ./src/core/instrs/instr.cpp
