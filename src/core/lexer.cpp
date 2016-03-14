@@ -55,6 +55,7 @@ namespace gca {
     case 'H':
     case 'R':
     case 'Q':
+    case 'S':
     case 'x':
     case 'y':
     case 'z':
@@ -64,6 +65,7 @@ namespace gca {
     case 'f':
     case 'h':
     case 'r':
+    case 's':
     case 'q':
       return lit::make(parse_dbl(s));
     case 'G':
@@ -71,7 +73,6 @@ namespace gca {
     case 'N':
     case 'O':
     case 'T':
-    case 'S':
     case 'P':
     case 'D':
     case 'L':
@@ -80,7 +81,6 @@ namespace gca {
     case 'n':
     case 'o':
     case 't':
-    case 's':
     case 'p':
     case 'd':
     case 'l':
