@@ -5,6 +5,7 @@
 #include <streambuf>
 #include <string>
 
+#include "analysis/propagate_settings.h"
 #include "analysis/unfold.h"
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
@@ -90,7 +91,8 @@ void read_dir(const string& dir_name) {
       cout << "NUM BLOCKS: " << p.size() << endl;
       vector<block> uf = unfold_gprog(p);
       cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
-      print_canned_cycle_feedrates(uf);
+      vector<block> prop = propagate_settings(uf);
+      print_canned_cycle_feedrates(prop);
     }
   }
 }
