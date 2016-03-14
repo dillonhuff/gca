@@ -36,10 +36,6 @@ namespace gca {
       correct.push_back(b1);
       correct.push_back(b2);
       correct.push_back(b3);
-      cout << "Correct: " << endl;
-      cout << correct << endl;
-      cout << "Actual: " << endl;
-      cout << res << endl;
       REQUIRE(res == correct);
     }
   }

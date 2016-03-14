@@ -13,12 +13,6 @@
 using namespace gca;
 using namespace std;
 
-struct cmp_token_to {
-  const token* t;
-  cmp_token_to(const token* tp) : t(tp) {}
-  bool operator()(const token* l) { return (*l) == (*t); }
-};
-
 bool is_canned_cycle(const token* t) {
   vector<token*> canned;
   canned.push_back(icode::make('G', 81));
