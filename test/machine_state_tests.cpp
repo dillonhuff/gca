@@ -156,5 +156,20 @@ namespace gca {
       r = next_machine_state(b, s);
       REQUIRE(c != r);
     }
+
+    SECTION("Tool radius comp negative NEQ") {
+      block b = lex_gprog("G41 H7").front();
+      r = next_machine_state(b, s);
+      REQUIRE(c != r);
+    }
+
+    SECTION("Tool radius comp negative") {
+      block b = lex_gprog("G41 H2").front();
+      r = next_machine_state(b, s);
+      c.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
+      c.tool_radius_value = ilit::make(2);
+      REQUIRE(c == r);
+    }
+    
   }
 }

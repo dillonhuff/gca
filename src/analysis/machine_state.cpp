@@ -31,6 +31,32 @@ namespace gca {
     r.tool_height_value = ilit::make(sr.v);
     b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
   }
+
+  void set_tool_radius_comp_left(machine_state& r, block& b) {
+    r.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
+    icode* h = find_icode('H', b);
+    if (!h) {
+      h = find_icode('D', b);
+    }
+    assert(h);
+    assert(h->v.is_ilit());
+    const ilit& sr = static_cast<const ilit&>(h->v);
+    r.tool_radius_value = ilit::make(sr.v);
+    b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+  }
+
+  void set_tool_radius_comp_right(machine_state& r, block& b) {
+    r.tool_radius_comp = TOOL_RADIUS_COMP_RIGHT;
+    icode* h = find_icode('H', b);
+    if (!h) {
+      h = find_icode('D', b);
+    }
+    assert(h);
+    assert(h->v.is_ilit());
+    const ilit& sr = static_cast<const ilit&>(h->v);
+    r.tool_radius_value = ilit::make(sr.v);
+    b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+  }
   
   bool no_state_effect(const token* t) {
     if (t->tp() == ICODE) {
@@ -40,76 +66,7 @@ namespace gca {
     return true;
   }
 
-  machine_state next_machine_state(const block& bs, const machine_state& s) {
-    block b = bs;
-    b.erase(remove_if(b.begin(), b.end(), no_state_effect), b.end());
-    machine_state r = s;
-    icode* f = find_icode('F', b);
-    if (f) {
-      assert(f->v.is_lit());
-      const lit& fr = static_cast<const lit&>(f->v);
-      r.feedrate = lit::make(fr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
-    }
-    icode* sp = find_icode('S', b);
-    if (sp) {
-      assert(sp->v.is_lit());
-      const lit& sr = static_cast<const lit&>(sp->v);
-      r.spindle_speed = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(sp)), b.end());
-    }
-    icode* x = find_icode('X', b);
-    if (x) {
-      assert(x->v.is_lit());
-      const lit& sr = static_cast<const lit&>(x->v);
-      r.spindle_speed = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(x)), b.end());
-    }
-    icode* y = find_icode('Y', b);
-    if (y) {
-      assert(y->v.is_lit());
-      const lit& sr = static_cast<const lit&>(y->v);
-      r.spindle_speed = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(y)), b.end());
-    }
-    icode* z = find_icode('Z', b);
-    if (z) {
-      assert(z->v.is_lit());
-      const lit& sr = static_cast<const lit&>(z->v);
-      r.spindle_speed = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(z)), b.end());
-    }
-
-    icode* i = find_icode('I', b);
-    if (i) {
-      assert(i->v.is_lit());
-      const lit& sr = static_cast<const lit&>(i->v);
-      r.i = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(i)), b.end());
-    }
-    icode* j = find_icode('J', b);
-    if (j) {
-      assert(j->v.is_lit());
-      const lit& sr = static_cast<const lit&>(j->v);
-      r.j = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(j)), b.end());
-    }
-    icode* k = find_icode('K', b);
-    if (k) {
-      assert(k->v.is_lit());
-      const lit& sr = static_cast<const lit&>(k->v);
-      r.k = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(k)), b.end());
-    }
-    
-    icode* t = find_icode('T', b);
-    if (t) {
-      assert(t->v.is_ilit());
-      const ilit& sr = static_cast<const ilit&>(t->v);
-      r.last_referenced_tool = ilit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(t)), b.end());
-    }
-    
+  void update_m_codes(block& b, machine_state& r) {
     icode* m = find_icode('M', b);
     while (m != NULL) {
       assert(m->v.is_ilit());
@@ -141,7 +98,9 @@ namespace gca {
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(m)), b.end());
       m = find_icode('M', b);
     }
-    
+  }
+
+  void update_g_codes(block& b, machine_state& r) {
     icode* g = find_icode('G', b);
     while (g != NULL) {
       assert(g->v.is_ilit());
@@ -168,6 +127,12 @@ namespace gca {
       case 40:
 	r.tool_radius_comp = TOOL_RADIUS_COMP_OFF;
 	break;
+      case 41:
+	set_tool_radius_comp_left(r, b);
+	break;
+      case 42:
+	set_tool_radius_comp_right(r, b);
+	break;
       case 43:
 	set_negative_tool_height_comp(r, b);
 	break;
@@ -193,6 +158,41 @@ namespace gca {
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(g)), b.end());
       g = find_icode('G', b);
     }
+  }
+
+  value* replace_value(value* old, char c, block& b) {
+    icode* f = find_icode(c, b);
+    if (f) {
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
+      if (f->v.is_lit()) {
+	const lit& fr = static_cast<const lit&>(f->v);
+	return lit::make(fr.v);
+      } else if (f->v.is_ilit()) {
+	const ilit& fr = static_cast<const ilit&>(f->v);
+	return ilit::make(fr.v);
+      } else {
+	assert(false);
+      }
+    }
+    return old;
+  }
+  
+  machine_state next_machine_state(const block& bs, const machine_state& s) {
+    block b = bs;
+    b.erase(remove_if(b.begin(), b.end(), no_state_effect), b.end());
+    machine_state r = s;
+    r.feedrate = replace_value(r.feedrate, 'F', b);
+    r.spindle_speed = replace_value(r.spindle_speed, 'S', b);
+    r.x = replace_value(r.x, 'X', b);
+    r.y = replace_value(r.y, 'Y', b);
+    r.z = replace_value(r.z, 'Z', b);
+    r.i = replace_value(r.i, 'I', b);
+    r.j = replace_value(r.j, 'J', b);
+    r.k = replace_value(r.k, 'K', b);
+    r.last_referenced_tool = replace_value(r.last_referenced_tool, 'T', b);
+
+    update_m_codes(b, r);
+    update_g_codes(b, r);
     if (b.size() > 0) {
       cout << "Not all instructions in the block were processed: " << b << endl;
       assert(false);
@@ -224,7 +224,8 @@ namespace gca {
       l.coolant_setting == r.coolant_setting &&
       *(l.tool_height_value) == *(r.tool_height_value) &&
       *(l.x) == *(r.x) && *(l.y) == *(r.y) && *(l.z) == *(r.z) &&
-      *(l.i) == *(r.i) && *(l.j) == *(r.j) && *(l.k) == *(r.k);
+      *(l.i) == *(r.i) && *(l.j) == *(r.j) && *(l.k) == *(r.k) &&
+      *(l.tool_radius_value) == *(r.tool_radius_value);
   }
 
   bool operator!=(const machine_state& l, const machine_state& r)
