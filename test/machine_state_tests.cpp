@@ -89,18 +89,26 @@ namespace gca {
       REQUIRE(c == r);
     }
 
-    SECTION("G54 is active coord system") {
+    SECTION("G54 is active coord system NEQ") {
       block b = lex_gprog("G54").front();
       r = next_machine_state(b, s);
       REQUIRE(c != r);
     }
 
-    SECTION("Tool height comp negative") {
-      block b = lex_gprog("G43").front();
+    SECTION("Tool height comp negative NEQ") {
+      block b = lex_gprog("G43 H7").front();
       r = next_machine_state(b, s);
       REQUIRE(c != r);
     }
 
+    SECTION("Tool height comp negative") {
+      block b = lex_gprog("G43 H7").front();
+      r = next_machine_state(b, s);
+      c.tool_height_comp = TOOL_HEIGHT_COMP_NEGATIVE;
+      c.tool_height_value = ilit::make(7);
+      REQUIRE(c == r);
+    }
+    
     SECTION("Tool radius comp off") {
       block b = lex_gprog("G40").front();
       r = next_machine_state(b, s);
@@ -140,6 +148,12 @@ namespace gca {
       block b = lex_gprog("M8").front();
       r = next_machine_state(b, s);
       c.coolant_setting = COOLANT_OFF;
+      REQUIRE(c != r);
+    }
+
+    SECTION("Circle parameters NEQ") {
+      block b = lex_gprog("I1.0 J2.0 K3.0").front();
+      r = next_machine_state(b, s);
       REQUIRE(c != r);
     }
   }

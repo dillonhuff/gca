@@ -82,6 +82,10 @@ namespace gca {
     value* last_referenced_tool;
     value* active_tool;
     coolant_state coolant_setting;
+    value* tool_height_value;
+    value* i;
+    value* j;
+    value* k;
 
     machine_state() :
       feedrate(omitted::make()), spindle_speed(omitted::make()),
@@ -96,7 +100,9 @@ namespace gca {
       spindle_setting(SPINDLE_STATE_UNKNOWN),
       last_referenced_tool(omitted::make()),
       active_tool(omitted::make()),
-      coolant_setting(COOLANT_STATE_UNKNOWN) {}
+      coolant_setting(COOLANT_STATE_UNKNOWN),
+      tool_height_value(omitted::make()),
+      i(omitted::make()), j(omitted::make()), k(omitted::make()) {}
 
     machine_state(const machine_state& s) :
       feedrate(s.feedrate), spindle_speed(s.spindle_speed),
@@ -111,7 +117,9 @@ namespace gca {
       spindle_setting(s.spindle_setting),
       last_referenced_tool(s.last_referenced_tool),
       active_tool(s.active_tool),
-      coolant_setting(s.coolant_setting) {}
+      coolant_setting(s.coolant_setting),
+      tool_height_value(s.tool_height_value),
+      i(s.i), j(s.j), k(s.k) {}
 
     machine_state& operator=(const machine_state& s) {
       feedrate = s.feedrate;
@@ -129,6 +137,10 @@ namespace gca {
       last_referenced_tool = s.last_referenced_tool;
       active_tool = s.active_tool;
       coolant_setting = s.coolant_setting;
+      tool_height_value = s.tool_height_value;
+      i = s.i;
+      j = s.j;
+      k = s.k;
       return *this;
     }
   };

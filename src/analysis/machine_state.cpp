@@ -22,6 +22,16 @@ namespace gca {
     return static_cast<icode*>(t);
   }
 
+  void set_negative_tool_height_comp(machine_state& r, block& b) {
+    r.tool_height_comp = TOOL_HEIGHT_COMP_NEGATIVE;
+    icode* h = find_icode('H', b);
+    assert(h);
+    assert(h->v.is_ilit());
+    const ilit& sr = static_cast<const ilit&>(h->v);
+    r.tool_height_value = ilit::make(sr.v);
+    b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+  }
+  
   bool no_state_effect(const token* t) {
     if (t->tp() == ICODE) {
       const icode* ic = static_cast<const icode*>(t);
@@ -41,12 +51,12 @@ namespace gca {
       r.feedrate = lit::make(fr.v);
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
     }
-    icode* k = find_icode('S', b);
-    if (k) {
-      assert(k->v.is_lit());
-      const lit& sr = static_cast<const lit&>(k->v);
+    icode* sp = find_icode('S', b);
+    if (sp) {
+      assert(sp->v.is_lit());
+      const lit& sr = static_cast<const lit&>(sp->v);
       r.spindle_speed = lit::make(sr.v);
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(k)), b.end());
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(sp)), b.end());
     }
     icode* x = find_icode('X', b);
     if (x) {
@@ -70,6 +80,28 @@ namespace gca {
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(z)), b.end());
     }
 
+    icode* i = find_icode('I', b);
+    if (i) {
+      assert(i->v.is_lit());
+      const lit& sr = static_cast<const lit&>(i->v);
+      r.i = lit::make(sr.v);
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(i)), b.end());
+    }
+    icode* j = find_icode('J', b);
+    if (j) {
+      assert(j->v.is_lit());
+      const lit& sr = static_cast<const lit&>(j->v);
+      r.j = lit::make(sr.v);
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(j)), b.end());
+    }
+    icode* k = find_icode('K', b);
+    if (k) {
+      assert(k->v.is_lit());
+      const lit& sr = static_cast<const lit&>(k->v);
+      r.k = lit::make(sr.v);
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(k)), b.end());
+    }
+    
     icode* t = find_icode('T', b);
     if (t) {
       assert(t->v.is_ilit());
@@ -137,7 +169,7 @@ namespace gca {
 	r.tool_radius_comp = TOOL_RADIUS_COMP_OFF;
 	break;
       case 43:
-	r.tool_height_comp = TOOL_HEIGHT_COMP_NEGATIVE;
+	set_negative_tool_height_comp(r, b);
 	break;
       case 49:
 	r.tool_height_comp = TOOL_HEIGHT_COMP_OFF;
@@ -189,7 +221,10 @@ namespace gca {
       l.spindle_setting == r.spindle_setting &&
       *(l.last_referenced_tool) == *(r.last_referenced_tool) &&
       *(l.active_tool) == *(r.active_tool) &&
-      l.coolant_setting == r.coolant_setting;
+      l.coolant_setting == r.coolant_setting &&
+      *(l.tool_height_value) == *(r.tool_height_value) &&
+      *(l.x) == *(r.x) && *(l.y) == *(r.y) && *(l.z) == *(r.z) &&
+      *(l.i) == *(r.i) && *(l.j) == *(r.j) && *(l.k) == *(r.k);
   }
 
   bool operator!=(const machine_state& l, const machine_state& r)
