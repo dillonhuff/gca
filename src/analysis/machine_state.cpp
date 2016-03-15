@@ -6,72 +6,72 @@ namespace gca {
   struct matches_char {
     char c;
     matches_char(char cp) : c(cp) {}
-    bool operator()(const token* t) {
-      if (t->tp() == ICODE) {
-	return t->c == c;
+    bool operator()(const token t) {
+      if (t.tp() == ICODE) {
+	return t.c == c;
       }
       return false;
     }
   };
 
-  token* find_icode(char c, const block& b) {
+  const token* find_icode(char c, const block& b) {
     block::const_iterator i = find_if(b.begin(), b.end(), matches_char(c));
     if (i == b.end()) { return NULL; }
-    return *i;
+    return &(*i);
   }
 
   void set_negative_tool_height_comp(machine_state& r, block& b) {
     r.tool_height_comp = TOOL_HEIGHT_COMP_NEGATIVE;
-    token* h = find_icode('H', b);
+    const token* h = find_icode('H', b);
     assert(h);
-    assert(h->v.is_ilit());
-    const ilit& sr = static_cast<const ilit&>(h->v);
-    r.tool_height_value = ilit::make(sr.v);
+    assert(h->v->is_ilit());
+    ilit* sr = static_cast<ilit*>(h->v);
+    r.tool_height_value = ilit::make(sr->v);
     b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
   }
 
   void set_tool_radius_comp_left(machine_state& r, block& b) {
     r.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
-    token* h = find_icode('H', b);
+    const token* h = find_icode('H', b);
     if (!h) {
       h = find_icode('D', b);
     }
     if (h) {
-      assert(h->v.is_ilit());
-      const ilit& sr = static_cast<const ilit&>(h->v);
-      r.tool_radius_value = ilit::make(sr.v);
+      assert(h->v->is_ilit());
+      ilit* sr = static_cast<ilit*>(h->v);
+      r.tool_radius_value = ilit::make(sr->v);
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
     }
   }
 
   void set_tool_radius_comp_right(machine_state& r, block& b) {
     r.tool_radius_comp = TOOL_RADIUS_COMP_RIGHT;
-    token* h = find_icode('H', b);
+    const token* h = find_icode('H', b);
     if (!h) {
       h = find_icode('D', b);
     }
     if (h) {
-      assert(h->v.is_ilit());
-      const ilit& sr = static_cast<const ilit&>(h->v);
-      r.tool_radius_value = ilit::make(sr.v);
+      assert(h->v->is_ilit());
+      ilit* sr = static_cast<ilit*>(h->v);
+      r.tool_radius_value = ilit::make(sr->v);
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
     }
   }
   
-  bool no_state_effect(const token* t) {
-    if (t->tp() == ICODE) {
-      return t->c == 'N' || t->c == 'O' ||
-	t->c == 'n' || t->c == 'o';
+  bool no_state_effect(const token& t) {
+    if (t.tp() == ICODE) {
+      return t.c == 'N' || t.c == 'O' ||
+	t.c == 'n' || t.c == 'o';
     }
     return true;
   }
 
   void update_m_codes(block& b, machine_state& r) {
-    token* m = find_icode('M', b);
+    const token* m = find_icode('M', b);
     while (m != NULL) {
-      assert(m->v.is_ilit());
-      const ilit& sr = static_cast<const ilit&>(m->v);
-      switch (sr.v) {
+      assert(m->v->is_ilit());
+      ilit* sr = static_cast<ilit*>(m->v);
+      switch (sr->v) {
       case 0:
 	break;
       case 1:
@@ -112,11 +112,11 @@ namespace gca {
   }
 
   void update_g_codes(block& b, machine_state& r) {
-    token* g = find_icode('G', b);
+    const token* g = find_icode('G', b);
     while (g != NULL) {
-      assert(g->v.is_ilit());
-      const ilit& sr = static_cast<const ilit&>(g->v);
-      switch(sr.v) {
+      assert(g->v->is_ilit());
+      ilit* sr = static_cast<ilit*>(g->v);
+      switch(sr->v) {
       case 0:
 	r.active_move_type = FAST_MOVE;
 	break;
@@ -202,15 +202,15 @@ namespace gca {
   }
 
   value* replace_value(value* old, char c, block& b) {
-    token* f = find_icode(c, b);
+    const token* f = find_icode(c, b);
     if (f) {
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
-      if (f->v.is_lit()) {
-	const lit& fr = static_cast<const lit&>(f->v);
-	return lit::make(fr.v);
-      } else if (f->v.is_ilit()) {
-	const ilit& fr = static_cast<const ilit&>(f->v);
-	return ilit::make(fr.v);
+      if (f->v->is_lit()) {
+	lit* fr = static_cast<lit*>(f->v);
+	return lit::make(fr->v);
+      } else if (f->v->is_ilit()) {
+	ilit* fr = static_cast<ilit*>(f->v);
+	return ilit::make(fr->v);
       } else {
 	assert(false);
       }

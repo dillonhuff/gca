@@ -15,56 +15,56 @@
 using namespace gca;
 using namespace std;
 
-bool is_canned_cycle(const token* t) {
-  vector<token*> canned;
-  canned.push_back(new token('G', 81));
-  canned.push_back(new token('G', 82));
-  canned.push_back(new token('G', 83));
-  canned.push_back(new token('G', 84));
-  canned.push_back(new token('G', 85));
-  return count_if(canned.begin(), canned.end(), cmp_token_to(t)) > 0;
-}
+// bool is_canned_cycle(const token* t) {
+//   vector<token*> canned;
+//   canned.push_back(new token('G', 81));
+//   canned.push_back(new token('G', 82));
+//   canned.push_back(new token('G', 83));
+//   canned.push_back(new token('G', 84));
+//   canned.push_back(new token('G', 85));
+//   return count_if(canned.begin(), canned.end(), cmp_token_to(t)) > 0;
+// }
 
-bool is_feedrate(const token* t) {
-  if (t->tp() == ICODE) {
-    const token* ic = static_cast<const token*>(t);
-    return ic->c == 'F';
-  }
-  return false;
-}
+// bool is_feedrate(const token* t) {
+//   if (t->tp() == ICODE) {
+//     const token* ic = static_cast<const token*>(t);
+//     return ic->c == 'F';
+//   }
+//   return false;
+// }
 
-bool is_spindle_speed(const token* t) {
-  if (t->tp() == ICODE) {
-    const token* ic = static_cast<const token*>(t);
-    return ic->c == 'S' || ic->c == 'T';
-  } else if (t->tp() == COMMENT) {
-    return true;
-  }
-  return false;
-}
+// bool is_spindle_speed(const token* t) {
+//   if (t->tp() == ICODE) {
+//     const token* ic = static_cast<const token*>(t);
+//     return ic->c == 'S' || ic->c == 'T';
+//   } else if (t->tp() == COMMENT) {
+//     return true;
+//   }
+//   return false;
+// }
 
-bool is_coord_system(const token* t) {
-  if (t->tp() == ICODE) {
-    const token* ic = static_cast<const token*>(t);
-    return ic->c == 'G' &&
-      (ic->v == ilit(54) ||
-       ic->v == ilit(55) ||
-       ic->v == ilit(56) ||
-       ic->v == ilit(57) ||
-       ic->v == ilit(58));
-  }
-  return false;
-}
+// bool is_coord_system(const token* t) {
+//   if (t->tp() == ICODE) {
+//     const token* ic = static_cast<const token*>(t);
+//     return ic->c == 'G' &&
+//       (ic->v == ilit(54) ||
+//        ic->v == ilit(55) ||
+//        ic->v == ilit(56) ||
+//        ic->v == ilit(57) ||
+//        ic->v == ilit(58));
+//   }
+//   return false;
+// }
 
-void print_canned_feedrate(const block& b) {
-  if (count_if(b.begin(), b.end(), is_coord_system) > 0) { //is_spindle_speed) > 0) {//is_feedrate) > 0) {//is_canned_cycle) > 0) {
-    cout << b << endl;
-  }
-}
+// void print_canned_feedrate(const block& b) {
+//   if (count_if(b.begin(), b.end(), is_coord_system) > 0) { //is_spindle_speed) > 0) {//is_feedrate) > 0) {//is_canned_cycle) > 0) {
+//     cout << b << endl;
+//   }
+// }
 
-void print_canned_cycle_feedrates(const vector<block>& p) {
-  for_each(p.begin(), p.end(), print_canned_feedrate);
-}
+// void print_canned_cycle_feedrates(const vector<block>& p) {
+//   for_each(p.begin(), p.end(), print_canned_feedrate);
+// }
 
 inline bool ends_with(string const& value, string const& ending) {
     if (ending.size() > value.size()) return false;

@@ -18,18 +18,25 @@ namespace gca {
     token_type ttp;
     string text;
     char c;
-    const value& v;
+    value* v;
 
     token(const token& x) : ttp(x.ttp), text(x.text), c(x.c), v(x.v) {}
-    token(string textp) : ttp(COMMENT), text(textp), v(*omitted::make()) {}
-    token(char cp, const value& vp) : ttp(ICODE), c(cp), v(vp) {}
-    token(char cp, int vp) : ttp(ICODE), c(cp), v(*ilit::make(vp)) {}
-    token(char cp, double vp) : ttp(ICODE), c(cp), v(*lit::make(vp)) {}
-    
+    token(string textp) : ttp(COMMENT), text(textp) {}
+    token(char cp, value* vp) : ttp(ICODE), c(cp), v(vp) {}
+    token(char cp, int vp) : ttp(ICODE), c(cp), v(ilit::make(vp)) {}
+    token(char cp, double vp) : ttp(ICODE), c(cp), v(lit::make(vp)) {}
+
+    token& operator=(const token& x) {
+      ttp = x.ttp;
+      c = x.c;
+      v = x.v;
+      return *this;
+    }
+
     bool operator==(const token& other) const {
       if (ttp != other.ttp) { return false; }
       return ((ttp == COMMENT) && (text == other.text)) ||
-	((ttp == ICODE) && ((c == other.c) && (v == other.v)));
+	((ttp == ICODE) && ((c == other.c) && (*v == *(other.v))));
     }
     
     token_type tp() const { return ttp; }
@@ -38,12 +45,12 @@ namespace gca {
       if (ttp == COMMENT) {
 	stream << text;
       } else {
-	stream << c << v;
+	stream << c << *v;
       }
     }
   };
   
-  typedef vector<token*> block;
+  typedef vector<token> block;
 
   bool cmp_tokens(const token* l, const token* r);
   
@@ -58,7 +65,7 @@ namespace gca {
   struct cmp_token_to {
     const token* t;
     cmp_token_to(const token* tp) : t(tp) {}
-    bool operator()(const token* l) { return (*l) == (*t); }
+    bool operator()(const token& l) { return l == (*t); }
   };
   
 }

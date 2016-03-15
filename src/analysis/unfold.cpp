@@ -4,10 +4,9 @@
 
 namespace gca {
 
-  bool is_end_code(const token* t) {
-    if (t->tp() == ICODE) {
-      const token* ci = static_cast<const token*>(t);
-      return ci->c == 'M' && (ci->v == ilit(2) || ci->v == ilit(30));
+  bool is_end_code(const token t) {
+    if (t.tp() == ICODE) {
+      return t.c == 'M' && (*(t.v) == ilit(2) || *(t.v) == ilit(30));
     }
     return false;
   }
@@ -19,11 +18,9 @@ namespace gca {
     return contains_end_instr;
   }
 
-  bool is_ret_code(const token* t) {
-    if (t->tp() == ICODE) {
-      const token* ci = static_cast<const token*>(t);
-      return ci->c == 'M' && (ci->v == ilit(99));
-    }
+  bool is_ret_code(const token t) {
+    if (t.tp() == ICODE)
+      { return t.c == 'M' && (*(t.v) == ilit(99)); }
     return false;
   }
 
@@ -34,10 +31,9 @@ namespace gca {
     return contains_end_instr;
   }
 
-  bool is_call_code(const token* t) {
-    if (t->tp() == ICODE) {
-      const token* ci = static_cast<const token*>(t);
-      return ci->c == 'M' && (ci->v == ilit(97));
+  bool is_call_code(const token t) {
+    if (t.tp() == ICODE) {
+      return t.c == 'M' && (*(t.v) == ilit(97));
     }
     return false;
   }
@@ -53,17 +49,16 @@ namespace gca {
     token& ic;
     block_contains(token& icp) : ic(icp) {}
     bool operator()(const block& b) {
-      return find_if(b.begin(), b.end(), cmp_token_to(&ic)) != b.end();
+      return find(b.begin(), b.end(), ic) != b.end();
     }
   };
 
   struct is_register {
     char c;
     is_register(char cp) : c(cp) {}
-    bool operator()(const token* t) const {
-      if (t->tp() == ICODE) {
-	const token* ci = static_cast<const token*>(t);
-	return ci->c == c;
+    bool operator()(const token t) const {
+      if (t.tp() == ICODE) {
+	return t.c == c;
       }
       return false;
     }
@@ -78,8 +73,8 @@ namespace gca {
       if (is_call_block(b)) {
 	++it;
 	istack.push(it);
-	token* ic = static_cast<token*>(*find_if(b.begin(), b.end(), is_register('P')));
-	token line_no('N', ic->v);
+	token ic = *find_if(b.begin(), b.end(), is_register('P'));
+	token line_no('N', ic.v);
 	it = find_if(p.begin(), p.end(), block_contains(line_no));
       } else if (is_ret_block(*it)) {
 	it = istack.top();

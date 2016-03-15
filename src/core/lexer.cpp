@@ -15,7 +15,7 @@ namespace gca {
 
   ostream& operator<<(ostream& stream, const block& block) {
     for (block::const_iterator it = block.begin(); it != block.end(); ++it)
-      { stream << **it << " "; }
+      { stream << *it << " "; }
     return stream;
   }
 
@@ -104,7 +104,7 @@ namespace gca {
       char c = s.next();
       s++;
       value* v = parse_c_val(c, s);
-      return token(c, *v);
+      return token(c, v);
     }
   }
 
@@ -115,7 +115,7 @@ namespace gca {
     while (s.chars_left()) {
       ignore_whitespace(s);
       if (!s.chars_left()) { break; }
-      ts.push_back(new token(parse_token(s)));
+      ts.push_back(parse_token(s));
       i++;
     }
     return ts;
@@ -145,7 +145,7 @@ namespace gca {
   bool operator==(const block& l, const block& r) {
     if (l.size() != r.size())
       { return false; }
-    return equal(l.begin(), l.end(), r.begin(), cmp_tokens);
+    return equal(l.begin(), l.end(), r.begin()); //, cmp_tokens);
   }
 
   bool operator==(const vector<block>& l, const vector<block>& r) {
