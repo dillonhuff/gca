@@ -62,7 +62,7 @@ void sanity_check_machine_state(const machine_state& s) {
     if (spindle_off(s)) {
       cout << "Spindle off during cut: " << endl;
       cout << s << endl;
-      //assert(false);
+      assert(false);
     }
   }
 }
@@ -77,8 +77,8 @@ void print_program_info(const string& dir_name) {
     cout << "NUM BLOCKS: " << p.size() << endl;
     vector<machine_state> states = all_program_states(p);
     cout << "STATES: " << states.size() << endl;
-    for_each(states.begin(), states.end(), sanity_check_machine_state);
-    //for_each(states.begin(), states.end(), print_climb_vs_conventional);
+    //for_each(states.begin(), states.end(), sanity_check_machine_state);
+    for_each(states.begin(), states.end(), print_climb_vs_conventional);
   }
 }
 
