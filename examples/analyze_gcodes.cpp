@@ -119,5 +119,5 @@ int main(int argc, char** argv) {
 }
 
 // Before optimizations 58 seconds
-// After eliminating inheritance from tokens
+// After eliminating inheritance from tokens 61 seconds
 // After call optimization in unfold

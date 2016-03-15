@@ -203,17 +203,19 @@ namespace gca {
 
   value* replace_value(value* old, char c, block& b) {
     const token* f = find_icode(c, b);
+    value* l;
     if (f) {
-      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
       if (f->v->is_lit()) {
 	lit* fr = static_cast<lit*>(f->v);
-	return lit::make(fr->v);
+	l = lit::make(fr->v);
       } else if (f->v->is_ilit()) {
 	ilit* fr = static_cast<ilit*>(f->v);
-	return ilit::make(fr->v);
+	l = ilit::make(fr->v);
       } else {
 	assert(false);
       }
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
+      return l;
     }
     return old;
   }
@@ -281,6 +283,13 @@ namespace gca {
     } else {
       stream << *(s.feedrate);
     }
+    stream << " T ";
+    if (s.last_referenced_tool->is_omitted()) {
+      stream << "<omitted>";
+    } else {
+      stream << *(s.last_referenced_tool);
+    }
+
     stream << endl;
     return stream;
   }
