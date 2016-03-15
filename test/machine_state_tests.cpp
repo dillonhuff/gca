@@ -136,6 +136,17 @@ namespace gca {
       REQUIRE(c != r);
     }
 
+    SECTION("Spindle counterclockwise") {
+      vector<block> p = lex_gprog("S3000 M4\n G41 H3");
+      machine_state t = next_machine_state(p[0], s);
+      r = next_machine_state(p[1], s);
+      c.spindle_setting = SPINDLE_COUNTERCLOCKWISE;
+      c.spindle_speed = lit::make(3000);
+      c.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
+      c.tool_radius_value = ilit::make(3);
+      REQUIRE(c != r);
+    }
+    
     SECTION("Active tool tests") {
       block b = lex_gprog("T8 M6").front();
       r = next_machine_state(b, s);

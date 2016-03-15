@@ -15,56 +15,29 @@
 using namespace gca;
 using namespace std;
 
-// bool is_canned_cycle(const token* t) {
-//   vector<token*> canned;
-//   canned.push_back(new token('G', 81));
-//   canned.push_back(new token('G', 82));
-//   canned.push_back(new token('G', 83));
-//   canned.push_back(new token('G', 84));
-//   canned.push_back(new token('G', 85));
-//   return count_if(canned.begin(), canned.end(), cmp_token_to(t)) > 0;
-// }
-
-// bool is_feedrate(const token* t) {
-//   if (t->tp() == ICODE) {
-//     const token* ic = static_cast<const token*>(t);
-//     return ic->c == 'F';
-//   }
-//   return false;
-// }
-
-// bool is_spindle_speed(const token* t) {
-//   if (t->tp() == ICODE) {
-//     const token* ic = static_cast<const token*>(t);
-//     return ic->c == 'S' || ic->c == 'T';
-//   } else if (t->tp() == COMMENT) {
-//     return true;
-//   }
-//   return false;
-// }
-
-// bool is_coord_system(const token* t) {
-//   if (t->tp() == ICODE) {
-//     const token* ic = static_cast<const token*>(t);
-//     return ic->c == 'G' &&
-//       (ic->v == ilit(54) ||
-//        ic->v == ilit(55) ||
-//        ic->v == ilit(56) ||
-//        ic->v == ilit(57) ||
-//        ic->v == ilit(58));
-//   }
-//   return false;
-// }
-
-// void print_canned_feedrate(const block& b) {
-//   if (count_if(b.begin(), b.end(), is_coord_system) > 0) { //is_spindle_speed) > 0) {//is_feedrate) > 0) {//is_canned_cycle) > 0) {
-//     cout << b << endl;
-//   }
-// }
-
-// void print_canned_cycle_feedrates(const vector<block>& p) {
-//   for_each(p.begin(), p.end(), print_canned_feedrate);
-// }
+void print_climb_vs_conventional(const machine_state& s) {
+  if (s.tool_radius_comp == TOOL_RADIUS_COMP_LEFT) {
+    if (s.spindle_setting == SPINDLE_OFF ||
+	s.spindle_setting == SPINDLE_STATE_UNKNOWN) {
+      cout << "Bad spindle state: " << endl;
+      cout << s << endl;
+      assert(false);
+    }
+    cout << "Comp left" << endl;
+    if (s.spindle_setting == SPINDLE_CLOCKWISE) {
+      cout << "Climb" << endl;
+    } else if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
+      cout << "Conventional" << endl;
+    }
+  } else if (s.tool_radius_comp == TOOL_RADIUS_COMP_RIGHT) {
+    cout << "Comp right" << endl;
+    if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
+      cout << "Climb" << endl;
+    } else if (s.spindle_setting == SPINDLE_CLOCKWISE) {
+      cout << "Conventional" << endl;
+    }
+  }
+}
 
 inline bool ends_with(string const& value, string const& ending) {
     if (ending.size() > value.size()) return false;
@@ -95,6 +68,7 @@ void read_dir(const string& dir_name) {
       vector<machine_state> states = all_program_states(uf);
       cout << "STATES: " << states.size() << endl;
       assert(states.size() == uf.size() + 1);
+      for_each(states.begin(), states.end(), print_climb_vs_conventional);
     }
   }
 }
@@ -119,6 +93,7 @@ int main(int argc, char** argv) {
 }
 
 // Before optimizations 58 seconds
-// After eliminating inheritance from tokens 61 seconds
+// After eliminating inheritance from tokens 61 seconds (got worse)
 // After call optimization in unfold 66 seconds (got worse)
-// After correcting call optimization 55 seconds
+// After correcting call optimization 55 seconds (slightly better,
+// the whole speedup comes from a handful of cases that use subroutines extensively

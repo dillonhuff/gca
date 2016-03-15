@@ -81,6 +81,9 @@ namespace gca {
       case 3:
 	r.spindle_setting = SPINDLE_CLOCKWISE;
 	break;
+      case 4:
+	r.spindle_setting = SPINDLE_COUNTERCLOCKWISE;
+	break;
       case 5:
 	r.spindle_setting = SPINDLE_OFF;
 	break;
