@@ -48,32 +48,54 @@ inline bool ends_with(string const& value, string const& ending) {
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
-void read_dir(const string& dir_name) {
+bool is_cut(const machine_state& s) {
+  return (s.active_move_type != FAST_MOVE) && !(s.x->is_omitted() || s.y->is_omitted() || s.z->is_omitted());
+}
+
+bool spindle_off(const machine_state& s) {
+  return (s.spindle_setting == SPINDLE_OFF ||
+	  s.spindle_setting == SPINDLE_STATE_UNKNOWN);
+}
+
+void sanity_check_machine_state(const machine_state& s) {
+  if (is_cut(s)) {
+    if (spindle_off(s)) {
+      cout << "Spindle off during cut: " << endl;
+      cout << s << endl;
+      //assert(false);
+    }
+  }
+}
+
+void print_program_info(const string& dir_name) {
+  if (ends_with(dir_name, ".NCF")) {
+    cout << dir_name << endl;
+    std::ifstream t(dir_name);
+    std::string str((std::istreambuf_iterator<char>(t)),
+		    std::istreambuf_iterator<char>());
+    vector<block> p = lex_gprog(str);
+    cout << "NUM BLOCKS: " << p.size() << endl;
+    vector<machine_state> states = all_program_states(p);
+    cout << "STATES: " << states.size() << endl;
+    for_each(states.begin(), states.end(), sanity_check_machine_state);
+    //for_each(states.begin(), states.end(), print_climb_vs_conventional);
+  }
+}
+
+template<typename T>
+void read_dir(const string& dir_name, T f) {
   DIR *dir;
   struct dirent *ent;
   if ((dir = opendir(dir_name.c_str())) != NULL) {
     while ((ent = readdir(dir)) != NULL) {
       string fname = ent->d_name;
       if (fname != "." && fname != "..") {
-	read_dir(dir_name + "/" + fname);
+	read_dir(dir_name + "/" + fname, f);
       }
     }
     closedir(dir);
   } else {
-    if (ends_with(dir_name, ".NCF")) {
-      cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      vector<block> uf = unfold_gprog(p);
-      cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
-      vector<machine_state> states = all_program_states(uf);
-      cout << "STATES: " << states.size() << endl;
-      assert(states.size() == uf.size() + 1);
-      for_each(states.begin(), states.end(), print_climb_vs_conventional);
-    }
+    f(dir_name);
   }
 }
 
@@ -90,14 +112,10 @@ int main(int argc, char** argv) {
   time_t start;
   time_t end;
   time(&start);
-  read_dir(dir_name);
+  read_dir(dir_name, print_program_info);
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << endl;
 }
-
-// Before optimizations 58 seconds
-// After eliminating inheritance from tokens 61 seconds (got worse)
-// After call optimization in unfold 66 seconds (got worse)
-// After correcting call optimization 55 seconds (slightly better,
-// the whole speedup comes from a handful of cases that use subroutines extensively
+// Before unfold and create program states were collapsed into one: 128 seconds
+// After: 123

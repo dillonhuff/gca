@@ -1,4 +1,7 @@
+#include <stack>
+
 #include "analysis/machine_state.h"
+#include "analysis/utils.h"
 #include "core/value.h"
 
 namespace gca {
@@ -251,8 +254,25 @@ namespace gca {
   vector<machine_state> all_program_states(const vector<block>& p) {
     vector<machine_state> ms;
     ms.push_back(machine_state());
-    for (vector<block>::const_iterator it = p.begin(); it != p.end(); ++it) {
-      ms.push_back(next_machine_state(*it, ms.back()));
+    vector<pair<token, program_loc> > subroutine_starts = compute_starts(p);
+    stack<vector<block>::const_iterator> istack;
+    vector<block>::const_iterator it = p.begin();
+    while (it < p.end()) {
+      const block& b = *it;
+      if (is_call_block(b)) {
+	++it;
+	istack.push(it);
+	it = find_called_subroutine(b, subroutine_starts);
+      } else if (is_ret_block(*it)) {
+	it = istack.top();
+	istack.pop();
+      } else if (is_end_block(*it)) {
+	ms.push_back(next_machine_state(*it, ms.back()));
+	break;
+      } else {
+	ms.push_back(next_machine_state(*it, ms.back()));
+	++it;
+      }
     }
     return ms;
   }
@@ -293,8 +313,25 @@ namespace gca {
       stream << *(s.last_referenced_tool);
     }
 
+    stream << " " << s.spindle_setting;
+
     stream << endl;
     return stream;
+  }
+
+  ostream& operator<<(ostream& out, const spindle_state s) {
+    if (s == SPINDLE_STATE_UNKNOWN) {
+      out << "SPINDLE_STATE_UNKNOWN";
+    } else if (s == SPINDLE_OFF) {
+      out << "SPINDLE_OFF";
+    } else if (s == SPINDLE_CLOCKWISE) {
+      out << "SPINDLE_CLOCKWISE";
+    } else if (s == SPINDLE_COUNTERCLOCKWISE) {
+      out << "SPINDLE_COUNTERCLOCKWISE";
+    } else {
+      assert(false);
+    }
+    return out;
   }
   
 }

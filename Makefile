@@ -491,6 +491,48 @@ src/analysis/unfold.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.s
 .PHONY : src/analysis/unfold.cpp.s
 
+src/analysis/utils.o: src/analysis/utils.cpp.o
+
+.PHONY : src/analysis/utils.o
+
+# target to build an object file
+src/analysis/utils.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.o
+.PHONY : src/analysis/utils.cpp.o
+
+src/analysis/utils.i: src/analysis/utils.cpp.i
+
+.PHONY : src/analysis/utils.i
+
+# target to preprocess a source file
+src/analysis/utils.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.i
+.PHONY : src/analysis/utils.cpp.i
+
+src/analysis/utils.s: src/analysis/utils.cpp.s
+
+.PHONY : src/analysis/utils.s
+
+# target to generate assembly for a file
+src/analysis/utils.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.s
+.PHONY : src/analysis/utils.cpp.s
+
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
 
 .PHONY : src/checkers/bounds_checker.o
@@ -2404,6 +2446,9 @@ help:
 	@echo "... src/analysis/unfold.o"
 	@echo "... src/analysis/unfold.i"
 	@echo "... src/analysis/unfold.s"
+	@echo "... src/analysis/utils.o"
+	@echo "... src/analysis/utils.i"
+	@echo "... src/analysis/utils.s"
 	@echo "... src/checkers/bounds_checker.o"
 	@echo "... src/checkers/bounds_checker.i"
 	@echo "... src/checkers/bounds_checker.s"

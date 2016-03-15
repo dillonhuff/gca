@@ -173,6 +173,7 @@ namespace gca {
   bool operator==(const machine_state& l, const machine_state& r);
   bool operator!=(const machine_state& l, const machine_state& r);
   ostream& operator<<(ostream& stream, const machine_state& s);
+  ostream& operator<<(ostream& stream, const spindle_state s);
 }
 
 #endif

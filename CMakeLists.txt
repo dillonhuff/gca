@@ -76,6 +76,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/transformers/tiler.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
+	 ./src/analysis/utils.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
 	 ./src/core/arena_allocator.cpp
