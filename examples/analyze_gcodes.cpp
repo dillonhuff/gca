@@ -120,4 +120,5 @@ int main(int argc, char** argv) {
 
 // Before optimizations 58 seconds
 // After eliminating inheritance from tokens 61 seconds
-// After call optimization in unfold
+// After call optimization in unfold 66 seconds (got worse)
+// After correcting call optimization 55 seconds

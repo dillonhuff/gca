@@ -46,8 +46,8 @@ namespace gca {
   }
 
   struct block_contains {
-    token& ic;
-    block_contains(token& icp) : ic(icp) {}
+    const token& ic;
+    block_contains(const token& icp) : ic(icp) {}
     bool operator()(const block& b) {
       return find(b.begin(), b.end(), ic) != b.end();
     }
@@ -63,9 +63,49 @@ namespace gca {
       return false;
     }
   };
+
+  typedef vector<block>::const_iterator program_loc;
   
+  vector<block>::const_iterator
+  find_called_subroutine(const block& b,
+			 const vector<pair<token, program_loc> >& p) {
+    token ic = *find_if(b.begin(), b.end(), is_register('P'));
+    token line_no('N', ic.v);
+    for (vector<pair<token, program_loc> >::const_iterator it = p.begin();
+	 it != p.end(); ++it) {
+      pair<token, program_loc> pr = *it;
+      if (pr.first == line_no) { return pr.second; }
+    }
+    assert(false);
+  }
+
+  program_loc find_loc(const vector<block>& p, const token& t) {
+    return find_if(p.begin(), p.end(), block_contains(t));
+  }
+
+  vector<pair<token, program_loc> >
+  compute_starts(const vector<block>& p) {
+    vector<pair<token, program_loc> > locs;
+    vector<token> already_added;
+    for (program_loc it = p.begin(); it != p.end(); ++it) {
+      block b = *it;
+      if (is_call_block(b)) {
+	token ic = *find_if(b.begin(), b.end(), is_register('P'));
+	token line_no('N', ic.v);
+	if (find(already_added.begin(), already_added.end(), line_no) ==
+	    already_added.end()) {
+	  program_loc loc = find_loc(p, line_no);
+	  locs.push_back(pair<token, program_loc>(line_no, loc));
+	  already_added.push_back(line_no);
+	}
+      }
+    }
+    return locs;
+  }
+
   vector<block> unfold_gprog(const vector<block>& p) {
     vector<block> bs;
+    vector<pair<token, program_loc> > subroutine_starts = compute_starts(p);
     stack<vector<block>::const_iterator> istack;
     vector<block>::const_iterator it = p.begin();
     while (it < p.end()) {
@@ -73,9 +113,7 @@ namespace gca {
       if (is_call_block(b)) {
 	++it;
 	istack.push(it);
-	token ic = *find_if(b.begin(), b.end(), is_register('P'));
-	token line_no('N', ic.v);
-	it = find_if(p.begin(), p.end(), block_contains(line_no));
+	it = find_called_subroutine(b, subroutine_starts);
       } else if (is_ret_block(*it)) {
 	it = istack.top();
 	istack.pop();
