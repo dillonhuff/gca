@@ -200,6 +200,15 @@ namespace gca {
       c.tool_radius_value = ilit::make(3);
       REQUIRE(c == r);
     }
+
+    SECTION("X, Y, Z, I, J, K are not modal") {
+      vector<block> p = lex_gprog("X1.0 Y1.0 Z1.0 I1.0 J1.0 K1.0\n S300 M3");
+      vector<machine_state> ms = all_program_states(p);
+      r = ms.back();
+      c.spindle_setting = SPINDLE_CLOCKWISE;
+      c.spindle_speed = lit::make(300);
+      REQUIRE(c == r);
+    }
     
   }
 }

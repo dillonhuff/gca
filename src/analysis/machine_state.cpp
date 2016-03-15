@@ -232,12 +232,13 @@ namespace gca {
     machine_state r = s;
     r.feedrate = replace_value(r.feedrate, 'F', b);
     r.spindle_speed = replace_value(r.spindle_speed, 'S', b);
-    r.x = replace_value(r.x, 'X', b);
-    r.y = replace_value(r.y, 'Y', b);
-    r.z = replace_value(r.z, 'Z', b);
-    r.i = replace_value(r.i, 'I', b);
-    r.j = replace_value(r.j, 'J', b);
-    r.k = replace_value(r.k, 'K', b);
+    value* om = omitted::make();
+    r.x = replace_value(om, 'X', b);
+    r.y = replace_value(om, 'Y', b);
+    r.z = replace_value(om, 'Z', b);
+    r.i = replace_value(om, 'I', b);
+    r.j = replace_value(om, 'J', b);
+    r.k = replace_value(om, 'K', b);
     r.last_referenced_tool = replace_value(r.last_referenced_tool, 'T', b);
     r.r = replace_value(r.r, 'R', b);
     r.q = replace_value(r.k, 'Q', b);
@@ -299,23 +300,41 @@ namespace gca {
   bool operator!=(const machine_state& l, const machine_state& r)
   { return !(l == r); }
 
+  void print_val(ostream& stream, const value* v) {
+    if (v->is_omitted()) {
+      stream << "<omitted>";
+    } else {
+      stream << *v;
+    }
+  }
+
   ostream& operator<<(ostream& stream, const machine_state& s) {
     stream << "F ";
-    if (s.feedrate->is_omitted()) {
-      stream << "<omitted>";
-    } else {
-      stream << *(s.feedrate);
-    }
-    stream << " T ";
-    if (s.last_referenced_tool->is_omitted()) {
-      stream << "<omitted>";
-    } else {
-      stream << *(s.last_referenced_tool);
-    }
-
-    stream << " " << s.spindle_setting;
-
+    print_val(stream, s.feedrate);
     stream << endl;
+    stream << "T ";
+    print_val(stream, s.last_referenced_tool);
+    stream << endl;
+    stream << "X ";
+    print_val(stream, s.x);
+    stream << endl;
+    stream << "Y ";
+    print_val(stream, s.y);
+    stream << endl;
+    stream << "Z ";
+    print_val(stream, s.z);
+    stream << endl;
+    stream << "I ";
+    print_val(stream, s.i);
+    stream << endl;
+    stream << "J ";
+    print_val(stream, s.j);
+    stream << endl;
+    stream << "K ";
+    print_val(stream, s.k);
+    stream << endl;
+    stream << s.spindle_setting << endl;
+    stream << s.active_move_type << endl;
     return stream;
   }
 
@@ -333,5 +352,33 @@ namespace gca {
     }
     return out;
   }
-  
+
+  ostream& operator<<(ostream& out, const move_type s) {
+    if (s == UNKNOWN_MOVE_TYPE) {
+      out << "UNKNOWN_MOVE_TYPE";
+    } else if (s == FAST_MOVE) {
+      out << "FAST_MOVE";
+    } else if (s == LINEAR_MOVE) {
+      out << "LINEAR_MOVE";
+    } else if (s == CLOCKWISE_CIRCULAR_MOVE) {
+      out << "CLOCKWISE_CIRCULAR_MOVE";
+    } else if (s == COUNTERCLOCKWISE_CIRCULAR_MOVE) {
+      out << "COUNTERCLOCKWISE_CIRCULAR_MOVE";
+    } else if (s == CANCEL_CANNED_CYCLE_MOVE) {
+      out << "CANCEL_CANNED_CYCLE_MOVE";
+    } else if (s == CANNED_CYCLE_73_MOVE) {
+      out << "CANNED_CYCLE_73_MOVE";
+    } else if (s == CANNED_CYCLE_81_MOVE) {
+      out << "CANNED_CYCLE_81_MOVE";
+    } else if (s == CANNED_CYCLE_83_MOVE) {
+      out << "CANNED_CYCLE_83_MOVE";
+    } else if (s == CANNED_CYCLE_84_MOVE) {
+      out << "CANNED_CYCLE_84_MOVE";
+    } else if (s == CANNED_CYCLE_85_MOVE) {
+      out << "CANNED_CYCLE_85_MOVE";
+    } else {
+      assert(false);
+    }
+    return out;
+  }
 }

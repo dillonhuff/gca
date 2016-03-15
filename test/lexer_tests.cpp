@@ -206,5 +206,27 @@ namespace gca {
       correct.push_back(b);
       REQUIRE(p == correct);
     }
+
+    SECTION("No spaces") {
+      p = lex_gprog("N31S6000M3");
+      block b;
+      b.push_back(token('N', 31));
+      b.push_back(token('S', 6000.0));
+      b.push_back(token('M', 3));
+      correct.push_back(b);
+      REQUIRE(p == correct);
+    }
+
+    SECTION("No spaces final .") {
+      p = lex_gprog("N23111G91G28Z0.M19");
+      block b;
+      b.push_back(token('N', 23111));
+      b.push_back(token('G', 91));
+      b.push_back(token('G', 28));
+      b.push_back(token('Z', 0.0));
+      b.push_back(token('M', 19));
+      correct.push_back(b);
+      REQUIRE(p == correct);
+    }
   }
 }
