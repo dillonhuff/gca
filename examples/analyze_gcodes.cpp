@@ -17,17 +17,17 @@ using namespace std;
 
 bool is_canned_cycle(const token* t) {
   vector<token*> canned;
-  canned.push_back(icode::make('G', 81));
-  canned.push_back(icode::make('G', 82));
-  canned.push_back(icode::make('G', 83));
-  canned.push_back(icode::make('G', 84));
-  canned.push_back(icode::make('G', 85));
+  canned.push_back(new token('G', 81));
+  canned.push_back(new token('G', 82));
+  canned.push_back(new token('G', 83));
+  canned.push_back(new token('G', 84));
+  canned.push_back(new token('G', 85));
   return count_if(canned.begin(), canned.end(), cmp_token_to(t)) > 0;
 }
 
 bool is_feedrate(const token* t) {
   if (t->tp() == ICODE) {
-    const icode* ic = static_cast<const icode*>(t);
+    const token* ic = static_cast<const token*>(t);
     return ic->c == 'F';
   }
   return false;
@@ -35,7 +35,7 @@ bool is_feedrate(const token* t) {
 
 bool is_spindle_speed(const token* t) {
   if (t->tp() == ICODE) {
-    const icode* ic = static_cast<const icode*>(t);
+    const token* ic = static_cast<const token*>(t);
     return ic->c == 'S' || ic->c == 'T';
   } else if (t->tp() == COMMENT) {
     return true;
@@ -45,7 +45,7 @@ bool is_spindle_speed(const token* t) {
 
 bool is_coord_system(const token* t) {
   if (t->tp() == ICODE) {
-    const icode* ic = static_cast<const icode*>(t);
+    const token* ic = static_cast<const token*>(t);
     return ic->c == 'G' &&
       (ic->v == ilit(54) ||
        ic->v == ilit(55) ||
@@ -119,4 +119,5 @@ int main(int argc, char** argv) {
 }
 
 // Before optimizations 58 seconds
+// After eliminating inheritance from tokens
 // After call optimization in unfold

@@ -93,18 +93,18 @@ namespace gca {
     }
   }
 
-  token* parse_token(parse_state& s) {
+  token parse_token(parse_state& s) {
     if (s.next() == '[') {
       string cs = parse_comment_with_delimiters('[', ']', s);
-      return cmt::make(cs);
+      return token(cs);
     } else if (s.next() == '(') {
       string cs = parse_comment_with_delimiters('(', ')', s);
-      return cmt::make(cs);
+      return token(cs);
     } else {
       char c = s.next();
       s++;
       value* v = parse_c_val(c, s);
-      return new (allocate<icode>()) icode(c, *v);
+      return token(c, *v);
     }
   }
 
@@ -115,7 +115,7 @@ namespace gca {
     while (s.chars_left()) {
       ignore_whitespace(s);
       if (!s.chars_left()) { break; }
-      ts.push_back(parse_token(s));
+      ts.push_back(new token(parse_token(s)));
       i++;
     }
     return ts;

@@ -8,23 +8,21 @@ namespace gca {
     matches_char(char cp) : c(cp) {}
     bool operator()(const token* t) {
       if (t->tp() == ICODE) {
-	const icode* ic = static_cast<const icode*>(t);
-	return ic->c == c;
+	return t->c == c;
       }
       return false;
     }
   };
 
-  icode* find_icode(char c, const block& b) {
+  token* find_icode(char c, const block& b) {
     block::const_iterator i = find_if(b.begin(), b.end(), matches_char(c));
     if (i == b.end()) { return NULL; }
-    token* t = *i;
-    return static_cast<icode*>(t);
+    return *i;
   }
 
   void set_negative_tool_height_comp(machine_state& r, block& b) {
     r.tool_height_comp = TOOL_HEIGHT_COMP_NEGATIVE;
-    icode* h = find_icode('H', b);
+    token* h = find_icode('H', b);
     assert(h);
     assert(h->v.is_ilit());
     const ilit& sr = static_cast<const ilit&>(h->v);
@@ -34,7 +32,7 @@ namespace gca {
 
   void set_tool_radius_comp_left(machine_state& r, block& b) {
     r.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
-    icode* h = find_icode('H', b);
+    token* h = find_icode('H', b);
     if (!h) {
       h = find_icode('D', b);
     }
@@ -48,7 +46,7 @@ namespace gca {
 
   void set_tool_radius_comp_right(machine_state& r, block& b) {
     r.tool_radius_comp = TOOL_RADIUS_COMP_RIGHT;
-    icode* h = find_icode('H', b);
+    token* h = find_icode('H', b);
     if (!h) {
       h = find_icode('D', b);
     }
@@ -62,15 +60,14 @@ namespace gca {
   
   bool no_state_effect(const token* t) {
     if (t->tp() == ICODE) {
-      const icode* ic = static_cast<const icode*>(t);
-      return ic->c == 'N' || ic->c == 'O' ||
-	ic->c == 'n' || ic->c == 'o';
+      return t->c == 'N' || t->c == 'O' ||
+	t->c == 'n' || t->c == 'o';
     }
     return true;
   }
 
   void update_m_codes(block& b, machine_state& r) {
-    icode* m = find_icode('M', b);
+    token* m = find_icode('M', b);
     while (m != NULL) {
       assert(m->v.is_ilit());
       const ilit& sr = static_cast<const ilit&>(m->v);
@@ -115,7 +112,7 @@ namespace gca {
   }
 
   void update_g_codes(block& b, machine_state& r) {
-    icode* g = find_icode('G', b);
+    token* g = find_icode('G', b);
     while (g != NULL) {
       assert(g->v.is_ilit());
       const ilit& sr = static_cast<const ilit&>(g->v);
@@ -205,7 +202,7 @@ namespace gca {
   }
 
   value* replace_value(value* old, char c, block& b) {
-    icode* f = find_icode(c, b);
+    token* f = find_icode(c, b);
     if (f) {
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
       if (f->v.is_lit()) {

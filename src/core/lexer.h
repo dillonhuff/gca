@@ -20,8 +20,11 @@ namespace gca {
     char c;
     const value& v;
 
+    token(const token& x) : ttp(x.ttp), text(x.text), c(x.c), v(x.v) {}
     token(string textp) : ttp(COMMENT), text(textp), v(*omitted::make()) {}
     token(char cp, const value& vp) : ttp(ICODE), c(cp), v(vp) {}
+    token(char cp, int vp) : ttp(ICODE), c(cp), v(*ilit::make(vp)) {}
+    token(char cp, double vp) : ttp(ICODE), c(cp), v(*lit::make(vp)) {}
     
     bool operator==(const token& other) const {
       if (ttp != other.ttp) { return false; }
@@ -40,25 +43,6 @@ namespace gca {
     }
   };
   
-  struct cmt : public token {
-    cmt(string textp) : token(textp) {}
-
-    static cmt* make(string textp)
-    { return new (allocate<cmt>()) cmt(textp); }
-  };
-  
-  struct icode : public token {
-
-    icode(char cp, const value& vp) : token(cp, vp) {}
-
-    static icode* make(char c, const value& v)
-    { return new (allocate<icode>()) icode(c, v); }
-    static icode* make(char c, double v)
-    { return new (allocate<icode>()) icode(c, *lit::make(v)); }
-    static icode* make(char c, int v)
-    { return new (allocate<icode>()) icode(c, *ilit::make(v)); }
-  };
-
   typedef vector<token*> block;
 
   bool cmp_tokens(const token* l, const token* r);
