@@ -5,7 +5,7 @@
 #include <streambuf>
 #include <string>
 
-#include "analysis/propagate_settings.h"
+#include "analysis/machine_state.h"
 #include "analysis/unfold.h"
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
@@ -91,8 +91,8 @@ void read_dir(const string& dir_name) {
       cout << "NUM BLOCKS: " << p.size() << endl;
       vector<block> uf = unfold_gprog(p);
       cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
-      vector<block> prop = propagate_settings(uf);
-      print_canned_cycle_feedrates(prop);
+      vector<machine_state> states = all_program_states(uf);
+      assert(states.size() == uf.size() + 1);
     }
   }
 }
@@ -108,10 +108,4 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
   read_dir(dir_name);
-  
-  // std::ifstream t("/Users/dillon/Documents//ME318-2/ME318/ME318/Term Project/Part 1/Mount Op 3.NCF");
-  // std::string str((std::istreambuf_iterator<char>(t)),
-  // 		  std::istreambuf_iterator<char>());
-  
-  // vector<token> ts = lex_gprog(str);
 }

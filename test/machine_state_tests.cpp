@@ -81,6 +81,66 @@ namespace gca {
       c.active_distance_mode = RELATIVE_DISTANCE_MODE;
       REQUIRE(c == r);
     }
-    
+
+    SECTION("G54 is active coord system") {
+      block b = lex_gprog("G54").front();
+      r = next_machine_state(b, s);
+      c.active_coord_system = G54_COORD_SYSTEM;
+      REQUIRE(c == r);
+    }
+
+    SECTION("G54 is active coord system") {
+      block b = lex_gprog("G54").front();
+      r = next_machine_state(b, s);
+      REQUIRE(c != r);
+    }
+
+    SECTION("Tool height comp negative") {
+      block b = lex_gprog("G43").front();
+      r = next_machine_state(b, s);
+      REQUIRE(c != r);
+    }
+
+    SECTION("Tool radius comp off") {
+      block b = lex_gprog("G40").front();
+      r = next_machine_state(b, s);
+      REQUIRE(c != r);
+    }
+
+    SECTION("Select XY plane") {
+      block b = lex_gprog("G17").front();
+      r = next_machine_state(b, s);
+      c.active_plane = XZ_PLANE;
+      REQUIRE(c != r);
+    }
+
+    SECTION("Move home") {
+      block b = lex_gprog("G28 X0.0 Y2.0 Z3.0").front();
+      r = next_machine_state(b, s);
+      c.active_non_modal_setting = MOVE_HOME_THROUGH_POINT;
+      REQUIRE(c != r);
+    }
+
+    SECTION("Spindle on") {
+      block b = lex_gprog("M5").front();
+      r = next_machine_state(b, s);
+      c.spindle_setting = SPINDLE_CLOCKWISE;
+      REQUIRE(c != r);
+    }
+
+    SECTION("Active tool tests") {
+      block b = lex_gprog("T8 M6").front();
+      r = next_machine_state(b, s);
+      c.last_referenced_tool = ilit::make(8);
+      c.active_tool = ilit::make(8);
+      REQUIRE(c == r);
+    }
+
+    SECTION("Flood coolant on") {
+      block b = lex_gprog("M8").front();
+      r = next_machine_state(b, s);
+      c.coolant_setting = COOLANT_OFF;
+      REQUIRE(c != r);
+    }
   }
 }

@@ -5,6 +5,52 @@
 
 namespace gca {
 
+  enum coolant_state {
+    COOLANT_STATE_UNKNOWN = 0,
+    COOLANT_MIST,
+    COOLANT_FLOOD,
+    COOLANT_OFF
+  };
+
+  enum spindle_state {
+    SPINDLE_STATE_UNKNOWN = 0,
+    SPINDLE_CLOCKWISE,
+    SPINDLE_COUNTERCLOCKWISE,
+    SPINDLE_OFF
+  };
+
+  enum non_modal_setting {
+    NO_NON_MODAL_SETTING = 0,
+    MOVE_HOME_THROUGH_POINT
+  };
+
+  enum tool_plane {
+    UNKNOWN_PLANE = 0,
+    XY_PLANE,
+    YZ_PLANE,
+    XZ_PLANE
+  };
+
+  enum tool_height_compensation {
+    TOOL_HEIGHT_COMP_UNKNOWN = 0,
+    TOOL_HEIGHT_COMP_OFF,
+    TOOL_HEIGHT_COMP_NEGATIVE,
+    TOOL_HEIGHT_COMP_POSITIVE
+  };
+
+  enum tool_radius_compensation {
+    TOOL_RADIUS_COMP_UNKNOWN = 0,
+    TOOL_RADIUS_COMP_OFF,
+    TOOL_RADIUS_COMP_LEFT,
+    TOOL_RADIUS_COMP_RIGHT
+  };
+  
+  enum coord_system {
+    UNKNOWN_COORD_SYSTEM = 0,
+    G54_COORD_SYSTEM,
+    MACHINE_COORD_SYSTEM
+  };
+
   enum distance_mode {
     UNKNOWN_DISTANCE_MODE = 0,
     ABSOLUTE_DISTANCE_MODE,
@@ -24,26 +70,71 @@ namespace gca {
     value* spindle_speed;
     move_type active_move_type;
     distance_mode active_distance_mode;
+    coord_system active_coord_system;
+    tool_height_compensation tool_height_comp;
+    tool_radius_compensation tool_radius_comp;
+    tool_plane active_plane;
+    non_modal_setting active_non_modal_setting;
+    value* x;
+    value* y;
+    value* z;
+    spindle_state spindle_setting;
+    value* last_referenced_tool;
+    value* active_tool;
+    coolant_state coolant_setting;
 
     machine_state() :
       feedrate(omitted::make()), spindle_speed(omitted::make()),
       active_move_type(UNKNOWN_MOVE_TYPE),
-      active_distance_mode(UNKNOWN_DISTANCE_MODE) {}
+      active_distance_mode(UNKNOWN_DISTANCE_MODE),
+      active_coord_system(UNKNOWN_COORD_SYSTEM),
+      tool_height_comp(TOOL_HEIGHT_COMP_UNKNOWN),
+      tool_radius_comp(TOOL_RADIUS_COMP_UNKNOWN),
+      active_plane(UNKNOWN_PLANE),
+      active_non_modal_setting(NO_NON_MODAL_SETTING),
+      x(omitted::make()), y(omitted::make()), z(omitted::make()),
+      spindle_setting(SPINDLE_STATE_UNKNOWN),
+      last_referenced_tool(omitted::make()),
+      active_tool(omitted::make()),
+      coolant_setting(COOLANT_STATE_UNKNOWN) {}
+
     machine_state(const machine_state& s) :
       feedrate(s.feedrate), spindle_speed(s.spindle_speed),
-      active_move_type(UNKNOWN_MOVE_TYPE),
-      active_distance_mode(UNKNOWN_DISTANCE_MODE) {}
+      active_move_type(s.active_move_type),
+      active_distance_mode(s.active_distance_mode),
+      active_coord_system(s.active_coord_system),
+      tool_height_comp(s.tool_height_comp),
+      tool_radius_comp(s.tool_radius_comp),
+      active_plane(s.active_plane),
+      active_non_modal_setting(NO_NON_MODAL_SETTING),
+      x(s.x), y(s.y), z(s.z),
+      spindle_setting(s.spindle_setting),
+      last_referenced_tool(s.last_referenced_tool),
+      active_tool(s.active_tool),
+      coolant_setting(s.coolant_setting) {}
 
     machine_state& operator=(const machine_state& s) {
       feedrate = s.feedrate;
       spindle_speed = s.spindle_speed;
       active_move_type = s.active_move_type;
       active_distance_mode = s.active_distance_mode;
+      active_coord_system = s.active_coord_system;
+      tool_height_comp = s.tool_height_comp;
+      tool_radius_comp = s.tool_radius_comp;
+      active_non_modal_setting = s.active_non_modal_setting;
+      x = s.x;
+      y = s.y;
+      z = s.z;
+      spindle_setting = s.spindle_setting;
+      last_referenced_tool = s.last_referenced_tool;
+      active_tool = s.active_tool;
+      coolant_setting = s.coolant_setting;
       return *this;
     }
   };
 
   machine_state next_machine_state(const block& b, const machine_state& s);
+  vector<machine_state> all_program_states(const vector<block>& p);
 
   bool operator==(const machine_state& l, const machine_state& r);
   bool operator!=(const machine_state& l, const machine_state& r);
