@@ -5,6 +5,12 @@
 
 namespace gca {
 
+  enum canned_cycle_return_policy {
+    CANNED_CYCLE_RETURN_POLICY_UNKNOWN = 0,
+    CANNED_CYCLE_RETURN_Z,
+    CANNED_CYCLE_RETURN_R
+  };
+
   enum coolant_state {
     COOLANT_STATE_UNKNOWN = 0,
     COOLANT_MIST,
@@ -21,14 +27,15 @@ namespace gca {
 
   enum non_modal_setting {
     NO_NON_MODAL_SETTING = 0,
-    MOVE_HOME_THROUGH_POINT
+    MOVE_HOME_THROUGH_POINT,
+    POSITION_REGISTER_MOVE
   };
 
   enum tool_plane {
     UNKNOWN_PLANE = 0,
     XY_PLANE,
     YZ_PLANE,
-    XZ_PLANE
+    ZX_PLANE
   };
 
   enum tool_height_compensation {
@@ -62,7 +69,13 @@ namespace gca {
     FAST_MOVE,
     LINEAR_MOVE,
     CLOCKWISE_CIRCULAR_MOVE,
-    COUNTERCLOCKWISE_CIRCULAR_MOVE
+    COUNTERCLOCKWISE_CIRCULAR_MOVE,
+    CANCEL_CANNED_CYCLE_MOVE,
+    CANNED_CYCLE_73_MOVE,
+    CANNED_CYCLE_81_MOVE,
+    CANNED_CYCLE_83_MOVE,
+    CANNED_CYCLE_84_MOVE,
+    CANNED_CYCLE_85_MOVE
   };
 
   struct machine_state {
@@ -87,6 +100,9 @@ namespace gca {
     value* j;
     value* k;
     value* tool_radius_value;
+    canned_cycle_return_policy active_canned_cycle_return_policy;
+    value* r;
+    value* q;
 
     machine_state() :
       feedrate(omitted::make()), spindle_speed(omitted::make()),
@@ -104,7 +120,9 @@ namespace gca {
       coolant_setting(COOLANT_STATE_UNKNOWN),
       tool_height_value(omitted::make()),
       i(omitted::make()), j(omitted::make()), k(omitted::make()),
-      tool_radius_value(omitted::make()) {}
+      tool_radius_value(omitted::make()),
+      active_canned_cycle_return_policy(CANNED_CYCLE_RETURN_POLICY_UNKNOWN),
+      r(omitted::make()), q(omitted::make()) {}
 
     machine_state(const machine_state& s) :
       feedrate(s.feedrate), spindle_speed(s.spindle_speed),

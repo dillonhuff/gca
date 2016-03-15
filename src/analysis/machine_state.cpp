@@ -38,11 +38,12 @@ namespace gca {
     if (!h) {
       h = find_icode('D', b);
     }
-    assert(h);
-    assert(h->v.is_ilit());
-    const ilit& sr = static_cast<const ilit&>(h->v);
-    r.tool_radius_value = ilit::make(sr.v);
-    b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+    if (h) {
+      assert(h->v.is_ilit());
+      const ilit& sr = static_cast<const ilit&>(h->v);
+      r.tool_radius_value = ilit::make(sr.v);
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+    }
   }
 
   void set_tool_radius_comp_right(machine_state& r, block& b) {
@@ -51,17 +52,19 @@ namespace gca {
     if (!h) {
       h = find_icode('D', b);
     }
-    assert(h);
-    assert(h->v.is_ilit());
-    const ilit& sr = static_cast<const ilit&>(h->v);
-    r.tool_radius_value = ilit::make(sr.v);
-    b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+    if (h) {
+      assert(h->v.is_ilit());
+      const ilit& sr = static_cast<const ilit&>(h->v);
+      r.tool_radius_value = ilit::make(sr.v);
+      b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
+    }
   }
   
   bool no_state_effect(const token* t) {
     if (t->tp() == ICODE) {
       const icode* ic = static_cast<const icode*>(t);
-      return ic->c == 'N' || ic->c == 'O';
+      return ic->c == 'N' || ic->c == 'O' ||
+	ic->c == 'n' || ic->c == 'o';
     }
     return true;
   }
@@ -72,6 +75,12 @@ namespace gca {
       assert(m->v.is_ilit());
       const ilit& sr = static_cast<const ilit&>(m->v);
       switch (sr.v) {
+      case 0:
+	break;
+      case 1:
+	break;
+      case 2:
+	break;
       case 3:
 	r.spindle_setting = SPINDLE_CLOCKWISE;
 	break;
@@ -90,6 +99,11 @@ namespace gca {
 	break;
       case 9:
 	r.coolant_setting = COOLANT_OFF;
+	break;
+      case 19:
+	// TODO: Figure out what this instruction actually does
+	break;
+      case 30:
 	break;
       default:
 	cout << "Unhandled word: " << *m << endl;
@@ -121,6 +135,12 @@ namespace gca {
       case 17:
 	r.active_plane = XY_PLANE;
 	break;
+      case 18:
+	r.active_plane = ZX_PLANE;
+	break;
+      case 19:
+	r.active_plane = YZ_PLANE;
+	break;
       case 28:
 	r.active_non_modal_setting = MOVE_HOME_THROUGH_POINT;
 	break;
@@ -142,14 +162,38 @@ namespace gca {
       case 54:
 	r.active_coord_system = G54_COORD_SYSTEM;
 	break;
+      case 73:
+	r.active_move_type = CANNED_CYCLE_81_MOVE;
+	break;
       case 80:
-	// TODO: Add support for canned cycles
+	r.active_move_type = CANCEL_CANNED_CYCLE_MOVE;
+	break;
+      case 81:
+	r.active_move_type = CANNED_CYCLE_81_MOVE;
+	break;
+      case 83:
+	r.active_move_type = CANNED_CYCLE_83_MOVE;
+	break;
+      case 84:
+	r.active_move_type = CANNED_CYCLE_84_MOVE;
+	break;
+      case 85:
+	r.active_move_type = CANNED_CYCLE_85_MOVE;
 	break;
       case 90:
 	r.active_distance_mode = ABSOLUTE_DISTANCE_MODE;
 	break;
       case 91:
 	r.active_distance_mode = RELATIVE_DISTANCE_MODE;
+	break;
+      case 92:
+	r.active_non_modal_setting = POSITION_REGISTER_MOVE;
+	break;
+      case 98:
+	r.active_canned_cycle_return_policy = CANNED_CYCLE_RETURN_Z;
+	break;
+      case 99:
+	r.active_canned_cycle_return_policy = CANNED_CYCLE_RETURN_R;
 	break;
       default:
 	cout << "Unsupported g instruction: " << *g << endl;
@@ -190,6 +234,8 @@ namespace gca {
     r.j = replace_value(r.j, 'J', b);
     r.k = replace_value(r.k, 'K', b);
     r.last_referenced_tool = replace_value(r.last_referenced_tool, 'T', b);
+    r.r = replace_value(r.r, 'R', b);
+    r.q = replace_value(r.k, 'Q', b);
 
     update_m_codes(b, r);
     update_g_codes(b, r);

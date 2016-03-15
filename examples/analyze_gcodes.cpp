@@ -92,6 +92,7 @@ void read_dir(const string& dir_name) {
       vector<block> uf = unfold_gprog(p);
       cout << "UNFOLDED BLOCKS: " << uf.size() << endl;
       vector<machine_state> states = all_program_states(uf);
+      cout << "STATES: " << states.size() << endl;
       assert(states.size() == uf.size() + 1);
     }
   }
