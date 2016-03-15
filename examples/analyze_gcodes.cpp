@@ -1,4 +1,5 @@
 #include <cassert>
+#include <ctime>
 #include <dirent.h>
 #include <fstream>
 #include <iostream>
@@ -108,5 +109,14 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
+  time_t start;
+  time_t end;
+  time(&start);
   read_dir(dir_name);
+  time(&end);
+  double seconds = difftime(end, start);
+  cout << "Total time to process all .NCF files: " << seconds << endl;
 }
+
+// Before optimizations 58 seconds
+// After call optimization in unfold

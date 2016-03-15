@@ -118,7 +118,7 @@ namespace gca {
     SECTION("Select XY plane") {
       block b = lex_gprog("G17").front();
       r = next_machine_state(b, s);
-      c.active_plane = XZ_PLANE;
+      c.active_plane = ZX_PLANE;
       REQUIRE(c != r);
     }
 

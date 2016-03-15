@@ -15,35 +15,41 @@ namespace gca {
   };
 
   struct token {
-    virtual bool operator==(const token& other) const = 0;
-    virtual token_type tp() const = 0;
-    virtual void print(ostream& stream) const = 0;
-  };
-  
-  struct cmt : public token {
+    token_type ttp;
     string text;
-
-    cmt(string textp) : text(textp) {}
-
-    static cmt* make(string textp)
-    { return new (allocate<cmt>()) cmt(textp); }
-
-    bool operator==(const token& other) const {
-      if (other.tp() != COMMENT)
-	{return false; }
-      const cmt& ci = static_cast<const cmt&>(other);
-      return text == ci.text;
-    }
-    token_type tp() const { return COMMENT; }
-    void print(ostream& stream) const
-    { stream << text; }
-  };
-  
-  struct icode : public token {
     char c;
     const value& v;
 
-    icode(char cp, const value& vp) : c(cp), v(vp) {}
+    token(string textp) : ttp(COMMENT), text(textp), v(*omitted::make()) {}
+    token(char cp, const value& vp) : ttp(ICODE), c(cp), v(vp) {}
+    
+    bool operator==(const token& other) const {
+      if (ttp != other.ttp) { return false; }
+      return ((ttp == COMMENT) && (text == other.text)) ||
+	((ttp == ICODE) && ((c == other.c) && (v == other.v)));
+    }
+    
+    token_type tp() const { return ttp; }
+    
+    void print(ostream& stream) const {
+      if (ttp == COMMENT) {
+	stream << text;
+      } else {
+	stream << c << v;
+      }
+    }
+  };
+  
+  struct cmt : public token {
+    cmt(string textp) : token(textp) {}
+
+    static cmt* make(string textp)
+    { return new (allocate<cmt>()) cmt(textp); }
+  };
+  
+  struct icode : public token {
+
+    icode(char cp, const value& vp) : token(cp, vp) {}
 
     static icode* make(char c, const value& v)
     { return new (allocate<icode>()) icode(c, v); }
@@ -51,16 +57,6 @@ namespace gca {
     { return new (allocate<icode>()) icode(c, *lit::make(v)); }
     static icode* make(char c, int v)
     { return new (allocate<icode>()) icode(c, *ilit::make(v)); }
-    
-    bool operator==(const token& other) const {
-      if (other.tp() != ICODE)
-	{return false; }
-      const icode& ci = static_cast<const icode&>(other);
-      return c == ci.c && v == ci.v;
-    }
-    token_type tp() const { return ICODE; }
-    void print(ostream& stream) const
-    { stream << c << v; }
   };
 
   typedef vector<token*> block;
