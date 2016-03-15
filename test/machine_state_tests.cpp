@@ -139,12 +139,12 @@ namespace gca {
     SECTION("Spindle counterclockwise") {
       vector<block> p = lex_gprog("S3000 M4\n G41 H3");
       machine_state t = next_machine_state(p[0], s);
-      r = next_machine_state(p[1], s);
+      r = next_machine_state(p[1], t);
       c.spindle_setting = SPINDLE_COUNTERCLOCKWISE;
       c.spindle_speed = lit::make(3000);
       c.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
       c.tool_radius_value = ilit::make(3);
-      REQUIRE(c != r);
+      REQUIRE(c == r);
     }
     
     SECTION("Active tool tests") {
@@ -179,6 +179,25 @@ namespace gca {
       r = next_machine_state(b, s);
       c.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
       c.tool_radius_value = ilit::make(2);
+      REQUIRE(c == r);
+    }
+  }
+
+  TEST_CASE("Multi block example") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    machine_state r;
+    machine_state c;
+
+    SECTION("Spindle manipulation") {
+      vector<block> p = lex_gprog("M3 \n S3000 M4\n G41 H3");
+      vector<machine_state> ms = all_program_states(p);
+      r = ms.back();
+      c.spindle_setting = SPINDLE_COUNTERCLOCKWISE;
+      c.spindle_speed = lit::make(3000);
+      c.tool_radius_comp = TOOL_RADIUS_COMP_LEFT;
+      c.tool_radius_value = ilit::make(3);
       REQUIRE(c == r);
     }
     

@@ -252,7 +252,7 @@ namespace gca {
     vector<machine_state> ms;
     ms.push_back(machine_state());
     for (vector<block>::const_iterator it = p.begin(); it != p.end(); ++it) {
-      ms.push_back(next_machine_state(*it, ms.front()));
+      ms.push_back(next_machine_state(*it, ms.back()));
     }
     return ms;
   }

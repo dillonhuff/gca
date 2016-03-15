@@ -23,14 +23,18 @@ void print_climb_vs_conventional(const machine_state& s) {
       cout << s << endl;
       assert(false);
     }
-    cout << "Comp left" << endl;
     if (s.spindle_setting == SPINDLE_CLOCKWISE) {
       cout << "Climb" << endl;
     } else if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
       cout << "Conventional" << endl;
     }
   } else if (s.tool_radius_comp == TOOL_RADIUS_COMP_RIGHT) {
-    cout << "Comp right" << endl;
+    if (s.spindle_setting == SPINDLE_OFF ||
+	s.spindle_setting == SPINDLE_STATE_UNKNOWN) {
+      cout << "Bad spindle state: " << endl;
+      cout << s << endl;
+      assert(false);
+    }
     if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
       cout << "Climb" << endl;
     } else if (s.spindle_setting == SPINDLE_CLOCKWISE) {
