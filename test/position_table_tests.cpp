@@ -96,5 +96,19 @@ namespace gca {
 		   c);
       REQUIRE(t == c);
     }
+
+    SECTION("Tool change wipes out all positions") {
+      p = lex_gprog("G90 G54 \n G0 X1.0 Y2.0 \n T2 M6 \n G1 X2.0 Y1.5 Z2.0");
+      s = all_program_states(p);
+      t = program_position_table(s);
+      add_unk_row(c);
+      update_table(G54_COORD_SYSTEM,
+		   position(lit::make(1), lit::make(2), omitted::make()),
+		   c);
+      add_unk_row(c);
+      update_table(G54_COORD_SYSTEM, position(2, 1.5, 2), c);
+      REQUIRE(t == c);
+    }
+
   }
 }

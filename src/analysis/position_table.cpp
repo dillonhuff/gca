@@ -123,6 +123,8 @@ namespace gca {
 	} else {
 	  assert(false);
 	}
+      } else if (s.active_tool != (*(it - 1)).active_tool) {
+	add_unk_row(t);
       } else {
 	if (t.size() == 0) {
 	  add_unk_row(t);
