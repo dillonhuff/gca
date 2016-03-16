@@ -2,6 +2,7 @@
 #define GCA_ANALYSIS_UTILS_H
 
 #include "core/lexer.h"
+#include "analysis/machine_state.h"
 
 namespace gca {
 
@@ -40,7 +41,12 @@ namespace gca {
   program_loc find_loc(const vector<block>& p, const token& t);
 
   vector<pair<token, program_loc> >
-  compute_starts(const vector<block>& p);  
+  compute_starts(const vector<block>& p);
+
+  bool is_cut(const machine_state& s);
+  bool is_move(const machine_state& s);
+  bool spindle_off(const machine_state& s);
+  
 }
 
 #endif

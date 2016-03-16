@@ -32,5 +32,15 @@ namespace gca {
       t = program_position_table(s);
       REQUIRE(t != c);
     }
+
+    SECTION("G0 sets all coordinates") {
+      p = lex_gprog("O1001 \n G90 G54 \n G0 X1.0 Y2.0 Z3.0 F3.0");
+      s = all_program_states(p);
+      t = program_position_table(s);
+      add_unk_row(c);
+      add_unk_row(c);
+      update_table(G54_COORD_SYSTEM, position(1, 2, 3), c);
+      REQUIRE(t == c);
+    }
   }
 }

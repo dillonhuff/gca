@@ -8,6 +8,7 @@
 
 #include "analysis/machine_state.h"
 #include "analysis/unfold.h"
+#include "analysis/utils.h"
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
 #include "core/parser.h"
@@ -46,15 +47,6 @@ void print_climb_vs_conventional(const machine_state& s) {
 inline bool ends_with(string const& value, string const& ending) {
     if (ending.size() > value.size()) return false;
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
-}
-
-bool is_cut(const machine_state& s) {
-  return (s.active_move_type != FAST_MOVE) && !(s.x->is_omitted() || s.y->is_omitted() || s.z->is_omitted());
-}
-
-bool spindle_off(const machine_state& s) {
-  return (s.spindle_setting == SPINDLE_OFF ||
-	  s.spindle_setting == SPINDLE_STATE_UNKNOWN);
 }
 
 void sanity_check_machine_state(const machine_state& s) {

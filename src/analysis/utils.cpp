@@ -82,5 +82,19 @@ namespace gca {
     return locs;
   }
 
+  bool is_cut(const machine_state& s) {
+    return (s.active_move_type != FAST_MOVE) && !(s.x->is_omitted() || s.y->is_omitted() || s.z->is_omitted());
+  }
+
+  bool is_move(const machine_state& s) {
+    return (s.active_move_type != UNKNOWN_MOVE_TYPE) && !(s.x->is_omitted() || s.y->is_omitted() || s.z->is_omitted());
+  }
+  
+  bool spindle_off(const machine_state& s) {
+    return (s.spindle_setting == SPINDLE_OFF ||
+	    s.spindle_setting == SPINDLE_STATE_UNKNOWN);
+  }
+
+  
 
 }
