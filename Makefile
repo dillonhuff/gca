@@ -449,6 +449,48 @@ src/analysis/machine_state.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.s
 .PHONY : src/analysis/machine_state.cpp.s
 
+src/analysis/position_table.o: src/analysis/position_table.cpp.o
+
+.PHONY : src/analysis/position_table.o
+
+# target to build an object file
+src/analysis/position_table.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.o
+.PHONY : src/analysis/position_table.cpp.o
+
+src/analysis/position_table.i: src/analysis/position_table.cpp.i
+
+.PHONY : src/analysis/position_table.i
+
+# target to preprocess a source file
+src/analysis/position_table.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.i
+.PHONY : src/analysis/position_table.cpp.i
+
+src/analysis/position_table.s: src/analysis/position_table.cpp.s
+
+.PHONY : src/analysis/position_table.s
+
+# target to generate assembly for a file
+src/analysis/position_table.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.s
+.PHONY : src/analysis/position_table.cpp.s
+
 src/analysis/unfold.o: src/analysis/unfold.cpp.o
 
 .PHONY : src/analysis/unfold.o
@@ -2270,6 +2312,33 @@ test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
+test/position_table_tests.o: test/position_table_tests.cpp.o
+
+.PHONY : test/position_table_tests.o
+
+# target to build an object file
+test/position_table_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/position_table_tests.cpp.o
+.PHONY : test/position_table_tests.cpp.o
+
+test/position_table_tests.i: test/position_table_tests.cpp.i
+
+.PHONY : test/position_table_tests.i
+
+# target to preprocess a source file
+test/position_table_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/position_table_tests.cpp.i
+.PHONY : test/position_table_tests.cpp.i
+
+test/position_table_tests.s: test/position_table_tests.cpp.s
+
+.PHONY : test/position_table_tests.s
+
+# target to generate assembly for a file
+test/position_table_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/position_table_tests.cpp.s
+.PHONY : test/position_table_tests.cpp.s
+
 test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
 
 .PHONY : test/shapes_to_toolpaths_tests.o
@@ -2443,6 +2512,9 @@ help:
 	@echo "... src/analysis/machine_state.o"
 	@echo "... src/analysis/machine_state.i"
 	@echo "... src/analysis/machine_state.s"
+	@echo "... src/analysis/position_table.o"
+	@echo "... src/analysis/position_table.i"
+	@echo "... src/analysis/position_table.s"
 	@echo "... src/analysis/unfold.o"
 	@echo "... src/analysis/unfold.i"
 	@echo "... src/analysis/unfold.s"
@@ -2587,6 +2659,9 @@ help:
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"
+	@echo "... test/position_table_tests.o"
+	@echo "... test/position_table_tests.i"
+	@echo "... test/position_table_tests.s"
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"

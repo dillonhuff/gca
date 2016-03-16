@@ -228,5 +228,13 @@ namespace gca {
       correct.push_back(b);
       REQUIRE(p == correct);
     }
+
+    SECTION("O instruction") {
+      p = lex_gprog("O1001");
+      block b;
+      b.push_back(token('O', 1001));
+      correct.push_back(b);
+      REQUIRE(p == correct);
+    }
   }
 }
