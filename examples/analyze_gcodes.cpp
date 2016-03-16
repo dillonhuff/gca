@@ -19,26 +19,26 @@ void print_climb_vs_conventional(const machine_state& s) {
   if (s.tool_radius_comp == TOOL_RADIUS_COMP_LEFT) {
     if (s.spindle_setting == SPINDLE_OFF ||
 	s.spindle_setting == SPINDLE_STATE_UNKNOWN) {
-      cout << "Bad spindle state: " << endl;
+      cout << "Bad spindle state: " << s.line_no << endl;
       cout << s << endl;
       assert(false);
     }
     if (s.spindle_setting == SPINDLE_CLOCKWISE) {
-      cout << "Climb" << endl;
+      //cout << "Climb at line " << s.line_no << endl;
     } else if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
-      cout << "Conventional" << endl;
+      cout << "Conventional at line " << s.line_no << endl;
     }
   } else if (s.tool_radius_comp == TOOL_RADIUS_COMP_RIGHT) {
     if (s.spindle_setting == SPINDLE_OFF ||
 	s.spindle_setting == SPINDLE_STATE_UNKNOWN) {
-      cout << "Bad spindle state: " << endl;
+      cout << "Bad spindle state: " << s.line_no << endl;
       cout << s << endl;
       assert(false);
     }
     if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
-      cout << "Climb" << endl;
+      //cout << "Climb at line " << s.line_no << endl;
     } else if (s.spindle_setting == SPINDLE_CLOCKWISE) {
-      cout << "Conventional" << endl;
+      cout << "Conventional at line " << s.line_no << endl;
     }
   }
 }

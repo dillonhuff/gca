@@ -108,14 +108,16 @@ namespace gca {
     }
   }
 
-  block lex_gprog_line(const string& str) {
+  block lex_gprog_line(const string& str, int line_no) {
     block ts;
     parse_state s(str);
     int i = 0;
     while (s.chars_left()) {
       ignore_whitespace(s);
       if (!s.chars_left()) { break; }
-      ts.push_back(parse_token(s));
+      token t = parse_token(s);
+      t.line_no = line_no;
+      ts.push_back(t);
       i++;
     }
     return ts;
@@ -125,16 +127,18 @@ namespace gca {
     vector<block> blocks;
     string::const_iterator line_start = str.begin();
     string::const_iterator line_end;
+    int line_no = 1;
     while (line_start < str.end()) {
       line_end = find(line_start, str.end(), '\n');
       string line(line_start, line_end);
       if (line.size() > 0) {
-	block b = lex_gprog_line(line);
+	block b = lex_gprog_line(line, line_no);
 	if (b.size() > 0) {
 	  blocks.push_back(b);
 	}
       }
       line_start += line.size() + 1;
+      line_no++;
     }
     return blocks;
   }

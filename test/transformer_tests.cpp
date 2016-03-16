@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "core/parser.h"
+#include "core/lexer.h"
 #include "transformers/abs_to_rel.h"
 #include "transformers/feed_changer.h"
 #include "transformers/g0_filter.h"
@@ -14,43 +15,27 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
+    vector<block> p;
+    vector<block> correct;
+    value* initial_feedrate;
+    value* new_feedrate;
+
     SECTION("Feed changer with G0") {
-      gprog* p = parse_gprog("G91 G0 X1.5 G1 F2 X2.0 Y3.0 Z5.5");
-      value* initial_feedrate = lit::make(2.0);
-      value* new_feedrate = lit::make(5.0);
-      gprog* correct = parse_gprog("G91 G0 X1.5 G1 F5 X2.0 Y3.0 Z5.5");
-      REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
+      p = lex_gprog("G91 G0 X1.5 \n G1 F2 X2.0 Y3.0 Z5.5");
+      initial_feedrate = lit::make(2.0);
+      new_feedrate = lit::make(5.0);
+      correct = lex_gprog("G91 G0 X1.5 \n G1 F5 X2.0 Y3.0 Z5.5");
+      REQUIRE(change_feeds(p, initial_feedrate, new_feedrate) == correct);
     }
-  
+
     SECTION("Feed changer") {
-      gprog* p = gprog::make();
-      value* initial_feedrate = lit::make(1.0);
-      p->push_back(g1_instr::make(1.0, 1.0, 1.0, initial_feedrate));
-      value* new_feedrate = lit::make(4.0);
-      gprog* correct = gprog::make();
-      correct->push_back(g1_instr::make(1.0, 1.0, 1.0, new_feedrate));
-      REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
+      p = lex_gprog("G1 X1.0 Y1.0 Z1.0 F1.0");
+      initial_feedrate = lit::make(1.0);
+      new_feedrate = lit::make(4.0);
+      correct = lex_gprog("G1 X1.0 Y1.0 Z1.0 F4.0");
+      REQUIRE(change_feeds(p, initial_feedrate, new_feedrate) == correct);
     }
 
-    SECTION("Feed changer relative coordinates") {
-      gprog* p = gprog::make();
-      value* initial_feedrate = lit::make(1.0);
-      p->push_back(g1_instr::make(1.0, 1.0, 1.0, initial_feedrate));
-      value* new_feedrate = lit::make(4.0);
-      gprog* correct = gprog::make();
-      correct->push_back(g1_instr::make(1.0, 1.0, 1.0, new_feedrate));
-      REQUIRE(*change_feeds(p, initial_feedrate, new_feedrate) == *correct);
-    }
-
-    SECTION("Feed changer with variables") {
-      gprog* p = parse_gprog("G1 F15 X1.0 Y1.0 Z2.0");
-      lit* init_f = lit::make(15.0);
-      var* new_f = var::make(1);
-      value* default_val = lit::make(13);
-      gprog* correct = parse_gprog("#1=13 G1 F#1 X1.0 Y1.0 Z2.0");
-      REQUIRE(*generalize_feeds(p, default_val, init_f, new_f) == *correct);
-    }
-  
     SECTION("No irrelevant G0 moves") {
       gprog* p = gprog::make();
       p->push_back(g0_instr::make(point(1.0, 1.0, 1.0)));

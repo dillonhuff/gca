@@ -225,11 +225,20 @@ namespace gca {
     }
     return old;
   }
+
+  int line_no(const block& b) {
+    //cout << "Block: " << b << endl;
+    if (b.size() == 0) {
+      return -1;
+    }
+    return b.front().line_no;
+  }
   
   machine_state next_machine_state(const block& bs, const machine_state& s) {
     block b = bs;
     b.erase(remove_if(b.begin(), b.end(), no_state_effect), b.end());
     machine_state r = s;
+    r.line_no = line_no(b);
     r.feedrate = replace_value(r.feedrate, 'F', b);
     r.spindle_speed = replace_value(r.spindle_speed, 'S', b);
     value* om = omitted::make();

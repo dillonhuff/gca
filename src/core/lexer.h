@@ -19,17 +19,21 @@ namespace gca {
     string text;
     char c;
     value* v;
+    int line_no;
 
-    token(const token& x) : ttp(x.ttp), text(x.text), c(x.c), v(x.v) {}
-    token(string textp) : ttp(COMMENT), text(textp) {}
-    token(char cp, value* vp) : ttp(ICODE), c(cp), v(vp) {}
-    token(char cp, int vp) : ttp(ICODE), c(cp), v(ilit::make(vp)) {}
-    token(char cp, double vp) : ttp(ICODE), c(cp), v(lit::make(vp)) {}
+    token(const token& x) :
+      ttp(x.ttp), text(x.text), c(x.c), v(x.v), line_no(x.line_no) {}
+    token(string textp) : ttp(COMMENT), text(textp), line_no(-1) {}
+    token(char cp, value* vp) : ttp(ICODE), c(cp), v(vp), line_no(-1) {}
+    token(char cp, int vp) : ttp(ICODE), c(cp), v(ilit::make(vp)), line_no(-1) {}
+    token(char cp, double vp) : ttp(ICODE), c(cp), v(lit::make(vp)), line_no(-1) {}
 
     token& operator=(const token& x) {
       ttp = x.ttp;
+      text = x.text;
       c = x.c;
       v = x.v;
+      line_no = x.line_no;
       return *this;
     }
 

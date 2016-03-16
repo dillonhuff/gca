@@ -103,6 +103,7 @@ namespace gca {
     canned_cycle_return_policy active_canned_cycle_return_policy;
     value* r;
     value* q;
+    int line_no;
 
     machine_state() :
       feedrate(omitted::make()), spindle_speed(omitted::make()),
@@ -122,7 +123,8 @@ namespace gca {
       i(omitted::make()), j(omitted::make()), k(omitted::make()),
       tool_radius_value(omitted::make()),
       active_canned_cycle_return_policy(CANNED_CYCLE_RETURN_POLICY_UNKNOWN),
-      r(omitted::make()), q(omitted::make()) {}
+      r(omitted::make()), q(omitted::make()),
+      line_no(-1) {}
 
     machine_state(const machine_state& s) :
       feedrate(s.feedrate), spindle_speed(s.spindle_speed),
@@ -140,7 +142,8 @@ namespace gca {
       coolant_setting(s.coolant_setting),
       tool_height_value(s.tool_height_value),
       i(s.i), j(s.j), k(s.k),
-      tool_radius_value(s.tool_radius_value) {}
+      tool_radius_value(s.tool_radius_value),
+      line_no(s.line_no) {}
 
     machine_state& operator=(const machine_state& s) {
       feedrate = s.feedrate;
@@ -163,6 +166,7 @@ namespace gca {
       j = s.j;
       k = s.k;
       tool_radius_value = s.tool_radius_value;
+      line_no = s.line_no;
       return *this;
     }
   };
