@@ -31,6 +31,8 @@ namespace gca {
   bool operator!=(const position_table& x, const position_table& y);
   position_table program_position_table(const vector<machine_state>& p);
   void add_unk_row(position_table& x);
+
+  ostream& operator<<(ostream& out, const position_entry& e);
 }
 
 #endif 

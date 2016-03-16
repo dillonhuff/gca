@@ -15,6 +15,16 @@ namespace gca {
     return acs;
   }
 
+  position last_position(coord_system c, const position_table& t) {
+    assert(t.size() > 0);
+    position_table_row r = t.back();
+    for (position_table_row::iterator it = r.begin(); it != r.end(); ++it) {
+      position_entry e = *it;
+      if (e.first == c) { return e.second; }
+    }
+    assert(false);
+  }
+
   position_table_row unknown_row() {
     vector<coord_system> cs = all_coord_systems();
     position_table_row r;
@@ -30,6 +40,11 @@ namespace gca {
 
   void add_unk_row(position_table& x) {
     add_row(unknown_row(), x);
+  }
+
+  void copy_last_row(position_table& t) {
+    assert(t.size() > 0);
+    t.push_back(t.back());
   }
   
   bool operator==(const position& l, const position r)
@@ -64,20 +79,67 @@ namespace gca {
     }
     add_row(r, t);
   }
+
+  value* increment_value(value* v, value* inc) {
+    if (v->is_omitted()) {
+      return v;
+    } else if (v->is_lit() && inc->is_lit()) {
+      lit* vl = static_cast<lit*>(v);
+      lit* incl = static_cast<lit*>(inc);
+      return lit::make(vl->v + incl->v);
+    } else {
+      assert(false);
+    }
+  }
   
+  position increment_position(const position p, const position inc) {
+    return position(increment_value(p.x, inc.x),
+		    increment_value(p.y, inc.y),
+		    increment_value(p.z, inc.z));
+  }
+
+  position next_relative_position(const machine_state& s,
+				  const position_table& t) {
+    assert(t.size() > 0);
+    position last = last_position(s.active_coord_system, t);
+    position inc(s.x, s.y, s.z);
+    return increment_position(last, inc);
+  }
+
   position_table program_position_table(const vector<machine_state>& p) {
-    position_table_row last = unknown_row();
     position_table t;    
     for (vector<machine_state>::const_iterator it = p.begin() + 1;
 	 it < p.end(); ++it) {
       machine_state s = *it;
       if (is_move(s)) {
-	update_table(s.active_coord_system, position(s.x, s.y, s.z), t);
+	if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
+	  value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
+	  value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;
+	  value* z = s.z->is_omitted() ? last_position(s.active_coord_system, t).z : s.z;
+	  update_table(s.active_coord_system, position(x, y, z), t);
+	} else if (s.active_distance_mode == RELATIVE_DISTANCE_MODE) {
+	  position p = next_relative_position(s, t);
+	  update_table(s.active_coord_system, p, t);
+	} else {
+	  assert(false);
+	}
       } else {
-	add_unk_row(t);
+	if (t.size() == 0) {
+	  add_unk_row(t);
+	} else {
+	  copy_last_row(t);
+	}
       }
     }
     return t;
   }
 
+  ostream& operator<<(ostream& out, const position_entry& e) {
+    out << "(" << e.first << ", ";
+    out << *(e.second.x) << ", ";
+    out << *(e.second.y) << ", ";
+    out << *(e.second.z);
+    out << ")";
+    return out;
+  }
 }
