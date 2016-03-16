@@ -106,12 +106,15 @@ namespace gca {
     return increment_position(last, inc);
   }
 
+  // TODO: Use an adjacent difference function for this
   position_table program_position_table(const vector<machine_state>& p) {
     position_table t;    
     for (vector<machine_state>::const_iterator it = p.begin() + 1;
 	 it < p.end(); ++it) {
       machine_state s = *it;
-      if (is_move(s)) {
+      if (s.active_non_modal_setting == MOVE_HOME_THROUGH_POINT) {
+	update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), t);
+      } else if (is_move(s)) {
 	if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
 	  value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
 	  value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;

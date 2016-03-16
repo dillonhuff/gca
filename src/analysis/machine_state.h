@@ -134,7 +134,7 @@ namespace gca {
       tool_height_comp(s.tool_height_comp),
       tool_radius_comp(s.tool_radius_comp),
       active_plane(s.active_plane),
-      active_non_modal_setting(NO_NON_MODAL_SETTING),
+      active_non_modal_setting(s.active_non_modal_setting),
       x(s.x), y(s.y), z(s.z),
       spindle_setting(s.spindle_setting),
       last_referenced_tool(s.last_referenced_tool),

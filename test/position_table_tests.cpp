@@ -110,5 +110,13 @@ namespace gca {
       REQUIRE(t == c);
     }
 
+    SECTION("G28 returns to machine home") {
+      p = lex_gprog("G90 G54 \n G28 X-.1");
+      s = all_program_states(p);
+      t = program_position_table(s);
+      add_unk_row(c);
+      update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
+      REQUIRE(t == c);
+    }
   }
 }
