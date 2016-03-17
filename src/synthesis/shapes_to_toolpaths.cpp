@@ -80,12 +80,37 @@ namespace gca {
     insert_lines(shapes_to_cut.lines, polys);
     return polys;
   }
+
+  vector<polyline> shift_polys_for_drag_knife(double d, const vector<polyline>& ps) {
+    vector<polyline> polys;
+    for (auto pline : ps) {
+      vector<point> pts;
+      point offset;
+      auto it = pline.begin();
+      for (; it != pline.end() - 1; ++it) {
+	point p = *it;
+	point next = *(it + 1);
+	offset = d * (next - p).normalize();
+	pts.push_back(p + offset);
+      }
+      pts.push_back(*it + offset);
+      polys.push_back(polyline(pts));
+    }
+    return polys;
+  }
   
   vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
 			  const cut_params& params) {
-    vector<polyline> polys = polylines_for_shapes(shapes_to_cut);
+    vector<polyline> ps = polylines_for_shapes(shapes_to_cut);
     vector<double> depths = cut_depths(params);
     vector<cut*> cuts;
+    vector<polyline> polys;
+    if (params.tools == DRAG_KNIFE_ONLY ||
+	params.tools == DRILL_AND_DRAG_KNIFE) {
+      polys = shift_polys_for_drag_knife(0.16, ps);
+    } else {
+      polys = ps;
+    }
     for (auto pl : polys) {
       for (auto dpl : deepen_polyline(depths, pl)) {
 	for (auto l : dpl.lines())
