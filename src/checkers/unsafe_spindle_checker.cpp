@@ -17,7 +17,7 @@ namespace gca {
     for (auto s : ms) {
       if (find(no_spindle_tools.begin(),
 	       no_spindle_tools.end(),
-	       static_cast<ilit*>(s.active_tool)->v) != no_spindle_tools.end() &&
+	       static_cast<ilit*>(s.last_referenced_tool)->v) != no_spindle_tools.end() &&
 	  !spindle_off(s)) {
 	num_warns++;
       }

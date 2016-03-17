@@ -99,7 +99,7 @@ namespace gca {
     set_system_allocator(&a);
 
     SECTION("No bad spindle use") {
-      gprog* p = parse_gprog("M5 T6 T2 S000 M3");
+      gprog* p = parse_gprog("M5 T6 T2 S0 M3");
       vector<int> no_spindle_tools;
       no_spindle_tools.push_back(6);
       REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);

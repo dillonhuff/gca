@@ -162,6 +162,9 @@ namespace gca {
       case 49:
 	r.tool_height_comp = TOOL_HEIGHT_COMP_OFF;
 	break;
+      case 53:
+	r.active_non_modal_setting = POSITION_REGISTER_MOVE;
+	break;
       case 54:
 	r.active_coord_system = G54_COORD_SYSTEM;
 	break;
