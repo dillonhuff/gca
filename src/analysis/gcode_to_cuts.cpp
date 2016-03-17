@@ -113,9 +113,9 @@ namespace gca {
     cuts_callback c(settings);
     vector<cut*> cuts;
     int i = 0;
-    for (ilist::const_iterator it = p.begin(); it != p.end(); ++it) {
-      c.update(*it);
-      cut* ct = c(&p, i, *it);
+    for (auto is : p) {
+      c.update(is);
+      cut* ct = c(&p, i, is);
       if (ct != NULL) {
 	cuts.push_back(ct);
       }

@@ -7,6 +7,7 @@
 #include <string>
 
 #include "analysis/machine_state.h"
+#include "analysis/position_table.h"
 #include "analysis/unfold.h"
 #include "analysis/utils.h"
 #include "core/arena_allocator.h"
@@ -69,8 +70,11 @@ void print_program_info(const string& dir_name) {
     cout << "NUM BLOCKS: " << p.size() << endl;
     vector<machine_state> states = all_program_states(p);
     cout << "STATES: " << states.size() << endl;
+    position_table tbl = program_position_table(states);
+    cout << "NUM TABLE ENTRIES: " << tbl.size() << endl;
+    assert(tbl.size() == states.size() - 1);
     //for_each(states.begin(), states.end(), sanity_check_machine_state);
-    for_each(states.begin(), states.end(), print_climb_vs_conventional);
+    //for_each(states.begin(), states.end(), print_climb_vs_conventional);
   }
 }
 
@@ -109,5 +113,7 @@ int main(int argc, char** argv) {
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << endl;
 }
-// Before unfold and create program states were collapsed into one: 128 seconds
-// After: 123
+
+// With -std=c++98 -pedantic 78 seconds
+// With -std=c++11 -pedantic 72 seconds
+// With auto loops 69 seconds

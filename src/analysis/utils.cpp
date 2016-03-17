@@ -47,12 +47,10 @@ namespace gca {
   
   vector<block>::const_iterator
   find_called_subroutine(const block& b,
-			 const vector<pair<token, program_loc> >& p) {
+			 const vector<pair<token, program_loc>>& p) {
     token ic = *find_if(b.begin(), b.end(), is_register('P'));
     token line_no('N', ic.v);
-    for (vector<pair<token, program_loc> >::const_iterator it = p.begin();
-	 it != p.end(); ++it) {
-      pair<token, program_loc> pr = *it;
+    for (const auto pr : p) {
       if (pr.first == line_no) { return pr.second; }
     }
     assert(false);
@@ -66,8 +64,7 @@ namespace gca {
   compute_starts(const vector<block>& p) {
     vector<pair<token, program_loc> > locs;
     vector<token> already_added;
-    for (program_loc it = p.begin(); it != p.end(); ++it) {
-      block b = *it;
+    for (const auto b : p) {
       if (is_call_block(b)) {
 	token ic = *find_if(b.begin(), b.end(), is_register('P'));
 	token line_no('N', ic.v);

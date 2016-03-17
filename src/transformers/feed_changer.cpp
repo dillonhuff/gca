@@ -6,14 +6,11 @@ namespace gca {
 			     value* initial_feedrate,
 			     value* new_feedrate) {
     vector<block> np;
-    for (vector<block>::const_iterator it = p.begin(); it != p.end(); ++it) {
+    for (auto bp : p) {
       block b;
-      block bp = *it;
-      for (block::iterator jt = bp.begin(); jt != bp.end(); ++jt) {
-	token t = *jt;
-	if (t.tp() == ICODE && t.c == 'F' && *(t.v) == *initial_feedrate) {
-	  t.v = new_feedrate;
-	}
+      for (auto t : bp) {
+	if (t.tp() == ICODE && t.c == 'F' && *(t.v) == *initial_feedrate)
+	  { t.v = new_feedrate; }
 	b.push_back(t);
       }
       np.push_back(b);

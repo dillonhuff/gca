@@ -18,8 +18,7 @@ namespace gca {
   position last_position(coord_system c, const position_table& t) {
     assert(t.size() > 0);
     position_table_row r = t.back();
-    for (position_table_row::iterator it = r.begin(); it != r.end(); ++it) {
-      position_entry e = *it;
+    for (auto e : r) {
       if (e.first == c) { return e.second; }
     }
     assert(false);
@@ -28,8 +27,8 @@ namespace gca {
   position_table_row unknown_row() {
     vector<coord_system> cs = all_coord_systems();
     position_table_row r;
-    for (vector<coord_system>::iterator it = cs.begin(); it != cs.end(); ++it) {
-      r.push_back(position_entry(*it, unknown_pos()));
+    for (auto c : cs) {
+      r.push_back(position_entry(c, unknown_pos()));
     }
     return r;
   }
@@ -69,8 +68,7 @@ namespace gca {
   void update_table(coord_system c, const position p, position_table& t) {
     vector<coord_system> cs = all_coord_systems();
     position_table_row r;
-    for (vector<coord_system>::iterator it = cs.begin(); it != cs.end(); ++it) {
-      coord_system cs = *it;
+    for (auto cs : cs) {
       if (cs != c) {
 	r.push_back(position_entry(cs, unknown_pos()));
       } else {

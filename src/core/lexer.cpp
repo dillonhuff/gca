@@ -14,14 +14,12 @@ namespace gca {
   }
 
   ostream& operator<<(ostream& stream, const block& block) {
-    for (block::const_iterator it = block.begin(); it != block.end(); ++it)
-      { stream << *it << " "; }
+    for (auto i : block) { stream << i << " "; }
     return stream;
   }
 
   ostream& operator<<(ostream& stream, const vector<block>& blocks) {
-    for (vector<block>::const_iterator it = blocks.begin(); it != blocks.end(); ++it)
-      { stream << *it << endl; }
+    for (auto b : blocks) { stream << b << endl; }
     return stream;
   }
   
