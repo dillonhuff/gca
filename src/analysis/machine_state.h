@@ -173,6 +173,8 @@ namespace gca {
 
   machine_state next_machine_state(const block& b, const machine_state& s);
   vector<machine_state> all_program_states(const vector<block>& p);
+  vector<machine_state> all_program_states(const machine_state& init,
+					   const vector<block>& p);
 
   bool operator==(const machine_state& l, const machine_state& r);
   bool operator!=(const machine_state& l, const machine_state& r);

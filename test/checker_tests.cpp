@@ -22,12 +22,11 @@ namespace gca {
     SECTION("Program bounds checker false") {
       gprog* p = gprog::make();
       p->push_back(g1_instr::make(12.5, -10.3, 0.0));
-      p->push_back(m2_instr::make());
       REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, -10, 0.0, 2.0)  == 1);
     }
 
     SECTION("Program bounds checker true relative") {
-      gprog* p = parse_gprog("G91 G1 X8 G0 X7");
+      gprog* p = parse_gprog("G90 G1 X0 Y0 Z0 \n G91 G1 X8 \n G0 X7");
       REQUIRE(check_bounds(p, GCA_ABSOLUTE, 0, 9, -20, 10, 0.0, 2.0) == 1);
     }
 

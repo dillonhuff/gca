@@ -85,7 +85,11 @@ namespace gca {
       lit* vl = static_cast<lit*>(v);
       lit* incl = static_cast<lit*>(inc);
       return lit::make(vl->v + incl->v);
+    } else if (v->is_lit() && inc->is_omitted()) {
+      return v;
     } else {
+      cout << "V = " << *v << endl;
+      cout << "Inc = " << *inc << endl;
       assert(false);
     }
   }

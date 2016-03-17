@@ -118,5 +118,16 @@ namespace gca {
       update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
       REQUIRE(t == c);
     }
+
+    SECTION("Setup then several partial moves") {
+      p = lex_gprog("G90 G1 X0 Y0 Z0 \n G91 G1 X8 \n G0 X7");
+      s = all_program_states(p);
+      t = program_position_table(s);
+      update_table(UNKNOWN_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
+      update_table(UNKNOWN_COORD_SYSTEM, position(8.0, 0.0, 0.0), c);
+      update_table(UNKNOWN_COORD_SYSTEM, position(15.0, 0.0, 0.0), c);
+      REQUIRE(t == c);
+    }
+    
   }
 }

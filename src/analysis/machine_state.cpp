@@ -264,9 +264,10 @@ namespace gca {
     return r;
   }
 
-  vector<machine_state> all_program_states(const vector<block>& p) {
+  vector<machine_state> all_program_states(const machine_state& init,
+					   const vector<block>& p) {
     vector<machine_state> ms;
-    ms.push_back(machine_state());
+    ms.push_back(init);
     vector<pair<token, program_loc> > subroutine_starts = compute_starts(p);
     stack<vector<block>::const_iterator> istack;
     vector<block>::const_iterator it = p.begin();
@@ -288,6 +289,12 @@ namespace gca {
       }
     }
     return ms;
+  }
+  
+  
+  vector<machine_state> all_program_states(const vector<block>& p) {
+    machine_state ms;
+    return all_program_states(ms, p);
   }
 
   bool operator==(const machine_state& l, const machine_state& r) {
