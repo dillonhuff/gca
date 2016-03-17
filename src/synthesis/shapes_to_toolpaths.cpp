@@ -67,19 +67,23 @@ namespace gca {
     vector<polyline> ps;
     for (auto depth : depths) {
       vector<point> pts;
-      for (auto pt : p) {
-	pts.push_back(point(pt.x, pt.y, depth));
-      }
+      for (auto pt : p)
+	{ pts.push_back(point(pt.x, pt.y, depth)); }
       ps.push_back(polyline(pts));
     }
     return ps;
   }
-  
-  vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
-			  const cut_params& params) {
+
+  vector<polyline> polylines_for_shapes(const shape_layout& shapes_to_cut) {
     vector<polyline> polys;
     append_splines(shapes_to_cut.splines, polys);
     insert_lines(shapes_to_cut.lines, polys);
+    return polys;
+  }
+  
+  vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
+			  const cut_params& params) {
+    vector<polyline> polys = polylines_for_shapes(shapes_to_cut);
     vector<double> depths = cut_depths(params);
     vector<cut*> cuts;
     for (auto pl : polys) {
