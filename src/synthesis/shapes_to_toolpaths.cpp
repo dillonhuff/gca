@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <numeric>
 
-
+#include "geometry/polyline.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/shapes_to_toolpaths.h"
@@ -77,21 +77,34 @@ namespace gca {
     }
   }
 
+  void insert_lines(const vector<cut*>& lines,
+		    vector<polyline>& polys) {
+    for (auto c : lines) {
+      vector<point> p{c->start, c->end};
+      polys.push_back(polyline(p));
+    }
+  }
+  
   vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
 			  const cut_params& params) {
+    vector<polyline> polys;
+    //append_splines(shapes_to_cut.splines, no_depth_cuts);
+    insert_lines(shapes_to_cut.lines, polys);
     vector<cut*> no_depth_cuts;
-    append_splines(shapes_to_cut.splines, no_depth_cuts);
-    no_depth_cuts.insert(no_depth_cuts.end(),
-			 shapes_to_cut.lines.begin(), shapes_to_cut.lines.end());
+    for (auto pl : polys) {
+      for (auto l : pl.lines()) {
+	no_depth_cuts.push_back(linear_cut::make(l.start, l.end));
+      }
+    }
     vector<double> depths = cut_depths(params);
     vector<cut*> cuts;
-    for (vector<cut*>::iterator it = no_depth_cuts.begin();
-    	 it != no_depth_cuts.end(); ++it) {
-      append_deepened_cuts(*it, cuts, depths, params);
-    }
     if (params.tools != DRAG_KNIFE_ONLY) {
       vector<cut*> dcs = hole_cuts(shapes_to_cut.holes, params);
       cuts.insert(cuts.end(), dcs.begin(), dcs.end());
+    }
+    for (vector<cut*>::iterator it = no_depth_cuts.begin();
+    	 it != no_depth_cuts.end(); ++it) {
+      append_deepened_cuts(*it, cuts, depths, params);
     }
     tool_name tool_no = select_tool(params.tools);
     set_tool_nos(tool_no, cuts);

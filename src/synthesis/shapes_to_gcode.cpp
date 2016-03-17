@@ -158,33 +158,11 @@ namespace gca {
     return r;
   }
 
-  vector<cut*> shift_for_knife(double shift_val, const vector<cut*>& cuts) {
-    vector<cut*> shifted_cuts;
-    for (vector<cut*>::const_iterator it = cuts.begin(); it != cuts.end(); ++it) {
-      cut* c = *it;
-      if (c->is_linear_cut() && c->tool_no == DRAG_KNIFE) {
-	cut* cp = c->copy();
-	point shift_vec = shift_val * (cp->initial_orient().normalize());
-	cp->shift(shift_vec);
-	shifted_cuts.push_back(cp);
-      } else if (c->is_hole_punch()) {
-	shifted_cuts.push_back(c);
-      } else if (c->is_linear_cut() && c->tool_no == DRILL) {
-	shifted_cuts.push_back(c);
-      } else {
-	assert(false);
-      }
-    }
-    return shifted_cuts;
-  }
-  
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       const cut_params& params) {
     vector<cut*> scuts = shape_cuts(shapes_to_cut, params);
     vector<cut*> scheduled_cuts = schedule_cuts(scuts);
-    // TODO: Currently hard coded for D4 drag knife
-    vector<cut*> c_cuts = shift_for_knife(0.16, scheduled_cuts);
-    vector<cut*> all_cuts = insert_transitions(c_cuts, params);
+    vector<cut*> all_cuts = insert_transitions(scheduled_cuts, params);
     assert(cuts_are_adjacent(all_cuts));
     double scale = 1.0;
     point shift(0, 0, params.machine_z_zero);

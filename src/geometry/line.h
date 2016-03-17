@@ -5,8 +5,7 @@
 
 namespace gca {
   
-  class line {
-  public:
+  struct line {
     point start, end;
     line(point s, point e) {
       start = s;
