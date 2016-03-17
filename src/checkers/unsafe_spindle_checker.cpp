@@ -1,3 +1,7 @@
+#include <sstream>
+
+#include "analysis/machine_state.h"
+#include "analysis/utils.h"
 #include "checkers/unsafe_spindle_checker.h"
 
 namespace gca {
@@ -5,11 +9,20 @@ namespace gca {
   int check_for_unsafe_spindle_on(const vector<int>& no_spindle_tools,
 				  int default_tool,
 				  gprog* p) {
-    spindle_callback c(no_spindle_tools, default_tool);
+    stringstream s;
+    s << *p;
+    auto ws = lex_gprog(s.str());
+    auto ms = all_program_states(ws);
     int num_warns = 0;
-    for (unsigned i = 0; i < p->size(); i++) {
-      num_warns += c.call(p, i, (*p)[i]);
+    for (auto s : ms) {
+      if (find(no_spindle_tools.begin(),
+	       no_spindle_tools.end(),
+	       static_cast<ilit*>(s.active_tool)->v) != no_spindle_tools.end() &&
+	  !spindle_off(s)) {
+	num_warns++;
+      }
     }
+
     return num_warns;
   }
 
