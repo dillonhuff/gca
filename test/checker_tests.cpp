@@ -1,11 +1,9 @@
 #include "catch.hpp"
-#include "core/lexer.h"
 #include "checkers/bounds_checker.h"
-#include "checkers/extra_instruction_checker.h"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/g0_move_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
-
+#include "core/lexer.h"
 #include "core/parser.h"
 
 namespace gca {
@@ -13,11 +11,6 @@ namespace gca {
   TEST_CASE("Checkers") {
     arena_allocator a;
     set_system_allocator(&a);
-
-    SECTION("Extra instruction checker one warning") {
-      gprog* p = parse_gprog("G91 G91");
-      REQUIRE((check_for_extra_instructions(p, GCA_ABSOLUTE) == 1));
-    }
 
     SECTION("Program bounds checker true") {
       gprog* p = gprog::make();
