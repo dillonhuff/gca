@@ -88,7 +88,7 @@ namespace gca {
   vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
 			  const cut_params& params) {
     vector<polyline> polys;
-    //append_splines(shapes_to_cut.splines, no_depth_cuts);
+    append_splines(shapes_to_cut.splines, polys);
     insert_lines(shapes_to_cut.lines, polys);
     vector<cut*> no_depth_cuts;
     for (auto pl : polys) {
