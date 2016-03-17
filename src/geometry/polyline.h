@@ -28,9 +28,8 @@ namespace gca {
       assert(points.size() > 1);
       vector<line> ls;
       for (vector<point>::const_iterator it = points.begin();
-	   it != points.end() - 1; ++it) {
-	ls.push_back(line(*it, *(it + 1)));
-      }
+	   it != points.end() - 1; ++it)
+	{ ls.push_back(line(*it, *(it + 1))); }
       return ls;
     }
       

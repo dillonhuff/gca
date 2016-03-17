@@ -161,8 +161,7 @@ namespace gca {
   gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 			       const cut_params& params) {
     vector<cut*> scuts = shape_cuts(shapes_to_cut, params);
-    vector<cut*> scheduled_cuts = schedule_cuts(scuts);
-    vector<cut*> all_cuts = insert_transitions(scheduled_cuts, params);
+    vector<cut*> all_cuts = insert_transitions(scuts, params);
     assert(cuts_are_adjacent(all_cuts));
     double scale = 1.0;
     point shift(0, 0, params.machine_z_zero);
