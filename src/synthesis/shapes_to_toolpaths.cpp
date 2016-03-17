@@ -55,28 +55,6 @@ namespace gca {
     }
   }
 
-  void append_deepened_cuts(cut* ct,
-			    vector<cut*>& cuts,
-			    const vector<double>& depths,
-			    const cut_params& params) {
-    for (vector<double>::const_iterator it = depths.begin();
-	 it != depths.end(); ++it) {
-      double depth = *it;
-      cut* cut_with_depth;
-      assert(ct->start.z == 0.0 && ct->end.z == 0.0);
-      if (ct->is_linear_cut()) {
-	cut_with_depth = linear_cut::make(point(ct->start.x, ct->start.y, depth), point(ct->end.x, ct->end.y, depth));
-      } else if (ct->is_circular_arc()) {
-	cut_with_depth = ct->copy();
-	cut_with_depth->start.z = depth;
-	cut_with_depth->end.z = depth;
-      } else {
-	assert(false);
-      }
-      cuts.push_back(cut_with_depth);      
-    }
-  }
-
   void insert_lines(const vector<cut*>& lines,
 		    vector<polyline>& polys) {
     for (auto c : lines) {
@@ -84,27 +62,35 @@ namespace gca {
       polys.push_back(polyline(p));
     }
   }
+
+  vector<polyline> deepen_polyline(vector<double> depths, const polyline& p) {
+    vector<polyline> ps;
+    for (auto depth : depths) {
+      vector<point> pts;
+      for (auto pt : p) {
+	pts.push_back(point(pt.x, pt.y, depth));
+      }
+      ps.push_back(polyline(pts));
+    }
+    return ps;
+  }
   
   vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
 			  const cut_params& params) {
     vector<polyline> polys;
     append_splines(shapes_to_cut.splines, polys);
     insert_lines(shapes_to_cut.lines, polys);
-    vector<cut*> no_depth_cuts;
-    for (auto pl : polys) {
-      for (auto l : pl.lines()) {
-	no_depth_cuts.push_back(linear_cut::make(l.start, l.end));
-      }
-    }
     vector<double> depths = cut_depths(params);
     vector<cut*> cuts;
+    for (auto pl : polys) {
+      for (auto dpl : deepen_polyline(depths, pl)) {
+	for (auto l : dpl.lines())
+	  { cuts.push_back(linear_cut::make(l.start, l.end)); }
+      }
+    }
     if (params.tools != DRAG_KNIFE_ONLY) {
       vector<cut*> dcs = hole_cuts(shapes_to_cut.holes, params);
       cuts.insert(cuts.end(), dcs.begin(), dcs.end());
-    }
-    for (vector<cut*>::iterator it = no_depth_cuts.begin();
-    	 it != no_depth_cuts.end(); ++it) {
-      append_deepened_cuts(*it, cuts, depths, params);
     }
     tool_name tool_no = select_tool(params.tools);
     set_tool_nos(tool_no, cuts);

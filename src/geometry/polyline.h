@@ -18,7 +18,12 @@ namespace gca {
   public:
 
     polyline(const vector<point>& pointsp) : points(pointsp) {}
-    
+
+    vector<point>::iterator begin() { return points.begin(); }
+    vector<point>::iterator end() { return points.end(); }
+    vector<point>::const_iterator begin() const { return points.begin(); }
+    vector<point>::const_iterator end() const { return points.end(); }
+
     vector<line> lines() const {
       assert(points.size() > 1);
       vector<line> ls;
