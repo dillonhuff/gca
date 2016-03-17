@@ -14,8 +14,8 @@ namespace gca {
     cut_params c;
     c.target_machine = PROBOTIX_V90_MK2_VFD;
     vector<cut*> scaled_cuts;
-    for (vector<cut*>::iterator it = cuts.begin(); it != cuts.end(); ++it) {
-      scaled_cuts.push_back((*it)->shift(sf));
+    for (auto ct : cuts) {
+      scaled_cuts.push_back(ct->shift(sf));
     }
     return gcode_for_cuts(scaled_cuts, c);
   }

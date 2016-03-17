@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "core/lexer.h"
 #include "checkers/bounds_checker.h"
 #include "checkers/extra_instruction_checker.h"
 #include "checkers/forbidden_tool_checker.h"

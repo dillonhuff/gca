@@ -133,7 +133,7 @@ namespace gca {
     virtual inline bool is_G0() const { return true; }
 
     void print(ostream& s) const {
-      cout << "G0 ";
+      s << "G0 ";
       print_move_data(s, 0.000001);
     }
 
@@ -176,7 +176,7 @@ namespace gca {
     
     virtual inline bool is_G1() const { return true; }
     void print(ostream& s) const {
-      cout << "G1 ";
+      s << "G1 ";
       print_move_data(s, 0.000001);
     }
     
@@ -205,7 +205,7 @@ namespace gca {
     virtual inline bool is_G53() const { return true; }
     
     void print(ostream& s) const {
-      cout << "G53 ";
+      s << "G53 ";
       print_move_data(s, 0.000001);
     }
 
@@ -230,7 +230,7 @@ namespace gca {
     virtual inline bool is_G28() const { return true; }
     
     void print(ostream& s) const {
-      cout << "G28 ";
+      s << "G28 ";
       print_move_data(s, 0.000001);
     }
 
@@ -271,7 +271,7 @@ namespace gca {
     virtual inline bool is_G83() const { return true; }
     
     void print(ostream& s) const {
-      cout << "G83 ";
+      s << "G83 ";
       print_move_data(s, 0.000001);
     }
 
@@ -320,7 +320,7 @@ namespace gca {
     virtual inline bool is_G81() const { return true; }
     
     void print(ostream& s) const {
-      cout << "G81 ";
+      s << "G81 ";
       print_move_data(s, 0.000001);
     }
 
@@ -370,7 +370,7 @@ namespace gca {
     virtual inline bool is_G85() const { return true; }
     
     void print(ostream& s) const {
-      cout << "G85 ";
+      s << "G85 ";
       print_move_data(s, 0.000001);
     }
 
@@ -424,7 +424,7 @@ namespace gca {
     virtual inline bool is_G73() const { return true; }
     
     void print(ostream& s) const {
-      cout << "G73 ";
+      s << "G73 ";
       print_move_data(s, 0.000001);
     }
 

@@ -54,7 +54,7 @@ namespace gca {
       if (abs_i >= eps) {
 	s << v;
       } else {
-	cout << 0.0;
+	s << 0.0;
       }
     }
 

@@ -26,7 +26,6 @@ void print_climb_vs_conventional(const machine_state& s) {
       assert(false);
     }
     if (s.spindle_setting == SPINDLE_CLOCKWISE) {
-      //cout << "Climb at line " << s.line_no << endl;
     } else if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
       cout << "Conventional at line " << s.line_no << endl;
     }
@@ -38,7 +37,6 @@ void print_climb_vs_conventional(const machine_state& s) {
       assert(false);
     }
     if (s.spindle_setting == SPINDLE_COUNTERCLOCKWISE) {
-      //cout << "Climb at line " << s.line_no << endl;
     } else if (s.spindle_setting == SPINDLE_CLOCKWISE) {
       cout << "Conventional at line " << s.line_no << endl;
     }
