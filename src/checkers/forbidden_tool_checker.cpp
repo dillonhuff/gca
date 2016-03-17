@@ -6,11 +6,8 @@
 namespace gca {
 
   int check_for_forbidden_tool_changes(const vector<int>& permitted_tools,
-				       gprog* p) {
-    stringstream s;
-    s << *p;
+				       const vector<block>& ws) {
     int num_warns = 0;
-    auto ws = lex_gprog(s.str());
     for (auto b : ws) {
       for (auto w : b) {
 	if (w.tp() == ICODE &&
@@ -22,6 +19,15 @@ namespace gca {
       }
     }
     return num_warns;
+  }
+
+  
+  int check_for_forbidden_tool_changes(const vector<int>& permitted_tools,
+				       gprog* p) {
+    stringstream s;
+    s << *p;
+    auto ws = lex_gprog(s.str());
+    return check_for_forbidden_tool_changes(permitted_tools, ws);
   }
 
 }
