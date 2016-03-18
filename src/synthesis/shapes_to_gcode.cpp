@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <numeric>
+#include <sstream>
 
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/dxf_reader.h"
@@ -65,38 +66,6 @@ namespace gca {
     }
   }
 
-  tool_name get_tool_no(const cut* t) { return t->tool_no; }
-
-  tool_name toolpath_transition(tool_name next, tool_name previous) {
-    return previous == next ? NO_TOOL : next;
-  }
-
-  void append_transition_if_needed(tool_name trans, gprog& p, const cut_params& params) {
-    if (trans == NO_TOOL) {
-    } else if (trans == DRILL) {
-      append_drill_header(&p, params.target_machine);
-    } else if (trans == DRAG_KNIFE) {
-      append_drag_knife_transfer(&p, params.target_machine);
-    } else {
-      assert(false);
-    }
-  }
-
-  void append_cuts_gcode(const vector<cut*>& cuts,
-			 gprog& p,
-			 const cut_params& params) {
-    vector<tool_name> active_tools(cuts.size());
-    transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no);
-    
-    cut* next_cut = NULL;
-    cut* last_cut = NULL;
-    for (unsigned i = 0; i < cuts.size(); i++) {
-      next_cut = cuts[i];
-      append_cut_with_settings(last_cut, next_cut, p, params);
-      last_cut = next_cut;
-    }
-  }
-  
   vector<cut*> insert_transitions(const vector<cut*>& cuts,
 				  const cut_params& params) {
     vector<cut*> all_cuts;
@@ -151,15 +120,8 @@ namespace gca {
     }    
   }
 
-  gprog* gcode_for_cuts(const vector<cut*>& cuts, const cut_params& params) {
-    gprog* p = gprog::make();
-    append_cuts_gcode(cuts, *p, params);
-    gprog* r = append_footer(p, params.target_machine);
-    return r;
-  }
-
-  gprog* shape_layout_to_gcode(const shape_layout& shapes_to_cut,
-			       const cut_params& params) {
+  vector<cut*> shape_layout_to_cuts(const shape_layout& shapes_to_cut,
+				    const cut_params& params) {
     vector<cut*> scuts = shape_cuts(shapes_to_cut, params);
     vector<cut*> all_cuts = insert_transitions(scuts, params);
     assert(cuts_are_adjacent(all_cuts));
@@ -167,7 +129,16 @@ namespace gca {
     point shift(0, 0, params.machine_z_zero);
     vector<cut*> shifted_cuts = shift_and_scale_cuts(all_cuts, shift, scale);
     set_feedrates(shifted_cuts, params);
-    return gcode_for_cuts(shifted_cuts, params);
+    return shifted_cuts;
   }
 
+  string shape_layout_to_gcode_string(const shape_layout& shapes_to_cut,
+				      const cut_params& params) {
+    vector<cut*> shifted_cuts = shape_layout_to_cuts(shapes_to_cut, params);
+    vector<block> p = gcode_blocks_for_cuts(shifted_cuts, params);
+    stringstream ss;
+    ss << p << endl;
+    return ss.str();
+  }
+  
 }

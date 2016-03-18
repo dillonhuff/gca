@@ -3,6 +3,7 @@
 #include "checkers/bounds_checker.h"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
+#include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/dxf_reader.h"
@@ -85,7 +86,7 @@ namespace gca {
     vector<cut*> lines;
     vector<hole_punch*> holes;
     shape_layout l(lines, holes, lp.splines);
-    gprog* p = shape_layout_to_gcode(l, params);
+    gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 
     SECTION("2 paths for splines") {
       vector<cut_section> sections;
@@ -125,7 +126,7 @@ namespace gca {
       params.tools = DRILL_AND_DRAG_KNIFE;
       lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
       shape_layout l(lines, holes, splines);
-      gprog* p = shape_layout_to_gcode(l, params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 
       SECTION("No use of drill when there are no hole punches") {
 	permitted_tools.push_back(6);
@@ -133,7 +134,7 @@ namespace gca {
       }
 
       SECTION("Drill produces code for linear cuts") {
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
@@ -152,7 +153,7 @@ namespace gca {
       lines.push_back(linear_cut::make(point(-3, 2, 0), point(0, 2, 0)));
       
       shape_layout l(lines, holes, splines);
-      gprog* p = shape_layout_to_gcode(l, params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
       vector<cut_section> sections;
       extract_cuts(p, sections);
       REQUIRE(sections.size() == 6);
@@ -166,19 +167,19 @@ namespace gca {
       
       SECTION("With drill and drag knife") {
 	params.tools = DRILL_AND_DRAG_KNIFE;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 2);
       }
 
       SECTION("With drill only") {
 	params.tools = DRILL_ONLY;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
       }
 
       SECTION("Drill produces code for linear cuts") {
 	params.tools = DRILL_ONLY;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
@@ -186,7 +187,7 @@ namespace gca {
 
       SECTION("Drag knife only produces code for linear cuts") {
 	params.tools = DRAG_KNIFE_ONLY;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);	
@@ -194,7 +195,7 @@ namespace gca {
 
       SECTION("DRAG_KNIFE_ONLY on means only the drag knife is used") {
 	params.tools = DRAG_KNIFE_ONLY;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	REQUIRE(check_for_forbidden_tool_changes(permitted_tools, p) == 1);
       }
     }
@@ -217,7 +218,7 @@ namespace gca {
 
       SECTION("Drill and drag knife produces code") {
 	params.tools = DRILL_AND_DRAG_KNIFE;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
@@ -225,7 +226,7 @@ namespace gca {
 
       SECTION("Drill only produces code") {
 	params.tools = DRILL_ONLY;
-	gprog* p = shape_layout_to_gcode(l, params);
+	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
@@ -239,7 +240,7 @@ namespace gca {
       vector<b_spline*> splines;
       shape_layout l(lines, holes, splines);
 
-      gprog* p = shape_layout_to_gcode(l, params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 
       vector<cut*> dt = shape_cuts(l, params);
       REQUIRE(dt.size() == 2);
@@ -271,7 +272,7 @@ namespace gca {
     shape_layout l(lines, holes, splines);
 
     SECTION("Inside safe machine bounds") {
-      gprog* p = shape_layout_to_gcode(l, params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
       REQUIRE(check_bounds(p, GCA_ABSOLUTE,
 			   1, 12,
 			   1, 10,
@@ -281,7 +282,7 @@ namespace gca {
 
     SECTION("Inside safe bounds with different machine_z_zero") {
       params.machine_z_zero = -1.0;
-      gprog* p = shape_layout_to_gcode(l, params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
       REQUIRE(check_bounds(p, GCA_ABSOLUTE,
 			   1, 12,
 			   1, 10,

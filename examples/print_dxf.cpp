@@ -32,9 +32,9 @@ int main(int argc, char** argv) {
   params.tools = DRAG_KNIFE_ONLY;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
 
-  gprog* r = dxf_to_gcode(argv[1], params);
-  gprog* s = scale_xy(0.1, *r);
-  gprog* p = shift_xyz(8, 5, 0, *s);
+  gprog* p = dxf_to_gcode(argv[1], params);
+  // gprog* s = scale_xy(0.1, *r);
+  // gprog* p = shift_xyz(8, 5, 0, *s);
   
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

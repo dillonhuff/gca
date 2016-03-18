@@ -1,11 +1,31 @@
 #include <cmath>
 
+#include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/output.h"
 #include "synthesis/safe_move.h"
+#include "synthesis/shape_layout.h"
 
 namespace gca {
 
+  move_instr* circular_arc_to_gcode(circular_arc ca) {
+    move_instr* circle_move_instr;
+    if (ca.dir == CLOCKWISE) {
+      circle_move_instr = g2_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), lit::make(ca.end.z),
+					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
+					 ca.feedrate);
+    } else if (ca.dir == COUNTERCLOCKWISE) {
+      circle_move_instr = g3_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), lit::make(ca.end.z),
+					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
+					 ca.feedrate);
+
+    } else {
+      assert(false);
+    }
+    return circle_move_instr;
+  }
+
+  
   linear_cut* line_to_cut(line& l, double cutter_width) {
     double w = cutter_width / 2;
     point lv = l.end - l.start;
@@ -146,6 +166,20 @@ namespace gca {
     }
     return p;
   }
+
+  void append_footer_blocks(vector<block>& blocks, machine_name m) {
+    block b;
+    if (m == CAMASTER) {
+      b.push_back(token('G', 53));
+      b.push_back(token('Z', 0.0));
+      b.push_back(token('M', 5));
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
+      b.push_back(token('M', 2));
+    } else {
+      assert(false);
+    }
+    blocks.push_back(b);
+  }
   
   gprog* initial_gprog(machine_name m) {
     gprog* r = gprog::make();
@@ -185,6 +219,51 @@ namespace gca {
     }
   }
 
+  void append_drill_header_block(vector<block>& blocks, machine_name m) {
+    block b1, b2;
+    // TODO: Deal with feedrates on CAMASTER
+    if (m == CAMASTER) {
+      b1.push_back(token('G', 90));
+      b1.push_back(token('M', 5));
+      b1.push_back(token('G', 53));
+      b1.push_back(token('Z', 0.0));
+      b2.push_back(token('G', 90));
+      b2.push_back(token('S', 16000));
+      b2.push_back(token('T', 2));
+      b2.push_back(token('M', 3));
+      // p->push_back(f_instr::make(4, "XY"));
+      // p->push_back(f_instr::make(50, "Z"));
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
+      b1.push_back(token('G', 90));
+    } else {
+      assert(false);
+    }
+    blocks.push_back(b1);
+    blocks.push_back(b2);
+  }
+
+  void append_drag_knife_transfer_block(vector<block>& blocks, machine_name m) {
+    block b;
+    // TODO: Deal with feedrate printouts for CAMASTER
+    if (m == CAMASTER) {
+      b.push_back(token('M', 5));
+      b.push_back(token('G', 53));
+      b.push_back(token('Z', 0.0));
+      b.push_back(token('G', 90));
+      b.push_back(token('S', 0));
+      b.push_back(token('T', 6));
+      // p->push_back(f_instr::make(5, "XY"));
+      // p->push_back(f_instr::make(5, "Z"));
+    } else if (m == PROBOTIX_V90_MK2_VFD) {
+      b.push_back(token('G', 90));
+      b.push_back(token('M', 5));
+      b.push_back(token('S', 0));
+    } else {
+      assert(false);
+    }
+    blocks.push_back(b);
+  }
+  
   void append_drag_knife_transfer(gprog* p, machine_name m) {
     if (m == CAMASTER) {
       p->push_back(g90_instr::make());
@@ -216,6 +295,69 @@ namespace gca {
     cuts.push_back(safe_move::make(safe_up, safe_next));
     cuts.push_back(linear_cut::make(safe_next, next_loc));
     return cuts;
+  }
+
+
+
+  void append_cut(const cut* ci, gprog& p) {
+    if (ci->is_hole_punch()) {
+    } else if (ci->is_linear_cut()) {
+      p.push_back(g1_instr::make(ci->end.x, ci->end.y, ci->end.z, ci->feedrate));
+    } else if (ci->is_circular_arc()) {
+      const circular_arc* arc = static_cast<const circular_arc*>(ci);
+      p.push_back(circular_arc_to_gcode(*arc));
+    } else if (ci->is_safe_move()) {
+      p.push_back(g0_instr::make(ci->end));
+    } else {
+      assert(false);
+    }    
+  }
+
+  void append_settings(const cut* last,
+		       const cut* next,
+		       gprog& p,
+		       const cut_params& params) {
+    if (last == NULL || last->tool_no != next->tool_no) {
+      if (next->tool_no == DRAG_KNIFE) {
+	append_drag_knife_transfer(&p, params.target_machine);
+      } else if (next->tool_no == DRILL) {
+	append_drill_header(&p, params.target_machine);
+      } else {
+	assert(false);
+      }
+    }
+  }
+
+  tool_name get_tool_no(const cut* t) { return t->tool_no; }
+
+  void append_cut_with_settings(const cut* last,
+				const cut* next,
+				gprog& p,
+				const cut_params& params) {
+    append_settings(last, next, p, params);
+    append_cut(next, p);
+  }
+  
+  void append_cuts_gcode(const vector<cut*>& cuts,
+			 gprog& p,
+			 const cut_params& params) {
+    vector<tool_name> active_tools(cuts.size());
+    transform(cuts.begin(), cuts.end(), active_tools.begin(), get_tool_no);
+    
+    cut* next_cut = NULL;
+    cut* last_cut = NULL;
+    for (unsigned i = 0; i < cuts.size(); i++) {
+      next_cut = cuts[i];
+      append_cut_with_settings(last_cut, next_cut, p, params);
+      last_cut = next_cut;
+    }
+  }
+
+  gprog* gcode_for_cuts(const vector<cut*>& cuts, const cut_params& params) {
+    gprog* p = gprog::make();
+    append_cuts_gcode(cuts, *p, params);
+    gprog* r = append_footer(p, params.target_machine);
+    return r;
   }
 
 }

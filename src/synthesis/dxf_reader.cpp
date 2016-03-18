@@ -1,3 +1,4 @@
+#include "core/parser.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/shapes_to_gcode.h"
 
@@ -18,7 +19,7 @@ namespace gca {
 
   gprog* dxf_to_gcode(const char* file, cut_params params) {
     shape_layout shapes_to_cut = read_dxf(file, false);
-    return shape_layout_to_gcode(shapes_to_cut, params);
+    return parse_gprog(shape_layout_to_gcode_string(shapes_to_cut, params));
   }
 
 }

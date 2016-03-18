@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "checkers/bounds_checker.h"
+#include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 
@@ -20,7 +21,7 @@ int main(int argc, char** argv) {
   params.push_depth = 0.00;
   params.cut_depth = 0.05;
   params.safe_height = 0.45;
-  params.machine_z_zero = -1.903;
+  params.machine_z_zero = -1.90425; // + 0.2;
   params.start_loc = point(5, 5, 0);
   params.start_orient = point(0, -1, 0);
   params.tools = DRAG_KNIFE_ONLY;
@@ -28,10 +29,11 @@ int main(int argc, char** argv) {
 
   vector<cut*> lines;
   // Add outer rectangle
-  point p0(5, 1.7, 0);
-  point p1(5, 3.7, 0);
-  point p2(7, 3.7, 0);
-  point p3(7, 1.7, 0);
+  point bottom_left_corner = point(6.5, 5.4, 0);
+  point p0 = bottom_left_corner; //(5, 3.7, 0);
+  point p1 = p0 + point(0, 2, 0); //(5, 5.7, 0);
+  point p2 = p0  + point(2, 2, 0); //(7, 5.7, 0);
+  point p3 = p0 + point(2, 0, 0); //(7, 3.7, 0);
   lines.push_back(linear_cut::make(p0, p1));
   lines.push_back(linear_cut::make(p1, p2));
   lines.push_back(linear_cut::make(p2, p3));
@@ -50,7 +52,7 @@ int main(int argc, char** argv) {
   vector<hole_punch*> holes;
   vector<b_spline*> splines;
   shape_layout l(lines, holes, splines);
-  gprog* p = shape_layout_to_gcode(l, params);
+  gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
   
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

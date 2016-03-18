@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "checkers/bounds_checker.h"
+#include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 
@@ -35,7 +36,7 @@ int main(int argc, char** argv) {
   vector<hole_punch*> holes;
   vector<b_spline*> splines;
   shape_layout l(lines, holes, splines);
-  gprog* p = shape_layout_to_gcode(l, params);
+  gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
   
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

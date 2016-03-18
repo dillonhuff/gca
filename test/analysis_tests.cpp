@@ -1,6 +1,5 @@
 #include "analysis/extract_cuts.h"
 #include "catch.hpp"
-
 #include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
@@ -43,7 +42,7 @@ namespace gca {
       vector<b_spline*> splines;
       shape_layout l(lines, holes, splines);
       
-      gprog* p = shape_layout_to_gcode(l, params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 
       vector<cut_section> sections;
       extract_cuts(p, sections);

@@ -90,7 +90,7 @@ namespace gca {
       for (; it != pline.end() - 1; ++it) {
 	point p = *it;
 	point next = *(it + 1);
-	offset = d * (next - p).normalize();
+	offset = d * ((next - p).normalize());
 	pts.push_back(p + offset);
       }
       pts.push_back(*it + offset);
