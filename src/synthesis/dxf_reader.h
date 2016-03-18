@@ -1,7 +1,6 @@
 #ifndef GCA_DXF_READER_H
 #define GCA_DXF_READER_H
 
-
 #include "core/gprog.h"
 #include "dxflib/dl_dxf.h"
 #include "dxflib/dl_creationadapter.h"

@@ -22,7 +22,6 @@ SET(TEST_FILES test/parse_tests.cpp
 	       test/circular_arc_tests.cpp
 	       test/checker_tests.cpp
 	       test/cut_tests.cpp
-	       test/line_tests.cpp
 	       test/mill_simulator_tests.cpp
 	       test/transformer_tests.cpp
 	       test/analysis_tests.cpp

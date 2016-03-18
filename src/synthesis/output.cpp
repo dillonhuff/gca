@@ -8,63 +8,6 @@
 
 namespace gca {
 
-  linear_cut* line_to_cut(line& l, double cutter_width) {
-    double w = cutter_width / 2;
-    point lv = l.end - l.start;
-    point v = w*(lv.rotate_z(90).normalize());
-    point sp = l.start + v;
-    point ep = l.end + v;
-    point sr = extend_back(sp, ep, w);
-    point er = extend_back(ep, sp, w);
-    return linear_cut::make(sr, er);
-  }
-
-  linear_cut* vertical_cut_to(linear_cut* ct) {
-    point start(ct->start.x, ct->start.y, 0);
-    point end(ct->start);
-    return linear_cut::make(start, end);
-  }
-
-  vector<linear_cut*> lines_to_cuts(vector<line>& lines, double cutter_width) {
-    vector<linear_cut*> cuts;
-    for (unsigned i = 0; i < lines.size(); i++) {
-      linear_cut* res = line_to_cut(lines[i], cutter_width);
-      linear_cut* down = vertical_cut_to(res);
-      cuts.push_back(down);
-      cuts.push_back(res);
-    }
-    return cuts;
-  }
-
-  linear_cut* sink_cut(linear_cut* s, double l) {
-    double xd = s->end.x - s->start.x;
-    double yd = s->end.y - s->start.y;
-    double x_pos = xd > 0;
-    double y_pos = yd > 0;
-    if (xd == 0) {
-      if (y_pos) {
-	return linear_cut::make(point(s->start.x, s->start.y - l, 0), s->start);
-      } else {
-	return linear_cut::make(point(s->start.x, s->start.y + l, 0), s->start);
-      }
-    }
-    double m = yd / xd;
-    double a = sqrt((l*l) / (1.0 + m*m));
-    double b = m*a;
-    double xs, ys;
-    if (x_pos) {
-      xs = s->start.x - abs(a);
-    } else {
-      xs = s->start.x + abs(a);
-    }
-    if (y_pos) {
-      ys = s->start.y - abs(b);
-    } else {
-      ys = s->start.y + abs(b);
-    }
-    return linear_cut::make(point(xs, ys, 0), s->start);
-  }
-
   void append_footer_blocks(vector<block>& blocks, machine_name m) {
     block b;
     if (m == CAMASTER) {

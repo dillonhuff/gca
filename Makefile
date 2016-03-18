@@ -2093,33 +2093,6 @@ test/lexer_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.s
 .PHONY : test/lexer_tests.cpp.s
 
-test/line_tests.o: test/line_tests.cpp.o
-
-.PHONY : test/line_tests.o
-
-# target to build an object file
-test/line_tests.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.o
-.PHONY : test/line_tests.cpp.o
-
-test/line_tests.i: test/line_tests.cpp.i
-
-.PHONY : test/line_tests.i
-
-# target to preprocess a source file
-test/line_tests.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.i
-.PHONY : test/line_tests.cpp.i
-
-test/line_tests.s: test/line_tests.cpp.s
-
-.PHONY : test/line_tests.s
-
-# target to generate assembly for a file
-test/line_tests.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.s
-.PHONY : test/line_tests.cpp.s
-
 test/machine_state_tests.o: test/machine_state_tests.cpp.o
 
 .PHONY : test/machine_state_tests.o
@@ -2554,9 +2527,6 @@ help:
 	@echo "... test/lexer_tests.o"
 	@echo "... test/lexer_tests.i"
 	@echo "... test/lexer_tests.s"
-	@echo "... test/line_tests.o"
-	@echo "... test/line_tests.i"
-	@echo "... test/line_tests.s"
 	@echo "... test/machine_state_tests.o"
 	@echo "... test/machine_state_tests.i"
 	@echo "... test/machine_state_tests.s"

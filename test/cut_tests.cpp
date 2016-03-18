@@ -52,58 +52,6 @@ namespace gca {
     }
   }
   
-  TEST_CASE("Compute sink cut") {
-    
-    arena_allocator a;
-    set_system_allocator(&a);
-
-    SECTION("X axis sink") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(1, 0, -1));
-      linear_cut* sink = sink_cut(s1, 1.0);
-      linear_cut* correct = linear_cut::make(point(-1, 0, 0), point(0, 0, -1));
-      REQUIRE(*sink == *correct);
-    }
-
-    SECTION("Y axis sink") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(0, 1, -1));
-      linear_cut* sink = sink_cut(s1, 1.0);
-      linear_cut* correct = linear_cut::make(point(0, -1, 0), point(0, 0, -1));
-      REQUIRE(*sink == *correct);
-    }
-
-    SECTION("Mixed axis sink q1") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(1, 1, -1));
-      linear_cut* sink = sink_cut(s1, 1.0);
-      double v = sqrt(1.0/2.0);
-      linear_cut* correct = linear_cut::make(point(-v, -v, 0), point(0, 0, -1));
-      REQUIRE(*sink == *correct);
-    }
-    
-    SECTION("Mixed axis sink q2") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(-1, 1, -1));
-      linear_cut* sink = sink_cut(s1, 1.0);
-      double v = sqrt(1.0/2.0);
-      linear_cut* correct = linear_cut::make(point(v, -v, 0), point(0, 0, -1));
-      REQUIRE(*sink == *correct);
-    }
-
-    SECTION("Mixed axis sink q3") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(-1, -1, -1));
-      linear_cut* sink = sink_cut(s1, 1.0);
-      double v = sqrt(1.0/2.0);
-      linear_cut* correct = linear_cut::make(point(v, v, 0), point(0, 0, -1));
-      REQUIRE(*sink == *correct);
-    }
-
-    SECTION("Mixed axis sink q4") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(1, -1, -1));
-      linear_cut* sink = sink_cut(s1, 1.0);
-      double v = sqrt(1.0/2.0);
-      linear_cut* correct = linear_cut::make(point(-v, v, 0), point(0, 0, -1));
-      REQUIRE(*sink == *correct);
-    }
-  }
-
   TEST_CASE("Simple knife aligment code matches real CAM output") {
     arena_allocator a;
     set_system_allocator(&a);
