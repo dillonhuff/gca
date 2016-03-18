@@ -36,7 +36,6 @@ SET(TEST_FILES test/parse_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
-	    ./src/checkers/extra_instruction_checker.h
 	    ./src/checkers/g0_move_checker.h
 	    ./src/core/arena_allocator.h
 	    ./src/core/basic_states.h
@@ -73,8 +72,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/transformers/abs_to_rel.h
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/g0_filter.h
-	    ./src/transformers/rel_to_abs.h
-	    ./src/transformers/tiler.h)
+	    ./src/transformers/rel_to_abs.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
@@ -108,9 +106,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
-	 ./src/transformers/scale_xyz.cpp
-	 ./src/transformers/scale_xyz.cpp
-	 ./src/transformers/shift_xyz.cpp
 	 ./src/transformers/feed_changer.cpp
 	 ./src/transformers/g0_filter.cpp
 	 ./src/dxflib/dl_dxf.cpp

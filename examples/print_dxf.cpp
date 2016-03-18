@@ -5,8 +5,6 @@
 #include "checkers/bounds_checker.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
-#include "transformers/scale_xyz.h"
-#include "transformers/shift_xyz.h"
 
 using namespace gca;
 
@@ -33,9 +31,7 @@ int main(int argc, char** argv) {
   params.target_machine = PROBOTIX_V90_MK2_VFD;
 
   gprog* p = dxf_to_gcode(argv[1], params);
-  // gprog* s = scale_xy(0.1, *r);
-  // gprog* p = shift_xyz(8, 5, 0, *s);
-  
+
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
   p->print_nc_output(cout);
