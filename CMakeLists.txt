@@ -69,10 +69,8 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/system/bmp_output.h
-	    ./src/transformers/abs_to_rel.h
 	    ./src/transformers/feed_changer.h
-	    ./src/transformers/g0_filter.h
-	    ./src/transformers/rel_to_abs.h)
+	    ./src/transformers/g0_filter.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
