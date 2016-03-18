@@ -63,6 +63,7 @@ namespace gca {
   ostream& operator<<(ostream& stream, const vector<block>& blocks);
 
   vector<block> lex_gprog(const string& s);
+  vector<block> lex_file(const string& file_path);
 
   bool operator==(const vector<block>& l, const vector<block>& r);
 

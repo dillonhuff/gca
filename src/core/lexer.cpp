@@ -141,6 +141,14 @@ namespace gca {
     return blocks;
   }
 
+  vector<block> lex_file(const string& file_name) {
+    ifstream t(file_name);
+    string str((istreambuf_iterator<char>(t)),
+	       istreambuf_iterator<char>());
+    return lex_gprog(str);
+  }
+
+
   bool cmp_tokens(const token* l, const token* r)
   { return (*l) == (*r); }
   
