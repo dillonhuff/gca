@@ -8,24 +8,6 @@
 
 namespace gca {
 
-  move_instr* circular_arc_to_gcode(circular_arc ca) {
-    move_instr* circle_move_instr;
-    if (ca.dir == CLOCKWISE) {
-      circle_move_instr = g2_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), lit::make(ca.end.z),
-					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
-					 ca.feedrate);
-    } else if (ca.dir == COUNTERCLOCKWISE) {
-      circle_move_instr = g3_instr::make(lit::make(ca.end.x), lit::make(ca.end.y), lit::make(ca.end.z),
-					 lit::make(ca.start_offset.x), lit::make(ca.start_offset.y), omitted::make(),
-					 ca.feedrate);
-
-    } else {
-      assert(false);
-    }
-    return circle_move_instr;
-  }
-
-  
   linear_cut* line_to_cut(line& l, double cutter_width) {
     double w = cutter_width / 2;
     point lv = l.end - l.start;
@@ -52,34 +34,6 @@ namespace gca {
       cuts.push_back(res);
     }
     return cuts;
-  }
-  
-  void from_to_with_G0(gprog* p, point from, point to) {
-    instr* pull_up_instr = g0_instr::make(point(from.x, from.y, 0.0));
-    instr* move_instr = g0_instr::make(point(to.x, to.y, 0.0));
-    instr* push_down_instr = g0_instr::make(to);
-    p->push_back(pull_up_instr);
-    p->push_back(move_instr);
-    p->push_back(push_down_instr);
-  }
-
-  void from_to_with_G1(gprog* p, point from, point to) {
-    instr* move_instr = g1_instr::make(to.x, to.y, to.z);
-    p->push_back(move_instr);
-  }
-  
-  gprog* gcode_for_cuts(vector<linear_cut*>& cuts) {
-    point current_loc = point(0, 0, 0);
-    gprog* p = gprog::make();
-    for (unsigned i = 0; i < cuts.size(); i++) {
-      from_to_with_G0(p, current_loc, cuts[i]->start);
-      from_to_with_G1(p, cuts[i]->start, cuts[i]->end);
-      current_loc = cuts[i]->end;
-    }
-    point final_loc = point(0, 0, 0);
-    from_to_with_G0(p, current_loc, final_loc);
-    p->push_back(m2_instr::make());
-    return p;
   }
 
   linear_cut* sink_cut(linear_cut* s, double l) {
@@ -111,62 +65,6 @@ namespace gca {
     return linear_cut::make(point(xs, ys, 0), s->start);
   }
 
-  void insert_sink_cuts(double l, vector<linear_cut*>& cuts, vector<linear_cut*>& dest) {
-    for (unsigned i = 0; i < cuts.size(); i++) {
-      dest.push_back(sink_cut(cuts[i], l));
-      dest.push_back(cuts[i]);
-    }
-  }
-
-  vector<linear_cut*> surface_cuts(point left, point right,
-				   point shift, int num_cuts) {
-    vector<linear_cut*> cuts;
-    point c_left = left;
-    point c_right = right;
-    for (int i = 1; i <= num_cuts; i++) {
-      cuts.push_back(linear_cut::make(c_left, c_right));
-      // Reverse cut directions
-      point temp = c_left;
-      c_left = c_right + shift;
-      c_right = temp + shift;
-    }
-    return cuts;
-  }
-
-
-  vector<linear_cut*> two_pass_surface(double coarse_depth, double finish_inc,
-				       double cutter_width,
-				       double x_s, double x_e, double y,
-				       double width) {
-    double inc = cutter_width*(2.0/3.0);
-    int num_cuts = ceil(width / inc);
-    point coarse_start(x_s, y, coarse_depth);
-    point coarse_end(x_e, y, coarse_depth);
-    point shift(0, inc, 0);
-    double finish_depth = coarse_depth + finish_inc;
-    point finish_start(x_s, y, finish_depth);
-    point finish_end(x_e, y, finish_depth);
-    
-    vector<linear_cut*> cuts1 = surface_cuts(coarse_start, coarse_end,
-					     shift, num_cuts);
-    vector<linear_cut*> cuts2 = surface_cuts(finish_start, finish_end,
-					     shift, num_cuts);
-    cuts1.insert(cuts1.end(), cuts2.begin(), cuts2.end());
-    return cuts1;
-  }
-
-  gprog* append_footer(gprog* p, machine_name m) {
-    if (m == CAMASTER) {
-      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
-      p->push_back(m5_instr::make());
-    } else if (m == PROBOTIX_V90_MK2_VFD) {
-      p->push_back(m2_instr::make());
-    } else {
-      assert(false);
-    }
-    return p;
-  }
-
   void append_footer_blocks(vector<block>& blocks, machine_name m) {
     block b;
     if (m == CAMASTER) {
@@ -179,44 +77,6 @@ namespace gca {
       assert(false);
     }
     blocks.push_back(b);
-  }
-  
-  gprog* initial_gprog(machine_name m) {
-    gprog* r = gprog::make();
-    if (m == CAMASTER) {
-      r->push_back(g90_instr::make());
-      r->push_back(m5_instr::make());
-      r->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
-      r->push_back(t_instr::make(6));
-      r->push_back(s_instr::make(0));
-      r->push_back(m3_instr::make());
-      r->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
-      r->push_back(f_instr::make(5, "XY"));
-      r->push_back(f_instr::make(5, "Z"));
-    } else if (m == PROBOTIX_V90_MK2_VFD) {
-      r->push_back(g90_instr::make());
-    } else {
-      assert(false);
-    }
-    return r;
-  }
-
-  void append_drill_header(gprog* p, machine_name m) {
-    if (m == CAMASTER) {
-      p->push_back(g90_instr::make());
-      p->push_back(m5_instr::make());
-      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
-      p->push_back(t_instr::make(2));
-      p->push_back(s_instr::make(16000));
-      p->push_back(m3_instr::make());
-      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
-      p->push_back(f_instr::make(4, "XY"));
-      p->push_back(f_instr::make(50, "Z"));
-    } else if (m == PROBOTIX_V90_MK2_VFD) {
-      p->push_back(g90_instr::make());
-    } else {
-      assert(false);
-    }
   }
 
   void append_drill_header_block(vector<block>& blocks, machine_name m) {
@@ -264,24 +124,6 @@ namespace gca {
     blocks.push_back(b);
   }
   
-  void append_drag_knife_transfer(gprog* p, machine_name m) {
-    if (m == CAMASTER) {
-      p->push_back(g90_instr::make());
-      p->push_back(g53_instr::make(omitted::make(), omitted::make(), lit::make(0.0)));
-      p->push_back(m5_instr::make());
-      p->push_back(t_instr::make(6));
-      p->push_back(s_instr::make(0));
-      p->push_back(f_instr::make(5, "XY"));
-      p->push_back(f_instr::make(5, "Z"));
-    } else if (m == PROBOTIX_V90_MK2_VFD) {
-      p->push_back(g90_instr::make());
-      p->push_back(m5_instr::make());
-      p->push_back(s_instr::make(0));
-    } else {
-      assert(false);
-    }
-  }
-
   vector<cut*> from_to_with_G0_height(point current_loc,
 				      point next_loc,
 				      double safe_height,

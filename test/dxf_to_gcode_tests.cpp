@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "analysis/extract_cuts.h"
 #include "catch.hpp"
 #include "checkers/bounds_checker.h"
@@ -141,8 +143,11 @@ namespace gca {
       }
 
       SECTION("Produces some code") {
-	gprog c;
-	gprog* r = append_footer(&c, params.target_machine);
+	vector<block> blocks;
+	append_footer_blocks(blocks, params.target_machine);
+	stringstream ss;
+	ss << blocks;
+	gprog* r = parse_gprog(ss.str());
 	REQUIRE(p->size() > r->size());
       }
     }

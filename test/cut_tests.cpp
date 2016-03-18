@@ -52,51 +52,6 @@ namespace gca {
     }
   }
   
-  TEST_CASE("Cut to GCODE") {
-    arena_allocator a;
-    set_system_allocator(&a);
-
-    SECTION("GCODE from one cut") {
-      linear_cut* s = linear_cut::make(point(0, 0, -1), point(0, 3, -1));
-      vector<linear_cut*> cuts;
-      cuts.push_back(s);
-      gprog* res = gcode_for_cuts(cuts);
-      gprog* correct = gprog::make();
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, -1)));
-      correct->push_back(g1_instr::make(0, 3, -1));
-      correct->push_back(g0_instr::make(point(0, 3, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(m2_instr::make());
-      REQUIRE(*res == *correct);
-    }
-
-    SECTION("GCODE for adjacent cuts") {
-      linear_cut* s1 = linear_cut::make(point(0, 0, -1), point(0, 3, -1));
-      linear_cut* s2 = linear_cut::make(point(5, 3, -4), point(7, 2, -4));
-      vector<linear_cut*> cuts;
-      cuts.push_back(s1);
-      cuts.push_back(s2);
-      gprog* res = gcode_for_cuts(cuts);
-      gprog* correct = gprog::make();
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, -1)));
-      correct->push_back(g1_instr::make(0, 3, -1));
-      correct->push_back(g0_instr::make(point(0, 3, 0)));
-      correct->push_back(g0_instr::make(point(5, 3, 0)));
-      correct->push_back(g0_instr::make(point(5, 3, -4)));
-      correct->push_back(g1_instr::make(7, 2, -4));
-      correct->push_back(g0_instr::make(point(7, 2, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(g0_instr::make(point(0, 0, 0)));
-      correct->push_back(m2_instr::make());
-      REQUIRE(*res == *correct);      
-    }
-  }
-
   TEST_CASE("Compute sink cut") {
     
     arena_allocator a;
