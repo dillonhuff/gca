@@ -55,7 +55,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/core/pass.h
 	    ./src/core/state_names.h
 	    ./src/core/value.h
-	    ./src/diffs/all.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
