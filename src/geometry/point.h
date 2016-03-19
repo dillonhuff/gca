@@ -62,6 +62,8 @@ namespace gca {
   bool within_eps(double l, double r, double eps=0.0000001);
   double angle_between(point u, point v);
   ostream& operator<<(ostream& s, const point& p);
+  ostream& operator<<(ostream& s, const vector<point>& p);
+  
 }
 
 #endif

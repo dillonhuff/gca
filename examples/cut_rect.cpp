@@ -17,37 +17,30 @@ int main(int argc, char** argv) {
   cut_params params;
   params.default_feedrate = 30;
   params.set_default_feedrate = true;
-  params.material_depth = 0.075;
+  params.material_depth = 0.099;
   params.push_depth = 0.00;
   params.cut_depth = 0.05;
   params.safe_height = 0.45;
-  params.machine_z_zero = -1.90425; // + 0.2;
-  params.start_loc = point(5, 5, 0);
+  params.machine_z_zero = -1.90425 + 0.2;
+  params.start_loc = point(9, 8, 0);
   params.start_orient = point(0, -1, 0);
   params.tools = DRAG_KNIFE_ONLY;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
 
   vector<cut*> lines;
   // Add outer rectangle
-  point bottom_left_corner = point(6.5, 5.4, 0);
-  point p0 = bottom_left_corner; //(5, 3.7, 0);
-  point p1 = p0 + point(0, 2, 0); //(5, 5.7, 0);
-  point p2 = p0  + point(2, 2, 0); //(7, 5.7, 0);
-  point p3 = p0 + point(2, 0, 0); //(7, 3.7, 0);
+  double d = 2.0;
+  point bottom_left_corner = point(4.8, 5.8, 0); //point(4.0, 7.6, 0) + point(0, -0.9, 0);
+  point p0 = bottom_left_corner;
+  point p1 = p0 + point(0, d, 0);
+  point p2 = p0  + point(d, d, 0);
+  point p3 = p0 + point(d, 0, 0);
+  // double punch_offset = 0.16;
+  // point im = p1 + point(punch_offset, 0, 0);
   lines.push_back(linear_cut::make(p0, p1));
   lines.push_back(linear_cut::make(p1, p2));
   lines.push_back(linear_cut::make(p2, p3));
   lines.push_back(linear_cut::make(p3, p0));
-
-  // // Add inner rectangle
-  // point p4(5.5, 5.5, 0);
-  // point p5(5.5, 6.5, 0);
-  // point p6(6.5, 6.5, 0);
-  // point p7(6.5, 5.5, 0);  
-  // lines.push_back(linear_cut::make(p4, p5));
-  // lines.push_back(linear_cut::make(p5, p6));
-  // lines.push_back(linear_cut::make(p6, p7));
-  // lines.push_back(linear_cut::make(p7, p4));
 
   vector<hole_punch*> holes;
   vector<b_spline*> splines;

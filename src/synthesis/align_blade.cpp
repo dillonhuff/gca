@@ -12,6 +12,8 @@ namespace gca {
 			    point circle_end,
 			    point current_orient,
 			    double rad) {
+    cout << "Current orient: " << current_orient << endl;
+    cout << "Final orient: " << desired_orient << endl;
     double theta = angle_between(desired_orient, current_orient);
     point ef = rad*desired_orient.normalize();
     point circle_center = circle_end - ef;

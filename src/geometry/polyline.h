@@ -19,6 +19,7 @@ namespace gca {
 
     polyline(const vector<point>& pointsp) : points(pointsp) {}
 
+    unsigned num_points() const { return points.size(); }
     vector<point>::iterator begin() { return points.begin(); }
     vector<point>::iterator end() { return points.end(); }
     vector<point>::const_iterator begin() const { return points.begin(); }

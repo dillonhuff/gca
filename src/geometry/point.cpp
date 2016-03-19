@@ -1,5 +1,6 @@
-#include <iostream>
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 #include "point.h"
 
@@ -49,6 +50,11 @@ namespace gca {
     return s;
   }
 
+  ostream& operator<<(ostream& s, const vector<point>& p) {
+    for (auto pt : p) { pt.print(s); s << " "; }
+    return s;
+  }
+  
   point extend_back(point start, point end, double l) {
     point se = end - start;
     point sp = start - ((l/se.len())*se);

@@ -98,12 +98,52 @@ namespace gca {
     }
     return polys;
   }
-  
-  vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
-			  const cut_params& params) {
-    vector<polyline> ps = polylines_for_shapes(shapes_to_cut);
-    vector<double> depths = cut_depths(params);
-    vector<cut*> cuts;
+
+  void split_into_main_and_finish(const polyline& pl,
+				  double offset,
+				  vector<polyline>& last_main_cuts,
+				  vector<polyline>& last_finish_cuts) {
+    assert(pl.num_points() > 1);
+    vector<point> split_points(pl.num_points());
+    adjacent_difference(pl.begin(), pl.end(),
+			split_points.begin(),
+			[offset](const point r, const point l)
+			{ return l + offset*((r - l).normalize()); });
+    cout << "Split points: " << split_points << endl;
+    auto pli = pl.begin();
+    auto spi = split_points.begin() + 1;
+    for (; pli != pl.end() - 1; ++pli, ++spi) {
+      last_finish_cuts.push_back(polyline({*pli, *spi}));
+      last_main_cuts.push_back(polyline({*spi, *(pli + 1)}));
+    }
+  }
+
+  vector<polyline> deepen_polys(const vector<double> depths,
+				const vector<polyline>& ps) {
+    vector<polyline> deepened_polys;
+    vector<polyline> finish_lines;
+    for (auto pl : ps) {
+      vector<polyline> dps = deepen_polyline(depths, pl);
+      polyline last = dps.back();
+      dps.pop_back();
+      vector<polyline> last_main_cuts;
+      vector<polyline> last_finish_cuts;
+      // TODO: Make 0.16 a parameter
+      split_into_main_and_finish(last, 0.16, last_main_cuts, last_finish_cuts);
+      deepened_polys.insert(deepened_polys.end(), dps.begin(), dps.end());
+      deepened_polys.insert(deepened_polys.end(),
+			    last_main_cuts.begin(), last_main_cuts.end());
+      finish_lines.insert(finish_lines.end(),
+			  last_finish_cuts.begin(), last_finish_cuts.end());
+    }
+    deepened_polys.insert(deepened_polys.end(),
+			  finish_lines.begin(), finish_lines.end());
+    return deepened_polys;
+  }
+
+  vector<polyline> shift_polys(double offset,
+			       const cut_params& params,
+			       const vector<polyline>& ps) {
     vector<polyline> polys;
     if (params.tools == DRAG_KNIFE_ONLY ||
 	params.tools == DRILL_AND_DRAG_KNIFE) {
@@ -111,19 +151,36 @@ namespace gca {
     } else {
       polys = ps;
     }
-    for (auto pl : polys) {
-      for (auto dpl : deepen_polyline(depths, pl)) {
-	for (auto l : dpl.lines())
-	  { cuts.push_back(linear_cut::make(l.start, l.end)); }
-      }
-    }
+    return polys;
+  }
+
+  template<typename T>
+  vector<cut*> shape_cuts_p(const shape_layout& shapes_to_cut,
+			    const cut_params& params,
+			    T t) {
+    vector<polyline> ps = t(polylines_for_shapes(shapes_to_cut));
+    vector<double> depths = cut_depths(params);
+    vector<polyline> pls = deepen_polys(depths, ps);
+    auto polys = shift_polys(0.16, params, pls);
+    vector<cut*> cuts;
     if (params.tools != DRAG_KNIFE_ONLY) {
       vector<cut*> dcs = hole_cuts(shapes_to_cut.holes, params);
       cuts.insert(cuts.end(), dcs.begin(), dcs.end());
+    }
+    for (auto dpl : polys) {
+      for (auto l : dpl.lines())
+	{ cuts.push_back(linear_cut::make(l.start, l.end)); }
     }
     tool_name tool_no = select_tool(params.tools);
     set_tool_nos(tool_no, cuts);
     return cuts;
   }
+
+  template<typename T>
+  struct no_op { T operator()(const T t) const { return t; } };
   
+  vector<cut*> shape_cuts(const shape_layout& shapes_to_cut,
+			  const cut_params& params) {
+    return shape_cuts_p(shapes_to_cut, params, no_op<vector<polyline>>());
+  }
 }

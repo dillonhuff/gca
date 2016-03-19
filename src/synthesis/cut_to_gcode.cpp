@@ -7,6 +7,16 @@
 
 namespace gca {
 
+  void append_return_home(vector<block>& bs, const cut_params& params) {
+    block b;
+    b.push_back(token('G', 90));
+    b.push_back(token('G', 0));
+    b.push_back(token('X', params.start_loc.x));
+    b.push_back(token('Y', params.start_loc.y));
+    b.push_back(token('Z', params.safe_height));
+    bs.push_back(b);
+  }
+
   block circular_arc_to_gcode_block(circular_arc ca) {
     block b;
     if (ca.dir == CLOCKWISE) {
@@ -91,7 +101,7 @@ namespace gca {
 				      const cut_params& params) {
     vector<block> bs;
     append_cuts_gcode_blocks(cuts, bs, params);
-    append_footer_blocks(bs, params.target_machine);
+    append_footer_blocks(bs, params.target_machine);    
     return bs;
   }
   

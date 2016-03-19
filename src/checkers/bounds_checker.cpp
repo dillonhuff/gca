@@ -43,13 +43,13 @@ namespace gca {
       bool res_y = in_bounds(b.y_min, y, b.y_max);
       bool res_z = in_bounds(b.z_min, z, b.z_max);
       if (!res_x) {
-      	cout << x << " is not in X bounds" << endl;
+      	cout << "Warning: " << x << " is not in X bounds" << endl;
       }
       if (!res_y) {
-      	cout << "is not in Y bounds" << endl;
+      	cout << "Warning: " << y << " is not in Y bounds" << endl;
       }
       if (!res_z) {
-      	cout << "is not in Z bounds" << endl;
+      	cout << "Warning: " << z << " is not in Z bounds" << endl;
       }
       return res_x && res_y && res_z;
     } else {

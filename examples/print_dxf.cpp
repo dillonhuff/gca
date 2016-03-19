@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "checkers/bounds_checker.h"
+#include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 
@@ -30,7 +31,8 @@ int main(int argc, char** argv) {
   params.tools = DRAG_KNIFE_ONLY;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
 
-  gprog* p = dxf_to_gcode(argv[1], params);
+  auto l = read_dxf(argv[1]);
+  auto p = parse_gprog(shape_layout_to_gcode_string(l, params));
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

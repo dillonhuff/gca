@@ -2,8 +2,9 @@
 #include <numeric>
 #include <sstream>
 
-#include "synthesis/cut_to_gcode.h"
 #include "synthesis/dxf_reader.h"
+#include "synthesis/cut_to_gcode.h"
+#include "synthesis/safe_move.h"
 #include "synthesis/schedule_cuts.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
@@ -66,23 +67,36 @@ namespace gca {
     }
   }
 
+  void insert_move_home(vector<cut*>& cuts,
+			const cut_params& params) {
+    if (cuts.size() > 0) {
+      point above = cuts.back()->end;
+      above.z = params.safe_height;
+      point dest = params.start_loc;
+      dest.z = params.safe_height;
+      cut* pull_up = safe_move::make(cuts.back()->end, above);
+      pull_up->tool_no = cuts.back()->tool_no;
+      cut* shift = safe_move::make(above, dest);
+      shift->tool_no = cuts.back()->tool_no;
+      cuts.push_back(pull_up);
+      cuts.push_back(shift);
+    }
+  }
+
   vector<cut*> insert_transitions(const vector<cut*>& cuts,
 				  const cut_params& params) {
     vector<cut*> all_cuts;
     cut* last_cut = NULL;
-    cut* next_cut = NULL;
-    for (vector<cut*>::const_iterator it = cuts.begin();
-	 it != cuts.end(); ++it) {
-      next_cut = *it; //cuts[i];
+    for (auto next_cut : cuts) {
       vector<cut*> transition = move_to_next_cut(last_cut, next_cut, params);
-      for (vector<cut*>::iterator jt = transition.begin();
-	   jt != transition.end(); ++jt) {
-	(*jt)->tool_no = next_cut->tool_no;
+      for (auto jt : transition) {
+	jt->tool_no = next_cut->tool_no;
       }
       all_cuts.insert(all_cuts.end(), transition.begin(), transition.end());
       all_cuts.push_back(next_cut);
-      last_cut = *it; //cuts[i];
+      last_cut = next_cut;
     }
+    insert_move_home(all_cuts, params);
     return all_cuts;
   }
 
@@ -101,22 +115,18 @@ namespace gca {
     return true;
   }
 
-  vector<cut*> shift_and_scale_cuts(const vector<cut*>& cuts, point p, double s) {
+  vector<cut*> shift_cuts(const vector<cut*>& cuts, point p) {
     vector<cut*> shifted_cuts;
-    for (vector<cut*>::const_iterator it = cuts.begin();
-	 it != cuts.end(); ++it) {
-      shifted_cuts.push_back((*it)->shift(p)->scale(s));
-    }
+    for (auto cut : cuts)
+      { shifted_cuts.push_back(cut->shift(p)); }
     return shifted_cuts;
   }
 
   void set_feedrates(vector<cut*>& cuts,
 		     const cut_params& params) {
     if (params.set_default_feedrate) {
-      for (vector<cut*>::iterator it = cuts.begin();
-    	     it != cuts.end(); ++it) {
-    	(*it)->feedrate = lit::make(params.default_feedrate);
-      }
+      for (auto cut : cuts)
+    	{ cut->feedrate = lit::make(params.default_feedrate); }
     }    
   }
 
@@ -125,9 +135,8 @@ namespace gca {
     vector<cut*> scuts = shape_cuts(shapes_to_cut, params);
     vector<cut*> all_cuts = insert_transitions(scuts, params);
     assert(cuts_are_adjacent(all_cuts));
-    double scale = 1.0;
     point shift(0, 0, params.machine_z_zero);
-    vector<cut*> shifted_cuts = shift_and_scale_cuts(all_cuts, shift, scale);
+    vector<cut*> shifted_cuts = shift_cuts(all_cuts, shift);
     set_feedrates(shifted_cuts, params);
     return shifted_cuts;
   }
