@@ -2,6 +2,7 @@
 #define GCA_POINT_H
 
 #include <iostream>
+#include <vector>
 
 #include "geometry/point.h"
 

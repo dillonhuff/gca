@@ -109,7 +109,6 @@ namespace gca {
 			split_points.begin(),
 			[offset](const point r, const point l)
 			{ return l + offset*((r - l).normalize()); });
-    cout << "Split points: " << split_points << endl;
     auto pli = pl.begin();
     auto spi = split_points.begin() + 1;
     for (; pli != pl.end() - 1; ++pli, ++spi) {

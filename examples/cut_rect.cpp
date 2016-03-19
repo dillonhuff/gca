@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
   params.push_depth = 0.00;
   params.cut_depth = 0.05;
   params.safe_height = 0.45;
-  params.machine_z_zero = -1.90425 + 0.2;
+  params.machine_z_zero = -1.90425;
   params.start_loc = point(9, 8, 0);
   params.start_orient = point(0, -1, 0);
   params.tools = DRAG_KNIFE_ONLY;
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
   vector<cut*> lines;
   // Add outer rectangle
   double d = 2.0;
-  point bottom_left_corner = point(4.8, 5.8, 0); //point(4.0, 7.6, 0) + point(0, -0.9, 0);
+  point bottom_left_corner = point(9.4, 4.7, 0);
   point p0 = bottom_left_corner;
   point p1 = p0 + point(0, d, 0);
   point p2 = p0  + point(d, d, 0);

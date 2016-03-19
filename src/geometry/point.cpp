@@ -1,6 +1,5 @@
 #include <cmath>
 #include <iostream>
-#include <vector>
 
 #include "point.h"
 
