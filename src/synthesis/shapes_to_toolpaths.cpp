@@ -117,18 +117,28 @@ namespace gca {
     }
   }
 
+  // TODO: Actually implement this function so that tests pass AND
+  // the DXF output handles polylines cut by the drag knife correctly
+  bool all_contiguous(const polyline& p) {
+    return true;
+  }
+
+  // TODO: This should really account for whether or not the
+  // line is being cut with a drag knife
   vector<polyline> deepen_polys(const vector<double> depths,
 				const vector<polyline>& ps) {
     vector<polyline> deepened_polys;
     vector<polyline> finish_lines;
     for (auto pl : ps) {
       vector<polyline> dps = deepen_polyline(depths, pl);
-      polyline last = dps.back();
-      dps.pop_back();
       vector<polyline> last_main_cuts;
       vector<polyline> last_finish_cuts;
-      // TODO: Make 0.16 a parameter
-      split_into_main_and_finish(last, 0.16, last_main_cuts, last_finish_cuts);
+      if (pl.num_points() > 2 && !all_contiguous(pl)) {
+	polyline last = dps.back();
+	dps.pop_back();
+	// TODO: Make 0.16 a parameter
+	split_into_main_and_finish(last, 0.16, last_main_cuts, last_finish_cuts);
+      }
       deepened_polys.insert(deepened_polys.end(), dps.begin(), dps.end());
       deepened_polys.insert(deepened_polys.end(),
 			    last_main_cuts.begin(), last_main_cuts.end());
