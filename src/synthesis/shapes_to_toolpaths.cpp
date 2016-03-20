@@ -6,6 +6,7 @@
 #include "synthesis/linear_cut.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/spline_sampling.h"
+#include "system/algorithm.h"
 
 namespace gca {
 
@@ -119,14 +120,15 @@ namespace gca {
 
   bool all_contiguous(const polyline& p) {
     if (p.num_points() < 3) { return true; }
-    vector<point> orientations(p.num_points());
-    adjacent_difference(p.begin(), p.end(),
-			orientations.begin());
+    vector<point> orientations(p.num_points() - 1);
+    apply_between(p.begin(), p.end(),
+		  orientations.begin(),
+		  [](point p, point n) { return  n - p; });
     point current_orient, next_orient;
-    for (auto it = orientations.begin() + 1; it != orientations.end() - 1; ++it) {
+    for (auto it = orientations.begin(); it != orientations.end() - 1; ++it) {
       current_orient = *it;
       next_orient = *(it + 1);
-      // TODO: Fix this magic number
+      // TODO: Make this magic number a parameter
       if (!within_eps(angle_between(current_orient, next_orient), 0, 15))
 	{ return false; }
     }

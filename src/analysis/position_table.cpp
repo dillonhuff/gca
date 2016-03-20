@@ -108,15 +108,6 @@ namespace gca {
     return increment_position(last, inc);
   }
 
-  template<typename input_it, typename output_it, typename F>
-  void apply_between(input_it s, input_it e, output_it r, F f) {
-    while (s != (e - 1)) {
-      *r = f(*s, *(s + 1));
-      ++r;
-      ++s;
-    }
-  }
-
   // TODO: Use an adjacent difference function for this
   position_table program_position_table(const vector<machine_state>& p) {
     position_table t;
