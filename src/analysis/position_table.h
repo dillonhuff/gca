@@ -33,6 +33,7 @@ namespace gca {
   void add_unk_row(position_table& x);
 
   ostream& operator<<(ostream& out, const position_entry& e);
+  ostream& operator<<(ostream& out, const position_table& e);
 }
 
 #endif 

@@ -1,5 +1,6 @@
 #include "analysis/position_table.h"
 #include "analysis/utils.h"
+#include "system/algorithm.h"
 
 namespace gca {
 
@@ -108,37 +109,73 @@ namespace gca {
     return increment_position(last, inc);
   }
 
+  void update_table_with(position_table& t,
+			 const machine_state& s,
+			 const machine_state& next) {
+    if (s.active_non_modal_setting == MOVE_HOME_THROUGH_POINT) {
+      update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), t);
+    } else if (is_move(s)) {
+      if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
+	value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
+	value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;
+	value* z = s.z->is_omitted() ? last_position(s.active_coord_system, t).z : s.z;
+	update_table(s.active_coord_system, position(x, y, z), t);
+      } else if (s.active_distance_mode == RELATIVE_DISTANCE_MODE) {
+	position p = next_relative_position(s, t);
+	update_table(s.active_coord_system, p, t);
+      } else {
+	assert(false);
+      }
+    } else if (s.active_tool != next.active_tool) {
+      add_unk_row(t);
+    } else {
+      if (t.size() == 0) {
+	add_unk_row(t);
+      } else {
+	copy_last_row(t);
+      }
+    }
+  }
+
   // TODO: Use an adjacent difference function for this
   position_table program_position_table(const vector<machine_state>& p) {
     position_table t;
-    for (vector<machine_state>::const_iterator it = p.begin() + 1;
-    	 it < p.end(); ++it) {
-      machine_state s = *it;
-      if (s.active_non_modal_setting == MOVE_HOME_THROUGH_POINT) {
-    	update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), t);
-      } else if (is_move(s)) {
-    	if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
-    	  value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
-    	  value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;
-    	  value* z = s.z->is_omitted() ? last_position(s.active_coord_system, t).z : s.z;
-    	  update_table(s.active_coord_system, position(x, y, z), t);
-    	} else if (s.active_distance_mode == RELATIVE_DISTANCE_MODE) {
-    	  position p = next_relative_position(s, t);
-    	  update_table(s.active_coord_system, p, t);
-    	} else {
-    	  assert(false);
-    	}
-      } else if (s.active_tool != (*(it - 1)).active_tool) {
-    	add_unk_row(t);
-      } else {
-    	if (t.size() == 0) {
-    	  add_unk_row(t);
-    	} else {
-    	  copy_last_row(t);
-    	}
-      }
-    }
+    // cout << "Initial table " << endl;
+    // cout << t << endl;
+    apply_between(p.begin(), p.end(),
+		  [&t](const machine_state& previous, const machine_state& next)
+		  { update_table_with(t, next, previous); });
+    // cout << "Final table: " << endl;
+    // cout << t << endl;
     return t;
+    // for (vector<machine_state>::const_iterator it = p.begin() + 1;
+    // 	 it < p.end(); ++it) {
+    //   machine_state s = *it;
+    //   if (s.active_non_modal_setting == MOVE_HOME_THROUGH_POINT) {
+    // 	update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), t);
+    //   } else if (is_move(s)) {
+    // 	if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
+    // 	  value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
+    // 	  value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;
+    // 	  value* z = s.z->is_omitted() ? last_position(s.active_coord_system, t).z : s.z;
+    // 	  update_table(s.active_coord_system, position(x, y, z), t);
+    // 	} else if (s.active_distance_mode == RELATIVE_DISTANCE_MODE) {
+    // 	  position p = next_relative_position(s, t);
+    // 	  update_table(s.active_coord_system, p, t);
+    // 	} else {
+    // 	  assert(false);
+    // 	}
+    //   } else if (s.active_tool != (*(it - 1)).active_tool) {
+    // 	add_unk_row(t);
+    //   } else {
+    // 	if (t.size() == 0) {
+    // 	  add_unk_row(t);
+    // 	} else {
+    // 	  copy_last_row(t);
+    // 	}
+    //   }
+    // }
+    //    return t;
   }
 
   ostream& operator<<(ostream& out, const position_entry& e) {
@@ -147,6 +184,15 @@ namespace gca {
     out << *(e.second.y) << ", ";
     out << *(e.second.z);
     out << ")";
+    return out;
+  }
+
+  ostream& operator<<(ostream& out, const position_table& t) {
+    for (auto r : t) {
+      for (auto e : r)
+	{ out << e << " "; }
+      out << endl;
+    }
     return out;
   }
 }
