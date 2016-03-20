@@ -89,9 +89,12 @@ namespace gca {
   }
 
   vector<polyline> make_polylines_from(vector<cut*> lines) {
+    cout << "Make polylines" << endl;
     auto adj_test = [](cut* c, cut* n) { return c->end == n->start; };
     auto not_adj_test = [](cut* c, cut* n) { return !(c->end == n->start); };
+    cout << "Before gac " << lines << endl;
     greedy_adjacent_chains(lines.begin(), lines.end(), adj_test);
+    cout << "After gac " << lines << endl;
     vector<polyline> pls;
     auto it = lines.begin();
     while (it != lines.end()) {
