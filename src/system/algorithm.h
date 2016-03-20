@@ -1,6 +1,10 @@
 #ifndef GCA_SYSTEM_ALGORITHM_H
 #define GCA_SYSTEM_ALGORITHM_H
 
+#include <utility>
+
+using namespace std;
+
 namespace gca {
 
   template<typename input_it, typename output_it, typename F>
@@ -24,7 +28,20 @@ namespace gca {
 
   template<typename input_it, typename F>
   void greedy_adjacent_chains(input_it s, input_it e, F f) {
-    
+    if (s == e) { return; }
+    while (s < e - 1) {
+      auto n = s + 1;
+      bool found_adjacent = false;
+      while (n < e) {
+	if (f(*s, *n)) {
+	  found_adjacent = true;
+	  break;
+	}
+	n++;
+      }
+      if (found_adjacent) { swap(*(s + 1), *n); }
+      s++;
+    }
   }
 
   template<typename input_it, typename F>

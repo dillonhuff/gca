@@ -46,9 +46,11 @@ namespace gca {
 
     vector<int> no_spindle_tools;
     no_spindle_tools.push_back(6);
+
+    shape_layout l = read_dxf(file_name.c_str());
       
     SECTION("spiral is safe") {
-      gprog* p = dxf_to_gcode(file_name.c_str(), params);
+      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
       REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 0);
     }
   }

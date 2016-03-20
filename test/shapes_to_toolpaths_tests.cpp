@@ -70,13 +70,27 @@ namespace gca {
 	point p1 = p0 + point(0, d, 0);
 	point p2 = p0  + point(d, d, 0);
 	point p3 = p0 + point(d, 0, 0);
-	lines.push_back(linear_cut::make(p0, p1));
-	lines.push_back(linear_cut::make(p1, p2));
-	lines.push_back(linear_cut::make(p2, p3));
-	lines.push_back(linear_cut::make(p3, p0));	
-	shape_layout l(lines, holes, splines);
-	cuts = shape_cuts(l, params);
-	REQUIRE(cuts.size() == 8);
+
+	SECTION("Lines are in cut order") {
+	  lines.push_back(linear_cut::make(p0, p1));
+	  lines.push_back(linear_cut::make(p1, p2));
+	  lines.push_back(linear_cut::make(p2, p3));
+	  lines.push_back(linear_cut::make(p3, p0));	
+	  shape_layout l(lines, holes, splines);
+	  cuts = shape_cuts(l, params);
+	  REQUIRE(cuts.size() == 8);
+	}
+
+	SECTION("Lines are not in cut order") {
+	  lines.push_back(linear_cut::make(p0, p1));
+	  lines.push_back(linear_cut::make(p3, p0));
+	  lines.push_back(linear_cut::make(p2, p3));
+	  lines.push_back(linear_cut::make(p1, p2));
+	  
+	  shape_layout l(lines, holes, splines);
+	  cuts = shape_cuts(l, params);
+	  REQUIRE(cuts.size() == 8);
+	}
       }
 
     }

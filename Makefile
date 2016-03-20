@@ -2282,6 +2282,33 @@ test/spline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.s
 .PHONY : test/spline_tests.cpp.s
 
+test/system_algorithm_tests.o: test/system_algorithm_tests.cpp.o
+
+.PHONY : test/system_algorithm_tests.o
+
+# target to build an object file
+test/system_algorithm_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.o
+.PHONY : test/system_algorithm_tests.cpp.o
+
+test/system_algorithm_tests.i: test/system_algorithm_tests.cpp.i
+
+.PHONY : test/system_algorithm_tests.i
+
+# target to preprocess a source file
+test/system_algorithm_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.i
+.PHONY : test/system_algorithm_tests.cpp.i
+
+test/system_algorithm_tests.s: test/system_algorithm_tests.cpp.s
+
+.PHONY : test/system_algorithm_tests.s
+
+# target to generate assembly for a file
+test/system_algorithm_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.s
+.PHONY : test/system_algorithm_tests.cpp.s
+
 test/toolpath_tests.o: test/toolpath_tests.cpp.o
 
 .PHONY : test/toolpath_tests.o
@@ -2548,6 +2575,9 @@ help:
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"
+	@echo "... test/system_algorithm_tests.o"
+	@echo "... test/system_algorithm_tests.i"
+	@echo "... test/system_algorithm_tests.s"
 	@echo "... test/toolpath_tests.o"
 	@echo "... test/toolpath_tests.i"
 	@echo "... test/toolpath_tests.s"
