@@ -44,22 +44,39 @@ namespace gca {
 
     }
 
-    SECTION("Probotix, drill only") {
+    SECTION("Probotix") {
       params.safe_height = 0.35;
       params.material_depth = 0.011;
       params.cut_depth = 0.05;
       params.start_loc = point(0, 0, 0);
       params.start_orient = point(1, 0, 0);
       params.target_machine = PROBOTIX_V90_MK2_VFD;
-      params.tools = DRILL_ONLY;
       params.machine_z_is_inverted = true;
       params.machine_z_zero = -4.05;
       
-      SECTION("1 cut") {
+      SECTION("DRILL_ONLY, 1 cut") {
+	params.tools = DRILL_ONLY;
 	lines.push_back(linear_cut::make(point(1, 0, 0), point(3, 4, 0)));
 	shape_layout l(lines, holes, splines);
 	cuts = shape_cuts(l, params);
 	REQUIRE(cuts.size() == 1);
+      }
+
+      SECTION("DRAG_KNIFE_ONLY, cut square") {
+	params.tools = DRAG_KNIFE_ONLY;
+	double d = 2.0;
+	point bottom_left_corner = point(9.4, 4.7, 0);
+	point p0 = bottom_left_corner;
+	point p1 = p0 + point(0, d, 0);
+	point p2 = p0  + point(d, d, 0);
+	point p3 = p0 + point(d, 0, 0);
+	lines.push_back(linear_cut::make(p0, p1));
+	lines.push_back(linear_cut::make(p1, p2));
+	lines.push_back(linear_cut::make(p2, p3));
+	lines.push_back(linear_cut::make(p3, p0));	
+	shape_layout l(lines, holes, splines);
+	cuts = shape_cuts(l, params);
+	REQUIRE(cuts.size() == 8);
       }
 
     }

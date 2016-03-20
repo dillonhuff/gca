@@ -117,9 +117,19 @@ namespace gca {
     }
   }
 
-  // TODO: Actually implement this function so that tests pass AND
-  // the DXF output handles polylines cut by the drag knife correctly
   bool all_contiguous(const polyline& p) {
+    if (p.num_points() < 3) { return true; }
+    vector<point> orientations(p.num_points());
+    adjacent_difference(p.begin(), p.end(),
+			orientations.begin());
+    point current_orient, next_orient;
+    for (auto it = orientations.begin() + 1; it != orientations.end() - 1; ++it) {
+      current_orient = *it;
+      next_orient = *(it + 1);
+      // TODO: Fix this magic number
+      if (!within_eps(angle_between(current_orient, next_orient), 0, 15))
+	{ return false; }
+    }
     return true;
   }
 
@@ -133,7 +143,7 @@ namespace gca {
       vector<polyline> dps = deepen_polyline(depths, pl);
       vector<polyline> last_main_cuts;
       vector<polyline> last_finish_cuts;
-      if (pl.num_points() > 2 && !all_contiguous(pl)) {
+      if (!all_contiguous(pl)) {
 	polyline last = dps.back();
 	dps.pop_back();
 	// TODO: Make 0.16 a parameter

@@ -108,34 +108,43 @@ namespace gca {
     return increment_position(last, inc);
   }
 
+  template<typename input_it, typename output_it, typename F>
+  void apply_between(input_it s, input_it e, output_it r, F f) {
+    while (s != (e - 1)) {
+      *r = f(*s, *(s + 1));
+      ++r;
+      ++s;
+    }
+  }
+
   // TODO: Use an adjacent difference function for this
   position_table program_position_table(const vector<machine_state>& p) {
-    position_table t;    
+    position_table t;
     for (vector<machine_state>::const_iterator it = p.begin() + 1;
-	 it < p.end(); ++it) {
+    	 it < p.end(); ++it) {
       machine_state s = *it;
       if (s.active_non_modal_setting == MOVE_HOME_THROUGH_POINT) {
-	update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), t);
+    	update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), t);
       } else if (is_move(s)) {
-	if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
-	  value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
-	  value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;
-	  value* z = s.z->is_omitted() ? last_position(s.active_coord_system, t).z : s.z;
-	  update_table(s.active_coord_system, position(x, y, z), t);
-	} else if (s.active_distance_mode == RELATIVE_DISTANCE_MODE) {
-	  position p = next_relative_position(s, t);
-	  update_table(s.active_coord_system, p, t);
-	} else {
-	  assert(false);
-	}
+    	if (s.active_distance_mode == ABSOLUTE_DISTANCE_MODE) {
+    	  value* x = s.x->is_omitted() ? last_position(s.active_coord_system, t).x : s.x;
+    	  value* y = s.y->is_omitted() ? last_position(s.active_coord_system, t).y : s.y;
+    	  value* z = s.z->is_omitted() ? last_position(s.active_coord_system, t).z : s.z;
+    	  update_table(s.active_coord_system, position(x, y, z), t);
+    	} else if (s.active_distance_mode == RELATIVE_DISTANCE_MODE) {
+    	  position p = next_relative_position(s, t);
+    	  update_table(s.active_coord_system, p, t);
+    	} else {
+    	  assert(false);
+    	}
       } else if (s.active_tool != (*(it - 1)).active_tool) {
-	add_unk_row(t);
+    	add_unk_row(t);
       } else {
-	if (t.size() == 0) {
-	  add_unk_row(t);
-	} else {
-	  copy_last_row(t);
-	}
+    	if (t.size() == 0) {
+    	  add_unk_row(t);
+    	} else {
+    	  copy_last_row(t);
+    	}
       }
     }
     return t;
