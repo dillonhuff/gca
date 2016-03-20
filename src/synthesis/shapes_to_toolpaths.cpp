@@ -75,10 +75,40 @@ namespace gca {
     return ps;
   }
 
+  vector<point> cuts_to_points(vector<cut*> cuts) {
+    vector<point> pts;
+    for (auto c : cuts) {
+      point s = c->start;
+      point e = c->end;
+      if (pts.size() == 0) {
+	pts.push_back(s);
+      }
+      pts.push_back(e);      
+    }
+    return pts;
+  }
+
+  vector<polyline> make_polylines_from(vector<cut*> lines) {
+    auto adj_test = [](cut* c, cut* n) { return c->end == n->start; };
+    auto not_adj_test = [](cut* c, cut* n) { return !(c->end == n->start); };
+    greedy_adjacent_chains(lines.begin(), lines.end(), adj_test);
+    vector<polyline> pls;
+    auto it = lines.begin();
+    while (it != lines.end()) {
+      auto r = find_between(it, lines.end(), not_adj_test);
+      vector<point> lts = cuts_to_points(vector<cut*>(it, r.first + 1));
+      pls.push_back(polyline(lts));
+      it = r.second;
+    }
+    return pls;
+  }
+
   vector<polyline> polylines_for_shapes(const shape_layout& shapes_to_cut) {
     vector<polyline> polys;
     append_splines(shapes_to_cut.splines, polys);
-    insert_lines(shapes_to_cut.lines, polys);
+    auto lines = shapes_to_cut.lines;
+    vector<polyline> pls = make_polylines_from(lines);
+    polys.insert(polys.end(), pls.begin(), pls.end());
     return polys;
   }
 
@@ -124,15 +154,9 @@ namespace gca {
     apply_between(p.begin(), p.end(),
 		  orientations.begin(),
 		  [](point p, point n) { return  n - p; });
-    point current_orient, next_orient;
-    for (auto it = orientations.begin(); it != orientations.end() - 1; ++it) {
-      current_orient = *it;
-      next_orient = *(it + 1);
-      // TODO: Make this magic number a parameter
-      if (!within_eps(angle_between(current_orient, next_orient), 0, 15))
-	{ return false; }
-    }
-    return true;
+    return all_between(orientations.begin(), orientations.end(),
+		       [](point l, point r)
+		       { return within_eps(angle_between(l, r), 0, 15); });
   }
 
   // TODO: This should really account for whether or not the
