@@ -89,8 +89,8 @@ namespace gca {
   }
 
   vector<polyline> make_polylines_from(vector<cut*> lines) {
-    auto adj_test = [](cut* c, cut* n) { return c->end == n->start; };
-    auto not_adj_test = [](cut* c, cut* n) { return !(c->end == n->start); };
+    auto adj_test = [](cut* c, cut* n) { return within_eps(c->end, n->start); };
+    auto not_adj_test = [](cut* c, cut* n) { return !(within_eps(c->end,n->start)); };
     greedy_adjacent_chains(lines.begin(), lines.end(), adj_test);
     vector<polyline> pls;
     auto it = lines.begin();
