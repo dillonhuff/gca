@@ -37,6 +37,15 @@ namespace gca {
     }
       
   };
+
+  template<typename F>
+  polyline apply_to_points(const polyline& l, F f) {
+    vector<point> pts;
+    for (auto p : l) {
+      pts.push_back(f(p));
+    }
+    return polyline(pts);
+  }
 }
 
 #endif

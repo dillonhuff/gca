@@ -141,6 +141,21 @@ namespace gca {
     return shifted_cuts;
   }
 
+  string cuts_to_gcode_string(const vector<cut*>& cuts,
+			      const cut_params& params) {
+    vector<cut*> all_cuts = insert_transitions(cuts, params);
+    assert(cuts_are_adjacent(all_cuts));
+    point shift(0, 0, params.machine_z_zero);
+    vector<cut*> shifted_cuts = shift_cuts(all_cuts, shift);
+    set_feedrates(shifted_cuts, params);
+    vector<block> p = gcode_blocks_for_cuts(shifted_cuts, params);
+    stringstream ss;
+    ss.setf(ios::fixed, ios::floatfield);
+    ss.setf(ios::showpoint);
+    ss << p << endl;
+    return ss.str();
+  }
+  
   string shape_layout_to_gcode_string(const shape_layout& shapes_to_cut,
 				      const cut_params& params) {
     vector<cut*> shifted_cuts = shape_layout_to_cuts(shapes_to_cut, params);

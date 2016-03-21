@@ -12,6 +12,9 @@ namespace gca {
   string shape_layout_to_gcode_string(const shape_layout& shapes_to_cut,
 				      const cut_params& params);
 
+  string cuts_to_gcode_string(const vector<cut*>& cuts,
+			      const cut_params& params);
+
 }
 
 #endif

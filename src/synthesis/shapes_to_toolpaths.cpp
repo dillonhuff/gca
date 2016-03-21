@@ -177,30 +177,13 @@ namespace gca {
 		       { return within_eps(angle_between(l, r), 0, 15); });
   }
 
-  // TODO: This should really account for whether or not the
-  // line is being cut with a drag knife
   vector<polyline> deepen_polys(const vector<double> depths,
 				const vector<polyline>& ps) {
     vector<polyline> deepened_polys;
-    //    vector<polyline> finish_lines;
     for (auto pl : ps) {
       vector<polyline> dps = deepen_polyline(depths, pl);
-      // vector<polyline> last_main_cuts;
-      // vector<polyline> last_finish_cuts;
-      // if (!all_contiguous(pl)) {
-      // 	polyline last = dps.back();
-      // 	dps.pop_back();
-      // 	// TODO: Make 0.16 a parameter
-      // 	split_into_main_and_finish(last, 0.16, last_main_cuts, last_finish_cuts);
-      // }
       deepened_polys.insert(deepened_polys.end(), dps.begin(), dps.end());
-      // deepened_polys.insert(deepened_polys.end(),
-      // 			    last_main_cuts.begin(), last_main_cuts.end());
-      // finish_lines.insert(finish_lines.end(),
-      // 			  last_finish_cuts.begin(), last_finish_cuts.end());
     }
-    // deepened_polys.insert(deepened_polys.end(),
-    // 			  finish_lines.begin(), finish_lines.end());
     return deepened_polys;
   }
 
@@ -263,11 +246,9 @@ namespace gca {
     return pls;
   }
 
-  template<typename T>
-  vector<cut*> shape_cuts_p(const shape_layout& shapes_to_cut,
-			    const cut_params& params,
-			    T t) {
-    vector<polyline> ps = t(polylines_for_shapes(shapes_to_cut));
+  vector<cut*> cuts_from_polylines(const shape_layout& shapes_to_cut,
+				   const vector<polyline>& ps,
+				   const cut_params& params) {
     vector<double> depths = cut_depths(params);
     vector<polyline> dps = deepen_polys(depths, ps);
     auto broken_pls = break_adjacent_cuts(depths.back(), dps);
