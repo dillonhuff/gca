@@ -54,59 +54,50 @@ pair<double, double> y_minmax(const vector<polyline>& ps) {
 
 box polylines_bounding_box(const vector<polyline>& ps) {
   auto xminmax = x_minmax(ps);
-  //  cout << "X minmax: " << *(xminmax.first) << " " << *(xminmax.second) << endl;
   auto yminmax = y_minmax(ps);
-  //  cout << "Y minmax: " << *(yminmax.first) << " " << *(yminmax.second) << endl;
   double x_min = xminmax.first;
   double x_max = xminmax.second;
   double y_min = yminmax.first;
   double y_max = yminmax.second;
   box b(x_min, x_max,
 	y_min, y_max);
-  //  cout << "polylines_bounding_box done" << endl;
   return b;
 }
 
 pair<double, double> box_scale_factors(const box dest, const box source) {
-  //  cout << "Dest: " << endl;
-  // cout << dest << endl;
-  // cout << "source: " << endl;
-  // cout << source << endl;
   double src_x_diff = source.x_max - source.x_min;
   double src_y_diff = source.y_max - source.y_min;
   double dst_x_diff = dest.x_max - dest.x_min;
   double dst_y_diff = dest.y_max - dest.y_min;
-  // cout << "dst_x_diff = " << dst_x_diff << endl;
-  // cout << "src_x_diff = " << src_x_diff << endl;
-  // cout << "dst_y_diff = " << dst_y_diff << endl;
-  // cout << "src_y_diff = " << src_y_diff << endl;
   return pair<double, double>(dst_x_diff / src_x_diff,
 			      dst_y_diff / src_y_diff);
 }
 
 double proportional_scale_factor(const box dest, const box source) {
   auto p = box_scale_factors(dest, source);
-  // cout << "X scale factor: " << p.first << endl;
-  // cout << "Y scale factor: " << p.second << endl;
   return min(p.first, p.second);
 }
 
 vector<polyline> fit_in_box(const box b,
 			    const vector<polyline>& polys) {
-  // cout << "Bounding box: " << endl;
-  // cout << b << endl;
   box poly_bounds = polylines_bounding_box(polys);
-  // cout << "Bounding box after poly_bounding_box call: " << endl;
-  // cout << b << endl;
-  auto sf = proportional_scale_factor(poly_bounds, b);
-  //  cout << "Scaling factor: " << sf << endl;
+  auto sf = proportional_scale_factor(b, poly_bounds);
   vector<polyline> scaled;
   auto scale_pt = [sf](const point p)
     { return point(sf * p.x, sf * p.y, p.z); };
   for (auto p : polys) {
     scaled.push_back(apply_to_points(p, scale_pt));
   }
-  return scaled;
+  box scaled_bounds = polylines_bounding_box(scaled);
+  double x_shift = b.x_min - scaled_bounds.x_min;
+  double y_shift = b.y_min - scaled_bounds.y_min;
+  vector<polyline> shifted;
+  auto shift_pt = [x_shift, y_shift](const point p)
+    { return point(p.x + x_shift, p.y + y_shift, p.z); };
+  for (auto p : scaled) {
+    shifted.push_back(apply_to_points(p, shift_pt));
+  }
+  return shifted;
 }
 
 int main(int argc, char** argv) {
@@ -133,7 +124,7 @@ int main(int argc, char** argv) {
   
   auto l = read_dxf(argv[1]);
   auto sf = [](const vector<polyline>& ps)
-    { return fit_in_box(box(0.5, 17, 1.2, 13.2), ps); };
+    { return fit_in_box(box(7.3 + 3.2, 10.6 + 3.2, 2.0, 4.0), ps); };
   vector<cut*> scuts = shape_cuts_p(l, params, sf);
   string s = cuts_to_gcode_string(scuts, params);
   auto p = parse_gprog(s);

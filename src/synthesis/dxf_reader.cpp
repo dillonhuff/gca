@@ -206,7 +206,7 @@ namespace gca {
     virtual void processCodeValuePair(unsigned int groupCode, char* groupValue) {}
     virtual void addBlock(const DL_BlockData& data) {}
     virtual void endBlock() {}
-    virtual void endEntity() { cout << "End entity" << endl; }
+    virtual void endEntity() {}
     virtual void addMText(const DL_MTextData& data) {}
     virtual void setVariableVector(const char* key, 
 				   double v1, double v2, double v3, int code) {}
