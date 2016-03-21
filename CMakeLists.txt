@@ -98,6 +98,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/spline_sampling.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
+	 ./src/synthesis/machine.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp

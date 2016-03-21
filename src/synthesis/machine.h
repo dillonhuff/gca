@@ -1,6 +1,10 @@
 #ifndef GCA_MACHINE_H
 #define GCA_MACHINE_H
 
+#include <iostream>
+
+using namespace std;
+
 namespace gca {
 
   enum machine_name {
@@ -13,6 +17,9 @@ namespace gca {
     DRAG_KNIFE,
     DRILL
   };
+
+  ostream& operator<<(ostream& out, const tool_name t);
+  ostream& operator<<(ostream& out, const machine_name t);
 }
 
 #endif

@@ -53,6 +53,11 @@ namespace gca {
     }
   }
 
+  // Could use adjacent_find in place of this function, but I
+  // found that the return policy of giving the first element of
+  // the matching pair if a match occurs, and end otherwise made
+  // iteration awkward when you want to construct new data structures
+  // out of the subranges produced by calls to adjacent_find
   template<typename InputIt, typename F>
   pair<InputIt, InputIt> find_between(InputIt s, InputIt e, F f) {
     while (s != (e - 1)) {

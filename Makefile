@@ -1457,6 +1457,48 @@ src/synthesis/linear_cut.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.s
 .PHONY : src/synthesis/linear_cut.cpp.s
 
+src/synthesis/machine.o: src/synthesis/machine.cpp.o
+
+.PHONY : src/synthesis/machine.o
+
+# target to build an object file
+src/synthesis/machine.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/machine.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/machine.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.o
+.PHONY : src/synthesis/machine.cpp.o
+
+src/synthesis/machine.i: src/synthesis/machine.cpp.i
+
+.PHONY : src/synthesis/machine.i
+
+# target to preprocess a source file
+src/synthesis/machine.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/machine.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/machine.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.i
+.PHONY : src/synthesis/machine.cpp.i
+
+src/synthesis/machine.s: src/synthesis/machine.cpp.s
+
+.PHONY : src/synthesis/machine.s
+
+# target to generate assembly for a file
+src/synthesis/machine.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/machine.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/machine.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.s
+.PHONY : src/synthesis/machine.cpp.s
+
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -2500,6 +2542,9 @@ help:
 	@echo "... src/synthesis/linear_cut.o"
 	@echo "... src/synthesis/linear_cut.i"
 	@echo "... src/synthesis/linear_cut.s"
+	@echo "... src/synthesis/machine.o"
+	@echo "... src/synthesis/machine.i"
+	@echo "... src/synthesis/machine.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"

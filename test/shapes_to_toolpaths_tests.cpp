@@ -1,9 +1,18 @@
 #include "catch.hpp"
 #include "core/arena_allocator.h"
 #include "synthesis/linear_cut.h"
+#include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
 
 namespace gca {
+
+  bool is_vertical_or_horizontal(const cut* c) {
+    cout << *c << endl;
+    if (c->is_linear_cut()) {
+      return (c->end.x == c->start.x) || (c->end.y == c->start.y);
+    }
+    return true;
+  }
 
   TEST_CASE("Lines to toolpaths") {
     arena_allocator a;
@@ -89,7 +98,14 @@ namespace gca {
 	  
 	  shape_layout l(lines, holes, splines);
 	  cuts = shape_cuts(l, params);
-	  REQUIRE(cuts.size() == 8);
+
+	  SECTION("Adjacent cuts get broken up") {
+	    REQUIRE(cuts.size() == 8);
+	  }
+
+	  SECTION("All lines in the square are vertical or horizontal") {
+	    REQUIRE(all_of(cuts.begin(), cuts.end(), is_vertical_or_horizontal));
+	  }
 	}
       }
 
