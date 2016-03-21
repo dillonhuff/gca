@@ -13,13 +13,18 @@ namespace gca {
       out << "DRAG_KNIFE";
       break;
     default:
-      cout << "Unsupported tool name" << endl;
+      cout << "Unsupported tool_name" << endl;
       assert(false);
     }
     return out;
   }
 
   ostream& operator<<(ostream& out, const machine_name t) {
+    switch (t) {
+    default:
+      cout << "Unsupported machine_name" << endl;
+      assert(false);
+    }
     return out;
   }
 

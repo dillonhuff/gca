@@ -35,8 +35,6 @@ int main(int argc, char** argv) {
   point p1 = p0 + point(0, d, 0);
   point p2 = p0  + point(d, d, 0);
   point p3 = p0 + point(d, 0, 0);
-  // double punch_offset = 0.16;
-  // point im = p1 + point(punch_offset, 0, 0);
   lines.push_back(linear_cut::make(p0, p1));
   lines.push_back(linear_cut::make(p1, p2));
   lines.push_back(linear_cut::make(p2, p3));
@@ -45,16 +43,19 @@ int main(int argc, char** argv) {
   vector<hole_punch*> holes;
   vector<b_spline*> splines;
   shape_layout l(lines, holes, splines);
-  gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
+  string s = shape_layout_to_gcode_string(l, params);
+  cout << "Standard gcode: " << endl;
+  cout << s << endl;
+  gprog* p = parse_gprog(s);
   
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
   p->print_nc_output(cout);
 
   int num_warns = check_bounds(p, GCA_ABSOLUTE,
-			       0.5, 17,			       
-			       1.2, 13.2,
-			       -4.1, -0.05);
+  			       0.5, 17,			       
+  			       1.2, 13.2,
+  			       -4.1, -0.05);
   if (num_warns > 0) {
     cout << "Num warnings: " << num_warns << endl;
   }

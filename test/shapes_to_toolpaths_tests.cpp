@@ -7,7 +7,6 @@
 namespace gca {
 
   bool is_vertical_or_horizontal(const cut* c) {
-    cout << *c << endl;
     if (c->is_linear_cut()) {
       return (c->end.x == c->start.x) || (c->end.y == c->start.y);
     }
@@ -87,7 +86,14 @@ namespace gca {
 	  lines.push_back(linear_cut::make(p3, p0));	
 	  shape_layout l(lines, holes, splines);
 	  cuts = shape_cuts(l, params);
-	  REQUIRE(cuts.size() == 8);
+
+	  SECTION("Adjacent cuts get broken up") {
+	    REQUIRE(cuts.size() == 8);
+	  }
+
+	  SECTION("All lines in the square are vertical or horizontal") {
+	    REQUIRE(all_of(cuts.begin(), cuts.end(), is_vertical_or_horizontal));
+	  }
 	}
 
 	SECTION("Lines are not in cut order") {
@@ -108,7 +114,46 @@ namespace gca {
 	  }
 	}
       }
+    }
 
+    SECTION("Probotix, multiple passes") {
+      params.material_depth = 0.099;
+      params.push_depth = 0.00;
+      params.cut_depth = 0.05;
+      params.safe_height = 0.45;
+      params.machine_z_zero = -1.90425;
+      params.start_loc = point(9, 8, 0);
+      params.start_orient = point(0, -1, 0);
+      params.tools = DRAG_KNIFE_ONLY;
+      params.target_machine = PROBOTIX_V90_MK2_VFD;
+
+      // Add outer rectangle
+      double d = 2.0;
+      point bottom_left_corner = point(9.4, 4.7, 0);
+      point p0 = bottom_left_corner;
+      point p1 = p0 + point(0, d, 0);
+      point p2 = p0  + point(d, d, 0);
+      point p3 = p0 + point(d, 0, 0);
+      lines.push_back(linear_cut::make(p0, p1));
+      lines.push_back(linear_cut::make(p1, p2));
+      lines.push_back(linear_cut::make(p2, p3));
+      lines.push_back(linear_cut::make(p3, p0));
+
+      vector<hole_punch*> holes;
+      vector<b_spline*> splines;
+      shape_layout l(lines, holes, splines);
+      cuts = shape_cuts(l, params);
+      string s = shape_layout_to_gcode_string(l, params);
+      cout << "Standard gcode: " << endl;
+      cout << s << endl;
+
+      SECTION("Adjacent cuts get broken up") {
+	REQUIRE(cuts.size() == 12);
+      }
+
+      SECTION("All lines in the square are vertical or horizontal") {
+	REQUIRE(all_of(cuts.begin(), cuts.end(), is_vertical_or_horizontal));
+      }
     }
   }
 }

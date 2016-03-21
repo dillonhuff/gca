@@ -146,6 +146,8 @@ namespace gca {
     vector<cut*> shifted_cuts = shape_layout_to_cuts(shapes_to_cut, params);
     vector<block> p = gcode_blocks_for_cuts(shifted_cuts, params);
     stringstream ss;
+    ss.setf(ios::fixed, ios::floatfield);
+    ss.setf(ios::showpoint);
     ss << p << endl;
     return ss.str();
   }

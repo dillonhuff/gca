@@ -25,6 +25,8 @@ namespace gca {
     vector<point>::const_iterator begin() const { return points.begin(); }
     vector<point>::const_iterator end() const { return points.end(); }
 
+    point pt(unsigned n) const { return points[n]; }
+
     vector<line> lines() const {
       assert(points.size() > 1);
       vector<line> ls;

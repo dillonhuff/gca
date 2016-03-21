@@ -88,9 +88,27 @@ namespace gca {
     return pts;
   }
 
+  vector<point> lines_to_points(vector<line> cuts) {
+    vector<point> pts;
+    for (auto c : cuts) {
+      point s = c.start;
+      point e = c.end;
+      if (pts.size() == 0) {
+	pts.push_back(s);
+      }
+      pts.push_back(e);      
+    }
+    return pts;
+  }
+  
   vector<polyline> make_polylines_from(vector<cut*> lines) {
     auto adj_test = [](cut* c, cut* n) { return within_eps(c->end, n->start); };
-    auto not_adj_test = [](cut* c, cut* n) { return !(within_eps(c->end,n->start)); };
+    auto not_adj_test = [](cut* c, cut* n) {
+      bool touching = within_eps(c->end,n->start);
+      // bool small_orientation_diff =
+      // within_eps(angle_between(c->final_orient(), n->initial_orient()), 0, 15);
+      return !touching; // || !small_orientation_diff;
+    };
     greedy_adjacent_chains(lines.begin(), lines.end(), adj_test);
     vector<polyline> pls;
     auto it = lines.begin();
@@ -164,25 +182,48 @@ namespace gca {
   vector<polyline> deepen_polys(const vector<double> depths,
 				const vector<polyline>& ps) {
     vector<polyline> deepened_polys;
-    vector<polyline> finish_lines;
+    //    vector<polyline> finish_lines;
     for (auto pl : ps) {
       vector<polyline> dps = deepen_polyline(depths, pl);
+      // vector<polyline> last_main_cuts;
+      // vector<polyline> last_finish_cuts;
+      // if (!all_contiguous(pl)) {
+      // 	polyline last = dps.back();
+      // 	dps.pop_back();
+      // 	// TODO: Make 0.16 a parameter
+      // 	split_into_main_and_finish(last, 0.16, last_main_cuts, last_finish_cuts);
+      // }
+      deepened_polys.insert(deepened_polys.end(), dps.begin(), dps.end());
+      // deepened_polys.insert(deepened_polys.end(),
+      // 			    last_main_cuts.begin(), last_main_cuts.end());
+      // finish_lines.insert(finish_lines.end(),
+      // 			  last_finish_cuts.begin(), last_finish_cuts.end());
+    }
+    // deepened_polys.insert(deepened_polys.end(),
+    // 			  finish_lines.begin(), finish_lines.end());
+    return deepened_polys;
+  }
+
+  vector<polyline> break_adjacent_cuts(double last_depth,
+				       const vector<polyline>& dps) {
+    vector<polyline> deepened_polys;
+    vector<polyline> finish_lines;
+    for (auto pl : dps) {
       vector<polyline> last_main_cuts;
       vector<polyline> last_finish_cuts;
-      if (!all_contiguous(pl)) {
-	polyline last = dps.back();
-	dps.pop_back();
-	// TODO: Make 0.16 a parameter
-	split_into_main_and_finish(last, 0.16, last_main_cuts, last_finish_cuts);
+      if (within_eps(pl.pt(0).z, last_depth) && !all_contiguous(pl)) {
+      	// TODO: Make 0.16 a parameter
+      	split_into_main_and_finish(pl, 0.16, last_main_cuts, last_finish_cuts);
+      } else {
+	last_main_cuts.push_back(pl);
       }
-      deepened_polys.insert(deepened_polys.end(), dps.begin(), dps.end());
       deepened_polys.insert(deepened_polys.end(),
-			    last_main_cuts.begin(), last_main_cuts.end());
+      			    last_main_cuts.begin(), last_main_cuts.end());
       finish_lines.insert(finish_lines.end(),
-			  last_finish_cuts.begin(), last_finish_cuts.end());
+      			  last_finish_cuts.begin(), last_finish_cuts.end());
     }
     deepened_polys.insert(deepened_polys.end(),
-			  finish_lines.begin(), finish_lines.end());
+    			  finish_lines.begin(), finish_lines.end());
     return deepened_polys;
   }
 
@@ -199,13 +240,38 @@ namespace gca {
     return polys;
   }
 
+  vector<polyline> break_into_contiguous_cuts(const vector<polyline>& ps) {
+    vector<line> lines;
+    for (auto p : ps) {
+      auto ls = p.lines();
+      lines.insert(lines.end(), ls.begin(), ls.end());
+    }
+    auto not_adj_test = [](line c, line n) {
+      bool touching = within_eps(c.end,n.start);
+      bool small_orientation_diff =
+      within_eps(angle_between(c.end - c.start, n.end - n.start), 0, 15);
+      return !touching || !small_orientation_diff;
+    };
+    vector<polyline> pls;
+    auto it = lines.begin();
+    while (it != lines.end()) {
+      auto r = find_between(it, lines.end(), not_adj_test);
+      vector<point> lts = lines_to_points(vector<line>(it, r.first + 1));
+      pls.push_back(polyline(lts));
+      it = r.second;
+    }
+    return pls;
+  }
+
   template<typename T>
   vector<cut*> shape_cuts_p(const shape_layout& shapes_to_cut,
 			    const cut_params& params,
 			    T t) {
     vector<polyline> ps = t(polylines_for_shapes(shapes_to_cut));
     vector<double> depths = cut_depths(params);
-    vector<polyline> pls = deepen_polys(depths, ps);
+    vector<polyline> dps = deepen_polys(depths, ps);
+    auto broken_pls = break_adjacent_cuts(depths.back(), dps);
+    auto pls = break_into_contiguous_cuts(broken_pls);
     auto polys = shift_polys(0.16, params, pls);
     vector<cut*> cuts;
     if (params.tools != DRAG_KNIFE_ONLY) {
