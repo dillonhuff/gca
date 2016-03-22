@@ -254,6 +254,7 @@ namespace gca {
     r.last_referenced_tool = replace_value(r.last_referenced_tool, 'T', b);
     r.r = replace_value(r.r, 'R', b);
     r.q = replace_value(r.k, 'Q', b);
+    r.active_non_modal_setting = NO_NON_MODAL_SETTING;
 
     update_m_codes(b, r);
     update_g_codes(b, r);
