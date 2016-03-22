@@ -105,8 +105,6 @@ namespace gca {
     auto adj_test = [](cut* c, cut* n) { return within_eps(c->end, n->start); };
     auto not_adj_test = [](cut* c, cut* n) {
       bool touching = within_eps(c->end,n->start);
-      // bool small_orientation_diff =
-      // within_eps(angle_between(c->final_orient(), n->initial_orient()), 0, 15);
       return !touching; // || !small_orientation_diff;
     };
     greedy_adjacent_chains(lines.begin(), lines.end(), adj_test);

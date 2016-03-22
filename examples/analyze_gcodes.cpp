@@ -13,6 +13,7 @@
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
 #include "core/parser.h"
+#include "system/algorithm.h"
 
 using namespace gca;
 using namespace std;
@@ -58,6 +59,20 @@ void sanity_check_machine_state(const machine_state& s) {
   }
 }
 
+void analyze_toolpaths(const vector<machine_state>& states) {
+  vector<vector<machine_state>> toolpaths;
+  split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
+	   { return c.active_tool == p.active_tool; });
+  cout << "Number of toolpaths: " << toolpaths.size() << endl;
+  delete_if(toolpaths, [](const vector<machine_state>& c)
+	    { return c.back().active_tool->is_omitted(); });
+  cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
+  for (auto toolpath : toolpaths) {
+    assert(toolpath.size() > 0);
+    cout << "Active tool: " << *(toolpath.back().active_tool) << endl;
+  }
+}
+
 void print_program_info(const string& dir_name) {
   if (ends_with(dir_name, ".NCF")) {
     cout << dir_name << endl;
@@ -68,9 +83,7 @@ void print_program_info(const string& dir_name) {
     cout << "NUM BLOCKS: " << p.size() << endl;
     vector<machine_state> states = all_program_states(p);
     cout << "STATES: " << states.size() << endl;
-    position_table tbl = program_position_table(states);
-    cout << "NUM TABLE ENTRIES: " << tbl.size() << endl;
-    assert(tbl.size() == states.size() - 1);
+    analyze_toolpaths(states);
   }
 }
 

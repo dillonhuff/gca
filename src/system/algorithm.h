@@ -66,6 +66,22 @@ namespace gca {
     }
     return pair<InputIt, InputIt>(s, e);
   }
+
+  template<typename I, typename F>
+  void split_by(const vector<I>& elems, vector<vector<I>>& res, F f) {
+    auto it = elems.begin();
+    auto not_f = [&f](const I& i, const I& j) { return !f(i, j); };
+    while (it != elems.end()) {
+      auto r = find_between(it, elems.end(), not_f);
+      res.push_back(vector<I>(it, r.first + 1));
+      it = r.second;
+    }
+  }
+
+  template<typename I, typename F>
+  void delete_if(I& c, F f) {
+    c.erase(remove_if(c.begin(), c.end(), f), c.end());
+  }
 }
 
 #endif
