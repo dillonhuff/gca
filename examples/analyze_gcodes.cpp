@@ -138,6 +138,8 @@ void analyze_toolpaths(const vector<machine_state>& states) {
 	value* active_tool_2 = toolpaths[j].front().active_tool;
 	if (no_overlap_between && (*active_tool_1 == *active_tool_2)) {
 	  cout << "Toolpaths " << i << " and " << j << " could be merged" << endl;
+	  cout << "Toolpath " << i << " bounds: " << endl << b1 << endl;
+	  cout << "Toolpath " << j << " bounds: " << endl << b2 << endl;
 	}
 	if (overlap(b1, b2))
 	  { no_overlap_between = false; }

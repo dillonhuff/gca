@@ -14,9 +14,13 @@ namespace gca {
     return out;
   }
 
+  // TODO: Add some unit tests
   template<typename T>
   bool intervals_overlap(pair<T, T> i, pair<T, T> j) {
-    return i.second >= j.first || j.second >= i.first;
+    return (j.first <= i.second && i.second <= j.second) ||
+      (j.first <= i.first && i.first <= j.second) ||
+      (i.first <= j.first && i.first <= j.second &&
+       j.first <= i.second && j.second <= i.second);
   }
   
   bool overlap(const box l, const box r) {
