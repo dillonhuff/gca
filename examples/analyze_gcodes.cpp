@@ -185,7 +185,9 @@ void print_histogram(vector<T>& items) {
   }
 }
 
-void collect_feedrates(vector<double>& h, const string& dir_name) {
+void collect_feeds_and_speeds(vector<double>& h,
+			      vector<double>& sp,
+			      const string& dir_name) {
   if (ends_with(dir_name, ".NCF")) {
     cout << dir_name << endl;
     std::ifstream t(dir_name);
@@ -197,8 +199,10 @@ void collect_feedrates(vector<double>& h, const string& dir_name) {
     cout << "STATES: " << states.size() << endl;
     for (auto s : states) {
       if (s.feedrate->is_lit() &&
+	  s.spindle_speed->is_lit() &&
 	  is_cut(s)) {
 	h.push_back(static_cast<lit*>(s.feedrate)->v);
+	sp.push_back(static_cast<lit*>(s.spindle_speed)->v);
       }
     }
   }
@@ -235,9 +239,13 @@ int main(int argc, char** argv) {
   time_t end;
   time(&start);
   vector<double> feedrates;
-  read_dir(dir_name, [&feedrates](const string& file_name)
-	   { collect_feedrates(feedrates, file_name); });
+  vector<double> spindle_speeds;
+  read_dir(dir_name, [&feedrates, &spindle_speeds](const string& file_name)
+	   { collect_feeds_and_speeds(feedrates, spindle_speeds, file_name); });
+  cout << "FEED RATE INFO" << endl;
   print_histogram(feedrates);
+  cout << "SPINDLE SPEED INFO" << endl;
+  print_histogram(spindle_speeds);
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << endl;
