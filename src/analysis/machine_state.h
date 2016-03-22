@@ -125,50 +125,6 @@ namespace gca {
       active_canned_cycle_return_policy(CANNED_CYCLE_RETURN_POLICY_UNKNOWN),
       r(omitted::make()), q(omitted::make()),
       line_no(-1) {}
-
-    machine_state(const machine_state& s) :
-      feedrate(s.feedrate), spindle_speed(s.spindle_speed),
-      active_move_type(s.active_move_type),
-      active_distance_mode(s.active_distance_mode),
-      active_coord_system(s.active_coord_system),
-      tool_height_comp(s.tool_height_comp),
-      tool_radius_comp(s.tool_radius_comp),
-      active_plane(s.active_plane),
-      active_non_modal_setting(s.active_non_modal_setting),
-      x(s.x), y(s.y), z(s.z),
-      spindle_setting(s.spindle_setting),
-      last_referenced_tool(s.last_referenced_tool),
-      active_tool(s.active_tool),
-      coolant_setting(s.coolant_setting),
-      tool_height_value(s.tool_height_value),
-      i(s.i), j(s.j), k(s.k),
-      tool_radius_value(s.tool_radius_value),
-      line_no(s.line_no) {}
-
-    machine_state& operator=(const machine_state& s) {
-      feedrate = s.feedrate;
-      spindle_speed = s.spindle_speed;
-      active_move_type = s.active_move_type;
-      active_distance_mode = s.active_distance_mode;
-      active_coord_system = s.active_coord_system;
-      tool_height_comp = s.tool_height_comp;
-      tool_radius_comp = s.tool_radius_comp;
-      active_non_modal_setting = s.active_non_modal_setting;
-      x = s.x;
-      y = s.y;
-      z = s.z;
-      spindle_setting = s.spindle_setting;
-      last_referenced_tool = s.last_referenced_tool;
-      active_tool = s.active_tool;
-      coolant_setting = s.coolant_setting;
-      tool_height_value = s.tool_height_value;
-      i = s.i;
-      j = s.j;
-      k = s.k;
-      tool_radius_value = s.tool_radius_value;
-      line_no = s.line_no;
-      return *this;
-    }
   };
 
   machine_state next_machine_state(const block& b, const machine_state& s);

@@ -143,9 +143,6 @@ namespace gca {
       vector<b_spline*> splines;
       shape_layout l(lines, holes, splines);
       cuts = shape_cuts(l, params);
-      string s = shape_layout_to_gcode_string(l, params);
-      cout << "Standard gcode: " << endl;
-      cout << s << endl;
 
       SECTION("Adjacent cuts get broken up") {
 	REQUIRE(cuts.size() == 12);

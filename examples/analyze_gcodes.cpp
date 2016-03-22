@@ -71,8 +71,6 @@ void print_program_info(const string& dir_name) {
     position_table tbl = program_position_table(states);
     cout << "NUM TABLE ENTRIES: " << tbl.size() << endl;
     assert(tbl.size() == states.size() - 1);
-    //for_each(states.begin(), states.end(), sanity_check_machine_state);
-    //for_each(states.begin(), states.end(), print_climb_vs_conventional);
   }
 }
 
@@ -111,7 +109,3 @@ int main(int argc, char** argv) {
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << endl;
 }
-
-// With -std=c++98 -pedantic 78 seconds
-// With -std=c++11 -pedantic 72 seconds
-// With auto loops 69 seconds

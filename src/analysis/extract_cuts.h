@@ -2,8 +2,8 @@
 #define GCA_EXTRACT_CUTS_H
 
 #include "core/basic_states.h"
-
 #include "core/gprog.h"
+#include "core/lexer.h"
 #include "core/pass.h"
 #include "geometry/point.h"
 
@@ -56,6 +56,7 @@ namespace gca {
 
   void extract_cuts(gprog* p, vector<cut_section>& g1_sections);
 
+  void extract_cuts(gprog* p, vector<cut_section>& g1_sections);  
 }
 
 #endif

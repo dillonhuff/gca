@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   cut_params params;
-  params.default_feedrate = 30;
+  params.default_feedrate = 10;
   params.set_default_feedrate = true;
   params.material_depth = 0.075;
   params.push_depth = 0.00;
@@ -124,11 +124,10 @@ int main(int argc, char** argv) {
   
   auto l = read_dxf(argv[1]);
   auto sf = [](const vector<polyline>& ps)
-    { return fit_in_box(box(7.3 + 3.2, 10.6 + 3.2, 2.0, 4.0), ps); };
+    { return fit_in_box(box(9, 12.8, 6.2, 8.1), ps); };
   vector<cut*> scuts = shape_cuts_p(l, params, sf);
   string s = cuts_to_gcode_string(scuts, params);
   auto p = parse_gprog(s);
-
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
   p->print_nc_output(cout);

@@ -1,4 +1,5 @@
 #include "analysis/extract_cuts.h"
+#include "synthesis/cut.h"
 
 namespace gca {
 
@@ -39,23 +40,28 @@ namespace gca {
       instr* ist = (*p)[i];
       s->update(ist);
       if (is_cut_G1(s, ist) && last_was_g1) {
-	current->push_back(ist);
+    	current->push_back(ist);
       } else if (is_cut_G1(s, ist)) {
-	last_was_g1 = true;
-	if (current->size() > 0) {
-	  g1_sections.push_back(cut_section(last_start, current));
-	}
-	last_start = get_before(s);
-	current = gprog::make();
-	current->push_back(ist);
+    	last_was_g1 = true;
+    	if (current->size() > 0) {
+    	  g1_sections.push_back(cut_section(last_start, current));
+    	}
+    	last_start = get_before(s);
+    	current = gprog::make();
+    	current->push_back(ist);
       } else {
-	last_was_g1 = false;
+    	last_was_g1 = false;
       }
       i++;
     }
     if (current->size() > 0) {
       g1_sections.push_back(cut_section(last_start, current));
     }
+  }
+
+  vector<cut*> extract_cuts(const vector<block>& states) {
+    vector<cut*> cuts;
+    return cuts;
   }
 
 }
