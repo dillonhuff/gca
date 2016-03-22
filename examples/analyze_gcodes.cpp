@@ -144,7 +144,9 @@ void analyze_toolpaths(const vector<machine_state>& states) {
 	  }
 	  if (no_overlap) {
 	    cout << "Toolpaths " << i << " and " << j << " could be merged" << endl;
+	    cout << "Toolpath " << i << " tool: " << endl << *active_tool_1 << endl;
 	    cout << "Toolpath " << i << " bounds: " << endl << b1 << endl;
+	    cout << "Toolpath " << j << " tool: " << endl << *active_tool_2 << endl;
 	    cout << "Toolpath " << j << " bounds: " << endl << b2 << endl;
 	    cout << "Toolpaths in between have bounds: " << endl;
 	    for (unsigned k = i + 1; k < j; k++) {
@@ -169,7 +171,36 @@ void print_program_info(const string& dir_name) {
     cout << "NUM BLOCKS: " << p.size() << endl;
     vector<machine_state> states = all_program_states(p);
     cout << "STATES: " << states.size() << endl;
-    analyze_toolpaths(states);
+  }
+}
+
+template<typename T>
+void print_histogram(vector<T>& items) {
+  stable_sort(items.begin(), items.end());
+  cout << "Total elements: " << items.size() << endl;
+  vector<vector<T>> buckets;
+  split_by(items, buckets, [](const T& x, const T& y) { return x == y; });
+  for (auto b : buckets) {
+    cout << b.front() << "\t" << b.size() << endl;
+  }
+}
+
+void collect_feedrates(vector<double>& h, const string& dir_name) {
+  if (ends_with(dir_name, ".NCF")) {
+    cout << dir_name << endl;
+    std::ifstream t(dir_name);
+    std::string str((std::istreambuf_iterator<char>(t)),
+		    std::istreambuf_iterator<char>());
+    vector<block> p = lex_gprog(str);
+    cout << "NUM BLOCKS: " << p.size() << endl;
+    vector<machine_state> states = all_program_states(p);
+    cout << "STATES: " << states.size() << endl;
+    for (auto s : states) {
+      if (s.feedrate->is_lit() &&
+	  is_cut(s)) {
+	h.push_back(static_cast<lit*>(s.feedrate)->v);
+      }
+    }
   }
 }
 
@@ -203,7 +234,10 @@ int main(int argc, char** argv) {
   time_t start;
   time_t end;
   time(&start);
-  read_dir(dir_name, print_program_info);
+  vector<double> feedrates;
+  read_dir(dir_name, [&feedrates](const string& file_name)
+	   { collect_feedrates(feedrates, file_name); });
+  print_histogram(feedrates);
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << endl;
