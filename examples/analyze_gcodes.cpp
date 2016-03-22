@@ -132,17 +132,28 @@ void analyze_toolpaths(const vector<machine_state>& states) {
     for (unsigned i = 0; i < toolpaths.size(); i++) {
       box b1 = bounding_boxes[i];
       value* active_tool_1 = toolpaths[i].front().active_tool;
-      bool no_overlap_between = true;
       for (unsigned j = i + 1; j < toolpaths.size(); j++) {
 	box b2 = bounding_boxes[j];
 	value* active_tool_2 = toolpaths[j].front().active_tool;
-	if (no_overlap_between && (*active_tool_1 == *active_tool_2)) {
-	  cout << "Toolpaths " << i << " and " << j << " could be merged" << endl;
-	  cout << "Toolpath " << i << " bounds: " << endl << b1 << endl;
-	  cout << "Toolpath " << j << " bounds: " << endl << b2 << endl;
+	if (*active_tool_1 == *active_tool_2) {
+	  bool no_overlap = true;
+	  for (unsigned k = i + 1; k < j; k++) {
+	    if (overlap(bounding_boxes[k], b1) ||
+		overlap(bounding_boxes[k], b2))
+	      { no_overlap = false; }
+	  }
+	  if (no_overlap) {
+	    cout << "Toolpaths " << i << " and " << j << " could be merged" << endl;
+	    cout << "Toolpath " << i << " bounds: " << endl << b1 << endl;
+	    cout << "Toolpath " << j << " bounds: " << endl << b2 << endl;
+	    cout << "Toolpaths in between have bounds: " << endl;
+	    for (unsigned k = i + 1; k < j; k++) {
+	      cout << "K = " << k << endl;
+	      cout << bounding_boxes[k] << endl;
+	    }
+	    
+	  }
 	}
-	if (overlap(b1, b2))
-	  { no_overlap_between = false; }
       }
     }
   }
