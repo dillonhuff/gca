@@ -400,4 +400,28 @@ namespace gca {
     }
     return out;
   }
+
+  ostream& operator<<(ostream& out, const coord_system s) {
+    switch (s) {
+    case UNKNOWN_COORD_SYSTEM:
+      out << "UNKNOWN_COORD_SYSTEM";
+      break;
+    case MACHINE_COORD_SYSTEM:
+      out << "MACHINE_COORD_SYSTEM";
+      break;
+    case G54_COORD_SYSTEM:
+      out << "G54_COORD_SYSTEM";
+      break;
+    default:
+      assert(false);
+    }
+    return out;
+  }
+
+  ostream& operator<<(ostream& stream, const vector<machine_state>& s) {
+    for (auto m : s) {
+      stream << m << endl;
+    }
+    return stream;
+  }
 }

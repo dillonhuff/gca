@@ -157,9 +157,25 @@ namespace gca {
   ostream& operator<<(ostream& out, const position_table& t) {
     for (auto r : t) {
       for (auto e : r)
-	{ out << e << " "; }
+	{ out << "| " << e.first << " " << e.second << " "; }
       out << endl;
     }
     return out;
+  }
+
+  ostream& operator<<(ostream& out, const position& p) {
+    out << "(" << *(p.x) << ", " << *(p.y) << ", " << *(p.z) << ")";
+    return out;
+  }
+
+  vector<position> select_column(coord_system c, const position_table& t) {
+    vector<position> ps;
+    for (auto r : t) {
+      auto e = *find_if(r.begin(), r.end(),
+			[c](const position_entry& et)
+			{ return et.first == c; });
+      ps.push_back(e.second);
+    }
+    return ps;
   }
 }

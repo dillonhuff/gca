@@ -18,6 +18,18 @@ namespace gca {
     position(const position& p) : x(p.x), y(p.y), z(p.z) {}
     position(double xp, double yp, double zp) :
       x(lit::make(xp)), y(lit::make(yp)), z(lit::make(zp)) {}
+
+    inline bool is_lit() const
+    { return x->is_lit() && y->is_lit() && z->is_lit(); }
+
+    inline point extract_point() const {
+      assert(is_lit());
+      lit* xl = static_cast<lit*>(x);
+      lit* yl = static_cast<lit*>(y);
+      lit* zl = static_cast<lit*>(z);
+      return point(xl->v, yl->v, zl->v);
+    }
+
   };
 
   typedef pair<coord_system, position> position_entry;
@@ -31,7 +43,9 @@ namespace gca {
   bool operator!=(const position_table& x, const position_table& y);
   position_table program_position_table(const vector<machine_state>& p);
   void add_unk_row(position_table& x);
+  vector<position> select_column(coord_system c, const position_table& t);
 
+  ostream& operator<<(ostream& out, const position& p);
   ostream& operator<<(ostream& out, const position_entry& e);
   ostream& operator<<(ostream& out, const position_table& e);
 }

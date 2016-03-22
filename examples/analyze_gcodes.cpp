@@ -59,7 +59,45 @@ void sanity_check_machine_state(const machine_state& s) {
   }
 }
 
+void print_toolpath_info(const vector<machine_state>& toolpath) {
+  assert(toolpath.size() > 0);
+  cout << toolpath << endl;
+  cout << "Active tool: " << *(toolpath.back().active_tool) << endl;
+  // TODO: Add support for any toolpath in the same coordinate system.
+  // In the existing GCODE programs from the PRL, this does not seem
+  // to come up
+  if (all_of(toolpath.begin(), toolpath.end(),
+	     [](const machine_state& s)
+	     { return s.active_coord_system == G54_COORD_SYSTEM; })) {
+    position_table t = program_position_table(toolpath);
+    cout << "Position table: " << endl;
+    cout << t << endl;
+    assert(false);
+    vector<position> positions = select_column(G54_COORD_SYSTEM, t);
+    assert(positions.size() == t.size());
+    vector<point> pts;
+    for (auto p : positions) {
+      cout << "p = " << p << endl;
+      if (p.is_lit()) { pts.push_back(p.extract_point()); }
+    }
+    assert(pts.size() > 0);
+    cout << "\t# Positions: " << pts.size() << endl;
+    auto xminmax = minmax_element(pts.begin(), pts.end(),
+				  [](const point l, const point r)
+				  { return l.x < r.x; });
+    assert(xminmax.first != pts.end());
+    point p = *(xminmax.first);
+    cout << "p = " << p << endl;
+    cout << "Bounds " << endl;
+    cout << "\tX min = " << *(xminmax.first) << endl;
+    cout << "\tX max = " << *(xminmax.second) << endl;
+  } else {
+    cout << "Cannot analyze toolpath, not all moves are in G54" << endl;
+  }
+}
+
 void analyze_toolpaths(const vector<machine_state>& states) {
+  cout << "Analyzing toolpaths..." << endl;
   vector<vector<machine_state>> toolpaths;
   split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
 	   { return c.active_tool == p.active_tool; });
@@ -67,10 +105,14 @@ void analyze_toolpaths(const vector<machine_state>& states) {
   delete_if(toolpaths, [](const vector<machine_state>& c)
 	    { return c.back().active_tool->is_omitted(); });
   cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
+  // On HAAS it appears that the last toolpath is always a change back
+  // to the first tool that was active, this toolpath never contains
+  // any moves
+  if (toolpaths.size() > 0) { toolpaths.pop_back(); };
   for (auto toolpath : toolpaths) {
-    assert(toolpath.size() > 0);
-    cout << "Active tool: " << *(toolpath.back().active_tool) << endl;
+    print_toolpath_info(toolpath);
   }
+  cout << "Done analyzing" << endl;
 }
 
 void print_program_info(const string& dir_name) {

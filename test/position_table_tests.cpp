@@ -119,6 +119,16 @@ namespace gca {
       REQUIRE(t == c);
     }
 
+    SECTION("G28 returns to machine home, then moves in G54") {
+      p = lex_gprog("G90 G54 \n G28 X-.1 \n G0 X1.0 Y2.0 Z3.0");
+      s = all_program_states(p);
+      t = program_position_table(s);
+      add_unk_row(c);
+      update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
+      update_table(G54_COORD_SYSTEM, position(1.0, 2.0, 3.0), c);
+      REQUIRE(t == c);
+    }
+    
     SECTION("Setup then several partial moves") {
       p = lex_gprog("G90 G1 X0 Y0 Z0 \n G91 G1 X8 \n G0 X7");
       s = all_program_states(p);
