@@ -4,31 +4,13 @@
 
 #include "checkers/bounds_checker.h"
 #include "core/parser.h"
+#include "geometry/box.h"
 #include "geometry/polyline.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/dxf_reader.h"
 
 using namespace gca;
-
-struct box {
-  double x_min, x_max, y_min, y_max;
-  box(double x_minp, double x_maxp, double y_minp, double y_maxp) :
-    x_min(x_minp), x_max(x_maxp), y_min(y_minp), y_max(y_maxp) {
-    if (x_min > x_max)
-      { cout << x_min << " > " << x_max << endl; assert(false); } 
-    if (y_min > y_max)
-      { cout << y_min << " > " << y_max << endl; assert(false); } 
-  }
-};
-
-ostream& operator<<(ostream& out, const box& b) {
-  out << "X min = " << b.x_min << endl;
-  out << "X max = " << b.x_max << endl;
-  out << "Y min = " << b.y_min << endl;
-  out << "Y max = " << b.y_max << endl;
-  return out;
-}
 
 pair<double, double> x_minmax(const vector<polyline>& ps) {
   vector<double> x_values;

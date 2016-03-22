@@ -12,7 +12,7 @@
 #include "analysis/utils.h"
 #include "core/arena_allocator.h"
 #include "core/lexer.h"
-#include "core/parser.h"
+#include "geometry/box.h"
 #include "system/algorithm.h"
 
 using namespace gca;
@@ -59,49 +59,65 @@ void sanity_check_machine_state(const machine_state& s) {
   }
 }
 
+box bound_positions(const vector<point> pts) {
+  assert(pts.size() > 0);
+  auto xminmax = minmax_element(pts.begin(), pts.end(),
+				[](const point l, const point r)
+				{ return l.x < r.x; });
+  assert(xminmax.first != pts.end());
+  auto yminmax = minmax_element(pts.begin(), pts.end(),
+				[](const point l, const point r)
+				{ return l.y < r.y; });
+  assert(yminmax.first != pts.end());
+  return box((*(xminmax.first)).x, (*(xminmax.second)).x,
+	     (*(yminmax.first)).y, (*(yminmax.second)).y);
+}
+
+bool is_analyzable(const vector<machine_state>& toolpath) {
+  assert(toolpath.size() > 0);
+  if (!all_of(toolpath.begin(), toolpath.end(),
+	      [](const machine_state& s)
+	      { return s.active_coord_system == G54_COORD_SYSTEM; })) {
+    return false;
+  }
+  return true;
+}
+
 void print_toolpath_info(const vector<machine_state>& toolpath) {
   assert(toolpath.size() > 0);
-  cout << toolpath << endl;
   cout << "Active tool: " << *(toolpath.back().active_tool) << endl;
-  // TODO: Add support for any toolpath in the same coordinate system.
-  // In the existing GCODE programs from the PRL, this does not seem
-  // to come up
   if (all_of(toolpath.begin(), toolpath.end(),
 	     [](const machine_state& s)
 	     { return s.active_coord_system == G54_COORD_SYSTEM; })) {
     position_table t = program_position_table(toolpath);
-    cout << "Position table: " << endl;
-    cout << t << endl;
-    assert(false);
     vector<position> positions = select_column(G54_COORD_SYSTEM, t);
     assert(positions.size() == t.size());
     vector<point> pts;
     for (auto p : positions) {
-      cout << "p = " << p << endl;
       if (p.is_lit()) { pts.push_back(p.extract_point()); }
     }
-    assert(pts.size() > 0);
-    cout << "\t# Positions: " << pts.size() << endl;
-    auto xminmax = minmax_element(pts.begin(), pts.end(),
-				  [](const point l, const point r)
-				  { return l.x < r.x; });
-    assert(xminmax.first != pts.end());
-    point p = *(xminmax.first);
-    cout << "p = " << p << endl;
-    cout << "Bounds " << endl;
-    cout << "\tX min = " << *(xminmax.first) << endl;
-    cout << "\tX max = " << *(xminmax.second) << endl;
+    box b = bound_positions(pts);
+    cout << "Bounds: " << endl << b << endl;
   } else {
     cout << "Cannot analyze toolpath, not all moves are in G54" << endl;
   }
 }
 
+box toolpath_bounds(const vector<machine_state>& toolpath) {
+    position_table t = program_position_table(toolpath);
+    vector<position> positions = select_column(G54_COORD_SYSTEM, t);
+    assert(positions.size() == t.size());
+    vector<point> pts;
+    for (auto p : positions) {
+      if (p.is_lit()) { pts.push_back(p.extract_point()); }
+    }
+    return bound_positions(pts);
+}
+
 void analyze_toolpaths(const vector<machine_state>& states) {
-  cout << "Analyzing toolpaths..." << endl;
   vector<vector<machine_state>> toolpaths;
   split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
 	   { return c.active_tool == p.active_tool; });
-  cout << "Number of toolpaths: " << toolpaths.size() << endl;
   delete_if(toolpaths, [](const vector<machine_state>& c)
 	    { return c.back().active_tool->is_omitted(); });
   cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
@@ -109,10 +125,25 @@ void analyze_toolpaths(const vector<machine_state>& states) {
   // to the first tool that was active, this toolpath never contains
   // any moves
   if (toolpaths.size() > 0) { toolpaths.pop_back(); };
-  for (auto toolpath : toolpaths) {
-    print_toolpath_info(toolpath);
+  if (all_of(toolpaths.begin(), toolpaths.end(), is_analyzable)) {
+    vector<box> bounding_boxes;
+    for (auto t : toolpaths)
+      { bounding_boxes.push_back(toolpath_bounds(t)); }
+    for (unsigned i = 0; i < toolpaths.size(); i++) {
+      box b1 = bounding_boxes[i];
+      value* active_tool_1 = toolpaths[i].front().active_tool;
+      bool no_overlap_between = true;
+      for (unsigned j = i + 1; j < toolpaths.size(); j++) {
+	box b2 = bounding_boxes[j];
+	value* active_tool_2 = toolpaths[j].front().active_tool;
+	if (no_overlap_between && (*active_tool_1 == *active_tool_2)) {
+	  cout << "Toolpaths " << i << " and " << j << " could be merged" << endl;
+	}
+	if (overlap(b1, b2))
+	  { no_overlap_between = false; }
+      }
+    }
   }
-  cout << "Done analyzing" << endl;
 }
 
 void print_program_info(const string& dir_name) {

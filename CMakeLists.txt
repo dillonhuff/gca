@@ -88,6 +88,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
 	 ./src/geometry/point.cpp
+	 ./src/geometry/box.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/output.cpp
