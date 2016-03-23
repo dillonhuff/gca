@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "checkers/bounds_checker.h"
-#include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 

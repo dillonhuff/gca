@@ -911,48 +911,6 @@ src/core/parse_stream.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.s
 .PHONY : src/core/parse_stream.cpp.s
 
-src/core/parser.o: src/core/parser.cpp.o
-
-.PHONY : src/core/parser.o
-
-# target to build an object file
-src/core/parser.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parser.cpp.o
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.o
-.PHONY : src/core/parser.cpp.o
-
-src/core/parser.i: src/core/parser.cpp.i
-
-.PHONY : src/core/parser.i
-
-# target to preprocess a source file
-src/core/parser.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parser.cpp.i
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.i
-.PHONY : src/core/parser.cpp.i
-
-src/core/parser.s: src/core/parser.cpp.s
-
-.PHONY : src/core/parser.s
-
-# target to generate assembly for a file
-src/core/parser.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parser.cpp.s
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.s
-.PHONY : src/core/parser.cpp.s
-
 src/core/value.o: src/core/value.cpp.o
 
 .PHONY : src/core/value.o
@@ -2147,33 +2105,6 @@ test/mill_simulator_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mill_simulator_tests.cpp.s
 .PHONY : test/mill_simulator_tests.cpp.s
 
-test/parse_tests.o: test/parse_tests.cpp.o
-
-.PHONY : test/parse_tests.o
-
-# target to build an object file
-test/parse_tests.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/parse_tests.cpp.o
-.PHONY : test/parse_tests.cpp.o
-
-test/parse_tests.i: test/parse_tests.cpp.i
-
-.PHONY : test/parse_tests.i
-
-# target to preprocess a source file
-test/parse_tests.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/parse_tests.cpp.i
-.PHONY : test/parse_tests.cpp.i
-
-test/parse_tests.s: test/parse_tests.cpp.s
-
-.PHONY : test/parse_tests.s
-
-# target to generate assembly for a file
-test/parse_tests.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/parse_tests.cpp.s
-.PHONY : test/parse_tests.cpp.s
-
 test/point_tests.o: test/point_tests.cpp.o
 
 .PHONY : test/point_tests.o
@@ -2461,9 +2392,6 @@ help:
 	@echo "... src/core/parse_stream.o"
 	@echo "... src/core/parse_stream.i"
 	@echo "... src/core/parse_stream.s"
-	@echo "... src/core/parser.o"
-	@echo "... src/core/parser.i"
-	@echo "... src/core/parser.s"
 	@echo "... src/core/value.o"
 	@echo "... src/core/value.i"
 	@echo "... src/core/value.s"
@@ -2560,9 +2488,6 @@ help:
 	@echo "... test/mill_simulator_tests.o"
 	@echo "... test/mill_simulator_tests.i"
 	@echo "... test/mill_simulator_tests.s"
-	@echo "... test/parse_tests.o"
-	@echo "... test/parse_tests.i"
-	@echo "... test/parse_tests.s"
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"

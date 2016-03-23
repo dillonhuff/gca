@@ -14,8 +14,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -pedantic -I./src -I./test -Werror -Wall
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
-SET(TEST_FILES test/parse_tests.cpp
-	       test/system_algorithm_tests.cpp
+SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/lexer_tests.cpp
 	       test/position_table_tests.cpp
 	       test/point_tests.cpp
@@ -48,7 +47,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/core/instrs/misc.h
 	    ./src/core/instrs/circular_arc_instr.h
 	    ./src/core/instrs/move_instr.h
-	    ./src/core/parser.h
 	    ./src/core/value.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
@@ -73,7 +71,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/core/arena_allocator.cpp
 	 ./src/core/gprog.cpp
 	 ./src/core/instrs/instr.cpp
-	 ./src/core/parser.cpp
 	 ./src/core/value.cpp
 	 ./src/core/lexer.cpp
 	 ./src/core/parse_stream.cpp

@@ -1,4 +1,3 @@
-#include "core/parser.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/shapes_to_gcode.h"
 

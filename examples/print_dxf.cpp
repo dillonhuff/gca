@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "checkers/bounds_checker.h"
-#include "core/parser.h"
 #include "geometry/box.h"
 #include "geometry/polyline.h"
 #include "synthesis/shapes_to_gcode.h"
