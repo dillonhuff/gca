@@ -116,16 +116,5 @@ namespace gca {
     }
     return cuts;
   }
-
-  vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings) {
-    stringstream s;
-    s << p;
-    auto ws = lex_gprog(s.str());
-    return gcode_to_cuts(ws);
-  }
-
-  bool gcode_settings::sanity_check() const {
-    return initial_tool == DRILL || initial_tool == DRAG_KNIFE;
-  }
   
 }

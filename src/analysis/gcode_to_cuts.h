@@ -9,18 +9,8 @@
 
 namespace gca {
 
-  struct gcode_settings {
-    orientation initial_coord_orient;
-    point initial_pos;
-    point initial_orient;
-    tool_name initial_tool;
-
-    bool sanity_check() const;
-  };
-
-  vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings);
-
   vector<cut*> gcode_to_cuts(const vector<block>& blocks);
+
 }
 
 #endif
