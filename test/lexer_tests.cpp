@@ -236,5 +236,10 @@ namespace gca {
       correct.push_back(b);
       REQUIRE(p == correct);
     }
+
+    SECTION("Example originally from gcode_to_cuts") {
+      vector<block> p = lex_gprog("G90 S2000 M3 \n G0 X0 Y0 Z0 \n G1 X1 Y1 Z1 \n S1000 G1 X2 Y2 Z2");
+      REQUIRE(p.size() == 4);
+    }
   }
 }

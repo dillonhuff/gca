@@ -3,6 +3,7 @@
 
 #include "core/gprog.h"
 #include "core/instrs/instr.h"
+#include "core/lexer.h"
 #include "synthesis/cut.h"
 #include "synthesis/machine.h"
 
@@ -18,6 +19,8 @@ namespace gca {
   };
 
   vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings);
+
+  vector<cut*> gcode_to_cuts(const vector<block>& blocks);
 }
 
 #endif
