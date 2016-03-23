@@ -92,10 +92,11 @@ namespace gca {
     shape_layout l(lines, holes, lp.splines);
     gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
 
+    vector<vector<machine_state>> sections;
+
     SECTION("2 paths for splines") {
-      vector<cut_section> sections;
       extract_cuts(p, sections);
-      REQUIRE(sections.size() == 2);      
+      REQUIRE(sections.size() == 6);      
     }
 
     SECTION("No standalone feedrate instructions, G53 moves, or toolchanges") {
@@ -126,6 +127,8 @@ namespace gca {
 
     vector<int> permitted_tools;
 
+    vector<vector<machine_state>> sections;
+    
     SECTION("No hole punches") {
       params.tools = DRILL_AND_DRAG_KNIFE;
       lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
@@ -139,7 +142,6 @@ namespace gca {
 
       SECTION("Drill produces code for linear cuts") {
 	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
-	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
       }
@@ -161,9 +163,8 @@ namespace gca {
       
       shape_layout l(lines, holes, splines);
       gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
-      vector<cut_section> sections;
       extract_cuts(p, sections);
-      REQUIRE(sections.size() == 6);
+      REQUIRE(sections.size() == 10);
     }
 
     SECTION("Lines and hole punches") {
@@ -187,15 +188,13 @@ namespace gca {
       SECTION("Drill produces code for linear cuts") {
 	params.tools = DRILL_ONLY;
 	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
-	vector<cut_section> sections;
 	extract_cuts(p, sections);
-	REQUIRE(sections.size() == 2);
+	REQUIRE(sections.size() == 3);
       }
 
       SECTION("Drag knife only produces code for linear cuts") {
 	params.tools = DRAG_KNIFE_ONLY;
 	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
-	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);	
       }
@@ -226,7 +225,6 @@ namespace gca {
       SECTION("Drill and drag knife produces code") {
 	params.tools = DRILL_AND_DRAG_KNIFE;
 	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
-	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
       }
@@ -234,7 +232,6 @@ namespace gca {
       SECTION("Drill only produces code") {
 	params.tools = DRILL_ONLY;
 	gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
-	vector<cut_section> sections;
 	extract_cuts(p, sections);
 	REQUIRE(sections.size() == 2);
       }

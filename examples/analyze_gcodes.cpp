@@ -242,10 +242,18 @@ int main(int argc, char** argv) {
   vector<double> spindle_speeds;
   read_dir(dir_name, [&feedrates, &spindle_speeds](const string& file_name)
 	   { collect_feeds_and_speeds(feedrates, spindle_speeds, file_name); });
+  vector<double> cp;
+  for (unsigned i = 0; i < feedrates.size(); i++) {
+    cp.push_back(feedrates[i]*spindle_speeds[i]);
+  }
+  
   cout << "FEED RATE INFO" << endl;
   print_histogram(feedrates);
   cout << "SPINDLE SPEED INFO" << endl;
   print_histogram(spindle_speeds);
+  cout << "FEED / SPEED PRODUCT INFO" << endl;
+  print_histogram(cp);
+
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << endl;
