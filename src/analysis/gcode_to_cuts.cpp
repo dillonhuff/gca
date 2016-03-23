@@ -188,6 +188,8 @@ namespace gca {
     vector<cut*> cuts;
     auto cs = clipped_states(blocks);
     cout << "Got clipped states" << endl;
+    cout << "points: " << endl;
+    cout << cs.second << endl;
     for (unsigned i = 1; i < cs.first.size(); i++) {
       machine_state current_state = cs.first[i];
       point current_position = cs.second[i];
