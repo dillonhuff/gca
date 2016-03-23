@@ -124,6 +124,7 @@ namespace gca {
 	position p = next_relative_position(s, t);
 	update_table(s.active_coord_system, p, t);
       } else {
+	cout << "Error: No distance mode set" << endl;
 	assert(false);
       }
     } else if (s.active_tool != next.active_tool) {

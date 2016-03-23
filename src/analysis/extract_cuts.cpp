@@ -6,11 +6,6 @@
 
 namespace gca {
 
-  vector<cut*> extract_cuts(const vector<block>& states) {
-    vector<cut*> cuts;
-    return cuts;
-  }
-
   void extract_cuts(const vector<block> blocks, vector<vector<machine_state>>& ms) {
     auto s = all_program_states(blocks);
     split_by(s, ms, [](const machine_state& c, const machine_state& p)

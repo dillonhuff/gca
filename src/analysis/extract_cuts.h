@@ -2,11 +2,8 @@
 #define GCA_EXTRACT_CUTS_H
 
 #include "analysis/machine_state.h"
-#include "core/basic_states.h"
 #include "core/gprog.h"
 #include "core/lexer.h"
-#include "core/pass.h"
-#include "geometry/point.h"
 
 namespace gca {
 

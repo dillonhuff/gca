@@ -1,9 +1,16 @@
+#include <sstream>
+
 #include "analysis/gcode_to_cuts.h"
+#include "analysis/machine_state.h"
+#include "analysis/position_table.h"
+#include "analysis/utils.h"
 #include "core/basic_states.h"
 #include "core/callback.h"
+#include "core/lexer.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
+#include "system/algorithm.h"
 
 namespace gca {
 
@@ -107,22 +114,41 @@ namespace gca {
   void sanity_check_speeds(const vector<cut*>& cuts) {
     assert(count_if(cuts.begin(), cuts.end(), drill_with_spindle_off) == 0);
   }
-  
-  vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings) {
-    assert(settings.sanity_check());
-    cuts_callback c(settings);
+
+  linear_cut* mk_linear_cut(const machine_state& s, const point c, const point n) {
+    //auto t = s.active_tool;
+    //assert(t->is_ilit());
+    linear_cut* ct = linear_cut::make(c, n);
+    ct->feedrate = s.feedrate;
+    ct->spindle_speed = s.spindle_speed;
+    return ct;
+  }
+
+  vector<cut*> gcode_to_cuts(const vector<block>& blocks) {
     vector<cut*> cuts;
-    int i = 0;
-    for (auto is : p) {
-      c.update(is);
-      cut* ct = c(&p, i, is);
-      if (ct != NULL) {
-	cuts.push_back(ct);
-      }
-      i++;
-    }
-    sanity_check_speeds(cuts);
+    
     return cuts;
+  }
+
+  vector<cut*> gcode_to_cuts(gprog& p, const gcode_settings& settings) {
+    stringstream s;
+    s << p;
+    auto ws = lex_gprog(s.str());
+    return gcode_to_cuts(ws);
+    //    assert(settings.sanity_check());
+    // cuts_callback c(settings);
+    // vector<cut*> cuts;
+    // int i = 0;
+    // for (auto is : p) {
+    //   c.update(is);
+    //   cut* ct = c(&p, i, is);
+    //   if (ct != NULL) {
+    // 	cuts.push_back(ct);
+    //   }
+    //   i++;
+    // }
+    // sanity_check_speeds(cuts);
+    // return cuts;
   }
 
   bool gcode_settings::sanity_check() const {

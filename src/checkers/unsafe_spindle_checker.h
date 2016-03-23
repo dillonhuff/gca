@@ -3,7 +3,6 @@
 
 #include <algorithm>
 
-#include "core/callback.h"
 #include "core/gprog.h"
 
 namespace gca {
