@@ -3,7 +3,6 @@
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
 #include "core/lexer.h"
-#include "core/parser.h"
 
 namespace gca {
 

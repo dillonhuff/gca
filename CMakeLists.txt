@@ -36,10 +36,8 @@ SET(TEST_FILES test/parse_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
-	    ./src/checkers/g0_move_checker.h
 	    ./src/core/arena_allocator.h
 	    ./src/core/basic_states.h
-	    ./src/core/callback.h
 	    ./src/core/gprog.h
 	    ./src/core/instrs/all.h
 	    ./src/core/instrs/assign_instr.h
@@ -68,8 +66,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/system/bmp_output.h
-	    ./src/transformers/feed_changer.h
-	    ./src/transformers/g0_filter.h)
+	    ./src/transformers/feed_changer.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
@@ -106,7 +103,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
 	 ./src/transformers/feed_changer.cpp
-	 ./src/transformers/g0_filter.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
 

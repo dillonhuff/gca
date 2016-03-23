@@ -4,7 +4,6 @@
 #include "analysis/machine_state.h"
 #include "analysis/position_table.h"
 #include "analysis/utils.h"
-#include "core/basic_states.h"
 #include "core/lexer.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
