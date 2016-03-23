@@ -2,7 +2,6 @@
 #define GCA_BOUNDS_CHECKER_H
 
 #include "analysis/machine_state.h"
-#include "core/instrs/instr.h"
 
 namespace gca {
 

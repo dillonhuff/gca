@@ -1,7 +1,6 @@
 #ifndef GCA_GCODE_TO_CUTS_H
 #define GCA_GCODE_TO_CUTS_H
 
-#include "core/instrs/instr.h"
 #include "core/lexer.h"
 #include "synthesis/cut.h"
 #include "synthesis/machine.h"

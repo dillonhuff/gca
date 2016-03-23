@@ -10,12 +10,6 @@ using namespace std;
 
 namespace gca {
 
-  enum orientation {
-    GCA_ABSOLUTE = 0,
-    GCA_RELATIVE = 1,
-    GCA_NONE
-  };
-  
   class instr {
   public:
     virtual instr* copy() const { assert(false); }

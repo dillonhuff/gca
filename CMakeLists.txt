@@ -36,16 +36,6 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
 	    ./src/core/arena_allocator.h
-	    ./src/core/instrs/all.h
-	    ./src/core/instrs/assign_instr.h
-	    ./src/core/instrs/comment.h
-	    ./src/core/instrs/f_instr.h
-	    ./src/core/instrs/g2_instr.h
-	    ./src/core/instrs/g3_instr.h
-	    ./src/core/instrs/instr.h
-	    ./src/core/instrs/misc.h
-	    ./src/core/instrs/circular_arc_instr.h
-	    ./src/core/instrs/move_instr.h
 	    ./src/core/value.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
@@ -68,7 +58,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
 	 ./src/core/arena_allocator.cpp
-	 ./src/core/instrs/instr.cpp
 	 ./src/core/value.cpp
 	 ./src/core/lexer.cpp
 	 ./src/core/parse_stream.cpp

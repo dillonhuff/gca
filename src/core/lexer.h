@@ -8,6 +8,12 @@
 using namespace std;
 
 namespace gca {
+
+  enum orientation {
+    GCA_ABSOLUTE = 0,
+    GCA_RELATIVE = 1,
+    GCA_NONE
+  };
   
   enum token_type {
     COMMENT = 0,

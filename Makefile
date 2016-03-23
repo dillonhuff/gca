@@ -743,48 +743,6 @@ src/core/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.s
 .PHONY : src/core/arena_allocator.cpp.s
 
-src/core/instrs/instr.o: src/core/instrs/instr.cpp.o
-
-.PHONY : src/core/instrs/instr.o
-
-# target to build an object file
-src/core/instrs/instr.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/instrs/instr.cpp.o
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.o
-.PHONY : src/core/instrs/instr.cpp.o
-
-src/core/instrs/instr.i: src/core/instrs/instr.cpp.i
-
-.PHONY : src/core/instrs/instr.i
-
-# target to preprocess a source file
-src/core/instrs/instr.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/instrs/instr.cpp.i
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.i
-.PHONY : src/core/instrs/instr.cpp.i
-
-src/core/instrs/instr.s: src/core/instrs/instr.cpp.s
-
-.PHONY : src/core/instrs/instr.s
-
-# target to generate assembly for a file
-src/core/instrs/instr.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/instrs/instr.cpp.s
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/instrs/instr.cpp.s
-.PHONY : src/core/instrs/instr.cpp.s
-
 src/core/lexer.o: src/core/lexer.cpp.o
 
 .PHONY : src/core/lexer.o
@@ -2338,9 +2296,6 @@ help:
 	@echo "... src/core/arena_allocator.o"
 	@echo "... src/core/arena_allocator.i"
 	@echo "... src/core/arena_allocator.s"
-	@echo "... src/core/instrs/instr.o"
-	@echo "... src/core/instrs/instr.i"
-	@echo "... src/core/instrs/instr.s"
 	@echo "... src/core/lexer.o"
 	@echo "... src/core/lexer.i"
 	@echo "... src/core/lexer.s"
