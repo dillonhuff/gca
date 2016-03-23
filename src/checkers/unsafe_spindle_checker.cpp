@@ -1,7 +1,5 @@
 #include <sstream>
 
-#include "analysis/machine_state.h"
-#include "analysis/utils.h"
 #include "checkers/unsafe_spindle_checker.h"
 
 namespace gca {

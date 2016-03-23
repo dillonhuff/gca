@@ -33,3 +33,5 @@ pen-draw-lines
 cut-rect
 misc
 analyze-gcodes
+feedrate_histogram.txt
+spindle_histogram.txt
