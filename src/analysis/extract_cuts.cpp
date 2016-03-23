@@ -14,12 +14,5 @@ namespace gca {
 	      { return c.front().active_move_type == FAST_MOVE ||
 		  c.front().active_move_type == UNKNOWN_MOVE_TYPE; });
   }
-
-  void extract_cuts(gprog* p, vector<vector<machine_state>>& ms) {
-    stringstream s;
-    s << *p;
-    auto ws = lex_gprog(s.str());
-    extract_cuts(ws, ms);
-  }
   
 }

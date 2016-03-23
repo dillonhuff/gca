@@ -1,5 +1,3 @@
-#include <sstream>
-
 #include "core/lexer.h"
 #include "checkers/forbidden_tool_checker.h"
 
@@ -19,15 +17,6 @@ namespace gca {
       }
     }
     return num_warns;
-  }
-
-  
-  int check_for_forbidden_tool_changes(const vector<int>& permitted_tools,
-				       gprog* p) {
-    stringstream s;
-    s << *p;
-    auto ws = lex_gprog(s.str());
-    return check_for_forbidden_tool_changes(permitted_tools, ws);
   }
 
 }

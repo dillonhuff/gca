@@ -1,5 +1,3 @@
-#include <sstream>
-
 #include "checkers/unsafe_spindle_checker.h"
 
 namespace gca {
@@ -18,14 +16,5 @@ namespace gca {
       }
     }
     return num_warns;
-  }
-  
-  int check_for_unsafe_spindle_on(const vector<int>& no_spindle_tools,
-				  int default_tool,
-				  gprog* p) {
-    stringstream s;
-    s << *p;
-    auto ws = lex_gprog(s.str());
-    return check_for_unsafe_spindle_on(no_spindle_tools, default_tool, ws);
   }
 }

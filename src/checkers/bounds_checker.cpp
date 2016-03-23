@@ -81,23 +81,4 @@ namespace gca {
 		      { return !all_entries_in_bounds(b, r); });
   }
   
-  int check_bounds(gprog* p, orientation orient,
-		   double x_minp,
-		   double x_maxp,
-		   double y_minp,
-		   double y_maxp,
-		   double z_minp,
-		   double z_maxp) {
-    stringstream s;
-    s << *p;
-    auto ws = lex_gprog(s.str());
-    return check_bounds(ws,
-			orient,
-			x_minp,
-			x_maxp,
-			y_minp,
-			y_maxp,
-			z_minp,
-			z_maxp);
-  }
 }

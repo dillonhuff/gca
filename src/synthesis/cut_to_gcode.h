@@ -1,7 +1,6 @@
 #ifndef GCA_CUT_TO_GCODE_H
 #define GCA_CUT_TO_GCODE_H
 
-#include "core/gprog.h"
 #include "core/lexer.h"
 #include "synthesis/cut.h"
 #include "synthesis/shape_layout.h"
@@ -13,10 +12,6 @@ namespace gca {
 
   void append_cut_block(const cut* ci, vector<block>& blocks);
 
-  void append_cut_with_settings(const cut* last,
-				const cut* next,
-				gprog& p,
-				const cut_params& params);
 }
 
 #endif

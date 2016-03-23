@@ -56,18 +56,6 @@ namespace gca {
     }
   }
 
-  bool instr_is_forbidden_on_V90(const instr* i) {
-    return i->is_F() || i->is_T() || i->is_G53();
-  }
-
-  bool g1_feedrate_omitted(const instr* i) {
-    if (i->is_G1()) {
-      const g1_instr* g = static_cast<const g1_instr*>(i);
-      return g->feed_rate->is_omitted();
-    }
-    return false;
-  }
-
   TEST_CASE("12 inch spiral splines are contiguous") {
     arena_allocator a;
     set_system_allocator(&a);

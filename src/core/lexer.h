@@ -8,7 +8,7 @@
 using namespace std;
 
 namespace gca {
-
+  
   enum token_type {
     COMMENT = 0,
     ICODE

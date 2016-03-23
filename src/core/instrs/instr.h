@@ -15,7 +15,7 @@ namespace gca {
     GCA_RELATIVE = 1,
     GCA_NONE
   };
-
+  
   class instr {
   public:
     virtual instr* copy() const { assert(false); }
