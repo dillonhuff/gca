@@ -24,7 +24,7 @@ namespace gca {
     SECTION("Empty program") {
       gprog* p = parse_gprog("");
       actual = gcode_to_cuts(*p, s);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 
     SECTION("One safe move") {
@@ -33,7 +33,7 @@ namespace gca {
       // safe_move* sm = safe_move::make(point(0, 0, 0), point(1, 1, 1), DRILL);
       // sm->spindle_speed = lit::make(3000);
       // correct.push_back(sm);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 
     SECTION("Safe move and linear move") {
@@ -46,7 +46,7 @@ namespace gca {
       lc->feedrate = lit::make(20);
       lc->spindle_speed = lit::make(3000);
       correct.push_back(lc);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 
     SECTION("Safe move and linear move with spindle") {
@@ -59,7 +59,7 @@ namespace gca {
       lc->feedrate = lit::make(20);
       lc->spindle_speed = lit::make(2000);
       correct.push_back(lc);
-      REQUIRE(correct == actual);//equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
     
     SECTION("Safe move and circular arc clockwise in XY plane") {
@@ -77,7 +77,7 @@ namespace gca {
       arc->feedrate = lit::make(12.5);
       arc->spindle_speed = lit::make(2000);
       correct.push_back(arc);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
     }
 
     SECTION("Safe move and circular arc counterclockwise in XY plane") {
@@ -95,7 +95,7 @@ namespace gca {
       arc->feedrate = lit::make(12.5);
       arc->spindle_speed = lit::make(2000);
       correct.push_back(arc);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
   }
 
@@ -121,7 +121,7 @@ namespace gca {
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2), DRILL);
       lc2->spindle_speed = lit::make(1000);
       correct.push_back(lc2);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 
     SECTION("Linear moves with tool change") {
@@ -133,7 +133,7 @@ namespace gca {
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2), DRAG_KNIFE);
       lc2->spindle_speed = lit::make(1000);
       correct.push_back(lc2);
-      REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
+      REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
   }
 
