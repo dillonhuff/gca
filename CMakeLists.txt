@@ -37,7 +37,6 @@ SET(TEST_FILES test/parse_tests.cpp
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
 	    ./src/core/arena_allocator.h
-	    ./src/core/basic_states.h
 	    ./src/core/gprog.h
 	    ./src/core/instrs/all.h
 	    ./src/core/instrs/assign_instr.h
@@ -50,8 +49,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/core/instrs/circular_arc_instr.h
 	    ./src/core/instrs/move_instr.h
 	    ./src/core/parser.h
-	    ./src/core/pass.h
-	    ./src/core/state_names.h
 	    ./src/core/value.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
@@ -77,7 +74,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/core/gprog.cpp
 	 ./src/core/instrs/instr.cpp
 	 ./src/core/parser.cpp
-	 ./src/core/pass.cpp
 	 ./src/core/value.cpp
 	 ./src/core/lexer.cpp
 	 ./src/core/parse_stream.cpp

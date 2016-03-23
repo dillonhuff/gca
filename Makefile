@@ -953,48 +953,6 @@ src/core/parser.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parser.cpp.s
 .PHONY : src/core/parser.cpp.s
 
-src/core/pass.o: src/core/pass.cpp.o
-
-.PHONY : src/core/pass.o
-
-# target to build an object file
-src/core/pass.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/pass.cpp.o
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.o
-.PHONY : src/core/pass.cpp.o
-
-src/core/pass.i: src/core/pass.cpp.i
-
-.PHONY : src/core/pass.i
-
-# target to preprocess a source file
-src/core/pass.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/pass.cpp.i
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.i
-.PHONY : src/core/pass.cpp.i
-
-src/core/pass.s: src/core/pass.cpp.s
-
-.PHONY : src/core/pass.s
-
-# target to generate assembly for a file
-src/core/pass.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/pass.cpp.s
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/pass.cpp.s
-.PHONY : src/core/pass.cpp.s
-
 src/core/value.o: src/core/value.cpp.o
 
 .PHONY : src/core/value.o
@@ -2506,9 +2464,6 @@ help:
 	@echo "... src/core/parser.o"
 	@echo "... src/core/parser.i"
 	@echo "... src/core/parser.s"
-	@echo "... src/core/pass.o"
-	@echo "... src/core/pass.i"
-	@echo "... src/core/pass.s"
 	@echo "... src/core/value.o"
 	@echo "... src/core/value.i"
 	@echo "... src/core/value.s"

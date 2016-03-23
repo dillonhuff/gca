@@ -1,7 +1,6 @@
 #ifndef GCA_SIM_MILL_H
 #define GCA_SIM_MILL_H
 
-#include "core/basic_states.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_res.h"
