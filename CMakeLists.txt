@@ -36,7 +36,6 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
 	    ./src/core/arena_allocator.h
-	    ./src/core/gprog.h
 	    ./src/core/instrs/all.h
 	    ./src/core/instrs/assign_instr.h
 	    ./src/core/instrs/comment.h
@@ -69,7 +68,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
 	 ./src/core/arena_allocator.cpp
-	 ./src/core/gprog.cpp
 	 ./src/core/instrs/instr.cpp
 	 ./src/core/value.cpp
 	 ./src/core/lexer.cpp
