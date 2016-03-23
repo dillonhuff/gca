@@ -10,8 +10,8 @@ using namespace std;
 
 namespace gca {
 
-  gprog* parse_gprog(const string& s);
-  gprog* read_file(string file_name);
+  // gprog* parse_gprog(const string& s);
+  // gprog* read_file(string file_name);
   
 }
 

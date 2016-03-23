@@ -108,18 +108,19 @@ int main(int argc, char** argv) {
   auto sf = [](const vector<polyline>& ps)
     { return fit_in_box(box(9, 12.8, 6.2, 8.1), ps); };
   vector<cut*> scuts = shape_cuts_p(l, params, sf);
-  string s = cuts_to_gcode_string(scuts, params);
-  auto p = parse_gprog(s);
+  vector<block> s = cuts_to_gcode(scuts, params);
+  
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
-  p->print_nc_output(cout);
+  cout << s << endl;
 
-  int num_warns = check_bounds(p, GCA_ABSOLUTE,
+  int num_warns = check_bounds(s, GCA_ABSOLUTE,
   			       0.5, 17,			       
   			       1.2, 13.2,
   			       -4.1, -0.05);
   if (num_warns > 0) {
     cout << "Num warnings: " << num_warns << endl;
   }
+  
   return 0;
 }

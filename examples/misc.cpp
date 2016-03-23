@@ -36,16 +36,17 @@ int main(int argc, char** argv) {
   vector<hole_punch*> holes;
   vector<b_spline*> splines;
   shape_layout l(lines, holes, splines);
-  gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
+
+  vector<block> s = shape_layout_to_gcode(l, params);
   
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
-  p->print_nc_output(cout);
+  cout << s << endl;
 
-  int num_warns = check_bounds(p, GCA_ABSOLUTE,
-			       0.5, 17,			       
-			       1.2, 13.2,
-			       -4.1, -0.05);
+  int num_warns = check_bounds(s, GCA_ABSOLUTE,
+  			       0.5, 17,			       
+  			       1.2, 13.2,
+  			       -4.1, -0.05);
   if (num_warns > 0) {
     cout << "Num warnings: " << num_warns << endl;
   }

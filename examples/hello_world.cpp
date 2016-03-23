@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
   string file = argv[1];
   
-  gprog* p = read_file(file);
-  cout << *p;
+  //  auto p = lex_file(file);
+  // cout << p;
   return 0;
 }

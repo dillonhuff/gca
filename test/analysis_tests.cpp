@@ -1,6 +1,5 @@
 #include "analysis/extract_cuts.h"
 #include "catch.hpp"
-#include "core/parser.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "synthesis/output.h"
@@ -13,14 +12,16 @@ namespace gca {
 
     vector<vector<machine_state>> sections;
 
+    vector<block> p;
+
     SECTION("No G1 segments") {
-      gprog* p = parse_gprog("G90 M5");
+      p = lex_gprog("G90 M5");
       extract_cuts(p, sections);
       REQUIRE(sections.size() == 0);
     }
 
     SECTION("One G1 segments with 1 instruction") {
-      gprog* p = parse_gprog("G90 G0 X1.0 Y0.0 Z0.0 G1 X2.0 Y3.0 Z0.0 M5");
+      p = lex_gprog("G90 \n G0 X1.0 Y0.0 Z0.0 \n G1 X2.0 Y3.0 Z0.0 M5");
       extract_cuts(p, sections);
       REQUIRE(sections.size() == 1);
     }
@@ -42,7 +43,7 @@ namespace gca {
       vector<b_spline*> splines;
       shape_layout l(lines, holes, splines);
       
-      gprog* p = parse_gprog(shape_layout_to_gcode_string(l, params));
+      p = shape_layout_to_gcode(l, params);
 
       extract_cuts(p, sections);
 
