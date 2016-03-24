@@ -58,6 +58,28 @@ void apply_to_gprograms(const string& dn, F f) {
   read_dir(dn, func);
 }
 
+void split_and_print(const vector<machine_state>& toolpath) {
+  auto ptbl = select_column(G54_COORD_SYSTEM, program_position_table(toolpath));
+  vector<pair<machine_state, position>> tstates;
+  for (unsigned i = 0; i < toolpath.size(); i++) {
+    tstates.push_back({toolpath[i], ptbl[i]});
+  }
+  vector<vector<pair<machine_state, position>>> sub_paths;
+  split_by(tstates, sub_paths,
+  	   [](const pair<machine_state, position>& x,
+  	      const pair<machine_state, position>& y)
+  	   { return x.second.is_lit() == y.second.is_lit(); });
+  delete_if(sub_paths, [](const vector<pair<machine_state, position>>& p)
+  	    { return !p.front().second.is_lit(); });
+  for (auto path : sub_paths) {
+    assert(all_of(path.begin(), path.end(),
+    		  [](const pair<machine_state, position>& p)
+    		  { return p.second.is_lit(); }));
+    vector<machine_state> states;
+    
+  }
+}
+
 void print_toolpaths(const vector<machine_state>& states) {
   vector<vector<machine_state>> toolpaths;
   split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
@@ -71,15 +93,7 @@ void print_toolpaths(const vector<machine_state>& states) {
   if (toolpaths.size() > 0) { toolpaths.pop_back(); };
   for (auto toolpath : toolpaths) {
     if (is_analyzable(toolpath)) {
-      cout << "Analyzeable toolpath" << endl;
-      auto ptbl = select_column(G54_COORD_SYSTEM, program_position_table(toolpath));
-      vector<pair<machine_state, position>> tstates(ptbl.size());
-      zip(toolpath.begin(), toolpath.end(), ptbl.begin(), tstates.begin());
-      drop_while(tstates, [](const pair<machine_state, position>& p)
-      		 { return !p.second.is_lit(); });
-      assert(all_of(tstates.begin(), tstates.end(),
-      		    [](const pair<machine_state, position>& p)
-      		    { return p.second.is_lit(); }));
+      split_and_print(toolpath);
     }
   }
 }

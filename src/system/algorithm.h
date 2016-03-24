@@ -86,7 +86,9 @@ namespace gca {
   template<typename T, typename Q>
   pair<T, Q>
   mk_pair(T t, Q q) { return pair<T, Q>(t, q); }
-  
+
+  // TODO: Figure out why this implementation always calls
+  // the default constructor
   template<typename InputIt1, typename InputIt2, typename OutputIt>
   OutputIt
   zip(InputIt1 ps, InputIt1 pe, InputIt2 qs, OutputIt r) {

@@ -170,6 +170,13 @@ namespace gca {
     return out;
   }
 
+  ostream& operator<<(ostream& out, const vector<position>& ps) {
+    for (auto p : ps) {
+      out << p << endl;
+    }
+    return out;
+  }
+
   vector<position> select_column(coord_system c, const position_table& t) {
     vector<position> ps;
     for (auto r : t) {

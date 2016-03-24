@@ -49,6 +49,7 @@ namespace gca {
   ostream& operator<<(ostream& out, const position& p);
   ostream& operator<<(ostream& out, const position_entry& e);
   ostream& operator<<(ostream& out, const position_table& e);
+  ostream& operator<<(ostream& out, const vector<position>& e);
 }
 
 #endif 
