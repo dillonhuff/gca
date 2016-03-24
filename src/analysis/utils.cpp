@@ -1,4 +1,6 @@
 #include "analysis/utils.h"
+#include "analysis/position_table.h"
+#include "system/algorithm.h"
 
 namespace gca {
   
@@ -92,4 +94,26 @@ namespace gca {
 	    s.spindle_setting == SPINDLE_STATE_UNKNOWN);
   }
 
+  bool is_analyzable(const vector<machine_state>& toolpath) {
+    if (toolpath.size() == 0) { return false; }
+    if (!all_of(toolpath.begin(), toolpath.end(),
+		  [](const machine_state& s)
+		{ return s.active_coord_system == G54_COORD_SYSTEM; })) {
+      return false;
+    }
+    auto ps = program_position_table(toolpath);
+    auto ptbl = select_column(G54_COORD_SYSTEM, ps);
+    auto p_it = ptbl.begin();
+    for (auto t_it = toolpath.begin(); t_it != toolpath.end() - 1; ++t_it, ++p_it) {
+      auto s = *(t_it + 1);
+      auto last_pos = *(p_it);
+      auto next_pos = *(p_it + 1);
+      if (is_cut(s) && !(last_pos.is_lit() && next_pos.is_lit())) {
+	cout << "Cannot analyze toolpath, not all cut start and end locations are known" << endl;
+	return false;
+      }
+    }
+    return true;
+  }
+  
 }

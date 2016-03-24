@@ -58,8 +58,22 @@ void apply_to_gprograms(const string& dn, F f) {
   read_dir(dn, func);
 }
 
-void print_toolpaths(const vector<machine_state>& s) {
-  
+void print_toolpaths(const vector<machine_state>& states) {
+  vector<vector<machine_state>> toolpaths;
+  split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
+	   { return c.active_tool == p.active_tool; });
+  delete_if(toolpaths, [](const vector<machine_state>& c)
+	    { return c.back().active_tool->is_omitted(); });
+  cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
+  // On HAAS it appears that the last toolpath is always a change back
+  // to the first tool that was active, this toolpath never contains
+  // any moves
+  if (toolpaths.size() > 0) { toolpaths.pop_back(); };
+  for (auto toolpath : toolpaths) {
+    if (is_analyzable(toolpath)) {
+      cout << "Analyzeable toolpath" << endl;
+    }
+  }
 }
 
 int main(int argc, char** argv) {

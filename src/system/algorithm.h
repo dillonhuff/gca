@@ -82,6 +82,31 @@ namespace gca {
   void delete_if(I& c, F f) {
     c.erase(remove_if(c.begin(), c.end(), f), c.end());
   }
+
+  // template<typename T, typename Q>
+  // struct pair_iter {
+  //   typename T::iterator t;
+  //   typename Q::iterator q;
+  //   pair_iter(typename T::iterator tp, typename Q::iterator qp) : t(tp), q(qp) {}
+
+  //   friend pair_iter<T, Q> operator-(const pair_iter<T, Q> i, size_t t)
+  //   { return pair_iter<T, Q>(i.t - t, i.q - t); }
+
+  //   bool operator!=(const pair_iter<T, Q> other)
+  //   { return (t != other.t) || (q != other.q); }
+
+  //   std::pair<T, Q> operator
+  // };
+
+  // template<typename T, typename Q>
+  // pair_iter<T, Q> pair_begin(const T& t, const Q& q) {
+  //   return pair_iter<T, Q>(t.begin(), q.begin());
+  // }
+
+  // template<typename T, typename Q>
+  // pair_iter<T, Q> pair_end(const T& t, const Q& q) {
+  //   return pair_iter<T, Q>(t.end(), q.end());
+  // }
 }
 
 #endif
