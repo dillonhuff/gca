@@ -7,7 +7,13 @@
 
 namespace gca {
 
-  vector<cut*> gcode_to_cuts(const vector<block>& blocks);
+  enum gcode_to_cuts_result {
+    GCODE_TO_CUTS_SUCCESS,
+    GCODE_TO_CUTS_PATHOLOGICAL_TOOLPATH,
+    GCODE_TO_CUTS_UNSUPPORTED_SETTINGS
+  };
+
+  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>> cuts);
 
 }
 

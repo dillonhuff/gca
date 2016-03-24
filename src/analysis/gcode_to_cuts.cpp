@@ -89,32 +89,31 @@ namespace gca {
     return pair<vector<machine_state>, vector<point>>(clipped_states, clipped_points);
   }
 
-  vector<cut*> gcode_to_cuts(const vector<block>& blocks) {
-    vector<cut*> cuts;
-    auto cs = clipped_states(blocks);
-    cout << "Got clipped states" << endl;
-    cout << "states: " << endl;
-    cout << cs.first << endl;
-    cout << "points: " << endl;
-    cout << cs.second << endl;
-    for (unsigned i = 1; i < cs.first.size(); i++) {
-      machine_state current_state = cs.first[i];
-      point current_position = cs.second[i];
-      point last_position = cs.second[i - 1];
-      switch (current_state.active_move_type) {
-      case LINEAR_MOVE:
-	cuts.push_back(mk_linear_cut(current_state, last_position, current_position));
-	break;
-      case CLOCKWISE_CIRCULAR_MOVE:
-	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
-      case COUNTERCLOCKWISE_CIRCULAR_MOVE:
-	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
-	break;
-      default:
-	break;
-      }
-    }
-    return cuts;
+  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>> cuts) {
+    // auto cs = clipped_states(blocks);
+    // cout << "Got clipped states" << endl;
+    // cout << "states: " << endl;
+    // cout << cs.first << endl;
+    // cout << "points: " << endl;
+    // cout << cs.second << endl;
+    // for (unsigned i = 1; i < cs.first.size(); i++) {
+    //   machine_state current_state = cs.first[i];
+    //   point current_position = cs.second[i];
+    //   point last_position = cs.second[i - 1];
+    //   switch (current_state.active_move_type) {
+    //   case LINEAR_MOVE:
+    // 	cuts.push_back(mk_linear_cut(current_state, last_position, current_position));
+    // 	break;
+    //   case CLOCKWISE_CIRCULAR_MOVE:
+    // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
+    //   case COUNTERCLOCKWISE_CIRCULAR_MOVE:
+    // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
+    // 	break;
+    //   default:
+    // 	break;
+    //   }
+    // }
+    return GCODE_TO_CUTS_SUCCESS;
   }
   
 }
