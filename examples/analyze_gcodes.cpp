@@ -69,9 +69,9 @@ void print_toolpaths(const vector<machine_state>& states) {
   if (toolpaths.size() > 0) { toolpaths.pop_back(); };
   cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
   for (auto toolpath : toolpaths) {
-    //    if (is_analyzable(toolpath)) {
+    if (is_analyzable(toolpath)) {
       split_and_print(toolpath);
-      //    }
+    }
   }
 }
 
@@ -88,9 +88,18 @@ int main(int argc, char** argv) {
   time_t start;
   time_t end;
   time(&start);
-  apply_to_gprograms(dir_name, [](const vector<machine_state>& p)
-		     { print_toolpaths(p); });
+  int num_canned_cycles;
+  int num_programs;
+  apply_to_gprograms(dir_name, [&num_canned_cycles, &num_programs](const vector<machine_state>& p) {
+      num_programs++;
+      if (any_of(p.begin(), p.end(), is_canned_cycle)) {
+	cout << "Contains canned cycle!" << endl;
+	num_canned_cycles++;
+      }
+    });
+  cout << "# programs processed: " << num_programs << endl;
+  cout << "# programs with canned cycles: " << num_canned_cycles << endl;
   time(&end);
   double seconds = difftime(end, start);
-  cout << "Total time to process all .NCF files: " << seconds << endl;
+  cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
 }

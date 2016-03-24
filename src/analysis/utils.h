@@ -46,6 +46,7 @@ namespace gca {
   bool is_cut(const machine_state& s);
   bool is_move(const machine_state& s);
   bool spindle_off(const machine_state& s);
+  bool is_canned_cycle(const machine_state& s);
 
   bool is_analyzable(const vector<machine_state>& toolpath);
 }

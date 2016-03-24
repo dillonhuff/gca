@@ -115,5 +115,14 @@ namespace gca {
     }
     return true;
   }
+
+  bool is_canned_cycle(const machine_state& s) {
+    move_type m = s.active_move_type;
+    return m == CANNED_CYCLE_73_MOVE ||
+      m == CANNED_CYCLE_81_MOVE ||
+      m == CANNED_CYCLE_83_MOVE ||
+      m == CANNED_CYCLE_84_MOVE ||
+      m == CANNED_CYCLE_85_MOVE;
+  }
   
 }

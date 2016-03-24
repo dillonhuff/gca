@@ -9,8 +9,7 @@
 
 namespace gca {
 
-  class cut {
-  public:
+  struct cut {
     point start, end;
     tool_name tool_no;
     value* feedrate;
