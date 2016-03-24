@@ -96,6 +96,7 @@ namespace gca {
       *r = mk_pair(*ps, *qs);
       ++ps;
       ++qs;
+      ++r;
     }
     return r;
   }

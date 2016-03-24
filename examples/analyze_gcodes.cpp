@@ -14,31 +14,10 @@
 #include "core/lexer.h"
 #include "geometry/box.h"
 #include "system/algorithm.h"
+#include "system/file.h"
 
 using namespace gca;
 using namespace std;
-
-inline bool ends_with(string const& value, string const& ending) {
-    if (ending.size() > value.size()) return false;
-    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
-}
-
-template<typename T>
-void read_dir(const string& dir_name, T f) {
-  DIR *dir;
-  struct dirent *ent;
-  if ((dir = opendir(dir_name.c_str())) != NULL) {
-    while ((ent = readdir(dir)) != NULL) {
-      string fname = ent->d_name;
-      if (fname != "." && fname != "..") {
-	read_dir(dir_name + "/" + fname, f);
-      }
-    }
-    closedir(dir);
-  } else {
-    f(dir_name);
-  }
-}
 
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
@@ -58,12 +37,11 @@ void apply_to_gprograms(const string& dn, F f) {
   read_dir(dn, func);
 }
 
+
 void split_and_print(const vector<machine_state>& toolpath) {
   auto ptbl = select_column(G54_COORD_SYSTEM, program_position_table(toolpath));
-  vector<pair<machine_state, position>> tstates;
-  for (unsigned i = 0; i < toolpath.size(); i++) {
-    tstates.push_back({toolpath[i], ptbl[i]});
-  }
+  vector<pair<machine_state, position>> tstates(ptbl.size());
+  zip(toolpath.begin(), toolpath.end(), ptbl.begin(), tstates.begin());
   vector<vector<pair<machine_state, position>>> sub_paths;
   split_by(tstates, sub_paths,
   	   [](const pair<machine_state, position>& x,
@@ -75,8 +53,7 @@ void split_and_print(const vector<machine_state>& toolpath) {
     assert(all_of(path.begin(), path.end(),
     		  [](const pair<machine_state, position>& p)
     		  { return p.second.is_lit(); }));
-    vector<machine_state> states;
-    
+    cout << "# of Positions in toolpath: " << path.size() << endl;
   }
 }
 
@@ -86,15 +63,15 @@ void print_toolpaths(const vector<machine_state>& states) {
 	   { return c.active_tool == p.active_tool; });
   delete_if(toolpaths, [](const vector<machine_state>& c)
 	    { return c.back().active_tool->is_omitted(); });
-  cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
   // On HAAS it appears that the last toolpath is always a change back
   // to the first tool that was active, this toolpath never contains
   // any moves
   if (toolpaths.size() > 0) { toolpaths.pop_back(); };
+  cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
   for (auto toolpath : toolpaths) {
-    if (is_analyzable(toolpath)) {
+    //    if (is_analyzable(toolpath)) {
       split_and_print(toolpath);
-    }
+      //    }
   }
 }
 

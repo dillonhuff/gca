@@ -82,6 +82,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
+	 ./src/system/file.cpp
 	 ./src/transformers/feed_changer.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)

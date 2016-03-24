@@ -1667,6 +1667,48 @@ src/system/bmp_output.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/bmp_output.cpp.s
 .PHONY : src/system/bmp_output.cpp.s
 
+src/system/file.o: src/system/file.cpp.o
+
+.PHONY : src/system/file.o
+
+# target to build an object file
+src/system/file.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/file.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/file.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.o
+.PHONY : src/system/file.cpp.o
+
+src/system/file.i: src/system/file.cpp.i
+
+.PHONY : src/system/file.i
+
+# target to preprocess a source file
+src/system/file.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/file.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/file.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.i
+.PHONY : src/system/file.cpp.i
+
+src/system/file.s: src/system/file.cpp.s
+
+.PHONY : src/system/file.s
+
+# target to generate assembly for a file
+src/system/file.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/file.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/file.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.s
+.PHONY : src/system/file.cpp.s
+
 src/system/settings.o: src/system/settings.cpp.o
 
 .PHONY : src/system/settings.o
@@ -2362,6 +2404,9 @@ help:
 	@echo "... src/system/bmp_output.o"
 	@echo "... src/system/bmp_output.i"
 	@echo "... src/system/bmp_output.s"
+	@echo "... src/system/file.o"
+	@echo "... src/system/file.i"
+	@echo "... src/system/file.s"
 	@echo "... src/system/settings.o"
 	@echo "... src/system/settings.i"
 	@echo "... src/system/settings.s"
