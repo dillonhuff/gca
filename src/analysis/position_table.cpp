@@ -140,6 +140,7 @@ namespace gca {
 
   position_table program_position_table(const vector<machine_state>& p) {
     position_table t;
+    if (p.size() > 0) { add_unk_row(t); }
     apply_between(p.begin(), p.end(),
 		  [&t](const machine_state& previous, const machine_state& next)
 		  { update_table_with(t, next, previous); });

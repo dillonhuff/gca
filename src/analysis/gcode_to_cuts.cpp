@@ -80,7 +80,7 @@ namespace gca {
     auto positions = select_column(UNKNOWN_COORD_SYSTEM, ptbl);
     unsigned i = 0;
     while (i < positions.size() && !positions[i].is_lit()) { i++; }
-    vector<machine_state> clipped_states(ms.begin() + i + 1, ms.end());
+    vector<machine_state> clipped_states(ms.begin() + i, ms.end());
     vector<point> clipped_points;
     for (; i < positions.size(); i++) {
       clipped_points.push_back(positions[i].extract_point());

@@ -23,6 +23,7 @@ namespace gca {
       s = all_program_states(p);
       t = program_position_table(s);
       add_unk_row(c);
+      add_unk_row(c);
       REQUIRE(t == c);
     }
 
@@ -39,6 +40,7 @@ namespace gca {
       t = program_position_table(s);
       add_unk_row(c);
       add_unk_row(c);
+      add_unk_row(c);
       update_table(G54_COORD_SYSTEM, position(1, 2, 3), c);
       REQUIRE(t == c);
     }
@@ -47,6 +49,7 @@ namespace gca {
       p = lex_gprog("G90 G54 \n G0 X1.0 Y2.0");
       s = all_program_states(p);
       t = program_position_table(s);
+      add_unk_row(c);
       add_unk_row(c);
       update_table(G54_COORD_SYSTEM,
 		   position(lit::make(1), lit::make(2), omitted::make()),
@@ -59,6 +62,7 @@ namespace gca {
       s = all_program_states(p);
       t = program_position_table(s);
       add_unk_row(c);
+      add_unk_row(c);
       update_table(G54_COORD_SYSTEM,
 		   position(lit::make(1), lit::make(2), omitted::make()),
 		   c);
@@ -70,6 +74,7 @@ namespace gca {
       p = lex_gprog("G90 G54 \n G0 X1.0 Y2.0 \n G91");
       s = all_program_states(p);
       t = program_position_table(s);
+      add_unk_row(c);
       add_unk_row(c);
       update_table(G54_COORD_SYSTEM,
 		   position(lit::make(1), lit::make(2), omitted::make()),
@@ -84,6 +89,7 @@ namespace gca {
       p = lex_gprog("G90 G54 \n G0 X1.0 Y2.0 \n G91 \n G1 X2.0 Y1.5 Z2.0");
       s = all_program_states(p);
       t = program_position_table(s);
+      add_unk_row(c);
       add_unk_row(c);
       update_table(G54_COORD_SYSTEM,
 		   position(lit::make(1), lit::make(2), omitted::make()),
@@ -102,6 +108,7 @@ namespace gca {
       s = all_program_states(p);
       t = program_position_table(s);
       add_unk_row(c);
+      add_unk_row(c);
       update_table(G54_COORD_SYSTEM,
 		   position(lit::make(1), lit::make(2), omitted::make()),
 		   c);
@@ -115,6 +122,7 @@ namespace gca {
       s = all_program_states(p);
       t = program_position_table(s);
       add_unk_row(c);
+      add_unk_row(c);
       update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
       REQUIRE(t == c);
     }
@@ -123,6 +131,7 @@ namespace gca {
       p = lex_gprog("G90 G54 \n G28 X-.1 \n G0 X1.0 Y2.0 Z3.0");
       s = all_program_states(p);
       t = program_position_table(s);
+      add_unk_row(c);
       add_unk_row(c);
       update_table(MACHINE_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
       update_table(G54_COORD_SYSTEM, position(1.0, 2.0, 3.0), c);
@@ -133,6 +142,7 @@ namespace gca {
       p = lex_gprog("G90 G1 X0 Y0 Z0 \n G91 G1 X8 \n G0 X7");
       s = all_program_states(p);
       t = program_position_table(s);
+      add_unk_row(c);
       update_table(UNKNOWN_COORD_SYSTEM, position(0.0, 0.0, 0.0), c);
       update_table(UNKNOWN_COORD_SYSTEM, position(8.0, 0.0, 0.0), c);
       update_table(UNKNOWN_COORD_SYSTEM, position(15.0, 0.0, 0.0), c);
