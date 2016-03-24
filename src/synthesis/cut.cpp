@@ -24,9 +24,9 @@ namespace gca {
   }
 
   bool same_cut_properties(const cut& l, const cut& r) {
-    return (*(l.spindle_speed) == *(r.spindle_speed)) &&
-      (*(l.feedrate) == *(r.feedrate)) &&
-      (l.tool_no == r.tool_no);
+    return l.settings == r.settings; // (*(l.spindle_speed) == *(r.spindle_speed)) &&
+      // (*(l.feedrate) == *(r.feedrate)) &&
+      // (l.tool_no == r.tool_no);
   }
 
 }

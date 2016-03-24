@@ -126,7 +126,7 @@ namespace gca {
 		     const cut_params& params) {
     if (params.set_default_feedrate) {
       for (auto cut : cuts)
-    	{ cut->feedrate = lit::make(params.default_feedrate); }
+    	{ cut->set_feedrate(lit::make(params.default_feedrate)); }
     }    
   }
 

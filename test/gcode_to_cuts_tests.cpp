@@ -32,8 +32,8 @@ namespace gca {
       p = lex_gprog("G90 S3000 M3 \n G0 X2 Y1 Z-2 \n G1 F20 X3 Y3 Z2");
       actual = gcode_to_cuts(p);
       linear_cut* lc = linear_cut::make(point(2, 1, -2), point(3, 3, 2), DRILL);
-      lc->feedrate = lit::make(20);
-      lc->spindle_speed = lit::make(3000);
+      lc->set_feedrate(lit::make(20));
+      lc->set_spindle_speed(lit::make(3000));
       correct.push_back(lc);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
@@ -42,8 +42,8 @@ namespace gca {
       p = lex_gprog("G90 S2000 M3 \n G0 X2 Y1 Z-2 \n G1 F20 X3 Y3 Z2");
       actual = gcode_to_cuts(p);
       linear_cut* lc = linear_cut::make(point(2, 1, -2), point(3, 3, 2), DRILL);
-      lc->feedrate = lit::make(20);
-      lc->spindle_speed = lit::make(2000);
+      lc->set_feedrate(lit::make(20));
+      lc->set_spindle_speed(lit::make(2000));
       correct.push_back(lc);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
@@ -57,8 +57,8 @@ namespace gca {
       					     CLOCKWISE,
       					     XY,
 					     DRILL);
-      arc->feedrate = lit::make(12.5);
-      arc->spindle_speed = lit::make(2000);
+      arc->set_feedrate(lit::make(12.5));
+      arc->set_spindle_speed(lit::make(2000));
       correct.push_back(arc);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
     }
@@ -72,8 +72,8 @@ namespace gca {
       					     COUNTERCLOCKWISE,
       					     XY,
 					     DRILL);
-      arc->feedrate = lit::make(12.5);
-      arc->spindle_speed = lit::make(2000);
+      arc->set_feedrate(lit::make(12.5));
+      arc->set_spindle_speed(lit::make(2000));
       correct.push_back(arc);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
@@ -92,10 +92,10 @@ namespace gca {
       p = lex_gprog("G90 S2000 M3 \n G0 X0 Y0 Z0 \n G1 X1 Y1 Z1 \n S1000 G1 X2 Y2 Z2");
       actual = gcode_to_cuts(p);
       linear_cut* lc1 = linear_cut::make(point(0, 0, 0), point(1, 1, 1), DRILL);
-      lc1->spindle_speed = lit::make(2000);
+      lc1->set_spindle_speed(lit::make(2000));
       correct.push_back(lc1);
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2), DRILL);
-      lc2->spindle_speed = lit::make(1000);
+      lc2->set_spindle_speed(lit::make(1000));
       correct.push_back(lc2);
       REQUIRE(equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }

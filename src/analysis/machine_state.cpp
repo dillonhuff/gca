@@ -320,6 +320,25 @@ namespace gca {
   bool operator!=(const machine_state& l, const machine_state& r)
   { return !(l == r); }
 
+  bool operator==(const machine_settings& l, const machine_settings& r) {
+    return *(l.feedrate) == *(r.feedrate) &&
+      *(l.spindle_speed) == *(r.spindle_speed) &&
+      l.active_move_type == r.active_move_type &&
+      l.active_coord_system == r.active_coord_system &&
+      l.tool_height_comp == r.tool_height_comp &&
+      l.tool_radius_comp == r.tool_radius_comp &&
+      l.active_plane == r.active_plane &&
+      l.spindle_setting == r.spindle_setting &&
+      *(l.last_referenced_tool) == *(r.last_referenced_tool) &&
+      *(l.active_tool) == *(r.active_tool) &&
+      l.coolant_setting == r.coolant_setting &&
+      *(l.tool_height_value) == *(r.tool_height_value) &&
+      *(l.tool_radius_value) == *(r.tool_radius_value);
+  }
+
+  bool operator!=(const machine_settings& l, const machine_settings& r)
+  { return !(l == r); }
+
   void print_val(ostream& stream, const value* v) {
     if (v->is_omitted()) {
       stream << "<omitted>";

@@ -13,7 +13,7 @@
 namespace gca {
 
   bool drill_with_spindle_off(const cut* c) {
-    return !(!(c->tool_no == DRILL) || (!c->spindle_speed->is_omitted()));
+    return !(!(c->tool_no == DRILL) || (!c->get_spindle_speed()->is_omitted()));
   }
 
   void sanity_check_speeds(const vector<cut*>& cuts) {
@@ -57,8 +57,8 @@ namespace gca {
       double jv = static_cast<lit*>(s.j)->v;
       point offset(iv, jv, 0);
       c = circular_arc::make(cur, n, offset, d, XY);
-      c->spindle_speed = s.spindle_speed;
-      c->feedrate = s.feedrate;
+      c->set_spindle_speed(s.spindle_speed);
+      c->set_feedrate(s.feedrate);
       c->tool_no = t;
     } else {
       assert(false);
@@ -69,8 +69,8 @@ namespace gca {
   linear_cut* mk_linear_cut(const machine_state& s, const point c, const point n) {
     auto tn = get_tool(s);
     linear_cut* ct = linear_cut::make(c, n, tn);
-    ct->feedrate = s.feedrate;
-    ct->spindle_speed = s.spindle_speed;
+    ct->set_feedrate(s.feedrate);
+    ct->set_spindle_speed(s.spindle_speed);
     return ct;
   }
 

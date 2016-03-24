@@ -62,20 +62,20 @@ namespace gca {
     virtual cut* copy() const {
       hole_punch* h = hole_punch::make(start, radius);
       h->tool_no = tool_no;
-      h->feedrate = feedrate;
-      h->spindle_speed = spindle_speed;
+      h->set_feedrate(get_feedrate());
+      h->set_spindle_speed(get_spindle_speed());
       return h;
     }
 
     void print(ostream& other) const {
       other << "HOLE PUNCH: " << tool_no << " ";
-      if (!feedrate->is_omitted()) {
-	other << "F" << *feedrate << " ";
+      if (!get_feedrate()->is_omitted()) {
+	other << "F" << *get_feedrate() << " ";
       } else {
 	other << "<F omitted> ";
       }
-      if (!spindle_speed->is_omitted()) {
-	other << "S" << *spindle_speed << " ";
+      if (!get_spindle_speed()->is_omitted()) {
+	other << "S" << *get_spindle_speed() << " ";
       } else {
 	other << "<S omitted> ";
       }

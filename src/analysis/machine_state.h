@@ -78,6 +78,40 @@ namespace gca {
     CANNED_CYCLE_85_MOVE
   };
 
+  struct machine_settings {
+    value* feedrate;
+    value* spindle_speed;
+    move_type active_move_type;
+    distance_mode active_distance_mode;
+    coord_system active_coord_system;
+    tool_height_compensation tool_height_comp;
+    tool_radius_compensation tool_radius_comp;
+    tool_plane active_plane;
+    spindle_state spindle_setting;
+    value* last_referenced_tool;
+    value* active_tool;
+    coolant_state coolant_setting;
+    value* tool_height_value;
+    value* tool_radius_value;
+    canned_cycle_return_policy active_canned_cycle_return_policy;
+
+    machine_settings() :
+      feedrate(omitted::make()), spindle_speed(omitted::make()),
+      active_move_type(UNKNOWN_MOVE_TYPE),
+      active_distance_mode(UNKNOWN_DISTANCE_MODE),
+      active_coord_system(UNKNOWN_COORD_SYSTEM),
+      tool_height_comp(TOOL_HEIGHT_COMP_UNKNOWN),
+      tool_radius_comp(TOOL_RADIUS_COMP_UNKNOWN),
+      active_plane(UNKNOWN_PLANE),
+      spindle_setting(SPINDLE_STATE_UNKNOWN),
+      last_referenced_tool(omitted::make()),
+      active_tool(omitted::make()),
+      coolant_setting(COOLANT_STATE_UNKNOWN),
+      tool_height_value(omitted::make()),
+      tool_radius_value(omitted::make()),
+      active_canned_cycle_return_policy(CANNED_CYCLE_RETURN_POLICY_UNKNOWN) {}
+  };
+
   struct machine_state {
     value* feedrate;
     value* spindle_speed;
@@ -132,6 +166,8 @@ namespace gca {
   vector<machine_state> all_program_states(const machine_state& init,
 					   const vector<block>& p);
 
+  bool operator==(const machine_settings& l, const machine_settings& r);
+  bool operator!=(const machine_settings& l, const machine_settings& r);
   bool operator==(const machine_state& l, const machine_state& r);
   bool operator!=(const machine_state& l, const machine_state& r);
   ostream& operator<<(ostream& stream, const machine_state& s);

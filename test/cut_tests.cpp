@@ -20,32 +20,32 @@ namespace gca {
 
     SECTION("Copy preserves info for safe move") {
       s = safe_move::make(point(1, 0, 0), point(1, 0, 0), DRILL);
-      s->feedrate = lit::make(1.0);
-      s->spindle_speed = lit::make(16000);
+      s->set_feedrate(lit::make(1.0));
+      s->set_spindle_speed(lit::make(16000));
       c = s->copy();
       REQUIRE(*c == *s);
     }
     
     SECTION("Copy preserves info for linear cut") {
       s = linear_cut::make(point(1, 0, 0), point(1, 0, 0), DRAG_KNIFE);
-      s->feedrate = lit::make(1.0);
-      s->spindle_speed = lit::make(0);
+      s->set_feedrate(lit::make(1.0));
+      s->set_spindle_speed(lit::make(0));
       c = s->copy();
       REQUIRE(*c == *s);
     }
 
     SECTION("Copy preserves info for circular arc") {
       s = circular_arc::make(point(1, 0, 0), point(1, 0, 0), point(1, 1, 1), CLOCKWISE, YZ, DRILL);
-      s->feedrate = lit::make(1.0);
-      s->spindle_speed = lit::make(16000);
+      s->set_feedrate(lit::make(1.0));
+      s->set_spindle_speed(lit::make(16000));
       c = s->copy();
       REQUIRE(*c == *s);
     }
 
     SECTION("Copy preserves info for hole punch") {
       s = hole_punch::make(point(1, 1, 1), 2.3, DRILL);
-      s->feedrate = lit::make(1.0);
-      s->spindle_speed = lit::make(16000);
+      s->set_feedrate(lit::make(1.0));
+      s->set_spindle_speed(lit::make(16000));
       c = s->copy();
       REQUIRE(*c == *s);
     }

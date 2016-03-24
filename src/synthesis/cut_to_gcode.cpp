@@ -42,7 +42,7 @@ namespace gca {
       b.push_back(token('X', ci->end.x));
       b.push_back(token('Y', ci->end.y));
       b.push_back(token('Z', ci->end.z));
-      if (!ci->feedrate->is_omitted()) { b.push_back(token('F', ci->feedrate)); }
+      if (!ci->get_feedrate()->is_omitted()) { b.push_back(token('F', ci->get_feedrate())); }
     } else if (ci->is_circular_arc()) {
       const circular_arc* arc = static_cast<const circular_arc*>(ci);
       b = circular_arc_to_gcode_block(*arc);

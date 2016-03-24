@@ -71,8 +71,8 @@ namespace gca {
     virtual cut* copy() const {
       linear_cut* l = linear_cut::make(start, end);
       l->tool_no = tool_no;
-      l->feedrate = feedrate;
-      l->spindle_speed = spindle_speed;
+      l->set_feedrate(settings.feedrate);
+      l->set_spindle_speed(settings.spindle_speed);
       return l;
     }
 

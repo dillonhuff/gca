@@ -86,20 +86,20 @@ namespace gca {
     virtual cut* copy() const {
       circular_arc* arc = circular_arc::make(start, end, start_offset, dir, pl);
       arc->tool_no = tool_no;
-      arc->feedrate = feedrate;
-      arc->spindle_speed = spindle_speed;
+      arc->set_feedrate(settings.feedrate);
+      arc->set_spindle_speed(settings.spindle_speed);
       return arc;
     }
 
     void print(ostream& other) const {
       other << "CIRCULAR ARC: " << tool_no << " ";
-      if (!feedrate->is_omitted()) {
-	other << "F" << *feedrate << " ";
+      if (!get_feedrate()->is_omitted()) {
+	other << "F" << *get_feedrate() << " ";
       } else {
 	other << "<F omitted> ";
       }
-      if (!spindle_speed->is_omitted()) {
-	other << "S" << *spindle_speed << " ";
+      if (!get_spindle_speed()->is_omitted()) {
+	other << "S" << *get_spindle_speed() << " ";
       } else {
 	other << "<S omitted> ";
       }

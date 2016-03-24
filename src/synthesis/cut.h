@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include "analysis/machine_state.h"
 #include "core/value.h"
 #include "geometry/point.h"
 #include "synthesis/machine.h"
@@ -10,14 +11,21 @@
 namespace gca {
 
   struct cut {
+    machine_settings settings;
     point start, end;
     tool_name tool_no;
-    value* feedrate;
-    value* spindle_speed;
+    // value* feedrate;
+    // value* spindle_speed;
     
-  cut(point s, point e) : start(s), end(e), tool_no(NO_TOOL), feedrate(omitted::make()), spindle_speed(omitted::make()) {}
-  cut(point s, point e, tool_name t) : start(s), end(e), tool_no(t), feedrate(omitted::make()), spindle_speed(omitted::make()) {}
+    cut(point s, point e) : start(s), end(e), tool_no(NO_TOOL) {}
+    cut(point s, point e, tool_name t) : start(s), end(e), tool_no(t) {}
 
+    inline value* get_spindle_speed() const { return settings.spindle_speed; }
+    inline value* get_feedrate() const { return settings.feedrate; }
+
+    inline void set_spindle_speed(value* v) { settings.spindle_speed = v; }
+    inline void set_feedrate(value* v) { settings.feedrate = v; }
+    
     virtual inline bool is_safe_move() const { return false; }
     virtual inline bool is_linear_cut() const { return false; }
     virtual inline bool is_circular_arc() const { return false; }

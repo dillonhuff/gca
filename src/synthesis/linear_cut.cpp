@@ -4,13 +4,13 @@ namespace gca {
 
   void linear_cut::print(ostream& other) const {
     other << "LINEAR CUT: " << tool_no << " ";
-    if (!feedrate->is_omitted()) {
-      other << "F" << *feedrate << " ";
+    if (!get_feedrate()->is_omitted()) {
+      other << "F" << *get_feedrate() << " ";
     } else {
       other << "<F omitted> ";
     }
-    if (!spindle_speed->is_omitted()) {
-      other << "S" << *spindle_speed << " ";
+    if (!get_spindle_speed()->is_omitted()) {
+      other << "S" << *get_spindle_speed() << " ";
     } else {
       other << "<S omitted> ";
     }

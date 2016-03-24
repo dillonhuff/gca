@@ -68,20 +68,20 @@ namespace gca {
     virtual cut* copy() const {
       safe_move* c = safe_move::make(start, end);
       c->tool_no = tool_no;
-      c->feedrate = feedrate;
-      c->spindle_speed = spindle_speed;
+      c->set_feedrate(settings.feedrate);
+      c->set_spindle_speed(settings.spindle_speed);
       return c;
     }
 
     void print(ostream& other) const {
       other << "SAFE MOVE: " << tool_no << " ";
-      if (!feedrate->is_omitted()) {
-	other << "F" << *feedrate << " ";
+      if (!get_feedrate()->is_omitted()) {
+	other << "F" << *get_feedrate() << " ";
       } else {
 	other << "<F omitted> ";
       }
-      if (!spindle_speed->is_omitted()) {
-	other << "S" << *spindle_speed << " ";
+      if (!get_spindle_speed()->is_omitted()) {
+	other << "S" << *get_spindle_speed() << " ";
       } else {
 	other << "<S omitted> ";
       }
