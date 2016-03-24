@@ -14,6 +14,7 @@ namespace gca {
     value* x;
     value* y;
     value* z;
+    position() : x(omitted::make()), y(omitted::make()), z(omitted::make()) {}
     position(value* xp, value* yp, value* zp) : x(xp), y(yp), z(zp) {}
     position(const position& p) : x(p.x), y(p.y), z(p.z) {}
     position(double xp, double yp, double zp) :

@@ -45,4 +45,28 @@ namespace gca {
       REQUIRE(v == correct);
     }
   }
+
+  TEST_CASE("Drop while tests") {
+
+    SECTION("") {
+      vector<int> v{};
+      drop_while(v, [](int i) { return i < 0; });
+      vector<int> correct;
+      REQUIRE(v == correct);
+    }
+
+    SECTION("Several values") {
+      vector<int> v{1, 3, 5, 2, 8, 34, 2};
+      drop_while(v, [](int i) { return i < 5; });
+      vector<int> correct{5, 2, 8, 34, 2};
+      REQUIRE(v == correct);
+    }
+
+    SECTION("Drop the entire sequence") {
+      vector<int> v{1, 3, 5, 2, 8, 34, 2};
+      drop_while(v, [](int i) { return i < 500; });
+      vector<int> correct;
+      REQUIRE(v == correct);
+    }
+  }
 }

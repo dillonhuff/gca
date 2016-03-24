@@ -83,6 +83,30 @@ namespace gca {
     c.erase(remove_if(c.begin(), c.end(), f), c.end());
   }
 
+  template<typename T, typename Q>
+  pair<T, Q>
+  mk_pair(T t, Q q) { return pair<T, Q>(t, q); }
+  
+  template<typename InputIt1, typename InputIt2, typename OutputIt>
+  OutputIt
+  zip(InputIt1 ps, InputIt1 pe, InputIt2 qs, OutputIt r) {
+    while (ps != pe) {
+      *r = mk_pair(*ps, *qs);
+      ++ps;
+      ++qs;
+    }
+    return r;
+  }
+
+  template<typename T, typename F>
+  void
+  drop_while(T& t, F f) {
+    auto r = find_if_not(t.begin(), t.end(), f);
+    auto s = distance(t.begin(), r);
+    rotate(t.begin(), r, t.end());
+    t.erase(t.begin() + t.size() - s, t.end());
+  }
+
   // template<typename T, typename Q>
   // struct pair_iter {
   //   typename T::iterator t;

@@ -72,6 +72,14 @@ void print_toolpaths(const vector<machine_state>& states) {
   for (auto toolpath : toolpaths) {
     if (is_analyzable(toolpath)) {
       cout << "Analyzeable toolpath" << endl;
+      auto ptbl = select_column(G54_COORD_SYSTEM, program_position_table(toolpath));
+      vector<pair<machine_state, position>> tstates(ptbl.size());
+      zip(toolpath.begin(), toolpath.end(), ptbl.begin(), tstates.begin());
+      drop_while(tstates, [](const pair<machine_state, position>& p)
+      		 { return !p.second.is_lit(); });
+      assert(all_of(tstates.begin(), tstates.end(),
+      		    [](const pair<machine_state, position>& p)
+      		    { return p.second.is_lit(); }));
     }
   }
 }
