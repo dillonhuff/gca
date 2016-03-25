@@ -12,14 +12,6 @@
 
 namespace gca {
 
-  bool drill_with_spindle_off(const cut* c) {
-    return !(!(c->tool_no == DRILL) || (!c->get_spindle_speed()->is_omitted()));
-  }
-
-  void sanity_check_speeds(const vector<cut*>& cuts) {
-    assert(count_if(cuts.begin(), cuts.end(), drill_with_spindle_off) == 0);
-  }
-
   tool_name get_tool(const machine_state& s) {
     auto t = s.active_tool;
     tool_name tn;
@@ -74,21 +66,6 @@ namespace gca {
     return ct;
   }
 
-  pair<vector<machine_state>, vector<point>> clipped_states(const vector<block>& blocks) {
-    auto ms = all_program_states(blocks);
-    auto ptbl = program_position_table(ms);
-    auto positions = select_column(UNKNOWN_COORD_SYSTEM, ptbl);
-    unsigned i = 0;
-    while (i < positions.size() && !positions[i].is_lit()) { i++; }
-    vector<machine_state> clipped_states(ms.begin() + i, ms.end());
-    vector<point> clipped_points;
-    for (; i < positions.size(); i++) {
-      clipped_points.push_back(positions[i].extract_point());
-    }
-    assert(clipped_points.size() == clipped_states.size());
-    return pair<vector<machine_state>, vector<point>>(clipped_states, clipped_points);
-  }
-
   cut* compute_next_cut(const machine_state& current_state,
 			point current_position,
 			point last_position) {
@@ -101,6 +78,7 @@ namespace gca {
       return mk_circular_arc(current_state, last_position, current_position);
     default:
       return nullptr;
+      //      assert(false);
     }
   }
 
@@ -111,7 +89,8 @@ namespace gca {
     split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
 	     { return c.active_tool == p.active_tool; });
     for (auto toolpath : toolpaths) {
-      auto ptbl = select_column(UNKNOWN_COORD_SYSTEM, program_position_table(toolpath));
+      coord_system c = toolpath.back().active_coord_system;
+      auto ptbl = select_column(c, program_position_table(toolpath));
       vector<pair<machine_state, position>> tstates(ptbl.size());
       zip(toolpath.begin(), toolpath.end(), ptbl.begin(), tstates.begin());
       vector<vector<pair<machine_state, position>>> sub_paths;
@@ -125,7 +104,8 @@ namespace gca {
     }
   }
 
-  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>>& cuts) {
+  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks,
+				     vector<vector<cut*>>& cuts) {
     vector<vector<pair<machine_state, position>>> sub_paths;
     fill_paths(blocks, sub_paths);
     for (auto path : sub_paths) {

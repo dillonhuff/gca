@@ -6,6 +6,7 @@
 #include <streambuf>
 #include <string>
 
+#include "analysis/gcode_to_cuts.h"
 #include "analysis/machine_state.h"
 #include "analysis/position_table.h"
 #include "analysis/unfold.h"
@@ -21,6 +22,22 @@ using namespace std;
 
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
+  auto func = [&f](const string& dir_name) {
+    if (ends_with(dir_name, ".NCF")) {
+      cout << dir_name << endl;
+      std::ifstream t(dir_name);
+      std::string str((std::istreambuf_iterator<char>(t)),
+		      std::istreambuf_iterator<char>());
+      vector<block> p = lex_gprog(str);
+      cout << "NUM BLOCKS: " << p.size() << endl;
+      f(p);
+    }
+  };
+  read_dir(dn, func);
+}
+
+template<typename F>
+void apply_to_program_states(const string& dn, F f) {
   auto func = [&f](const string& dir_name) {
     if (ends_with(dir_name, ".NCF")) {
       cout << dir_name << endl;
@@ -88,17 +105,14 @@ int main(int argc, char** argv) {
   time_t start;
   time_t end;
   time(&start);
-  int num_canned_cycles;
-  int num_programs;
-  apply_to_gprograms(dir_name, [&num_canned_cycles, &num_programs](const vector<machine_state>& p) {
-      num_programs++;
-      if (any_of(p.begin(), p.end(), is_canned_cycle)) {
-	cout << "Contains canned cycle!" << endl;
-	num_canned_cycles++;
-      }
+  int num_paths;
+  apply_to_gprograms(dir_name, [&num_paths](const vector<block>& p) {
+      vector<vector<cut*>> paths;
+      gcode_to_cuts(p, paths);
+      cout << "Paths: " << paths.size() << endl;
+      num_paths += paths.size();
     });
-  cout << "# programs processed: " << num_programs << endl;
-  cout << "# programs with canned cycles: " << num_canned_cycles << endl;
+  cout << "# paths: " << num_paths << endl;
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;

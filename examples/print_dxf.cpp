@@ -33,15 +33,30 @@ pair<double, double> y_minmax(const vector<polyline>& ps) {
   return pair<double, double>(*(p.first), *(p.second));
 }
 
+pair<double, double> z_minmax(const vector<polyline>& ps) {
+  vector<double> z_values;
+  for (auto p : ps) {
+    for (auto pt : p) {
+      z_values.push_back(pt.z);
+    }
+  }
+  auto p = minmax_element(z_values.begin(), z_values.end());
+  return pair<double, double>(*(p.first), *(p.second));
+}
+
 box polylines_bounding_box(const vector<polyline>& ps) {
   auto xminmax = x_minmax(ps);
   auto yminmax = y_minmax(ps);
+  auto zminmax = z_minmax(ps);
   double x_min = xminmax.first;
   double x_max = xminmax.second;
   double y_min = yminmax.first;
   double y_max = yminmax.second;
+  double z_min = zminmax.first;
+  double z_max = zminmax.second;
   box b(x_min, x_max,
-	y_min, y_max);
+	y_min, y_max,
+	z_min, z_max);
   return b;
 }
 
@@ -105,7 +120,7 @@ int main(int argc, char** argv) {
   
   auto l = read_dxf(argv[1]);
   auto sf = [](const vector<polyline>& ps)
-    { return fit_in_box(box(9, 12.8, 6.2, 8.1), ps); };
+    { return fit_in_box(box(9, 12.8, 6.2, 8.1, 0, 5), ps); };
   vector<cut*> scuts = shape_cuts_p(l, params, sf);
   vector<block> s = cuts_to_gcode(scuts, params);
   
