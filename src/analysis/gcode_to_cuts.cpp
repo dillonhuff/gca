@@ -6,6 +6,7 @@
 #include "analysis/utils.h"
 #include "core/lexer.h"
 #include "synthesis/circular_arc.h"
+#include "synthesis/circular_helix_cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
 #include "system/algorithm.h"
@@ -22,7 +23,7 @@ namespace gca {
       } else if (i == 2) {
 	tn = DRILL;
       } else {
-	assert(false);
+	tn = NO_TOOL; //assert(false);
       }
     } else {
       tn = DRILL;
@@ -30,9 +31,9 @@ namespace gca {
     return tn;
   }
 
-  circular_arc* mk_circular_arc(const machine_state& s, const point cur, const point n) {
+  cut* mk_circular_arc(const machine_state& s, const point cur, const point n) {
     tool_name t = get_tool(s);
-    circular_arc* c;
+    cut* c;
     point offset;
     direction d;
     if (s.active_move_type == CLOCKWISE_CIRCULAR_MOVE) {
@@ -43,12 +44,18 @@ namespace gca {
       assert(false);
     }
     if (!s.k->is_lit()) {
-      assert(s.i->is_lit());
-      assert(s.j->is_lit());
-      double iv = static_cast<lit*>(s.i)->v;
-      double jv = static_cast<lit*>(s.j)->v;
+      assert(s.active_plane == XY_PLANE);
+      assert(s.k->is_omitted());
+      assert(s.i->is_lit() || s.i->is_omitted());
+      assert(s.j->is_lit() || s.j->is_omitted());
+      double iv = s.i->is_lit() ? static_cast<lit*>(s.i)->v : 0.0;
+      double jv = s.j->is_lit() ? static_cast<lit*>(s.j)->v : 0.0;
       point offset(iv, jv, 0);
-      c = circular_arc::make(cur, n, offset, d, XY);
+      if (within_eps(cur.z, n.z)) {
+	c = circular_arc::make(cur, n, offset, d, XY);
+      } else {
+	c = circular_helix_cut::make(cur, n, offset, d, XY);
+      }
       c->set_spindle_speed(s.spindle_speed);
       c->set_feedrate(s.feedrate);
       c->tool_no = t;
@@ -66,10 +73,20 @@ namespace gca {
     return ct;
   }
 
+  safe_move* mk_fast_move(const machine_state& s, const point c, const point n) {
+    auto tn = get_tool(s);
+    safe_move* ct = safe_move::make(c, n, tn);
+    ct->set_feedrate(s.feedrate);
+    ct->set_spindle_speed(s.spindle_speed);
+    return ct;
+  }
+  
   cut* compute_next_cut(const machine_state& current_state,
 			point current_position,
 			point last_position) {
     switch (current_state.active_move_type) {
+    case FAST_MOVE:
+      return mk_fast_move(current_state, last_position, current_position);
     case LINEAR_MOVE:
       return mk_linear_cut(current_state, last_position, current_position);
     case CLOCKWISE_CIRCULAR_MOVE:
@@ -78,13 +95,18 @@ namespace gca {
       return mk_circular_arc(current_state, last_position, current_position);
     default:
       return nullptr;
-      //      assert(false);
     }
   }
 
-  void fill_paths(const vector<block>& blocks,
-		  vector<vector<pair<machine_state, position>>>& paths) {
+  gcode_to_cuts_result fill_paths(const vector<block>& blocks,
+				  vector<vector<pair<machine_state, position>>>& paths) {
     auto states = all_program_states(blocks);
+    // TODO: Extract this check for correct settings into a new function
+    for (auto current_state : states) {
+      if (current_state.active_plane == ZX_PLANE ||
+    	  current_state.active_plane == YZ_PLANE)
+    	{ return GCODE_TO_CUTS_UNSUPPORTED_SETTINGS; }
+    }
     vector<vector<machine_state>> toolpaths;
     split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
 	     { return c.active_tool == p.active_tool; });
@@ -102,12 +124,14 @@ namespace gca {
 		{ return !p.front().second.is_lit(); });
       paths.insert(end(paths), begin(sub_paths), end(sub_paths));
     }
+    return GCODE_TO_CUTS_SUCCESS;
   }
 
   gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks,
 				     vector<vector<cut*>>& cuts) {
     vector<vector<pair<machine_state, position>>> sub_paths;
-    fill_paths(blocks, sub_paths);
+    auto r = fill_paths(blocks, sub_paths);
+    if (r != GCODE_TO_CUTS_SUCCESS) { return r; }
     for (auto path : sub_paths) {
       vector<cut*> cts;
       for (unsigned i = 1; i < path.size(); i++) {
@@ -115,11 +139,32 @@ namespace gca {
 	point current_position = path[i].second.extract_point();
 	point last_position = path[i - 1].second.extract_point();
 	cut* next_cut = compute_next_cut(current_state, current_position, last_position);
-	if (next_cut != nullptr) { cts.push_back(next_cut); }
+	if (next_cut == nullptr)
+	  { return GCODE_TO_CUTS_UNSUPPORTED_SETTINGS; }
+	else
+	  { cts.push_back(next_cut); }
+	// cts.push_back(next_cut);
       }
       if (cts.size() > 0) { cuts.push_back(cts); }
     }
     return GCODE_TO_CUTS_SUCCESS;
   }
-    
+
+  ostream& operator<<(ostream& out, const gcode_to_cuts_result r) {
+    switch (r) {
+    case GCODE_TO_CUTS_SUCCESS:
+      out << "GCODE_TO_CUTS_SUCCESS";
+      break;
+    case GCODE_TO_CUTS_PATHOLOGICAL_TOOLPATH:
+      out << "GCODE_TO_CUTS_PATHOLOGICAL_TOOLPATH";
+      break;
+    case GCODE_TO_CUTS_UNSUPPORTED_SETTINGS:
+      out << "GCODE_TO_CUTS_UNSUPPORTED_SETTINGS";
+      break;
+    default:
+      cout << "Unsupported gcode_to_cuts_result" << endl;
+      assert(false);
+    }
+    return out;
+  }
 }

@@ -13,6 +13,8 @@ namespace gca {
     GCODE_TO_CUTS_UNSUPPORTED_SETTINGS
   };
 
+  ostream& operator<<(ostream& out, const gcode_to_cuts_result r);
+
   gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>>& cuts);
 
 }

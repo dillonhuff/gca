@@ -57,7 +57,7 @@ namespace gca {
     }
     
     SECTION("Safe move and circular arc clockwise in XY plane") {
-      p = lex_gprog("G90 S2000 G0 X1 Y1 Z1 \n G2 F12.5 X3 Y4.5 Z1 I1.0 J1.75");
+      p = lex_gprog("G17 G90 S2000 G0 X1 Y1 Z1 \n G2 F12.5 X3 Y4.5 Z1 I1.0 J1.75");
       r = gcode_to_cuts(p, actual);
       circular_arc* arc = circular_arc::make(point(1, 1, 1),
       					     point(3, 4.5, 1),
@@ -72,7 +72,7 @@ namespace gca {
     }
 
     SECTION("Safe move and circular arc counterclockwise in XY plane") {
-      p = lex_gprog("G90 S2000 \n G0 X1 Y1 Z1 \n G3 F12.5 X3 Y4.5 Z1 I1.0 J1.75");
+      p = lex_gprog("G17 G90 S2000 \n G0 X1 Y1 Z1 \n G3 F12.5 X3 Y4.5 Z1 I1.0 J1.75");
       r = gcode_to_cuts(p, actual);
       circular_arc* arc = circular_arc::make(point(1, 1, 1),
       					     point(3, 4.5, 1),
@@ -129,6 +129,21 @@ namespace gca {
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2));
       lc2->set_spindle_speed(lit::make(1000));
       correct.push_back({lc2});
+      REQUIRE(correct == actual);
+    }
+
+    SECTION("Fail on selected plane other than G17") {
+      p = lex_gprog("G18");
+      r = gcode_to_cuts(p, actual);
+      REQUIRE(r == GCODE_TO_CUTS_UNSUPPORTED_SETTINGS);
+    }
+
+    SECTION("Fast move as part of toolpath") {
+      p = lex_gprog("G54 G90 S2000 \n G0 X0 Y0 Z0 \n G0 X1 Y1 Z1 \n");
+      r = gcode_to_cuts(p, actual);
+      safe_move* lc1 = safe_move::make(point(0, 0, 0), point(1, 1, 1));
+      lc1->set_spindle_speed(lit::make(2000));
+      correct.push_back({lc1});
       REQUIRE(correct == actual);
     }
   }
