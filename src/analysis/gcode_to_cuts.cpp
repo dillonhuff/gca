@@ -89,7 +89,23 @@ namespace gca {
     return pair<vector<machine_state>, vector<point>>(clipped_states, clipped_points);
   }
 
-  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>>& cuts) {
+  cut* compute_next_cut(const machine_state& current_state,
+			point current_position,
+			point last_position) {
+    switch (current_state.active_move_type) {
+    case LINEAR_MOVE:
+      return mk_linear_cut(current_state, last_position, current_position);
+    case CLOCKWISE_CIRCULAR_MOVE:
+      return mk_circular_arc(current_state, last_position, current_position);
+    case COUNTERCLOCKWISE_CIRCULAR_MOVE:
+      return mk_circular_arc(current_state, last_position, current_position);
+    default:
+      return nullptr;
+    }
+  }
+
+  void fill_paths(const vector<block>& blocks,
+		  vector<vector<pair<machine_state, position>>>& paths) {
     auto states = all_program_states(blocks);
     vector<vector<machine_state>> toolpaths;
     split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
@@ -105,57 +121,25 @@ namespace gca {
 	       { return x.second.is_lit() == y.second.is_lit(); });
       delete_if(sub_paths, [](const vector<pair<machine_state, position>>& p)
 		{ return !p.front().second.is_lit(); });
-      for (auto path : sub_paths) {
-	vector<cut*> cts;
-	for (unsigned i = 1; i < path.size(); i++) { //cs.first.size(); i++) {
-	  cout << "Path " << endl;
-	  machine_state current_state = path[i].first;
-	  point current_position = path[i].second.extract_point();
-	  point last_position = path[i - 1].second.extract_point();
-	  switch (current_state.active_move_type) {
-	  case LINEAR_MOVE:
-	    cout << "Linear move" << endl;
-	    cts.push_back(mk_linear_cut(current_state, last_position, current_position));
-	    break;
-	  case CLOCKWISE_CIRCULAR_MOVE:
-	    cts.push_back(mk_circular_arc(current_state, last_position, current_position));
-	    break;
-	  case COUNTERCLOCKWISE_CIRCULAR_MOVE:
-	    cts.push_back(mk_circular_arc(current_state, last_position, current_position));
-	    break;
-	  default:
-	    cout << "Did not do anything" << endl;
-	    break;
-	  }
-	}
-	if (cts.size() > 0) { cuts.push_back(cts); }
+      paths.insert(end(paths), begin(sub_paths), end(sub_paths));
+    }
+  }
+
+  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>>& cuts) {
+    vector<vector<pair<machine_state, position>>> sub_paths;
+    fill_paths(blocks, sub_paths);
+    for (auto path : sub_paths) {
+      vector<cut*> cts;
+      for (unsigned i = 1; i < path.size(); i++) {
+	machine_state current_state = path[i].first;
+	point current_position = path[i].second.extract_point();
+	point last_position = path[i - 1].second.extract_point();
+	cut* next_cut = compute_next_cut(current_state, current_position, last_position);
+	if (next_cut != nullptr) { cts.push_back(next_cut); }
       }
+      if (cts.size() > 0) { cuts.push_back(cts); }
     }
     return GCODE_TO_CUTS_SUCCESS;
   }
     
-      // auto cs = clipped_states(blocks);
-      // cout << "Got clipped states" << endl;
-      // cout << "states: " << endl;
-      // cout << cs.first << endl;
-      // cout << "points: " << endl;
-      // cout << cs.second << endl;
-      // for (unsigned i = 1; i < cs.first.size(); i++) {
-      //   machine_state current_state = cs.first[i];
-      //   point current_position = cs.second[i];
-      //   point last_position = cs.second[i - 1];
-      //   switch (current_state.active_move_type) {
-      //   case LINEAR_MOVE:
-      // 	cuts.push_back(mk_linear_cut(current_state, last_position, current_position));
-      // 	break;
-      //   case CLOCKWISE_CIRCULAR_MOVE:
-      // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
-      //   case COUNTERCLOCKWISE_CIRCULAR_MOVE:
-      // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
-      // 	break;
-      //   default:
-      // 	break;
-      //   }
-      // }
-  
 }
