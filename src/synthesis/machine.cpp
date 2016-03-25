@@ -13,8 +13,9 @@ namespace gca {
       out << "DRAG_KNIFE";
       break;
     default:
-      cout << "Unsupported tool_name" << endl;
-      assert(false);
+      out << "NO_TOOL";
+      break;
+      //      assert(false);
     }
     return out;
   }

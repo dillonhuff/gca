@@ -67,7 +67,7 @@ namespace gca {
       } else if (next->tool_no == DRILL) {
     	append_drill_header_block(blocks, params.target_machine);
       } else {
-    	assert(false);
+    	//assert(false);
       }
     }
   }

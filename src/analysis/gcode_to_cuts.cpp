@@ -143,7 +143,6 @@ namespace gca {
 	  { return GCODE_TO_CUTS_UNSUPPORTED_SETTINGS; }
 	else
 	  { cts.push_back(next_cut); }
-	// cts.push_back(next_cut);
       }
       if (cts.size() > 0) { cuts.push_back(cts); }
     }
