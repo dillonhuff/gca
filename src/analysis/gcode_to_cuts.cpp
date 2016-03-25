@@ -89,31 +89,73 @@ namespace gca {
     return pair<vector<machine_state>, vector<point>>(clipped_states, clipped_points);
   }
 
-  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>> cuts) {
-    // auto cs = clipped_states(blocks);
-    // cout << "Got clipped states" << endl;
-    // cout << "states: " << endl;
-    // cout << cs.first << endl;
-    // cout << "points: " << endl;
-    // cout << cs.second << endl;
-    // for (unsigned i = 1; i < cs.first.size(); i++) {
-    //   machine_state current_state = cs.first[i];
-    //   point current_position = cs.second[i];
-    //   point last_position = cs.second[i - 1];
-    //   switch (current_state.active_move_type) {
-    //   case LINEAR_MOVE:
-    // 	cuts.push_back(mk_linear_cut(current_state, last_position, current_position));
-    // 	break;
-    //   case CLOCKWISE_CIRCULAR_MOVE:
-    // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
-    //   case COUNTERCLOCKWISE_CIRCULAR_MOVE:
-    // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
-    // 	break;
-    //   default:
-    // 	break;
-    //   }
-    // }
+  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>>& cuts) {
+    auto states = all_program_states(blocks);
+    vector<vector<machine_state>> toolpaths;
+    split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
+	     { return c.active_tool == p.active_tool; });
+    for (auto toolpath : toolpaths) {
+      auto ptbl = select_column(UNKNOWN_COORD_SYSTEM, program_position_table(toolpath));
+      vector<pair<machine_state, position>> tstates(ptbl.size());
+      zip(toolpath.begin(), toolpath.end(), ptbl.begin(), tstates.begin());
+      vector<vector<pair<machine_state, position>>> sub_paths;
+      split_by(tstates, sub_paths,
+	       [](const pair<machine_state, position>& x,
+		  const pair<machine_state, position>& y)
+	       { return x.second.is_lit() == y.second.is_lit(); });
+      delete_if(sub_paths, [](const vector<pair<machine_state, position>>& p)
+		{ return !p.front().second.is_lit(); });
+      for (auto path : sub_paths) {
+	vector<cut*> cts;
+	for (unsigned i = 1; i < path.size(); i++) { //cs.first.size(); i++) {
+	  cout << "Path " << endl;
+	  machine_state current_state = path[i].first;
+	  point current_position = path[i].second.extract_point();
+	  point last_position = path[i - 1].second.extract_point();
+	  switch (current_state.active_move_type) {
+	  case LINEAR_MOVE:
+	    cout << "Linear move" << endl;
+	    cts.push_back(mk_linear_cut(current_state, last_position, current_position));
+	    break;
+	  case CLOCKWISE_CIRCULAR_MOVE:
+	    cts.push_back(mk_circular_arc(current_state, last_position, current_position));
+	    break;
+	  case COUNTERCLOCKWISE_CIRCULAR_MOVE:
+	    cts.push_back(mk_circular_arc(current_state, last_position, current_position));
+	    break;
+	  default:
+	    cout << "Did not do anything" << endl;
+	    break;
+	  }
+	}
+	if (cts.size() > 0) { cuts.push_back(cts); }
+      }
+    }
     return GCODE_TO_CUTS_SUCCESS;
   }
+    
+      // auto cs = clipped_states(blocks);
+      // cout << "Got clipped states" << endl;
+      // cout << "states: " << endl;
+      // cout << cs.first << endl;
+      // cout << "points: " << endl;
+      // cout << cs.second << endl;
+      // for (unsigned i = 1; i < cs.first.size(); i++) {
+      //   machine_state current_state = cs.first[i];
+      //   point current_position = cs.second[i];
+      //   point last_position = cs.second[i - 1];
+      //   switch (current_state.active_move_type) {
+      //   case LINEAR_MOVE:
+      // 	cuts.push_back(mk_linear_cut(current_state, last_position, current_position));
+      // 	break;
+      //   case CLOCKWISE_CIRCULAR_MOVE:
+      // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
+      //   case COUNTERCLOCKWISE_CIRCULAR_MOVE:
+      // 	cuts.push_back(mk_circular_arc(current_state, last_position, current_position));
+      // 	break;
+      //   default:
+      // 	break;
+      //   }
+      // }
   
 }

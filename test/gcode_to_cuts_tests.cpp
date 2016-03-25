@@ -102,10 +102,9 @@ namespace gca {
       r = gcode_to_cuts(p, actual);
       linear_cut* lc1 = linear_cut::make(point(0, 0, 0), point(1, 1, 1), DRILL);
       lc1->set_spindle_speed(lit::make(2000));
-      correct.push_back({lc1});
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2), DRILL);
       lc2->set_spindle_speed(lit::make(1000));
-      correct.push_back({lc2});
+      correct.push_back({lc1, lc2});
       REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 

@@ -13,7 +13,7 @@ namespace gca {
     GCODE_TO_CUTS_UNSUPPORTED_SETTINGS
   };
 
-  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>> cuts);
+  gcode_to_cuts_result gcode_to_cuts(const vector<block>& blocks, vector<vector<cut*>>& cuts);
 
 }
 
