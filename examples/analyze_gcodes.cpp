@@ -117,7 +117,9 @@ double cut_execution_time(const cut* c) {
     assert(f->is_lit());
     fr = static_cast<lit*>(f)->v;
   } else {
-    fr = 300;
+    // This is the fast feedrate for HAAS VF1
+    // Q: Does the HAAS actually go that fast?
+    fr = 1000;
   }
   return (c->end - c->start).len() / fr;
 }
@@ -128,13 +130,22 @@ double execution_time(const vector<cut*>& path) {
   return exec_time;
 }
 
+
+
 void print_paths_gcode(vector<vector<cut*>> paths) {
   cut_params params;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
   params.safe_height = 2.0;
   for (auto path : paths) {
     if (is_prismatic(path)) {
-      cout << "prismatic path, execution time = " <<  execution_time(path) << " minutes" << endl;
+      double time = execution_time(path);
+      cout << "prismatic path, execution time = " << time << " minutes" << endl;
+      delete_if(path, [](const cut* c) { return c->is_safe_move(); });
+      double time_wo_transitions = execution_time(path);
+      cout << "prismatic path, time w/o transitions = " <<  time_wo_transitions << " minutes" << endl;
+      double pct_time_in_transition =
+	((time - time_wo_transitions) / time) * 100;
+      cout << "% of time spent in G0 moves: " << pct_time_in_transition << endl;
     }
   }
 }
