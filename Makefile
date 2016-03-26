@@ -701,48 +701,6 @@ src/checkers/unsafe_spindle_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.s
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.s
 
-src/core/arena_allocator.o: src/core/arena_allocator.cpp.o
-
-.PHONY : src/core/arena_allocator.o
-
-# target to build an object file
-src/core/arena_allocator.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.o
-.PHONY : src/core/arena_allocator.cpp.o
-
-src/core/arena_allocator.i: src/core/arena_allocator.cpp.i
-
-.PHONY : src/core/arena_allocator.i
-
-# target to preprocess a source file
-src/core/arena_allocator.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.i
-.PHONY : src/core/arena_allocator.cpp.i
-
-src/core/arena_allocator.s: src/core/arena_allocator.cpp.s
-
-.PHONY : src/core/arena_allocator.s
-
-# target to generate assembly for a file
-src/core/arena_allocator.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/arena_allocator.cpp.s
-.PHONY : src/core/arena_allocator.cpp.s
-
 src/core/lexer.o: src/core/lexer.cpp.o
 
 .PHONY : src/core/lexer.o
@@ -1625,6 +1583,48 @@ src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.s
 .PHONY : src/synthesis/toolpath.cpp.s
 
+src/system/arena_allocator.o: src/system/arena_allocator.cpp.o
+
+.PHONY : src/system/arena_allocator.o
+
+# target to build an object file
+src/system/arena_allocator.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.o
+.PHONY : src/system/arena_allocator.cpp.o
+
+src/system/arena_allocator.i: src/system/arena_allocator.cpp.i
+
+.PHONY : src/system/arena_allocator.i
+
+# target to preprocess a source file
+src/system/arena_allocator.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.i
+.PHONY : src/system/arena_allocator.cpp.i
+
+src/system/arena_allocator.s: src/system/arena_allocator.cpp.s
+
+.PHONY : src/system/arena_allocator.s
+
+# target to generate assembly for a file
+src/system/arena_allocator.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.s
+.PHONY : src/system/arena_allocator.cpp.s
+
 src/system/bmp_output.o: src/system/bmp_output.cpp.o
 
 .PHONY : src/system/bmp_output.o
@@ -2335,9 +2335,6 @@ help:
 	@echo "... src/checkers/unsafe_spindle_checker.o"
 	@echo "... src/checkers/unsafe_spindle_checker.i"
 	@echo "... src/checkers/unsafe_spindle_checker.s"
-	@echo "... src/core/arena_allocator.o"
-	@echo "... src/core/arena_allocator.i"
-	@echo "... src/core/arena_allocator.s"
 	@echo "... src/core/lexer.o"
 	@echo "... src/core/lexer.i"
 	@echo "... src/core/lexer.s"
@@ -2401,6 +2398,9 @@ help:
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"
+	@echo "... src/system/arena_allocator.o"
+	@echo "... src/system/arena_allocator.i"
+	@echo "... src/system/arena_allocator.s"
 	@echo "... src/system/bmp_output.o"
 	@echo "... src/system/bmp_output.i"
 	@echo "... src/system/bmp_output.s"

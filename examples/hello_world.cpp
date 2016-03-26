@@ -1,4 +1,4 @@
-#include "core/arena_allocator.h"
+#include "system/arena_allocator.h"
 
 using namespace gca;
 using namespace std;

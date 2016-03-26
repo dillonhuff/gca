@@ -4,7 +4,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "core/arena_allocator.h"
+#include "system/arena_allocator.h"
 #include "geometry/point.h"
 
 using namespace std;

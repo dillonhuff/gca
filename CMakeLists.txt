@@ -35,7 +35,6 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
-	    ./src/core/arena_allocator.h
 	    ./src/core/value.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
@@ -50,6 +49,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/system/bmp_output.h
+	    ./src/system/arena_allocator.h
 	    ./src/transformers/feed_changer.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
@@ -57,7 +57,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/utils.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
-	 ./src/core/arena_allocator.cpp
 	 ./src/core/value.cpp
 	 ./src/core/lexer.cpp
 	 ./src/core/parse_stream.cpp
@@ -83,6 +82,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
+	 ./src/system/arena_allocator.cpp	 
 	 ./src/transformers/feed_changer.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)

@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include "core/arena_allocator.h"
+#include "system/arena_allocator.h"
 
 namespace gca {
   arena_allocator* system_allocator = NULL;

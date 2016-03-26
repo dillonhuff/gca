@@ -1,7 +1,7 @@
 #ifndef GCA_HOLE_PUNCH_H
 #define GCA_HOLE_PUNCH_H
 
-#include "core/arena_allocator.h"
+#include "system/arena_allocator.h"
 #include "synthesis/cut.h"
 
 namespace gca {

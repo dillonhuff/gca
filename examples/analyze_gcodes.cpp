@@ -7,7 +7,7 @@
 #include "analysis/position_table.h"
 #include "analysis/unfold.h"
 #include "analysis/utils.h"
-#include "core/arena_allocator.h"
+#include "system/arena_allocator.h"
 #include "core/lexer.h"
 #include "geometry/box.h"
 #include "synthesis/cut_to_gcode.h"

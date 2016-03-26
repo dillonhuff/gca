@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "catch.hpp"
-#include "core/arena_allocator.h"
+#include "system/arena_allocator.h"
 #include "geometry/line.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
