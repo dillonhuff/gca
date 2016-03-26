@@ -1,10 +1,6 @@
 #include <cassert>
 #include <ctime>
-#include <dirent.h>
-#include <fstream>
-#include <iostream>
 #include <streambuf>
-#include <string>
 
 #include "analysis/gcode_to_cuts.h"
 #include "analysis/machine_state.h"
@@ -116,16 +112,11 @@ bool is_prismatic(const vector<cut*>& path) {
 // TODO: Make this account for cut shape
 double cut_execution_time(const cut* c) {
   value* f = c->get_feedrate();
-  // if (!f->is_lit()) {
-  //   cout << "F is not a lit " << endl;
-  //   cout << *f << endl;
-  // }
   double fr;
-  if (!c->is_safe_move()) {//f->is_lit()) {
+  if (!c->is_safe_move()) {
     assert(f->is_lit());
     fr = static_cast<lit*>(f)->v;
-  } else { //if (f->is_omitted()) {
-    //cout << *c << endl;
+  } else {
     fr = 300;
   }
   return (c->end - c->start).len() / fr;
@@ -138,7 +129,6 @@ double execution_time(const vector<cut*>& path) {
 }
 
 void print_paths_gcode(vector<vector<cut*>> paths) {
-  cout << "PRINTING PATHS " << endl;
   cut_params params;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
   params.safe_height = 2.0;
@@ -146,10 +136,7 @@ void print_paths_gcode(vector<vector<cut*>> paths) {
     if (is_prismatic(path)) {
       cout << "prismatic path, execution time = " <<  execution_time(path) << " minutes" << endl;
     }
-    //auto bs = gcode_blocks_for_cuts(path, params);
-    //    cout << bs << endl;
   }
-  cout << "DONE PRINTING PATHS" << endl;
 }
 
 int main(int argc, char** argv) {

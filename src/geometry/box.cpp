@@ -30,7 +30,9 @@ namespace gca {
 				       pair<double, double>(r.x_min, r.x_max));
     bool y_overlap = intervals_overlap(pair<double, double>(l.y_min, l.y_max),
 				       pair<double, double>(r.y_min, r.y_max));
-    return x_overlap && y_overlap;
+    bool z_overlap = intervals_overlap(pair<double, double>(l.z_min, l.z_max),
+				       pair<double, double>(r.z_min, r.z_max));
+    return x_overlap && y_overlap && z_overlap;
   }
 
 }
