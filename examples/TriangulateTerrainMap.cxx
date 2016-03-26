@@ -15,7 +15,6 @@
 
 #include "core/parser.h"
 #include "simulators/sim_mill.h"
-#include "system/bmp_output.h"
 
 using namespace gca;
  

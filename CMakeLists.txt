@@ -48,7 +48,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
-	    ./src/system/bmp_output.h
 	    ./src/system/arena_allocator.h
 	    ./src/transformers/feed_changer.h)
 
@@ -79,7 +78,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp
-	 ./src/system/bmp_output.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/arena_allocator.cpp	 
