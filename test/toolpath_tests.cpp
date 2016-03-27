@@ -1,8 +1,8 @@
 #include "catch.hpp"
-#include "system/arena_allocator.h"
-
+#include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/toolpath.h"
+#include "system/arena_allocator.h"
 
 namespace gca {
 
@@ -22,7 +22,7 @@ namespace gca {
 
     SECTION("No cuts") {
       actual = cuts_to_toolpaths(cuts);
-      REQUIRE(actual == correct);
+      REQUIRE(actual.size() == 0);
     }
 
     SECTION("One linear cut") {
@@ -40,7 +40,13 @@ namespace gca {
       SECTION("Result ends at cut sequence end") {
 	REQUIRE(actual.back().end() == point(1, 4, -2));
       }
-      
+    }
+
+    SECTION("One circular arc") {
+      cuts.push_back(circular_arc::make(point(0, 0, 0), point(1, 0, 0),
+					point(0.5, 0, 0), CLOCKWISE, XY));
+      actual = cuts_to_toolpaths(cuts);
+      REQUIRE(actual.back().c.value(0.5) == point(0.5, 0.5, 0));
     }
   }
 }

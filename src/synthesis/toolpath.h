@@ -18,12 +18,9 @@ namespace gca {
     parametric_curve c;
     toolpath(machine_settings sp, parametric_curve cp) : s(sp), c(cp) {}
 
-    inline point start() const { return c.value(0); }
+    inline point start() const { return c.value(0.0); }
     inline point end() const { return c.value(1.0); }
   };
-
-  bool operator==(const toolpath& x, const toolpath& y);
-  bool operator!=(const toolpath& x, const toolpath& y);
 
   vector<toolpath> cuts_to_toolpaths(const vector<cut*> cuts);
 }
