@@ -34,7 +34,15 @@ namespace gca {
     
     inline point value(double t) const
     { return self->value(t); }
+
+    template<typename T>
+    T& get_obj() {
+      concept_t* cptr = self.get();
+      parametric_curve::model<T>* mt = static_cast<parametric_curve::model<T>*>(cptr);
+      return mt->data;
+    }
   };
+
 }
 
 #endif

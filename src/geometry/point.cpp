@@ -1,3 +1,4 @@
+#include <cassert>
 #include <cmath>
 #include <iostream>
 
@@ -20,6 +21,13 @@ namespace gca {
     return diff <= eps;
   }
 
+  point point::normalize() const {
+    double l = len();
+    assert(!within_eps(l, 0.0));
+    return point(x / l, y / l, z / l);
+  }
+
+  
   point point::rotate_z(double degrees) const {
     double theta_rad = (M_PI/180)*degrees;
     double new_x = cos(theta_rad)*x - sin(theta_rad)*y;
@@ -40,7 +48,12 @@ namespace gca {
   }
 
   double angle_between(point u, point v) {
-    double rads = acos((u.dot(v)) / (u.len() * v.len()));
+    if (within_eps(u, v)) { return 0.0; }
+    double l = u.len() * v.len();
+    double d = u.dot(v);
+    if (within_eps(d, 0)) { return 180.0; }
+    double m = (u.dot(v)) / l;
+    double rads = acos(m);
     return (180.0/M_PI)*rads;
   }
   

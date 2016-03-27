@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "geometry/arc.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/toolpath.h"
@@ -46,6 +47,9 @@ namespace gca {
       cuts.push_back(circular_arc::make(point(0, 0, 0), point(1, 0, 0),
 					point(0.5, 0, 0), CLOCKWISE, XY));
       actual = cuts_to_toolpaths(cuts);
+      toolpath t = actual.back();
+      parametric_curve crv = t.c;
+      arc& a = crv.get_obj<arc>();
       REQUIRE(actual.back().c.value(0.5) == point(0.5, 0.5, 0));
     }
   }

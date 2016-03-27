@@ -39,12 +39,9 @@ namespace gca {
       return point(x - other.x, y - other.y, z - other.z);
     }
 
-    point normalize() const {
-      double l = len();
-      return point(x / l, y / l, z / l);
-    }
-
     double len() const;
+
+    point normalize() const;
 
     point rotate_z(double degrees) const;
 
@@ -57,10 +54,9 @@ namespace gca {
   };
 
   point operator*(double a, const point& other);
-
-  point extend_back(point start, point end, double l);
   bool within_eps(const point& l, const point& r, double eps=0.0000001);
   bool within_eps(double l, double r, double eps=0.0000001);
+  point extend_back(point start, point end, double l);
   double angle_between(point u, point v);
   ostream& operator<<(ostream& s, const point& p);
   ostream& operator<<(ostream& s, const vector<point>& p);

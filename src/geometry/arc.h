@@ -20,15 +20,7 @@ namespace gca {
       assert(within_eps(start.z, end.z));
     }
 
-    inline point value(double t) const {
-      point x_axis = point(1, 0, start.z);
-      double s = angle_between(start.normalize(), x_axis);
-      double e = angle_between(end.normalize(), x_axis);
-      cout << "s = " << s << endl;
-      cout << "e = " << e << endl;
-      double theta = (e - s)*t + s;
-      return center + point(radius*sin(theta), radius*cos(theta), 0);
-    }
+    point value(double t) const;
   };
 }
 
