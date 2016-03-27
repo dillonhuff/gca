@@ -140,7 +140,9 @@ void print_paths_gcode(vector<vector<cut*>> paths) {
     if (is_prismatic(path)) {
       double time = execution_time(path);
       cout << "prismatic path, execution time = " << time << " minutes" << endl;
-      delete_if(path, [](const cut* c) { return c->is_safe_move(); });
+      delete_if(path, [](const cut* c)
+		{ return c->is_safe_move() ||
+		    (c->is_linear_cut() && is_vertical(c)); });
       double time_wo_transitions = execution_time(path);
       cout << "prismatic path, time w/o transitions = " <<  time_wo_transitions << " minutes" << endl;
       double pct_time_in_transition =

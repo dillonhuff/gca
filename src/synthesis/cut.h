@@ -14,8 +14,6 @@ namespace gca {
     machine_settings settings;
     point start, end;
     tool_name tool_no;
-    // value* feedrate;
-    // value* spindle_speed;
     
     cut(point s, point e) : start(s), end(e), tool_no(NO_TOOL) {}
     cut(point s, point e, tool_name t) : start(s), end(e), tool_no(t) {}
