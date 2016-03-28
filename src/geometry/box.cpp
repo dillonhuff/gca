@@ -35,4 +35,22 @@ namespace gca {
     return x_overlap && y_overlap && z_overlap;
   }
 
+  box bound_positions(const vector<point> pts) {
+    assert(pts.size() > 0);
+    auto xminmax = minmax_element(pts.begin(), pts.end(),
+				  [](const point l, const point r)
+				  { return l.x < r.x; });
+    assert(xminmax.first != pts.end());
+    auto yminmax = minmax_element(pts.begin(), pts.end(),
+				  [](const point l, const point r)
+				  { return l.y < r.y; });
+    auto zminmax = minmax_element(pts.begin(), pts.end(),
+				  [](const point l, const point r)
+				  { return l.z < r.z; });
+    assert(yminmax.first != pts.end());
+    return box((*(xminmax.first)).x, (*(xminmax.second)).x,
+	       (*(yminmax.first)).y, (*(yminmax.second)).y,
+	       (*(zminmax.first)).z, (*(zminmax.second)).z);
+  }
+
 }

@@ -3,6 +3,9 @@
 
 #include <cassert>
 #include <iostream>
+#include <vector>
+
+#include "geometry/point.h"
 
 using namespace std;
 
@@ -26,7 +29,8 @@ namespace gca {
   ostream& operator<<(ostream& out, const box& b);
 
   bool overlap(const box l, const box r);
-  
+
+  box bound_positions(const vector<point> pts);  
 }
 
 #endif

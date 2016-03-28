@@ -124,5 +124,26 @@ namespace gca {
       m == CANNED_CYCLE_84_MOVE ||
       m == CANNED_CYCLE_85_MOVE;
   }
+
+  bool is_climb_milling(const machine_state& s) {
+    if (s.tool_radius_comp == TOOL_RADIUS_COMP_LEFT) {
+      return s.spindle_setting == SPINDLE_CLOCKWISE;
+    } else if (s.tool_radius_comp == TOOL_RADIUS_COMP_RIGHT) {
+      return s.spindle_setting == SPINDLE_COUNTERCLOCKWISE;
+    } else {
+      assert(false);
+    }
+  }
+
+  void sanity_check_machine_state(const machine_state& s) {
+    if (is_cut(s)) {
+      if (spindle_off(s)) {
+	cout << "Spindle off during cut: " << endl;
+	cout << s << endl;
+	assert(false);
+      }
+    }
+  }
+
   
 }

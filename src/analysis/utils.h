@@ -47,8 +47,10 @@ namespace gca {
   bool is_move(const machine_state& s);
   bool spindle_off(const machine_state& s);
   bool is_canned_cycle(const machine_state& s);
-
   bool is_analyzable(const vector<machine_state>& toolpath);
+  void sanity_check_machine_state(const machine_state& s);  
+  bool is_climb_milling(const machine_state& s);
+  
 }
 
 #endif
