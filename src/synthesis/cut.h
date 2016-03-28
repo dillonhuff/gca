@@ -11,8 +11,12 @@
 namespace gca {
 
   struct cut {
+  private:
+    point start;
+    point end;
+    
+  public:
     machine_settings settings;
-    point start, end;
     tool_name tool_no;
     
     cut(point s, point e) : start(s), end(e), tool_no(NO_TOOL) {}

@@ -14,7 +14,7 @@ namespace gca {
     } else {
       other << "<S omitted> ";
     }
-    other << start << " -> " << end;
+    other << get_start() << " -> " << get_end();
   }
 
 }

@@ -26,11 +26,11 @@ namespace gca {
     }
     
     point final_orient() const {
-      return end - start;
+      return get_end() - get_start();
     }
     
     point initial_orient() const {
-      return end - start;
+      return get_end() - get_start();
     }
 
     bool operator==(const cut& other) const {
@@ -38,7 +38,7 @@ namespace gca {
 	return false;
       }
       if (other.is_linear_cut()) {
-	bool res = within_eps(start, other.get_start()) && within_eps(end, other.get_end());
+	bool res = within_eps(get_start(), other.get_start()) && within_eps(get_end(), other.get_end());
 	return res;
       }
       return false;
@@ -46,30 +46,30 @@ namespace gca {
 
     cut* shift(point sh) const {
       linear_cut* c = static_cast<linear_cut*>(copy());
-      c->start = start + sh;
-      c->end = end + sh;
+      c->set_start(get_start() + sh);
+      c->set_end(get_end() + sh);
       c->tool_no = tool_no;
       return c;
     }
 
     cut* scale(double s) const {
       cut* c = copy();
-      c->start = s*c->get_start();
-      c->end = s*c->get_end();
+      c->set_start(s*c->get_start());
+      c->set_end(s*c->get_end());
       return c;
     }
 
     cut* scale_xy(double s) const {
       linear_cut* m = static_cast<linear_cut*>(copy());
-      m->start = point(s*start.x, s*start.y, start.z);
-      m->end = point(s*end.x, s*end.y, end.z);
+      m->set_start(point(s*get_start().x, s*get_start().y, get_start().z));
+      m->set_end(point(s*get_end().x, s*get_end().y, get_end().z));
       return m;
     }
 
     inline bool is_linear_cut() const { return true; }
 
     virtual cut* copy() const {
-      linear_cut* l = linear_cut::make(start, end);
+      linear_cut* l = linear_cut::make(get_start(), get_end());
       l->tool_no = tool_no;
       l->set_feedrate(settings.feedrate);
       l->set_spindle_speed(settings.spindle_speed);

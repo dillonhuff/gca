@@ -23,8 +23,8 @@ namespace gca {
   }
 
     void sanity_check() {
-      double sdiff = (center() - start).len();
-      double ediff =  (center() - end).len();
+      double sdiff = (center() - get_start()).len();
+      double ediff =  (center() - get_end()).len();
       double tolerance = 0.0005;
       if (!(within_eps(sdiff, ediff, tolerance))) {
 	cout << "Error: !(within_eps((center() - start).len(), (center() - end).len()))" << endl;
@@ -33,8 +33,8 @@ namespace gca {
 	cout << "Difference               = " << sdiff - ediff << endl;
 	cout << "Tolerance                = " << tolerance << endl;
 	cout << "center                   = " << center() << endl;
-	cout << "start                    = " << start << endl;
-	cout << "end                      = " << end << endl;
+	cout << "start                    = " << get_start() << endl;
+	cout << "end                      = " << get_end() << endl;
 	cout << "start_offset             = " << start_offset << endl;
 	assert(false);
       }
@@ -56,7 +56,7 @@ namespace gca {
       }
       if (other.is_circular_arc()) {
 	const circular_arc& ci = static_cast<const circular_arc&>(other);
-	return pl == ci.pl && dir == ci.dir && within_eps(start, ci.get_start()) && within_eps(end, ci.get_end()) && within_eps(start_offset, ci.start_offset);
+	return pl == ci.pl && dir == ci.dir && within_eps(get_start(), ci.get_start()) && within_eps(get_end(), ci.get_end()) && within_eps(start_offset, ci.start_offset);
       }
       return false;
     }
@@ -64,15 +64,15 @@ namespace gca {
     cut* shift(point sh) const {
       //circular_arc* mem = allocate<circular_arc>();
       circular_arc* arc = static_cast<circular_arc*>(copy()); // new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
-      arc->start = start + sh;
-      arc->end = end + sh;
+      arc->set_start(get_start() + sh);
+      arc->set_end(get_end() + sh);
       return arc;
     }
 
     cut* scale(double s) const {
       circular_arc* arc = static_cast<circular_arc*>(copy());
-      arc->start = s*start;
-      arc->end = s*end;
+      arc->set_start(s*get_start());
+      arc->set_end(s*get_end());
       arc->start_offset = s*start_offset;
       arc->tool_no = tool_no;
       return arc;
@@ -80,15 +80,15 @@ namespace gca {
 
     cut* scale_xy(double s) const {
       circular_arc* m = static_cast<circular_arc*>(copy());
-      m->start = point(s*start.x, s*start.y, start.z);
-      m->end = point(s*end.x, s*end.y, end.z);
+      m->set_start(point(s*get_start().x, s*get_start().y, get_start().z));
+      m->set_end(point(s*get_end().x, s*get_end().y, get_end().z));
       m->start_offset = point(s*start_offset.x, s*start_offset.y, start_offset.z);
       return m;
     }
     
     virtual point initial_orient() const {
       double theta = dir == CLOCKWISE ? 90 : -90;
-      return (end - start).rotate_z(theta).normalize();
+      return (get_end() - get_start()).rotate_z(theta).normalize();
     }
 
     virtual point final_orient() const {
@@ -98,11 +98,11 @@ namespace gca {
     inline bool is_circular_arc() const { return true; }
     
     inline point center_to_start_vec() const { return -1 * start_offset; }
-    inline point center_to_end_vec() const { return end - center(); }
-    inline point center() const { return start + start_offset; }
+    inline point center_to_end_vec() const { return get_end() - center(); }
+    inline point center() const { return get_start() + start_offset; }
 
     virtual cut* copy() const {
-      circular_arc* arc = circular_arc::make(start, end, start_offset, dir, pl);
+      circular_arc* arc = circular_arc::make(get_start(), get_end(), start_offset, dir, pl);
       arc->tool_no = tool_no;
       arc->set_feedrate(settings.feedrate);
       arc->set_spindle_speed(settings.spindle_speed);

@@ -96,7 +96,7 @@ namespace gca {
       if (pts.size() == 0) {
 	pts.push_back(s);
       }
-      pts.push_back(e);      
+      pts.push_back(e);
     }
     return pts;
   }
