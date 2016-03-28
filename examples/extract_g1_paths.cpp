@@ -13,9 +13,9 @@ using namespace gca;
 using namespace std;
 
 bool duplicate_ignoring_z(cut_section& p1, cut_section& p2) {
-  point p1s = p1.start;
+  point p1s = p1.get_start();
   p1s.z = 0;
-  point p2s = p1.start;
+  point p2s = p1.get_start();
   p2s.z = 0;  
   if (!within_eps(p1s, p2s)) {
     return false;
@@ -72,14 +72,14 @@ gprog* generate_drag_knife_code(double safe_height,
   gprog* res = initial_gprog();
   for (unsigned i = 0; i < sections.size(); i++) {
     cut_section sec = sections[i];    
-    cout << "[ section starting at " << sec.start << " ]" << endl;
+    cout << "[ section starting at " << sec.get_start() << " ]" << endl;
     cout << "[ section of size " << (sec.p)->size() << " ]" << endl;
     from_to_with_G0_drag_knife(safe_height,
 			       align_depth,
 			       res,
 			       last_section_end_pos,
 			       last_section_end_orientation,
-			       sec.start,
+			       sec.get_start(),
 			       sec.start_orientation());
     for (unsigned j = 0; j < (sec.p)->size(); j++) {
       res->push_back((*(sec.p))[j]);

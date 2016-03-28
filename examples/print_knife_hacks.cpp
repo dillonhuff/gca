@@ -78,7 +78,7 @@ circular_arc compute_arc(const vector<instr*>& window) {
 }
 
 ostream& operator<<(ostream& s, const circular_arc& a) {
-  s << a.start << " " << a.end << " " << a.start_offset;
+  s << a.get_start() << " " << a.end << " " << a.start_offset;
   return s;
 }
 
@@ -87,10 +87,10 @@ void print_window_info(const vector<instr*>& window) {
   circular_arc ca = extract_arc(window);
   cout << "Extracted: " << ca << endl;
   cout << "Extracted circle radius = " << ca.start_offset.len() << endl;
-  point circle_center = ca.start + ca.start_offset;
+  point circle_center = ca.get_start() + ca.start_offset;
   cout << "Extracted circle center = " << circle_center << endl;;
   point ev = ca.end - circle_center;
-  point sv = ca.start - circle_center;
+  point sv = ca.get_start() - circle_center;
   cout << "ev = " << ev << endl;
   cout << "sv = " << sv << endl;
   cout << "angle between start and end = " << angle_between(sv, ev) << endl;

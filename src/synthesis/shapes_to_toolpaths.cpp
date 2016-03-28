@@ -228,7 +228,7 @@ namespace gca {
       lines.insert(lines.end(), ls.begin(), ls.end());
     }
     auto not_adj_test = [](line c, line n) {
-      bool touching = within_eps(c.end,n.start);
+      bool touching = within_eps(c.end, n.start);
       bool small_orientation_diff =
       within_eps(angle_between(c.end - c.start, n.end - n.start), 0, 15);
       return !touching || !small_orientation_diff;

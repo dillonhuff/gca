@@ -49,11 +49,11 @@ namespace gca {
     point next_pos_xy = next_pos;
     next_pos_xy.z = align_depth;
     circular_arc ca = align_coords(next_orient, next_pos_xy, last_orient, r);
-    point sd = point(ca.start.x, ca.start.y, safe_height);
-    point rd = point(ca.start.x, ca.start.y, align_depth);
+    point sd = point(ca.get_start().x, ca.get_start().y, safe_height);
+    point rd = point(ca.get_start().x, ca.get_start().y, align_depth);
     cuts.push_back(safe_move::make(last_pos_up, sd));
     cuts.push_back(linear_cut::make(sd, rd));
-    cuts.push_back(circular_arc::make(ca.start, ca.end, ca.start_offset, ca.dir, ca.pl));
+    cuts.push_back(circular_arc::make(ca.get_start(), ca.end, ca.start_offset, ca.dir, ca.pl));
     cuts.push_back(linear_cut::make(ca.end, next_pos));
     return cuts;
   }
