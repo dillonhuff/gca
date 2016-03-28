@@ -28,7 +28,7 @@ namespace gca {
 
     double align_depth = params.material_depth - params.push_depth;
     point next_orient = next_cut->initial_orient();
-    point next_loc = next_cut->start;
+    point next_loc = next_cut->get_start();
     vector<cut*> tcuts;
     if (!within_eps(angle_between(current_orient, next_orient), 0, params.max_orientation_diff)) {
       tcuts = from_to_with_G0_drag_knife(params.safe_height,
@@ -38,7 +38,7 @@ namespace gca {
 					 next_loc,
 					 next_orient);
     } else if (!within_eps(current_loc, next_loc)) {
-      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, lit::make(params.default_feedrate));
+      tcuts = from_to_with_G0_height(current_loc, next_cut->get_start(), params.safe_height, lit::make(params.default_feedrate));
     }
     return tcuts;
   }
@@ -49,8 +49,8 @@ namespace gca {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
 
     vector<cut*> tcuts;
-    if (!within_eps(current_loc, next_cut->start)) {
-      tcuts = from_to_with_G0_height(current_loc, next_cut->start, params.safe_height, lit::make(params.default_feedrate));
+    if (!within_eps(current_loc, next_cut->get_start())) {
+      tcuts = from_to_with_G0_height(current_loc, next_cut->get_start(), params.safe_height, lit::make(params.default_feedrate));
     }
     return tcuts;
   }
@@ -105,10 +105,10 @@ namespace gca {
       for (unsigned i = 0; i < cuts.size() - 1; i++) {
 	cut* current = cuts[i];
 	cut* next = cuts[i+1];
-	if (!within_eps(current->end, next->start) &&
+	if (!within_eps(current->end, next->get_start()) &&
 	    current->tool_no == next->tool_no) {
 	  cout << "Error: " << current->end << " and " << endl;
-	  cout << next->start << " are not adjacent" << endl;
+	  cout << next->get_start() << " are not adjacent" << endl;
 	}
       }
     }

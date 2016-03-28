@@ -20,9 +20,13 @@ namespace gca {
 
     inline value* get_spindle_speed() const { return settings.spindle_speed; }
     inline value* get_feedrate() const { return settings.feedrate; }
+    inline point get_start() const { return start; }
+    inline point get_end() const { return end; }
 
     inline void set_spindle_speed(value* v) { settings.spindle_speed = v; }
     inline void set_feedrate(value* v) { settings.feedrate = v; }
+    inline void set_start(point p) { start = p; }
+    inline void set_end(point p) { end = p; }
     
     virtual inline bool is_safe_move() const { return false; }
     virtual inline bool is_linear_cut() const { return false; }

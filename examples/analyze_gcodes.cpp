@@ -94,12 +94,12 @@ void print_toolpaths(const vector<machine_state>& states) {
 // It is possible that a cut could have both its start and
 // end in the XY plane even though it moves above that plane
 bool is_vertical(const cut* c) {
-  return within_eps(c->end.x, c->start.x) &&
-    within_eps(c->end.y, c->start.y);
+  return within_eps(c->end.x, c->get_start().x) &&
+    within_eps(c->end.y, c->get_start().y);
 }
 
 bool is_horizontal(const cut* c) {
-  return within_eps(c->end.z, c->start.z);
+  return within_eps(c->end.z, c->get_start().z);
 }
 
 bool is_prismatic(const vector<cut*>& path) {
@@ -121,7 +121,7 @@ double cut_execution_time(const cut* c) {
     // Q: Does the HAAS actually go that fast?
     fr = 1000;
   }
-  return (c->end - c->start).len() / fr;
+  return (c->end - c->get_start()).len() / fr;
 }
 
 double execution_time(const vector<cut*>& path) {

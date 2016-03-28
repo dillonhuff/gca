@@ -8,9 +8,9 @@ namespace gca {
   typedef vector<cut*> cut_group;
 
   bool cmp_z(const cut* l, const cut* r) {
-    assert(within_eps(l->start.z, l->end.z));
-    assert(within_eps(r->start.z, r->end.z));
-    return l->start.z > r->start.z;
+    assert(within_eps(l->get_start().z, l->end.z));
+    assert(within_eps(r->get_start().z, r->end.z));
+    return l->get_start().z > r->get_start().z;
   }
 
   struct elem_test {
@@ -34,7 +34,7 @@ namespace gca {
 		    max_orientation_change)) {
       return false;
     }
-    return within_eps(last->end, next->start);
+    return within_eps(last->end, next->get_start());
   }
 
   vector<cut*> contiguous_chain(vector<cut*>::const_iterator it,
@@ -61,7 +61,7 @@ namespace gca {
   }
 
   bool represents_polygon(const cut_group* r) {
-    return within_eps(r->front()->start, r->back()->end);
+    return within_eps(r->front()->get_start(), r->back()->end);
   }
 
   bool poly_contains(const cut_group* l, const cut_group* r) {

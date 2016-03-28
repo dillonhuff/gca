@@ -59,7 +59,7 @@ namespace gca {
   void insert_lines(const vector<cut*>& lines,
 		    vector<polyline>& polys) {
     for (auto c : lines) {
-      vector<point> p{c->start, c->end};
+      vector<point> p{c->get_start(), c->end};
       polys.push_back(polyline(p));
     }
   }
@@ -78,7 +78,7 @@ namespace gca {
   vector<point> cuts_to_points(vector<cut*> cuts) {
     vector<point> pts;
     for (auto c : cuts) {
-      point s = c->start;
+      point s = c->get_start();
       point e = c->end;
       if (pts.size() == 0) {
 	pts.push_back(s);
@@ -102,9 +102,9 @@ namespace gca {
   }
   
   vector<polyline> make_polylines_from(vector<cut*> lines) {
-    auto adj_test = [](cut* c, cut* n) { return within_eps(c->end, n->start); };
+    auto adj_test = [](cut* c, cut* n) { return within_eps(c->end, n->get_start()); };
     auto not_adj_test = [](cut* c, cut* n) {
-      bool touching = within_eps(c->end,n->start);
+      bool touching = within_eps(c->end,n->get_start());
       return !touching; // || !small_orientation_diff;
     };
     greedy_adjacent_chains(lines.begin(), lines.end(), adj_test);
