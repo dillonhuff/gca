@@ -11,10 +11,10 @@ namespace gca {
 
   parametric_curve mk_parametric_curve(const cut& c) {
     if (c.is_linear_cut()) {
-      return parametric_curve(line(c.get_start(), c.end));
+      return parametric_curve(line(c.get_start(), c.get_end()));
     } else if (c.is_circular_arc()) {
       const circular_arc& ca = static_cast<const circular_arc&>(c);
-      return parametric_curve(arc(ca.get_start(), ca.end, ca.start_offset, ca.dir));
+      return parametric_curve(arc(ca.get_start(), ca.get_end(), ca.start_offset, ca.dir));
     } else {
       assert(false);
     }

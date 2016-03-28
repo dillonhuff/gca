@@ -59,7 +59,7 @@ namespace gca {
       }
       if (other.is_circular_helix_cut()) {
 	const circular_helix_cut& ci = static_cast<const circular_helix_cut&>(other);
-	return pl == ci.pl && dir == ci.dir && within_eps(start, ci.start) && within_eps(end, ci.end) && within_eps(start_offset, ci.start_offset);
+	return pl == ci.pl && dir == ci.dir && within_eps(start, ci.get_start()) && within_eps(end, ci.get_end()) && within_eps(start_offset, ci.start_offset);
       }
       return false;
     }

@@ -26,9 +26,9 @@ namespace gca {
     } else {
       assert(false);
     }
-    b.push_back(token('X', ca.end.x));
-    b.push_back(token('Y', ca.end.y));
-    b.push_back(token('Z', ca.end.z));
+    b.push_back(token('X', ca.get_end().x));
+    b.push_back(token('Y', ca.get_end().y));
+    b.push_back(token('Z', ca.get_end().z));
     b.push_back(token('I', ca.start_offset.x));
     b.push_back(token('J', ca.start_offset.y));
     return b;

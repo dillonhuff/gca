@@ -29,7 +29,7 @@ gprog* generalize_zs(set<double>& z_values, gprog* p) {
   map<double, var*> new_vars;
   int i = 1;
   for (set<double>::iterator it = z_values.begin();
-       it != z_values.end(); ++it) {
+       it != z_values.get_end()(); ++it) {
     var* v = var::make(i);
     new_vars[*it] = var::make(i);
     r->push_back(mk_assign(v, lit::make(*it)));

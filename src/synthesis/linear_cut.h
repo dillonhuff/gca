@@ -38,7 +38,7 @@ namespace gca {
 	return false;
       }
       if (other.is_linear_cut()) {
-	bool res = within_eps(start, other.start) && within_eps(end, other.end);
+	bool res = within_eps(start, other.get_start()) && within_eps(end, other.get_end());
 	return res;
       }
       return false;

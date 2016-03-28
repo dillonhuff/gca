@@ -53,8 +53,8 @@ namespace gca {
     point rd = point(ca.get_start().x, ca.get_start().y, align_depth);
     cuts.push_back(safe_move::make(last_pos_up, sd));
     cuts.push_back(linear_cut::make(sd, rd));
-    cuts.push_back(circular_arc::make(ca.get_start(), ca.end, ca.start_offset, ca.dir, ca.pl));
-    cuts.push_back(linear_cut::make(ca.end, next_pos));
+    cuts.push_back(circular_arc::make(ca.get_start(), ca.get_end(), ca.start_offset, ca.dir, ca.pl));
+    cuts.push_back(linear_cut::make(ca.get_end(), next_pos));
     return cuts;
   }
   

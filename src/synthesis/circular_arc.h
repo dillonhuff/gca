@@ -56,7 +56,7 @@ namespace gca {
       }
       if (other.is_circular_arc()) {
 	const circular_arc& ci = static_cast<const circular_arc&>(other);
-	return pl == ci.pl && dir == ci.dir && within_eps(start, ci.start) && within_eps(end, ci.end) && within_eps(start_offset, ci.start_offset);
+	return pl == ci.pl && dir == ci.dir && within_eps(start, ci.get_start()) && within_eps(end, ci.get_end()) && within_eps(start_offset, ci.start_offset);
       }
       return false;
     }

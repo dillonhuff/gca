@@ -54,7 +54,7 @@ namespace gca {
       }
       if (other.is_hole_punch()) {
 	const hole_punch& other_hp = static_cast<const hole_punch&>(other);
-	return other_hp.start == start && other_hp.radius == radius;
+	return other_hp.get_start() == start && other_hp.radius == radius;
       }
       return false;
     }
