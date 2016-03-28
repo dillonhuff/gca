@@ -188,6 +188,19 @@ print-dxf/fast:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/build
 .PHONY : print-dxf/fast
 
+#=============================================================================
+# Target rules for targets named tool-simulator
+
+# Build rule for target.
+tool-simulator: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tool-simulator
+.PHONY : tool-simulator
+
+# fast build rule for target.
+tool-simulator/fast:
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/build
+.PHONY : tool-simulator/fast
+
 examples/analyze_gcodes.o: examples/analyze_gcodes.cpp.o
 
 .PHONY : examples/analyze_gcodes.o
@@ -323,6 +336,33 @@ examples/print_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/examples/print_dxf.cpp.s
 .PHONY : examples/print_dxf.cpp.s
 
+examples/tool_simulator.o: examples/tool_simulator.cpp.o
+
+.PHONY : examples/tool_simulator.o
+
+# target to build an object file
+examples/tool_simulator.cpp.o:
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/examples/tool_simulator.cpp.o
+.PHONY : examples/tool_simulator.cpp.o
+
+examples/tool_simulator.i: examples/tool_simulator.cpp.i
+
+.PHONY : examples/tool_simulator.i
+
+# target to preprocess a source file
+examples/tool_simulator.cpp.i:
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/examples/tool_simulator.cpp.i
+.PHONY : examples/tool_simulator.cpp.i
+
+examples/tool_simulator.s: examples/tool_simulator.cpp.s
+
+.PHONY : examples/tool_simulator.s
+
+# target to generate assembly for a file
+examples/tool_simulator.cpp.s:
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/examples/tool_simulator.cpp.s
+.PHONY : examples/tool_simulator.cpp.s
+
 src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
 .PHONY : src/analysis/extract_cuts.o
@@ -335,6 +375,7 @@ src/analysis/extract_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/extract_cuts.cpp.o
 .PHONY : src/analysis/extract_cuts.cpp.o
 
 src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
@@ -349,6 +390,7 @@ src/analysis/extract_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/extract_cuts.cpp.i
 .PHONY : src/analysis/extract_cuts.cpp.i
 
 src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
@@ -363,6 +405,7 @@ src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
 src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
@@ -377,6 +420,7 @@ src/analysis/gcode_to_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/gcode_to_cuts.cpp.o
 .PHONY : src/analysis/gcode_to_cuts.cpp.o
 
 src/analysis/gcode_to_cuts.i: src/analysis/gcode_to_cuts.cpp.i
@@ -391,6 +435,7 @@ src/analysis/gcode_to_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/gcode_to_cuts.cpp.i
 .PHONY : src/analysis/gcode_to_cuts.cpp.i
 
 src/analysis/gcode_to_cuts.s: src/analysis/gcode_to_cuts.cpp.s
@@ -405,6 +450,7 @@ src/analysis/gcode_to_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/gcode_to_cuts.cpp.s
 .PHONY : src/analysis/gcode_to_cuts.cpp.s
 
 src/analysis/machine_state.o: src/analysis/machine_state.cpp.o
@@ -419,6 +465,7 @@ src/analysis/machine_state.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/machine_state.cpp.o
 .PHONY : src/analysis/machine_state.cpp.o
 
 src/analysis/machine_state.i: src/analysis/machine_state.cpp.i
@@ -433,6 +480,7 @@ src/analysis/machine_state.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/machine_state.cpp.i
 .PHONY : src/analysis/machine_state.cpp.i
 
 src/analysis/machine_state.s: src/analysis/machine_state.cpp.s
@@ -447,6 +495,7 @@ src/analysis/machine_state.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/machine_state.cpp.s
 .PHONY : src/analysis/machine_state.cpp.s
 
 src/analysis/position_table.o: src/analysis/position_table.cpp.o
@@ -461,6 +510,7 @@ src/analysis/position_table.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/position_table.cpp.o
 .PHONY : src/analysis/position_table.cpp.o
 
 src/analysis/position_table.i: src/analysis/position_table.cpp.i
@@ -475,6 +525,7 @@ src/analysis/position_table.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/position_table.cpp.i
 .PHONY : src/analysis/position_table.cpp.i
 
 src/analysis/position_table.s: src/analysis/position_table.cpp.s
@@ -489,6 +540,7 @@ src/analysis/position_table.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/position_table.cpp.s
 .PHONY : src/analysis/position_table.cpp.s
 
 src/analysis/unfold.o: src/analysis/unfold.cpp.o
@@ -503,6 +555,7 @@ src/analysis/unfold.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/unfold.cpp.o
 .PHONY : src/analysis/unfold.cpp.o
 
 src/analysis/unfold.i: src/analysis/unfold.cpp.i
@@ -517,6 +570,7 @@ src/analysis/unfold.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/unfold.cpp.i
 .PHONY : src/analysis/unfold.cpp.i
 
 src/analysis/unfold.s: src/analysis/unfold.cpp.s
@@ -531,6 +585,7 @@ src/analysis/unfold.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/unfold.cpp.s
 .PHONY : src/analysis/unfold.cpp.s
 
 src/analysis/utils.o: src/analysis/utils.cpp.o
@@ -545,6 +600,7 @@ src/analysis/utils.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/utils.cpp.o
 .PHONY : src/analysis/utils.cpp.o
 
 src/analysis/utils.i: src/analysis/utils.cpp.i
@@ -559,6 +615,7 @@ src/analysis/utils.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/utils.cpp.i
 .PHONY : src/analysis/utils.cpp.i
 
 src/analysis/utils.s: src/analysis/utils.cpp.s
@@ -573,6 +630,7 @@ src/analysis/utils.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/analysis/utils.cpp.s
 .PHONY : src/analysis/utils.cpp.s
 
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
@@ -587,6 +645,7 @@ src/checkers/bounds_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/bounds_checker.cpp.o
 .PHONY : src/checkers/bounds_checker.cpp.o
 
 src/checkers/bounds_checker.i: src/checkers/bounds_checker.cpp.i
@@ -601,6 +660,7 @@ src/checkers/bounds_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/bounds_checker.cpp.i
 .PHONY : src/checkers/bounds_checker.cpp.i
 
 src/checkers/bounds_checker.s: src/checkers/bounds_checker.cpp.s
@@ -615,6 +675,7 @@ src/checkers/bounds_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/bounds_checker.cpp.s
 .PHONY : src/checkers/bounds_checker.cpp.s
 
 src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
@@ -629,6 +690,7 @@ src/checkers/forbidden_tool_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/forbidden_tool_checker.cpp.o
 .PHONY : src/checkers/forbidden_tool_checker.cpp.o
 
 src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
@@ -643,6 +705,7 @@ src/checkers/forbidden_tool_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/forbidden_tool_checker.cpp.i
 .PHONY : src/checkers/forbidden_tool_checker.cpp.i
 
 src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
@@ -657,6 +720,7 @@ src/checkers/forbidden_tool_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/forbidden_tool_checker.cpp.s
 .PHONY : src/checkers/forbidden_tool_checker.cpp.s
 
 src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
@@ -671,6 +735,7 @@ src/checkers/unsafe_spindle_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/unsafe_spindle_checker.cpp.o
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.o
 
 src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
@@ -685,6 +750,7 @@ src/checkers/unsafe_spindle_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/unsafe_spindle_checker.cpp.i
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.i
 
 src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
@@ -699,6 +765,7 @@ src/checkers/unsafe_spindle_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/checkers/unsafe_spindle_checker.cpp.s
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.s
 
 src/core/lexer.o: src/core/lexer.cpp.o
@@ -713,6 +780,7 @@ src/core/lexer.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/lexer.cpp.o
 .PHONY : src/core/lexer.cpp.o
 
 src/core/lexer.i: src/core/lexer.cpp.i
@@ -727,6 +795,7 @@ src/core/lexer.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/lexer.cpp.i
 .PHONY : src/core/lexer.cpp.i
 
 src/core/lexer.s: src/core/lexer.cpp.s
@@ -741,6 +810,7 @@ src/core/lexer.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/lexer.cpp.s
 .PHONY : src/core/lexer.cpp.s
 
 src/core/parse_stream.o: src/core/parse_stream.cpp.o
@@ -755,6 +825,7 @@ src/core/parse_stream.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/parse_stream.cpp.o
 .PHONY : src/core/parse_stream.cpp.o
 
 src/core/parse_stream.i: src/core/parse_stream.cpp.i
@@ -769,6 +840,7 @@ src/core/parse_stream.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/parse_stream.cpp.i
 .PHONY : src/core/parse_stream.cpp.i
 
 src/core/parse_stream.s: src/core/parse_stream.cpp.s
@@ -783,6 +855,7 @@ src/core/parse_stream.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/parse_stream.cpp.s
 .PHONY : src/core/parse_stream.cpp.s
 
 src/core/value.o: src/core/value.cpp.o
@@ -797,6 +870,7 @@ src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/value.cpp.o
 .PHONY : src/core/value.cpp.o
 
 src/core/value.i: src/core/value.cpp.i
@@ -811,6 +885,7 @@ src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/value.cpp.i
 .PHONY : src/core/value.cpp.i
 
 src/core/value.s: src/core/value.cpp.s
@@ -825,6 +900,7 @@ src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/core/value.cpp.s
 .PHONY : src/core/value.cpp.s
 
 src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
@@ -839,6 +915,7 @@ src/dxflib/dl_dxf.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/dxflib/dl_dxf.cpp.o
 .PHONY : src/dxflib/dl_dxf.cpp.o
 
 src/dxflib/dl_dxf.i: src/dxflib/dl_dxf.cpp.i
@@ -853,6 +930,7 @@ src/dxflib/dl_dxf.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/dxflib/dl_dxf.cpp.i
 .PHONY : src/dxflib/dl_dxf.cpp.i
 
 src/dxflib/dl_dxf.s: src/dxflib/dl_dxf.cpp.s
@@ -867,6 +945,7 @@ src/dxflib/dl_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/dxflib/dl_dxf.cpp.s
 .PHONY : src/dxflib/dl_dxf.cpp.s
 
 src/dxflib/dl_writer_ascii.o: src/dxflib/dl_writer_ascii.cpp.o
@@ -881,6 +960,7 @@ src/dxflib/dl_writer_ascii.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/dxflib/dl_writer_ascii.cpp.o
 .PHONY : src/dxflib/dl_writer_ascii.cpp.o
 
 src/dxflib/dl_writer_ascii.i: src/dxflib/dl_writer_ascii.cpp.i
@@ -895,6 +975,7 @@ src/dxflib/dl_writer_ascii.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/dxflib/dl_writer_ascii.cpp.i
 .PHONY : src/dxflib/dl_writer_ascii.cpp.i
 
 src/dxflib/dl_writer_ascii.s: src/dxflib/dl_writer_ascii.cpp.s
@@ -909,6 +990,7 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
 src/geometry/arc.o: src/geometry/arc.cpp.o
@@ -923,6 +1005,7 @@ src/geometry/arc.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/arc.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/arc.cpp.o
 .PHONY : src/geometry/arc.cpp.o
 
 src/geometry/arc.i: src/geometry/arc.cpp.i
@@ -937,6 +1020,7 @@ src/geometry/arc.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/arc.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/arc.cpp.i
 .PHONY : src/geometry/arc.cpp.i
 
 src/geometry/arc.s: src/geometry/arc.cpp.s
@@ -951,6 +1035,7 @@ src/geometry/arc.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/arc.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/arc.cpp.s
 .PHONY : src/geometry/arc.cpp.s
 
 src/geometry/box.o: src/geometry/box.cpp.o
@@ -965,6 +1050,7 @@ src/geometry/box.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/box.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/box.cpp.o
 .PHONY : src/geometry/box.cpp.o
 
 src/geometry/box.i: src/geometry/box.cpp.i
@@ -979,6 +1065,7 @@ src/geometry/box.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/box.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/box.cpp.i
 .PHONY : src/geometry/box.cpp.i
 
 src/geometry/box.s: src/geometry/box.cpp.s
@@ -993,6 +1080,7 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/box.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
 src/geometry/point.o: src/geometry/point.cpp.o
@@ -1007,6 +1095,7 @@ src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/point.cpp.o
 .PHONY : src/geometry/point.cpp.o
 
 src/geometry/point.i: src/geometry/point.cpp.i
@@ -1021,6 +1110,7 @@ src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/point.cpp.i
 .PHONY : src/geometry/point.cpp.i
 
 src/geometry/point.s: src/geometry/point.cpp.s
@@ -1035,6 +1125,7 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/geometry/point.cpp.s
 .PHONY : src/geometry/point.cpp.s
 
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
@@ -1049,6 +1140,7 @@ src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/simulators/mill_tool.cpp.o
 .PHONY : src/simulators/mill_tool.cpp.o
 
 src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
@@ -1063,6 +1155,7 @@ src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/simulators/mill_tool.cpp.i
 .PHONY : src/simulators/mill_tool.cpp.i
 
 src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
@@ -1077,6 +1170,7 @@ src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/simulators/mill_tool.cpp.s
 .PHONY : src/simulators/mill_tool.cpp.s
 
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
@@ -1091,6 +1185,7 @@ src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/simulators/sim_mill.cpp.o
 .PHONY : src/simulators/sim_mill.cpp.o
 
 src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
@@ -1105,6 +1200,7 @@ src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/simulators/sim_mill.cpp.i
 .PHONY : src/simulators/sim_mill.cpp.i
 
 src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
@@ -1119,6 +1215,7 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
 src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
@@ -1133,6 +1230,7 @@ src/synthesis/align_blade.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/align_blade.cpp.o
 .PHONY : src/synthesis/align_blade.cpp.o
 
 src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
@@ -1147,6 +1245,7 @@ src/synthesis/align_blade.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/align_blade.cpp.i
 .PHONY : src/synthesis/align_blade.cpp.i
 
 src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
@@ -1161,6 +1260,7 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
 src/synthesis/cut.o: src/synthesis/cut.cpp.o
@@ -1175,6 +1275,7 @@ src/synthesis/cut.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/cut.cpp.o
 .PHONY : src/synthesis/cut.cpp.o
 
 src/synthesis/cut.i: src/synthesis/cut.cpp.i
@@ -1189,6 +1290,7 @@ src/synthesis/cut.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/cut.cpp.i
 .PHONY : src/synthesis/cut.cpp.i
 
 src/synthesis/cut.s: src/synthesis/cut.cpp.s
@@ -1203,6 +1305,7 @@ src/synthesis/cut.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/cut.cpp.s
 .PHONY : src/synthesis/cut.cpp.s
 
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
@@ -1217,6 +1320,7 @@ src/synthesis/cut_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/cut_to_gcode.cpp.o
 .PHONY : src/synthesis/cut_to_gcode.cpp.o
 
 src/synthesis/cut_to_gcode.i: src/synthesis/cut_to_gcode.cpp.i
@@ -1231,6 +1335,7 @@ src/synthesis/cut_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/cut_to_gcode.cpp.i
 .PHONY : src/synthesis/cut_to_gcode.cpp.i
 
 src/synthesis/cut_to_gcode.s: src/synthesis/cut_to_gcode.cpp.s
@@ -1245,6 +1350,7 @@ src/synthesis/cut_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/cut_to_gcode.cpp.s
 .PHONY : src/synthesis/cut_to_gcode.cpp.s
 
 src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
@@ -1259,6 +1365,7 @@ src/synthesis/dxf_reader.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/dxf_reader.cpp.o
 .PHONY : src/synthesis/dxf_reader.cpp.o
 
 src/synthesis/dxf_reader.i: src/synthesis/dxf_reader.cpp.i
@@ -1273,6 +1380,7 @@ src/synthesis/dxf_reader.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/dxf_reader.cpp.i
 .PHONY : src/synthesis/dxf_reader.cpp.i
 
 src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
@@ -1287,6 +1395,7 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
 src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
@@ -1301,6 +1410,7 @@ src/synthesis/linear_cut.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/linear_cut.cpp.o
 .PHONY : src/synthesis/linear_cut.cpp.o
 
 src/synthesis/linear_cut.i: src/synthesis/linear_cut.cpp.i
@@ -1315,6 +1425,7 @@ src/synthesis/linear_cut.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/linear_cut.cpp.i
 .PHONY : src/synthesis/linear_cut.cpp.i
 
 src/synthesis/linear_cut.s: src/synthesis/linear_cut.cpp.s
@@ -1329,6 +1440,7 @@ src/synthesis/linear_cut.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/linear_cut.cpp.s
 .PHONY : src/synthesis/linear_cut.cpp.s
 
 src/synthesis/machine.o: src/synthesis/machine.cpp.o
@@ -1343,6 +1455,7 @@ src/synthesis/machine.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/machine.cpp.o
 .PHONY : src/synthesis/machine.cpp.o
 
 src/synthesis/machine.i: src/synthesis/machine.cpp.i
@@ -1357,6 +1470,7 @@ src/synthesis/machine.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/machine.cpp.i
 .PHONY : src/synthesis/machine.cpp.i
 
 src/synthesis/machine.s: src/synthesis/machine.cpp.s
@@ -1371,6 +1485,7 @@ src/synthesis/machine.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/machine.cpp.s
 .PHONY : src/synthesis/machine.cpp.s
 
 src/synthesis/output.o: src/synthesis/output.cpp.o
@@ -1385,6 +1500,7 @@ src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/output.cpp.o
 .PHONY : src/synthesis/output.cpp.o
 
 src/synthesis/output.i: src/synthesis/output.cpp.i
@@ -1399,6 +1515,7 @@ src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/output.cpp.i
 .PHONY : src/synthesis/output.cpp.i
 
 src/synthesis/output.s: src/synthesis/output.cpp.s
@@ -1413,6 +1530,7 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/output.cpp.s
 .PHONY : src/synthesis/output.cpp.s
 
 src/synthesis/schedule_cuts.o: src/synthesis/schedule_cuts.cpp.o
@@ -1427,6 +1545,7 @@ src/synthesis/schedule_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/schedule_cuts.cpp.o
 .PHONY : src/synthesis/schedule_cuts.cpp.o
 
 src/synthesis/schedule_cuts.i: src/synthesis/schedule_cuts.cpp.i
@@ -1441,6 +1560,7 @@ src/synthesis/schedule_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/schedule_cuts.cpp.i
 .PHONY : src/synthesis/schedule_cuts.cpp.i
 
 src/synthesis/schedule_cuts.s: src/synthesis/schedule_cuts.cpp.s
@@ -1455,6 +1575,7 @@ src/synthesis/schedule_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/schedule_cuts.cpp.s
 .PHONY : src/synthesis/schedule_cuts.cpp.s
 
 src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
@@ -1469,6 +1590,7 @@ src/synthesis/shapes_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/shapes_to_gcode.cpp.o
 .PHONY : src/synthesis/shapes_to_gcode.cpp.o
 
 src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
@@ -1483,6 +1605,7 @@ src/synthesis/shapes_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/shapes_to_gcode.cpp.i
 .PHONY : src/synthesis/shapes_to_gcode.cpp.i
 
 src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
@@ -1497,6 +1620,7 @@ src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
 src/synthesis/shapes_to_toolpaths.o: src/synthesis/shapes_to_toolpaths.cpp.o
@@ -1511,6 +1635,7 @@ src/synthesis/shapes_to_toolpaths.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.o
 
 src/synthesis/shapes_to_toolpaths.i: src/synthesis/shapes_to_toolpaths.cpp.i
@@ -1525,6 +1650,7 @@ src/synthesis/shapes_to_toolpaths.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.i
 
 src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
@@ -1539,6 +1665,7 @@ src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
 
 src/synthesis/spline_sampling.o: src/synthesis/spline_sampling.cpp.o
@@ -1553,6 +1680,7 @@ src/synthesis/spline_sampling.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/spline_sampling.cpp.o
 .PHONY : src/synthesis/spline_sampling.cpp.o
 
 src/synthesis/spline_sampling.i: src/synthesis/spline_sampling.cpp.i
@@ -1567,6 +1695,7 @@ src/synthesis/spline_sampling.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/spline_sampling.cpp.i
 .PHONY : src/synthesis/spline_sampling.cpp.i
 
 src/synthesis/spline_sampling.s: src/synthesis/spline_sampling.cpp.s
@@ -1581,6 +1710,7 @@ src/synthesis/spline_sampling.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/spline_sampling.cpp.s
 .PHONY : src/synthesis/spline_sampling.cpp.s
 
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
@@ -1595,6 +1725,7 @@ src/synthesis/toolpath.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/toolpath.cpp.o
 .PHONY : src/synthesis/toolpath.cpp.o
 
 src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
@@ -1609,6 +1740,7 @@ src/synthesis/toolpath.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/toolpath.cpp.i
 .PHONY : src/synthesis/toolpath.cpp.i
 
 src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
@@ -1623,6 +1755,7 @@ src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/synthesis/toolpath.cpp.s
 .PHONY : src/synthesis/toolpath.cpp.s
 
 src/system/arena_allocator.o: src/system/arena_allocator.cpp.o
@@ -1637,6 +1770,7 @@ src/system/arena_allocator.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/arena_allocator.cpp.o
 .PHONY : src/system/arena_allocator.cpp.o
 
 src/system/arena_allocator.i: src/system/arena_allocator.cpp.i
@@ -1651,6 +1785,7 @@ src/system/arena_allocator.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/arena_allocator.cpp.i
 .PHONY : src/system/arena_allocator.cpp.i
 
 src/system/arena_allocator.s: src/system/arena_allocator.cpp.s
@@ -1665,6 +1800,7 @@ src/system/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/arena_allocator.cpp.s
 .PHONY : src/system/arena_allocator.cpp.s
 
 src/system/file.o: src/system/file.cpp.o
@@ -1679,6 +1815,7 @@ src/system/file.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/file.cpp.o
 .PHONY : src/system/file.cpp.o
 
 src/system/file.i: src/system/file.cpp.i
@@ -1693,6 +1830,7 @@ src/system/file.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/file.cpp.i
 .PHONY : src/system/file.cpp.i
 
 src/system/file.s: src/system/file.cpp.s
@@ -1707,6 +1845,7 @@ src/system/file.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/file.cpp.s
 .PHONY : src/system/file.cpp.s
 
 src/system/settings.o: src/system/settings.cpp.o
@@ -1721,6 +1860,7 @@ src/system/settings.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/settings.cpp.o
 .PHONY : src/system/settings.cpp.o
 
 src/system/settings.i: src/system/settings.cpp.i
@@ -1735,6 +1875,7 @@ src/system/settings.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/settings.cpp.i
 .PHONY : src/system/settings.cpp.i
 
 src/system/settings.s: src/system/settings.cpp.s
@@ -1749,6 +1890,7 @@ src/system/settings.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/system/settings.cpp.s
 .PHONY : src/system/settings.cpp.s
 
 src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
@@ -1763,6 +1905,7 @@ src/transformers/feed_changer.cpp.o:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/transformers/feed_changer.cpp.o
 .PHONY : src/transformers/feed_changer.cpp.o
 
 src/transformers/feed_changer.i: src/transformers/feed_changer.cpp.i
@@ -1777,6 +1920,7 @@ src/transformers/feed_changer.cpp.i:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/transformers/feed_changer.cpp.i
 .PHONY : src/transformers/feed_changer.cpp.i
 
 src/transformers/feed_changer.s: src/transformers/feed_changer.cpp.s
@@ -1791,6 +1935,7 @@ src/transformers/feed_changer.cpp.s:
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/tool-simulator.dir/build.make CMakeFiles/tool-simulator.dir/src/transformers/feed_changer.cpp.s
 .PHONY : src/transformers/feed_changer.cpp.s
 
 test/analysis_tests.o: test/analysis_tests.cpp.o
@@ -2286,6 +2431,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... tool-simulator"
 	@echo "... analyze-gcodes"
 	@echo "... misc"
 	@echo "... rebuild_cache"
@@ -2308,6 +2454,9 @@ help:
 	@echo "... examples/print_dxf.o"
 	@echo "... examples/print_dxf.i"
 	@echo "... examples/print_dxf.s"
+	@echo "... examples/tool_simulator.o"
+	@echo "... examples/tool_simulator.i"
+	@echo "... examples/tool_simulator.s"
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"

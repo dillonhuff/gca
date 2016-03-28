@@ -148,10 +148,17 @@ void print_profile_info(vector<cut*>& path) {
     if (!c->is_circular_arc() && !c->is_circular_helix_cut())
       { time_wo_G2_G3 += cut_execution_time(c); }
   }
+  double inches_traveled = 0.0;
+  for (auto c : path) {
+    inches_traveled += (c->get_end() - c->get_start()).len();
+  }
   double pct_time_in_G0s = ((time - time_wo_transitions) / time) * 100;
   double pct_time_in_G1s = ((time - time_wo_G1s) / time) * 100;
   double pct_time_in_G2s_G3s = ((time - time_wo_G2_G3) / time) * 100;
   double total_pct = pct_time_in_G0s + pct_time_in_G1s + pct_time_in_G2s_G3s;
+  cout << "PATH STATISTICS" << endl;
+  cout << "---------------------------------------------------------" << endl;
+  cout << "total inches traveled           = " << inches_traveled << endl;
   cout << "execution time                  = " << time << " minutes" << endl;
   cout << "% of time spent in G0 moves     = " << pct_time_in_G0s << endl;
   cout << "% of time spent in G1 moves     = " << pct_time_in_G1s << endl;
