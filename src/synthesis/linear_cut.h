@@ -54,8 +54,8 @@ namespace gca {
 
     cut* scale(double s) const {
       cut* c = copy();
-      c->start = s*c->start;
-      c->end = s*c->end;
+      c->start = s*c->get_start();
+      c->end = s*c->get_end();
       return c;
     }
 

@@ -39,18 +39,18 @@ namespace gca {
     if (ci->is_hole_punch()) {
     } else if (ci->is_linear_cut()) {
       b.push_back(token('G', 1));
-      b.push_back(token('X', ci->end.x));
-      b.push_back(token('Y', ci->end.y));
-      b.push_back(token('Z', ci->end.z));
+      b.push_back(token('X', ci->get_end().x));
+      b.push_back(token('Y', ci->get_end().y));
+      b.push_back(token('Z', ci->get_end().z));
       if (!ci->get_feedrate()->is_omitted()) { b.push_back(token('F', ci->get_feedrate())); }
     } else if (ci->is_circular_arc()) {
       const circular_arc* arc = static_cast<const circular_arc*>(ci);
       b = circular_arc_to_gcode_block(*arc);
     } else if (ci->is_safe_move()) {
       b.push_back(token('G', 0));
-      b.push_back(token('X', ci->end.x));
-      b.push_back(token('Y', ci->end.y));
-      b.push_back(token('Z', ci->end.z));
+      b.push_back(token('X', ci->get_end().x));
+      b.push_back(token('Y', ci->get_end().y));
+      b.push_back(token('Z', ci->get_end().z));
     } else {
       assert(false);
     }

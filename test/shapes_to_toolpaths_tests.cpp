@@ -8,7 +8,7 @@ namespace gca {
 
   bool is_vertical_or_horizontal(const cut* c) {
     if (c->is_linear_cut()) {
-      return (c->end.x == c->get_start().x) || (c->end.y == c->get_start().y);
+      return (c->get_end().x == c->get_start().x) || (c->get_end().y == c->get_start().y);
     }
     return true;
   }

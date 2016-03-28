@@ -22,7 +22,7 @@ namespace gca {
       current_loc = params.start_loc;
       current_orient = params.start_orient;
     } else {
-      current_loc = last_cut->end;
+      current_loc = last_cut->get_end();
       current_orient = last_cut->final_orient();
     }
 
@@ -46,7 +46,7 @@ namespace gca {
   vector<cut*> move_to_next_cut_drill(cut* last_cut,
 				      cut* next_cut,
 				      const cut_params& params) {
-    point current_loc = last_cut == NULL ? params.start_loc : last_cut->end;
+    point current_loc = last_cut == NULL ? params.start_loc : last_cut->get_end();
 
     vector<cut*> tcuts;
     if (!within_eps(current_loc, next_cut->get_start())) {
@@ -70,11 +70,11 @@ namespace gca {
   void insert_move_home(vector<cut*>& cuts,
 			const cut_params& params) {
     if (cuts.size() > 0) {
-      point above = cuts.back()->end;
+      point above = cuts.back()->get_end();
       above.z = params.safe_height;
       point dest = params.start_loc;
       dest.z = params.safe_height;
-      cut* pull_up = safe_move::make(cuts.back()->end, above);
+      cut* pull_up = safe_move::make(cuts.back()->get_end(), above);
       pull_up->tool_no = cuts.back()->tool_no;
       cut* shift = safe_move::make(above, dest);
       shift->tool_no = cuts.back()->tool_no;
@@ -105,9 +105,9 @@ namespace gca {
       for (unsigned i = 0; i < cuts.size() - 1; i++) {
 	cut* current = cuts[i];
 	cut* next = cuts[i+1];
-	if (!within_eps(current->end, next->get_start()) &&
+	if (!within_eps(current->get_end(), next->get_start()) &&
 	    current->tool_no == next->tool_no) {
-	  cout << "Error: " << current->end << " and " << endl;
+	  cout << "Error: " << current->get_end() << " and " << endl;
 	  cout << next->get_start() << " are not adjacent" << endl;
 	}
       }
