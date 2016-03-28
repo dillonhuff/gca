@@ -10,7 +10,7 @@ ENDIF()
 
 project(gca)
 
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test") # -pedantic -Werror -Wall")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -pedantic -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -97,16 +97,16 @@ add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
 
 ######### VTK Example ##########
 
-find_package(VTK REQUIRED)
-include(${VTK_USE_FILE})
+# find_package(VTK REQUIRED)
+# include(${VTK_USE_FILE})
  
-#add_executable(TriangulateTerrainMap MACOSX_BUNDLE examples/TriangulateTerrainMap.cxx ${SRCS})
-#add_executable(DataAnimationSubclass MACOSX_BUNDLE examples/DataAnimationSubclass ${SRCS})
+# #add_executable(TriangulateTerrainMap MACOSX_BUNDLE examples/TriangulateTerrainMap.cxx ${SRCS})
+# #add_executable(DataAnimationSubclass MACOSX_BUNDLE examples/DataAnimationSubclass ${SRCS})
 
-add_executable(tool-simulator MACOSX_BUNDLE examples/tool_simulator ${SRCS})
+# add_executable(tool-simulator MACOSX_BUNDLE examples/tool_simulator ${SRCS})
  
-if(VTK_LIBRARIES)
-  target_link_libraries(tool-simulator ${VTK_LIBRARIES})
-else()
-  target_link_libraries(tool-simulator vtkHybrid vtkWidgets)
-endif()
+# if(VTK_LIBRARIES)
+#   target_link_libraries(tool-simulator ${VTK_LIBRARIES})
+# else()
+#   target_link_libraries(tool-simulator vtkHybrid vtkWidgets)
+# endif()

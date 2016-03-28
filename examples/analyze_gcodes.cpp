@@ -7,11 +7,11 @@
 #include "analysis/position_table.h"
 #include "analysis/unfold.h"
 #include "analysis/utils.h"
-#include "system/arena_allocator.h"
 #include "core/lexer.h"
 #include "geometry/box.h"
 #include "synthesis/cut_to_gcode.h"
 #include "system/algorithm.h"
+#include "system/arena_allocator.h"
 #include "system/file.h"
 
 using namespace gca;
@@ -32,25 +32,6 @@ void apply_to_gprograms(const string& dn, F f) {
   };
   read_dir(dn, func);
 }
-
-// template<typename F>
-// void apply_to_program_states(const string& dn, F f) {
-//   auto func = [&f](const string& dir_name) {
-//     if (ends_with(dir_name, ".NCF")) {
-//       cout << dir_name << endl;
-//       std::ifstream t(dir_name);
-//       std::string str((std::istreambuf_iterator<char>(t)),
-// 		      std::istreambuf_iterator<char>());
-//       vector<block> p = lex_gprog(str);
-//       cout << "NUM BLOCKS: " << p.size() << endl;
-//       vector<machine_state> states = all_program_states(p);
-//       cout << "STATES: " << states.size() << endl;
-//       f(states);
-//     }
-//   };
-//   read_dir(dn, func);
-// }
-
 
 void split_and_print(const vector<machine_state>& toolpath) {
   auto ptbl = select_column(G54_COORD_SYSTEM, program_position_table(toolpath));
@@ -134,22 +115,17 @@ double execution_time(const vector<cut*>& path) {
 void print_profile_info(vector<cut*>& path) {
   double time = execution_time(path);
   double time_wo_transitions = 0.0;
+  double time_wo_G1s = 0.0;
+  double time_wo_G2_G3 = 0.0;
+  double inches_traveled = 0.0;
+
   for (auto c : path) {
     if (!c->is_safe_move())
       { time_wo_transitions += cut_execution_time(c); }
-  }
-  double time_wo_G1s = 0.0;
-  for (auto c : path) {
     if (!c->is_linear_cut())
       { time_wo_G1s += cut_execution_time(c); }
-  }
-  double time_wo_G2_G3 = 0.0;
-  for (auto c : path) {
     if (!c->is_circular_arc() && !c->is_circular_helix_cut())
       { time_wo_G2_G3 += cut_execution_time(c); }
-  }
-  double inches_traveled = 0.0;
-  for (auto c : path) {
     inches_traveled += (c->get_end() - c->get_start()).len();
   }
   double pct_time_in_G0s = ((time - time_wo_transitions) / time) * 100;
@@ -167,12 +143,38 @@ void print_profile_info(vector<cut*>& path) {
   assert(within_eps(total_pct, 100.0));
 }
 
+box path_bounds(const vector<cut*>& path) {
+  vector<point> bound_pts;
+  for (auto c : path) {
+    bound_pts.push_back(c->get_start());
+    bound_pts.push_back(c->get_end());
+  }
+  return bound_positions(bound_pts);
+}
+
 void print_paths_gcode(vector<vector<cut*>> paths) {
   cut_params params;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
   params.safe_height = 2.0;
+  vector<box> path_boxes;
   for (auto path : paths) {
     print_profile_info(path);
+    path_boxes.push_back(path_bounds(path));
+  }
+  cout << "---------------------------------------------------------" << endl;
+  cout << "PATH GEOMETRY" << endl;
+  cout << "---------------------------------------------------------" << endl;
+  if (paths.size() > 0) {
+    box bound = bound_boxes(path_boxes);
+    cout << "All path bounding box: " << endl << bound << endl;
+    box new_machine_bounds(0.5, 17,
+			   1.2, 13.2,
+			   -4.1, -0.05);
+    if (fits_inside(bound, new_machine_bounds)) {
+      cout << "FITS NEW MACHINE BOUNDS" << endl;
+    } else {
+      cout << "DOES NOT FIT NEW MACHINE BOUNDS" << endl;
+    }
   }
 }
 

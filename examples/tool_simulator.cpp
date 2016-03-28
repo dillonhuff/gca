@@ -7,7 +7,44 @@
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
- 
+
+#include "analysis/gcode_to_cuts.h"
+#include "core/lexer.h"
+#include "geometry/point.h"
+
+using namespace gca;
+
+struct tool_simulator_data {
+  unsigned i, j;
+  vector<vector<cut*>>& cuts;
+  point tool_pos;
+  
+  bool done() {
+    if (!(i < cuts.size())) {
+      return !(j < cuts[i].size());
+    } else {
+      return false;
+    }
+  }
+
+  tool_simulator_data(vector<vector<cut*>>& cutsp) : i(0), j(0), cuts(cutsp) {}
+  
+  void update() {
+    assert(!done());
+    if (j < cuts[i].size()) {
+      cout << "Updating tool_pos" << endl;
+      auto t = cuts[i][j];
+      tool_pos = t->get_end();
+      j++;
+    } else {
+      i++;
+      j = 0;
+    }
+  }
+
+  point tool_position() const { return tool_pos; }
+};
+
 class vtkTimerCallback2 : public vtkCommand {
 public:
   static vtkTimerCallback2 *New()
@@ -25,7 +62,10 @@ public:
         ++this->TimerCount;
       }
     std::cout << this->TimerCount << std::endl;
-    actor->SetPosition(this->TimerCount, this->TimerCount,0);
+    sim_data->update();
+    point p = (0.1) * sim_data->tool_position();
+    cout << "Tool position: " << p << endl;
+    actor->SetPosition(p.x, p.y, p.z); //this->TimerCount, this->TimerCount, 0);
     vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::SafeDownCast(caller);
     iren->GetRenderWindow()->Render();
   }
@@ -33,18 +73,19 @@ public:
 private:
   int TimerCount;
 public:
+  tool_simulator_data* sim_data;
   vtkActor* actor;
 };
- 
-int main(int, char* []) {
-  // Create a cylinder
+
+void run_simulator(tool_simulator_data& sim_data) {
+  // Create a cylinder representing the tool
   vtkSmartPointer<vtkCylinderSource> toolSource = 
     vtkSmartPointer<vtkCylinderSource>::New();
   toolSource->SetCenter(0.0, 0.0, 0.0);
-  toolSource->SetRadius(5.0);
+  toolSource->SetRadius(0.1);
   toolSource->SetHeight(2.0);
   toolSource->Update();
- 
+
   // Create a mapper and actor
   vtkSmartPointer<vtkPolyDataMapper> mapper = 
     vtkSmartPointer<vtkPolyDataMapper>::New();
@@ -76,13 +117,33 @@ int main(int, char* []) {
   vtkSmartPointer<vtkTimerCallback2> cb = 
     vtkSmartPointer<vtkTimerCallback2>::New();
   cb->actor = actor;
+  cb->sim_data = &sim_data;
   renderWindowInteractor->AddObserver(vtkCommand::TimerEvent, cb);
  
-  int timerId = renderWindowInteractor->CreateRepeatingTimer(100);
+  int timerId = renderWindowInteractor->CreateRepeatingTimer(1);
   std::cout << "timerId: " << timerId << std::endl;
  
   // Start the interaction and timer
   renderWindowInteractor->Start();
+}
+ 
+int main(int, char* []) {
+  arena_allocator a;
+  set_system_allocator(&a);
+  
+  string file_name = "/Users/dillon/Documents/PRL-Project-Folders/090318_1132/CAM/footboard bottom.NCF"; //"/Users/dillon/CppWorkspace/gca/CUT_INNER_RECT_3.ngc";
+  std::ifstream t(file_name);
+  std::string str((std::istreambuf_iterator<char>(t)),
+		  std::istreambuf_iterator<char>());
+  vector<block> p = lex_gprog(str);
+  vector<vector<cut*>> cuts;
+  auto r = gcode_to_cuts(p, cuts);
+  if (r != GCODE_TO_CUTS_SUCCESS) {
+    cout << "Error: " << r << endl;
+    return 1;
+  }
+  tool_simulator_data sim_data(cuts);
+  run_simulator(sim_data);
  
   return EXIT_SUCCESS;
 }
