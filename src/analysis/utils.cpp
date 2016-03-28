@@ -125,7 +125,7 @@ namespace gca {
       m == CANNED_CYCLE_85_MOVE;
   }
 
-  bool is_climb_milling(const machine_state& s) {
+  bool is_climb_milling(const machine_settings& s) {
     if (s.tool_radius_comp == TOOL_RADIUS_COMP_LEFT) {
       return s.spindle_setting == SPINDLE_CLOCKWISE;
     } else if (s.tool_radius_comp == TOOL_RADIUS_COMP_RIGHT) {

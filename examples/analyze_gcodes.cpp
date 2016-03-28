@@ -33,23 +33,23 @@ void apply_to_gprograms(const string& dn, F f) {
   read_dir(dn, func);
 }
 
-template<typename F>
-void apply_to_program_states(const string& dn, F f) {
-  auto func = [&f](const string& dir_name) {
-    if (ends_with(dir_name, ".NCF")) {
-      cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      vector<machine_state> states = all_program_states(p);
-      cout << "STATES: " << states.size() << endl;
-      f(states);
-    }
-  };
-  read_dir(dn, func);
-}
+// template<typename F>
+// void apply_to_program_states(const string& dn, F f) {
+//   auto func = [&f](const string& dir_name) {
+//     if (ends_with(dir_name, ".NCF")) {
+//       cout << dir_name << endl;
+//       std::ifstream t(dir_name);
+//       std::string str((std::istreambuf_iterator<char>(t)),
+// 		      std::istreambuf_iterator<char>());
+//       vector<block> p = lex_gprog(str);
+//       cout << "NUM BLOCKS: " << p.size() << endl;
+//       vector<machine_state> states = all_program_states(p);
+//       cout << "STATES: " << states.size() << endl;
+//       f(states);
+//     }
+//   };
+//   read_dir(dn, func);
+// }
 
 
 void split_and_print(const vector<machine_state>& toolpath) {
@@ -102,7 +102,7 @@ bool is_horizontal(const cut* c) {
   return within_eps(c->get_end().z, c->get_start().z);
 }
 
-bool is_prismatic(const vector<cut*>& path) {
+bool is_prismatic(vector<cut*>& path) {
   return all_of(path.begin(), path.end(),
 		[](const cut* c)
 		{ return !c->is_circular_helix_cut() &&
@@ -118,7 +118,8 @@ double cut_execution_time(const cut* c) {
     fr = static_cast<lit*>(f)->v;
   } else {
     // This is the fast feedrate for HAAS VF1
-    // Q: Does the HAAS actually go that fast?
+    // Q: Does the HAAS actually go that fast during
+    // G0 moves?
     fr = 1000;
   }
   return (c->get_end() - c->get_start()).len() / fr;
@@ -130,25 +131,41 @@ double execution_time(const vector<cut*>& path) {
   return exec_time;
 }
 
-
+void print_profile_info(vector<cut*>& path) {
+  double time = execution_time(path);
+  double time_wo_transitions = 0.0;
+  for (auto c : path) {
+    if (!c->is_safe_move())
+      { time_wo_transitions += cut_execution_time(c); }
+  }
+  double time_wo_G1s = 0.0;
+  for (auto c : path) {
+    if (!c->is_linear_cut())
+      { time_wo_G1s += cut_execution_time(c); }
+  }
+  double time_wo_G2_G3 = 0.0;
+  for (auto c : path) {
+    if (!c->is_circular_arc() && !c->is_circular_helix_cut())
+      { time_wo_G2_G3 += cut_execution_time(c); }
+  }
+  double pct_time_in_G0s = ((time - time_wo_transitions) / time) * 100;
+  double pct_time_in_G1s = ((time - time_wo_G1s) / time) * 100;
+  double pct_time_in_G2s_G3s = ((time - time_wo_G2_G3) / time) * 100;
+  double total_pct = pct_time_in_G0s + pct_time_in_G1s + pct_time_in_G2s_G3s;
+  cout << "execution time                  = " << time << " minutes" << endl;
+  cout << "% of time spent in G0 moves     = " << pct_time_in_G0s << endl;
+  cout << "% of time spent in G1 moves     = " << pct_time_in_G1s << endl;
+  cout << "% of time spent in G2, G3 moves = " << pct_time_in_G2s_G3s << endl;
+  cout << "Total pct                       = " << total_pct << endl;
+  assert(within_eps(total_pct, 100.0));
+}
 
 void print_paths_gcode(vector<vector<cut*>> paths) {
   cut_params params;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
   params.safe_height = 2.0;
   for (auto path : paths) {
-    if (is_prismatic(path)) {
-      double time = execution_time(path);
-      cout << "prismatic path, execution time = " << time << " minutes" << endl;
-      delete_if(path, [](const cut* c)
-		{ return c->is_safe_move() ||
-		    (c->is_linear_cut() && is_vertical(c)); });
-      double time_wo_transitions = execution_time(path);
-      cout << "prismatic path, time w/o transitions = " <<  time_wo_transitions << " minutes" << endl;
-      double pct_time_in_transition =
-	((time - time_wo_transitions) / time) * 100;
-      cout << "% of time spent in G0 moves: " << pct_time_in_transition << endl;
-    }
+    print_profile_info(path);
   }
 }
 
