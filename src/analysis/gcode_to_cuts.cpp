@@ -138,11 +138,13 @@ namespace gca {
 	machine_state current_state = path[i].first;
 	point current_position = path[i].second.extract_point();
 	point last_position = path[i - 1].second.extract_point();
-	cut* next_cut = compute_next_cut(current_state, current_position, last_position);
-	if (next_cut == nullptr)
-	  { return GCODE_TO_CUTS_UNSUPPORTED_SETTINGS; }
-	else
-	  { cts.push_back(next_cut); }
+	if (is_move(current_state)) {
+	  cut* next_cut = compute_next_cut(current_state, current_position, last_position);
+	  if (next_cut == nullptr)
+	    { return GCODE_TO_CUTS_UNSUPPORTED_SETTINGS; }
+	  else
+	    { cts.push_back(next_cut); }
+	}
       }
       if (cts.size() > 0) { cuts.push_back(cts); }
     }

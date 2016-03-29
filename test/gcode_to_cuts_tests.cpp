@@ -111,6 +111,25 @@ namespace gca {
       }
       REQUIRE(all_cuts_move);
     }
+
+    SECTION("G0s with extra settings") {
+      string gprog = "";
+      gprog += "G54 \n";
+      gprog += "G90 G17 G40 G49 G80 G90 \n";
+      gprog += "G28 Z0. M5 \n";
+      gprog += "G0 X1 Y1 Z1\n";
+      gprog += "G0 Z2 \n";
+      gprog += "M30 \n";
+      p = lex_gprog(gprog);
+      r = gcode_to_cuts(p, actual);
+      for (auto p : actual) {
+	for (auto c : p)
+	  { cout << *c << endl; }
+      }
+      REQUIRE(r == GCODE_TO_CUTS_SUCCESS);
+      REQUIRE(actual.size() == 1);
+      REQUIRE(actual.back().size() == 1);
+    }
   }
 
   TEST_CASE("GCODE to cuts CAMASTER") {
