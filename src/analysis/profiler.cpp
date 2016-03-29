@@ -3,7 +3,7 @@
 namespace gca {
 
   void print_profile_info(vector<cut*>& path) {
-    double time = execution_time(path);
+    double time = execution_time_minutes(path);
     double time_wo_transitions = 0.0;
     double time_wo_G1s = 0.0;
     double time_wo_G2_G3 = 0.0;
@@ -11,11 +11,11 @@ namespace gca {
 
     for (auto c : path) {
       if (!c->is_safe_move())
-	{ time_wo_transitions += cut_execution_time(c); }
+	{ time_wo_transitions += cut_execution_time_minutes(c); }
       if (!c->is_linear_cut())
-	{ time_wo_G1s += cut_execution_time(c); }
+	{ time_wo_G1s += cut_execution_time_minutes(c); }
       if (!c->is_circular_arc() && !c->is_circular_helix_cut())
-	{ time_wo_G2_G3 += cut_execution_time(c); }
+	{ time_wo_G2_G3 += cut_execution_time_minutes(c); }
       inches_traveled += (c->get_end() - c->get_start()).len();
     }
     double pct_time_in_G0s = ((time - time_wo_transitions) / time) * 100;

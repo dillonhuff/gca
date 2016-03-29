@@ -59,7 +59,7 @@ namespace gca {
   }
 
   // TODO: Make this account for cut shape
-  double cut_execution_time(const cut* c) {
+  double cut_execution_time_minutes(const cut* c) {
     value* f = c->get_feedrate();
     double fr;
     if (!c->is_safe_move()) {
@@ -74,9 +74,13 @@ namespace gca {
     return (c->get_end() - c->get_start()).len() / fr;
   }
 
-  double execution_time(const vector<cut*>& path) {
+  double cut_execution_time_seconds(const cut* c) {
+    return cut_execution_time_minutes(c) / 60;
+  }
+
+  double execution_time_minutes(const vector<cut*>& path) {
     double exec_time = 0.0;
-    for (auto c : path) { exec_time += cut_execution_time(c); }
+    for (auto c : path) { exec_time += cut_execution_time_minutes(c); }
     return exec_time;
   }
 }

@@ -61,8 +61,9 @@ namespace gca {
   bool is_horizontal(const cut* c);
   bool is_prismatic(vector<cut*>& path);
   // TODO: Make this account for cut shape
-  double cut_execution_time(const cut* c);
-  double execution_time(const vector<cut*>& path);
+  double cut_execution_time_minutes(const cut* c);
+  double cut_execution_time_seconds(const cut* c);
+  double execution_time_minutes(const vector<cut*>& path);
 }
 
 
