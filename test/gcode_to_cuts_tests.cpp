@@ -85,6 +85,32 @@ namespace gca {
       correct.push_back({arc});
       REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
+
+    SECTION("G1 with procedure call") {
+      string gprog = "";
+      gprog += "G54 \n";
+      gprog += "G0 G17 G40 G49 G80 G90 \n";
+      gprog += "G28 Z0. M5 \n";
+      gprog += "G1 X4.2938 Y3.0159 \n";
+      gprog += "Z-.03 F15. \n";
+      gprog += "M97 P4 \n";
+      gprog += "G0 Z.5 \n";
+      gprog += "M30 \n";
+      gprog += "N4 Y1.1854 F36. \n";
+      gprog += "M99";
+      p = lex_gprog(gprog);
+      r = gcode_to_cuts(p, actual);
+      REQUIRE(r == GCODE_TO_CUTS_SUCCESS);
+      bool all_cuts_move = true;
+      for (auto path : actual) {
+	for (auto c : path) {
+	  cout << *c << endl;
+	  if (within_eps(cut_execution_time_seconds(c), 0))
+	    { all_cuts_move = false; }
+	}
+      }
+      REQUIRE(all_cuts_move);
+    }
   }
 
   TEST_CASE("GCODE to cuts CAMASTER") {

@@ -75,7 +75,7 @@ namespace gca {
   }
 
   double cut_execution_time_seconds(const cut* c) {
-    return cut_execution_time_minutes(c) / 60;
+    return cut_execution_time_minutes(c) * 60;
   }
 
   double execution_time_minutes(const vector<cut*>& path) {

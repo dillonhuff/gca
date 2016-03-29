@@ -8,6 +8,7 @@
 #include "analysis/profiler.h"
 #include "analysis/unfold.h"
 #include "analysis/utils.h"
+#include "checkers/block_rate_checker.h"
 #include "core/lexer.h"
 #include "geometry/box.h"
 #include "synthesis/cut.h"
@@ -72,7 +73,7 @@ void print_toolpaths(const vector<machine_state>& states) {
   }
 }
 
-void print_paths_gcode(vector<vector<cut*>> paths) {
+void print_paths_gcode(vector<vector<cut*>>& paths) {
   cut_params params;
   params.target_machine = PROBOTIX_V90_MK2_VFD;
   params.safe_height = 2.0;
@@ -95,6 +96,9 @@ void print_paths_gcode(vector<vector<cut*>> paths) {
     } else {
       cout << "DOES NOT FIT NEW MACHINE BOUNDS" << endl;
     }
+  }
+  if (!all_cuts_within_block_rate(paths, 4000)) {
+    cout << "NOT ALL CUTS FIT IN THE BLOCK RATE" << endl;
   }
 }
 
