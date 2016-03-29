@@ -5,6 +5,7 @@
 
 #include "analysis/machine_state.h"
 #include "core/value.h"
+#include "geometry/box.h"
 #include "geometry/point.h"
 #include "synthesis/machine.h"
 
@@ -54,6 +55,14 @@ namespace gca {
 
   bool cmp_cuts(const cut* l, const cut* r);
   bool same_cut_properties(const cut& l, const cut& r);
+
+  box path_bounds(const vector<cut*>& path);  
+  bool is_vertical(const cut* c);
+  bool is_horizontal(const cut* c);
+  bool is_prismatic(vector<cut*>& path);
+  // TODO: Make this account for cut shape
+  double cut_execution_time(const cut* c);
+  double execution_time(const vector<cut*>& path);
 }
 
 

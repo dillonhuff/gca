@@ -491,6 +491,48 @@ src/analysis/position_table.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.s
 .PHONY : src/analysis/position_table.cpp.s
 
+src/analysis/profiler.o: src/analysis/profiler.cpp.o
+
+.PHONY : src/analysis/profiler.o
+
+# target to build an object file
+src/analysis/profiler.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/profiler.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/profiler.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/profiler.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/profiler.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/profiler.cpp.o
+.PHONY : src/analysis/profiler.cpp.o
+
+src/analysis/profiler.i: src/analysis/profiler.cpp.i
+
+.PHONY : src/analysis/profiler.i
+
+# target to preprocess a source file
+src/analysis/profiler.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/profiler.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/profiler.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/profiler.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/profiler.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/profiler.cpp.i
+.PHONY : src/analysis/profiler.cpp.i
+
+src/analysis/profiler.s: src/analysis/profiler.cpp.s
+
+.PHONY : src/analysis/profiler.s
+
+# target to generate assembly for a file
+src/analysis/profiler.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/profiler.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/profiler.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/profiler.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/profiler.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/profiler.cpp.s
+.PHONY : src/analysis/profiler.cpp.s
+
 src/analysis/unfold.o: src/analysis/unfold.cpp.o
 
 .PHONY : src/analysis/unfold.o
@@ -2320,6 +2362,9 @@ help:
 	@echo "... src/analysis/position_table.o"
 	@echo "... src/analysis/position_table.i"
 	@echo "... src/analysis/position_table.s"
+	@echo "... src/analysis/profiler.o"
+	@echo "... src/analysis/profiler.i"
+	@echo "... src/analysis/profiler.s"
 	@echo "... src/analysis/unfold.o"
 	@echo "... src/analysis/unfold.i"
 	@echo "... src/analysis/unfold.s"

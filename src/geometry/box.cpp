@@ -11,8 +11,8 @@ namespace gca {
     out << "X max = " << b.x_max << endl;
     out << "Y min = " << b.y_min << endl;
     out << "Y max = " << b.y_max << endl;
-    out << "Y min = " << b.z_min << endl;
-    out << "Y max = " << b.z_max << endl;
+    out << "Z min = " << b.z_min << endl;
+    out << "Z max = " << b.z_max << endl;
     return out;
   }
 

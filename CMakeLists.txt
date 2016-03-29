@@ -56,6 +56,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/utils.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
+	 ./src/analysis/profiler.cpp
 	 ./src/core/value.cpp
 	 ./src/core/lexer.cpp
 	 ./src/core/parse_stream.cpp
