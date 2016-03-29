@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "checkers/block_rate_checker.h"
 #include "checkers/bounds_checker.h"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
@@ -69,4 +70,22 @@ namespace gca {
       REQUIRE(check_for_unsafe_spindle_on(no_spindle_tools, 2, p) == 1);
     }
   }
+
+  TEST_CASE("Excessive block rate checker") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<block> p;
+
+    SECTION("Empty program") {
+      p = lex_gprog("");
+      REQUIRE(all_cuts_within_block_rate(p, 1000));
+    }
+
+    SECTION("Evil program") {
+      p = lex_gprog("G54 G90 T6 M6 \n F100 \n S3000 M3 \n G0 X1 Y1 Z1 \n G1 X1.0001 Y1 Z1 \n G1 X1.0001 Y1.0001 Z1");
+      REQUIRE(!all_cuts_within_block_rate(p, 10));
+    }
+  }
+
 }

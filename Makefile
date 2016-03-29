@@ -617,6 +617,48 @@ src/analysis/utils.cpp.s:
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.s
 .PHONY : src/analysis/utils.cpp.s
 
+src/checkers/block_rate_checker.o: src/checkers/block_rate_checker.cpp.o
+
+.PHONY : src/checkers/block_rate_checker.o
+
+# target to build an object file
+src/checkers/block_rate_checker.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/block_rate_checker.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/block_rate_checker.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/block_rate_checker.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/block_rate_checker.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/block_rate_checker.cpp.o
+.PHONY : src/checkers/block_rate_checker.cpp.o
+
+src/checkers/block_rate_checker.i: src/checkers/block_rate_checker.cpp.i
+
+.PHONY : src/checkers/block_rate_checker.i
+
+# target to preprocess a source file
+src/checkers/block_rate_checker.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/block_rate_checker.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/block_rate_checker.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/block_rate_checker.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/block_rate_checker.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/block_rate_checker.cpp.i
+.PHONY : src/checkers/block_rate_checker.cpp.i
+
+src/checkers/block_rate_checker.s: src/checkers/block_rate_checker.cpp.s
+
+.PHONY : src/checkers/block_rate_checker.s
+
+# target to generate assembly for a file
+src/checkers/block_rate_checker.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/block_rate_checker.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/block_rate_checker.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/block_rate_checker.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/block_rate_checker.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/block_rate_checker.cpp.s
+.PHONY : src/checkers/block_rate_checker.cpp.s
+
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
 
 .PHONY : src/checkers/bounds_checker.o
@@ -2371,6 +2413,9 @@ help:
 	@echo "... src/analysis/utils.o"
 	@echo "... src/analysis/utils.i"
 	@echo "... src/analysis/utils.s"
+	@echo "... src/checkers/block_rate_checker.o"
+	@echo "... src/checkers/block_rate_checker.i"
+	@echo "... src/checkers/block_rate_checker.s"
 	@echo "... src/checkers/bounds_checker.o"
 	@echo "... src/checkers/bounds_checker.i"
 	@echo "... src/checkers/bounds_checker.s"

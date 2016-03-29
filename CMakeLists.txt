@@ -63,6 +63,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/checkers/bounds_checker.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
+	 ./src/checkers/block_rate_checker.cpp
 	 ./src/geometry/point.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
