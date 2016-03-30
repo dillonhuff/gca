@@ -1,6 +1,5 @@
 #include "analysis/gcode_to_cuts.h"
 #include "checkers/block_rate_checker.h"
-#include "synthesis/cut.h"
 
 namespace gca {
 
@@ -11,8 +10,6 @@ namespace gca {
     for (auto path : paths) {
       for (auto c : path) {
 	if (cut_execution_time_seconds(c) <= seconds_per_block) {
-	  cout << *c << endl;
-	  cout << "has execution time = " << cut_execution_time_seconds(c) << endl;
 	  return false;
 	}
       }

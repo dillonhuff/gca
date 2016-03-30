@@ -104,7 +104,6 @@ namespace gca {
       bool all_cuts_move = true;
       for (auto path : actual) {
 	for (auto c : path) {
-	  cout << *c << endl;
 	  if (within_eps(cut_execution_time_seconds(c), 0))
 	    { all_cuts_move = false; }
 	}
@@ -122,10 +121,6 @@ namespace gca {
       gprog += "M30 \n";
       p = lex_gprog(gprog);
       r = gcode_to_cuts(p, actual);
-      for (auto p : actual) {
-	for (auto c : p)
-	  { cout << *c << endl; }
-      }
       REQUIRE(r == GCODE_TO_CUTS_SUCCESS);
       REQUIRE(actual.size() == 1);
       REQUIRE(actual.back().size() == 1);

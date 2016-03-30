@@ -6,6 +6,8 @@
 #include "analysis/machine_state.h"
 #include "core/value.h"
 #include "geometry/box.h"
+#include "geometry/line.h"
+#include "geometry/parametric_curve.h"
 #include "geometry/point.h"
 #include "synthesis/machine.h"
 
@@ -15,23 +17,26 @@ namespace gca {
   private:
     point start;
     point end;
+
+  protected:
+    parametric_curve c;
     
   public:
     machine_settings settings;
     tool_name tool_no;
     
-    cut(point s, point e) : start(s), end(e), tool_no(NO_TOOL) {}
-    cut(point s, point e, tool_name t) : start(s), end(e), tool_no(t) {}
+    cut(point s, point e) : start(s), end(e), c(line(s, e)), tool_no(NO_TOOL) {}
+    cut(point s, point e, tool_name t) : start(s), end(e), c(line(s, e)), tool_no(t) {}
 
     inline value* get_spindle_speed() const { return settings.spindle_speed; }
     inline value* get_feedrate() const { return settings.feedrate; }
-    inline point get_start() const { return start; }
-    inline point get_end() const { return end; }
+    inline point get_start() const { return c.value(0.0); }
+    inline point get_end() const { return c.value(1.0); }
 
     inline void set_spindle_speed(value* v) { settings.spindle_speed = v; }
     inline void set_feedrate(value* v) { settings.feedrate = v; }
-    inline void set_start(point p) { start = p; }
-    inline void set_end(point p) { end = p; }
+    inline void set_start(point p) { c = parametric_curve(line(p, get_end())); }
+    inline void set_end(point p) { c = parametric_curve(line(get_start(), p)); }
     
     virtual inline bool is_safe_move() const { return false; }
     virtual inline bool is_linear_cut() const { return false; }
@@ -43,9 +48,25 @@ namespace gca {
     virtual point initial_orient() const { assert(false); }
     
     virtual bool operator==(const cut& other) const = 0;
-    virtual cut* shift(point shift) const = 0;
-    virtual cut* scale(double s) const = 0;
-    virtual cut* scale_xy(double s) const = 0;
+
+    virtual cut* shift(point shift) const {
+      cut* new_c = copy();
+      new_c->c = c.shift(shift);
+      return new_c;
+    }
+
+    virtual cut* scale(double s) const {
+      cut* new_c = copy();
+      new_c->c = c.scale(s);
+      return new_c;
+    }
+
+    virtual cut* scale_xy(double s) const {
+      cut* new_c = copy();
+      new_c->c = c.scale_xy(s);
+      return new_c;
+    }
+
     virtual cut* copy() const = 0;
     virtual void print(ostream& other) const = 0;
   };

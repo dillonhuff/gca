@@ -29,7 +29,6 @@ namespace gca {
       hole_punch* hole = static_cast<hole_punch*>(copy());
       hole->set_start(get_start() + sh);
       hole->set_end(get_end() + sh);
-      hole->tool_no = tool_no;
       return hole;
     }
 

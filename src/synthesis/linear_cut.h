@@ -9,11 +9,11 @@ namespace gca {
 
   class linear_cut : public cut {
   public:
-  linear_cut(point sp, point ep) :
-    cut(sp, ep) {}
+    linear_cut(point sp, point ep) :
+      cut(sp, ep) {}
 
-  linear_cut(point sp, point ep, tool_name t) :
-    cut(sp, ep, t) {}
+    linear_cut(point sp, point ep, tool_name t) :
+      cut(sp, ep, t) {}
 
     static linear_cut* make(point sp, point ep) {
       linear_cut* mem = allocate<linear_cut>();
@@ -42,28 +42,6 @@ namespace gca {
 	return res;
       }
       return false;
-    }
-
-    cut* shift(point sh) const {
-      linear_cut* c = static_cast<linear_cut*>(copy());
-      c->set_start(get_start() + sh);
-      c->set_end(get_end() + sh);
-      c->tool_no = tool_no;
-      return c;
-    }
-
-    cut* scale(double s) const {
-      cut* c = copy();
-      c->set_start(s*c->get_start());
-      c->set_end(s*c->get_end());
-      return c;
-    }
-
-    cut* scale_xy(double s) const {
-      linear_cut* m = static_cast<linear_cut*>(copy());
-      m->set_start(point(s*get_start().x, s*get_start().y, get_start().z));
-      m->set_end(point(s*get_end().x, s*get_end().y, get_end().z));
-      return m;
     }
 
     inline bool is_linear_cut() const { return true; }

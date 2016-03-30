@@ -13,14 +13,14 @@ namespace gca {
     direction dir;
     plane pl;
 
-  circular_arc(point sp, point ep, point so, direction pdir, plane ppl) :
-    cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {
-    sanity_check();
-  }
+    circular_arc(point sp, point ep, point so, direction pdir, plane ppl) :
+      cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {
+      sanity_check();
+    }
 
-  circular_arc(point sp, point ep, point so, direction pdir, plane ppl, tool_name tn) : cut(sp, ep, tn), start_offset(so), dir(pdir), pl(ppl)  {
-    sanity_check();
-  }
+    circular_arc(point sp, point ep, point so, direction pdir, plane ppl, tool_name tn) : cut(sp, ep, tn), start_offset(so), dir(pdir), pl(ppl)  {
+      sanity_check();
+    }
 
     void sanity_check() {
       double sdiff = (center() - get_start()).len();
@@ -61,31 +61,6 @@ namespace gca {
       return false;
     }
 
-    cut* shift(point sh) const {
-      //circular_arc* mem = allocate<circular_arc>();
-      circular_arc* arc = static_cast<circular_arc*>(copy()); // new (mem) circular_arc(start + sh, end + sh, start_offset, dir, pl);
-      arc->set_start(get_start() + sh);
-      arc->set_end(get_end() + sh);
-      return arc;
-    }
-
-    cut* scale(double s) const {
-      circular_arc* arc = static_cast<circular_arc*>(copy());
-      arc->set_start(s*get_start());
-      arc->set_end(s*get_end());
-      arc->start_offset = s*start_offset;
-      arc->tool_no = tool_no;
-      return arc;
-    }
-
-    cut* scale_xy(double s) const {
-      circular_arc* m = static_cast<circular_arc*>(copy());
-      m->set_start(point(s*get_start().x, s*get_start().y, get_start().z));
-      m->set_end(point(s*get_end().x, s*get_end().y, get_end().z));
-      m->start_offset = point(s*start_offset.x, s*start_offset.y, start_offset.z);
-      return m;
-    }
-    
     virtual point initial_orient() const {
       double theta = dir == CLOCKWISE ? 90 : -90;
       return (get_end() - get_start()).rotate_z(theta).normalize();
