@@ -93,7 +93,8 @@ namespace gca {
       return true;
     }
 
-    void update(point p, const mill_tool& t) {
+    double update(point p, const mill_tool& t) {
+      double volume_removed = 0.0;
       int first_x = static_cast<int>(t.x_min(p) / resolution);
       int last_x = static_cast<int>(t.x_max(p) / resolution);
       int first_y = static_cast<int>(t.y_min(p) / resolution);
@@ -104,11 +105,13 @@ namespace gca {
 	    double z_diff = static_cast<double>(column_height(i, j)) - p.z;
 	    if (z_diff > 0) {
 	      set_column_height(i, j, p.z);
-	      total_volume_removed += resolution*resolution*z_diff;
+	      volume_removed += resolution*resolution*z_diff;
 	    }
 	  }
 	}
       }
+      total_volume_removed += volume_removed;
+      return volume_removed;
     }
   };
 
