@@ -50,7 +50,7 @@ namespace gca {
       toolpath t = actual.back();
       parametric_curve crv = t.c;
       arc& a = crv.get_obj<arc>();
-      REQUIRE(actual.back().c.value(0.5) == point(0.5, 0.5, 0));
+      REQUIRE(within_eps(actual.back().c.value(0.5), point(0.5, 0.5, 0)));
     }
   }
 }

@@ -10,8 +10,40 @@ namespace gca {
 
     SECTION("Start location") {
       arc a = arc(point(1, 0, 0), point(1, 1, 0), point(0, 0.5, 0), CLOCKWISE);
-      cout << "Start location: " << a.value(0.0) << endl;
       REQUIRE(within_eps(a.value(0.0), point(1, 0, 0)));
     }
+
+    SECTION("Vertical arc") {
+      arc a = arc(point(2, 1, 1), point(2, 2, 1), point(0, 0.5, 0), CLOCKWISE);
+      SECTION("Start") {
+	REQUIRE(within_eps(a.value(0.0), point(2, 1, 1)));
+      }
+
+      SECTION("End") {
+	REQUIRE(within_eps(a.value(1.0), point(2, 2, 1)));
+      }
+
+      SECTION("Middle") {
+	REQUIRE(within_eps(a.value(0.5), point(1.5, 1.5, 1)));
+      }
+      
+    }
+
+    SECTION("Horizontal arc") {
+      arc a = arc(point(0, 0, 0), point(1, 0, 0), point(0.5, 0, 0), COUNTERCLOCKWISE);
+      SECTION("Start") {
+	REQUIRE(within_eps(a.value(0.0), point(0, 0, 0)));
+      }
+
+      SECTION("End") {
+	REQUIRE(within_eps(a.value(1.0), point(1, 0, 0)));
+      }
+
+      SECTION("Middle") {
+	REQUIRE(within_eps(a.value(0.5), point(0.5, -0.5, 0)));
+      }
+      
+    }
+
   }
 }

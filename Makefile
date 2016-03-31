@@ -1904,6 +1904,33 @@ test/analysis_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/analysis_tests.cpp.s
 .PHONY : test/analysis_tests.cpp.s
 
+test/arc_tests.o: test/arc_tests.cpp.o
+
+.PHONY : test/arc_tests.o
+
+# target to build an object file
+test/arc_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.o
+.PHONY : test/arc_tests.cpp.o
+
+test/arc_tests.i: test/arc_tests.cpp.i
+
+.PHONY : test/arc_tests.i
+
+# target to preprocess a source file
+test/arc_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.i
+.PHONY : test/arc_tests.cpp.i
+
+test/arc_tests.s: test/arc_tests.cpp.s
+
+.PHONY : test/arc_tests.s
+
+# target to generate assembly for a file
+test/arc_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.s
+.PHONY : test/arc_tests.cpp.s
+
 test/checker_tests.o: test/checker_tests.cpp.o
 
 .PHONY : test/checker_tests.o
@@ -2506,6 +2533,9 @@ help:
 	@echo "... test/analysis_tests.o"
 	@echo "... test/analysis_tests.i"
 	@echo "... test/analysis_tests.s"
+	@echo "... test/arc_tests.o"
+	@echo "... test/arc_tests.i"
+	@echo "... test/arc_tests.s"
 	@echo "... test/checker_tests.o"
 	@echo "... test/checker_tests.i"
 	@echo "... test/checker_tests.s"
