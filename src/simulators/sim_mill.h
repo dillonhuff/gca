@@ -14,8 +14,8 @@ namespace gca {
     double inc_size;
     sim_res res;
     
-  sim_mill_state(region& rp, const mill_tool& tp) :
-    r(rp), t(tp), inc_size(r.resolution / 2.0),
+    sim_mill_state(region& rp, const mill_tool& tp) :
+      r(rp), t(tp), inc_size(r.resolution / 2.0),
       res(GCA_SIM_OK) {}
 
     inline sim_res result() { return res; }
@@ -41,7 +41,7 @@ namespace gca {
     }
   };
 
-  sim_res simulate_mill(const vector<line> p, region& r, const mill_tool& t);  
+  sim_res simulate_mill(const vector<line>& p, region& r, const mill_tool& t);  
 }
 
 #endif

@@ -66,7 +66,7 @@ vector<cut*> clip_transition_heights(const vector<cut*>& path,
 				    r.front()->get_start(),
 				    new_safe_height, lit::make(10.0));
     };
-    apply_between(move_sequences.begin(), move_sequences.end(),
+    apply_between(move_sequences.begin() + 1, move_sequences.end(),
 		  transitions.begin(),
 		  mk_transition);
     for (unsigned i = 0; i < move_sequences.size(); i++) {
