@@ -69,4 +69,21 @@ namespace gca {
       REQUIRE(v == correct);
     }
   }
+
+  TEST_CASE("Split unary tests") {
+
+    SECTION("Empty vector") {
+      vector<int> v{};
+      vector<vector<int>> res = group_unary(v, [](int i) { return i < 0; });
+      vector<vector<int>> correct{};
+      REQUIRE(res == correct);
+    }
+
+    SECTION("Several elements") {
+      vector<int> v{1, 5, 1, 7, 3, 10, 1, 2};
+      auto res = group_unary(v, [](int i) { return i < 3; });
+      vector<vector<int>> correct{{1}, {5}, {1}, {7, 3, 10}, {1, 2}};
+      REQUIRE(res == correct);
+    }
+  }
 }

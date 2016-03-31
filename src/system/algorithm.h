@@ -79,6 +79,14 @@ namespace gca {
   }
 
   template<typename I, typename F>
+  vector<vector<I>> group_unary(const vector<I>& elems, F f) {
+    vector<vector<I>> grouped;
+    auto match = [&f](const I& i, const I& j) { return f(i) == f(j); };
+    split_by(elems, grouped, match);
+    return grouped;
+  }
+
+  template<typename I, typename F>
   void delete_if(I& c, F f) {
     c.erase(remove_if(c.begin(), c.end(), f), c.end());
   }
