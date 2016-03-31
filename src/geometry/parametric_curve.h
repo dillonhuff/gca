@@ -9,6 +9,9 @@ namespace gca {
       virtual ~concept_t() = default;
       virtual concept_t* copy() const = 0;
       virtual point value(double t) const = 0;
+      virtual parametric_curve shift(point t) const = 0;
+      virtual parametric_curve scale(double t) const = 0;
+      virtual parametric_curve scale_xy(double t) const = 0;
     };
 
     template<typename T>
@@ -17,6 +20,9 @@ namespace gca {
       model(T x) : data(move(x)) {}
       virtual concept_t* copy() const { return new model<T>(*this); }
       virtual point value(double t) const { return data.value(t); }
+      virtual parametric_curve shift(point t) const { return data.shift(t); }
+      virtual parametric_curve scale(double t) const { return data.scale(t); }
+      virtual parametric_curve scale_xy(double t) const { return data.scale_xy(t); }
     };
   
     unique_ptr<concept_t> self;
@@ -35,6 +41,13 @@ namespace gca {
     inline point value(double t) const
     { return self->value(t); }
 
+    virtual parametric_curve shift(point t) const
+    { return self->shift(t); }
+    virtual parametric_curve scale(double t) const
+    { return self->scale(t); }
+    virtual parametric_curve scale_xy(double t) const
+    { return self->scale_xy(t); }
+    
     template<typename T>
     T& get_obj() {
       concept_t* cptr = self.get();

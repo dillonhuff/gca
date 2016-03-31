@@ -21,6 +21,28 @@ namespace gca {
     }
 
     point value(double t) const;
+
+    inline point start_offset() const { return center - start; }
+
+    arc shift(point s) const
+    { return arc(start + s, end + s, start_offset(), dir); }
+
+    arc scale(double s) const {
+      return arc(s*start, s*end, s*start_offset(), dir);
+    }
+
+    arc scale_xy(double t) const {
+      point se = start;
+      se.x = t*se.x;
+      se.y = t*se.y;
+      point ee = end;
+      ee.x = t*ee.x;
+      ee.y = t*ee.y;
+      point so = start_offset();
+      so.x = t*so.z;
+      so.y = t*so.y;
+      return arc(se, ee, so, dir);
+    }
   };
 }
 
