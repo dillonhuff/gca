@@ -4,6 +4,7 @@
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_res.h"
+#include "synthesis/cut.h"
 
 namespace gca {
 
@@ -41,7 +42,7 @@ namespace gca {
     }
   };
 
-  sim_res simulate_mill(const vector<line>& p, region& r, const mill_tool& t);  
+  sim_res simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t);  
 }
 
 #endif

@@ -6,6 +6,7 @@
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
+#include "synthesis/linear_cut.h"
 
 namespace gca {
 
@@ -15,7 +16,7 @@ namespace gca {
     set_system_allocator(&a);
 
     SECTION("Run empty program") {
-      vector<line> lines;
+      vector<cut*> lines;
       region r(10, 10, 10, 0.01);
       cylindrical_bit t(1);
       simulate_mill(lines, r, t);
@@ -29,7 +30,7 @@ namespace gca {
       r.set_machine_y_offset(5);
       double tool_diameter = 1.0;
       cylindrical_bit t(tool_diameter);
-      vector<line> lines{line(point(0, 0, 0), point(0, 0, 5))};
+      vector<cut*> lines{linear_cut::make(point(0, 0, 0), point(0, 0, 5))};
       simulate_mill(lines, r, t);
       double tr = tool_diameter / 2.0;
       double correct_volume = M_PI*tr*tr*5;
@@ -47,7 +48,7 @@ namespace gca {
       cylindrical_bit t(tool_diameter);
       
       SECTION("Move through whole workpiece") {
-	vector<line> lines{line(point(0, 0, 2), point(3, 0, 2))};
+    	vector<cut*> lines{linear_cut::make(point(0, 0, 2), point(3, 0, 2))};
       	r.set_height(2, 3, 2, 4, 5);
       	simulate_mill(lines, r, t);
       	double correct_volume = tool_diameter*2*1;
@@ -58,8 +59,8 @@ namespace gca {
       }
 
       SECTION("Move through whole workpiece then move back and stop") {
-	vector<line> lines{line(point(0, 0, 2), point(3, 0, 2)),
-	    line(point(3, 0, 2), point(0, 0, 2))};
+    	vector<cut*> lines{linear_cut::make(point(0, 0, 2), point(3, 0, 2)),
+    	    linear_cut::make(point(3, 0, 2), point(0, 0, 2))};
       	r.set_height(2, 3, 2, 4, 5);
       	simulate_mill(lines, r, t);
       	double correct_volume = tool_diameter*2*1;
@@ -70,14 +71,14 @@ namespace gca {
       }
 
       SECTION("Diagonal cut over nothing") {
-	vector<line> lines{line(point(0, 0, 2), point(3, -0.1, 2))};
-	r.set_height(2, 3, 2, 4, 1);
-	simulate_mill(lines, r, t);
-	double correct_volume = 0.0;
-	double actual = r.volume_removed();
-	cout << "-- Correct: " << correct_volume << endl;
-	cout << "-- Actual: " << actual << endl;
-	REQUIRE(within_eps(actual, correct_volume, 0.05));
+    	vector<cut*> lines{linear_cut::make(point(0, 0, 2), point(3, -0.1, 2))};
+    	r.set_height(2, 3, 2, 4, 1);
+    	simulate_mill(lines, r, t);
+    	double correct_volume = 0.0;
+    	double actual = r.volume_removed();
+    	cout << "-- Correct: " << correct_volume << endl;
+    	cout << "-- Actual: " << actual << endl;
+    	REQUIRE(within_eps(actual, correct_volume, 0.05));
       }
     }
   }

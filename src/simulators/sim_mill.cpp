@@ -4,10 +4,11 @@
 
 namespace gca {
 
-  sim_res simulate_mill(const vector<line>& p, region& r, const mill_tool& t) {
+  sim_res simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t) {
     sim_mill_state sim_state(r, t);
-    for (auto l : p) {
-      sim_state.update_line(l.start, l.end);
+    for (auto c : p) {
+      assert(c->is_linear_cut());
+      sim_state.update_line(c->get_start(), c->get_end());
     }
     return sim_state.result();
   }
