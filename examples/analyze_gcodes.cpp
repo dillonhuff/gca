@@ -13,6 +13,7 @@
 #include "geometry/box.h"
 #include "synthesis/cut.h"
 #include "synthesis/cut_to_gcode.h"
+#include "synthesis/output.h"
 #include "system/algorithm.h"
 #include "system/arena_allocator.h"
 #include "system/file.h"
@@ -36,50 +37,64 @@ void apply_to_gprograms(const string& dn, F f) {
   read_dir(dn, func);
 }
 
-void split_and_print(const vector<machine_state>& toolpath) {
-  auto ptbl = select_column(G54_COORD_SYSTEM, program_position_table(toolpath));
-  vector<pair<machine_state, position>> tstates(ptbl.size());
-  zip(toolpath.begin(), toolpath.end(), ptbl.begin(), tstates.begin());
-  vector<vector<pair<machine_state, position>>> sub_paths;
-  split_by(tstates, sub_paths,
-  	   [](const pair<machine_state, position>& x,
-  	      const pair<machine_state, position>& y)
-  	   { return x.second.is_lit() == y.second.is_lit(); });
-  delete_if(sub_paths, [](const vector<pair<machine_state, position>>& p)
-  	    { return !p.front().second.is_lit(); });
-  for (auto path : sub_paths) {
-    assert(all_of(path.begin(), path.end(),
-    		  [](const pair<machine_state, position>& p)
-    		  { return p.second.is_lit(); }));
-    cout << "# of Positions in toolpath: " << path.size() << endl;
-  }
+// TODO: Actually implement extraction
+double infer_safe_height(const vector<cut*>& path) {
+  return 1.0;
 }
 
-void print_toolpaths(const vector<machine_state>& states) {
-  vector<vector<machine_state>> toolpaths;
-  split_by(states, toolpaths, [](const machine_state& c, const machine_state& p)
-	   { return c.active_tool == p.active_tool; });
-  delete_if(toolpaths, [](const vector<machine_state>& c)
-	    { return c.back().active_tool->is_omitted(); });
-  // On HAAS it appears that the last toolpath is always a change back
-  // to the first tool that was active, this toolpath never contains
-  // any moves
-  if (toolpaths.size() > 0) { toolpaths.pop_back(); };
-  cout << "Number of toolpaths with known tool: " << toolpaths.size() << endl;
-  for (auto toolpath : toolpaths) {
-    if (is_analyzable(toolpath)) {
-      split_and_print(toolpath);
+vector<cut*> clip_transition_heights(const vector<cut*>& path,
+				     double new_safe_height) {
+  vector<vector<cut*>> move_sequences =
+    group_unary(path, [](const cut* c) { return c->is_safe_move(); });
+  delete_if(move_sequences, [](const vector<cut*>& cs)
+	    { return cs.front()->is_safe_move(); });
+  bool all_normal_paths = true;
+  for (auto s : move_sequences) {
+    if (!is_vertical(s.front()) || s.size() < 2) {
+      all_normal_paths = false;
+      break;
     }
   }
+  vector<cut*> clipped_cuts;
+  if (all_normal_paths) {
+    cout << "All normal paths" << endl;
+    vector<vector<cut*>> transitions(move_sequences.size() - 1);
+    // TODO: Add push feedrate inference
+    auto mk_transition = [new_safe_height](const vector<cut*> l,
+					   const vector<cut*> r) {
+      return from_to_with_G0_height(l.back()->get_end(),
+				    r.front()->get_start(),
+				    new_safe_height, lit::make(10.0));
+    };
+    apply_between(move_sequences.begin(), move_sequences.end(),
+		  transitions.begin(),
+		  mk_transition);
+    for (unsigned i = 0; i < move_sequences.size(); i++) {
+      auto m = move_sequences[i];
+      clipped_cuts.insert(end(clipped_cuts), m.begin() + 1, m.end());
+      if (i < move_sequences.size() - 1) {
+	auto t = transitions[i];
+	clipped_cuts.insert(end(clipped_cuts), t.begin(), t.end());
+      }
+    }
+  } else {
+    clipped_cuts = path;
+  }
+  return clipped_cuts;
 }
 
-void print_paths_gcode(vector<vector<cut*>>& paths) {
-  cut_params params;
-  params.target_machine = PROBOTIX_V90_MK2_VFD;
-  params.safe_height = 2.0;
+vector<vector<cut*>> clip_transition_heights(vector<vector<cut*>>& paths,
+					     double new_safe_height) {
+  vector<vector<cut*>> clipped_paths;
+  for (auto path : paths) {
+    clipped_paths.push_back(clip_transition_heights(path, new_safe_height));
+  }
+  return clipped_paths;
+}
+
+void print_geometry_info(vector<vector<cut*>>& paths) {
   vector<box> path_boxes;
   for (auto path : paths) {
-    print_profile_info(path);
     path_boxes.push_back(path_bounds(path));
   }
   cout << "---------------------------------------------------------" << endl;
@@ -100,6 +115,31 @@ void print_paths_gcode(vector<vector<cut*>>& paths) {
   if (!all_cuts_within_block_rate(paths, 4000)) {
     cout << "NOT ALL CUTS FIT IN THE BLOCK RATE" << endl;
   }
+}
+
+void print_profile_info(vector<vector<cut*>>& paths) {
+  for (auto path : paths) {
+    print_profile_info(path);
+  }
+}
+
+void print_performance_diff(const program_profile_info& before,
+			    const program_profile_info& after) {
+  assert(before.size() == after.size());
+  double time_before = execution_time(before);
+  double time_after = execution_time(after);
+  assert(!within_eps(time_before, 0));
+  double pct_change = ((time_before - time_after) / time_before) * 100;
+  cout << "Time before  = " << time_before << endl;
+  cout << "Time after   = " << time_after << endl;
+  cout << "% change     = " << pct_change << endl;;
+}
+
+void print_paths_gcode(vector<vector<cut*>>& paths) {
+  program_profile_info before = profile_toolpaths(paths);
+  vector<vector<cut*>> clipped_height_paths = clip_transition_heights(paths, 0.01);
+  program_profile_info after = profile_toolpaths(clipped_height_paths);
+  print_performance_diff(before, after);
 }
 
 int main(int argc, char** argv) {

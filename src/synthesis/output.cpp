@@ -78,7 +78,9 @@ namespace gca {
     vector<cut*> cuts;
     cuts.push_back(safe_move::make(current_loc, safe_up));
     cuts.push_back(safe_move::make(safe_up, safe_next));
-    cuts.push_back(linear_cut::make(safe_next, next_loc));
+    auto c = linear_cut::make(safe_next, next_loc);
+    c->set_feedrate(feedrate);
+    cuts.push_back(c);
     return cuts;
   }
 
