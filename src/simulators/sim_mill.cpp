@@ -1,6 +1,7 @@
 #include "system/arena_allocator.h"
 #include "geometry/line.h"
 #include "simulators/sim_mill.h"
+#include "synthesis/circular_arc.h"
 
 namespace gca {
 
@@ -27,11 +28,31 @@ namespace gca {
     return volume_removed;
   }
 
+  double update_arc(region& r, const mill_tool& t, circular_arc* ar) {
+    double volume_removed = 0.0;
+    // TODO: Get rid of 100 magic number
+    point s;
+    for (int i = 0; i < 100; i++) {
+      double tp = static_cast<double>(i) / static_cast<double>(100);
+      point e = r.machine_coords_to_region_coords(ar->value(tp));
+      if (!r.in_region(e, t)) {
+	cout << "goes outside of region bounds" << endl;
+	assert(false);
+      }
+      volume_removed += r.update(e, t);
+    }
+    return volume_removed;
+  }
+
   double simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t) {
     double volume_removed = 0.0;
     for (auto c : p) {
-      assert(c->is_linear_cut());
-      volume_removed += update_line(r, t, c->get_start(), c->get_end());
+      if (c->is_linear_cut()) {
+	volume_removed += update_line(r, t, c->get_start(), c->get_end());
+      } else if (c->is_circular_arc()) {
+	circular_arc* ca = static_cast<circular_arc*>(c);
+	volume_removed += update_arc(r, t, ca);
+      }
     }
     return volume_removed;
   }

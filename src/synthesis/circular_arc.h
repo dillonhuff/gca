@@ -104,6 +104,8 @@ namespace gca {
       other << " dir: " << dir;
     }
 
+    inline point value(double t) const { return c.value(t); }
+
   };
 
 }
