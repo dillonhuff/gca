@@ -42,6 +42,28 @@ namespace gca {
       SECTION("Middle") {
 	REQUIRE(within_eps(a.value(0.5), point(0.5, -0.5, 0)));
       }
+    }
+
+    SECTION("Random example originally from gcode_to_cuts") {
+      arc a(point(1, 1, 1),
+	    point(3, 4.5, 1),
+	    point(1, 1.75, 0),
+	    COUNTERCLOCKWISE);
+
+      SECTION("Start") {
+	point s = a.value(0.0);
+	REQUIRE(within_eps(s, point(1, 1, 1)));
+      }
+
+      SECTION("End") {
+	REQUIRE(within_eps(a.value(1.0), point(3, 4.5, 1)));
+      }
+
+      SECTION("Middle") {
+	point m = a.value(0.5);
+	cout << "Middle = " << m << endl;
+	REQUIRE(within_eps(m, point(3.75, 1.75, 1)));
+      }
       
     }
 

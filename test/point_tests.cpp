@@ -59,4 +59,19 @@ namespace gca {
     REQUIRE(within_eps(c, r));
   }
 
+  TEST_CASE("Angle between is 180") {
+    point p(1, 1, 0);
+    point q(-1, -1, 0);
+    double a = angle_between(p, q);
+    REQUIRE(within_eps(a, 180, 0.00001));
+  }
+
+  TEST_CASE("Angle between is 180 2") {
+    point p(-1, -1.75, 0);
+    point q(1, 1.75, 0);
+    double a = angle_between(p, q);
+    cout << "angle between = " << a << endl;
+    REQUIRE(within_eps(a, 180, 0.00001));
+  }
+  
 }

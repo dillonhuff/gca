@@ -18,6 +18,8 @@ namespace gca {
       start(startp), end(endp), center(start + start_offsetp),
       radius((start - center).len()), dir(dirp) {
       assert(within_eps(start.z, end.z));
+      assert(within_eps(start.z, center.z));
+      assert(within_eps((start - center).len(), (end - center).len()));
     }
 
     point value(double t) const;

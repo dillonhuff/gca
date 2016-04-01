@@ -68,6 +68,16 @@ namespace gca {
       arc->set_feedrate(lit::make(12.5));
       arc->set_spindle_speed(lit::make(2000));
       correct.push_back({arc});
+      // cout << "Correct: " << endl;
+      // for (auto cs : correct) {
+      // 	for (auto c : cs)
+      // 	{ cout << *c << endl; }
+      // }
+      // cout << "Actual: " << endl;
+      // for (auto cs : actual) {
+      // 	for (auto c : cs)
+      // 	{ cout << *c << endl; }
+      // }
       REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));      
     }
 
@@ -83,6 +93,16 @@ namespace gca {
       arc->set_feedrate(lit::make(12.5));
       arc->set_spindle_speed(lit::make(2000));
       correct.push_back({arc});
+      //      cout << "Correct: " << endl;
+      // for (auto cs : correct) {
+      // 	for (auto c : cs)
+      // 	{ cout << *c << endl; }
+      // }
+      // cout << "Actual: " << endl;
+      // for (auto cs : actual) {
+      // 	for (auto c : cs)
+      // 	{ cout << *c << endl; }
+      // }
       REQUIRE(correct == actual); //equal(correct.begin(), correct.end(), actual.begin(), cmp_cuts));
     }
 

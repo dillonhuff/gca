@@ -2,6 +2,7 @@
 #define GCA_CIRCULAR_ARC_H
 
 #include "system/arena_allocator.h"
+#include "geometry/arc.h"
 #include "geometry/direction.h"
 #include "synthesis/cut.h"
 
@@ -16,10 +17,12 @@ namespace gca {
     circular_arc(point sp, point ep, point so, direction pdir, plane ppl) :
       cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {
       sanity_check();
+      c = arc(sp, ep, so, pdir);
     }
 
     circular_arc(point sp, point ep, point so, direction pdir, plane ppl, tool_name tn) : cut(sp, ep, tn), start_offset(so), dir(pdir), pl(ppl)  {
       sanity_check();
+      c = arc(sp, ep, so, pdir);
     }
 
     void sanity_check() {
@@ -96,6 +99,7 @@ namespace gca {
       } else {
 	other << "<S omitted> ";
       }
+      cout << get_start() << " -> " << get_end();
       other << " offset: " << start_offset;
       other << " dir: " << dir;
     }

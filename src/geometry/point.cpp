@@ -7,6 +7,13 @@
 using namespace std;
 
 namespace gca {
+
+  double safe_acos(double v) {
+    if (within_eps(v, -1)) { return M_PI; }
+    if (within_eps(v, 1)) { return 0.0; }
+    assert(-1 <= v && v <= 1);
+    return acos(v);
+  }
   
   bool within_eps(const point& l, const point& r, double eps) {
     double xd = l.x - r.x;
@@ -53,7 +60,7 @@ namespace gca {
     double d = u.dot(v);
     if (within_eps(d, 0)) { return 180.0; }
     double m = (u.dot(v)) / l;
-    double rads = acos(m);
+    double rads = safe_acos(m);
     return (180.0/M_PI)*rads;
   }
   
