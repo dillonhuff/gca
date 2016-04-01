@@ -11,6 +11,8 @@
 #include "checkers/block_rate_checker.h"
 #include "core/lexer.h"
 #include "geometry/box.h"
+#include "simulators/region.h"
+#include "simulators/sim_mill.h"
 #include "synthesis/cut.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/output.h"
@@ -142,6 +144,32 @@ void print_paths_gcode(vector<vector<cut*>>& paths) {
   print_performance_diff(before, after);
 }
 
+box bound_paths(vector<vector<cut*>>& paths) {
+  vector<box> path_boxes;
+  for (auto path : paths) {
+    path_boxes.push_back(path_bounds(path));
+  }
+  return bound_boxes(path_boxes);
+}
+
+void simulate_paths(vector<vector<cut*>>& paths) {
+  if (paths.size() == 0) { return; }
+  box b = bound_paths(paths);
+  double tool_diameter = 0.125;
+  double x_len = b.x_max - b.x_min + 5*tool_diameter;
+  double y_len = b.y_max - b.y_min + 5*tool_diameter;
+  double z_len = b.z_max - b.z_min + 5*tool_diameter;
+  region r(x_len, y_len, z_len + 0.01, 0.01);
+  r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
+  r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
+  r.set_height(0, x_len, 0, y_len, 0.0);
+  cylindrical_bit t(tool_diameter);
+  for (auto path : paths) {
+    double volume_removed = simulate_mill(path, r, t);
+    cout << "Volume removed = " << volume_removed << endl;
+  }
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: print-knife-hacks <gcode file path>" << endl;
@@ -160,9 +188,7 @@ int main(int argc, char** argv) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
-	cout << "Paths: " << paths.size() << endl;
-	num_paths += paths.size();
-	print_paths_gcode(paths);
+	simulate_paths(paths);
       } else {
 	cout << "Could not process all paths: " << r << endl;
       }

@@ -19,7 +19,25 @@ namespace gca {
       radius((start - center).len()), dir(dirp) {
       assert(within_eps(start.z, end.z));
       assert(within_eps(start.z, center.z));
-      assert(within_eps((start - center).len(), (end - center).len()));
+      sanity_check();
+    }
+
+    void sanity_check() {
+      double sdiff = (center - start).len();
+      double ediff =  (center - end).len();
+      double tolerance = 0.0005;
+      if (!(within_eps(sdiff, ediff, tolerance))) {
+	cout << "Error: !(within_eps((center() - start).len(), (center() - end).len()))" << endl;
+	cout << "(center() - start).len() = " << sdiff << endl;
+	cout << "(center() - end).len()   = " << ediff << endl;
+	cout << "Difference               = " << sdiff - ediff << endl;
+	cout << "Tolerance                = " << tolerance << endl;
+	cout << "center                   = " << center << endl;
+	cout << "start                    = " << start << endl;
+	cout << "end                      = " << end << endl;
+	cout << "start_offset             = " << start_offset() << endl;
+	assert(false);
+      }
     }
 
     point value(double t) const;

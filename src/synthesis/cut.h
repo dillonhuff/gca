@@ -14,10 +14,6 @@
 namespace gca {
 
   struct cut {
-  private:
-    point start;
-    point end;
-
   protected:
     parametric_curve c;
     
@@ -25,8 +21,8 @@ namespace gca {
     machine_settings settings;
     tool_name tool_no;
     
-    cut(point s, point e) : start(s), end(e), c(line(s, e)), tool_no(NO_TOOL) {}
-    cut(point s, point e, tool_name t) : start(s), end(e), c(line(s, e)), tool_no(t) {}
+    cut(point s, point e) : c(line(s, e)), tool_no(NO_TOOL) {}
+    cut(point s, point e, tool_name t) : c(line(s, e)), tool_no(t) {}
 
     inline value* get_spindle_speed() const { return settings.spindle_speed; }
     inline value* get_feedrate() const { return settings.feedrate; }

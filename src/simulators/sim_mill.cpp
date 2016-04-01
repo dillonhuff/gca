@@ -11,7 +11,12 @@ namespace gca {
     point s = r.machine_coords_to_region_coords(sp);
     point e = r.machine_coords_to_region_coords(ep);
     if (!r.in_region(e, t)) {
-      cout << "goes outside of region bounds" << endl;
+      cout << e << " goes outside of region bounds" << endl;
+      cout << "Region height: " << r.height << endl;
+      cout << "Region x len: " << r.x_len << endl;
+      cout << "Region y len: " << r.y_len << endl;
+      cout << "Machine x offset: " << r.machine_x_offset << endl;
+      cout << "Machine y offset: " << r.machine_y_offset << endl;
       assert(false);
     }
     point d = e - s;
@@ -36,7 +41,12 @@ namespace gca {
       double tp = static_cast<double>(i) / static_cast<double>(100);
       point e = r.machine_coords_to_region_coords(ar->value(tp));
       if (!r.in_region(e, t)) {
-	cout << "goes outside of region bounds" << endl;
+	cout << e << " goes outside of region bounds" << endl;
+	cout << "Region height: " << r.height << endl;
+	cout << "Region x len: " << r.x_len << endl;
+	cout << "Region y len: " << r.y_len << endl;
+	cout << "Machine x offset: " << r.machine_x_offset << endl;
+	cout << "Machine y offset: " << r.machine_y_offset << endl;
 	assert(false);
       }
       volume_removed += r.update(e, t);

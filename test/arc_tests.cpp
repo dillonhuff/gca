@@ -61,10 +61,8 @@ namespace gca {
 
       SECTION("Middle") {
 	point m = a.value(0.5);
-	cout << "Middle = " << m << endl;
 	REQUIRE(within_eps(m, point(3.75, 1.75, 1)));
       }
-      
     }
 
   }
