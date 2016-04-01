@@ -96,9 +96,9 @@ namespace gca {
     double update(point p, const mill_tool& t) {
       double volume_removed = 0.0;
       int first_x = static_cast<int>(t.x_min(p) / resolution);
-      int last_x = static_cast<int>(t.x_max(p) / resolution);
+      int last_x = static_cast<int>(t.x_max(p) / resolution) + 1;
       int first_y = static_cast<int>(t.y_min(p) / resolution);
-      int last_y = static_cast<int>(t.y_max(p) / resolution);
+      int last_y = static_cast<int>(t.y_max(p) / resolution) + 1;
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  if (t.contains(p, resolution, i, j)) {
