@@ -35,7 +35,7 @@ namespace gca {
     }
 
     SECTION("Copy preserves info for circular arc") {
-      s = circular_arc::make(point(1, 0, 0), point(1, 0, 0), point(1, 1, 1), CLOCKWISE, YZ, DRILL);
+      s = circular_arc::make(point(1, 0, 0), point(1, 1, 0), point(0, 0.5, 0), CLOCKWISE, YZ, DRILL);
       s->set_feedrate(lit::make(1.0));
       s->set_spindle_speed(lit::make(16000));
       c = s->copy();
