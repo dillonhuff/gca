@@ -28,6 +28,8 @@ namespace gca {
     inline value* get_feedrate() const { return settings.feedrate; }
     inline point get_start() const { return c.value(0.0); }
     inline point get_end() const { return c.value(1.0); }
+    inline point value_at(double t) const { return c.value(t); }
+    inline double length() const { return (get_end() - get_start()).len(); }
 
     inline void set_spindle_speed(value* v) { settings.spindle_speed = v; }
     inline void set_feedrate(value* v) { settings.feedrate = v; }

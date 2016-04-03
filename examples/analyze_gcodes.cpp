@@ -155,13 +155,16 @@ box bound_paths(vector<vector<cut*>>& paths) {
 void simulate_paths(vector<vector<cut*>>& paths) {
   if (paths.size() == 0) { return; }
   box b = bound_paths(paths);
+  cout << "Toolpath bounds: " << endl;
+  cout << b << endl;
   double tool_diameter = 0.125;
   double x_len = b.x_max - b.x_min + 5*tool_diameter;
   double y_len = b.y_max - b.y_min + 5*tool_diameter;
-  double z_len = b.z_max - b.z_min + 5*tool_diameter;
-  region r(x_len, y_len, z_len + 0.01, 0.01);
+  double z_len = b.z_max - b.z_min;
+  region r(x_len, y_len, z_len, 0.01);
   r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
   r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
+  r.set_machine_z_offset(-b.z_min);
   r.set_height(0, x_len, 0, y_len, 0.0);
   cylindrical_bit t(tool_diameter);
   for (auto path : paths) {

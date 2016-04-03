@@ -24,7 +24,7 @@ namespace gca {
       linear_cut* mem = allocate<linear_cut>();
       return new (mem) linear_cut(sp, ep, tn);
     }
-    
+
     point final_orient() const {
       return get_end() - get_start();
     }

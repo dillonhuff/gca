@@ -17,14 +17,14 @@ namespace gca {
     int num_x_elems, num_y_elems;
     double total_volume_removed;
     float* column_heights;
-    double machine_x_offset, machine_y_offset;
+    double machine_x_offset, machine_y_offset, machine_z_offset;
     
   region(double x_w, double y_w, double z_w, double xy_resolution) :
     resolution(xy_resolution), height(z_w), x_len(x_w), y_len(y_w),
       num_x_elems(x_w/static_cast<double>(xy_resolution)),
       num_y_elems(y_w/static_cast<double>(xy_resolution)),
       total_volume_removed(0),
-      machine_x_offset(0), machine_y_offset(0) {
+    machine_x_offset(0), machine_y_offset(0), machine_z_offset(0) {
       column_heights = static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
       for (int i = 0; i < num_x_elems; i++) {
 	for (int j = 0; j < num_y_elems; j++) {
@@ -38,11 +38,12 @@ namespace gca {
     point machine_coords_to_region_coords(point p) {
       return point(p.x + machine_x_offset,
 		   p.y + machine_y_offset,
-		   p.z); //height - p.z);
+		   p.z + machine_z_offset); //height - p.z);
     }
 
     inline void set_machine_x_offset(double x_off) { machine_x_offset = x_off; }
     inline void set_machine_y_offset(double y_off) { machine_y_offset = y_off; }
+    inline void set_machine_z_offset(double z_off) { machine_z_offset = z_off; }
 
     void set_height(double x_s, double x_e,
 		    double y_s, double y_e,
@@ -66,7 +67,7 @@ namespace gca {
       return total_volume_removed;
     }
 
-    inline float column_height(int i, int j) {
+    inline float column_height(int i, int j) const {
       return *(column_heights + i*num_y_elems + j);
     }
 
@@ -74,11 +75,11 @@ namespace gca {
       *(column_heights + i*num_y_elems + j) = f;
     }
 
-    inline bool legal_column(int i, int j) {
+    inline bool legal_column(int i, int j) const {
       return (0 <= i && i < num_x_elems) && (0 <= j && j < num_y_elems);
     }
 
-    inline bool in_region(point p, const mill_tool& t) {
+    inline bool in_region(point p, const mill_tool& t) const {
       int first_x = static_cast<int>(t.x_min(p) / resolution);
       int last_x = static_cast<int>(t.x_max(p) / resolution);
       int first_y = static_cast<int>(t.y_min(p) / resolution);
