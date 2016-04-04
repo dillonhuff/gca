@@ -76,9 +76,9 @@ namespace gca {
     auto position_table = program_position_table(states);
     bounds b(x_minp, x_maxp, y_minp, y_maxp, z_minp, z_maxp);
     return count_if(position_table.begin(),
-		    position_table.end(),
-		    [b](const position_table_row& r)
-		      { return !all_entries_in_bounds(b, r); });
+    		    position_table.end(),
+    		    [b](const position_table_row& r)
+    		      { return !all_entries_in_bounds(b, r); });
   }
   
 }

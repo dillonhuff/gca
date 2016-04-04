@@ -24,9 +24,7 @@ namespace gca {
   }
 
   bool same_cut_properties(const cut& l, const cut& r) {
-    return l.settings == r.settings; // (*(l.spindle_speed) == *(r.spindle_speed)) &&
-    // (*(l.feedrate) == *(r.feedrate)) &&
-    // (l.tool_no == r.tool_no);
+    return l.settings == r.settings;
   }
 
   box path_bounds(const vector<cut*>& path) {
@@ -34,6 +32,12 @@ namespace gca {
     for (auto c : path) {
       bound_pts.push_back(c->get_start());
       bound_pts.push_back(c->get_end());
+      // TODO: Improve sampling
+      const int num_points = 10;
+      for (int i = 0; i < num_points; i++) {
+	double t = static_cast<double>(i) / static_cast<const double>(num_points);
+	bound_pts.push_back(c->value_at(t));
+      }
     }
     return bound_positions(bound_pts);
   }

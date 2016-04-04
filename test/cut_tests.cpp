@@ -50,7 +50,7 @@ namespace gca {
       REQUIRE(*c == *s);
     }
   }
-  
+
   TEST_CASE("Simple knife aligment code matches real CAM output") {
     arena_allocator a;
     set_system_allocator(&a);
