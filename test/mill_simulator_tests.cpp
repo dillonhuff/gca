@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "system/arena_allocator.h"
 #include "geometry/line.h"
@@ -8,13 +9,39 @@
 #include "simulators/sim_mill.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/linear_cut.h"
+#include "synthesis/safe_move.h"
+#include "system/file.h"
 
 namespace gca {
+  
+  region set_up_region(const vector<vector<cut*>>& paths,
+		       double tool_diameter) {
+    box b = bound_paths(paths);
+    cout << "Toolpath bounds: " << endl;
+    cout << b << endl;
+    double x_len = b.x_max - b.x_min + 5*tool_diameter;
+    double y_len = b.y_max - b.y_min + 5*tool_diameter;
+    double z_len = b.z_max - b.z_min;
+    double safe_z = infer_safe_height(paths);
+    if (!(b.z_max > safe_z)) {
+      cout << "ERROR" << endl;
+      cout << "z_max = " << b.z_max << endl;
+      cout << "safe_z = " << safe_z << endl;
+      assert(false);
+    }
+    cout << "Safe height = " << safe_z << endl;
+    region r(x_len, y_len, z_len, 0.01);
+    r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
+    r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
+    r.set_machine_z_offset(-b.z_min);
+    r.set_height(0, x_len, 0, y_len, safe_z);
+    return r;
+  }
 
+  
   double square(double d) { return d*d; }
 
   TEST_CASE("Mill simulator") {
-    
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -123,5 +150,53 @@ namespace gca {
 	REQUIRE(within_eps(actual, correct, 0.05));
       }
     }
+
+    SECTION("Safe move above the workpiece removes nothing") {
+      region r(5, 5, 5, 0.005);
+      double z_max = 0.499;
+      r.set_height(0, 5, 0, 5, z_max);
+      r.set_machine_x_offset(0);
+      r.set_machine_y_offset(0);
+      double tool_diameter = 0.125;
+      double tool_radius = tool_diameter / 2.0;
+      cylindrical_bit t(tool_diameter);
+      auto c = safe_move::make(point(1, 1, 0.5), point(1, 2, 0.5));
+      double volume_removed = update_cut(*c, r, t);
+      REQUIRE(volume_removed == 0.0);
+    }
+  }
+
+  TEST_CASE("Material removing safe moves extracted from actual program ") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    string dir_name = "/Users/dillon/CppWorkspace/gca/test/nc-files/TopSide1.NCF";
+    std::ifstream td(dir_name);
+    std::string str((std::istreambuf_iterator<char>(td)),
+		    std::istreambuf_iterator<char>());
+    vector<block> p = lex_gprog(str);
+    vector<vector<cut*>> paths;
+    auto res = gcode_to_cuts(p, paths);
+    assert(res == GCODE_TO_CUTS_SUCCESS);
+    double tool_diameter = 0.125;
+    cylindrical_bit t(tool_diameter);
+    auto r = set_up_region(paths, tool_diameter);
+    bool no_safe_moves_remove_material = true;
+    for (auto path : paths) {
+      for (auto c : path) {
+	double volume_removed = update_cut(*c, r, t);
+	if (c->is_safe_move() && !within_eps(volume_removed, 0.0)) {
+	  no_safe_moves_remove_material = false;
+	  cout << *c << endl;
+	  cout << "CUT INFO" << endl;
+	  cout << "Execution time: " << cut_execution_time_seconds(c) << endl;
+	  cout << "Volume removed: " << volume_removed << endl;
+	  if (is_horizontal(c)) {
+	    cout << "IS HORIZONTAL" << endl;
+	  }
+	}
+      }
+    }
+    REQUIRE(no_safe_moves_remove_material);
   }
 }

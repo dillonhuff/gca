@@ -75,7 +75,9 @@ namespace gca {
   bool cmp_cuts(const cut* l, const cut* r);
   bool same_cut_properties(const cut& l, const cut& r);
 
+  double infer_safe_height(const vector<vector<cut*>>& paths);
   box path_bounds(const vector<cut*>& path);  
+  box bound_paths(const vector<vector<cut*>>& paths);
   bool is_vertical(const cut* c);
   bool is_horizontal(const cut* c);
   bool is_prismatic(vector<cut*>& path);

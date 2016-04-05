@@ -103,8 +103,9 @@ namespace gca {
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  if (t.contains(p, resolution, i, j)) {
-	    double z_diff = static_cast<double>(column_height(i, j)) - p.z;
-	    if (z_diff > 0) {
+	    double h = static_cast<double>(column_height(i, j));
+	    if (h > p.z) {
+	      double z_diff = h - p.z;
 	      set_column_height(i, j, p.z);
 	      volume_removed += resolution*resolution*z_diff;
 	    }

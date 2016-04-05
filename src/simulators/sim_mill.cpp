@@ -19,7 +19,7 @@ namespace gca {
     }
   }
 
-  double update_cut(region& r, const mill_tool& t, const cut& c) {
+  double update_cut(const cut& c, region& r, const mill_tool& t) {
     double volume_removed = 0.0;
     double d = r.resolution;
     int num_points = (c.length() / d) + 1;
@@ -35,7 +35,7 @@ namespace gca {
   double simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t) {
     double volume_removed = 0.0;
     for (auto c : p) {
-      volume_removed += update_cut(r, t, *c);
+      volume_removed += update_cut(*c, r, t);
     }
     return volume_removed;
   }

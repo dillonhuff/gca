@@ -39,11 +39,6 @@ void apply_to_gprograms(const string& dn, F f) {
   read_dir(dn, func);
 }
 
-// TODO: Actually implement extraction
-double infer_safe_height(const vector<cut*>& path) {
-  return 1.0;
-}
-
 vector<cut*> clip_transition_heights(const vector<cut*>& path,
 				     double new_safe_height) {
   vector<vector<cut*>> move_sequences =
@@ -144,32 +139,48 @@ void print_paths_gcode(vector<vector<cut*>>& paths) {
   print_performance_diff(before, after);
 }
 
-box bound_paths(vector<vector<cut*>>& paths) {
-  vector<box> path_boxes;
-  for (auto path : paths) {
-    path_boxes.push_back(path_bounds(path));
-  }
-  return bound_boxes(path_boxes);
-}
-
-void simulate_paths(vector<vector<cut*>>& paths) {
-  if (paths.size() == 0) { return; }
+region set_up_region(const vector<vector<cut*>>& paths,
+		     double tool_diameter) {
   box b = bound_paths(paths);
   cout << "Toolpath bounds: " << endl;
   cout << b << endl;
-  double tool_diameter = 0.125;
   double x_len = b.x_max - b.x_min + 5*tool_diameter;
   double y_len = b.y_max - b.y_min + 5*tool_diameter;
   double z_len = b.z_max - b.z_min;
+  double safe_z = infer_safe_height(paths);
+  if (!(b.z_max > safe_z)) {
+    cout << "ERROR" << endl;
+    cout << "z_max = " << b.z_max << endl;
+    cout << "safe_z = " << safe_z << endl;
+    assert(false);
+  }
+  cout << "Safe height = " << safe_z << endl;
   region r(x_len, y_len, z_len, 0.01);
   r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
   r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
   r.set_machine_z_offset(-b.z_min);
-  r.set_height(0, x_len, 0, y_len, 0.0);
+  r.set_height(0, x_len, 0, y_len, safe_z);
+  return r;
+}
+
+void simulate_paths(vector<vector<cut*>>& paths) {
+  if (paths.size() == 0) { return; }
+  double tool_diameter = 0.125;
   cylindrical_bit t(tool_diameter);
+  auto r = set_up_region(paths, tool_diameter);
   for (auto path : paths) {
-    double volume_removed = simulate_mill(path, r, t);
-    cout << "Volume removed = " << volume_removed << endl;
+    for (auto c : path) {
+      double volume_removed = update_cut(*c, r, t);
+      if (c->is_safe_move() && volume_removed > 0.001) {
+	cout << *c << endl;
+	cout << "CUT INFO" << endl;
+	cout << "Execution time: " << cut_execution_time_seconds(c) << endl;
+	cout << "Volume removed: " << volume_removed << endl;
+	if (is_horizontal(c)) {
+	  cout << "IS HORIZONTAL" << endl;
+	}
+      }
+    }
   }
 }
 

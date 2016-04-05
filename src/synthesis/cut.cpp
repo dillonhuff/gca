@@ -87,4 +87,29 @@ namespace gca {
     for (auto c : path) { exec_time += cut_execution_time_minutes(c); }
     return exec_time;
   }
+
+  box bound_paths(const vector<vector<cut*>>& paths) {
+    vector<box> path_boxes;
+    for (auto path : paths) {
+      path_boxes.push_back(path_bounds(path));
+    }
+    return bound_boxes(path_boxes);
+  }
+
+  double infer_safe_height(const vector<vector<cut*>>& paths) {
+    // TODO: Proper floating point max
+    double safe_height = 10000000;
+    for (auto p : paths) {
+      for (auto c : p) {
+	if (c->is_safe_move()) {
+	  double z = max(c->get_start().z, c->get_end().z);
+	  if (z < safe_height) {
+	    safe_height = z;
+	  }
+	}
+      }
+    }
+    return safe_height - 0.1;
+  }
+
 }
