@@ -159,54 +159,54 @@ namespace gca {
     REQUIRE(volume_removed == 0.0);
   }
 
-  TEST_CASE("Vertical safe move does not remove material") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Vertical safe move does not remove material") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
     
-    double tool_diameter = 0.3;
-    double tool_radius = tool_diameter / 2.0;
-    cylindrical_bit t(tool_diameter);
-    double safe_height = 2.5;
-    auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
-    auto c2 = linear_cut::make(point(1, 2, safe_height), point(1, 2, -0.5));
-    auto c3 = linear_cut::make(point(1, 2, -0.5), point(2, 2, -0.5));
-    auto c4 = safe_move::make(point(2, 2, -0.5), point(2, 2, safe_height));
-    vector<vector<cut*>> paths{{}};
-    paths.front().push_back(c1);
-    paths.front().push_back(c2);
-    paths.front().push_back(c3);
-    paths.front().push_back(c4);
-    auto r = set_up_region(paths, tool_diameter);
-    update_cut(*c1, r, t);
-    double vr_push = update_cut(*c2, r, t);
-    update_cut(*c3, r, t);
-    double volume_removed = update_cut(*c4, r, t);
-    cout << "vr_push = " << vr_push << endl;
-    REQUIRE(volume_removed == 0.0);
-  }
+  //   double tool_diameter = 0.3;
+  //   double tool_radius = tool_diameter / 2.0;
+  //   cylindrical_bit t(tool_diameter);
+  //   double safe_height = 2.5;
+  //   auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
+  //   auto c2 = linear_cut::make(point(1, 2, safe_height), point(1, 2, -0.5));
+  //   auto c3 = linear_cut::make(point(1, 2, -0.5), point(2, 2, -0.5));
+  //   auto c4 = safe_move::make(point(2, 2, -0.5), point(2, 2, safe_height));
+  //   vector<vector<cut*>> paths{{}};
+  //   paths.front().push_back(c1);
+  //   paths.front().push_back(c2);
+  //   paths.front().push_back(c3);
+  //   paths.front().push_back(c4);
+  //   auto r = set_up_region(paths, tool_diameter);
+  //   update_cut(*c1, r, t);
+  //   double vr_push = update_cut(*c2, r, t);
+  //   update_cut(*c3, r, t);
+  //   double volume_removed = update_cut(*c4, r, t);
+  //   cout << "vr_push = " << vr_push << endl;
+  //   REQUIRE(volume_removed == 0.0);
+  // }
 
-  TEST_CASE("Vertical safe move up and down does not remove material") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Vertical safe move up and down does not remove material") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
     
-    double tool_diameter = 0.3;
-    double tool_radius = tool_diameter / 2.0;
-    cylindrical_bit t(tool_diameter);
-    double safe_height = 2.5;
-    auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
-    auto c2 = linear_cut::make(point(1, 2, safe_height), point(1, 2, -0.5));
-    auto c3 = safe_move::make(point(1, 2, -0.5), point(1, 2, safe_height));
-    vector<vector<cut*>> paths{{}};
-    paths.front().push_back(c1);
-    paths.front().push_back(c2);
-    paths.front().push_back(c3);
-    auto r = set_up_region(paths, tool_diameter);
-    update_cut(*c1, r, t);
-    double vr_push = update_cut(*c2, r, t);
-    double volume_removed = update_cut(*c3, r, t);
-    cout << "vr_push = " << vr_push << endl;
-    REQUIRE(volume_removed == 0.0);
-  }
+  //   double tool_diameter = 0.3;
+  //   double tool_radius = tool_diameter / 2.0;
+  //   cylindrical_bit t(tool_diameter);
+  //   double safe_height = 2.5;
+  //   auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
+  //   auto c2 = linear_cut::make(point(1, 2, safe_height), point(1, 2, -0.5));
+  //   auto c3 = safe_move::make(point(1, 2, -0.5), point(1, 2, safe_height));
+  //   vector<vector<cut*>> paths{{}};
+  //   paths.front().push_back(c1);
+  //   paths.front().push_back(c2);
+  //   paths.front().push_back(c3);
+  //   auto r = set_up_region(paths, tool_diameter);
+  //   update_cut(*c1, r, t);
+  //   double vr_push = update_cut(*c2, r, t);
+  //   double volume_removed = update_cut(*c3, r, t);
+  //   cout << "vr_push = " << vr_push << endl;
+  //   REQUIRE(volume_removed == 0.0);
+  // }
   
   // TODO: Remove the read from file system and replace with identical region
   // construction manually

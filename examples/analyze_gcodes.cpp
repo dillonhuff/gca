@@ -1,5 +1,6 @@
 #include <cassert>
 #include <ctime>
+#include <numeric>
 #include <streambuf>
 
 #include "analysis/gcode_to_cuts.h"
@@ -159,26 +160,22 @@ void simulate_paths(vector<vector<cut*>>& paths) {
   for (auto path : paths) {
     for (auto c : path) {
       double volume_removed = update_cut(*c, r, t);
-      if (c->is_safe_move() && volume_removed > 0.001) {
-	cout << *c << endl;
-	cout << "CUT INFO" << endl;
-	cout << "Execution time: " << cut_execution_time_seconds(c) << endl;
-	cout << "Volume removed: " << volume_removed << endl;
-	if (is_horizontal(c)) {
-	  cout << "IS HORIZONTAL" << endl;
-	  assert(false);
-	}
-      }
       double execution_time = cut_execution_time_minutes(c);
-      if (!within_eps(execution_time, 0.0)) {// && !c->is_safe_move()) {
+      if (!within_eps(execution_time, 0.0)) {
 	double mrr = volume_removed / execution_time;
 	mrrs.push_back(mrr);
       }
     }
   }
   auto mm = minmax_element(mrrs.begin(), mrrs.end());
+  auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
+  auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
+  cout << "MRR STATS" << endl;
+  cout << "-----------------------------------------------------" << endl;
+  cout << "Average MRR  = "<< cut_average_mrr << endl;
   cout << "Smallest MRR = " << *mm.first << endl;
-  cout << "Largest MRR = " << *mm.second << endl;
+  cout << "Largest MRR  = " << *mm.second << endl;
+  cout << "-----------------------------------------------------" << endl;
 }
 
 int main(int argc, char** argv) {

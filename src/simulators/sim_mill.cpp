@@ -9,8 +9,6 @@ namespace gca {
   region set_up_region(const vector<vector<cut*>>& paths,
 		       double tool_diameter) {
     box b = bound_paths(paths);
-    cout << "Toolpath bounds: " << endl;
-    cout << b << endl;
     double x_len = b.x_max - b.x_min + 5*tool_diameter;
     double y_len = b.y_max - b.y_min + 5*tool_diameter;
     double z_len = b.z_max - b.z_min;
@@ -21,7 +19,6 @@ namespace gca {
       cout << "safe_z = " << safe_z << endl;
       assert(false);
     }
-    cout << "Safe height = " << safe_z << endl;
     region r(x_len, y_len, z_len, 0.01);
     r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
     r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
@@ -30,7 +27,6 @@ namespace gca {
     // machine coordinate system
     point safe_machine_point(0, 0, safe_z);
     point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
-    cout << "safe region point = " << safe_region_point << endl;
     r.set_height(0, x_len, 0, y_len, safe_region_point.z);
     return r;
   }
