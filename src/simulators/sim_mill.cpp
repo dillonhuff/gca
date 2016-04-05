@@ -26,7 +26,12 @@ namespace gca {
     r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
     r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
     r.set_machine_z_offset(-b.z_min);
-    r.set_height(0, x_len, 0, y_len, safe_z);
+    // TODO: Find better way to express the safe z value in the
+    // machine coordinate system
+    point safe_machine_point(0, 0, safe_z);
+    point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
+    cout << "safe region point = " << safe_region_point << endl;
+    r.set_height(0, x_len, 0, y_len, safe_region_point.z);
     return r;
   }
 

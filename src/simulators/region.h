@@ -38,7 +38,7 @@ namespace gca {
     point machine_coords_to_region_coords(point p) {
       return point(p.x + machine_x_offset,
 		   p.y + machine_y_offset,
-		   p.z + machine_z_offset); //height - p.z);
+		   p.z + machine_z_offset);
     }
 
     inline void set_machine_x_offset(double x_off) { machine_x_offset = x_off; }
