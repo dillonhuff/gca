@@ -3,7 +3,7 @@
 namespace gca {
 
   int check_for_unsafe_spindle_on(const vector<int>& no_spindle_tools,
-				  int default_tool,
+				  int ,
 				  const vector<block>& ws) {
     auto ms = all_program_states(ws);
     int num_warns = 0;

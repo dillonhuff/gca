@@ -159,33 +159,84 @@ namespace gca {
     REQUIRE(volume_removed == 0.0);
   }
 
-  TEST_CASE("Material removing safe moves extracted from actual program 2") {
+  TEST_CASE("Vertical safe move does not remove material") {
     arena_allocator a;
     set_system_allocator(&a);
-
-    string dir_name = "/Users/dillon/CppWorkspace/gca/test/nc-files/BottomALBottom2.NCF";
-    std::ifstream td(dir_name);
-    std::string str((std::istreambuf_iterator<char>(td)),
-		    std::istreambuf_iterator<char>());
-    vector<block> p = lex_gprog(str);
-    vector<vector<cut*>> paths;
-    auto res = gcode_to_cuts(p, paths);
-    assert(res == GCODE_TO_CUTS_SUCCESS);
-    double tool_diameter = 0.125;
+    
+    double tool_diameter = 0.3;
+    double tool_radius = tool_diameter / 2.0;
     cylindrical_bit t(tool_diameter);
+    double safe_height = 2.5;
+    auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
+    auto c2 = linear_cut::make(point(1, 2, safe_height), point(1, 2, -0.5));
+    auto c3 = linear_cut::make(point(1, 2, -0.5), point(2, 2, -0.5));
+    auto c4 = safe_move::make(point(2, 2, -0.5), point(2, 2, safe_height));
+    vector<vector<cut*>> paths{{}};
+    paths.front().push_back(c1);
+    paths.front().push_back(c2);
+    paths.front().push_back(c3);
+    paths.front().push_back(c4);
     auto r = set_up_region(paths, tool_diameter);
-    auto c = safe_move::make(point(-0.2191, -1.813, 2.5), point(-0.3893, 0.2266, 2.5));
-    double volume_removed = update_cut(*c, r, t);
-    if (c->is_safe_move() && !within_eps(volume_removed, 0.0)) {
-      if (is_horizontal(c)) {
-	cout << *c << endl;
-	cout << "CUT INFO" << endl;
-	cout << "Execution time: " << cut_execution_time_seconds(c) << endl;
-	cout << "Volume removed: " << volume_removed << endl;
-	cout << "IS HORIZONTAL" << endl;
-      }
-    }
+    update_cut(*c1, r, t);
+    double vr_push = update_cut(*c2, r, t);
+    update_cut(*c3, r, t);
+    double volume_removed = update_cut(*c4, r, t);
+    cout << "vr_push = " << vr_push << endl;
     REQUIRE(volume_removed == 0.0);
   }
+
+  TEST_CASE("Vertical safe move up and down does not remove material") {
+    arena_allocator a;
+    set_system_allocator(&a);
+    
+    double tool_diameter = 0.3;
+    double tool_radius = tool_diameter / 2.0;
+    cylindrical_bit t(tool_diameter);
+    double safe_height = 2.5;
+    auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
+    auto c2 = linear_cut::make(point(1, 2, safe_height), point(1, 2, -0.5));
+    auto c3 = safe_move::make(point(1, 2, -0.5), point(1, 2, safe_height));
+    vector<vector<cut*>> paths{{}};
+    paths.front().push_back(c1);
+    paths.front().push_back(c2);
+    paths.front().push_back(c3);
+    auto r = set_up_region(paths, tool_diameter);
+    update_cut(*c1, r, t);
+    double vr_push = update_cut(*c2, r, t);
+    double volume_removed = update_cut(*c3, r, t);
+    cout << "vr_push = " << vr_push << endl;
+    REQUIRE(volume_removed == 0.0);
+  }
+  
+  // TODO: Remove the read from file system and replace with identical region
+  // construction manually
+  // TEST_CASE("Material removing safe moves extracted from actual program 2") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
+
+  //   string dir_name = "/Users/dillon/CppWorkspace/gca/test/nc-files/BottomALBottom2.NCF";
+  //   std::ifstream td(dir_name);
+  //   std::string str((std::istreambuf_iterator<char>(td)),
+  // 		    std::istreambuf_iterator<char>());
+  //   vector<block> p = lex_gprog(str);
+  //   vector<vector<cut*>> paths;
+  //   auto res = gcode_to_cuts(p, paths);
+  //   assert(res == GCODE_TO_CUTS_SUCCESS);
+  //   double tool_diameter = 0.125;
+  //   cylindrical_bit t(tool_diameter);
+  //   auto r = set_up_region(paths, tool_diameter);
+  //   auto c = safe_move::make(point(-0.2191, -1.813, 2.5), point(-0.3893, 0.2266, 2.5));
+  //   double volume_removed = update_cut(*c, r, t);
+  //   if (c->is_safe_move() && !within_eps(volume_removed, 0.0)) {
+  //     if (is_horizontal(c)) {
+  // 	cout << *c << endl;
+  // 	cout << "CUT INFO" << endl;
+  // 	cout << "Execution time: " << cut_execution_time_seconds(c) << endl;
+  // 	cout << "Volume removed: " << volume_removed << endl;
+  // 	cout << "IS HORIZONTAL" << endl;
+  //     }
+  //   }
+  //   REQUIRE(volume_removed == 0.0);
+  // }
 
 }

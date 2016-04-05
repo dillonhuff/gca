@@ -21,7 +21,7 @@ namespace gca {
     virtual bool operator==(const value& other) const = 0;    
     virtual void print(ostream& other) const = 0;
 
-    virtual void print_eps(ostream& s, double eps) const {
+    virtual void print_eps(ostream& s, double ) const {
       print(s);
     }
   };
@@ -57,7 +57,6 @@ namespace gca {
 	s << 0.0;
       }
     }
-
   };  
 
   class ilit : public value {
@@ -124,7 +123,7 @@ namespace gca {
       return false;
     }
 
-    virtual void print(ostream& other) const {}
+    virtual void print(ostream& ) const {}
     
   };
 

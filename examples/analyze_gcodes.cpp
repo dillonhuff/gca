@@ -139,11 +139,23 @@ void print_paths_gcode(vector<vector<cut*>>& paths) {
   print_performance_diff(before, after);
 }
 
+template<typename T>
+void print_histogram(vector<T>& items) {
+  stable_sort(items.begin(), items.end());
+  cout << "Total elements: " << items.size() << endl;
+  vector<vector<T>> buckets;
+  split_by(items, buckets, [](const T& x, const T& y) { return x == y; });
+  for (auto b : buckets) {
+    cout << b.front() << "\t" << b.size() << endl;
+  }
+}
+
 void simulate_paths(vector<vector<cut*>>& paths) {
   if (paths.size() == 0) { return; }
   double tool_diameter = 0.125;
   cylindrical_bit t(tool_diameter);
   auto r = set_up_region(paths, tool_diameter);
+  vector<double> mrrs;
   for (auto path : paths) {
     for (auto c : path) {
       double volume_removed = update_cut(*c, r, t);
@@ -157,8 +169,16 @@ void simulate_paths(vector<vector<cut*>>& paths) {
 	  assert(false);
 	}
       }
+      double execution_time = cut_execution_time_minutes(c);
+      if (!within_eps(execution_time, 0.0)) {// && !c->is_safe_move()) {
+	double mrr = volume_removed / execution_time;
+	mrrs.push_back(mrr);
+      }
     }
   }
+  auto mm = minmax_element(mrrs.begin(), mrrs.end());
+  cout << "Smallest MRR = " << *mm.first << endl;
+  cout << "Largest MRR = " << *mm.second << endl;
 }
 
 int main(int argc, char** argv) {
