@@ -139,30 +139,6 @@ void print_paths_gcode(vector<vector<cut*>>& paths) {
   print_performance_diff(before, after);
 }
 
-region set_up_region(const vector<vector<cut*>>& paths,
-		     double tool_diameter) {
-  box b = bound_paths(paths);
-  cout << "Toolpath bounds: " << endl;
-  cout << b << endl;
-  double x_len = b.x_max - b.x_min + 5*tool_diameter;
-  double y_len = b.y_max - b.y_min + 5*tool_diameter;
-  double z_len = b.z_max - b.z_min;
-  double safe_z = infer_safe_height(paths);
-  if (!(b.z_max > safe_z)) {
-    cout << "ERROR" << endl;
-    cout << "z_max = " << b.z_max << endl;
-    cout << "safe_z = " << safe_z << endl;
-    assert(false);
-  }
-  cout << "Safe height = " << safe_z << endl;
-  region r(x_len, y_len, z_len, 0.01);
-  r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
-  r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
-  r.set_machine_z_offset(-b.z_min);
-  r.set_height(0, x_len, 0, y_len, safe_z);
-  return r;
-}
-
 void simulate_paths(vector<vector<cut*>>& paths) {
   if (paths.size() == 0) { return; }
   double tool_diameter = 0.125;
@@ -178,6 +154,7 @@ void simulate_paths(vector<vector<cut*>>& paths) {
 	cout << "Volume removed: " << volume_removed << endl;
 	if (is_horizontal(c)) {
 	  cout << "IS HORIZONTAL" << endl;
+	  assert(false);
 	}
       }
     }
