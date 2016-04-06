@@ -176,6 +176,7 @@ namespace gca {
       correct.push_back({lc1});
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2));
       lc2->set_spindle_speed(lit::make(1000));
+      lc2->settings.active_tool = ilit::make(6);
       correct.push_back({lc2});
       REQUIRE(correct == actual);
     }
@@ -188,6 +189,7 @@ namespace gca {
       correct.push_back({lc1});
       linear_cut* lc2 = linear_cut::make(point(1, 1, 1), point(2, 2, 2));
       lc2->set_spindle_speed(lit::make(1000));
+      lc2->settings.active_tool = ilit::make(6);
       correct.push_back({lc2});
       REQUIRE(correct == actual);
     }

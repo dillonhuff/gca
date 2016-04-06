@@ -84,18 +84,27 @@ namespace gca {
   cut* compute_next_cut(const machine_state& current_state,
 			point current_position,
 			point last_position) {
+    cut* c = nullptr;
     switch (current_state.active_move_type) {
     case FAST_MOVE:
-      return mk_fast_move(current_state, last_position, current_position);
+      c = mk_fast_move(current_state, last_position, current_position);
+      break;
     case LINEAR_MOVE:
-      return mk_linear_cut(current_state, last_position, current_position);
+      c = mk_linear_cut(current_state, last_position, current_position);
+      break;
     case CLOCKWISE_CIRCULAR_MOVE:
-      return mk_circular_arc(current_state, last_position, current_position);
+      c = mk_circular_arc(current_state, last_position, current_position);
+      break;
     case COUNTERCLOCKWISE_CIRCULAR_MOVE:
-      return mk_circular_arc(current_state, last_position, current_position);
+      c = mk_circular_arc(current_state, last_position, current_position);
+      break;
     default:
-      return nullptr;
+      c = nullptr;
     }
+    c->set_spindle_speed(current_state.spindle_speed);
+    c->set_feedrate(current_state.feedrate);
+    c->settings.active_tool = current_state.active_tool;
+    return c;
   }
 
   gcode_to_cuts_result fill_paths(const vector<block>& blocks,
