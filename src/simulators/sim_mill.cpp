@@ -6,29 +6,40 @@
 
 namespace gca {
 
-  region set_up_region(const vector<vector<cut*>>& paths,
-		       double tool_diameter) {
-    box b = bound_paths(paths);
+  region bounding_region(double tool_diameter, box b, double material_height) {
     double x_len = b.x_max - b.x_min + 5*tool_diameter;
     double y_len = b.y_max - b.y_min + 5*tool_diameter;
     double z_len = b.z_max - b.z_min;
-    double safe_z = infer_safe_height(paths);
-    if (!(b.z_max > safe_z)) {
-      cout << "ERROR" << endl;
-      cout << "z_max = " << b.z_max << endl;
-      cout << "safe_z = " << safe_z << endl;
-      assert(false);
-    }
+    // if (!(b.z_max > material_height)) {
+    //   cout << "ERROR" << endl;
+    //   cout << "z_max = " << b.z_max << endl;
+    //   cout << "material height = " << material_height << endl;
+    //   assert(false);
+    // }
     region r(x_len, y_len, z_len, 0.01);
     r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
     r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
     r.set_machine_z_offset(-b.z_min);
     // TODO: Find better way to express the safe z value in the
     // machine coordinate system
-    point safe_machine_point(0, 0, safe_z);
+    point safe_machine_point(0, 0, material_height);
     point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
     r.set_height(0, x_len, 0, y_len, safe_region_point.z);
     return r;
+  }
+
+  region set_up_region_conservative(const vector<vector<cut*>>& paths,
+				    double tool_diameter) {
+    box b = bound_paths(paths);
+    double material_h = infer_material_height(paths, 0.01);
+    return bounding_region(tool_diameter, b, material_h);
+  }
+
+  region set_up_region(const vector<vector<cut*>>& paths,
+		       double tool_diameter) {
+    box b = bound_paths(paths);
+    double safe_z = infer_safe_height(paths);
+    return bounding_region(tool_diameter, b, safe_z);
   }
 
   void check_region_bounds(const point e, const region& r, const mill_tool& t) {

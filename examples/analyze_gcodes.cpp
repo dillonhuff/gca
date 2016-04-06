@@ -151,12 +151,12 @@ void print_histogram(vector<T>& items) {
   }
 }
 
-void simulate_paths(vector<vector<cut*>>& paths) {
+void simulate_paths(vector<vector<cut*>>& paths, vector<double>& mrrs) {
   if (paths.size() == 0) { return; }
   double tool_diameter = 0.125;
   cylindrical_bit t(tool_diameter);
-  auto r = set_up_region(paths, tool_diameter);
-  vector<double> mrrs;
+  auto r = set_up_region_conservative(paths, tool_diameter);
+  //  auto r = set_up_region(paths, tool_diameter);
   for (auto path : paths) {
     for (auto c : path) {
       double volume_removed = update_cut(*c, r, t);
@@ -172,9 +172,9 @@ void simulate_paths(vector<vector<cut*>>& paths) {
   auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
   cout << "MRR STATS" << endl;
   cout << "-----------------------------------------------------" << endl;
-  cout << "Average MRR  = "<< cut_average_mrr << endl;
-  cout << "Smallest MRR = " << *mm.first << endl;
-  cout << "Largest MRR  = " << *mm.second << endl;
+  cout << "Average MRR so far  = "<< cut_average_mrr << endl;
+  cout << "Smallest MRR so far = " << *mm.first << endl;
+  cout << "Largest MRR so far  = " << *mm.second << endl;
   cout << "-----------------------------------------------------" << endl;
 }
 
@@ -192,16 +192,20 @@ int main(int argc, char** argv) {
   time_t end;
   time(&start);
   int num_paths;
-  apply_to_gprograms(dir_name, [&num_paths](const vector<block>& p) {
+  vector<double> mrrs;
+  apply_to_gprograms(dir_name, [&num_paths, &mrrs](const vector<block>& p) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
-	simulate_paths(paths);
+	simulate_paths(paths, mrrs);
       } else {
 	cout << "Could not process all paths: " << r << endl;
       }
     });
+  double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
+				   [](double mrr) { return mrr > 5.0; });;
   cout << "# paths: " << num_paths << endl;
+  cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;

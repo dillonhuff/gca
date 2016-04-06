@@ -99,7 +99,7 @@ namespace gca {
       } else {
 	other << "<S omitted> ";
       }
-      cout << get_start() << " -> " << get_end();
+      other << get_start() << " -> " << get_end();
       other << " offset: " << start_offset;
       other << " dir: " << dir;
     }

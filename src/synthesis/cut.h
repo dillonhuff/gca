@@ -76,6 +76,7 @@ namespace gca {
   bool same_cut_properties(const cut& l, const cut& r);
 
   double infer_safe_height(const vector<vector<cut*>>& paths);
+  double infer_material_height(const vector<vector<cut*>>& paths, double offset);
   box path_bounds(const vector<cut*>& path);  
   box bound_paths(const vector<vector<cut*>>& paths);
   bool is_vertical(const cut* c);

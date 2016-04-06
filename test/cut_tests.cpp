@@ -51,6 +51,23 @@ namespace gca {
     }
   }
 
+  TEST_CASE("Infer material height") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<vector<cut*>> cuts;
+    double actual;
+    
+    SECTION("Empty cuts") {
+      vector<cut*> c{safe_move::make(point(1, 1, 10), point(1, 1, 11)),
+	  linear_cut::make(point(1, 1, 11), point(1, 1, 3)),
+	  linear_cut::make(point(1, 1, 3), point(2, 2, 3))};
+      cuts.push_back(c);
+      actual = infer_material_height(cuts, 0.01);
+      REQUIRE(actual == 3.01);
+    }
+  }
+
   TEST_CASE("Simple knife aligment code matches real CAM output") {
     arena_allocator a;
     set_system_allocator(&a);

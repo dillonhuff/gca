@@ -96,6 +96,21 @@ namespace gca {
     return bound_boxes(path_boxes);
   }
 
+  double infer_material_height(const vector<vector<cut*>>& paths, double offset) {
+    double material_height = -1000000;
+    for (auto p : paths) {
+      for (auto c : p) {
+	if (!c->is_safe_move() && !is_vertical(c)) {
+	  double z = max(c->get_start().z, c->get_end().z);
+	  if (z > material_height) {
+	    material_height = z;
+	  }
+	}
+      }
+    }
+    return material_height + offset;
+  }
+
   double infer_safe_height(const vector<vector<cut*>>& paths) {
     // TODO: Proper floating point max
     double safe_height = 10000000;
