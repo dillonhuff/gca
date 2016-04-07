@@ -4,6 +4,7 @@ namespace gca {
 
   ostream& operator<<(ostream& stream, const cut& c) {
     c.print(stream);
+    stream << c.settings;
     return stream;
   }
 

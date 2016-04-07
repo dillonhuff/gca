@@ -101,9 +101,11 @@ namespace gca {
     default:
       c = nullptr;
     }
-    c->set_spindle_speed(current_state.spindle_speed);
-    c->set_feedrate(current_state.feedrate);
-    c->settings.active_tool = current_state.active_tool;
+    if (c != nullptr) {
+      c->set_spindle_speed(current_state.spindle_speed);
+      c->set_feedrate(current_state.feedrate);
+      c->settings.active_tool = current_state.active_tool;
+    }
     return c;
   }
 

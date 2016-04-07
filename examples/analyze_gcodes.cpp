@@ -172,6 +172,7 @@ void simulate_paths(vector<vector<cut*>>& paths,
     }
     auto tl = static_cast<ilit*>(tn);
     int current_tool_no = tl->v;
+    cout << "current_tool_no = " << current_tool_no << endl;
     double tool_diameter = tool_table[current_tool_no]; //0.125;
     cout << "Tool diameter = " << tool_diameter << endl;
     cylindrical_bit t = (tool_diameter);
@@ -201,7 +202,7 @@ bool starts_with(string& value, string& prefix) {
   return res.first == prefix.end();
 }
 
-void add_tool(map<int, double> tt, string& comment) {
+void add_tool(map<int, double>& tt, string& comment) {
   string tool_comment_start = "( TOOL ";
   if (starts_with(comment, tool_comment_start)) {
     cout << "Tool comment is " << comment << endl;
@@ -213,6 +214,7 @@ void add_tool(map<int, double> tt, string& comment) {
     cout << "Rest of comment = " << rest << endl;
     double tool_diameter = stod(rest);
     cout << "tool diameter = " << tool_diameter << endl;
+    tt[tool_no] = tool_diameter;
   }
 }
 

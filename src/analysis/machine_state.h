@@ -170,12 +170,14 @@ namespace gca {
   bool operator!=(const machine_settings& l, const machine_settings& r);
   bool operator==(const machine_state& l, const machine_state& r);
   bool operator!=(const machine_state& l, const machine_state& r);
+  ostream& operator<<(ostream& stream, const machine_settings& s);
   ostream& operator<<(ostream& stream, const machine_state& s);
   ostream& operator<<(ostream& stream, const vector<machine_state>& s);
   ostream& operator<<(ostream& stream, const spindle_state s);
   ostream& operator<<(ostream& out, const move_type s);
   ostream& operator<<(ostream& out, const coord_system s);
-  
+  ostream& operator<<(ostream& stream, const tool_radius_compensation s);
+  ostream& operator<<(ostream& stream, const tool_height_compensation s);
 }
 
 #endif

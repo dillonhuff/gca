@@ -336,6 +336,13 @@ namespace gca {
       *(l.tool_radius_value) == *(r.tool_radius_value);
   }
 
+  ostream& operator<<(ostream& stream, const machine_settings& s) {
+    stream << "---- MACHINE SETTINGS ----" << endl;
+    stream << s.tool_radius_comp << endl;
+    stream << s.tool_height_comp << endl;
+    return stream;
+  }
+
   bool operator!=(const machine_settings& l, const machine_settings& r)
   { return !(l == r); }
 
@@ -444,4 +451,45 @@ namespace gca {
     }
     return stream;
   }
+
+  ostream& operator<<(ostream& stream, const tool_radius_compensation s) {
+    switch(s) {
+    case TOOL_RADIUS_COMP_UNKNOWN:
+      stream << "TOOL_RADIUS_COMP_UNKNOWN";
+      break;
+    case TOOL_RADIUS_COMP_OFF:
+      stream << "TOOL_RADIUS_COMP_OFF";
+      break;
+    case TOOL_RADIUS_COMP_LEFT:
+      stream << "TOOL_RADIUS_COMP_LEFT";
+      break;
+    case TOOL_RADIUS_COMP_RIGHT:
+      stream << "TOOL_RADIUS_COMP_RIGHT";
+      break;
+    default:
+      assert(false);
+    }
+    return stream;
+  }
+  
+  ostream& operator<<(ostream& stream, const tool_height_compensation s) {
+    switch(s) {
+    case TOOL_HEIGHT_COMP_UNKNOWN:
+      stream << "TOOL_HEIGHT_COMP_UNKNOWN";
+      break;
+    case TOOL_HEIGHT_COMP_OFF:
+      stream << "TOOL_HEIGHT_COMP_OFF";
+      break;
+    case TOOL_HEIGHT_COMP_NEGATIVE:
+      stream << "TOOL_HEIGHT_COMP_NEGATIVE";
+      break;
+    case TOOL_HEIGHT_COMP_POSITIVE:
+      stream << "TOOL_HEIGHT_COMP_POSITIVE";
+      break;
+    default:
+      assert(false);
+    }
+    return stream;
+  }
+
 }
