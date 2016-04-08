@@ -46,6 +46,10 @@ namespace gca {
       r->settings.active_tool = ilit::make(t);
       if (height_comp_setting == TOOL_HEIGHT_COMP_NEGATIVE) {
 	r = r->shift(point(0, 0, old_tool.length));
+	r->settings.tool_height_comp = TOOL_HEIGHT_COMP_OFF;
+      } else if (height_comp_setting == TOOL_HEIGHT_COMP_POSITIVE) {
+	cout << "ERROR: Positive tool height compensation is not supported" << endl;
+	assert(false);
       }
       cuts.push_back(r);
     }

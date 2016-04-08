@@ -58,7 +58,15 @@ namespace gca {
       REQUIRE(within_eps(retargeted.z_min, original.z_min + 1.5));
     }
 
-    SECTION("Tool length comp setting is turned") {
+    SECTION("Tool height comp setting is turned") {
+      bool height_comp_off = true;
+      for (auto path : res_paths) {
+	for (auto c : path) {
+	  if (c->settings.tool_height_comp != TOOL_HEIGHT_COMP_OFF)
+	    { height_comp_off = false; }
+	}
+      }
+      REQUIRE(height_comp_off);
     }
   }  
 
