@@ -143,6 +143,15 @@ namespace gca {
     return shifted_cuts;
   }
 
+  vector<block> cuts_to_gcode_no_transitions(const vector<cut*>& all_cuts,
+					     const cut_params& params) {
+    assert(cuts_are_adjacent(all_cuts));
+    point shift(0, 0, params.machine_z_zero);
+    vector<cut*> shifted_cuts = shift_cuts(all_cuts, shift);
+    set_feedrates(shifted_cuts, params);
+    return gcode_blocks_for_cuts(shifted_cuts, params);
+  }
+  
   vector<block> cuts_to_gcode(const vector<cut*>& cuts,
 			      const cut_params& params) {
     vector<cut*> all_cuts = insert_transitions(cuts, params);

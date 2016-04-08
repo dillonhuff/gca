@@ -85,7 +85,7 @@ namespace gca {
     sanity_check_toolpath(path);
     cut_params params;
     params.target_machine = EMCO_F1;
-    return cuts_to_gcode(path, params);
+    return cuts_to_gcode_no_transitions(path, params);
   }
 
   vector<vector<cut*>> haas_to_minimill(const vector<vector<cut*>> & p,

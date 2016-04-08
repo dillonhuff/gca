@@ -20,6 +20,9 @@ namespace gca {
   string cuts_to_gcode_string(const vector<cut*>& cuts,
 			      const cut_params& params);
 
+  vector<block> cuts_to_gcode_no_transitions(const vector<cut*>& all_cuts,
+					     const cut_params& params);
+  
 }
 
 #endif
