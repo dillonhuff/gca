@@ -348,6 +348,8 @@ namespace gca {
   ostream& operator<<(ostream& stream, const machine_settings& s) {
     stream << endl << "---- MACHINE SETTINGS ----" << endl;
     stream << "ACTIVE TOOL NO: " << *(s.active_tool) << endl;
+    stream << "SPINDLE SPEED: " << *(s.spindle_speed) << endl;
+    stream << "FEEDRATE: " << *(s.feedrate) << endl;
     stream << s.tool_radius_comp << endl;
     stream << s.tool_height_comp << endl;
     return stream;

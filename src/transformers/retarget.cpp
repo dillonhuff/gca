@@ -68,6 +68,13 @@ namespace gca {
 	cout << *r << endl;
 	assert(false);
       }
+      if (r->settings.spindle_speed->is_omitted()) {
+	cout << "ERROR IN RETARGET TOOLPATH" << endl;
+	cout << *c << endl;
+	cout << *r << endl;
+	assert(false);
+      }
+
       cuts.push_back(r);
     }
     sanity_check_toolpath(cuts);

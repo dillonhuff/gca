@@ -69,15 +69,20 @@ namespace gca {
       } else if (next->tool_no == DRILL) {
     	append_drill_header_block(blocks, params.target_machine);
       } else {
-	double next_ss = get_spindle_speed(next);
-	if (last == NULL) {
-	  block b;
-	  b.push_back(token('S', next_ss));
-	} else if (!within_eps(get_spindle_speed(last), next_ss)) {
-	  block b;
-	  b.push_back(token('S', next_ss));
-	}
-	
+	block b;
+	b.push_back(token('S', 1500));
+	blocks.push_back(b);
+	// block b;
+	// double next_ss = get_spindle_speed(next);
+	// if (last == NULL) {
+	//   block b;
+	//   b.push_back(token('S', next_ss));
+	//   blocks.push_back(b);
+	// } else if (!within_eps(get_spindle_speed(last), next_ss)) {
+	//   block b;
+	//   b.push_back(token('S', next_ss));
+	//   blocks.push_back(b);
+	// }
       }
     }
   }

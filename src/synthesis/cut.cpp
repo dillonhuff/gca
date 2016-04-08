@@ -143,28 +143,33 @@ namespace gca {
     return current_tool_no;
   }
 
+  double extract_spindle_speed(const cut* c) {
+    auto tn = c->settings.spindle_speed;
+    if (tn->is_omitted()) {
+      cout << "ERROR in get_spindle_speed" << endl;
+      cout << "is lit ? " << tn->is_lit() << endl;
+      cout << "is omitted ? " << tn->is_omitted() << endl;
+      cout << *c << endl;
+      assert(false);
+    } else if (tn->is_ilit()) {
+      auto ss = static_cast<ilit*>(tn);
+      return ss->v;
+    } else if (tn->is_lit()) {
+      auto ss = static_cast<lit*>(tn);
+      return ss->v;
+    } else {
+      assert(false);
+    }
+  }
+
   double get_spindle_speed(const vector<cut*>& path) {
     auto c = *find_if(path.begin(), path.end(),
 		      [](const cut* c) { return !c->is_safe_move(); });
-    auto tn = c->settings.spindle_speed; //path.front()->settings.active_tool;
-    if (!(tn->is_lit())) {
-      cout << "ERROR in get_spindle_speed" << endl;
-      cout << *c << endl;
-      assert(false);
-    }
-    auto ss = static_cast<lit*>(tn);
-    return ss->v;
+    return extract_spindle_speed(c);
   }
 
   double get_spindle_speed(const cut* c) {
-    auto tn = c->settings.spindle_speed;
-    if (!(tn->is_lit())) {
-      cout << "ERROR in get_spindle_speed" << endl;
-      cout << *c << endl;
-      assert(false);
-    }
-    auto ss = static_cast<lit*>(tn);
-    return ss->v;
+    return extract_spindle_speed(c);
   }
   
 }
