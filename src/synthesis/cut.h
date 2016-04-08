@@ -77,7 +77,7 @@ namespace gca {
 
   double infer_safe_height(const vector<vector<cut*>>& paths);
   double infer_material_height(const vector<vector<cut*>>& paths, double offset);
-  box path_bounds(const vector<cut*>& path);  
+  box path_bounds(const vector<cut*>& path);
   box bound_paths(const vector<vector<cut*>>& paths);
   bool is_vertical(const cut* c);
   bool is_horizontal(const cut* c);
@@ -86,6 +86,7 @@ namespace gca {
   double cut_execution_time_minutes(const cut* c);
   double cut_execution_time_seconds(const cut* c);
   double execution_time_minutes(const vector<cut*>& path);
+  int get_active_tool_no(const vector<cut*>& path);
 }
 
 

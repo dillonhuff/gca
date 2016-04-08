@@ -9,22 +9,6 @@
 
 namespace gca {
 
-  int get_active_tool_no(const vector<cut*>& path) {
-    auto c = *find_if(path.begin(), path.end(),
-		      [](const cut* c) { return !c->is_safe_move(); });
-    auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-    if (!(tn->is_ilit())) {
-      cout << "ERROR" << endl;
-      cout << *c << endl;
-      cout << "Active tool = " << *(c->settings.active_tool) << endl;
-      assert(false);
-    }
-    auto tl = static_cast<ilit*>(tn);
-    int current_tool_no = tl->v;
-    cout << "current_tool_no = " << current_tool_no << endl;
-    return current_tool_no;
-  }
-
   double conservative_simulation(const vector<vector<cut*>>& paths,
 				 tool_table& tt) {
     double volume_removed = 0.0;
@@ -48,8 +32,6 @@ namespace gca {
 
     string dir_name = "/Users/dillon/CppWorkspace/gca/test/nc-files/fake_HAAS_VF1_program_one_cut.NCF";
     vector<block> p = lex_file(dir_name);
-    cout << "Original program: " << endl;
-    cout << p << endl;
     
     vector<vector<cut*>> paths;
     auto r = gcode_to_cuts(p, paths);
@@ -68,6 +50,15 @@ namespace gca {
       double original_volume_removed = conservative_simulation(res_paths, tt);
       double retargeted_volume_removed = conservative_simulation(paths, tt);
       REQUIRE(within_eps(original_volume_removed, retargeted_volume_removed));
+    }
+
+    SECTION("Z values adjusted to for tool length") {
+      box original = bound_paths(paths);
+      box retargeted = bound_paths(res_paths);
+      REQUIRE(within_eps(retargeted.z_min, original.z_min + 1.5));
+    }
+
+    SECTION("Tool length comp setting is turned") {
     }
   }  
 

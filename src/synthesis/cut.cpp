@@ -128,4 +128,19 @@ namespace gca {
     return safe_height - 0.1;
   }
 
+  int get_active_tool_no(const vector<cut*>& path) {
+    auto c = *find_if(path.begin(), path.end(),
+		      [](const cut* c) { return !c->is_safe_move(); });
+    auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
+    if (!(tn->is_ilit())) {
+      cout << "ERROR" << endl;
+      cout << *c << endl;
+      cout << "Active tool = " << *(c->settings.active_tool) << endl;
+      assert(false);
+    }
+    auto tl = static_cast<ilit*>(tn);
+    int current_tool_no = tl->v;
+    return current_tool_no;
+  }
+  
 }

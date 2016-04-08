@@ -25,12 +25,12 @@ namespace gca {
   vector<block> generate_gcode(const vector<cut*>& paths);
   
   vector<vector<cut*>> haas_to_minimill(const vector<vector<cut*>> & p,
-					const tool_table& old_tools,
-					const tool_table& new_tools);
+					tool_table& old_tools,
+					tool_table& new_tools);
   
   vector<vector<block>> haas_to_minimill(const vector<block>& p,
-					 const tool_table& old_tools,
-					 const tool_table& new_tools);
+					 tool_table& old_tools,
+					 tool_table& new_tools);
   
 }
 
