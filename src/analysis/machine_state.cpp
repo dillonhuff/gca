@@ -346,7 +346,7 @@ namespace gca {
   }
 
   ostream& operator<<(ostream& stream, const machine_settings& s) {
-    stream << "---- MACHINE SETTINGS ----" << endl;
+    stream << endl << "---- MACHINE SETTINGS ----" << endl;
     stream << s.tool_radius_comp << endl;
     stream << s.tool_height_comp << endl;
     return stream;

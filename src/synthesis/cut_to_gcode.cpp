@@ -67,7 +67,7 @@ namespace gca {
       } else if (next->tool_no == DRILL) {
     	append_drill_header_block(blocks, params.target_machine);
       } else {
-    	//assert(false);
+	//assert(false);
       }
     }
   }
@@ -96,10 +96,19 @@ namespace gca {
       last_cut = next_cut;
     }
   }
+
+  void append_header_blocks(vector<block>& bs, const machine_name m) {
+    if (m == EMCO_F1) {
+      block b;
+      b.push_back(token('G', 90));
+      bs.push_back(b);
+    }
+  }
   
   vector<block> gcode_blocks_for_cuts(const vector<cut*>& cuts,
 				      const cut_params& params) {
     vector<block> bs;
+    append_header_blocks(bs, params.target_machine);
     append_cuts_gcode_blocks(cuts, bs, params);
     append_footer_blocks(bs, params.target_machine);    
     return bs;

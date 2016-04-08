@@ -55,6 +55,7 @@ namespace gca {
     return tcuts;
   }
 
+  // TODO: Rework this code to avoid the vestigial cut->tool_no parameter
   vector<cut*> move_to_next_cut(cut* last_cut,
 				cut* next_cut,
 				const cut_params& params) {
@@ -63,7 +64,8 @@ namespace gca {
     } else if (next_cut->tool_no == DRAG_KNIFE) {
       return move_to_next_cut_dn(last_cut, next_cut, params);
     } else {
-      assert(false);
+      return move_to_next_cut_drill(last_cut, next_cut, params);
+      //      assert(false);
     }
   }
 

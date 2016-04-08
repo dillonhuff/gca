@@ -51,6 +51,7 @@ namespace gca {
       l->tool_no = tool_no;
       l->set_feedrate(settings.feedrate);
       l->set_spindle_speed(settings.spindle_speed);
+      l->settings = settings;
       return l;
     }
 
