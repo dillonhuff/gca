@@ -9,7 +9,8 @@ namespace gca {
 
   enum machine_name {
     CAMASTER = 0,
-    PROBOTIX_V90_MK2_VFD
+    PROBOTIX_V90_MK2_VFD,
+    EMCO_F1
   };
 
   enum tool_name {

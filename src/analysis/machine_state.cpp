@@ -292,12 +292,21 @@ namespace gca {
     return ms;
   }
   
-  
   vector<machine_state> all_program_states(const vector<block>& p) {
     machine_state ms;
     return all_program_states(ms, p);
   }
 
+  machine_settings extract_settings(const machine_state& s) {
+    machine_settings ms;
+    ms.feedrate = s.feedrate;
+    ms.spindle_speed = s.spindle_speed;
+    ms.active_tool = s.active_tool;
+    ms.tool_radius_comp = s.tool_radius_comp;
+    ms.tool_height_comp = s.tool_height_comp;
+    return ms;
+  }
+  
   bool operator==(const machine_state& l, const machine_state& r) {
     return *(l.feedrate) == *(r.feedrate) &&
       *(l.spindle_speed) == *(r.spindle_speed) &&

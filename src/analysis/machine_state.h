@@ -166,6 +166,7 @@ namespace gca {
   vector<machine_state> all_program_states(const machine_state& init,
 					   const vector<block>& p);
 
+  machine_settings extract_settings(const machine_state& s);
   bool operator==(const machine_settings& l, const machine_settings& r);
   bool operator!=(const machine_settings& l, const machine_settings& r);
   bool operator==(const machine_state& l, const machine_state& r);
@@ -178,6 +179,7 @@ namespace gca {
   ostream& operator<<(ostream& out, const coord_system s);
   ostream& operator<<(ostream& stream, const tool_radius_compensation s);
   ostream& operator<<(ostream& stream, const tool_height_compensation s);
+
 }
 
 #endif

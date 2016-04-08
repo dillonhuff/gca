@@ -16,6 +16,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -pedantic -Werror -Wall
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/retargeting_tests.cpp
 	       test/arc_tests.cpp
 	       test/lexer_tests.cpp
 	       test/position_table_tests.cpp
@@ -51,7 +52,8 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/system/arena_allocator.h
-	    ./src/transformers/feed_changer.h)
+	    ./src/transformers/feed_changer.h
+	    ./src/transformers/retarget.h)
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
@@ -87,6 +89,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/system/file.cpp
 	 ./src/system/arena_allocator.cpp	 
 	 ./src/transformers/feed_changer.cpp
+	 ./src/transformers/retarget.cpp
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
 
@@ -98,7 +101,6 @@ add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 add_executable(cut-rect examples/cut_rect.cpp ${SRCS})
 add_executable(misc examples/misc.cpp ${SRCS})
 add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
-add_executable(retarget examples/retarget.cpp ${SRCS})
 
 ######### VTK Example ##########
 

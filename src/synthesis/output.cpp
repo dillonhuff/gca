@@ -16,6 +16,8 @@ namespace gca {
       b.push_back(token('M', 5));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       b.push_back(token('M', 2));
+    } else if (m == EMCO_F1) {
+      b.push_back(token('M', 2));
     } else {
       assert(false);
     }
