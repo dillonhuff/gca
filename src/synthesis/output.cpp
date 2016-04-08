@@ -40,6 +40,8 @@ namespace gca {
       // p->push_back(f_instr::make(50, "Z"));
     } else if (m == PROBOTIX_V90_MK2_VFD) {
       b1.push_back(token('G', 90));
+    } else if (m == EMCO_F1) {
+      
     } else {
       assert(false);
     }

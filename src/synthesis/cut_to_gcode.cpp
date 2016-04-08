@@ -57,6 +57,8 @@ namespace gca {
     blocks.push_back(b);
   }
 
+  // TODO: This needs to be changed to do FULL machine
+  // settings changes
   void append_settings_block(const cut* last,
 			     const cut* next,
 			     vector<block>& blocks,
@@ -67,7 +69,15 @@ namespace gca {
       } else if (next->tool_no == DRILL) {
     	append_drill_header_block(blocks, params.target_machine);
       } else {
-	//assert(false);
+	double next_ss = get_spindle_speed(next);
+	if (last == NULL) {
+	  block b;
+	  b.push_back(token('S', next_ss));
+	} else if (!within_eps(get_spindle_speed(last), next_ss)) {
+	  block b;
+	  b.push_back(token('S', next_ss));
+	}
+	
       }
     }
   }

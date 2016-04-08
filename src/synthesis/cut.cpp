@@ -142,5 +142,29 @@ namespace gca {
     int current_tool_no = tl->v;
     return current_tool_no;
   }
+
+  double get_spindle_speed(const vector<cut*>& path) {
+    auto c = *find_if(path.begin(), path.end(),
+		      [](const cut* c) { return !c->is_safe_move(); });
+    auto tn = c->settings.spindle_speed; //path.front()->settings.active_tool;
+    if (!(tn->is_lit())) {
+      cout << "ERROR in get_spindle_speed" << endl;
+      cout << *c << endl;
+      assert(false);
+    }
+    auto ss = static_cast<lit*>(tn);
+    return ss->v;
+  }
+
+  double get_spindle_speed(const cut* c) {
+    auto tn = c->settings.spindle_speed;
+    if (!(tn->is_lit())) {
+      cout << "ERROR in get_spindle_speed" << endl;
+      cout << *c << endl;
+      assert(false);
+    }
+    auto ss = static_cast<lit*>(tn);
+    return ss->v;
+  }
   
 }

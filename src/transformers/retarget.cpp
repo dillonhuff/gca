@@ -2,6 +2,16 @@
 
 namespace gca {
 
+  void sanity_check_spindle_speed(const vector<cut*>& path) {
+    auto ss = get_spindle_speed(path);
+    for (auto c : path) {
+      auto css = c->settings.spindle_speed;
+      assert(css->is_lit());
+      lit* cssl = static_cast<lit*>(css);
+      assert(within_eps(cssl->v, ss));
+    }
+  }
+  
   void sanity_check_height_comp(const vector<cut*>& path) {
     auto lc_setting = path.front()->settings.tool_height_comp;
     for (auto c : path) {
@@ -22,6 +32,7 @@ namespace gca {
       assert(til->v == tn);
     }
     sanity_check_height_comp(path);
+    sanity_check_spindle_speed(path);
   }
 
   int select_new_tool(const vector<cut*>& path,
@@ -51,12 +62,20 @@ namespace gca {
 	cout << "ERROR: Positive tool height compensation is not supported" << endl;
 	assert(false);
       }
+      if (r->settings.active_tool->is_omitted()) {
+	cout << "ERROR IN RETARGET TOOLPATH" << endl;
+	cout << *c << endl;
+	cout << *r << endl;
+	assert(false);
+      }
       cuts.push_back(r);
     }
+    sanity_check_toolpath(cuts);
     return cuts;
   }
 
   vector<block> generate_gcode(const vector<cut*>& path) {
+    sanity_check_toolpath(path);
     cut_params params;
     params.target_machine = EMCO_F1;
     return cuts_to_gcode(path, params);

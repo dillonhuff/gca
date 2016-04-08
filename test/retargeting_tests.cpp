@@ -40,6 +40,7 @@ namespace gca {
     tool_table tt;
     tt[1] = tool_info(1.5, 0.25);
 
+    auto res_progs = haas_to_minimill(p, tt, tt);
     auto res_paths = haas_to_minimill(paths, tt, tt);
 
     SECTION("One program per toolpath") {
@@ -58,7 +59,7 @@ namespace gca {
       REQUIRE(within_eps(retargeted.z_min, original.z_min + 1.5));
     }
 
-    SECTION("Tool height comp setting is turned") {
+    SECTION("Tool height comp setting is turned off") {
       bool height_comp_off = true;
       for (auto path : res_paths) {
 	for (auto c : path) {
@@ -67,6 +68,22 @@ namespace gca {
 	}
       }
       REQUIRE(height_comp_off);
+    }
+
+    SECTION("Resulting GCODE retains old properties") {
+      vector<vector<cut*>> output_cuts;
+      for (auto prog : res_progs) {
+    	vector<vector<cut*>> pcuts;
+    	r = gcode_to_cuts(prog, pcuts);
+    	output_cuts.insert(output_cuts.end(), pcuts.begin(), pcuts.end());
+      }
+
+      REQUIRE(output_cuts.size() == 1);
+
+      SECTION("Spindle speed saved") {
+    	auto spindle_speed = get_spindle_speed(output_cuts.front());
+    	REQUIRE(spindle_speed == 1500);
+      }
     }
   }  
 

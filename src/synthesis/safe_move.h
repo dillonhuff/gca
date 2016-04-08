@@ -42,26 +42,26 @@ namespace gca {
       return false;
     }
 
-    cut* shift(point sh) const {
-      safe_move* mem = allocate<safe_move>();
-      safe_move* m = new (mem) safe_move(get_start() + sh, get_end() + sh);
-      m->tool_no = tool_no;
-      return m;
-    }
+    // cut* shift(point sh) const {
+    //   safe_move* mem = allocate<safe_move>();
+    //   safe_move* m = new (mem) safe_move(get_start() + sh, get_end() + sh);
+    //   m->tool_no = tool_no;
+    //   return m;
+    // }
 
-    cut* scale(double s) const {
-      safe_move* mem = allocate<safe_move>();
-      safe_move* m = new (mem) safe_move(s*get_start(), s*get_end());
-      m->tool_no = tool_no;
-      return m;
-    }
+    // cut* scale(double s) const {
+    //   safe_move* mem = allocate<safe_move>();
+    //   safe_move* m = new (mem) safe_move(s*get_start(), s*get_end());
+    //   m->tool_no = tool_no;
+    //   return m;
+    // }
 
-    cut* scale_xy(double s) const {
-      safe_move* m = static_cast<safe_move*>(copy());
-      m->set_start(point(s*get_start().x, s*get_start().y, get_start().z));
-      m->set_end(point(s*get_end().x, s*get_end().y, get_end().z));
-      return m;
-    }
+    // cut* scale_xy(double s) const {
+    //   safe_move* m = static_cast<safe_move*>(copy());
+    //   m->set_start(point(s*get_start().x, s*get_start().y, get_start().z));
+    //   m->set_end(point(s*get_end().x, s*get_end().y, get_end().z));
+    //   return m;
+    // }
 
     inline bool is_safe_move() const { return true; }
 
@@ -70,6 +70,7 @@ namespace gca {
       c->tool_no = tool_no;
       c->set_feedrate(settings.feedrate);
       c->set_spindle_speed(settings.spindle_speed);
+      c->settings = settings;
       return c;
     }
 
