@@ -101,6 +101,7 @@ add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 add_executable(cut-rect examples/cut_rect.cpp ${SRCS})
 add_executable(misc examples/misc.cpp ${SRCS})
 add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
+add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
 
 ######### VTK Example ##########
 
