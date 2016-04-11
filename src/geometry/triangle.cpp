@@ -14,24 +14,6 @@ namespace gca {
     return within_eps((x.normal - y.normal).len(), 0.0, tolerance);
   }
 
-  bool same_line(const line l, const line r) {
-    bool ss = within_eps(l.start, r.start);
-    bool ee = within_eps(l.end, r.end);
-    bool se = within_eps(l.start, r.end);
-    bool es = within_eps(l.end, r.start);
-    return (ss && ee) || (se && es);
-  }
-
-  bool count_in(const line l, const vector<line> ls) {
-    return count_if(ls.begin(), ls.end(), [l](const line r)
-		    { return same_line(l, r); });
-  }
-
-  bool adj_segment(const line l, const line r) {
-    return within_eps(l.start, r.end) ||
-      within_eps(l.end, r.start);
-  }
-
   vector<point> collect_polygon(vector<line>& lines) {
     assert(lines.size() > 0);
     vector<point> points;
@@ -84,12 +66,16 @@ namespace gca {
       tri_lines.push_back(line(t.v2, t.v3));
       tri_lines.push_back(line(t.v3, t.v1));
     }
+    // for (auto l : tri_lines) {
+    //   cout << l << endl;
+    // }
     vector<line> no_dups;
     for (auto l : tri_lines) {
-      if (count_in(l, no_dups) == 0) {
+      if (count_in(l, tri_lines) == 1) {
 	no_dups.push_back(l);
       }
     }
+    //    cout << "# edge segments: " << no_dups.size() << endl;
     return unordered_segments_to_polygons(normal, no_dups);
   }
   

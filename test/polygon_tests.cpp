@@ -27,6 +27,7 @@ namespace gca {
       vector<triangle> ts{triangle(n, bl, ul, ur), triangle(n, bl, br, ur)};
       auto merged = merge_triangles(ts);
       REQUIRE(merged.size() == 1);
+      REQUIRE(merged.front().vertices.size() == 4);
     }
 
     SECTION("Real stl file") {

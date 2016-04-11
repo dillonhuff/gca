@@ -22,6 +22,7 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/lexer_tests.cpp
 	       test/position_table_tests.cpp
 	       test/point_tests.cpp
+	       test/line_tests.cpp
 	       test/unfold_tests.cpp
 	       test/circular_arc_tests.cpp
 	       test/checker_tests.cpp

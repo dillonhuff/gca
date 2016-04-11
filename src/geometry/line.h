@@ -31,6 +31,9 @@ namespace gca {
     
   };
 
+  bool same_line(const line l, const line r);  
+  int count_in(const line l, const vector<line> ls);  
+  bool adj_segment(const line l, const line r);  
   ostream& operator<<(ostream& out, line l);
 
 }
