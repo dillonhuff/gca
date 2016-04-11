@@ -54,6 +54,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/system/arena_allocator.h
+	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/retarget.h)
 
@@ -73,6 +74,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/point.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
+	 ./src/geometry/line.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
@@ -90,7 +92,8 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
-	 ./src/system/arena_allocator.cpp	 
+	 ./src/system/arena_allocator.cpp
+	 ./src/system/parse_stl.cpp
 	 ./src/transformers/feed_changer.cpp
 	 ./src/transformers/retarget.cpp
 	 ./src/dxflib/dl_dxf.cpp

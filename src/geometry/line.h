@@ -31,6 +31,8 @@ namespace gca {
     
   };
 
+  ostream& operator<<(ostream& out, line l);
+
 }
 
 #endif

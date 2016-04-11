@@ -1173,6 +1173,51 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
+src/geometry/line.o: src/geometry/line.cpp.o
+
+.PHONY : src/geometry/line.o
+
+# target to build an object file
+src/geometry/line.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/line.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/line.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/line.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/line.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/line.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/line.cpp.o
+.PHONY : src/geometry/line.cpp.o
+
+src/geometry/line.i: src/geometry/line.cpp.i
+
+.PHONY : src/geometry/line.i
+
+# target to preprocess a source file
+src/geometry/line.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/line.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/line.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/line.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/line.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/line.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/line.cpp.i
+.PHONY : src/geometry/line.cpp.i
+
+src/geometry/line.s: src/geometry/line.cpp.s
+
+.PHONY : src/geometry/line.s
+
+# target to generate assembly for a file
+src/geometry/line.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/line.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/line.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/line.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/line.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/line.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/line.cpp.s
+.PHONY : src/geometry/line.cpp.s
+
 src/geometry/point.o: src/geometry/point.cpp.o
 
 .PHONY : src/geometry/point.o
@@ -1983,6 +2028,51 @@ src/system/file.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/file.cpp.s
 .PHONY : src/system/file.cpp.s
 
+src/system/parse_stl.o: src/system/parse_stl.cpp.o
+
+.PHONY : src/system/parse_stl.o
+
+# target to build an object file
+src/system/parse_stl.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/parse_stl.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/parse_stl.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/parse_stl.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/parse_stl.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/parse_stl.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/parse_stl.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/parse_stl.cpp.o
+.PHONY : src/system/parse_stl.cpp.o
+
+src/system/parse_stl.i: src/system/parse_stl.cpp.i
+
+.PHONY : src/system/parse_stl.i
+
+# target to preprocess a source file
+src/system/parse_stl.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/parse_stl.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/parse_stl.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/parse_stl.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/parse_stl.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/parse_stl.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/parse_stl.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/parse_stl.cpp.i
+.PHONY : src/system/parse_stl.cpp.i
+
+src/system/parse_stl.s: src/system/parse_stl.cpp.s
+
+.PHONY : src/system/parse_stl.s
+
+# target to generate assembly for a file
+src/system/parse_stl.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/parse_stl.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/parse_stl.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/parse_stl.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/parse_stl.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/parse_stl.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/parse_stl.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/parse_stl.cpp.s
+.PHONY : src/system/parse_stl.cpp.s
+
 src/system/settings.o: src/system/settings.cpp.o
 
 .PHONY : src/system/settings.o
@@ -2772,6 +2862,9 @@ help:
 	@echo "... src/geometry/box.o"
 	@echo "... src/geometry/box.i"
 	@echo "... src/geometry/box.s"
+	@echo "... src/geometry/line.o"
+	@echo "... src/geometry/line.i"
+	@echo "... src/geometry/line.s"
 	@echo "... src/geometry/point.o"
 	@echo "... src/geometry/point.i"
 	@echo "... src/geometry/point.s"
@@ -2826,6 +2919,9 @@ help:
 	@echo "... src/system/file.o"
 	@echo "... src/system/file.i"
 	@echo "... src/system/file.s"
+	@echo "... src/system/parse_stl.o"
+	@echo "... src/system/parse_stl.i"
+	@echo "... src/system/parse_stl.s"
 	@echo "... src/system/settings.o"
 	@echo "... src/system/settings.i"
 	@echo "... src/system/settings.s"
