@@ -20,24 +20,29 @@ namespace gca {
     vector<line> to_remove;
     points.push_back(lines.front().start);
     points.push_back(lines.front().end);
-    to_remove.push_back(lines.front());
-    unsigned i = 1;
-    while (i < lines.size()) {
+    lines.erase(lines.begin());
+    unsigned i = 0;
+    while (lines.size() > 0 && i < lines.size()) {
       if (within_eps(lines[i].start, points.back())) {
+	if (within_eps(lines[i].end, points.front())) {
+	  lines.erase(lines.begin() + i);	  
+	  return points;
+	}
 	points.push_back(lines[i].end);
-	to_remove.push_back(lines[i]);
+	lines.erase(lines.begin() + i);
+	i = 0;
       } else if (within_eps(lines[i].end, points.back())) {
+	if (within_eps(lines[i].start, points.front())) {
+	  lines.erase(lines.begin() + i);
+	  return points;
+	}
 	points.push_back(lines[i].start);
-	to_remove.push_back(lines[i]);
+	lines.erase(lines.begin() + i);
+	i = 0;
+      } else {
+	i++;
       }
-      i++;
     }
-    auto should_remove = [&to_remove](const line l) {
-      return find_if(to_remove.begin(), to_remove.end(),
-		     [l](const line r)
-      { return same_line(l, r); }) != to_remove.end();
-    };
-    delete_if(lines, should_remove);
     return points;
   }
 
@@ -66,16 +71,13 @@ namespace gca {
       tri_lines.push_back(line(t.v2, t.v3));
       tri_lines.push_back(line(t.v3, t.v1));
     }
-    // for (auto l : tri_lines) {
-    //   cout << l << endl;
-    // }
     vector<line> no_dups;
     for (auto l : tri_lines) {
       if (count_in(l, tri_lines) == 1) {
 	no_dups.push_back(l);
       }
     }
-    //    cout << "# edge segments: " << no_dups.size() << endl;
+    cout << "# edge segments: " << no_dups.size() << endl;
     return unordered_segments_to_polygons(normal, no_dups);
   }
   
