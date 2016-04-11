@@ -16,6 +16,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -pedantic -Werror -Wall
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/polygon_tests.cpp
 	       test/retargeting_tests.cpp
 	       test/arc_tests.cpp
 	       test/lexer_tests.cpp
@@ -42,6 +43,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
+	    ./src/geometry/triangle.h
 	    ./src/simulators/mill_tool.h
 	    ./src/simulators/region.h
 	    ./src/simulators/sim_mill.h
@@ -71,6 +73,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/point.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
+	 ./src/geometry/triangle.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/output.cpp

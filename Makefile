@@ -1218,6 +1218,51 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/point.cpp.s
 .PHONY : src/geometry/point.cpp.s
 
+src/geometry/triangle.o: src/geometry/triangle.cpp.o
+
+.PHONY : src/geometry/triangle.o
+
+# target to build an object file
+src/geometry/triangle.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangle.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/triangle.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/triangle.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/triangle.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/triangle.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/triangle.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/triangle.cpp.o
+.PHONY : src/geometry/triangle.cpp.o
+
+src/geometry/triangle.i: src/geometry/triangle.cpp.i
+
+.PHONY : src/geometry/triangle.i
+
+# target to preprocess a source file
+src/geometry/triangle.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangle.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/triangle.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/triangle.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/triangle.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/triangle.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/triangle.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/triangle.cpp.i
+.PHONY : src/geometry/triangle.cpp.i
+
+src/geometry/triangle.s: src/geometry/triangle.cpp.s
+
+.PHONY : src/geometry/triangle.s
+
+# target to generate assembly for a file
+src/geometry/triangle.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangle.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/triangle.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/triangle.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/triangle.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/triangle.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/triangle.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/triangle.cpp.s
+.PHONY : src/geometry/triangle.cpp.s
+
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 .PHONY : src/simulators/mill_tool.o
@@ -2397,6 +2442,33 @@ test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
+test/polygon_tests.o: test/polygon_tests.cpp.o
+
+.PHONY : test/polygon_tests.o
+
+# target to build an object file
+test/polygon_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.o
+.PHONY : test/polygon_tests.cpp.o
+
+test/polygon_tests.i: test/polygon_tests.cpp.i
+
+.PHONY : test/polygon_tests.i
+
+# target to preprocess a source file
+test/polygon_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.i
+.PHONY : test/polygon_tests.cpp.i
+
+test/polygon_tests.s: test/polygon_tests.cpp.s
+
+.PHONY : test/polygon_tests.s
+
+# target to generate assembly for a file
+test/polygon_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.s
+.PHONY : test/polygon_tests.cpp.s
+
 test/position_table_tests.o: test/position_table_tests.cpp.o
 
 .PHONY : test/position_table_tests.o
@@ -2703,6 +2775,9 @@ help:
 	@echo "... src/geometry/point.o"
 	@echo "... src/geometry/point.i"
 	@echo "... src/geometry/point.s"
+	@echo "... src/geometry/triangle.o"
+	@echo "... src/geometry/triangle.i"
+	@echo "... src/geometry/triangle.s"
 	@echo "... src/simulators/mill_tool.o"
 	@echo "... src/simulators/mill_tool.i"
 	@echo "... src/simulators/mill_tool.s"
@@ -2796,6 +2871,9 @@ help:
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"
+	@echo "... test/polygon_tests.o"
+	@echo "... test/polygon_tests.i"
+	@echo "... test/polygon_tests.s"
 	@echo "... test/position_table_tests.o"
 	@echo "... test/position_table_tests.i"
 	@echo "... test/position_table_tests.s"
