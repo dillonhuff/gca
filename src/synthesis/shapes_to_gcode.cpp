@@ -68,9 +68,9 @@ namespace gca {
       trans = move_to_next_cut_drill(last_cut, next_cut, params);
       //      assert(false);
     }
-    // 
     for (auto t : trans) {
       t->set_spindle_speed(next_cut->get_spindle_speed());
+      t->set_feedrate(next_cut->get_feedrate());
     }
     return trans;
   }
