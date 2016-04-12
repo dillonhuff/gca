@@ -19,7 +19,7 @@ namespace gca {
     triangle(point normalp, point v1p, point v2p, point v3p) :
       normal(normalp), v1(v1p), v2(v2p), v3(v3p) {}
   };
-  
+
   bool is_upward_facing(const triangle& t, double tolerance);
   bool same_orientation(const triangle& x, const triangle& y, double tolerance);
   vector<oriented_polygon> merge_triangles(const vector<triangle>& tris);

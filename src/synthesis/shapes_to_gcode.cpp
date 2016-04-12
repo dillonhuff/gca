@@ -59,14 +59,20 @@ namespace gca {
   vector<cut*> move_to_next_cut(cut* last_cut,
 				cut* next_cut,
 				const cut_params& params) {
+    vector<cut*> trans;
     if (next_cut->tool_no == DRILL) {
-      return move_to_next_cut_drill(last_cut, next_cut, params);
+      trans = move_to_next_cut_drill(last_cut, next_cut, params);
     } else if (next_cut->tool_no == DRAG_KNIFE) {
-      return move_to_next_cut_dn(last_cut, next_cut, params);
+      trans = move_to_next_cut_dn(last_cut, next_cut, params);
     } else {
-      return move_to_next_cut_drill(last_cut, next_cut, params);
+      trans = move_to_next_cut_drill(last_cut, next_cut, params);
       //      assert(false);
     }
+    // 
+    for (auto t : trans) {
+      t->set_spindle_speed(next_cut->get_spindle_speed());
+    }
+    return trans;
   }
 
   void insert_move_home(vector<cut*>& cuts,

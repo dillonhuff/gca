@@ -1263,6 +1263,51 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/point.cpp.s
 .PHONY : src/geometry/point.cpp.s
 
+src/geometry/polygon.o: src/geometry/polygon.cpp.o
+
+.PHONY : src/geometry/polygon.o
+
+# target to build an object file
+src/geometry/polygon.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polygon.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polygon.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polygon.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polygon.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polygon.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polygon.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polygon.cpp.o
+.PHONY : src/geometry/polygon.cpp.o
+
+src/geometry/polygon.i: src/geometry/polygon.cpp.i
+
+.PHONY : src/geometry/polygon.i
+
+# target to preprocess a source file
+src/geometry/polygon.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polygon.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polygon.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polygon.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polygon.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polygon.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polygon.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polygon.cpp.i
+.PHONY : src/geometry/polygon.cpp.i
+
+src/geometry/polygon.s: src/geometry/polygon.cpp.s
+
+.PHONY : src/geometry/polygon.s
+
+# target to generate assembly for a file
+src/geometry/polygon.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polygon.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polygon.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polygon.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polygon.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polygon.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polygon.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polygon.cpp.s
+.PHONY : src/geometry/polygon.cpp.s
+
 src/geometry/triangle.o: src/geometry/triangle.cpp.o
 
 .PHONY : src/geometry/triangle.o
@@ -2895,6 +2940,9 @@ help:
 	@echo "... src/geometry/point.o"
 	@echo "... src/geometry/point.i"
 	@echo "... src/geometry/point.s"
+	@echo "... src/geometry/polygon.o"
+	@echo "... src/geometry/polygon.i"
+	@echo "... src/geometry/polygon.s"
 	@echo "... src/geometry/triangle.o"
 	@echo "... src/geometry/triangle.i"
 	@echo "... src/geometry/triangle.s"

@@ -13,6 +13,8 @@ namespace gca {
     oriented_polygon(point normalp, const vector<point>& verticesp) :
       normal(normalp), vertices(verticesp) {}
   };
+
+  bool is_horizontal(const oriented_polygon& p);
 }
 
 #endif

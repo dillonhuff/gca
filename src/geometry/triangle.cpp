@@ -77,7 +77,6 @@ namespace gca {
 	no_dups.push_back(l);
       }
     }
-    cout << "# edge segments: " << no_dups.size() << endl;
     return unordered_segments_to_polygons(normal, no_dups);
   }
   

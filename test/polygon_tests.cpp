@@ -48,6 +48,7 @@ namespace gca {
 	auto merged_polys = merge_triangles(g);
 	polys.insert(polys.end(), merged_polys.begin(), merged_polys.end());
       }
+      cout << "# merged polygons: " << polys.size() << endl;
       REQUIRE(polys.size() > constant_orientation_groups.size());
     }
   }
