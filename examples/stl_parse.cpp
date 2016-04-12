@@ -27,6 +27,7 @@ vector<cut*> dummy_cuts(const oriented_polygon& p) {
   assert(p.vertices.size() >= 2);
   vector<cut*> c(p.vertices.size() - 1);
   apply_between(p.vertices.begin(), p.vertices.end(), c.begin(), mk_cut);
+  c.push_back(mk_cut(p.vertices.back(), p.vertices.front()));
   return c;
 }
 
@@ -53,11 +54,11 @@ int main(int argc, char* argv[]) {
   assert(argc == 2);
   string stl_path = argv[1];
   auto info = parse_stl(stl_path);
-  auto ts = info.triangles;
-  vector<triangle> triangles;
-  for (auto t : ts) {
-    triangles.push_back(flip_triangle_yz(t));
-  }
+  auto triangles = info.triangles;
+  // vector<triangle> triangles;
+  // for (auto t : ts) {
+  //   triangles.push_back(flip_triangle_yz(t));
+  // }
   cout << "# triangles: " << triangles.size() << endl;
   delete_if(triangles, [](const triangle& t) { return !is_upward_facing(t, 1e-2); });
   cout << "# upward facing triangles: " << triangles.size() << endl;
