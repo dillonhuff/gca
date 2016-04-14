@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
     cout << p << endl;
   }
 
-  double inc = 0.3;
+  double inc = 0.1;
   double deg = 90;
   int num_phases = 2;
   double start_depth = 1.2;
