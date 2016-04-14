@@ -134,22 +134,12 @@ int main(int argc, char* argv[]) {
   double inc = 0.3;
   double deg = 90;
   int num_phases = 12;
-  vector<polyline> paths;
-  paths.push_back(p);
-  for (int i = 0; i < num_phases; i++) {
-    auto op = offset(paths.back(), deg, inc);
-    paths.push_back(op);
-  }
-
-  reverse(paths.begin(), paths.end());
-
-  double start_depth = 1.2;
+  double start_depth = 10.2;
   double end_depth = 0.03;
   double cut_depth = 0.35;
 
-  vector<polyline> phases;
-  auto tiled_lines = tile_vertical(paths, start_depth, end_depth, cut_depth);
-  phases.insert(phases.end(), tiled_lines.begin(), tiled_lines.end());
+  pocket_info_2P5D pocket(p, inc, deg, num_phases, start_depth, end_depth, cut_depth);
+  auto pocket_lines = pocket_2P5D_lines(pocket);
 
   vector<cut*> cuts;
   for (auto p : phases) {
@@ -161,7 +151,7 @@ int main(int argc, char* argv[]) {
 
   cut_params params;
   params.target_machine = EMCO_F1;
-  params.safe_height = 2.0;
+  params.safe_height = 20.0;
   params.cut_depth = 0.5;
   params.material_depth = 1.5;
 

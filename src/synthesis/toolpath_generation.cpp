@@ -44,5 +44,28 @@ namespace gca {
     return vertical_slices;
   }
 
-  
+  vector<polyline> repeated_offsets(const polyline& p,
+				    int num_repeats,
+				    double degrees,
+				    double inc) {
+    assert(num_repeats > 0);
+    vector<polyline> paths;
+    paths.push_back(offset(p, degrees, inc));
+    for (int i = 1; i < num_repeats; i++) {
+      paths.push_back(offset(paths.back(), degrees, inc));
+    }
+    reverse(paths.begin(), paths.end());
+    return paths;
+  }
+
+  vector<polyline> pocket_2P5D_lines(const pocket_info_2P5D& pocket) {
+    auto paths = repeated_offsets(pocket.outline,
+				  pocket.num_phases,
+				  pocket.deg,
+				  pocket.inc);
+    return tile_vertical(paths,
+			 pocket.start_depth,
+			 pocket.end_depth,
+			 pocket.cut_depth);
+  }
 }
