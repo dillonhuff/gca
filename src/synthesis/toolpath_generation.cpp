@@ -27,5 +27,22 @@ namespace gca {
     }
     return depths;
   }
+
+  vector<polyline> tile_vertical(const vector<polyline>& ps,
+				 double start_depth,
+				 double end_depth,
+				 double cut_depth) {
+    vector<polyline> vertical_slices;
+    auto depths = cut_depths(start_depth, end_depth, cut_depth);
+    for (auto p : ps) {
+      auto cuts = deepen_polyline(depths, p);
+      vertical_slices.insert(vertical_slices.end(), cuts.begin(), cuts.end());
+    }
+    stable_sort(vertical_slices.begin(), vertical_slices.end(),
+    		[](const polyline& l, const polyline& r)
+    		{ return l.front().z > r.front().z; });
+    return vertical_slices;
+  }
+
   
 }

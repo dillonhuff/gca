@@ -150,19 +150,6 @@ misc/fast:
 .PHONY : misc/fast
 
 #=============================================================================
-# Target rules for targets named cut-rect
-
-# Build rule for target.
-cut-rect: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cut-rect
-.PHONY : cut-rect
-
-# fast build rule for target.
-cut-rect/fast:
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/build
-.PHONY : cut-rect/fast
-
-#=============================================================================
 # Target rules for targets named print-dxf
 
 # Build rule for target.
@@ -227,33 +214,6 @@ examples/analyze_gcodes.s: examples/analyze_gcodes.cpp.s
 examples/analyze_gcodes.cpp.s:
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.s
 .PHONY : examples/analyze_gcodes.cpp.s
-
-examples/cut_rect.o: examples/cut_rect.cpp.o
-
-.PHONY : examples/cut_rect.o
-
-# target to build an object file
-examples/cut_rect.cpp.o:
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.o
-.PHONY : examples/cut_rect.cpp.o
-
-examples/cut_rect.i: examples/cut_rect.cpp.i
-
-.PHONY : examples/cut_rect.i
-
-# target to preprocess a source file
-examples/cut_rect.cpp.i:
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.i
-.PHONY : examples/cut_rect.cpp.i
-
-examples/cut_rect.s: examples/cut_rect.cpp.s
-
-.PHONY : examples/cut_rect.s
-
-# target to generate assembly for a file
-examples/cut_rect.cpp.s:
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.s
-.PHONY : examples/cut_rect.cpp.s
 
 examples/hello_world.o: examples/hello_world.cpp.o
 
@@ -372,7 +332,6 @@ src/analysis/extract_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.o
@@ -387,7 +346,6 @@ src/analysis/extract_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.i
@@ -402,7 +360,6 @@ src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/extract_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.s
@@ -417,7 +374,6 @@ src/analysis/gcode_to_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.o
@@ -432,7 +388,6 @@ src/analysis/gcode_to_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.i
@@ -447,7 +402,6 @@ src/analysis/gcode_to_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/gcode_to_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.s
@@ -462,7 +416,6 @@ src/analysis/machine_state.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.o
@@ -477,7 +430,6 @@ src/analysis/machine_state.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.i
@@ -492,7 +444,6 @@ src/analysis/machine_state.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/machine_state.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/machine_state.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.s
@@ -507,7 +458,6 @@ src/analysis/position_table.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.o
@@ -522,7 +472,6 @@ src/analysis/position_table.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.i
@@ -537,7 +486,6 @@ src/analysis/position_table.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/position_table.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/position_table.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.s
@@ -552,7 +500,6 @@ src/analysis/profiler.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/profiler.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/profiler.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/profiler.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/profiler.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/profiler.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/profiler.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.o
@@ -567,7 +514,6 @@ src/analysis/profiler.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/profiler.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/profiler.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/profiler.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/profiler.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/profiler.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/profiler.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.i
@@ -582,7 +528,6 @@ src/analysis/profiler.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/profiler.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/profiler.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/profiler.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/profiler.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/profiler.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/profiler.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.s
@@ -597,7 +542,6 @@ src/analysis/unfold.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.o
@@ -612,7 +556,6 @@ src/analysis/unfold.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.i
@@ -627,7 +570,6 @@ src/analysis/unfold.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/unfold.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/unfold.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.s
@@ -642,7 +584,6 @@ src/analysis/utils.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.o
@@ -657,7 +598,6 @@ src/analysis/utils.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.i
@@ -672,7 +612,6 @@ src/analysis/utils.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/analysis/utils.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/analysis/utils.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.s
@@ -687,7 +626,6 @@ src/checkers/block_rate_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/block_rate_checker.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/block_rate_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/block_rate_checker.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/block_rate_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/block_rate_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/block_rate_checker.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.o
@@ -702,7 +640,6 @@ src/checkers/block_rate_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/block_rate_checker.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/block_rate_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/block_rate_checker.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/block_rate_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/block_rate_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/block_rate_checker.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.i
@@ -717,7 +654,6 @@ src/checkers/block_rate_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/block_rate_checker.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/block_rate_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/block_rate_checker.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/block_rate_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/block_rate_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/block_rate_checker.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.s
@@ -732,7 +668,6 @@ src/checkers/bounds_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.o
@@ -747,7 +682,6 @@ src/checkers/bounds_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.i
@@ -762,7 +696,6 @@ src/checkers/bounds_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/bounds_checker.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.s
@@ -777,7 +710,6 @@ src/checkers/forbidden_tool_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.o
@@ -792,7 +724,6 @@ src/checkers/forbidden_tool_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.i
@@ -807,7 +738,6 @@ src/checkers/forbidden_tool_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/forbidden_tool_checker.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.s
@@ -822,7 +752,6 @@ src/checkers/unsafe_spindle_checker.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.o
@@ -837,7 +766,6 @@ src/checkers/unsafe_spindle_checker.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.i
@@ -852,7 +780,6 @@ src/checkers/unsafe_spindle_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/checkers/unsafe_spindle_checker.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
@@ -867,7 +794,6 @@ src/core/lexer.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.o
@@ -882,7 +808,6 @@ src/core/lexer.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.i
@@ -897,7 +822,6 @@ src/core/lexer.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/lexer.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.s
@@ -912,7 +836,6 @@ src/core/parse_stream.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.o
@@ -927,7 +850,6 @@ src/core/parse_stream.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.i
@@ -942,7 +864,6 @@ src/core/parse_stream.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/parse_stream.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.s
@@ -957,7 +878,6 @@ src/core/value.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.o
@@ -972,7 +892,6 @@ src/core/value.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.i
@@ -987,7 +906,6 @@ src/core/value.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/core/value.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.s
@@ -1002,7 +920,6 @@ src/dxflib/dl_dxf.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.o
@@ -1017,7 +934,6 @@ src/dxflib/dl_dxf.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.i
@@ -1032,7 +948,6 @@ src/dxflib/dl_dxf.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_dxf.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_dxf.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_dxf.cpp.s
@@ -1047,7 +962,6 @@ src/dxflib/dl_writer_ascii.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.o
@@ -1062,7 +976,6 @@ src/dxflib/dl_writer_ascii.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.i
@@ -1077,7 +990,6 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/dxflib/dl_writer_ascii.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.s
@@ -1092,7 +1004,6 @@ src/geometry/arc.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/arc.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/arc.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/arc.cpp.o
@@ -1107,7 +1018,6 @@ src/geometry/arc.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/arc.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/arc.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/arc.cpp.i
@@ -1122,7 +1032,6 @@ src/geometry/arc.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/arc.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/arc.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/arc.cpp.s
@@ -1137,7 +1046,6 @@ src/geometry/box.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/box.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/box.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/box.cpp.o
@@ -1152,7 +1060,6 @@ src/geometry/box.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/box.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/box.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/box.cpp.i
@@ -1167,7 +1074,6 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/box.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/box.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/box.cpp.s
@@ -1182,7 +1088,6 @@ src/geometry/line.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/line.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/line.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/line.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/line.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/line.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/line.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.o
@@ -1197,7 +1102,6 @@ src/geometry/line.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/line.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/line.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/line.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/line.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/line.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/line.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.i
@@ -1212,7 +1116,6 @@ src/geometry/line.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/line.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/line.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/line.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/line.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/line.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/line.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.s
@@ -1227,7 +1130,6 @@ src/geometry/point.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.o
@@ -1242,7 +1144,6 @@ src/geometry/point.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.i
@@ -1257,7 +1158,6 @@ src/geometry/point.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/point.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/point.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/point.cpp.s
@@ -1272,7 +1172,6 @@ src/geometry/polygon.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polygon.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polygon.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polygon.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polygon.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polygon.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polygon.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polygon.cpp.o
@@ -1287,7 +1186,6 @@ src/geometry/polygon.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polygon.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polygon.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polygon.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polygon.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polygon.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polygon.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polygon.cpp.i
@@ -1302,7 +1200,6 @@ src/geometry/polygon.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polygon.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polygon.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polygon.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polygon.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polygon.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polygon.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polygon.cpp.s
@@ -1317,7 +1214,6 @@ src/geometry/polyline.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polyline.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polyline.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polyline.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polyline.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polyline.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polyline.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polyline.cpp.o
@@ -1332,7 +1228,6 @@ src/geometry/polyline.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polyline.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polyline.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polyline.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polyline.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polyline.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polyline.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polyline.cpp.i
@@ -1347,7 +1242,6 @@ src/geometry/polyline.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/polyline.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/polyline.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/polyline.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/polyline.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/polyline.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/polyline.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polyline.cpp.s
@@ -1362,7 +1256,6 @@ src/geometry/triangle.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/triangle.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/triangle.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/triangle.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/triangle.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/triangle.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/triangle.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangle.cpp.o
@@ -1377,7 +1270,6 @@ src/geometry/triangle.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/triangle.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/triangle.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/triangle.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/triangle.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/triangle.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/triangle.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangle.cpp.i
@@ -1392,7 +1284,6 @@ src/geometry/triangle.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/triangle.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/geometry/triangle.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/geometry/triangle.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/geometry/triangle.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/geometry/triangle.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/geometry/triangle.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangle.cpp.s
@@ -1407,7 +1298,6 @@ src/simulators/mill_tool.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.o
@@ -1422,7 +1312,6 @@ src/simulators/mill_tool.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.i
@@ -1437,7 +1326,6 @@ src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/mill_tool.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.s
@@ -1452,7 +1340,6 @@ src/simulators/sim_mill.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.o
@@ -1467,7 +1354,6 @@ src/simulators/sim_mill.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.i
@@ -1482,7 +1368,6 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/simulators/sim_mill.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.s
@@ -1497,7 +1382,6 @@ src/synthesis/align_blade.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.o
@@ -1512,7 +1396,6 @@ src/synthesis/align_blade.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.i
@@ -1527,7 +1410,6 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/align_blade.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/align_blade.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.s
@@ -1542,7 +1424,6 @@ src/synthesis/cut.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.o
@@ -1557,7 +1438,6 @@ src/synthesis/cut.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.i
@@ -1572,7 +1452,6 @@ src/synthesis/cut.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.s
@@ -1587,7 +1466,6 @@ src/synthesis/cut_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.o
@@ -1602,7 +1480,6 @@ src/synthesis/cut_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.i
@@ -1617,7 +1494,6 @@ src/synthesis/cut_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/cut_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/cut_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut_to_gcode.cpp.s
@@ -1632,7 +1508,6 @@ src/synthesis/dxf_reader.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.o
@@ -1647,7 +1522,6 @@ src/synthesis/dxf_reader.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.i
@@ -1662,7 +1536,6 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/dxf_reader.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/dxf_reader.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.s
@@ -1677,7 +1550,6 @@ src/synthesis/linear_cut.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.o
@@ -1692,7 +1564,6 @@ src/synthesis/linear_cut.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.i
@@ -1707,7 +1578,6 @@ src/synthesis/linear_cut.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/linear_cut.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.s
@@ -1722,7 +1592,6 @@ src/synthesis/machine.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.o
@@ -1737,7 +1606,6 @@ src/synthesis/machine.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.i
@@ -1752,7 +1620,6 @@ src/synthesis/machine.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/machine.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.s
@@ -1767,7 +1634,6 @@ src/synthesis/output.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.o
@@ -1782,7 +1648,6 @@ src/synthesis/output.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.i
@@ -1797,7 +1662,6 @@ src/synthesis/output.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/output.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/output.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/output.cpp.s
@@ -1812,7 +1676,6 @@ src/synthesis/schedule_cuts.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.o
@@ -1827,7 +1690,6 @@ src/synthesis/schedule_cuts.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.i
@@ -1842,7 +1704,6 @@ src/synthesis/schedule_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/schedule_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/schedule_cuts.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/schedule_cuts.cpp.s
@@ -1857,7 +1718,6 @@ src/synthesis/shapes_to_gcode.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.o
@@ -1872,7 +1732,6 @@ src/synthesis/shapes_to_gcode.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.i
@@ -1887,7 +1746,6 @@ src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_gcode.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_gcode.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_gcode.cpp.s
@@ -1902,7 +1760,6 @@ src/synthesis/shapes_to_toolpaths.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.o
@@ -1917,7 +1774,6 @@ src/synthesis/shapes_to_toolpaths.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.i
@@ -1932,7 +1788,6 @@ src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/shapes_to_toolpaths.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.s
@@ -1947,7 +1802,6 @@ src/synthesis/spline_sampling.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.o
@@ -1962,7 +1816,6 @@ src/synthesis/spline_sampling.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.i
@@ -1977,7 +1830,6 @@ src/synthesis/spline_sampling.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/spline_sampling.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.s
@@ -1992,7 +1844,6 @@ src/synthesis/toolpath.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.o
@@ -2007,7 +1858,6 @@ src/synthesis/toolpath.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.i
@@ -2022,7 +1872,6 @@ src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.s
@@ -2037,7 +1886,6 @@ src/synthesis/toolpath_generation.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath_generation.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath_generation.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath_generation.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath_generation.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath_generation.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath_generation.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.o
@@ -2052,7 +1900,6 @@ src/synthesis/toolpath_generation.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath_generation.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath_generation.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath_generation.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath_generation.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath_generation.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath_generation.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.i
@@ -2067,7 +1914,6 @@ src/synthesis/toolpath_generation.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath_generation.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath_generation.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath_generation.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath_generation.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath_generation.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath_generation.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.s
@@ -2082,7 +1928,6 @@ src/system/arena_allocator.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.o
@@ -2097,7 +1942,6 @@ src/system/arena_allocator.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.i
@@ -2112,7 +1956,6 @@ src/system/arena_allocator.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/arena_allocator.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.s
@@ -2127,7 +1970,6 @@ src/system/file.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.o
@@ -2142,7 +1984,6 @@ src/system/file.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.i
@@ -2157,7 +1998,6 @@ src/system/file.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/file.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/file.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.s
@@ -2172,7 +2012,6 @@ src/system/parse_stl.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/parse_stl.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/parse_stl.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/parse_stl.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/parse_stl.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/parse_stl.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/parse_stl.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/parse_stl.cpp.o
@@ -2187,7 +2026,6 @@ src/system/parse_stl.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/parse_stl.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/parse_stl.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/parse_stl.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/parse_stl.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/parse_stl.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/parse_stl.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/parse_stl.cpp.i
@@ -2202,7 +2040,6 @@ src/system/parse_stl.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/parse_stl.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/parse_stl.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/parse_stl.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/parse_stl.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/parse_stl.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/parse_stl.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/parse_stl.cpp.s
@@ -2217,7 +2054,6 @@ src/system/settings.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.o
@@ -2232,7 +2068,6 @@ src/system/settings.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.i
@@ -2247,7 +2082,6 @@ src/system/settings.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/system/settings.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/system/settings.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/settings.cpp.s
@@ -2262,7 +2096,6 @@ src/transformers/feed_changer.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.o
@@ -2277,7 +2110,6 @@ src/transformers/feed_changer.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.i
@@ -2292,7 +2124,6 @@ src/transformers/feed_changer.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/feed_changer.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.s
@@ -2307,7 +2138,6 @@ src/transformers/retarget.cpp.o:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/retarget.cpp.o
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/retarget.cpp.o
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/retarget.cpp.o
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/retarget.cpp.o
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/retarget.cpp.o
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/retarget.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/retarget.cpp.o
@@ -2322,7 +2152,6 @@ src/transformers/retarget.cpp.i:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/retarget.cpp.i
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/retarget.cpp.i
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/retarget.cpp.i
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/retarget.cpp.i
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/retarget.cpp.i
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/retarget.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/retarget.cpp.i
@@ -2337,7 +2166,6 @@ src/transformers/retarget.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/retarget.cpp.s
 	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/transformers/retarget.cpp.s
 	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/transformers/retarget.cpp.s
-	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/transformers/retarget.cpp.s
 	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/transformers/retarget.cpp.s
 	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/transformers/retarget.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/retarget.cpp.s
@@ -2971,20 +2799,16 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... rebuild_cache"
 	@echo "... stl-parse"
 	@echo "... analyze-gcodes"
 	@echo "... misc"
-	@echo "... rebuild_cache"
-	@echo "... cut-rect"
 	@echo "... print-dxf"
 	@echo "... hello-world"
 	@echo "... all-tests"
 	@echo "... examples/analyze_gcodes.o"
 	@echo "... examples/analyze_gcodes.i"
 	@echo "... examples/analyze_gcodes.s"
-	@echo "... examples/cut_rect.o"
-	@echo "... examples/cut_rect.i"
-	@echo "... examples/cut_rect.s"
 	@echo "... examples/hello_world.o"
 	@echo "... examples/hello_world.i"
 	@echo "... examples/hello_world.s"

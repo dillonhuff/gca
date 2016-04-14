@@ -9,6 +9,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "synthesis/shapes_to_gcode.h"
+#include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 #include "system/parse_stl.h"
 
@@ -125,10 +126,52 @@ int main(int argc, char* argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  assert(argc == 2);
-  string stl_path = argv[1];
-  auto info = parse_stl(stl_path);
-  cout << "# triangles: " << info.triangles.size() << endl;
+  point p1(1, 0, -1);
+  point p2(4, -23, -1);
+  point p3(10, 3, -1);
+  polyline p({p1, p2, p3, p1});
+
+  double inc = 0.3;
+  double deg = 90;
+  int num_phases = 12;
+  vector<polyline> paths;
+  paths.push_back(p);
+  for (int i = 0; i < num_phases; i++) {
+    auto op = offset(paths.back(), deg, inc);
+    paths.push_back(op);
+  }
+
+  reverse(paths.begin(), paths.end());
+
+  double start_depth = 1.2;
+  double end_depth = 0.03;
+  double cut_depth = 0.35;
+
+  vector<polyline> phases;
+  auto tiled_lines = tile_vertical(paths, start_depth, end_depth, cut_depth);
+  phases.insert(phases.end(), tiled_lines.begin(), tiled_lines.end());
+
+  vector<cut*> cuts;
+  for (auto p : phases) {
+    auto cs = dummy_cuts(p);
+    cuts.insert(cuts.end(), cs.begin(), cs.end());
+  }
+
+  cout << "# cuts: " << cuts.size() << endl;
+
+  cut_params params;
+  params.target_machine = EMCO_F1;
+  params.safe_height = 2.0;
+  params.cut_depth = 0.5;
+  params.material_depth = 1.5;
+
+  auto bs = cuts_to_gcode(cuts, params);
+  cout << bs << endl;
+
+  // assert(argc == 2);
+  // string stl_path = argv[1];
+  // auto info = parse_stl(stl_path);
+  // cout << "# triangles: " << info.triangles.size() << endl;
   // box workpiece = make_box(point(0, 0, 0), 10.0, 10.0, 1.9);
   // auto polys = preprocess_triangles(info.triangles);
   // cut_params params;

@@ -10,6 +10,11 @@ namespace gca {
   vector<double> cut_depths(double start_depth,
 			    double end_depth,
 			    double cut_depth);
+
+  vector<polyline> tile_vertical(const vector<polyline>& ps,
+				 double start_depth,
+				 double end_depth,
+				 double cut_depth);
   
 }
 
