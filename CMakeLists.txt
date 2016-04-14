@@ -17,6 +17,7 @@ SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/polygon_tests.cpp
+	       test/polyline_tests.cpp
 	       test/retargeting_tests.cpp
 	       test/arc_tests.cpp
 	       test/lexer_tests.cpp
@@ -77,6 +78,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/line.cpp
 	 ./src/geometry/polygon.cpp
+	 ./src/geometry/polyline.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp

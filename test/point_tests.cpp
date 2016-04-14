@@ -73,5 +73,5 @@ namespace gca {
     cout << "angle between = " << a << endl;
     REQUIRE(within_eps(a, 180, 0.00001));
   }
-  
+
 }

@@ -31,17 +31,23 @@ namespace gca {
     }
   }
 
-  vector<double> cut_depths(const cut_params& params) {
+  vector<double> cut_depths(double start_depth,
+			    double end_depth,
+			    double cut_depth) {
     vector<double> depths;
-    double depth = max(0.0, params.material_depth - params.cut_depth);
+    double depth = max(end_depth, start_depth - cut_depth);
     while (true) {
       depths.push_back(depth);
-      if (depth == 0.0) {
+      if (depth == end_depth) {
 	break;
       }
-      depth = max(0.0, depth - params.cut_depth);
+      depth = max(end_depth, depth - cut_depth);
     }
     return depths;
+  }
+
+  vector<double> cut_depths(const cut_params& params) {
+    return cut_depths(params.material_depth, 0.0, params.cut_depth);
   }
 
   void set_tool_nos(tool_name tool_no,

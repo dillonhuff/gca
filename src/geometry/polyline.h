@@ -46,6 +46,10 @@ namespace gca {
     }
     return polyline(pts);
   }
+
+  bool pointwise_within_eps(const polyline& p, const polyline& q, double tol);
+
+  polyline offset(const polyline& p, double degrees, double n);
 }
 
 #endif
