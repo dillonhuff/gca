@@ -96,12 +96,21 @@ namespace gca {
       if (p_b_m.just && n_b_m.just) {
 	double p_b = p_b_m.t;
 	double n_b = n_b_m.t;
+	if (within_eps(p_slope, n_slope) && !within_eps(p_b, n_b)) {
+	  return maybe<point>();
+	}
 	double x = (p_b - n_b) / (n_slope - p_slope);
 	double y = p_slope*x + p_b;
 	return maybe<point>(point(x, y, z));
       } else {
 	assert(false);
       }
+    } else if (p_slope_m.just) {
+      double x = next.start.x;
+      return maybe<point>(point(x, p_slope_m.t*x + y_intersect_2d(prev).t, z));
+    } else if (n_slope_m.just) {
+      double x = prev.start.x;
+      return maybe<point>(point(x, n_slope_m.t*x + y_intersect_2d(next).t, z));
     } else {
       assert(false);
     }

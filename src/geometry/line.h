@@ -46,6 +46,8 @@ namespace gca {
   ostream& operator<<(ostream& out, line l);
   maybe<point> trim_or_extend(line prev, line next);
   point trim_or_extend_unsafe(line prev, line next);
+  maybe<point> line_intersection_2d(line prev, line next);
+
 }
 
 #endif

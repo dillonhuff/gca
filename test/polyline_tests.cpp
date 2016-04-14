@@ -87,7 +87,7 @@ namespace gca {
 
       cout << "Offset square" << endl;
       for (auto pt : off) {
-	cout << pt << endl;
+      	cout << pt << endl;
       }
 
       REQUIRE(pointwise_within_eps(off, correct, 0.00001));
