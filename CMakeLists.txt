@@ -55,6 +55,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
+	    ./src/synthesis/toolpath_generation.h
 	    ./src/system/arena_allocator.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
@@ -94,6 +95,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp
+	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/arena_allocator.cpp

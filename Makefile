@@ -2028,6 +2028,51 @@ src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath.cpp.s
 .PHONY : src/synthesis/toolpath.cpp.s
 
+src/synthesis/toolpath_generation.o: src/synthesis/toolpath_generation.cpp.o
+
+.PHONY : src/synthesis/toolpath_generation.o
+
+# target to build an object file
+src/synthesis/toolpath_generation.cpp.o:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.o
+.PHONY : src/synthesis/toolpath_generation.cpp.o
+
+src/synthesis/toolpath_generation.i: src/synthesis/toolpath_generation.cpp.i
+
+.PHONY : src/synthesis/toolpath_generation.i
+
+# target to preprocess a source file
+src/synthesis/toolpath_generation.cpp.i:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.i
+.PHONY : src/synthesis/toolpath_generation.cpp.i
+
+src/synthesis/toolpath_generation.s: src/synthesis/toolpath_generation.cpp.s
+
+.PHONY : src/synthesis/toolpath_generation.s
+
+# target to generate assembly for a file
+src/synthesis/toolpath_generation.cpp.s:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/src/synthesis/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.s
+.PHONY : src/synthesis/toolpath_generation.cpp.s
+
 src/system/arena_allocator.o: src/system/arena_allocator.cpp.o
 
 .PHONY : src/system/arena_allocator.o
@@ -3063,6 +3108,9 @@ help:
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"
+	@echo "... src/synthesis/toolpath_generation.o"
+	@echo "... src/synthesis/toolpath_generation.i"
+	@echo "... src/synthesis/toolpath_generation.s"
 	@echo "... src/system/arena_allocator.o"
 	@echo "... src/system/arena_allocator.i"
 	@echo "... src/system/arena_allocator.s"

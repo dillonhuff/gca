@@ -8,6 +8,7 @@
 #include "synthesis/schedule_cuts.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
+#include "synthesis/toolpath_generation.h"
 
 using namespace std;
 

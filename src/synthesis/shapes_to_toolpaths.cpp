@@ -6,6 +6,7 @@
 #include "synthesis/linear_cut.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/spline_sampling.h"
+#include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 
 namespace gca {
@@ -31,21 +32,7 @@ namespace gca {
     }
   }
 
-  vector<double> cut_depths(double start_depth,
-			    double end_depth,
-			    double cut_depth) {
-    vector<double> depths;
-    double depth = max(end_depth, start_depth - cut_depth);
-    while (true) {
-      depths.push_back(depth);
-      if (depth == end_depth) {
-	break;
-      }
-      depth = max(end_depth, depth - cut_depth);
-    }
-    return depths;
-  }
-
+  
   vector<double> cut_depths(const cut_params& params) {
     return cut_depths(params.material_depth, 0.0, params.cut_depth);
   }
@@ -68,17 +55,6 @@ namespace gca {
       vector<point> p{c->get_start(), c->get_end()};
       polys.push_back(polyline(p));
     }
-  }
-
-  vector<polyline> deepen_polyline(vector<double> depths, const polyline& p) {
-    vector<polyline> ps;
-    for (auto depth : depths) {
-      vector<point> pts;
-      for (auto pt : p)
-	{ pts.push_back(point(pt.x, pt.y, depth)); }
-      ps.push_back(polyline(pts));
-    }
-    return ps;
   }
 
   vector<point> cuts_to_points(vector<cut*> cuts) {

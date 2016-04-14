@@ -4,7 +4,16 @@
 #include "geometry/point.h"
 
 namespace gca {
-  
+
+  // TODO: This really belongs in utils
+  template<typename T>
+  struct maybe {
+    bool just;
+    T t;
+    maybe() : just(false), t() {}
+    maybe(T tp) : just(true), t(tp) {}
+  };
+
   struct line {
     point start, end;
     line(point s, point e) : start(s), end(e) {}
@@ -35,6 +44,7 @@ namespace gca {
   int count_in(const line l, const vector<line> ls);  
   bool adj_segment(const line l, const line r);  
   ostream& operator<<(ostream& out, line l);
+  point trim_or_extend(line prev, line next);
 
 }
 
