@@ -79,14 +79,34 @@ namespace gca {
     }
     return unordered_segments_to_polygons(normal, no_dups);
   }
-  
+
   ostream& operator<<(ostream& out, const triangle& t) {
     cout << "---- TRIANGLE ----" << endl;
-    cout << t.normal << endl;;
-    cout << t.v1 << endl;;
-    cout << t.v2 << endl;;
-    cout << t.v3 << endl;;
+    cout << t.normal << endl;
+    cout << t.v1 << endl;
+    cout << t.v2 << endl;
+    cout << t.v3 << endl;
     return out;
+  }
+
+  void extract_millable_surface(vector<triangle>& triangles,
+				vector<vector<triangle>>& millable_surfaces) {
+    assert(triangles.size() > 0);
+    vector<triangle> ts;
+    ts.push_back(triangles.back());
+    triangles.pop_back();
+    millable_surfaces.push_back(ts);
+  }
+
+  vector<vector<triangle>> millable_surfaces(const vector<triangle>& tris) {
+    auto triangles = tris;
+    delete_if(triangles, [](const triangle& t)
+	      { return !is_upward_facing(t, 1e-2); });
+    vector<vector<triangle>> millable_surfaces;
+    while (triangles.size() > 0) {
+      extract_millable_surface(triangles, millable_surfaces);
+    }
+    return millable_surfaces;
   }
 
 }

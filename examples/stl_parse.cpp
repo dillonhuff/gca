@@ -84,50 +84,7 @@ vector<oriented_polygon> preprocess_triangles(const vector<triangle>& tris) {
   return polys;
 }
 
-void sanity_check_pockets(const vector<oriented_polygon>& pockets) {
-  for (auto p : pockets) {
-    assert(is_horizontal(p));
-  }
-}
-
-// TODO: Add depth sorting
-void order_pockets(const vector<oriented_polygon>& pockets) {
-  
-}
-
-vector<polyline> pocket_lines(const oriented_polygon& pocket,
-			      double workpiece_height,
-			      double cut_depth) {
-  vector<polyline> ps;
-  return ps;
-}
-
-vector<polyline> compute_pocket_paths(const vector<oriented_polygon>& pockets,
-				      const box workpiece,
-				      const cut_params& params) {
-  vector<polyline> paths;
-  double workpiece_height = workpiece.z_max;
-  for (auto pocket : pockets) {
-    auto pocket_paths = pocket_lines(pocket, workpiece_height, params.cut_depth);
-    paths.insert(paths.end(), pocket_paths.begin(), pocket_paths.end());
-  }
-  return paths;
-}
-
-vector<cut*> generate_toolpath(const vector<oriented_polygon>& pockets,
-			       const box workpiece,
-			       const cut_params& params) {
-  sanity_check_pockets(pockets);
-  order_pockets(pockets);
-  auto depth_pockets = compute_pocket_paths(pockets, workpiece, params);
-  vector<cut*> cuts;
-  for (auto p : depth_pockets) {
-    auto cs = dummy_cuts(p);
-    cuts.insert(cuts.end(), cs.begin(), cs.end());
-  }
-  return cuts;
-}
-
+// TODO: Move to box.h
 box make_box(point bottom_left, double x_len, double y_len, double z_len) {
   return box(bottom_left.x, bottom_left.x + x_len,
 	     bottom_left.y, bottom_left.y + y_len,

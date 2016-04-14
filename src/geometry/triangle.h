@@ -24,6 +24,8 @@ namespace gca {
   bool same_orientation(const triangle& x, const triangle& y, double tolerance);
   vector<oriented_polygon> merge_triangles(const vector<triangle>& tris);
   ostream& operator<<(ostream& out, const triangle& t);
+
+  vector<vector<triangle>> millable_surfaces(const vector<triangle>& tris);
 }
 
 #endif
