@@ -53,8 +53,6 @@ namespace gca {
     double x;
     double y;
     double z = p.start.z;
-    cout << "p = " << p << endl;
-    cout << "l = " << l << endl;
     if (get_line_intersection(p.start.x, p.start.y,
 			      p.end.x, p.end.y,
 			      l.start.x, l.start.y,

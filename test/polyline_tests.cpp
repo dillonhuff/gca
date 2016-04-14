@@ -38,5 +38,35 @@ namespace gca {
       polyline correct({c1, c2, c3, c4});
       REQUIRE(pointwise_within_eps(off, correct, 0.00001));
     }
+
+    SECTION("Fully connected triangles") {
+      point p1(1, 0, -1);
+      point p2(4, -23, -1);
+      point p3(10, 3, -1);
+      polyline p({p1, p2, p3, p1});
+
+      double deg = 90;
+      double inc = 0.2;
+
+      auto off = offset(p, deg, inc);
+
+      line l1(p1, p2);
+      point i1 = inc*((p2 - p1).normalize().rotate_z(deg));
+      line l2(p2, p3);
+      point i2 = inc*((p3 - p2).normalize().rotate_z(deg));
+      line l3(p3, p1);
+      point i3 = inc*((p1 - p3).normalize().rotate_z(deg));
+      
+      line k1 = l1.shift(i1);
+      line k2 = l2.shift(i2);
+      line k3 = l3.shift(i3);
+
+      point c1 = trim_or_extend(k3, k1);
+      point c2 = trim_or_extend(k1, k2);
+      point c3 = trim_or_extend(k2, k3);
+
+      polyline correct({c1, c2, c3, c1});
+      REQUIRE(pointwise_within_eps(off, correct, 0.00001));
+    }
   }
 }

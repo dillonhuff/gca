@@ -20,11 +20,20 @@ namespace gca {
       initial_lines.push_back(line(l.start + offset_vec, l.end + offset_vec));
     }
     vector<point> new_points(initial_lines.size());
-    new_points[0] = initial_lines[0].start;
     apply_between(initial_lines.begin(), initial_lines.end(),
 		  new_points.begin() + 1,
 		  trim_or_extend);
-    new_points.push_back(initial_lines.back().end);
+    // TODO: Allow this tolerance to be set by the api
+    if (!within_eps(p.front(), p.back(), 0.000001)) {
+      new_points[0] = initial_lines[0].start;
+      new_points.push_back(initial_lines.back().end);
+    } else {
+      assert(p.num_points() > 3);
+      point n = trim_or_extend(initial_lines[initial_lines.size() - 1],
+			       initial_lines[0]);
+      new_points[0] = n;
+      new_points.push_back(n);
+    }
     polyline off(new_points);
     return off;
   }

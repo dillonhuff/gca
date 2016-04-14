@@ -25,6 +25,9 @@ namespace gca {
     vector<point>::const_iterator begin() const { return points.begin(); }
     vector<point>::const_iterator end() const { return points.end(); }
 
+    point front() const { return points.front(); }
+    point back() const { return points.back(); }
+
     point pt(unsigned n) const { return points[n]; }
 
     vector<line> lines() const {
