@@ -51,7 +51,19 @@ triangle flip_triangle_yz(const triangle t) {
   return triangle(flip_yz(np), flip_yz(v1), flip_yz(v2), flip_yz(v3));
 }
 
-vector<oriented_polygon> preprocess_triangles(const vector<triangle> tris) {
+polyline extract_part_base_outline(const vector<triangle>& tris) {
+  auto triangles = tris;
+  delete_if(triangles, [](const triangle& t)
+	    { return !within_eps(t.normal, point(0, 0, -1), 1e-2); });
+  auto outlines = merge_triangles(triangles);
+  assert(outlines.size() == 1);
+  auto base_outline = outlines.front();
+  vector<point> vertices = base_outline.vertices;
+  vertices.push_back(vertices.front());
+  return polyline(vertices);
+}
+
+vector<oriented_polygon> preprocess_triangles(const vector<triangle>& tris) {
   auto triangles = tris;
   delete_if(triangles, [](const triangle& t) { return !is_upward_facing(t, 1e-2); });
   greedy_adjacent_chains(triangles.begin(), triangles.end(),
@@ -126,23 +138,27 @@ int main(int argc, char* argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  point p1(1, 0, -1);
-  point p2(4, -23, -1);
-  point p3(10, 3, -1);
-  polyline p({p1, p2, p3, p1});
+  assert(argc == 2);
+  auto info = parse_stl(argv[1]);
+  vector<triangle> triangles = info.triangles;
+  auto outline = extract_part_base_outline(triangles);
+
+  for (auto p : outline) {
+    cout << p << endl;
+  }
 
   double inc = 0.3;
   double deg = 90;
-  int num_phases = 12;
-  double start_depth = 10.2;
+  int num_phases = 2;
+  double start_depth = 1.2;
   double end_depth = 0.03;
   double cut_depth = 0.35;
 
-  pocket_info_2P5D pocket(p, inc, deg, num_phases, start_depth, end_depth, cut_depth);
+  pocket_info_2P5D pocket(outline, inc, deg, num_phases, start_depth, end_depth, cut_depth);
   auto pocket_lines = pocket_2P5D_lines(pocket);
 
   vector<cut*> cuts;
-  for (auto p : phases) {
+  for (auto p : pocket_lines) {
     auto cs = dummy_cuts(p);
     cuts.insert(cuts.end(), cs.begin(), cs.end());
   }
@@ -158,19 +174,4 @@ int main(int argc, char* argv[]) {
   auto bs = cuts_to_gcode(cuts, params);
   cout << bs << endl;
 
-  // assert(argc == 2);
-  // string stl_path = argv[1];
-  // auto info = parse_stl(stl_path);
-  // cout << "# triangles: " << info.triangles.size() << endl;
-  // box workpiece = make_box(point(0, 0, 0), 10.0, 10.0, 1.9);
-  // auto polys = preprocess_triangles(info.triangles);
-  // cut_params params;
-  // params.target_machine = EMCO_F1;
-  // params.safe_height = 2.0;
-  // params.cut_depth = 0.5;
-  // // TODO: Find a better way to do this
-  // params.material_depth = workpiece.z_max;
-  // auto cuts = generate_toolpath(polys, workpiece, params);
-  // auto bs = cuts_to_gcode(cuts, params);
-  // cout << bs << endl;
 }
