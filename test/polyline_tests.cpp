@@ -33,7 +33,7 @@ namespace gca {
       line k1(l1.start + i, l1.end + i);
       i = inc*((p4 - p3).normalize().rotate_z(deg));
       line k2(l2.start + i, l2.end + i);
-      point c3 = trim_or_extend(k1, k2);
+      point c3 = trim_or_extend_unsafe(k1, k2);
       point c4 = p4 + i;
       polyline correct({c1, c2, c3, c4});
       REQUIRE(pointwise_within_eps(off, correct, 0.00001));
@@ -61,11 +61,35 @@ namespace gca {
       line k2 = l2.shift(i2);
       line k3 = l3.shift(i3);
 
-      point c1 = trim_or_extend(k3, k1);
-      point c2 = trim_or_extend(k1, k2);
-      point c3 = trim_or_extend(k2, k3);
+      point c1 = trim_or_extend_unsafe(k3, k1);
+      point c2 = trim_or_extend_unsafe(k1, k2);
+      point c3 = trim_or_extend_unsafe(k2, k3);
 
       polyline correct({c1, c2, c3, c1});
+      REQUIRE(pointwise_within_eps(off, correct, 0.00001));
+    }
+
+    SECTION("Offset that produced nan") {
+      point p1(0, 0, 0); //(0.602907, 1.36214, 1e-06);
+      point p2(1, 0, 0); //(1.60291, 1.36214, 1e-06);
+      point p3(1, -1, 0); //(1.60291, 0.362136, 1e-06);
+
+      polyline p({p1, p2, p3});
+      double inc = 0.1;
+      double deg = 90;
+
+      auto off = offset(p, deg, inc);
+
+      point c1(0, 0.1, 0);
+      point c2(1.1, 0.1, 0);
+      point c3(1.1, -1, 0);
+      polyline correct({c1, c2, c3});
+
+      cout << "Offset square" << endl;
+      for (auto pt : off) {
+	cout << pt << endl;
+      }
+
       REQUIRE(pointwise_within_eps(off, correct, 0.00001));
     }
   }

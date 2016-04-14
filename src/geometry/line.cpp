@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include "geometry/line.h"
 
 namespace gca {
@@ -64,32 +66,60 @@ namespace gca {
     }
   }
 
-  double slope_2d(line l) {
-    return (l.end.y - l.start.y) / (l.end.x - l.start.x);
+  maybe<double> slope_2d(line l) {
+    if (within_eps(l.end.x, l.start.x, 0.000001)) {
+      return maybe<double>();
+    } else {
+      return maybe<double>((l.end.y - l.start.y) / (l.end.x - l.start.x));
+    }
+    
   }
 
-  double y_intersect_2d(line l) {
-    return l.start.y - slope_2d(l)*l.start.x;
+  maybe<double> y_intersect_2d(line l) {
+    maybe<double> sm = slope_2d(l);
+    if (sm.just) {
+      return maybe<double>(l.start.y - (sm.t)*l.start.x);
+    } else {
+      return maybe<double>();
+    }
   }
 
-  point line_intersection_2d(line prev, line next) {
+  maybe<point> line_intersection_2d(line prev, line next) {
     double z = prev.start.z;
-    double p_slope = slope_2d(prev);
-    double n_slope = slope_2d(next);
-    double p_b = y_intersect_2d(prev);
-    double n_b = y_intersect_2d(next);
-    double x = (p_b - n_b) / (n_slope - p_slope);
-    double y = p_slope*x + p_b;
-    return point(x, y, z);
+    maybe<double> p_slope_m = slope_2d(prev);
+    maybe<double> n_slope_m = slope_2d(next);
+    if (p_slope_m.just && n_slope_m.just) {
+      auto p_slope = p_slope_m.t;
+      auto n_slope = n_slope_m.t;
+      maybe<double> p_b_m = y_intersect_2d(prev);
+      maybe<double> n_b_m = y_intersect_2d(next);
+      if (p_b_m.just && n_b_m.just) {
+	double p_b = p_b_m.t;
+	double n_b = n_b_m.t;
+	double x = (p_b - n_b) / (n_slope - p_slope);
+	double y = p_slope*x + p_b;
+	return maybe<point>(point(x, y, z));
+      } else {
+	assert(false);
+      }
+    } else {
+      assert(false);
+    }
   }
 
-  point trim_or_extend(line prev, line next) {
+  maybe<point> trim_or_extend(line prev, line next) {
     auto intersection = segment_intersection_2d(prev, next);
     if (intersection.just) {
       return intersection.t;
     } else {
       return line_intersection_2d(prev, next);
     }
+  }
+
+  point trim_or_extend_unsafe(line prev, line next) {
+    maybe<point> p = trim_or_extend(prev, next);
+    assert(p.just);
+    return p.t;
   }
 
 }

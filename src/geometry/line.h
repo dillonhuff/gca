@@ -44,8 +44,8 @@ namespace gca {
   int count_in(const line l, const vector<line> ls);  
   bool adj_segment(const line l, const line r);  
   ostream& operator<<(ostream& out, line l);
-  point trim_or_extend(line prev, line next);
-
+  maybe<point> trim_or_extend(line prev, line next);
+  point trim_or_extend_unsafe(line prev, line next);
 }
 
 #endif
