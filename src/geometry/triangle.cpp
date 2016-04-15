@@ -103,9 +103,12 @@ namespace gca {
     delete_if(triangles, [](const triangle& t)
 	      { return !is_upward_facing(t, 1e-2); });
     vector<vector<triangle>> millable_surfaces;
-    while (triangles.size() > 0) {
-      extract_millable_surface(triangles, millable_surfaces);
-    }
+    stable_sort(begin(triangles), end(triangles),
+		[](const triangle l, const triangle r)
+		{ return l.v1.z < r.v1.z; });
+    split_by(triangles, millable_surfaces,
+    	     [](const triangle l, const triangle r)
+    	     { return within_eps(l.v1.z, r.v1.z); });
     return millable_surfaces;
   }
 
