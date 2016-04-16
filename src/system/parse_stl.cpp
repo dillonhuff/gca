@@ -32,13 +32,11 @@ namespace gca {
     char header_info[80] = "";
     char n_triangles[4];
     stl_file.read(header_info, 80);
-    printf("HEADER: %s\n", header_info);
     stl_file.read(n_triangles, 4);
     string h(header_info);
     stl_data info(h);
     unsigned int* r = (unsigned int*) n_triangles;
     unsigned int num_triangles = *r;
-    printf("# triangles = %u\n", num_triangles);
     for (unsigned int i = 0; i < num_triangles; i++) {
       auto normal = parse_point(stl_file);
       auto v1 = parse_point(stl_file);

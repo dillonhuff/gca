@@ -17,8 +17,14 @@ namespace gca {
       REQUIRE(faces.size() == 1);
     }
 
-    SECTION("Multiple cylinders") {
+    SECTION("Multiple cylinders, 2 levels") {
       auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders.stl").triangles;
+      auto faces = millable_surfaces(triangles);
+      REQUIRE(faces.size() == 2);
+    }
+    
+    SECTION("Multiple cylinders, 3 levels") {
+      auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders2.stl").triangles;
       auto faces = millable_surfaces(triangles);
       REQUIRE(faces.size() == 3);
     }

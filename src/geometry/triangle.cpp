@@ -89,15 +89,6 @@ namespace gca {
     return out;
   }
 
-  void extract_millable_surface(vector<triangle>& triangles,
-				vector<vector<triangle>>& millable_surfaces) {
-    assert(triangles.size() > 0);
-    vector<triangle> ts;
-    ts.push_back(triangles.back());
-    triangles.pop_back();
-    millable_surfaces.push_back(ts);
-  }
-
   vector<vector<triangle>> millable_surfaces(const vector<triangle>& tris) {
     auto triangles = tris;
     delete_if(triangles, [](const triangle& t)
