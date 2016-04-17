@@ -21,36 +21,12 @@ polyline extract_part_base_outline(const vector<triangle>& tris) {
   return polyline(vertices);
 }
 
-int main(int argc, char* argv[]) {
-  arena_allocator a;
-  set_system_allocator(&a);
-
-  assert(argc == 2);
-
-  auto info = parse_stl(argv[1]);
-  vector<triangle> triangles = info.triangles;
-  auto outline = extract_part_base_outline(triangles);
-  auto surfaces = millable_surfaces(triangles);
-  stable_sort(begin(surfaces), end(surfaces),
-	      [](const vector<triangle>& tsl,
-		 const vector<triangle>& tsr)
-	      { return tsl.front().v1.z > tsr.front().v1.z; });
-
+vector<block> generate_mill_paths(const polyline& outline,
+				  vector<vector<triangle>>& surfaces) {
   double start_depth = surfaces.front().front().v1.z;
   double end_depth = outline.front().z;
 
-  double cut_depth = 0.35;
-  double inc = 0.1;
-  double deg = 90;
-  int num_phases = 1;
-
-  pocket_info_2P5D pocket(outline,
-			  inc,
-			  deg,
-			  num_phases,
-			  start_depth,
-			  end_depth,
-			  cut_depth);
+  pocket_info_2P5D pocket(outline, start_depth, end_depth);
 
   auto pocket_lines = pocket_2P5D_lines(pocket);
 
@@ -66,7 +42,25 @@ int main(int argc, char* argv[]) {
   params.target_machine = EMCO_F1;
   params.safe_height = start_depth + 0.05;
 
-  auto bs = cuts_to_gcode(cuts, params);
+  return cuts_to_gcode(cuts, params);
+}
+
+int main(int argc, char* argv[]) {
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  assert(argc == 2);
+
+  auto info = parse_stl(argv[1]);
+  vector<triangle> triangles = info.triangles;
+  auto outline = extract_part_base_outline(triangles);
+  auto surfaces = millable_surfaces(triangles);
+  stable_sort(begin(surfaces), end(surfaces),
+	      [](const vector<triangle>& tsl,
+		 const vector<triangle>& tsr)
+	      { return tsl.front().v1.z > tsr.front().v1.z; });
+
+  auto bs = generate_mill_paths(outline, surfaces);
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

@@ -35,3 +35,8 @@ misc
 analyze-gcodes
 feedrate_histogram.txt
 spindle_histogram.txt
+.cproject
+.project
+dummy-test
+stl-parse
+tool-simulator.app/

@@ -60,15 +60,18 @@ namespace gca {
     return paths;
   }
 
+  // TODO: Add in tool and workpiece info to compute cut_depth,
+  // the degree of the polyline and the number of offsets,
+  // and the offset increment
   vector<polyline> pocket_2P5D_lines(const pocket_info_2P5D& pocket) {
     auto paths = repeated_offsets(pocket.outline,
-				  pocket.num_phases,
-				  pocket.deg,
-				  pocket.inc);
+				  1,
+				  90,
+				  0.1);
     return tile_vertical(paths,
 			 pocket.start_depth,
 			 pocket.end_depth,
-			 pocket.cut_depth);
+			 0.35);
   }
 
   cut* mk_cut(const point l, const point r) {
