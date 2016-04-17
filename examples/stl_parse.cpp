@@ -21,22 +21,36 @@ polyline extract_part_base_outline(const vector<triangle>& tris) {
   return polyline(vertices);
 }
 
+pocket_info_2P5D surface_pocket_info(double z_level,
+				     const vector<triangle>& surface) {
+  auto polygons = merge_triangles(surface);
+  //assert(polygons.size() == 1);
+  vector<point> vertices = polygons.front().vertices;
+  vertices.push_back(vertices.front());
+  polyline p(vertices);
+  return pocket_info_2P5D(p, z_level, p.front().z);
+}
+
 vector<block> generate_mill_paths(const polyline& outline,
 				  vector<vector<triangle>>& surfaces) {
   double start_depth = surfaces.front().front().v1.z;
   double end_depth = outline.front().z;
-
+  double z_level = start_depth;
+  vector<polyline> pocket_lines;
+  for (auto surface : surfaces) {
+    pocket_info_2P5D sa = surface_pocket_info(z_level, surface);
+    auto pcs = pocket_2P5D_lines(sa);
+    pocket_lines.insert(end(pocket_lines), begin(pcs), end(pcs));
+  }
   pocket_info_2P5D pocket(outline, start_depth, end_depth);
-
-  auto pocket_lines = pocket_2P5D_lines(pocket);
+  auto pocket_cuts = pocket_2P5D_lines(pocket);
+  pocket_lines.insert(end(pocket_lines), begin(pocket_cuts), end(pocket_cuts));
 
   vector<cut*> cuts;
   for (auto p : pocket_lines) {
     auto cs = polyline_cuts(p);
     cuts.insert(cuts.end(), cs.begin(), cs.end());
   }
-
-  cout << "# cuts: " << cuts.size() << endl;
 
   cut_params params;
   params.target_machine = EMCO_F1;

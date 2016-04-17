@@ -30,7 +30,7 @@ namespace gca {
 
   vector<polyline> repeated_offsets(const polyline& p,
 				    int num_repeats,
-				    double degrees,
+				    offset_dir d,
 				    double inc);
 
   vector<polyline> pocket_2P5D_lines(const pocket_info_2P5D& pocket);

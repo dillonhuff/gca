@@ -11,7 +11,7 @@ namespace gca {
     
     SECTION("One segment") {
       polyline p({point(0, 0, 0), point(1, 0, 0)});
-      auto off = offset(p, 90, 3.0);
+      auto off = offset(p, OFFSET_LEFT, 3.0);
       polyline correct({point(0, 3, 0), point(1, 3, 0)});
       REQUIRE(pointwise_within_eps(off, correct, 0.000001));
     }
@@ -21,10 +21,10 @@ namespace gca {
       point p2(0, 1, 0);
       point p3(2, 1, 0);
       point p4(3, 2, 0);
-      double deg = -90;
       double inc = 0.5;
+      double deg = -90;
       polyline p({p1, p2, p3, p4});
-      auto off = offset(p, deg, inc);
+      auto off = offset(p, OFFSET_RIGHT, inc);
       point c1(0.5, 0, 0);
       point c2(0.5, 0.5, 0);
       line l1(p2, p3);
@@ -45,10 +45,10 @@ namespace gca {
       point p3(10, 3, -1);
       polyline p({p1, p2, p3, p1});
 
-      double deg = 90;
       double inc = 0.2;
+      double deg = 90;
 
-      auto off = offset(p, deg, inc);
+      auto off = offset(p, OFFSET_LEFT, inc);
 
       line l1(p1, p2);
       point i1 = inc*((p2 - p1).normalize().rotate_z(deg));
@@ -78,7 +78,7 @@ namespace gca {
       double inc = 0.1;
       double deg = 90;
 
-      auto off = offset(p, deg, inc);
+      auto off = offset(p, OFFSET_LEFT, inc);
 
       point c1(0, 0.1, 0);
       point c2(1.1, 0.1, 0);

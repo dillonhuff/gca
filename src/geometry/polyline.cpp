@@ -12,9 +12,10 @@ namespace gca {
 
   // TODO: Add assertion to check for simplicity, e.g. the only
   // intersection of the lines is potentially the first and last point
-  polyline offset(const polyline& p, double degrees, double n) {
+  polyline offset(const polyline& p, offset_dir d, double n) {
     assert(p.num_points() > 1);
     vector<line> initial_lines;
+    double degrees = d == OFFSET_LEFT ? 90.0 : -90.0;
     for (auto l : p.lines()) {
       auto offset_vec = n * ((l.end - l.start).normalize()).rotate_z(degrees);
       initial_lines.push_back(line(l.start + offset_vec, l.end + offset_vec));

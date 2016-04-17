@@ -50,9 +50,14 @@ namespace gca {
     return polyline(pts);
   }
 
+  enum offset_dir {
+    OFFSET_LEFT,
+    OFFSET_RIGHT
+  };
+
   bool pointwise_within_eps(const polyline& p, const polyline& q, double tol);
 
-  polyline offset(const polyline& p, double degrees, double n);
+  polyline offset(const polyline& p, offset_dir d, double n);
 }
 
 #endif
