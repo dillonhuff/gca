@@ -64,9 +64,10 @@ namespace gca {
   // the degree of the polyline and the number of offsets,
   // and the offset increment
   vector<polyline> pocket_2P5D_lines(const pocket_info_2P5D& pocket) {
+    offset_dir d = exterior_direction(pocket.outline);
     auto paths = repeated_offsets(pocket.outline,
 				  1,
-				  OFFSET_LEFT,
+				  d,
 				  0.1);
     return tile_vertical(paths,
 			 pocket.start_depth,

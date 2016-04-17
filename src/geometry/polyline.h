@@ -55,6 +55,8 @@ namespace gca {
     OFFSET_RIGHT
   };
 
+  bool is_closed(const polyline& p);
+  offset_dir exterior_direction(const polyline& p);
   bool pointwise_within_eps(const polyline& p, const polyline& q, double tol);
 
   polyline offset(const polyline& p, offset_dir d, double n);

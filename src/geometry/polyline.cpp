@@ -4,6 +4,19 @@
 
 namespace gca {
 
+  bool is_closed(const polyline& p) {
+    return within_eps(p.front(), p.back());
+  }
+
+  offset_dir exterior_direction(const polyline& p) {
+    assert(is_closed(p));
+    double signed_a = 0.0;
+    for (auto l : p.lines()) {
+      signed_a += (l.end.x - l.start.x)*(l.end.y + l.start.y);
+    }
+    return signed_a >= 0.0 ? OFFSET_LEFT : OFFSET_RIGHT;
+  }
+
   bool pointwise_within_eps(const polyline& p, const polyline& q, double tol) {
     if (!(p.num_points() == q.num_points())) { return false; }
     return mismatch(p.begin(), p.end(), q.begin(),

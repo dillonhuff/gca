@@ -70,9 +70,9 @@ namespace gca {
     }
 
     SECTION("Offset that produced nan") {
-      point p1(0, 0, 0); //(0.602907, 1.36214, 1e-06);
-      point p2(1, 0, 0); //(1.60291, 1.36214, 1e-06);
-      point p3(1, -1, 0); //(1.60291, 0.362136, 1e-06);
+      point p1(0, 0, 0);
+      point p2(1, 0, 0);
+      point p3(1, -1, 0);
 
       polyline p({p1, p2, p3});
       double inc = 0.1;
@@ -92,5 +92,23 @@ namespace gca {
 
       REQUIRE(pointwise_within_eps(off, correct, 0.00001));
     }
+  }
+
+  TEST_CASE("Exterior direction") {
+    polyline p({point(0, 0, 0),
+	  point(1, 0, 0),
+	  point(1, 1, 0),
+	  point(0, 1, 0),
+	  point(0, 0, 0)});
+
+    SECTION("exterior direction is OFFSET_RIGHT") {
+      REQUIRE(exterior_direction(p) == OFFSET_RIGHT);
+    }
+
+    SECTION("exterior direction is OFFSET_LEFT") {
+      reverse(begin(p), end(p));
+      REQUIRE(exterior_direction(p) == OFFSET_LEFT);
+    }
+
   }
 }
