@@ -1,3 +1,5 @@
+#include "synthesis/cut.h"
+#include "synthesis/linear_cut.h"
 #include "synthesis/toolpath_generation.h"
 
 namespace gca {
@@ -68,4 +70,22 @@ namespace gca {
 			 pocket.end_depth,
 			 pocket.cut_depth);
   }
+
+  cut* mk_cut(const point l, const point r) {
+    auto c = linear_cut::make(l, r);
+    c->set_spindle_speed(lit::make(3000));
+    c->set_feedrate(lit::make(10));
+    return c;
+  }
+
+  vector<cut*> polyline_cuts(const polyline& p) {
+    auto ls = p.lines();
+    assert(ls.size() > 0);
+    vector<cut*> c;
+    for (auto l : ls) {
+      c.push_back(mk_cut(l.start, l.end));
+    }
+    return c;
+  }
+
 }

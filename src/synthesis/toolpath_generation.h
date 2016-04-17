@@ -49,6 +49,8 @@ namespace gca {
 
   vector<polyline> pocket_2P5D_lines(const pocket_info_2P5D& pocket);
 
+  vector<cut*> polyline_cuts(const polyline& p);
+
 }
 
 #endif
