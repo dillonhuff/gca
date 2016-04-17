@@ -57,7 +57,11 @@ namespace gca {
 
   bool is_closed(const polyline& p);
   offset_dir exterior_direction(const polyline& p);
+  offset_dir interior_direction(const polyline& p);
   bool pointwise_within_eps(const polyline& p, const polyline& q, double tol);
+
+  double area(const polyline& p);
+  double signed_area(const polyline& p);
 
   polyline offset(const polyline& p, offset_dir d, double n);
 }

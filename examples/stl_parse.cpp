@@ -32,18 +32,19 @@ pocket_info_2P5D surface_pocket_info(double z_level,
 }
 
 vector<block> generate_mill_paths(const polyline& outline,
-				  vector<vector<triangle>>& surfaces) {
+				  vector<vector<triangle>>& surfaces,
+				  double tool_diameter) {
   double start_depth = surfaces.front().front().v1.z;
   double end_depth = outline.front().z;
   double z_level = start_depth;
   vector<polyline> pocket_lines;
   for (auto surface : surfaces) {
     pocket_info_2P5D sa = surface_pocket_info(z_level, surface);
-    auto pcs = pocket_2P5D_lines(sa);
+    auto pcs = pocket_2P5D_interior(sa, tool_diameter);
     pocket_lines.insert(end(pocket_lines), begin(pcs), end(pcs));
   }
   pocket_info_2P5D pocket(outline, start_depth, end_depth);
-  auto pocket_cuts = pocket_2P5D_lines(pocket);
+  auto pocket_cuts = pocket_2P5D_exterior(pocket);
   pocket_lines.insert(end(pocket_lines), begin(pocket_cuts), end(pocket_cuts));
 
   vector<cut*> cuts;
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
 		 const vector<triangle>& tsr)
 	      { return tsl.front().v1.z > tsr.front().v1.z; });
 
-  auto bs = generate_mill_paths(outline, surfaces);
+  auto bs = generate_mill_paths(outline, surfaces, 0.1);
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

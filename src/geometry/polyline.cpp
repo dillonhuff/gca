@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "geometry/line.h"
 #include "geometry/polyline.h"
 #include "system/algorithm.h"
@@ -8,13 +10,27 @@ namespace gca {
     return within_eps(p.front(), p.back());
   }
 
-  offset_dir exterior_direction(const polyline& p) {
+  double signed_area(const polyline& p) {
     assert(is_closed(p));
     double signed_a = 0.0;
     for (auto l : p.lines()) {
       signed_a += (l.end.x - l.start.x)*(l.end.y + l.start.y);
     }
-    return signed_a >= 0.0 ? OFFSET_LEFT : OFFSET_RIGHT;
+    return signed_a / 2.0;
+  }
+
+  double area(const polyline& p) {
+    double sa = signed_area(p);
+    return abs(sa);
+  }
+
+  offset_dir exterior_direction(const polyline& p) {
+    assert(is_closed(p));
+    return signed_area(p) >= 0.0 ? OFFSET_LEFT : OFFSET_RIGHT;
+  }
+
+  offset_dir interior_direction(const polyline& p) {
+    return exterior_direction(p) == OFFSET_LEFT ? OFFSET_RIGHT : OFFSET_LEFT;
   }
 
   bool pointwise_within_eps(const polyline& p, const polyline& q, double tol) {

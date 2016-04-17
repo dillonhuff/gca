@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "synthesis/cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/toolpath_generation.h"
@@ -60,10 +62,9 @@ namespace gca {
     return paths;
   }
 
-  // TODO: Add in tool and workpiece info to compute cut_depth,
-  // the degree of the polyline and the number of offsets,
+  // TODO: Add in tool and workpiece info to compute cut_depth
   // and the offset increment
-  vector<polyline> pocket_2P5D_lines(const pocket_info_2P5D& pocket) {
+  vector<polyline> pocket_2P5D_exterior(const pocket_info_2P5D& pocket) {
     offset_dir d = exterior_direction(pocket.outline);
     auto paths = repeated_offsets(pocket.outline,
 				  1,
@@ -74,6 +75,30 @@ namespace gca {
 			 pocket.end_depth,
 			 0.35);
   }
+
+  vector<polyline> pocket_2P5D_interior(const pocket_info_2P5D& pocket,
+					double tool_diameter) {
+    assert(tool_diameter > 0.0);
+    offset_dir dir = interior_direction(pocket.outline);
+    double tool_radius = tool_diameter / 2.0;
+    double tool_surface_area = M_PI * tool_radius * tool_radius;
+    vector<polyline> paths;
+    polyline off = offset(pocket.outline,
+			  dir,
+			  tool_radius);
+    while (area(off) > tool_surface_area) {
+      paths.push_back(off);
+      off = offset(off,
+		   dir,
+		   tool_radius);
+    }
+    assert(paths.size() > 0);
+    return tile_vertical(paths,
+			 pocket.start_depth,
+			 pocket.end_depth,
+			 0.35);
+  }
+
 
   cut* mk_cut(const point l, const point r) {
     auto c = linear_cut::make(l, r);
