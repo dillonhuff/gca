@@ -2,6 +2,7 @@
 
 #include "synthesis/cut.h"
 #include "synthesis/linear_cut.h"
+#include "synthesis/shape_layout.h"
 #include "synthesis/toolpath_generation.h"
 
 namespace gca {
