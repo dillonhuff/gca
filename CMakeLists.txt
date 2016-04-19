@@ -38,7 +38,8 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/toolpath_tests.cpp
 	       test/cut_scheduling_tests.cpp
 	       test/gcode_to_cuts_tests.cpp
-	       test/machine_state_tests.cpp)
+	       test/machine_state_tests.cpp
+	       test/axis_3_tests.cpp)
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
@@ -57,6 +58,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
+	    ./src/synthesis/axis_3.h
 	    ./src/system/arena_allocator.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
@@ -97,6 +99,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/synthesis/toolpath_generation.cpp
+	 ./src/synthesis/axis_3.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/arena_allocator.cpp

@@ -1415,6 +1415,48 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
+src/synthesis/axis_3.o: src/synthesis/axis_3.cpp.o
+
+.PHONY : src/synthesis/axis_3.o
+
+# target to build an object file
+src/synthesis/axis_3.cpp.o:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/axis_3.cpp.o
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/axis_3.cpp.o
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/axis_3.cpp.o
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/axis_3.cpp.o
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/axis_3.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/axis_3.cpp.o
+.PHONY : src/synthesis/axis_3.cpp.o
+
+src/synthesis/axis_3.i: src/synthesis/axis_3.cpp.i
+
+.PHONY : src/synthesis/axis_3.i
+
+# target to preprocess a source file
+src/synthesis/axis_3.cpp.i:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/axis_3.cpp.i
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/axis_3.cpp.i
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/axis_3.cpp.i
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/axis_3.cpp.i
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/axis_3.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/axis_3.cpp.i
+.PHONY : src/synthesis/axis_3.cpp.i
+
+src/synthesis/axis_3.s: src/synthesis/axis_3.cpp.s
+
+.PHONY : src/synthesis/axis_3.s
+
+# target to generate assembly for a file
+src/synthesis/axis_3.cpp.s:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/axis_3.cpp.s
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/src/synthesis/axis_3.cpp.s
+	$(MAKE) -f CMakeFiles/misc.dir/build.make CMakeFiles/misc.dir/src/synthesis/axis_3.cpp.s
+	$(MAKE) -f CMakeFiles/print-dxf.dir/build.make CMakeFiles/print-dxf.dir/src/synthesis/axis_3.cpp.s
+	$(MAKE) -f CMakeFiles/hello-world.dir/build.make CMakeFiles/hello-world.dir/src/synthesis/axis_3.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/axis_3.cpp.s
+.PHONY : src/synthesis/axis_3.cpp.s
+
 src/synthesis/cut.o: src/synthesis/cut.cpp.o
 
 .PHONY : src/synthesis/cut.o
@@ -2225,6 +2267,33 @@ test/arc_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.s
 .PHONY : test/arc_tests.cpp.s
 
+test/axis_3_tests.o: test/axis_3_tests.cpp.o
+
+.PHONY : test/axis_3_tests.o
+
+# target to build an object file
+test/axis_3_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_3_tests.cpp.o
+.PHONY : test/axis_3_tests.cpp.o
+
+test/axis_3_tests.i: test/axis_3_tests.cpp.i
+
+.PHONY : test/axis_3_tests.i
+
+# target to preprocess a source file
+test/axis_3_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_3_tests.cpp.i
+.PHONY : test/axis_3_tests.cpp.i
+
+test/axis_3_tests.s: test/axis_3_tests.cpp.s
+
+.PHONY : test/axis_3_tests.s
+
+# target to generate assembly for a file
+test/axis_3_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_3_tests.cpp.s
+.PHONY : test/axis_3_tests.cpp.s
+
 test/checker_tests.o: test/checker_tests.cpp.o
 
 .PHONY : test/checker_tests.o
@@ -2926,6 +2995,9 @@ help:
 	@echo "... src/synthesis/align_blade.o"
 	@echo "... src/synthesis/align_blade.i"
 	@echo "... src/synthesis/align_blade.s"
+	@echo "... src/synthesis/axis_3.o"
+	@echo "... src/synthesis/axis_3.i"
+	@echo "... src/synthesis/axis_3.s"
 	@echo "... src/synthesis/cut.o"
 	@echo "... src/synthesis/cut.i"
 	@echo "... src/synthesis/cut.s"
@@ -2986,6 +3058,9 @@ help:
 	@echo "... test/arc_tests.o"
 	@echo "... test/arc_tests.i"
 	@echo "... test/arc_tests.s"
+	@echo "... test/axis_3_tests.o"
+	@echo "... test/axis_3_tests.i"
+	@echo "... test/axis_3_tests.s"
 	@echo "... test/checker_tests.o"
 	@echo "... test/checker_tests.i"
 	@echo "... test/checker_tests.s"
