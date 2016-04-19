@@ -101,8 +101,20 @@ vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z
   return pts;
 }
 
+
+box bounding_box(const oriented_polygon& p) {
+  return bound_positions(p.vertices);
+}
+
+// Make this actual polygon containment
 bool contains(const oriented_polygon& g, point p) {
-  return false;
+  box b = bounding_box(g);
+  if ((b.x_min <= p.x && p.x <= b.x_max) && (b.y_min <= p.y && p.y <= b.y_max)) {
+    cout << "Deleting" << endl;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // TODO: Fill in
@@ -116,11 +128,6 @@ bool contained_by_any(point p, InputIt l, InputIt r) {
   }
   return false;
 }
-
-box bounding_box(const oriented_polygon& p) {
-  return bound_positions(p.vertices);
-}
-
 template<typename InputIt>
 box bounding_box(InputIt s, InputIt e) {
   vector<box> boxes;
@@ -131,30 +138,59 @@ box bounding_box(InputIt s, InputIt e) {
   return bound_boxes(boxes);
 }
 
+bool overlaps(line l, const oriented_polygon& p) {
+  polyline pl(p.vertices);
+  for (auto pll : pl.lines()) {
+    if (segment_intersection_2d(l, pll).just)
+      { return true; }
+  }
+  return false;
+}
+
+template<typename InputIt>
+bool overlaps_any(line l, InputIt s, InputIt e) {
+  while (s != e) {
+    if (overlaps(l, *s)) {
+      return true;
+    }
+    ++s;
+  }
+  return false;
+}
+
 template<typename InputIt>
 vector<polyline> level_roughing(InputIt s, InputIt m, InputIt e, double last_level) {
   box b = bounding_box(m, e);
+  cout << "Bounding box" << endl;
+  cout << b << endl;
   // Select sample rate from tool_diameter
-  auto toolpath_points = sample_points_2d(b, 0.025, 0.025, last_level);
+  auto toolpath_points = sample_points_2d(b, 0.05, 0.05, last_level);
   delete_if(toolpath_points,
 	    [s, m](const point p)
 	    { return contained_by_any(p, s, m); });
-  vector<polyline> lines{toolpath_points};
+  assert(toolpath_points.size() > 0);
+  vector<vector<point>> lpts;
+  split_by(toolpath_points, lpts,
+	   [s, m](const point l, const point r)
+	   { return !overlaps_any(line(l, r), s, m); });
+  vector<polyline> lines;
+  for (auto ls : lpts) {
+    lines.push_back(ls);
+  }
   return lines;
 }
 
 vector<block> generate_mill_paths(const vector<triangle>& triangles,
 				  double tool_diameter) {
   auto polygons = merge_triangles(triangles);
-  cout << "# of polygons: " << polygons.size() << endl;
-  for (auto p : polygons) {
-    assert(p.vertices.size() > 0);
-  }
-  // TODO: Add polygon depth check
   stable_sort(begin(polygons), end(polygons),
 	      [](const oriented_polygon& x,
 		 const oriented_polygon& y)
 	      { return x.vertices.front().z > y.vertices.front().z; });
+  cout << "# of polygons: " << polygons.size() << endl;  
+  for (auto p : polygons) {
+    cout << "z level = " << p.vertices.front().z << endl;
+  }
   double start_depth = polygons.front().vertices.front().z;
   double last_level = start_depth;
   auto below_level = begin(polygons);
@@ -165,10 +201,12 @@ vector<block> generate_mill_paths(const vector<triangle>& triangles,
 				      end(polygons),
 				      last_level);
     pocket_lines.insert(end(pocket_lines), begin(level_rough), end(level_rough));
-    last_level = (*below_level).vertices.front().z;
     below_level = find_if(below_level, end(polygons),
 			  [last_level](const oriented_polygon& p)
-			  { return !within_eps(p.vertices.front().z, last_level); });
+			  { return !within_eps(p.vertices.front().z, last_level, 0.01); });
+    if (below_level != end(polygons)) {
+      last_level = (*below_level).vertices.front().z;
+    }
   }
   return emco_f1_code(pocket_lines, start_depth);
 }
