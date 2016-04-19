@@ -63,12 +63,6 @@ namespace gca {
     return bound_boxes(boxes);
   }
 
-  // Make this actual polygon containment
-  bool contains(const oriented_polygon& g, point p) {
-    box b = bounding_box(g);
-    return (b.x_min <= p.x && p.x <= b.x_max) && (b.y_min <= p.y && p.y <= b.y_max);
-  }
-
   template<typename InputIt>
   bool contained_by_any(point p, InputIt l, InputIt r) {
     while (l != r) {
@@ -135,8 +129,8 @@ namespace gca {
     // TODO: Select sample rate from tool_diameter
     auto toolpath_points = sample_points_2d(b, 0.05, 0.05, last_level);
     delete_if(toolpath_points,
-	      [&offset_holes](const point p)
-	      { return contained_by_any(p, begin(offset_holes), end(offset_holes)); });
+    	      [&offset_holes](const point p)
+    	      { return contained_by_any(p, begin(offset_holes), end(offset_holes)); });
     delete_if(toolpath_points,
 	      [&bound_polys](const point p)
 	      { return !contained_by_any(p, begin(bound_polys), end(bound_polys)); });

@@ -15,8 +15,11 @@ namespace gca {
 
     oriented_polygon(point normalp, const vector<point>& verticesp) :
       normal(normalp), vertices(verticesp) {}
+
+    inline point pt(unsigned i) const { return vertices[i]; }
   };
 
+  bool contains(const oriented_polygon& g, point p);
   bool is_horizontal(const oriented_polygon& p);
 }
 

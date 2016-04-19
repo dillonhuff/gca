@@ -18,7 +18,7 @@ namespace gca {
 
     SECTION("Multiple cylinders 2") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders2.stl").triangles;
-      double tool_diameter = 0.125;
+      double tool_diameter = 0.000125;
       auto mill_lines = mill_surface_lines(triangles, tool_diameter);
       REQUIRE(mill_lines.size() > 0);
     }
