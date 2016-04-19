@@ -31,53 +31,6 @@ polyline extract_part_base_outline(const vector<triangle>& tris) {
   return polyline(vertices);
 }
 
-// template<typename InputIt>
-// pocket_info_2P5D surface_pocket_info(double z_level,
-// 				     InputIt surface,
-// 				     InputIt below,
-// 				     InputIt end) {
-//   // auto polygons = merge_triangles(vector<triangle>(surface, end));
-//   // //assert(polygons.size() == 1);
-//   // vector<point> vertices = polygons.front().vertices;
-//   // vertices.push_back(vertices.front());
-//   // polyline p(vertices);
-//   // return pocket_info_2P5D(p, z_level, p.front().z);
-// }
-
-// vector<block> generate_mill_paths(const polyline& outline,
-// 				  vector<vector<triangle>>& surfaces,
-// 				  double tool_diameter) {
-//   stable_sort(begin(surfaces), end(surfaces),
-// 	      [](const vector<triangle>& tsl,
-// 		 const vector<triangle>& tsr)
-// 	      { return tsl.front().v1.z > tsr.front().v1.z; });
-//   double start_depth = surfaces.front().front().v1.z;
-//   double z_level = start_depth;
-//   auto below_level = begin(surfaces);
-//   auto above_level = begin(surfaces);
-//   vector<polyline> pocket_lines;
-//   while (below_level < end(surfaces)) {
-//     pocket_info_2P5D sa = surface_pocket_info(z_level,
-// 					      below_level,
-// 					      above_level,
-// 					      end(surfaces));
-//     auto pcs = pocket_2P5D_interior(sa, tool_diameter);
-//     below_level = find_if(below_level, end(surfaces),
-// 			  [z_level](const vector<triangle>& t)
-// 			  { return !within_eps(t.front().v1.z, z_level); });
-//     pocket_lines.insert(end(pocket_lines), begin(pcs), end(pcs));
-//   }
-//   double end_depth = outline.front().z;
-//   pocket_info_2P5D pocket(outline, start_depth, end_depth);
-//   auto pocket_cuts = pocket_2P5D_exterior(pocket);
-//   pocket_lines.insert(end(pocket_lines), begin(pocket_cuts), end(pocket_cuts));
-
-//   cut_params params;
-//   params.target_machine = EMCO_F1;
-//   params.safe_height = start_depth + 0.05;
-//   return polylines_cuts(pocket_lines, params);
-// }
-
 vector<block> emco_f1_code(const vector<polyline>& pocket_lines,
 			   double start_depth) {
   cut_params params;
@@ -97,27 +50,29 @@ vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z
     }
     x += x_inc;
   }
-  cout << "# pts = " << pts.size() << endl;
   return pts;
 }
-
 
 box bounding_box(const oriented_polygon& p) {
   return bound_positions(p.vertices);
 }
 
+template<typename InputIt>
+box bounding_box(InputIt s, InputIt e) {
+  vector<box> boxes;
+  while (s != e) {
+    boxes.push_back(bounding_box(*s));
+    ++s;
+  }
+  return bound_boxes(boxes);
+}
+
 // Make this actual polygon containment
 bool contains(const oriented_polygon& g, point p) {
   box b = bounding_box(g);
-  if ((b.x_min <= p.x && p.x <= b.x_max) && (b.y_min <= p.y && p.y <= b.y_max)) {
-    cout << "Deleting" << endl;
-    return true;
-  } else {
-    return false;
-  }
+  return (b.x_min <= p.x && p.x <= b.x_max) && (b.y_min <= p.y && p.y <= b.y_max);
 }
 
-// TODO: Fill in
 template<typename InputIt>
 bool contained_by_any(point p, InputIt l, InputIt r) {
   while (l != r) {
@@ -127,15 +82,6 @@ bool contained_by_any(point p, InputIt l, InputIt r) {
     ++l;
   }
   return false;
-}
-template<typename InputIt>
-box bounding_box(InputIt s, InputIt e) {
-  vector<box> boxes;
-  while (s != e) {
-    boxes.push_back(bounding_box(*s));
-    ++s;
-  }
-  return bound_boxes(boxes);
 }
 
 bool overlaps(line l, const oriented_polygon& p) {
@@ -158,21 +104,51 @@ bool overlaps_any(line l, InputIt s, InputIt e) {
   return false;
 }
 
+oriented_polygon exterior_offset(const oriented_polygon& p,
+				 double inc) {
+  auto vs = p.vertices;
+  vs.push_back(p.vertices.front());
+  polyline pl(vs);
+  auto off_l = offset(pl, exterior_direction(pl), inc);
+  vector<point> pts(begin(off_l), end(off_l));
+  return oriented_polygon(p.normal, pts);
+}
+
+oriented_polygon interior_offset(const oriented_polygon& p,
+				 double inc) {
+  auto vs = p.vertices;
+  vs.push_back(p.vertices.front());
+  polyline pl(vs);
+  auto off_l = offset(pl, interior_direction(pl), inc);
+  vector<point> pts(begin(off_l), end(off_l));
+  return oriented_polygon(p.normal, pts);
+}
+
+// TODO: Add tool diameter plan
 template<typename InputIt>
 vector<polyline> level_roughing(InputIt s, InputIt m, InputIt e, double last_level) {
-  box b = bounding_box(m, e);
-  cout << "Bounding box" << endl;
-  cout << b << endl;
-  // Select sample rate from tool_diameter
+  vector<oriented_polygon> offset_holes(distance(s, m));
+  transform(s, m, begin(offset_holes),
+	    [](const oriented_polygon& p)
+	    { return exterior_offset(p, 0.01); });
+  vector<oriented_polygon> bound_polys(distance(m, e));
+  transform(m, e, begin(bound_polys),
+	    [](const oriented_polygon& p)
+	    { return interior_offset(p, 0.01); });
+  box b = bounding_box(begin(bound_polys), end(bound_polys));
+  // TODO: Select sample rate from tool_diameter
   auto toolpath_points = sample_points_2d(b, 0.05, 0.05, last_level);
   delete_if(toolpath_points,
-	    [s, m](const point p)
-	    { return contained_by_any(p, s, m); });
+	    [&offset_holes](const point p)
+	    { return contained_by_any(p, begin(offset_holes), end(offset_holes)); });
+  delete_if(toolpath_points,
+	    [&bound_polys](const point p)
+	    { return !contained_by_any(p, begin(bound_polys), end(bound_polys)); });
   assert(toolpath_points.size() > 0);
   vector<vector<point>> lpts;
   split_by(toolpath_points, lpts,
-	   [s, m](const point l, const point r)
-	   { return !overlaps_any(line(l, r), s, m); });
+	   [&offset_holes](const point l, const point r)
+	   { return !overlaps_any(line(l, r), begin(offset_holes), end(offset_holes)); });
   vector<polyline> lines;
   for (auto ls : lpts) {
     lines.push_back(ls);

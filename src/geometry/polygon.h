@@ -10,6 +10,9 @@ namespace gca {
     point normal;
     vector<point> vertices;
 
+    oriented_polygon() :
+      normal(point(0, 0, 0)), vertices({}) {}
+
     oriented_polygon(point normalp, const vector<point>& verticesp) :
       normal(normalp), vertices(verticesp) {}
   };
