@@ -1,5 +1,4 @@
 #include "geometry/polygon.h"
-#include "geometry/polyline.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
@@ -29,11 +28,10 @@ namespace gca {
     return polyline(vertices);
   }
 
-  vector<block> emco_f1_code(const vector<polyline>& pocket_lines,
-			     double start_depth) {
+  vector<block> emco_f1_code(const vector<polyline>& pocket_lines) {
     cut_params params;
     params.target_machine = EMCO_F1;
-    params.safe_height = start_depth + 0.05;
+    params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
     return polylines_cuts(pocket_lines, params);
   }
 
@@ -154,8 +152,8 @@ namespace gca {
     return lines;
   }
 
-  vector<block> mill_surface(vector<triangle>& triangles,
-			     double tool_diameter) {
+  vector<polyline> mill_surface_lines(vector<triangle>& triangles,
+				      double tool_diameter) {
     delete_if(triangles,
 	      [](const triangle t)
 	      { return !is_upward_facing(t, 0.01); });
@@ -185,7 +183,13 @@ namespace gca {
 	last_level = (*below_level).vertices.front().z;
       }
     }
-    return emco_f1_code(pocket_lines, start_depth);
+    return pocket_lines;
+  }
+  
+  vector<block> mill_surface(vector<triangle>& triangles,
+			     double tool_diameter) {
+    auto pocket_lines = mill_surface_lines(triangles, tool_diameter);
+    return emco_f1_code(pocket_lines);
   }
 
 }
