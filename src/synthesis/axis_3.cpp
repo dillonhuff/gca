@@ -117,14 +117,27 @@ namespace gca {
   // TODO: Add tool diameter parameter
   template<typename InputIt>
   vector<polyline> level_roughing(InputIt s, InputIt m, InputIt e, double last_level) {
-    vector<oriented_polygon> offset_holes(distance(s, m));
-    transform(s, m, begin(offset_holes),
+    vector<oriented_polygon> offset_h(distance(s, m));
+    transform(s, m, begin(offset_h),
 	      [](const oriented_polygon& p)
 	      { return exterior_offset(p, 0.01); });
     vector<oriented_polygon> bound_polys(distance(m, e));
     transform(m, e, begin(bound_polys),
 	      [](const oriented_polygon& p)
 	      { return interior_offset(p, 0.01); });
+    vector<oriented_polygon> offset_holes;
+    for (auto hole : offset_h) {
+      bool contained_by_bound = false;
+      for (auto b : bound_polys) {
+	if (contains(b, hole)) {
+	  contained_by_bound = true;
+	  break;
+	}
+      }
+      if (contained_by_bound) {
+	offset_holes.push_back(hole);
+      }
+    }
     box b = bounding_box(begin(bound_polys), end(bound_polys));
     // TODO: Select sample rate from tool_diameter
     auto toolpath_points = sample_points_2d(b, 0.05, 0.05, last_level);

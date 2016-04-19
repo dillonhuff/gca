@@ -22,7 +22,17 @@ namespace gca {
       dtheta += 2*M_PI; //TWOPI;
 
     return(dtheta);
-  }  
+  }
+
+  bool contains(const oriented_polygon& poly,
+		const oriented_polygon& maybe_contained) {
+    for (auto pt : maybe_contained.vertices) {
+      if (!contains(poly, pt)) {
+	return false;
+      }
+    }
+    return true;
+  }
 
   bool contains(const oriented_polygon& poly, point p)
   {

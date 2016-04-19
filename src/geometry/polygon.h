@@ -20,6 +20,9 @@ namespace gca {
   };
 
   bool contains(const oriented_polygon& g, point p);
+  bool contains(const oriented_polygon& poly,
+		const oriented_polygon& maybe_contained);
+
   bool is_horizontal(const oriented_polygon& p);
 }
 
