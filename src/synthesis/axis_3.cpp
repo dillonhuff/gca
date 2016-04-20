@@ -16,6 +16,13 @@ namespace gca {
     return cuts_to_gcode(cuts, params);
   }
 
+  vector<block> emco_f1_code(const vector<polyline>& pocket_lines) {
+    cut_params params;
+    params.target_machine = EMCO_F1;
+    params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
+    return polylines_cuts(pocket_lines, params);
+  }
+  
   polyline extract_part_base_outline(const vector<triangle>& tris) {
     auto triangles = tris;
     delete_if(triangles, [](const triangle& t)
@@ -28,67 +35,13 @@ namespace gca {
     return polyline(vertices);
   }
 
-  vector<block> emco_f1_code(const vector<polyline>& pocket_lines) {
-    cut_params params;
-    params.target_machine = EMCO_F1;
-    params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
-    return polylines_cuts(pocket_lines, params);
-  }
-
-  box bounding_box(const oriented_polygon& p) {
-    return bound_positions(p.vertices);
-  }
-
-  template<typename InputIt>
-  bool contained_by_any(point p, InputIt l, InputIt r) {
-    while (l != r) {
-      if (contains(*l, p)) {
-	return true;
-      }
-      ++l;
-    }
-    return false;
-  }
-
-  bool overlaps(line l, const oriented_polygon& p) {
-    polyline pl(p.vertices);
-    for (auto pll : pl.lines()) {
-      if (segment_intersection_2d(l, pll).just)
-	{ return true; }
-    }
-    return false;
-  }
-
   template<typename InputIt>
   bool overlaps_any(line l, InputIt s, InputIt e) {
-    while (s != e) {
-      if (overlaps(l, *s)) {
-	return true;
-      }
-      ++s;
-    }
-    return false;
+    return any_of(s, e,
+		  [l](const oriented_polygon& p)
+		  { return overlaps(l, p); });
   }
 
-  oriented_polygon exterior_offset(const oriented_polygon& p,
-				   double inc) {
-    auto vs = p.vertices;
-    vs.push_back(p.vertices.front());
-    polyline pl(vs);
-    auto off_l = offset(pl, exterior_direction(pl), inc);
-    vector<point> pts(begin(off_l), end(off_l));
-    return oriented_polygon(p.normal, pts);
-  }
-
-  oriented_polygon interior_offset(const oriented_polygon& p,
-				   double inc) {
-    auto vs = p.vertices;
-    vs.push_back(p.vertices.front());
-    polyline pl(vs);
-    auto off_l = offset(pl, interior_direction(pl), inc);
-    vector<point> pts(begin(off_l), end(off_l));
-    return oriented_polygon(p.normal, pts);
-  }
 
   vector<polyline> roughing_lines(const vector<oriented_polygon>& holes,
 				  const vector<oriented_polygon>& boundaries,
@@ -102,10 +55,14 @@ namespace gca {
 					    last_level);
     delete_if(toolpath_points,
     	      [&holes](const point p)
-    	      { return contained_by_any(p, begin(holes), end(holes)); });
+    	      { return any_of(begin(holes), end(holes),
+			      [p](const oriented_polygon& pl)
+			      { return contains(pl, p); }); });
     delete_if(toolpath_points,
 	      [&boundaries](const point p)
-	      { return !contained_by_any(p, begin(boundaries), end(boundaries)); });
+	      { return !any_of(begin(boundaries), end(boundaries),
+			       [p](const oriented_polygon& pl)
+			       { return contains(pl, p); }); });
     assert(toolpath_points.size() > 0);
     vector<vector<point>> lpts;
     split_by(toolpath_points, lpts,
