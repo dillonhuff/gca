@@ -18,7 +18,17 @@ int main(int argc, char* argv[]) {
 
   auto info = parse_stl(argv[1]);
   vector<triangle> triangles = info.triangles;
-  auto bs = mill_surface(triangles, 0.1);
+  auto lines = mill_surface_lines(triangles, 0.1);
+  point shift(-3, -2.5, -0.5);
+  vector<polyline> shifted_lines;
+  for (auto l : lines) {
+    vector<point> pts;
+    for (auto pt : l) {
+      pts.push_back(pt + shift);
+    }
+    shifted_lines.push_back(pts);
+  }
+  auto bs = emco_f1_code(shifted_lines);
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);

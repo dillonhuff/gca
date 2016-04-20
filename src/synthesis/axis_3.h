@@ -12,7 +12,8 @@ namespace gca {
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
 				      double tool_diameter);
-  
+
+  vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
 }
 
 #endif

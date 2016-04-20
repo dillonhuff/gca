@@ -104,7 +104,7 @@ namespace gca {
   cut* mk_cut(const point l, const point r) {
     auto c = linear_cut::make(l, r);
     c->set_spindle_speed(lit::make(3000));
-    c->set_feedrate(lit::make(10));
+    c->set_feedrate(lit::make(6.4));
     return c;
   }
 

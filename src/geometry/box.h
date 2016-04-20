@@ -35,6 +35,19 @@ namespace gca {
   box bound_positions(const vector<point>& pts);
   box bound_boxes(const vector<box>& boxes);
   bool fits_inside(const box& inner, const box& outer);
+
+  vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z_level);
+
+  template<typename InputIt>
+  box bounding_box(InputIt s, InputIt e) {
+    vector<box> boxes;
+    while (s != e) {
+      boxes.push_back(bounding_box(*s));
+      ++s;
+    }
+    return bound_boxes(boxes);
+  }
+
 }
 
 #endif

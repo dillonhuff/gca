@@ -92,5 +92,19 @@ namespace gca {
       (inner_y_range < outer_y_range) &&
       (inner_z_range < outer_z_range);
   }
-  
+
+  vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z_level) {
+    vector<point> pts;
+    double x = b.x_min;
+    while (x < b.x_max) {
+      double y = b.y_min;
+      while (y < b.y_max) {
+	pts.push_back(point(x, y, z_level));
+	y += y_inc;
+      }
+      x += x_inc;
+    }
+    return pts;
+  }
+
 }

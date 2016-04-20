@@ -35,32 +35,8 @@ namespace gca {
     return polylines_cuts(pocket_lines, params);
   }
 
-  vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z_level) {
-    vector<point> pts;
-    double x = b.x_min;
-    while (x < b.x_max) {
-      double y = b.y_min;
-      while (y < b.y_max) {
-	pts.push_back(point(x, y, z_level));
-	y += y_inc;
-      }
-      x += x_inc;
-    }
-    return pts;
-  }
-
   box bounding_box(const oriented_polygon& p) {
     return bound_positions(p.vertices);
-  }
-
-  template<typename InputIt>
-  box bounding_box(InputIt s, InputIt e) {
-    vector<box> boxes;
-    while (s != e) {
-      boxes.push_back(bounding_box(*s));
-      ++s;
-    }
-    return bound_boxes(boxes);
   }
 
   template<typename InputIt>
@@ -185,16 +161,11 @@ namespace gca {
 		[](const oriented_polygon& x,
 		   const oriented_polygon& y)
 		{ return x.vertices.front().z > y.vertices.front().z; });
-    cout << "# of polygons: " << polygons.size() << endl;  
-    for (auto p : polygons) {
-      cout << "z level = " << p.vertices.front().z << endl;
-    }
     return polygons;
   }
 
-  vector<polyline> mill_surface_lines(vector<triangle>& triangles,
+  vector<polyline> mill_surface_lines(vector<oriented_polygon> polygons,
 				      double tool_diameter) {
-    auto polygons = preprocess_triangles(triangles);
     double start_depth = polygons.front().vertices.front().z;
     double workpiece_height = start_depth + 0.1;
     double last_level = start_depth;
@@ -215,6 +186,12 @@ namespace gca {
       }
     }
     return pocket_lines;
+  }
+
+  vector<polyline> mill_surface_lines(vector<triangle>& triangles,
+				      double tool_diameter) {
+    auto polygons = preprocess_triangles(triangles);
+    return mill_surface_lines(polygons, tool_diameter);
   }
 
   vector<block> mill_surface(vector<triangle>& triangles,
