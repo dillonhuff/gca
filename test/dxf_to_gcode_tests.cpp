@@ -145,16 +145,16 @@ namespace gca {
       }
     }
 
-    SECTION("3 separate lines, no hole punches") {
-      lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
-      lines.push_back(linear_cut::make(point(0, 2, 0), point(1, 6, 0)));
-      lines.push_back(linear_cut::make(point(-3, 2, 0), point(0, 2, 0)));
+    // SECTION("3 separate lines, no hole punches") {
+    //   lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));
+    //   lines.push_back(linear_cut::make(point(0, 2, 0), point(1, 6, 0)));
+    //   lines.push_back(linear_cut::make(point(-3, 2, 0), point(0, 2, 0)));
       
-      shape_layout l(lines, holes, splines);
-      p = shape_layout_to_gcode(l, params);
-      extract_cuts(p, sections);
-      REQUIRE(sections.size() == 10);
-    }
+    //   shape_layout l(lines, holes, splines);
+    //   p = shape_layout_to_gcode(l, params);
+    //   extract_cuts(p, sections);
+    //   REQUIRE(sections.size() == 10);
+    // }
 
     SECTION("Lines and hole punches") {
       lines.push_back(linear_cut::make(point(0, 0, 0), point(1, 0, 0)));

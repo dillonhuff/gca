@@ -11,7 +11,7 @@ ENDIF()
 project(gca)
 
 #Add -Wextra ?
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -pedantic -Werror -Wall")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -O2 -pedantic -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
