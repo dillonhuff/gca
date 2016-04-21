@@ -23,4 +23,14 @@ namespace gca {
       REQUIRE(mill_lines.size() > 0);
     }
   }
+
+  TEST_CASE("Computing finishes") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("Chimney shape") {
+      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
+      
+    }
+  }
 }
