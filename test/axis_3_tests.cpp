@@ -28,9 +28,10 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    SECTION("Chimney shape") {
-      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
-      
-    }
+    // SECTION("Chimney shape") {
+    //   vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
+    //   vector<pocket_info_2P5D> finish_outlines = surface_finishes(triangles);
+    //   REQUIRE(finish_outlines.size() == 1);
+    // }
   }
 }

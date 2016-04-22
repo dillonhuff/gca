@@ -4,6 +4,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "synthesis/shapes_to_gcode.h"
+#include "synthesis/toolpath_generation.h"
 
 namespace gca {
 
@@ -14,6 +15,8 @@ namespace gca {
 				      double tool_diameter);
 
   vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
+
+  vector<pocket> surface_finishes(vector<triangle>& triangles);
 }
 
 #endif

@@ -5,13 +5,13 @@
 
 namespace gca {
 
-  struct pocket_info_2P5D {
+  struct pocket {
     polyline outline;
     double start_depth;
     double end_depth;
-    pocket_info_2P5D(polyline outlinep,
-		     double start_depthp,
-		     double end_depthp) :
+    pocket(polyline outlinep,
+	   double start_depthp,
+	   double end_depthp) :
       outline(outlinep),
       start_depth(start_depthp),
       end_depth(end_depthp) {}
@@ -33,9 +33,9 @@ namespace gca {
 				    offset_dir d,
 				    double inc);
 
-  vector<polyline> pocket_2P5D_exterior(const pocket_info_2P5D& pocket);
+  vector<polyline> pocket_2P5D_exterior(const pocket& pocket);
 
-  vector<polyline> pocket_2P5D_interior(const pocket_info_2P5D& pocket,
+  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_diameter);
   vector<cut*> polyline_cuts(const polyline& p);
 

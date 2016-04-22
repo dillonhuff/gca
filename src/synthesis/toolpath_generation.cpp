@@ -65,7 +65,7 @@ namespace gca {
 
   // TODO: Add in tool and workpiece info to compute cut_depth
   // and the offset increment
-  vector<polyline> pocket_2P5D_exterior(const pocket_info_2P5D& pocket) {
+  vector<polyline> pocket_2P5D_exterior(const pocket& pocket) {
     offset_dir d = exterior_direction(pocket.outline);
     auto paths = repeated_offsets(pocket.outline,
 				  1,
@@ -77,7 +77,7 @@ namespace gca {
 			 0.35);
   }
 
-  vector<polyline> pocket_2P5D_interior(const pocket_info_2P5D& pocket,
+  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_diameter) {
     assert(tool_diameter > 0.0);
     offset_dir dir = interior_direction(pocket.outline);

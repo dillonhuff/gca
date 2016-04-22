@@ -36,17 +36,24 @@ namespace gca {
   }
 
   template<typename InputIt>
-  bool overlaps_any(line l, InputIt s, InputIt e) {
+  bool overlaps_or_intersects_any(line l, InputIt s, InputIt e) {
+    if (any_of(s, e,
+	       [l](const oriented_polygon& p)
+	       { return overlaps(l, p); })) {
+      return true;
+    }
     return any_of(s, e,
 		  [l](const oriented_polygon& p)
-		  { return overlaps(l, p); });
+		  { return contains(p, l.end) || contains(p, l.start); });
   }
 
 
+  // Change name to reflect roughing and finishing
   vector<polyline> roughing_lines(const vector<oriented_polygon>& holes,
 				  const vector<oriented_polygon>& boundaries,
-				  double last_level) {
-    double sample_increment = 0.05;
+				  double last_level,
+				  double tool_radius) {
+    double sample_increment = tool_radius;
     box b = bounding_box(begin(boundaries), end(boundaries));
     // TODO: Select sample rate from tool_diameter
     auto toolpath_points = sample_points_2d(b,
@@ -67,10 +74,15 @@ namespace gca {
     vector<vector<point>> lpts;
     split_by(toolpath_points, lpts,
 	     [&holes](const point l, const point r)
-	     { return !overlaps_any(line(l, r), begin(holes), end(holes)); });
+	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
     vector<polyline> lines;
     for (auto ls : lpts) {
       lines.push_back(ls);
+    }
+    // Insert finishing lines
+    for (auto bound : boundaries) {
+      polyline p(bound.vertices);
+      lines.push_back(p);
     }
     return lines;
   }
@@ -80,8 +92,8 @@ namespace gca {
   vector<polyline> level_roughing(InputIt s,
 				  InputIt m,
 				  InputIt e,
-				  double last_level) {
-    double tool_radius = 0.01;
+				  double last_level,
+				  double tool_radius) {
     vector<oriented_polygon> offset_h(distance(s, m));
     transform(s, m, begin(offset_h),
 	      [tool_radius](const oriented_polygon& p)
@@ -105,7 +117,7 @@ namespace gca {
     }
     double bottom = bound_polys.front().pt(0).z;
     double cut_depth = 0.05;
-    vector<polyline> rough_pass = roughing_lines(offset_holes, bound_polys, last_level);
+    vector<polyline> rough_pass = roughing_lines(offset_holes, bound_polys, last_level, tool_radius);
     return tile_vertical(rough_pass, last_level, bottom, cut_depth);
   }
 
@@ -132,7 +144,8 @@ namespace gca {
       auto level_rough = level_roughing(begin(polygons),
 					below_level,
 					end(polygons),
-					workpiece_height);
+					workpiece_height,
+					tool_diameter / 2.0);
       pocket_lines.insert(end(pocket_lines), begin(level_rough), end(level_rough));
       below_level = find_if(below_level, end(polygons),
 			    [last_level](const oriented_polygon& p)
@@ -155,6 +168,11 @@ namespace gca {
 			     double tool_diameter) {
     auto pocket_lines = mill_surface_lines(triangles, tool_diameter);
     return emco_f1_code(pocket_lines);
+  }
+
+  vector<pocket> surface_finishes(vector<triangle>& triangles) {
+    vector<pocket> pockets;
+    return pockets;
   }
 
 }

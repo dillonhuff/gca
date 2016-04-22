@@ -11,7 +11,7 @@ ENDIF()
 project(gca)
 
 #Add -Wextra ?
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -O2 -pedantic -Werror -Wall")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -pedantic -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -112,11 +112,12 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 SET(SRCS ${CPPS} ${HEADERS})
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
-add_executable(hello-world examples/hello_world.cpp ${SRCS})
-add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
-add_executable(misc examples/misc.cpp ${SRCS})
-add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
+# add_executable(hello-world examples/hello_world.cpp ${SRCS})
+# add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
+# add_executable(misc examples/misc.cpp ${SRCS})
+# add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
+add_executable(face-graph examples/face_graph.cpp ${SRCS})
 
 ######### VTK Example ##########
 
