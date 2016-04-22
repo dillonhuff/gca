@@ -47,45 +47,6 @@ namespace gca {
     return polyline(vertices);
   }
 
-  // Change name to reflect roughing and finishing
-  // vector<polyline> roughing_lines(const vector<oriented_polygon>& holes,
-  // 				  const vector<oriented_polygon>& boundaries,
-  // 				  double last_level,
-  // 				  double tool_radius) {
-  //   double sample_increment = tool_radius;
-  //   box b = bounding_box(begin(boundaries), end(boundaries));
-  //   // TODO: Select sample rate from tool_diameter
-  //   auto toolpath_points = sample_points_2d(b,
-  // 					    sample_increment,
-  // 					    sample_increment,
-  // 					    last_level);
-  //   delete_if(toolpath_points,
-  //   	      [&holes](const point p)
-  //   	      { return any_of(begin(holes), end(holes),
-  // 			      [p](const oriented_polygon& pl)
-  // 			      { return contains(pl, p); }); });
-  //   delete_if(toolpath_points,
-  // 	      [&boundaries](const point p)
-  // 	      { return !any_of(begin(boundaries), end(boundaries),
-  // 			       [p](const oriented_polygon& pl)
-  // 			       { return contains(pl, p); }); });
-  //   assert(toolpath_points.size() > 0);
-  //   vector<vector<point>> lpts;
-  //   split_by(toolpath_points, lpts,
-  // 	     [&holes](const point l, const point r)
-  // 	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
-  //   vector<polyline> lines;
-  //   for (auto ls : lpts) {
-  //     lines.push_back(ls);
-  //   }
-  //   // Insert finishing lines
-  //   for (auto bound : boundaries) {
-  //     polyline p(bound.vertices);
-  //     lines.push_back(p);
-  //   }
-  //   return lines;
-  // }
-
   // TODO: Add tool diameter parameter
   // template<typename InputIt>
   // vector<polyline> level_roughing(InputIt s,
@@ -158,6 +119,11 @@ namespace gca {
   vector<polyline> mill_pockets(vector<pocket>& pockets,
 				double tool_diameter) {
     vector<polyline> lines;
+    double tool_radius = tool_diameter / 2.0;
+    for (auto pocket : pockets) {
+      auto pocket_paths = pocket_2P5D_interior(pocket, tool_radius);
+      lines.insert(end(lines), begin(pocket_paths), end(pocket_paths));
+    }
     return lines;
   }
 

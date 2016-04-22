@@ -90,33 +90,34 @@ namespace gca {
 		  { return contains(p, l.end) || contains(p, l.start); });
   }
 
-  
-  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_radius) {
-    auto boundaries = pocket.get_boundaries();
-    auto holes = pocket.get_holes();
+
+  // Change name to reflect roughing and finishing
+  vector<polyline> roughing_lines(const vector<oriented_polygon>& holes,
+  				  const vector<oriented_polygon>& boundaries,
+  				  double last_level,
+  				  double tool_radius) {
     double sample_increment = tool_radius;
     box b = bounding_box(begin(boundaries), end(boundaries));
     // TODO: Select sample rate from tool_diameter
     auto toolpath_points = sample_points_2d(b,
-					    sample_increment,
-					    sample_increment,
-					    pocket.start_depth);
+  					    sample_increment,
+  					    sample_increment,
+  					    last_level);
     delete_if(toolpath_points,
     	      [&holes](const point p)
     	      { return any_of(begin(holes), end(holes),
-			      [p](const oriented_polygon& pl)
-			      { return contains(pl, p); }); });
+  			      [p](const oriented_polygon& pl)
+  			      { return contains(pl, p); }); });
     delete_if(toolpath_points,
-	      [&boundaries](const point p)
-	      { return !any_of(begin(boundaries), end(boundaries),
-			       [p](const oriented_polygon& pl)
-			       { return contains(pl, p); }); });
+  	      [&boundaries](const point p)
+  	      { return !any_of(begin(boundaries), end(boundaries),
+  			       [p](const oriented_polygon& pl)
+  			       { return contains(pl, p); }); });
     assert(toolpath_points.size() > 0);
     vector<vector<point>> lpts;
     split_by(toolpath_points, lpts,
-	     [&holes](const point l, const point r)
-	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
+  	     [&holes](const point l, const point r)
+  	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
     vector<polyline> lines;
     for (auto ls : lpts) {
       lines.push_back(ls);
@@ -127,6 +128,73 @@ namespace gca {
       lines.push_back(p);
     }
     return lines;
+  }
+
+  
+  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
+					double tool_radius) {
+    auto bounds = pocket.get_boundaries();
+    auto holes = pocket.get_holes();
+    vector<oriented_polygon> offset_h(holes.size());
+    transform(begin(holes), end(holes), begin(offset_h),
+  	      [tool_radius](const oriented_polygon& p)
+  	      { return exterior_offset(p, tool_radius); });
+    vector<oriented_polygon> bound_polys(bounds.size());
+    transform(begin(bounds), end(bounds), begin(bound_polys),
+  	      [tool_radius](const oriented_polygon& p)
+  	      { return interior_offset(p, tool_radius); });
+    vector<oriented_polygon> offset_holes;
+    for (auto hole : offset_h) {
+      bool contained_by_bound = false;
+      for (auto b : bound_polys) {
+  	if (contains(b, hole)) {
+  	  contained_by_bound = true;
+  	  break;
+  	}
+      }
+      if (contained_by_bound) {
+  	offset_holes.push_back(hole);
+      }
+    }
+    double cut_depth = 0.05;
+    vector<polyline> rough_pass = roughing_lines(offset_holes, bound_polys, pocket.start_depth, tool_radius);
+    return tile_vertical(rough_pass, pocket.start_depth, pocket.end_depth, cut_depth);
+  }
+    
+    // auto boundaries = pocket.get_boundaries();
+    // auto holes = pocket.get_holes();
+    // double sample_increment = tool_radius;
+    // box b = bounding_box(begin(boundaries), end(boundaries));
+    // // TODO: Select sample rate from tool_diameter
+    // auto toolpath_points = sample_points_2d(b,
+    // 					    sample_increment,
+    // 					    sample_increment,
+    // 					    pocket.start_depth);
+    // delete_if(toolpath_points,
+    // 	      [&holes](const point p)
+    // 	      { return any_of(begin(holes), end(holes),
+    // 			      [p](const oriented_polygon& pl)
+    // 			      { return contains(pl, p); }); });
+    // delete_if(toolpath_points,
+    // 	      [&boundaries](const point p)
+    // 	      { return !any_of(begin(boundaries), end(boundaries),
+    // 			       [p](const oriented_polygon& pl)
+    // 			       { return contains(pl, p); }); });
+    // assert(toolpath_points.size() > 0);
+    // vector<vector<point>> lpts;
+    // split_by(toolpath_points, lpts,
+    // 	     [&holes](const point l, const point r)
+    // 	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
+    // vector<polyline> lines;
+    // for (auto ls : lpts) {
+    //   lines.push_back(ls);
+    // }
+    // // Insert finishing lines
+    // for (auto bound : boundaries) {
+    //   polyline p(bound.vertices);
+    //   lines.push_back(p);
+    // }
+    // return lines;
     
     // assert(tool_diameter > 0.0);
     // offset_dir dir = interior_direction(pocket.get_outline());
@@ -147,7 +215,6 @@ namespace gca {
     // 			 pocket.start_depth,
     // 			 pocket.end_depth,
     // 			 0.35);
-  }
 
 
   cut* mk_cut(const point l, const point r) {
