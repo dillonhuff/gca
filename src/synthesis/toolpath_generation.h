@@ -11,10 +11,10 @@ namespace gca {
     vector<oriented_polygon> boundaries;
     vector<oriented_polygon> holes; 
 
-  public:
     double start_depth;
     double end_depth;
-    
+
+  public:
     pocket(vector<oriented_polygon>& boundariesp,
 	   vector<oriented_polygon>& holesp,
 	   double start_depthp,
@@ -24,8 +24,12 @@ namespace gca {
       start_depth(start_depthp),
       end_depth(end_depthp) {}
 
-    inline const vector<oriented_polygon>& get_holes() const { return holes; }
-    inline const vector<oriented_polygon>& get_boundaries() const { return boundaries; }
+    inline const vector<oriented_polygon>& get_holes() const
+    { return holes; }
+    inline const vector<oriented_polygon>& get_boundaries() const
+    { return boundaries; }
+    inline double get_start_depth() const { return start_depth; }
+    inline double get_end_depth() const { return end_depth; }
 
   };
 

@@ -18,17 +18,12 @@ namespace gca {
 	REQUIRE(pockets.size() == 2);
       }
 
-      cout << "pocket 0 start depth = " << pockets[0].start_depth << endl;
-      cout << "pocket 0 end depth = " << pockets[0].end_depth << endl;
-      cout << "pocket 1 start depth = " << pockets[1].start_depth << endl;
-      cout << "pocket 1 end depth = " << pockets[1].end_depth << endl;
-
       SECTION("First pocket has one boundary") {
 	REQUIRE(pockets.front().get_boundaries().size() == 1);
       }
 
       SECTION("First pocket ends at 0.200001") {
-	REQUIRE(within_eps(pockets.front().end_depth, 0.200001) );
+	REQUIRE(within_eps(pockets.front().get_end_depth(), 0.200001) );
       }
 
       SECTION("First pocket has no holes") {

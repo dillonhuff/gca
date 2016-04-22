@@ -148,10 +148,11 @@ namespace gca {
     // }
     // TODO: Make this an input parameter
     double cut_depth = 0.1;
-    vector<polyline> rough_pass = roughing_lines(offset_h, bound_polys, pocket.start_depth, tool_radius);
-    return tile_vertical(rough_pass, pocket.start_depth, pocket.end_depth, cut_depth);
+    vector<polyline> rough_pass = roughing_lines(offset_h, bound_polys, pocket.get_start_depth(), tool_radius);
+    return tile_vertical(rough_pass, pocket.get_start_depth(), pocket.get_end_depth(), cut_depth);
   }
-    
+
+  // TODO: Make the spindle_speed and feedrate parameters explicit
   cut* mk_cut(const point l, const point r) {
     auto c = linear_cut::make(l, r);
     c->set_spindle_speed(lit::make(3000));
