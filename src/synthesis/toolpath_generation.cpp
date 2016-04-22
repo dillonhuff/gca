@@ -84,7 +84,6 @@ namespace gca {
   				  double tool_radius) {
     double sample_increment = tool_radius;
     box b = bounding_box(begin(boundaries), end(boundaries));
-    // TODO: Select sample rate from tool_diameter
     auto toolpath_points = sample_points_2d(b,
   					    sample_increment,
   					    sample_increment,
@@ -122,7 +121,8 @@ namespace gca {
   }
 
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_radius) {
+					double tool_radius,
+					double cut_depth) {
     auto bounds = pocket.get_boundaries();
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
@@ -133,21 +133,8 @@ namespace gca {
     transform(begin(bounds), end(bounds), begin(bound_polys),
   	      [tool_radius](const oriented_polygon& p)
   	      { return interior_offset(p, tool_radius); });
-    // vector<oriented_polygon> offset_holes;
-    // for (auto hole : offset_h) {
-    //   bool contained_by_bound = false;
-    //   for (auto b : bound_polys) {
-    // 	if (contains(b, hole)) {
-    // 	  contained_by_bound = true;
-    // 	  break;
-    // 	}
-    //   }
-    //   if (contained_by_bound) {
-    // 	offset_holes.push_back(hole);
-    //   }
-    // }
     // TODO: Make this an input parameter
-    double cut_depth = 0.1;
+    //    double cut_depth = 0.05;
     vector<polyline> rough_pass = roughing_lines(offset_h, bound_polys, pocket.get_start_depth(), tool_radius);
     return tile_vertical(rough_pass, pocket.get_start_depth(), pocket.get_end_depth(), cut_depth);
   }

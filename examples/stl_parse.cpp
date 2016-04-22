@@ -10,31 +10,6 @@
 using namespace gca;
 using namespace std;
 
-bool is_vertical(const triangle t, double tolerance) {
-  return within_eps(t.normal.z, 0.0, tolerance);
-}
-
-vector<polyline> finish_points(vector<triangle>& triangles,
-			       double tolerance) {
-  // delete_if(triangles,
-  // 	    [tolerance](const triangle t)
-  // 	    { return !is_vertical(t, tolerance); });
-  stable_sort(begin(triangles), end(triangles),
-	      [](const triangle l, const triangle r)
-	      { return l.v1.x > r.v1.x; });
-  stable_sort(begin(triangles), end(triangles),
-	      [](const triangle l, const triangle r)
-	      { return l.v1.y > r.v1.y; });
-  stable_sort(begin(triangles), end(triangles),
-	      [](const triangle l, const triangle r)
-	      { return l.v1.z > r.v1.z; });
-  vector<point> pts;
-  for (auto t : triangles) {
-    pts.push_back(t.v1 + -0.1 * (t.normal.normalize()));
-  }
-  return vector<polyline>({pts});
-}
-
 int main(int argc, char* argv[]) {
   assert(argc == 2);
 
@@ -43,7 +18,9 @@ int main(int argc, char* argv[]) {
 
   auto triangles = parse_stl(argv[1]).triangles;
 
-  auto lines = mill_surface_lines(triangles, 0.2);
+  double tool_radius = 0.1;
+  double cut_depth = 0.1;
+  auto lines = mill_surface_lines(triangles, tool_radius, cut_depth);
   point shift(-3, -2.5, -0.5);
   vector<polyline> shifted_lines;
   for (auto l : lines) {

@@ -9,14 +9,14 @@
 namespace gca {
 
   vector<block> mill_surface(vector<triangle>& triangles,
-			     double tool_diameter);
+			     double tool_diameter,
+			     double cut_depth);
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
-				      double tool_diameter);
+				      double tool_diameter,
+				      double cut_depth);
 
   vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
-
-  vector<pocket> surface_finishes(vector<triangle>& triangles);
 
   vector<pocket> make_pockets(vector<oriented_polygon> polygons);
 

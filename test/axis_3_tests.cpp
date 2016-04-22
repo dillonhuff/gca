@@ -47,14 +47,16 @@ namespace gca {
     SECTION("Rectangle cylinder") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
       double tool_diameter = 0.05;
-      auto mill_paths = mill_surface(triangles, tool_diameter);
+      double cut_depth = 0.25;
+      auto mill_paths = mill_surface(triangles, tool_diameter, cut_depth);
       REQUIRE(mill_paths.size() > 0);
     }
 
     SECTION("Multiple cylinders") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders.stl").triangles;
       double tool_diameter = 0.2;
-      auto mill_lines = mill_surface_lines(triangles, tool_diameter);
+      double cut_depth = 0.5;
+      auto mill_lines = mill_surface_lines(triangles, tool_diameter, cut_depth);
       REQUIRE(mill_lines.size() > 0);
     }
   }

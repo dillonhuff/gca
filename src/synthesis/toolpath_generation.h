@@ -49,10 +49,9 @@ namespace gca {
 				    offset_dir d,
 				    double inc);
 
-  //  vector<polyline> pocket_2P5D_exterior(const pocket& pocket);
-
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_diameter);
+					double tool_diameter,
+					double cut_depth);
   vector<cut*> polyline_cuts(const polyline& p);
 
 }

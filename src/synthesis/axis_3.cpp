@@ -125,32 +125,30 @@ namespace gca {
   }
 
   vector<polyline> mill_pockets(vector<pocket>& pockets,
-				double tool_diameter) {
+				double tool_diameter,
+				double cut_depth) {
     vector<polyline> lines;
     double tool_radius = tool_diameter / 2.0;
     for (auto pocket : pockets) {
-      auto pocket_paths = pocket_2P5D_interior(pocket, tool_radius);
+      auto pocket_paths = pocket_2P5D_interior(pocket, tool_radius, cut_depth);
       lines.insert(end(lines), begin(pocket_paths), end(pocket_paths));
     }
     return lines;
   }
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
-				      double tool_diameter) {
+				      double tool_diameter,
+				      double cut_depth) {
     auto polygons = preprocess_triangles(triangles);
     auto pockets = make_pockets(polygons);
-    return mill_pockets(pockets, tool_diameter);
+    return mill_pockets(pockets, tool_diameter, cut_depth);
   }
 
   vector<block> mill_surface(vector<triangle>& triangles,
-			     double tool_diameter) {
-    auto pocket_lines = mill_surface_lines(triangles, tool_diameter);
+			     double tool_diameter,
+			     double cut_depth) {
+    auto pocket_lines = mill_surface_lines(triangles, tool_diameter, cut_depth);
     return emco_f1_code(pocket_lines);
-  }
-
-  vector<pocket> surface_finishes(vector<triangle>& triangles) {
-    vector<pocket> pockets;
-    return pockets;
   }
 
 }
