@@ -5,6 +5,37 @@
 
 namespace gca {
 
+  TEST_CASE("Pocketing") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("CylinderSquare") {
+      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
+      auto polygons = preprocess_triangles(triangles);
+      auto pockets = make_pockets(polygons);
+
+      SECTION("Two pockets") {
+	REQUIRE(pockets.size() == 2);
+      }
+
+      SECTION("First pocket has one boundary") {
+	REQUIRE(pockets.front().get_boundaries().size() == 1);
+      }
+
+      SECTION("First pocket has no holes") {
+	REQUIRE(pockets.front().get_holes().size() == 0);
+      }
+
+      SECTION("Last pocket has 1 boundary") {
+	REQUIRE(pockets.back().get_boundaries().size() == 1);
+      }
+
+      SECTION("Last pocket has one hole") {
+	REQUIRE(pockets.back().get_holes().size() == 1);
+      }
+    }
+  }
+
   TEST_CASE("Milling surfaces") {
     arena_allocator a;
     set_system_allocator(&a);

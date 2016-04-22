@@ -47,39 +47,9 @@ namespace gca {
     return polyline(vertices);
   }
 
-  // TODO: Add tool diameter parameter
-  // template<typename InputIt>
-  // vector<polyline> level_roughing(InputIt s,
-  // 				  InputIt m,
-  // 				  InputIt e,
-  // 				  double last_level,
-  // 				  double tool_radius) {
-  //   vector<oriented_polygon> offset_h(distance(s, m));
-  //   transform(s, m, begin(offset_h),
-  // 	      [tool_radius](const oriented_polygon& p)
-  // 	      { return exterior_offset(p, tool_radius); });
-  //   vector<oriented_polygon> bound_polys(distance(m, e));
-  //   transform(m, e, begin(bound_polys),
-  // 	      [tool_radius](const oriented_polygon& p)
-  // 	      { return interior_offset(p, tool_radius); });
-  //   vector<oriented_polygon> offset_holes;
-  //   for (auto hole : offset_h) {
-  //     bool contained_by_bound = false;
-  //     for (auto b : bound_polys) {
-  // 	if (contains(b, hole)) {
-  // 	  contained_by_bound = true;
-  // 	  break;
-  // 	}
-  //     }
-  //     if (contained_by_bound) {
-  // 	offset_holes.push_back(hole);
-  //     }
-  //   }
-  //   double bottom = bound_polys.front().pt(0).z;
-  //   double cut_depth = 0.05;
-  //   vector<polyline> rough_pass = roughing_lines(offset_holes, bound_polys, last_level, tool_radius);
-  //   return tile_vertical(rough_pass, last_level, bottom, cut_depth);
-  // }
+  double height(const oriented_polygon& p) {
+    return p.vertices.front().z;
+  }
 
   template<typename InputIt>
   pocket level_pocket(InputIt s,
@@ -87,7 +57,25 @@ namespace gca {
 		      InputIt e,
 		      double last_level) {
     vector<oriented_polygon> holes(s, m);
-    vector<oriented_polygon> bounds(m, e);
+    vector<oriented_polygon> possible_bounds(m, e);
+    assert(possible_bounds.size() > 0);
+    vector<oriented_polygon> bounds;
+    for (unsigned i = 0; i < possible_bounds.size(); i++) {
+      oriented_polygon& bound = possible_bounds[i];
+      bool contained = false;
+      for (unsigned j = 0; j < possible_bounds.size(); j++) {
+	if (i != j) {
+	  oriented_polygon& other = possible_bounds[j];
+	  if (contains(other, bound)) {
+	    contained = true;
+	    break;
+	  }
+	}
+      }
+      if (!contained) {
+	bounds.push_back(bound);
+      }
+    }
     double bottom = bounds.front().pt(0).z;
     assert(bottom < last_level);
     return pocket(bounds, holes, last_level, bottom);
@@ -131,7 +119,7 @@ namespace gca {
 				      double tool_diameter) {
     auto polygons = preprocess_triangles(triangles);
     auto pockets = make_pockets(polygons);
-    return mill_pockets(pockets, tool_diameter); //mill_surface_lines(polygons, tool_diameter);
+    return mill_pockets(pockets, tool_diameter);
   }
 
   vector<block> mill_surface(vector<triangle>& triangles,

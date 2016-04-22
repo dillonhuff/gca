@@ -64,20 +64,6 @@ namespace gca {
     return paths;
   }
 
-  // TODO: Add in tool and workpiece info to compute cut_depth
-  // and the offset increment
-  // vector<polyline> pocket_2P5D_exterior(const pocket& pocket) {
-  //   offset_dir d = exterior_direction(pocket.get_outline());
-  //   auto paths = repeated_offsets(pocket.get_outline(),
-  // 				  1,
-  // 				  d,
-  // 				  0.1);
-  //   return tile_vertical(paths,
-  // 			 pocket.start_depth,
-  // 			 pocket.end_depth,
-  // 			 0.35);
-  // }
-
   template<typename InputIt>
   bool overlaps_or_intersects_any(line l, InputIt s, InputIt e) {
     if (any_of(s, e,
@@ -122,15 +108,19 @@ namespace gca {
     for (auto ls : lpts) {
       lines.push_back(ls);
     }
-    // Insert finishing lines
+    //Insert finishing lines
     for (auto bound : boundaries) {
       polyline p(bound.vertices);
       lines.push_back(p);
     }
+    for (auto hole : holes) {
+      polyline p(hole.vertices);
+      lines.push_back(p);
+    }
+
     return lines;
   }
 
-  
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_radius) {
     auto bounds = pocket.get_boundaries();
@@ -143,80 +133,25 @@ namespace gca {
     transform(begin(bounds), end(bounds), begin(bound_polys),
   	      [tool_radius](const oriented_polygon& p)
   	      { return interior_offset(p, tool_radius); });
-    vector<oriented_polygon> offset_holes;
-    for (auto hole : offset_h) {
-      bool contained_by_bound = false;
-      for (auto b : bound_polys) {
-  	if (contains(b, hole)) {
-  	  contained_by_bound = true;
-  	  break;
-  	}
-      }
-      if (contained_by_bound) {
-  	offset_holes.push_back(hole);
-      }
-    }
-    double cut_depth = 0.05;
-    vector<polyline> rough_pass = roughing_lines(offset_holes, bound_polys, pocket.start_depth, tool_radius);
+    // vector<oriented_polygon> offset_holes;
+    // for (auto hole : offset_h) {
+    //   bool contained_by_bound = false;
+    //   for (auto b : bound_polys) {
+    // 	if (contains(b, hole)) {
+    // 	  contained_by_bound = true;
+    // 	  break;
+    // 	}
+    //   }
+    //   if (contained_by_bound) {
+    // 	offset_holes.push_back(hole);
+    //   }
+    // }
+    // TODO: Make this an input parameter
+    double cut_depth = 0.1;
+    vector<polyline> rough_pass = roughing_lines(offset_h, bound_polys, pocket.start_depth, tool_radius);
     return tile_vertical(rough_pass, pocket.start_depth, pocket.end_depth, cut_depth);
   }
     
-    // auto boundaries = pocket.get_boundaries();
-    // auto holes = pocket.get_holes();
-    // double sample_increment = tool_radius;
-    // box b = bounding_box(begin(boundaries), end(boundaries));
-    // // TODO: Select sample rate from tool_diameter
-    // auto toolpath_points = sample_points_2d(b,
-    // 					    sample_increment,
-    // 					    sample_increment,
-    // 					    pocket.start_depth);
-    // delete_if(toolpath_points,
-    // 	      [&holes](const point p)
-    // 	      { return any_of(begin(holes), end(holes),
-    // 			      [p](const oriented_polygon& pl)
-    // 			      { return contains(pl, p); }); });
-    // delete_if(toolpath_points,
-    // 	      [&boundaries](const point p)
-    // 	      { return !any_of(begin(boundaries), end(boundaries),
-    // 			       [p](const oriented_polygon& pl)
-    // 			       { return contains(pl, p); }); });
-    // assert(toolpath_points.size() > 0);
-    // vector<vector<point>> lpts;
-    // split_by(toolpath_points, lpts,
-    // 	     [&holes](const point l, const point r)
-    // 	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
-    // vector<polyline> lines;
-    // for (auto ls : lpts) {
-    //   lines.push_back(ls);
-    // }
-    // // Insert finishing lines
-    // for (auto bound : boundaries) {
-    //   polyline p(bound.vertices);
-    //   lines.push_back(p);
-    // }
-    // return lines;
-    
-    // assert(tool_diameter > 0.0);
-    // offset_dir dir = interior_direction(pocket.get_outline());
-    // double tool_radius = tool_diameter / 2.0;
-    // double tool_surface_area = M_PI * tool_radius * tool_radius;
-    // vector<polyline> paths;
-    // polyline off = offset(pocket.get_outline(),
-    // 			  dir,
-    // 			  tool_radius);
-    // while (area(off) > tool_surface_area) {
-    //   paths.push_back(off);
-    //   off = offset(off,
-    // 		   dir,
-    // 		   tool_radius);
-    // }
-    // assert(paths.size() > 0);
-    // return tile_vertical(paths,
-    // 			 pocket.start_depth,
-    // 			 pocket.end_depth,
-    // 			 0.35);
-
-
   cut* mk_cut(const point l, const point r) {
     auto c = linear_cut::make(l, r);
     c->set_spindle_speed(lit::make(3000));

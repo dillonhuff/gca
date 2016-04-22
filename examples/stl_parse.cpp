@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 
   auto triangles = parse_stl(argv[1]).triangles;
 
-  auto lines = mill_surface_lines(triangles, 0.1);
+  auto lines = mill_surface_lines(triangles, 0.05);
   point shift(-3, -2.5, -0.5);
   vector<polyline> shifted_lines;
   for (auto l : lines) {
