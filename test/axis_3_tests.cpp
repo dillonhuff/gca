@@ -27,6 +27,10 @@ namespace gca {
 	REQUIRE(pockets.front().get_boundaries().size() == 1);
       }
 
+      SECTION("First pocket ends at 0.200001") {
+	REQUIRE(within_eps(pockets.front().end_depth, 0.200001) );
+      }
+
       SECTION("First pocket has no holes") {
 	REQUIRE(pockets.front().get_holes().size() == 0);
       }
