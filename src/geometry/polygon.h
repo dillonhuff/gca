@@ -19,6 +19,8 @@ namespace gca {
       normal(normalp), vertices(verticesp) {}
 
     inline point pt(unsigned i) const { return vertices[i]; }
+    inline double height() const
+    { return vertices.front().z; }
   };
 
   bool contains(const oriented_polygon& g, point p);

@@ -7,6 +7,23 @@
 
 namespace gca {
 
+  TEST_CASE("Merge triangles, CylinderChimneySlot") {
+    vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
+    delete_if(triangles,
+	      [](const triangle t)
+	      { return !is_upward_facing(t, 0.05); });
+    auto polygons = merge_triangles(triangles);
+    stable_sort(begin(polygons), end(polygons),
+		[](const oriented_polygon& x,
+		   const oriented_polygon& y)
+		{ return x.height() < y.height(); });
+
+    SECTION("Top polygon has height 0.35") {
+      double top_polygon_height = polygons.back().height();
+      REQUIRE(within_eps(top_polygon_height, 0.35, 0.00001));
+    }
+  }
+
   TEST_CASE("Identify millable surfaces") {
     arena_allocator a;
     set_system_allocator(&a);

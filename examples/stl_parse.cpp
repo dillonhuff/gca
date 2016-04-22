@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
   auto triangles = parse_stl(argv[1]).triangles;
 
-  double tool_radius = 0.1;
+  double tool_radius = 0.05;
   double cut_depth = 0.1;
   auto lines = mill_surface_lines(triangles, tool_radius, cut_depth);
   point shift(-3, -2.5, -0.5);

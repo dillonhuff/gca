@@ -9,15 +9,16 @@ namespace gca {
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {
     delete_if(triangles,
 	      [](const triangle t)
-	      { return !is_upward_facing(t, 0.01); });
+	      { return !is_upward_facing(t, 0.05); });
     auto polygons = merge_triangles(triangles);
+    // TODO: Use polygon height member function
     stable_sort(begin(polygons), end(polygons),
 		[](const oriented_polygon& x,
 		   const oriented_polygon& y)
 		{ return x.vertices.front().z > y.vertices.front().z; });
     return polygons;
   }
-  
+
   vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
 			       const cut_params params) {
     vector<cut*> cuts;
@@ -45,10 +46,6 @@ namespace gca {
     vector<point> vertices = base_outline.vertices;
     vertices.push_back(vertices.front());
     return polyline(vertices);
-  }
-
-  double height(const oriented_polygon& p) {
-    return p.vertices.front().z;
   }
 
   template<typename InputIt>
