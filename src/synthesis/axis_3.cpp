@@ -56,7 +56,7 @@ namespace gca {
 		      InputIt m,
 		      InputIt e,
 		      double last_level) {
-    vector<oriented_polygon> holes(s, m);
+    vector<oriented_polygon> possible_holes(s, m);
     vector<oriented_polygon> possible_bounds(m, e);
     double bottom = (*max_element(begin(possible_bounds),
 				 end(possible_bounds),
@@ -64,6 +64,7 @@ namespace gca {
 				     const oriented_polygon& y)
       { return x.pt(0).z < y.pt(0).z; })).pt(0).z;
     assert(possible_bounds.size() > 0);
+
     vector<oriented_polygon> bounds;
     for (unsigned i = 0; i < possible_bounds.size(); i++) {
       oriented_polygon& bound = possible_bounds[i];
@@ -81,6 +82,21 @@ namespace gca {
 	bounds.push_back(bound);
       }
     }
+
+    vector<oriented_polygon> holes;
+    for (auto hole : possible_holes) {
+      bool contained_by_bound = false;
+      for (auto b : bounds) {
+    	if (contains(b, hole)) {
+    	  contained_by_bound = true;
+    	  break;
+    	}
+      }
+      if (contained_by_bound) {
+    	holes.push_back(hole);
+      }
+    }
+    
     assert(bottom < last_level);
     return pocket(bounds, holes, last_level, bottom);
   }
