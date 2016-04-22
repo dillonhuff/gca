@@ -120,34 +120,39 @@ namespace gca {
   //   return tile_vertical(rough_pass, last_level, bottom, cut_depth);
   // }
 
-  // vector<polyline> mill_surface_lines(vector<oriented_polygon> polygons,
-  // 				      double tool_diameter) {
-  //   double start_depth = polygons.front().vertices.front().z;
-  //   double workpiece_height = start_depth + 0.1;
-  //   double last_level = start_depth;
-  //   auto below_level = begin(polygons);
-  //   vector<polyline> pocket_lines;
-  //   while (below_level != end(polygons)) {
-  //     auto level_rough = level_roughing(begin(polygons),
-  // 					below_level,
-  // 					end(polygons),
-  // 					workpiece_height,
-  // 					tool_diameter / 2.0);
-  //     pocket_lines.insert(end(pocket_lines), begin(level_rough), end(level_rough));
-  //     below_level = find_if(below_level, end(polygons),
-  // 			    [last_level](const oriented_polygon& p)
-  // 			    { return !within_eps(p.vertices.front().z, last_level, 0.01); });
-  //     if (below_level != end(polygons)) {
-  // 	workpiece_height = last_level;
-  // 	last_level = (*below_level).vertices.front().z;
-  //     }
-  //   }
-  //   return pocket_lines;
-  // }
+  template<typename InputIt>
+  pocket level_pocket(InputIt s,
+		      InputIt m,
+		      InputIt e,
+		      double last_level) {
+    vector<oriented_polygon> holes(s, m);
+    vector<oriented_polygon> bounds(m, e);
+    double bottom = bounds.front().pt(0).z;
+    assert(bottom < last_level);
+    return pocket(bounds, holes, last_level, bottom);
+  }
 
-  vector<pocket> make_pockets(vector<oriented_polygon>& polygons) {
-    vector<pocket> ps;
-    return ps;
+  vector<pocket> make_pockets(vector<oriented_polygon> polygons) {
+    vector<pocket> pockets;
+    double start_depth = polygons.front().vertices.front().z;
+    double workpiece_height = start_depth + 0.1;
+    double last_level = start_depth;
+    auto below_level = begin(polygons);
+    while (below_level != end(polygons)) {
+      auto pocket = level_pocket(begin(polygons),
+				 below_level,
+				 end(polygons),
+				 workpiece_height);
+      pockets.push_back(pocket);
+      below_level = find_if(below_level, end(polygons),
+  			    [last_level](const oriented_polygon& p)
+  			    { return !within_eps(p.vertices.front().z, last_level, 0.01); });
+      if (below_level != end(polygons)) {
+  	workpiece_height = last_level;
+  	last_level = (*below_level).vertices.front().z;
+      }
+    }
+    return pockets;
   }
 
   vector<polyline> mill_pockets(vector<pocket>& pockets,
