@@ -6,15 +6,21 @@
 namespace gca {
 
   struct pocket {
+  private:
     polyline outline;
+    vector<polyline> holes; 
+  public:
     double start_depth;
     double end_depth;
+    
     pocket(polyline outlinep,
 	   double start_depthp,
 	   double end_depthp) :
       outline(outlinep),
       start_depth(start_depthp),
       end_depth(end_depthp) {}
+
+    inline polyline get_outline() const { return outline; }
   };
 
   vector<polyline> deepen_polyline(vector<double> depths, const polyline& p);
