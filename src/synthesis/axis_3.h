@@ -8,6 +8,8 @@
 
 namespace gca {
 
+  void select_visible_triangles(vector<triangle>& triangles);
+
   vector<block> mill_surface(vector<triangle>& triangles,
 			     double tool_diameter,
 			     double cut_depth);
@@ -18,7 +20,8 @@ namespace gca {
 
   vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
 
-  vector<pocket> make_pockets(vector<oriented_polygon> polygons);
+  //  vector<pocket> make_pockets(vector<oriented_polygon> polygons);
+  vector<pocket> make_pockets(const vector<triangle>& triangles);  
 
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
 }

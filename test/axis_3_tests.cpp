@@ -37,8 +37,9 @@ namespace gca {
 
     SECTION("CylinderSquare") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
-      auto polygons = preprocess_triangles(triangles);
-      auto pockets = make_pockets(polygons);
+      //      auto polygons = preprocess_triangles(triangles);
+      select_visible_triangles(triangles);
+      auto pockets = make_pockets(triangles);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -67,8 +68,11 @@ namespace gca {
 
     SECTION("CylinderChimneySlot") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
-      auto polygons = preprocess_triangles(triangles);
-      auto pockets = make_pockets(polygons);
+      // auto polygons = preprocess_triangles(triangles);
+      // auto pockets = make_pockets(polygons);
+      select_visible_triangles(triangles);
+      auto pockets = make_pockets(triangles);
+      
 
       SECTION("4 pockets") {
 	REQUIRE(pockets.size() == 4);

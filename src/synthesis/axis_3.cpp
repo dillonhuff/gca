@@ -102,26 +102,31 @@ namespace gca {
     return pocket(bounds, holes, last_level, bottom);
   }
 
-  vector<pocket> make_pockets(vector<oriented_polygon> polygons) {
+  // vector<pocket> make_pockets(vector<oriented_polygon> polygons) {
+  //   vector<pocket> pockets;
+  //   double start_depth = polygons.front().vertices.front().z;
+  //   double workpiece_height = start_depth + 0.1;
+  //   double last_level = start_depth;
+  //   auto below_level = begin(polygons);
+  //   while (below_level != end(polygons)) {
+  //     auto pocket = level_pocket(begin(polygons),
+  // 				 below_level,
+  // 				 end(polygons),
+  // 				 workpiece_height);
+  //     pockets.push_back(pocket);
+  //     below_level = find_if(below_level, end(polygons),
+  // 			    [last_level](const oriented_polygon& p)
+  // 			    { return !within_eps(p.vertices.front().z, last_level, 0.01); });
+  //     if (below_level != end(polygons)) {
+  // 	workpiece_height = last_level;
+  // 	last_level = (*below_level).vertices.front().z;
+  //     }
+  //   }
+  //   return pockets;
+  // }
+
+  vector<pocket> make_pockets(const vector<triangle>& triangles) {
     vector<pocket> pockets;
-    double start_depth = polygons.front().vertices.front().z;
-    double workpiece_height = start_depth + 0.1;
-    double last_level = start_depth;
-    auto below_level = begin(polygons);
-    while (below_level != end(polygons)) {
-      auto pocket = level_pocket(begin(polygons),
-				 below_level,
-				 end(polygons),
-				 workpiece_height);
-      pockets.push_back(pocket);
-      below_level = find_if(below_level, end(polygons),
-  			    [last_level](const oriented_polygon& p)
-  			    { return !within_eps(p.vertices.front().z, last_level, 0.01); });
-      if (below_level != end(polygons)) {
-  	workpiece_height = last_level;
-  	last_level = (*below_level).vertices.front().z;
-      }
-    }
     return pockets;
   }
 
@@ -140,8 +145,8 @@ namespace gca {
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
 				      double tool_diameter,
 				      double cut_depth) {
-    auto polygons = preprocess_triangles(triangles);
-    auto pockets = make_pockets(polygons);
+    select_visible_triangles(triangles);
+    auto pockets = make_pockets(triangles);
     return mill_pockets(pockets, tool_diameter, cut_depth);
   }
 
