@@ -4,6 +4,7 @@
 #include "synthesis/linear_cut.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/toolpath_generation.h"
+#include "system/algorithm.h"
 
 namespace gca {
 
@@ -65,39 +66,87 @@ namespace gca {
 
   // TODO: Add in tool and workpiece info to compute cut_depth
   // and the offset increment
-  vector<polyline> pocket_2P5D_exterior(const pocket& pocket) {
-    offset_dir d = exterior_direction(pocket.get_outline());
-    auto paths = repeated_offsets(pocket.get_outline(),
-				  1,
-				  d,
-				  0.1);
-    return tile_vertical(paths,
-			 pocket.start_depth,
-			 pocket.end_depth,
-			 0.35);
+  // vector<polyline> pocket_2P5D_exterior(const pocket& pocket) {
+  //   offset_dir d = exterior_direction(pocket.get_outline());
+  //   auto paths = repeated_offsets(pocket.get_outline(),
+  // 				  1,
+  // 				  d,
+  // 				  0.1);
+  //   return tile_vertical(paths,
+  // 			 pocket.start_depth,
+  // 			 pocket.end_depth,
+  // 			 0.35);
+  // }
+
+  template<typename InputIt>
+  bool overlaps_or_intersects_any(line l, InputIt s, InputIt e) {
+    if (any_of(s, e,
+	       [l](const oriented_polygon& p)
+	       { return overlaps(l, p); })) {
+      return true;
+    }
+    return any_of(s, e,
+		  [l](const oriented_polygon& p)
+		  { return contains(p, l.end) || contains(p, l.start); });
   }
 
+  
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_diameter) {
-    assert(tool_diameter > 0.0);
-    offset_dir dir = interior_direction(pocket.get_outline());
-    double tool_radius = tool_diameter / 2.0;
-    double tool_surface_area = M_PI * tool_radius * tool_radius;
-    vector<polyline> paths;
-    polyline off = offset(pocket.get_outline(),
-			  dir,
-			  tool_radius);
-    while (area(off) > tool_surface_area) {
-      paths.push_back(off);
-      off = offset(off,
-		   dir,
-		   tool_radius);
+					double tool_radius) {
+    auto boundaries = pocket.get_boundaries();
+    auto holes = pocket.get_holes();
+    double sample_increment = tool_radius;
+    box b = bounding_box(begin(boundaries), end(boundaries));
+    // TODO: Select sample rate from tool_diameter
+    auto toolpath_points = sample_points_2d(b,
+					    sample_increment,
+					    sample_increment,
+					    pocket.start_depth);
+    delete_if(toolpath_points,
+    	      [&holes](const point p)
+    	      { return any_of(begin(holes), end(holes),
+			      [p](const oriented_polygon& pl)
+			      { return contains(pl, p); }); });
+    delete_if(toolpath_points,
+	      [&boundaries](const point p)
+	      { return !any_of(begin(boundaries), end(boundaries),
+			       [p](const oriented_polygon& pl)
+			       { return contains(pl, p); }); });
+    assert(toolpath_points.size() > 0);
+    vector<vector<point>> lpts;
+    split_by(toolpath_points, lpts,
+	     [&holes](const point l, const point r)
+	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
+    vector<polyline> lines;
+    for (auto ls : lpts) {
+      lines.push_back(ls);
     }
-    assert(paths.size() > 0);
-    return tile_vertical(paths,
-			 pocket.start_depth,
-			 pocket.end_depth,
-			 0.35);
+    // Insert finishing lines
+    for (auto bound : boundaries) {
+      polyline p(bound.vertices);
+      lines.push_back(p);
+    }
+    return lines;
+    
+    // assert(tool_diameter > 0.0);
+    // offset_dir dir = interior_direction(pocket.get_outline());
+    // double tool_radius = tool_diameter / 2.0;
+    // double tool_surface_area = M_PI * tool_radius * tool_radius;
+    // vector<polyline> paths;
+    // polyline off = offset(pocket.get_outline(),
+    // 			  dir,
+    // 			  tool_radius);
+    // while (area(off) > tool_surface_area) {
+    //   paths.push_back(off);
+    //   off = offset(off,
+    // 		   dir,
+    // 		   tool_radius);
+    // }
+    // assert(paths.size() > 0);
+    // return tile_vertical(paths,
+    // 			 pocket.start_depth,
+    // 			 pocket.end_depth,
+    // 			 0.35);
   }
 
 

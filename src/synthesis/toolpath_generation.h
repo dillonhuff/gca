@@ -1,26 +1,32 @@
 #ifndef GCA_TOOLPATH_GENERATION_H
 #define GCA_TOOLPATH_GENERATION_H
 
+#include "geometry/polygon.h"
 #include "geometry/polyline.h"
 
 namespace gca {
 
   struct pocket {
   private:
-    polyline outline;
-    vector<polyline> holes; 
+    vector<oriented_polygon> boundaries;
+    vector<oriented_polygon> holes; 
+
   public:
     double start_depth;
     double end_depth;
     
-    pocket(polyline outlinep,
+    pocket(vector<oriented_polygon>& boundariesp,
+	   vector<oriented_polygon>& holesp,
 	   double start_depthp,
 	   double end_depthp) :
-      outline(outlinep),
+      boundaries(boundariesp),
+      holes(holesp),
       start_depth(start_depthp),
       end_depth(end_depthp) {}
 
-    inline polyline get_outline() const { return outline; }
+    inline const vector<oriented_polygon>& get_holes() const { return holes; }
+    inline const vector<oriented_polygon>& get_boundaries() const { return boundaries; }
+
   };
 
   vector<polyline> deepen_polyline(vector<double> depths, const polyline& p);
@@ -39,7 +45,7 @@ namespace gca {
 				    offset_dir d,
 				    double inc);
 
-  vector<polyline> pocket_2P5D_exterior(const pocket& pocket);
+  //  vector<polyline> pocket_2P5D_exterior(const pocket& pocket);
 
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_diameter);
