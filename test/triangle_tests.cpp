@@ -12,7 +12,7 @@ namespace gca {
     delete_if(triangles,
 	      [](const triangle t)
 	      { return !is_upward_facing(t, 0.05); });
-    auto polygons = merge_triangles(triangles);
+    auto polygons = mesh_bounds(triangles);
     stable_sort(begin(polygons), end(polygons),
 		[](const oriented_polygon& x,
 		   const oriented_polygon& y)

@@ -13,7 +13,7 @@ namespace gca {
 
     SECTION("Empty triangle vector") {
       vector<triangle> ts;
-      auto res = merge_triangles(ts);
+      auto res = mesh_bounds(ts);
       REQUIRE(res.size() == 0);
     }
 
@@ -25,7 +25,7 @@ namespace gca {
       point ur(1, 1, 0);
 
       vector<triangle> ts{triangle(n, bl, ul, ur), triangle(n, bl, br, ur)};
-      auto merged = merge_triangles(ts);
+      auto merged = mesh_bounds(ts);
       REQUIRE(merged.size() == 1);
       REQUIRE(merged.front().vertices.size() == 4);
     }
@@ -45,10 +45,9 @@ namespace gca {
       vector<oriented_polygon> polys;
       for (auto g : constant_orientation_groups) {
 	assert(g.size() > 0);
-	auto merged_polys = merge_triangles(g);
+	auto merged_polys = mesh_bounds(g);
 	polys.insert(polys.end(), merged_polys.begin(), merged_polys.end());
       }
-      cout << "# merged polygons: " << polys.size() << endl;
       REQUIRE(polys.size() > constant_orientation_groups.size());
     }
   }

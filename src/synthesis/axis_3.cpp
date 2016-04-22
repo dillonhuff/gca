@@ -6,11 +6,15 @@
 
 namespace gca {
 
-  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {
+  void select_visible_triangles(vector<triangle>& triangles) {
     delete_if(triangles,
 	      [](const triangle t)
 	      { return !is_upward_facing(t, 0.05); });
-    auto polygons = merge_triangles(triangles);
+  }
+
+  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {
+    select_visible_triangles(triangles);
+    auto polygons = mesh_bounds(triangles);
     // TODO: Use polygon height member function
     stable_sort(begin(polygons), end(polygons),
 		[](const oriented_polygon& x,
@@ -18,7 +22,7 @@ namespace gca {
 		{ return x.vertices.front().z > y.vertices.front().z; });
     return polygons;
   }
-
+  
   vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
 			       const cut_params params) {
     vector<cut*> cuts;
@@ -35,12 +39,12 @@ namespace gca {
     params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
     return polylines_cuts(pocket_lines, params);
   }
-  
+
   polyline extract_part_base_outline(const vector<triangle>& tris) {
     auto triangles = tris;
     delete_if(triangles, [](const triangle& t)
 	      { return !within_eps(t.normal, point(0, 0, -1), 1e-2); });
-    auto outlines = merge_triangles(triangles);
+    auto outlines = mesh_bounds(triangles);
     assert(outlines.size() == 1);
     auto base_outline = outlines.front();
     vector<point> vertices = base_outline.vertices;

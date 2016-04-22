@@ -18,7 +18,7 @@ namespace gca {
 		     const oriented_polygon& y)
 		  { return x.height() < y.height(); });
 
-      SECTION("One polygon per face") {//, and 1 more for the cylinder base") {
+      SECTION("One polygon per face") {
 	REQUIRE(polygons.size() == 4);
       }
 

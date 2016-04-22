@@ -58,7 +58,7 @@ namespace gca {
     return ps;
   }
 
-  vector<oriented_polygon> merge_triangles(const vector<triangle>& triangles) {
+  vector<oriented_polygon> mesh_bounds(const vector<triangle>& triangles) {
     auto tris = triangles;
     vector<oriented_polygon> ps;
     if (tris.size() == 0) {

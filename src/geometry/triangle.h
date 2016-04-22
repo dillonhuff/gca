@@ -22,7 +22,7 @@ namespace gca {
 
   bool is_upward_facing(const triangle& t, double tolerance);
   bool same_orientation(const triangle& x, const triangle& y, double tolerance);
-  vector<oriented_polygon> merge_triangles(const vector<triangle>& tris);
+  vector<oriented_polygon> mesh_bounds(const vector<triangle>& tris);
   ostream& operator<<(ostream& out, const triangle& t);
 
   vector<vector<triangle>> millable_surfaces(const vector<triangle>& tris);
