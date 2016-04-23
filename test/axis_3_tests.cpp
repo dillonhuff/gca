@@ -79,6 +79,17 @@ namespace gca {
 	REQUIRE(pockets.size() == 4);
       }
     }
+
+    SECTION("SlicedCone") {
+      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
+      select_visible_triangles(triangles);
+      auto pockets = make_pockets(triangles, workpiece_depth);
+      
+      SECTION("2 pockets") {
+	REQUIRE(pockets.size() == 2);
+      }
+    }
+
   }
 
   TEST_CASE("Milling surfaces") {
