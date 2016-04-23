@@ -20,7 +20,11 @@ int main(int argc, char* argv[]) {
 
   double tool_radius = 0.1;
   double cut_depth = 0.1;
-  auto lines = mill_surface_lines(triangles, tool_radius, cut_depth);
+  double workpiece_height = 0.5;
+  auto lines = mill_surface_lines(triangles,
+				  tool_radius,
+				  cut_depth,
+				  workpiece_height);
   point shift(-1, -1, 0); //-3, -2.5, -0.5);
   vector<polyline> shifted_lines;
   for (auto l : lines) {

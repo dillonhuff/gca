@@ -200,11 +200,8 @@ namespace gca {
     return pocket(bound, holes, top_height, boundary.height());
   }
   
-  vector<pocket> make_pockets(vector<triangle>& triangles) {
+  vector<pocket> make_pockets(vector<triangle>& triangles, double workpiece_height) {
     vector<vector<triangle>> surfaces = merge_surfaces(triangles);
-    // TODO: Add real calculation of highest triangle z
-    double start_depth = 4.0;
-    double workpiece_height = start_depth + 0.1;
     vector<pocket> pockets;
     for (auto surface : surfaces) {
       pockets.push_back(pocket_for_surface(surface, workpiece_height));
@@ -226,16 +223,18 @@ namespace gca {
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
 				      double tool_diameter,
-				      double cut_depth) {
+				      double cut_depth,
+				      double workpiece_height) {
     select_visible_triangles(triangles);
-    auto pockets = make_pockets(triangles);
+    auto pockets = make_pockets(triangles, workpiece_height);
     return mill_pockets(pockets, tool_diameter, cut_depth);
   }
 
   vector<block> mill_surface(vector<triangle>& triangles,
 			     double tool_diameter,
-			     double cut_depth) {
-    auto pocket_lines = mill_surface_lines(triangles, tool_diameter, cut_depth);
+			     double cut_depth,
+			     double workpiece_height) {
+    auto pocket_lines = mill_surface_lines(triangles, tool_diameter, cut_depth, workpiece_height);
     return emco_f1_code(pocket_lines);
   }
 

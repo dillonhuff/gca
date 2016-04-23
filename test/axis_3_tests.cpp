@@ -24,7 +24,6 @@ namespace gca {
 
       SECTION("Top polygon has height 0.35") {
 	double top_polygon_height = polygons.back().height();
-	cout << "top height = " << top_polygon_height << endl;
 	REQUIRE(within_eps(top_polygon_height, 0.35, 0.00001));
       }
       
@@ -35,11 +34,13 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
+    double workpiece_depth = 1.0;
+
     SECTION("CylinderSquare") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
-      //      auto polygons = preprocess_triangles(triangles);
+
       select_visible_triangles(triangles);
-      auto pockets = make_pockets(triangles);
+      auto pockets = make_pockets(triangles, workpiece_depth);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -71,18 +72,10 @@ namespace gca {
 
     SECTION("CylinderChimneySlot") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
-      // auto polygons = preprocess_triangles(triangles);
-      // auto pockets = make_pockets(polygons);
       select_visible_triangles(triangles);
-      auto pockets = make_pockets(triangles);
+      auto pockets = make_pockets(triangles, workpiece_depth);
       
       SECTION("4 pockets") {
-	for (auto pocket : pockets) {
-	  cout << "pocket end depth = " << pocket.get_end_depth() << endl;
-	  for (auto p : pocket.get_boundaries().front().vertices) {
-	    cout << p << endl;
-	  }
-	}
 	REQUIRE(pockets.size() == 4);
       }
       
@@ -93,11 +86,16 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
+    double workpiece_height = 1.0;
+
     SECTION("Rectangle cylinder") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
       double tool_diameter = 0.05;
       double cut_depth = 0.25;
-      auto mill_paths = mill_surface(triangles, tool_diameter, cut_depth);
+      auto mill_paths = mill_surface(triangles,
+				     tool_diameter,
+				     cut_depth,
+				     workpiece_height);
       REQUIRE(mill_paths.size() > 0);
     }
 
@@ -105,7 +103,7 @@ namespace gca {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders.stl").triangles;
       double tool_diameter = 0.2;
       double cut_depth = 0.5;
-      auto mill_lines = mill_surface_lines(triangles, tool_diameter, cut_depth);
+      auto mill_lines = mill_surface_lines(triangles, tool_diameter, cut_depth, workpiece_height);
       REQUIRE(mill_lines.size() > 0);
     }
   }

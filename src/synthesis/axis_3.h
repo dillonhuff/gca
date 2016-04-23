@@ -12,16 +12,19 @@ namespace gca {
 
   vector<block> mill_surface(vector<triangle>& triangles,
 			     double tool_diameter,
-			     double cut_depth);
+			     double cut_depth,
+			     double workpiece_height);
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
 				      double tool_diameter,
-				      double cut_depth);
+				      double cut_depth,
+				      double workpiece_height);
 
   vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
 
   //  vector<pocket> make_pockets(vector<oriented_polygon> polygons);
-  vector<pocket> make_pockets(vector<triangle>& triangles);  
+  vector<pocket> make_pockets(vector<triangle>& triangles,
+			      double workpiece_height);  
 
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
 }
