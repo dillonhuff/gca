@@ -78,7 +78,6 @@ namespace gca {
       SECTION("4 pockets") {
 	REQUIRE(pockets.size() == 4);
       }
-      
     }
   }
 

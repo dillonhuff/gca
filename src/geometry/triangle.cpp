@@ -6,6 +6,13 @@
 
 namespace gca {
 
+  double min_z(const vector<triangle>& triangles) {
+    auto t = *min_element(begin(triangles), end(triangles),
+			  [](const triangle l, const triangle r)
+			  { return l.v1.z < r.v1.z; });
+    return t.v1.z;
+  }
+
   bool is_upward_facing(const triangle& t, double tolerance) {
     return t.normal.z > tolerance;
   }

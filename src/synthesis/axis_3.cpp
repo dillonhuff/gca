@@ -52,79 +52,6 @@ namespace gca {
     return polyline(vertices);
   }
 
-  template<typename InputIt>
-  pocket level_pocket(InputIt s,
-		      InputIt m,
-		      InputIt e,
-		      double last_level) {
-    vector<oriented_polygon> possible_holes(s, m);
-    vector<oriented_polygon> possible_bounds(m, e);
-    double bottom = (*max_element(begin(possible_bounds),
-				 end(possible_bounds),
-				  [](const oriented_polygon& x,
-				     const oriented_polygon& y)
-      { return x.pt(0).z < y.pt(0).z; })).pt(0).z;
-    assert(possible_bounds.size() > 0);
-
-    vector<oriented_polygon> bounds;
-    for (unsigned i = 0; i < possible_bounds.size(); i++) {
-      oriented_polygon& bound = possible_bounds[i];
-      bool contained = false;
-      for (unsigned j = 0; j < possible_bounds.size(); j++) {
-	if (i != j) {
-	  oriented_polygon& other = possible_bounds[j];
-	  if (contains(other, bound)) {
-	    contained = true;
-	    break;
-	  }
-	}
-      }
-      if (!contained) {
-	bounds.push_back(bound);
-      }
-    }
-
-    vector<oriented_polygon> holes;
-    for (auto hole : possible_holes) {
-      bool contained_by_bound = false;
-      for (auto b : bounds) {
-    	if (contains(b, hole)) {
-    	  contained_by_bound = true;
-    	  break;
-    	}
-      }
-      if (contained_by_bound) {
-    	holes.push_back(hole);
-      }
-    }
-    
-    assert(bottom < last_level);
-    return pocket(bounds, holes, last_level, bottom);
-  }
-
-  // vector<pocket> make_pockets(vector<oriented_polygon> polygons) {
-  //   vector<pocket> pockets;
-  //   double start_depth = polygons.front().vertices.front().z;
-  //   double workpiece_height = start_depth + 0.1;
-  //   double last_level = start_depth;
-  //   auto below_level = begin(polygons);
-  //   while (below_level != end(polygons)) {
-  //     auto pocket = level_pocket(begin(polygons),
-  // 				 below_level,
-  // 				 end(polygons),
-  // 				 workpiece_height);
-  //     pockets.push_back(pocket);
-  //     below_level = find_if(below_level, end(polygons),
-  // 			    [last_level](const oriented_polygon& p)
-  // 			    { return !within_eps(p.vertices.front().z, last_level, 0.01); });
-  //     if (below_level != end(polygons)) {
-  // 	workpiece_height = last_level;
-  // 	last_level = (*below_level).vertices.front().z;
-  //     }
-  //   }
-  //   return pockets;
-  // }
-
   bool adjacent(const triangle l, const triangle r) {
     for (auto l_edge : l.edges()) {
       for (auto r_edge : r.edges()) {
@@ -197,7 +124,7 @@ namespace gca {
     auto boundary = extract_boundary(bounds);
     vector<oriented_polygon> bound{boundary};
     vector<oriented_polygon> holes = bounds;
-    return pocket(bound, holes, top_height, boundary.height());
+    return pocket(bound, holes, top_height, surface);
   }
   
   vector<pocket> make_pockets(vector<triangle>& triangles, double workpiece_height) {

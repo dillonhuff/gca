@@ -3,34 +3,35 @@
 
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
+#include "geometry/triangle.h"
 
 namespace gca {
 
   struct pocket {
   private:
     vector<oriented_polygon> boundaries;
-    vector<oriented_polygon> holes; 
+    vector<oriented_polygon> holes;
 
     double start_depth;
-    double end_depth;
+    
+    vector<triangle> base;
 
   public:
     pocket(vector<oriented_polygon>& boundariesp,
 	   vector<oriented_polygon>& holesp,
 	   double start_depthp,
-	   double end_depthp) :
+	   const vector<triangle>& basep) :
       boundaries(boundariesp),
       holes(holesp),
       start_depth(start_depthp),
-      end_depth(end_depthp) {}
+      base(basep) {}
 
     inline const vector<oriented_polygon>& get_holes() const
     { return holes; }
     inline const vector<oriented_polygon>& get_boundaries() const
     { return boundaries; }
     inline double get_start_depth() const { return start_depth; }
-    inline double get_end_depth() const { return end_depth; }
-
+    inline double get_end_depth() const { return min_z(base); }
   };
 
   vector<polyline> deepen_polyline(vector<double> depths, const polyline& p);
@@ -52,6 +53,7 @@ namespace gca {
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_diameter,
 					double cut_depth);
+
   vector<cut*> polyline_cuts(const polyline& p);
 
 }
