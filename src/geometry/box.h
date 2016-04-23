@@ -38,6 +38,17 @@ namespace gca {
 
   vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z_level);
 
+  template<typename F>
+  vector<point> sample_filtered_points_2d(const box b,
+					  double x_inc,
+					  double y_inc,
+					  double z_level,
+					  F f) {
+    auto points = sample_points_2d(b, x_inc, y_inc, z_level);
+    delete_if(points, f);
+    return points;
+  }
+
   template<typename InputIt>
   box bounding_box(InputIt s, InputIt e) {
     vector<box> boxes;
