@@ -85,8 +85,8 @@ namespace gca {
       select_visible_triangles(triangles);
       auto pockets = make_pockets(triangles, workpiece_depth);
       
-      SECTION("2 pockets") {
-	REQUIRE(pockets.size() == 2);
+      SECTION("1 pocket") {
+	REQUIRE(pockets.size() == 1);
       }
     }
 
