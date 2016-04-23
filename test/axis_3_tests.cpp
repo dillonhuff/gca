@@ -49,8 +49,11 @@ namespace gca {
 	REQUIRE(pockets.front().get_boundaries().size() == 1);
       }
 
-      SECTION("First pocket ends at 0.200001") {
-	REQUIRE(within_eps(pockets.front().get_end_depth(), 0.200001) );
+      SECTION("One pocket ends at 0.200001") {
+	REQUIRE(any_of(begin(pockets), end(pockets),
+		       [](const pocket& p) {
+			 return within_eps(p.get_end_depth(), 0.200001);
+		       }));
       }
 
       SECTION("First pocket has no holes") {
@@ -100,16 +103,5 @@ namespace gca {
       auto mill_lines = mill_surface_lines(triangles, tool_diameter, cut_depth);
       REQUIRE(mill_lines.size() > 0);
     }
-  }
-
-  TEST_CASE("Computing finishes") {
-    arena_allocator a;
-    set_system_allocator(&a);
-
-    // SECTION("Chimney shape") {
-    //   vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
-    //   vector<pocket_info_2P5D> finish_outlines = surface_finishes(triangles);
-    //   REQUIRE(finish_outlines.size() == 1);
-    // }
   }
 }
