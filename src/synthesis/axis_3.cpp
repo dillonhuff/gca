@@ -125,8 +125,66 @@ namespace gca {
   //   return pockets;
   // }
 
-  vector<pocket> make_pockets(const vector<triangle>& triangles) {
+  bool adjacent(const triangle l, const triangle r) {
+    for (auto l_edge : l.edges()) {
+      for (auto r_edge : r.edges()) {
+	if (same_line(l_edge, r_edge)) {
+	  return true;
+	}
+      }
+    }
+    return false;
+  }
+
+  vector<triangle> collect_surface(vector<triangle>& triangles) {
+    assert(triangles.size() > 0);
+    vector<triangle> surface;
+    surface.push_back(triangles.back());
+    triangles.pop_back();
+    int i = 0;
+    while (triangles.size() > 0 && i < triangles.size()) {
+      auto t = triangles[i];
+      bool part_of_surface = false;
+      for (auto surface_triangle : surface) {
+	if (adjacent(surface_triangle, t)) {
+	  part_of_surface = true;
+	  break;
+	}
+      }
+      if (part_of_surface) {
+	surface.push_back(t);
+	triangles.erase(triangles.begin() + i);
+      } else {
+	i++;
+      }
+    }
+    return surface;
+  }
+
+  vector<vector<triangle>> merge_surfaces(vector<triangle>& triangles) {
+    vector<vector<triangle>> surfaces;
+    while (triangles.size() > 0) {
+      surfaces.push_back(collect_surface(triangles));
+    }
+    return surfaces;
+  }
+
+  pocket pocket_for_surface(const vector<triangle>& surface, double top_height) {
+    auto bounds = mesh_bounds(surface);
+    assert(bounds.size() == 1);
+    vector<oriented_polygon> holes;
+    return pocket(bounds, holes, top_height, -1);
+  }
+  
+  vector<pocket> make_pockets(vector<triangle>& triangles) {
+    vector<vector<triangle>> surfaces = merge_surfaces(triangles);
+    // TODO: Add real calculation of highest triangle z
+    double start_depth = 4.0;
+    double workpiece_height = start_depth + 0.1;
     vector<pocket> pockets;
+    for (auto surface : surfaces) {
+      pockets.push_back(pocket_for_surface(surface, workpiece_height));
+    }
     return pockets;
   }
 
