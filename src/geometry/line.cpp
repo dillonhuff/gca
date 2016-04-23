@@ -9,11 +9,11 @@ namespace gca {
     return out;
   }
 
-  bool same_line(const line l, const line r) {
-    bool ss = within_eps(l.start, r.start);
-    bool ee = within_eps(l.end, r.end);
-    bool se = within_eps(l.start, r.end);
-    bool es = within_eps(l.end, r.start);
+  bool same_line(const line l, const line r, double tolerance) {
+    bool ss = within_eps(l.start, r.start, tolerance);
+    bool ee = within_eps(l.end, r.end, tolerance);
+    bool se = within_eps(l.start, r.end, tolerance);
+    bool es = within_eps(l.end, r.start, tolerance);
     return (ss && ee) || (se && es);
   }
 

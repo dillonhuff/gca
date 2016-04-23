@@ -128,7 +128,7 @@ namespace gca {
   bool adjacent(const triangle l, const triangle r) {
     for (auto l_edge : l.edges()) {
       for (auto r_edge : r.edges()) {
-	if (same_line(l_edge, r_edge)) {
+	if (same_line(l_edge, r_edge, 0.001)) {
 	  return true;
 	}
       }
@@ -154,6 +154,7 @@ namespace gca {
       if (part_of_surface) {
 	surface.push_back(t);
 	triangles.erase(triangles.begin() + i);
+	i = 0;
       } else {
 	i++;
       }

@@ -40,7 +40,7 @@ namespace gca {
     
   };
 
-  bool same_line(const line l, const line r);  
+  bool same_line(const line l, const line r, double tolerance=0.0000001);  
   int count_in(const line l, const vector<line> ls);  
   bool adj_segment(const line l, const line r);  
   ostream& operator<<(ostream& out, line l);

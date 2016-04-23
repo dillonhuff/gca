@@ -76,8 +76,13 @@ namespace gca {
       select_visible_triangles(triangles);
       auto pockets = make_pockets(triangles);
       
-
       SECTION("4 pockets") {
+	for (auto pocket : pockets) {
+	  cout << "pocket end depth = " << pocket.get_end_depth() << endl;
+	  for (auto p : pocket.get_boundaries().front().vertices) {
+	    cout << p << endl;
+	  }
+	}
 	REQUIRE(pockets.size() == 4);
       }
       
