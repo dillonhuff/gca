@@ -110,4 +110,27 @@ namespace gca {
     return millable_surfaces;
   }
 
+  bool in_projection(const triangle t, const point p) {
+    vector<point> vs{t.v1, t.v2, t.v3, t.v1};
+    return contains(oriented_polygon(t.normal, vs), p);
+  }
+
+  double z_at(const triangle t, double x, double y) {
+    point a = t.v1;
+    point b = t.v2;
+    point c = t.v3;
+    double y_c_numerator = (b.x - a.x)*(c.z - a.z) - (c.x - a.x)*(b.z - a.z);
+    double x_c_numerator = (b.y - a.y)*(c.z - a.z) - (c.y - a.y)*(b.z - a.z);
+    double denom = (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y);
+    double y_c = y_c_numerator / denom;
+    double x_c = x_c_numerator / denom;
+    return a.z + y_c*(y - a.y) - x_c*(x - a.x);
+  }
+
+  // TODO: Dont just compare to a vertex
+  bool below(const triangle t, const point p) {
+    return p.z < z_at(t, p.x, p.y);
+  }
+
+
 }

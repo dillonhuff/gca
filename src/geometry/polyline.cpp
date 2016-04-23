@@ -68,4 +68,22 @@ namespace gca {
     return off;
   }
 
+  vector<point> points(const polyline& p) {
+    vector<point> pts;
+    for (unsigned i = 0; i < p.num_points(); i++) {
+      pts.push_back(p.pt(i));
+    }
+    return pts;
+  }
+
+  vector<point> points(const vector<polyline>& p) {
+    vector<point> pts;
+    for (auto pl : p) {
+      auto pl_pts = points(pl);
+      pts.insert(end(pts), begin(pl_pts), end(pl_pts));
+    }
+    return pts;
+  }
+
+
 }

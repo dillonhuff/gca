@@ -94,55 +94,9 @@ namespace gca {
     return lines;
   }
 
-  // Change name to reflect roughing and finishing
-  vector<polyline> roughing_lines(const vector<oriented_polygon>& holes,
-  				  const vector<oriented_polygon>& boundaries,
-  				  double last_level,
-  				  double tool_radius) {
-    double sample_increment = tool_radius;
-    box b = bounding_box(begin(boundaries), end(boundaries));
-    auto not_in_safe_region = [&holes, &boundaries](const point p) {
-      bool in_hole = any_of(begin(holes), end(holes),
-		       [p](const oriented_polygon& pl)
-      { return contains(pl, p); });
-      if (in_hole) { return true; }
-      bool outside_bounds = !any_of(begin(boundaries), end(boundaries),
-				    [p](const oriented_polygon& pl)
-      { return contains(pl, p); });
-      return outside_bounds;
-    };
-    auto toolpath_points = sample_filtered_points_2d(b,
-						     sample_increment,
-						     sample_increment,
-						     last_level,
-						     not_in_safe_region);
-    assert(toolpath_points.size() > 0);
-    vector<vector<point>> lpts;
-    split_by(toolpath_points, lpts,
-  	     [&holes](const point l, const point r)
-  	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
-    vector<polyline> lines;
-    for (auto ls : lpts) {
-      lines.push_back(ls);
-    }
-    return lines;
-  }
-
-  vector<polyline> roughing_passes(const vector<oriented_polygon>& holes,
-				   const vector<oriented_polygon>& boundaries,
-				   vector<double> depths,
-				   double tool_radius) {
-    vector<polyline> lines;
-    for (auto depth : depths) {
-      auto rough_level = roughing_lines(holes, boundaries, depth, tool_radius);
-      lines.insert(end(lines), begin(rough_level), end(rough_level));
-    }
-    return lines;
-  }
-  
-  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_radius,
-					double cut_depth) {
+  vector<polyline> finish_pocket(const pocket& pocket,
+				 double tool_radius,
+				 double cut_depth) {
     auto bounds = pocket.get_boundaries();
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
@@ -156,19 +110,117 @@ namespace gca {
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth);
-    vector<polyline> pocket_path = roughing_passes(offset_h,
+    return finish_passes(offset_h,
+			 bound_polys,
+			 depths,
+			 tool_radius);
+  }
+
+  // Change name to reflect roughing and finishing
+  vector<polyline> roughing_lines(const vector<triangle>& base,
+				  const vector<oriented_polygon>& holes,
+  				  const vector<oriented_polygon>& boundaries,
+  				  double last_level,
+  				  double tool_radius) {
+    double sample_increment = tool_radius;
+    box b = bounding_box(begin(boundaries), end(boundaries));
+    auto not_in_safe_region = [&base, &holes, &boundaries](const point p) {
+      bool in_hole = any_of(begin(holes), end(holes),
+		       [p](const oriented_polygon& pl)
+      { return contains(pl, p); });
+      if (in_hole) { return true; }
+      bool outside_bounds = !any_of(begin(boundaries), end(boundaries),
+				    [p](const oriented_polygon& pl)
+      { return contains(pl, p); });
+      if (outside_bounds) { return true; }
+      for (auto t : base) {
+	if (in_projection(t, p) && below(t, p)) { return true; }
+      }
+      return false;
+    };
+    auto toolpath_points = sample_filtered_points_2d(b,
+						     sample_increment,
+						     sample_increment,
+						     last_level,
+						     not_in_safe_region);
+    //assert(toolpath_points.size() > 0);
+    vector<vector<point>> lpts;
+    split_by(toolpath_points, lpts,
+  	     [&holes](const point l, const point r)
+  	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
+    vector<polyline> lines;
+    for (auto ls : lpts) {
+      lines.push_back(ls);
+    }
+    return lines;
+  }
+
+  vector<polyline> roughing_passes(const vector<triangle>& base,
+				   const vector<oriented_polygon>& holes,
+				   const vector<oriented_polygon>& boundaries,
+				   vector<double> depths,
+				   double tool_radius) {
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      auto rough_level = roughing_lines(base, holes, boundaries, depth, tool_radius);
+      lines.insert(end(lines), begin(rough_level), end(rough_level));
+    }
+    return lines;
+  }
+
+  vector<polyline> rough_pocket(const pocket& pocket,
+				double tool_radius,
+				double cut_depth) {
+    auto bounds = pocket.get_boundaries();
+    auto holes = pocket.get_holes();
+    vector<oriented_polygon> offset_h(holes.size());
+    transform(begin(holes), end(holes), begin(offset_h),
+  	      [tool_radius](const oriented_polygon& p)
+  	      { return exterior_offset(p, tool_radius); });
+    vector<oriented_polygon> bound_polys(bounds.size());
+    transform(begin(bounds), end(bounds), begin(bound_polys),
+  	      [tool_radius](const oriented_polygon& p)
+  	      { return interior_offset(p, tool_radius); });
+    vector<double> depths = cut_depths(pocket.get_start_depth(),
+				       pocket.get_end_depth(),
+				       cut_depth);
+    vector<polyline> pocket_path = roughing_passes(pocket.base,
+						   offset_h,
 						   bound_polys,
 						   depths,
 						   tool_radius);
-    auto finish_paths = finish_passes(offset_h,
-				      bound_polys,
-				      depths,
-				      tool_radius);
+    return pocket_path;
+  }
+
+  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
+					double tool_radius,
+					double cut_depth) {
+    // auto bounds = pocket.get_boundaries();
+    // auto holes = pocket.get_holes();
+    // vector<oriented_polygon> offset_h(holes.size());
+    // transform(begin(holes), end(holes), begin(offset_h),
+    // 	      [tool_radius](const oriented_polygon& p)
+    // 	      { return exterior_offset(p, tool_radius); });
+    // vector<oriented_polygon> bound_polys(bounds.size());
+    // transform(begin(bounds), end(bounds), begin(bound_polys),
+    // 	      [tool_radius](const oriented_polygon& p)
+    // 	      { return interior_offset(p, tool_radius); });
+    // vector<double> depths = cut_depths(pocket.get_start_depth(),
+    // 				       pocket.get_end_depth(),
+    // 				       cut_depth);
+    // vector<polyline> pocket_path = roughing_passes(offset_h,
+    // 						   bound_polys,
+    // 						   depths,
+    // 						   tool_radius);
+    // auto finish_paths = finish_passes(offset_h,
+    // 				      bound_polys,
+    // 				      depths,
+    // 				      tool_radius);
+
+    vector<polyline> pocket_path = rough_pocket(pocket, tool_radius, cut_depth);
+    auto finish_paths = finish_pocket(pocket, tool_radius, cut_depth);
     pocket_path.insert(end(pocket_path), begin(finish_paths), end(finish_paths));
     return pocket_path;
-
-    // vector<polyline> pocket_path = roughing_lines(offset_h, bound_polys, pocket.get_start_depth(), tool_radius);
-    // return tile_vertical(pocket_path, pocket.get_start_depth(), pocket.get_end_depth(), cut_depth);
   }
 
   // TODO: Make the spindle_speed and feedrate parameters explicit

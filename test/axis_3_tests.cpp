@@ -80,16 +80,6 @@ namespace gca {
       }
     }
 
-    SECTION("SlicedCone") {
-      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
-      select_visible_triangles(triangles);
-      auto pockets = make_pockets(triangles, workpiece_depth);
-      
-      SECTION("1 pocket") {
-	REQUIRE(pockets.size() == 1);
-      }
-    }
-
   }
 
   TEST_CASE("Milling surfaces") {
@@ -115,6 +105,35 @@ namespace gca {
       double cut_depth = 0.5;
       auto mill_lines = mill_surface_lines(triangles, tool_diameter, cut_depth, workpiece_height);
       REQUIRE(mill_lines.size() > 0);
+    }
+  }
+
+  TEST_CASE("Milling curved surfaces") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    double workpiece_height = 0.5;
+    double cut_depth = 0.1;
+    double tool_radius = 0.075;
+
+    SECTION("SlicedCone") {
+      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
+      select_visible_triangles(triangles);
+      auto pockets = make_pockets(triangles, workpiece_height);
+      
+      SECTION("1 pocket") {
+	REQUIRE(pockets.size() == 1);
+      }
+
+      SECTION("Roughing does not overlap the pocket base") {
+	auto rough_lines = rough_pocket(pockets.front(), tool_radius, cut_depth);
+	auto rough_points = points(rough_lines);
+	bool all_above_pocket_surface =
+	  all_of(begin(rough_points), end(rough_points),
+		 [&pockets](const point p)
+		 { return pockets.front().above_base(p); });
+	REQUIRE(all_above_pocket_surface);
+      }
     }
   }
 }

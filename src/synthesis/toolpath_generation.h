@@ -14,9 +14,10 @@ namespace gca {
 
     double start_depth;
     
+  public:
+
     vector<triangle> base;
 
-  public:
     pocket(vector<oriented_polygon>& boundariesp,
 	   vector<oriented_polygon>& holesp,
 	   double start_depthp,
@@ -32,6 +33,13 @@ namespace gca {
     { return boundaries; }
     inline double get_start_depth() const { return start_depth; }
     inline double get_end_depth() const { return min_z(base); }
+
+    bool above_base(const point p) {
+      for (auto t : base) {
+	if (in_projection(t, p) && below(t, p)) { return false; }
+      }
+      return true;
+    }
   };
 
   vector<polyline> deepen_polyline(vector<double> depths, const polyline& p);
@@ -49,6 +57,10 @@ namespace gca {
 				    int num_repeats,
 				    offset_dir d,
 				    double inc);
+
+  vector<polyline> rough_pocket(const pocket& pocket,
+				double tool_radius,
+				double cut_depth);
 
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_diameter,

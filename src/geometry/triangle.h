@@ -24,6 +24,9 @@ namespace gca {
     }
   };
 
+  bool in_projection(const triangle t, const point p);
+  bool below(const triangle t, const point p);
+
   double min_z(const vector<triangle>& triangles);
   bool is_upward_facing(const triangle& t, double tolerance);
   bool same_orientation(const triangle& x, const triangle& y, double tolerance);

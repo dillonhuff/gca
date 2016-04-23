@@ -64,6 +64,9 @@ namespace gca {
   double signed_area(const polyline& p);
 
   polyline offset(const polyline& p, offset_dir d, double n);
+
+  vector<point> points(const polyline& p);
+  vector<point> points(const vector<polyline>& p);
 }
 
 #endif
