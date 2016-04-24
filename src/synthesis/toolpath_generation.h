@@ -42,7 +42,7 @@ namespace gca {
     }
   };
 
-  vector<polyline> deepen_polyline(vector<double> depths, const polyline& p);
+  vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p);
 
   vector<double> cut_depths(double start_depth,
 			    double end_depth,

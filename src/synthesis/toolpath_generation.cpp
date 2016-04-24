@@ -8,7 +8,7 @@
 
 namespace gca {
 
-  vector<polyline> deepen_polyline(vector<double> depths, const polyline& p) {
+  vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p) {
     vector<polyline> ps;
     for (auto depth : depths) {
       vector<point> pts;
@@ -143,7 +143,6 @@ namespace gca {
 						     sample_increment,
 						     last_level,
 						     not_in_safe_region);
-    //assert(toolpath_points.size() > 0);
     vector<vector<point>> lpts;
     split_by(toolpath_points, lpts,
   	     [&holes](const point l, const point r)
@@ -195,34 +194,15 @@ namespace gca {
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					double tool_radius,
 					double cut_depth) {
-    // auto bounds = pocket.get_boundaries();
-    // auto holes = pocket.get_holes();
-    // vector<oriented_polygon> offset_h(holes.size());
-    // transform(begin(holes), end(holes), begin(offset_h),
-    // 	      [tool_radius](const oriented_polygon& p)
-    // 	      { return exterior_offset(p, tool_radius); });
-    // vector<oriented_polygon> bound_polys(bounds.size());
-    // transform(begin(bounds), end(bounds), begin(bound_polys),
-    // 	      [tool_radius](const oriented_polygon& p)
-    // 	      { return interior_offset(p, tool_radius); });
-    // vector<double> depths = cut_depths(pocket.get_start_depth(),
-    // 				       pocket.get_end_depth(),
-    // 				       cut_depth);
-    // vector<polyline> pocket_path = roughing_passes(offset_h,
-    // 						   bound_polys,
-    // 						   depths,
-    // 						   tool_radius);
-    // auto finish_paths = finish_passes(offset_h,
-    // 				      bound_polys,
-    // 				      depths,
-    // 				      tool_radius);
-
     vector<polyline> pocket_path = rough_pocket(pocket, tool_radius, cut_depth);
     auto finish_paths = finish_pocket(pocket, tool_radius, cut_depth);
     pocket_path.insert(end(pocket_path), begin(finish_paths), end(finish_paths));
     return pocket_path;
   }
 
+  // TODO: Move these to somewhere else, they really dont belong here
+
+  
   // TODO: Make the spindle_speed and feedrate parameters explicit
   cut* mk_cut(const point l, const point r) {
     auto c = linear_cut::make(l, r);
