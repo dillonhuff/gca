@@ -74,4 +74,11 @@ namespace gca {
     REQUIRE(within_eps(a, 180, 0.00001));
   }
 
+  TEST_CASE("Cross product") {
+    point a(1.5, 2.7, -3.4);
+    point b(5.3, -2.9, 6.0);
+    point c(6.34, -27.02, -18.66);
+    REQUIRE(within_eps(cross(a, b), c));
+  }
+
 }

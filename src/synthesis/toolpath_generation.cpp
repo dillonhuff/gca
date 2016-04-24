@@ -78,9 +78,7 @@ namespace gca {
 				  const vector<triangle>& base,
 				  InputIt s,
 				  InputIt e) {
-    for (auto t : base) {
-      if (intersects(t, l)) { return true; } //below(t, l.start) != below(t, l.end)) { return true; }
-    }
+    if (intersects_triangles(l, base)) { return true; }
     if (any_of(s, e,
 	       [l](const oriented_polygon& p)
 	       { return overlaps(l, p); })) {

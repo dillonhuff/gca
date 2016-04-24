@@ -35,6 +35,11 @@ namespace gca {
   ostream& operator<<(ostream& out, const triangle& t);
 
   vector<vector<triangle>> millable_surfaces(const vector<triangle>& tris);
+
+  void select_visible_triangles(vector<triangle>& triangles);
+
+  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
+  bool intersects_triangles(line l, const vector<triangle>& triangles);
 }
 
 #endif

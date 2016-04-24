@@ -46,5 +46,27 @@ namespace gca {
       REQUIRE(faces.size() == 3);
     }
   }
+
+  TEST_CASE("Segment intersection with triangles") {
+    auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
+    // cout << "# triangles: " << triangles.size() << endl;
+    // for (auto t : triangles) {
+    //   cout << t << endl;
+    // }
+
+    SECTION("Line at 10.0") {
+      point s(0.332573, 0.612317, 10.0);
+      point e(0.357573, 0.112317, 10.0);
+      line l(s, e);
+      REQUIRE(!intersects_triangles(l, triangles));
+    }
+
+    SECTION("Line at 0.1") {
+      point s(0.332573, 0.612317, 0.1);
+      point e(0.357573, 0.112317, 0.1);
+      line l(s, e);
+      REQUIRE(intersects_triangles(l, triangles));
+    }
+  }
   
 }

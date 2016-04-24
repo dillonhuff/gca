@@ -136,7 +136,7 @@ namespace gca {
 			       point v0, point v1, point v2) {
     point e1, e2, s, q;
     double a, f, u, v;
-    e1 = v1 - v2;
+    e1 = v1 - v0;
     e2 = v2 - v0;
 
     point h = cross(d, e2);
@@ -174,7 +174,33 @@ namespace gca {
   }  
 
   bool intersects(const triangle t, const line l) {
-    return ray_intersects_triangle(l.start, l.end,
-				   t.v1, t.v2, t.v3);
+    //    return (below(t, l.start) != below(t, l.end));
+    return ray_intersects_triangle(l.start, l.end - l.start,
+    				   t.v1, t.v2, t.v3);
   }
+
+  void select_visible_triangles(vector<triangle>& triangles) {
+    delete_if(triangles,
+	      [](const triangle t)
+	      { return !is_upward_facing(t, 0.05); });
+  }
+
+  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {
+    select_visible_triangles(triangles);
+    auto polygons = mesh_bounds(triangles);
+    // TODO: Use polygon height member function
+    stable_sort(begin(polygons), end(polygons),
+		[](const oriented_polygon& x,
+		   const oriented_polygon& y)
+		{ return x.vertices.front().z > y.vertices.front().z; });
+    return polygons;
+  }
+
+  bool intersects_triangles(line l, const vector<triangle>& triangles) {
+    for (auto t : triangles) {
+      if (intersects(t, l)) { return true; }
+    }
+    return false;
+  }
+
 }
