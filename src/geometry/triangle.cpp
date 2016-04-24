@@ -176,7 +176,9 @@ namespace gca {
   bool intersects(const triangle t, const line l) {
     //    return (below(t, l.start) != below(t, l.end));
     return ray_intersects_triangle(l.start, l.end - l.start,
-    				   t.v1, t.v2, t.v3);
+    				   t.v1, t.v2, t.v3) &&
+      ray_intersects_triangle(l.end, l.start - l.end,
+			      t.v1, t.v2, t.v3);
   }
 
   void select_visible_triangles(vector<triangle>& triangles) {
