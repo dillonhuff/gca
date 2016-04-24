@@ -174,8 +174,7 @@ namespace gca {
   }  
 
   bool intersects(const triangle t, const line l) {
-    return ray_intersects_triangle(l.start, l.end, //p, point d,
+    return ray_intersects_triangle(l.start, l.end,
 				   t.v1, t.v2, t.v3);
-
   }
 }

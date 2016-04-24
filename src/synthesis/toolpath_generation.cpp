@@ -8,6 +8,15 @@
 
 namespace gca {
 
+  template<typename T>
+  int num_elems(vector<vector<T>> v) {
+    int i = 0;
+    for (auto t : v) {
+      i += t.size();
+    }
+    return i;
+  }
+
   vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p) {
     vector<polyline> ps;
     for (auto depth : depths) {
@@ -122,6 +131,15 @@ namespace gca {
 			 tool_radius);
   }
 
+  vector<line> make_lines(const vector<point>& pts) {
+    assert(pts.size() > 1);
+    vector<line> l;
+    for (auto pt = begin(pts); pt != end(pts) - 1; ++pt) {
+      l.push_back(line(*pt, *(pt + 1)));
+    }
+    return l;
+  }
+
   // Change name to reflect roughing and finishing
   vector<polyline> roughing_lines(const vector<triangle>& base,
 				  const vector<oriented_polygon>& holes,
@@ -149,13 +167,26 @@ namespace gca {
 						     sample_increment,
 						     last_level,
 						     not_in_safe_region);
-    vector<vector<point>> lpts;
-    split_by(toolpath_points, lpts,
-  	     [&base, &holes](const point l, const point r)
-  	     { return !overlaps_or_intersects_any(line(l, r), base, begin(holes), end(holes)); });
+    auto overlaps =
+      [&base, &holes](const line l)
+      { return overlaps_or_intersects_any(l, 
+					  base,
+					  begin(holes),
+					  end(holes)); };
+    // vector<vector<point>> lpts;
+    // split_by(toolpath_points, lpts,
+    // 	     [&base, &holes](const point l, const point r)
+    // 	     { return !overlaps_or_intersects_any(line(l, r), base, begin(holes), end(holes)); });
     vector<polyline> lines;
-    for (auto ls : lpts) {
-      lines.push_back(ls);
+    if (toolpath_points.size() > 1) {
+      auto path_lines = make_lines(toolpath_points);
+      cout << "# of lines before = " << path_lines.size() << endl;
+      delete_if(path_lines, overlaps);
+      cout << "# of lines left = " << path_lines.size() << endl;
+      for (auto ls : path_lines) {
+	vector<point> pts{ls.start, ls.end};
+	lines.push_back(polyline(pts));
+      }
     }
     return lines;
   }
