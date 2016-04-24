@@ -53,6 +53,9 @@ namespace gca {
 
   };
 
+  point cross(point b, point c);
+  double dot(point u, point v);
+
   point operator*(double a, const point& other);
   bool within_eps(const point& l, const point& r, double eps=0.0000001);
   bool within_eps(double l, double r, double eps=0.0000001);

@@ -26,6 +26,7 @@ namespace gca {
 
   bool in_projection(const triangle t, const point p);
   bool below(const triangle t, const point p);
+  bool intersects(const triangle t, const line l);
 
   double min_z(const vector<triangle>& triangles);
   bool is_upward_facing(const triangle& t, double tolerance);

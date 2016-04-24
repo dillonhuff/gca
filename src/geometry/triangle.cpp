@@ -132,5 +132,50 @@ namespace gca {
     return p.z < z_at(t, p.x, p.y);
   }
 
+  bool ray_intersects_triangle(point p, point d,
+			       point v0, point v1, point v2) {
+    point e1, e2, s, q;
+    double a, f, u, v;
+    e1 = v1 - v2;
+    e2 = v2 - v0;
 
+    point h = cross(d, e2);
+    a = dot(e1, h);
+
+    if (a > -0.00001 && a < 0.00001) {
+      return(false);
+    }
+
+    f = 1/a;
+    s = p - v0;
+    u = f * (dot(s, h));
+
+    if (u < 0.0 || u > 1.0)
+      return(false);
+
+    q = cross(s, e1);
+    v = f * dot(d, q);
+
+    if (v < 0.0 || u + v > 1.0) {
+      return false;
+    }
+
+    // at this stage we can compute t to find out where
+    // the intersection point is on the line
+    double t = f * dot(e2, q);
+
+    if (t > 0.00001) {// ray intersection
+      return true;
+    } else {// this means that there is a line intersection
+      // but not a ray intersection
+      return false;
+    }
+
+  }  
+
+  bool intersects(const triangle t, const line l) {
+    return ray_intersects_triangle(l.start, l.end, //p, point d,
+				   t.v1, t.v2, t.v3);
+
+  }
 }

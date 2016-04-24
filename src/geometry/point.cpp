@@ -79,4 +79,16 @@ namespace gca {
     point sp = start - ((l/se.len())*se);
     return sp;
   }
+
+  double dot(point u, point v) {
+    return u.dot(v);
+  }
+
+  point cross(point b, point c) {
+    double x = (b).y * (c).z - (c).y * (b).z;
+    double y = (b).z * (c).x - (c).z * (b).x;
+    double z = (b).x * (c).y - (c).x * (b).y;
+    return point(x, y, z);
+  }
+
 }

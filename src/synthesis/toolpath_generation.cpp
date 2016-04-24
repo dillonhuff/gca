@@ -65,7 +65,13 @@ namespace gca {
   }
 
   template<typename InputIt>
-  bool overlaps_or_intersects_any(line l, InputIt s, InputIt e) {
+  bool overlaps_or_intersects_any(line l,
+				  const vector<triangle>& base,
+				  InputIt s,
+				  InputIt e) {
+    for (auto t : base) {
+      if (intersects(t, l)) { return true; } //below(t, l.start) != below(t, l.end)) { return true; }
+    }
     if (any_of(s, e,
 	       [l](const oriented_polygon& p)
 	       { return overlaps(l, p); })) {
@@ -145,8 +151,8 @@ namespace gca {
 						     not_in_safe_region);
     vector<vector<point>> lpts;
     split_by(toolpath_points, lpts,
-  	     [&holes](const point l, const point r)
-  	     { return !overlaps_or_intersects_any(line(l, r), begin(holes), end(holes)); });
+  	     [&base, &holes](const point l, const point r)
+  	     { return !overlaps_or_intersects_any(line(l, r), base, begin(holes), end(holes)); });
     vector<polyline> lines;
     for (auto ls : lpts) {
       lines.push_back(ls);
