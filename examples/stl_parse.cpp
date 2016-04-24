@@ -34,6 +34,10 @@ int main(int argc, char* argv[]) {
     }
     shifted_lines.push_back(pts);
   }
+  // vector<polyline> compressed_lines;
+  // for (auto l : shifted_lines) {
+  //   compressed_lines.push_back(compress_lines(l, 0.001));
+  // }
   auto bs = emco_f1_code(shifted_lines);
 
   cout.setf(ios::fixed, ios::floatfield);

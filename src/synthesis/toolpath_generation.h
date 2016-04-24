@@ -4,6 +4,7 @@
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
+#include "synthesis/cut.h"
 
 namespace gca {
 
@@ -68,6 +69,7 @@ namespace gca {
 
   vector<cut*> polyline_cuts(const polyline& p);
 
+  polyline compress_lines(const polyline& p, double tolerance);
 }
 
 #endif

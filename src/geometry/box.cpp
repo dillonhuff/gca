@@ -107,4 +107,25 @@ namespace gca {
     return pts;
   }
 
+  vector<point> sample_points_3d(const box b,
+				 double x_inc,
+				 double y_inc,
+				 double z_inc) {
+    vector<point> pts;
+    double x = b.x_min;
+    while (x < b.x_max) {
+      double y = b.y_min;
+      while (y < b.y_max) {
+	double z = b.z_min;
+	while (z < b.z_max) {
+	  pts.push_back(point(x, y, z));
+	  z += z_inc;
+	}
+	y += y_inc;
+      }
+      x += x_inc;
+    }
+    return pts;
+  }
+
 }

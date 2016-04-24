@@ -48,6 +48,7 @@ namespace gca {
   point trim_or_extend_unsafe(line prev, line next);
   maybe<point> line_intersection_2d(line prev, line next);
   maybe<point> segment_intersection_2d(line p, line l);
+  vector<line> make_lines(const vector<point>& pts);
 }
 
 #endif

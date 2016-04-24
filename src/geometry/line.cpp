@@ -131,4 +131,13 @@ namespace gca {
     return p.t;
   }
 
+  vector<line> make_lines(const vector<point>& pts) {
+    assert(pts.size() > 1);
+    vector<line> l;
+    for (auto pt = begin(pts); pt != end(pts) - 1; ++pt) {
+      l.push_back(line(*pt, *(pt + 1)));
+    }
+    return l;
+  }
+
 }

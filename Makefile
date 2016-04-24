@@ -2080,6 +2080,33 @@ test/system_algorithm_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.s
 .PHONY : test/system_algorithm_tests.cpp.s
 
+test/toolpath_generation_tests.o: test/toolpath_generation_tests.cpp.o
+
+.PHONY : test/toolpath_generation_tests.o
+
+# target to build an object file
+test/toolpath_generation_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.o
+.PHONY : test/toolpath_generation_tests.cpp.o
+
+test/toolpath_generation_tests.i: test/toolpath_generation_tests.cpp.i
+
+.PHONY : test/toolpath_generation_tests.i
+
+# target to preprocess a source file
+test/toolpath_generation_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.i
+.PHONY : test/toolpath_generation_tests.cpp.i
+
+test/toolpath_generation_tests.s: test/toolpath_generation_tests.cpp.s
+
+.PHONY : test/toolpath_generation_tests.s
+
+# target to generate assembly for a file
+test/toolpath_generation_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.s
+.PHONY : test/toolpath_generation_tests.cpp.s
+
 test/toolpath_tests.o: test/toolpath_tests.cpp.o
 
 .PHONY : test/toolpath_tests.o
@@ -2399,6 +2426,9 @@ help:
 	@echo "... test/system_algorithm_tests.o"
 	@echo "... test/system_algorithm_tests.i"
 	@echo "... test/system_algorithm_tests.s"
+	@echo "... test/toolpath_generation_tests.o"
+	@echo "... test/toolpath_generation_tests.i"
+	@echo "... test/toolpath_generation_tests.s"
 	@echo "... test/toolpath_tests.o"
 	@echo "... test/toolpath_tests.i"
 	@echo "... test/toolpath_tests.s"

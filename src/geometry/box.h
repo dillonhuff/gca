@@ -37,6 +37,10 @@ namespace gca {
   bool fits_inside(const box& inner, const box& outer);
 
   vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z_level);
+  vector<point> sample_points_3d(const box b,
+				 double x_inc,
+				 double y_inc,
+				 double z_inc);
 
   template<typename F>
   vector<point> sample_filtered_points_2d(const box b,
@@ -49,6 +53,17 @@ namespace gca {
     return points;
   }
 
+  template<typename F>
+  vector<point> sample_filtered_points_3d(const box b,
+					  double x_inc,
+					  double y_inc,
+					  double z_inc,
+					  F f) {
+    auto points = sample_points_3d(b, x_inc, y_inc, z_inc);
+    delete_if(points, f);
+    return points;
+  }
+  
   template<typename InputIt>
   box bounding_box(InputIt s, InputIt e) {
     vector<box> boxes;

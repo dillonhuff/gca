@@ -129,13 +129,22 @@ namespace gca {
 			 tool_radius);
   }
 
-  vector<line> make_lines(const vector<point>& pts) {
-    assert(pts.size() > 1);
-    vector<line> l;
-    for (auto pt = begin(pts); pt != end(pts) - 1; ++pt) {
-      l.push_back(line(*pt, *(pt + 1)));
+  bool not_in_safe_region(const point p,
+			  const vector<triangle>& base,
+			  const vector<oriented_polygon>& holes,
+			  const vector<oriented_polygon>& boundaries) {
+    bool in_hole = any_of(begin(holes), end(holes),
+			  [p](const oriented_polygon& pl)
+			  { return contains(pl, p); });
+    if (in_hole) { return true; }
+    bool outside_bounds = !any_of(begin(boundaries), end(boundaries),
+				  [p](const oriented_polygon& pl)
+				  { return contains(pl, p); });
+    if (outside_bounds) { return true; }
+    for (auto t : base) {
+      if (in_projection(t, p) && below(t, p)) { return true; }
     }
-    return l;
+    return false;
   }
 
   // Change name to reflect roughing and finishing
@@ -146,41 +155,23 @@ namespace gca {
   				  double tool_radius) {
     double sample_increment = tool_radius;
     box b = bounding_box(begin(boundaries), end(boundaries));
-    auto not_in_safe_region = [&base, &holes, &boundaries](const point p) {
-      bool in_hole = any_of(begin(holes), end(holes),
-		       [p](const oriented_polygon& pl)
-      { return contains(pl, p); });
-      if (in_hole) { return true; }
-      bool outside_bounds = !any_of(begin(boundaries), end(boundaries),
-				    [p](const oriented_polygon& pl)
-      { return contains(pl, p); });
-      if (outside_bounds) { return true; }
-      for (auto t : base) {
-	if (in_projection(t, p) && below(t, p)) { return true; }
-      }
-      return false;
-    };
+    auto not_safe = [&base, &holes, &boundaries](const point p)
+      { return not_in_safe_region(p, base, holes, boundaries); };
     auto toolpath_points = sample_filtered_points_2d(b,
 						     sample_increment,
 						     sample_increment,
 						     last_level,
-						     not_in_safe_region);
+						     not_safe);
     auto overlaps =
       [&base, &holes](const line l)
       { return overlaps_or_intersects_any(l, 
 					  base,
 					  begin(holes),
 					  end(holes)); };
-    // vector<vector<point>> lpts;
-    // split_by(toolpath_points, lpts,
-    // 	     [&base, &holes](const point l, const point r)
-    // 	     { return !overlaps_or_intersects_any(line(l, r), base, begin(holes), end(holes)); });
     vector<polyline> lines;
     if (toolpath_points.size() > 1) {
       auto path_lines = make_lines(toolpath_points);
-      cout << "# of lines before = " << path_lines.size() << endl;
       delete_if(path_lines, overlaps);
-      cout << "# of lines left = " << path_lines.size() << endl;
       for (auto ls : path_lines) {
 	vector<point> pts{ls.start, ls.end};
 	lines.push_back(polyline(pts));
@@ -192,6 +183,7 @@ namespace gca {
   vector<polyline> roughing_passes(const vector<triangle>& base,
 				   const vector<oriented_polygon>& holes,
 				   const vector<oriented_polygon>& boundaries,
+				   // Make this ref
 				   vector<double> depths,
 				   double tool_radius) {
     vector<polyline> lines;
@@ -217,7 +209,7 @@ namespace gca {
   	      { return interior_offset(p, tool_radius); });
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
-				       cut_depth);
+				       cut_depth / 2.0);
     vector<polyline> pocket_path = roughing_passes(pocket.base,
 						   offset_h,
 						   bound_polys,
@@ -254,6 +246,25 @@ namespace gca {
       c.push_back(mk_cut(l.start, l.end));
     }
     return c;
+  }
+
+  bool same_slope(const line l, const line r, double t) {
+    return within_eps(angle_between(l.end - l.start, r.end - r.start), 0, t);
+  }
+
+  polyline compress_lines(const polyline& p, double tolerance) {
+    assert(p.num_points() > 1);
+    if (p.num_points() == 2) { return p; }
+    vector<vector<line>> slope_groups;
+    split_by(p.lines(), slope_groups,
+	     [tolerance](const line l, const line r)
+	     { return same_slope(l, r, tolerance); });
+    vector<point> pts;
+    for (auto slope_group : slope_groups) {
+      pts.push_back(slope_group.front().start);
+      pts.push_back(slope_group.back().end);
+    }
+    return polyline(pts);
   }
 
 }
