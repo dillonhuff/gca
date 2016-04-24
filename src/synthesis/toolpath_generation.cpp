@@ -147,13 +147,13 @@ namespace gca {
     return false;
   }
 
-  // Change name to reflect roughing and finishing
   vector<polyline> roughing_lines(const vector<triangle>& base,
 				  const vector<oriented_polygon>& holes,
   				  const vector<oriented_polygon>& boundaries,
   				  double last_level,
   				  double tool_radius) {
     double sample_increment = tool_radius;
+    assert(boundaries.size() == 1);
     box b = bounding_box(begin(boundaries), end(boundaries));
     auto not_safe = [&base, &holes, &boundaries](const point p)
       { return not_in_safe_region(p, base, holes, boundaries); };
@@ -165,9 +165,9 @@ namespace gca {
     auto overlaps =
       [&base, &holes](const line l)
       { return overlaps_or_intersects_any(l, 
-					  base,
-					  begin(holes),
-					  end(holes)); };
+    					  base,
+    					  begin(holes),
+    					  end(holes)); };
     vector<polyline> lines;
     if (toolpath_points.size() > 1) {
       auto path_lines = make_lines(toolpath_points);
@@ -216,6 +216,17 @@ namespace gca {
 						   depths,
 						   tool_radius);
     return pocket_path;
+  }
+
+  vector<polyline> rough_pockets(const vector<pocket>& pockets,
+				 double tool_radius,
+				 double cut_depth) {
+    vector<polyline> ps;
+    for (auto pocket : pockets) {
+      auto ls = rough_pocket(pocket, tool_radius, cut_depth);
+      ps.insert(end(ps), begin(ls), end(ls));
+    }
+    return ps;
   }
 
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,

@@ -22,7 +22,6 @@ namespace gca {
 
   vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
 
-  //  vector<pocket> make_pockets(vector<oriented_polygon> polygons);
   vector<pocket> make_pockets(vector<triangle>& triangles,
 			      double workpiece_height);  
 

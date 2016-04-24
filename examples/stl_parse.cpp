@@ -17,14 +17,26 @@ int main(int argc, char* argv[]) {
   set_system_allocator(&a);
 
   auto triangles = parse_stl(argv[1]).triangles;
+  select_visible_triangles(triangles);
 
-  double tool_radius = 0.025;
+  double tool_radius = 0.05;
   double cut_depth = 0.1;
-  double workpiece_height = 0.3;
-  auto lines = mill_surface_lines(triangles,
-				  tool_radius,
-				  cut_depth,
-				  workpiece_height);
+  double workpiece_height = 0.8;
+
+  auto pockets = make_pockets(triangles, workpiece_height);
+  cout << "# of pockets = " << pockets.size() << endl;
+  // if (!(pockets.size() == 1)) {
+  //   cout << "# of pockets = " << pockets.size() << endl;
+  //   assert(false);
+  // }
+  auto lines = rough_pockets(pockets,
+			     tool_radius,
+			     cut_depth);
+  // auto lines = mill_surface_lines(triangles,
+  // 				  tool_radius,
+  // 				  cut_depth,
+  // 				  workpiece_height);
+
   point shift(0, 0, 0); //(-1, -1, 0); //-3, -2.5, -0.5);
   vector<polyline> shifted_lines;
   for (auto l : lines) {
@@ -34,10 +46,7 @@ int main(int argc, char* argv[]) {
     }
     shifted_lines.push_back(pts);
   }
-  // vector<polyline> compressed_lines;
-  // for (auto l : shifted_lines) {
-  //   compressed_lines.push_back(compress_lines(l, 0.001));
-  // }
+
   auto bs = emco_f1_code(shifted_lines);
 
   cout.setf(ios::fixed, ios::floatfield);
