@@ -4,6 +4,7 @@
 #include "geometry/box.h"
 #include "geometry/line.h"
 #include "geometry/point.h"
+#include "geometry/polyline.h"
 
 namespace gca {
 
@@ -41,6 +42,10 @@ namespace gca {
 				   double inc);
 
   box bounding_box(const oriented_polygon& p);
+
+  oriented_polygon project(const oriented_polygon& p, double z);
+
+  polyline to_polyline(const oriented_polygon& p);
   
 }
 

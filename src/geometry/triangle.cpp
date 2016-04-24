@@ -184,7 +184,7 @@ namespace gca {
   void select_visible_triangles(vector<triangle>& triangles) {
     delete_if(triangles,
 	      [](const triangle t)
-	      { return !is_upward_facing(t, 0.05); });
+	      { return !is_upward_facing(t, 0.5); });
   }
 
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {

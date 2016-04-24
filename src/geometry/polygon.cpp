@@ -103,4 +103,17 @@ namespace gca {
     return oriented_polygon(p.normal, pts);
   }
 
+  oriented_polygon project(const oriented_polygon& p, double z) {
+    vector<point> pts;
+    for (auto pt : p.vertices) {
+      pts.push_back(point(pt.x, pt.y, z));
+    }
+    return oriented_polygon(p.normal, pts);
+  }
+
+  polyline to_polyline(const oriented_polygon& p) {
+    auto v = p.vertices;
+    v.push_back(p.vertices.front());
+    return polyline(v);
+  }
 }
