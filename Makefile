@@ -995,6 +995,39 @@ src/geometry/triangular_mesh.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/triangular_mesh.cpp.s
 .PHONY : src/geometry/triangular_mesh.cpp.s
 
+src/geometry/trimesh.o: src/geometry/trimesh.cpp.o
+
+.PHONY : src/geometry/trimesh.o
+
+# target to build an object file
+src/geometry/trimesh.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/trimesh.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/trimesh.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/trimesh.cpp.o
+.PHONY : src/geometry/trimesh.cpp.o
+
+src/geometry/trimesh.i: src/geometry/trimesh.cpp.i
+
+.PHONY : src/geometry/trimesh.i
+
+# target to preprocess a source file
+src/geometry/trimesh.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/trimesh.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/trimesh.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/trimesh.cpp.i
+.PHONY : src/geometry/trimesh.cpp.i
+
+src/geometry/trimesh.s: src/geometry/trimesh.cpp.s
+
+.PHONY : src/geometry/trimesh.s
+
+# target to generate assembly for a file
+src/geometry/trimesh.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/trimesh.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/trimesh.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/trimesh.cpp.s
+.PHONY : src/geometry/trimesh.cpp.s
+
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 .PHONY : src/simulators/mill_tool.o
@@ -2539,6 +2572,9 @@ help:
 	@echo "... src/geometry/triangular_mesh.o"
 	@echo "... src/geometry/triangular_mesh.i"
 	@echo "... src/geometry/triangular_mesh.s"
+	@echo "... src/geometry/trimesh.o"
+	@echo "... src/geometry/trimesh.i"
+	@echo "... src/geometry/trimesh.s"
 	@echo "... src/simulators/mill_tool.o"
 	@echo "... src/simulators/mill_tool.i"
 	@echo "... src/simulators/mill_tool.s"

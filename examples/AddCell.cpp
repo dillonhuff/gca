@@ -8,6 +8,7 @@
 #include <vtkCellArray.h>
 #include <vtkPolyData.h>
 
+#include "geometry/triangular_mesh.h"
 #include "system/parse_stl.h"
 
 void visualize_polydata(vtkSmartPointer<vtkPolyData> polyData) {
@@ -73,7 +74,9 @@ int main(int argc, char* argv[]) {
 
   auto file = argv[1];
   auto stl_triangles = gca::parse_stl(file).triangles;
-  auto polyData = polydata_from_triangle_list(stl_triangles);
+  auto mesh = make_mesh(stl_triangles, 0.001);
+  auto tl_list = mesh.triangle_list();
+  auto polyData = polydata_from_triangle_list(tl_list);
   visualize_polydata(polyData);
  
   return EXIT_SUCCESS;

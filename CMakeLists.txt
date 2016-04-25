@@ -89,6 +89,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/polyline.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/geometry/triangular_mesh.cpp
+	 ./src/geometry/trimesh.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/output.cpp

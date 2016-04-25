@@ -11,7 +11,9 @@ namespace gca {
 
     SECTION("Box mesh in and out") {
       auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
-      triangular_mesh m = make_mesh(triangles);
+      triangular_mesh m = make_mesh(triangles, 0.001);
+      auto res_triangles = m.triangle_list();
+      REQUIRE(res_triangles.size() == triangles.size());
     }
   }
 }
