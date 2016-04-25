@@ -17,8 +17,7 @@ int main(int argc, char* argv[]) {
   set_system_allocator(&a);
 
   auto triangles = parse_stl(argv[1]).triangles;
-  select_visible_triangles(triangles);
-
+  //  select_visible_triangles(triangles);
   double tool_radius = 0.05;
   //  double cut_depth = 0.1;
   double workpiece_height = 0.8;

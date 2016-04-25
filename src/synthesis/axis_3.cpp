@@ -38,6 +38,7 @@ namespace gca {
   bool adjacent(const triangle l, const triangle r) {
     for (auto l_edge : l.edges()) {
       for (auto r_edge : r.edges()) {
+	// NOTE: Used to be 0.001
 	if (same_line(l_edge, r_edge, 0.001)) {
 	  return true;
 	}

@@ -14,7 +14,7 @@ namespace gca {
   }
 
   bool is_upward_facing(const triangle& t, double tolerance) {
-    return t.normal.z > tolerance;
+    return (t.normal.normalize()).z > tolerance;
   }
 
   bool same_orientation(const triangle& x, const triangle& y, double tolerance) {
@@ -184,7 +184,7 @@ namespace gca {
   void select_visible_triangles(vector<triangle>& triangles) {
     delete_if(triangles,
 	      [](const triangle t)
-	      { return !is_upward_facing(t, 0.5); });
+	      { return !is_upward_facing(t, 0.01); });
   }
 
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {

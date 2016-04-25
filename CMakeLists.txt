@@ -11,7 +11,8 @@ ENDIF()
 project(gca)
 
 #Add -Wextra ?
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -pedantic -Werror -Wall")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2")
+# REINTRODUCE WHEN NOT USING VTK ? -pedantic -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -27,6 +28,7 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/line_tests.cpp
 	       test/unfold_tests.cpp
 	       test/circular_arc_tests.cpp
+	       test/mesh_tests.cpp
 	       test/checker_tests.cpp
 	       test/cut_tests.cpp
 	       test/toolpath_generation_tests.cpp
@@ -49,6 +51,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/triangle.h
+	    ./src/geometry/triangular_mesh.h
 	    ./src/simulators/mill_tool.h
 	    ./src/simulators/region.h
 	    ./src/simulators/sim_mill.h
@@ -85,6 +88,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/polygon.cpp
 	 ./src/geometry/polyline.cpp
 	 ./src/geometry/triangle.cpp
+	 ./src/geometry/triangular_mesh.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/output.cpp
@@ -121,6 +125,24 @@ add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
 #add_executable(face-graph examples/face_graph.cpp ${SRCS})
 
 ######### VTK Example ##########
+
+# Make command:
+# /opt/local/bin/cmake -DVTK_DIR:PATH=/Users/dillon/Downloads/VTK-build/ .
+
+cmake_minimum_required(VERSION 2.8)
+ 
+PROJECT(AddCell)
+
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+ 
+add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
+ 
+if(VTK_LIBRARIES)
+  target_link_libraries(AddCell ${VTK_LIBRARIES})
+else()
+  target_link_libraries(AddCell vtkHybrid vtkWidgets)
+endif()
 
 # find_package(VTK REQUIRED)
 # include(${VTK_USE_FILE})
