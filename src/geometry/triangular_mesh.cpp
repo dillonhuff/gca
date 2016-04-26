@@ -76,4 +76,36 @@ namespace gca {
     return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
   }
 
+  double sign(point p1, point p2, point p3) {
+    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+  }
+
+  bool point_in_triangle_2d(point pt, point v1, point v2, point v3) {
+    bool b1, b2, b3;
+
+    b1 = sign(pt, v1, v2) < 0.0f;
+    b2 = sign(pt, v2, v3) < 0.0f;
+    b3 = sign(pt, v3, v1) < 0.0f;
+
+    return ((b1 == b2) && (b2 == b3));
+  }
+
+  double triangular_mesh::z_at(double x, double y) const {
+    for (unsigned i = 0; i < tri_vertices.size(); i++) {
+      auto t = tri_vertices[i];
+      auto orient = face_orientations[i];
+      if (point_in_triangle_2d(point(x, y, 0),
+			       vertices[t.v[0]],
+			       vertices[t.v[1]],
+			       vertices[t.v[2]]) &&
+	  orient.z > 0.01) {
+	// TODO: Add proper triangle height computation
+	cout << "Point at " << vertices[t.v[0]].z << endl;
+	return vertices[t.v[0]].z;
+      }
+    }
+    cout << "ERROR: No z value for point: " << point(x, y, 0) << endl;
+    assert(false);
+  }
+
 }

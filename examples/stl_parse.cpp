@@ -1,6 +1,7 @@
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
+#include "geometry/triangular_mesh.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
@@ -22,14 +23,37 @@ int main(int argc, char* argv[]) {
   //  double cut_depth = 0.1;
   double workpiece_height = 0.8;
 
-  auto pockets = make_pockets(triangles, workpiece_height);
-  cout << "# of pockets = " << pockets.size() << endl;
-  vector<polyline> pts;
-  for (auto pocket : pockets) {
-    auto bounds = pocket.get_boundaries();
-    for (auto bound : bounds) {
-      pts.push_back(to_polyline(interior_offset(project(bound, 0.0), tool_radius)));
-    }
+  auto mesh = make_mesh(triangles, 0.0001);
+  assert(mesh.is_connected());
+
+  box b = mesh.bounding_box();
+  b.x_min += 0.01;
+  b.y_min += 0.01;
+  b.z_min += 0.01;
+
+  vector<point> pts_z = sample_points_2d(b, tool_radius, tool_radius, 1.0);
+
+  vector<point> pts;
+  for (auto pt : pts_z) {
+    pts.push_back(point(pt.x, pt.y, mesh.z_at(pt.x, pt.y)));
+  }
+
+  vector<polyline> lines;
+  lines.push_back(pts);
+  auto bs = emco_f1_code(lines); //shifted_lines);
+
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
+  cout << bs << endl;
+  
+  // auto pockets = make_pockets(triangles, workpiece_height);
+  // cout << "# of pockets = " << pockets.size() << endl;
+  // vector<polyline> pts;
+  // for (auto pocket : pockets) {
+  //   auto bounds = pocket.get_boundaries();
+  //   for (auto bound : bounds) {
+  //     pts.push_back(to_polyline(interior_offset(project(bound, 0.0), tool_radius)));
+  //   }
     // vector<oriented_polygon> bound_polys(bounds.size());
     // transform(begin(bounds), end(bounds), begin(bound_polys),
     // 	      [tool_radius](const oriented_polygon& p)
@@ -43,7 +67,7 @@ int main(int argc, char* argv[]) {
     //   pts.push_back(new_pts);
     // }
     //pts.insert(end(pts), begin(new_pts), end(new_pts));
-  }
+  //  }
   // if (!(pockets.size() == 1)) {
   //   cout << "# of pockets = " << pockets.size() << endl;
   //   assert(false);
@@ -65,11 +89,5 @@ int main(int argc, char* argv[]) {
   //   }
   //   shifted_lines.push_back(pts);
   // }
-
-  auto bs = emco_f1_code(pts); //shifted_lines);
-
-  cout.setf(ios::fixed, ios::floatfield);
-  cout.setf(ios::showpoint);
-  cout << bs << endl;
 }
 

@@ -1,6 +1,7 @@
 #ifndef GCA_TRIANGULAR_MESH_H
 #define GCA_TRIANGULAR_MESH_H
 
+#include "geometry/box.h"
 #include "geometry/triangle.h"
 #include "geometry/trimesh.h"
 
@@ -14,7 +15,6 @@ namespace gca {
     trimesh_t mesh;
 
   public:
-
     triangular_mesh(const std::vector<point>& vertices_p,
 		    const std::vector<triangle_t>& triangles_p,
 		    const std::vector<point>& face_orientations_p,
@@ -33,6 +33,10 @@ namespace gca {
 
     bool is_constant_orientation_vertex(const point p,
 					double tolerance) const;
+
+    inline box bounding_box() const { return bound_positions(vertices); }
+
+    double z_at(double x, double y) const;
     
     std::vector<triangle> triangle_list() {
       std::vector<triangle> ts;
