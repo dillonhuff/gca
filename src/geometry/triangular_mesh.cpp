@@ -90,7 +90,7 @@ namespace gca {
     return ((b1 == b2) && (b2 == b3));
   }
 
-  double triangular_mesh::z_at(double x, double y) const {
+  maybe<double> triangular_mesh::z_at(double x, double y) const {
     for (unsigned i = 0; i < tri_vertices.size(); i++) {
       auto t = tri_vertices[i];
       auto orient = face_orientations[i];
@@ -100,12 +100,19 @@ namespace gca {
 			       vertices[t.v[2]]) &&
 	  orient.z > 0.01) {
 	// TODO: Add proper triangle height computation
-	cout << "Point at " << vertices[t.v[0]].z << endl;
-	return vertices[t.v[0]].z;
+	return maybe<double>(vertices[t.v[0]].z);
       }
     }
-    cout << "ERROR: No z value for point: " << point(x, y, 0) << endl;
-    assert(false);
+    return maybe<double>();
+  }
+
+  double triangular_mesh::z_at_unsafe(double x, double y) const {
+    maybe<double> z = z_at(x, y);
+    if (!(z.just)) {
+      cout << "ERROR: No z value for point: " << point(x, y, 0) << endl;
+      assert(false);
+    }
+    return z.t;
   }
 
 }

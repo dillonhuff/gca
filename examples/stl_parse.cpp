@@ -21,25 +21,31 @@ int main(int argc, char* argv[]) {
   //  select_visible_triangles(triangles);
   double tool_radius = 0.05;
   //  double cut_depth = 0.1;
-  double workpiece_height = 0.8;
+  double workpiece_height = 1.0;
 
   auto mesh = make_mesh(triangles, 0.0001);
   assert(mesh.is_connected());
 
   box b = mesh.bounding_box();
-  b.x_min += 0.01;
-  b.y_min += 0.01;
-  b.z_min += 0.01;
 
-  vector<point> pts_z = sample_points_2d(b, tool_radius, tool_radius, 1.0);
+  vector<point> pts_z =
+    sample_filtered_points_2d(b, tool_radius / 3.0, tool_radius / 3.0, 1.0,
+			      [&mesh](const point p)
+			      { return !mesh.z_at(p.x, p.y).just; });
 
   vector<point> pts;
   for (auto pt : pts_z) {
-    pts.push_back(point(pt.x, pt.y, mesh.z_at(pt.x, pt.y)));
+    pts.push_back(point(pt.x, pt.y, mesh.z_at_unsafe(pt.x, pt.y)));
   }
 
+  vector<vector<point>> pt_lines;
+  split_by(pts, pt_lines,
+	   [](const point l, const point r)
+	   { return within_eps(l.x, r.x); });
   vector<polyline> lines;
-  lines.push_back(pts);
+  for (auto pt_group : pt_lines) {
+    lines.push_back(pt_group);
+  }
   auto bs = emco_f1_code(lines); //shifted_lines);
 
   cout.setf(ios::fixed, ios::floatfield);

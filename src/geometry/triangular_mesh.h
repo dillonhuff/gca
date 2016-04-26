@@ -36,7 +36,8 @@ namespace gca {
 
     inline box bounding_box() const { return bound_positions(vertices); }
 
-    double z_at(double x, double y) const;
+    maybe<double> z_at(double x, double y) const;
+    double z_at_unsafe(double x, double y) const;
     
     std::vector<triangle> triangle_list() {
       std::vector<triangle> ts;
