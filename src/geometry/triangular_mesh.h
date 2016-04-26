@@ -8,16 +8,31 @@ namespace gca {
 
   class triangular_mesh {
   private:
-    vector<point> vertices;
-    vector<triangle_t> tri_vertices;
+    std::vector<point> vertices;
+    std::vector<triangle_t> tri_vertices;
+    std::vector<point> face_orientations;
     trimesh_t mesh;
 
   public:
 
     triangular_mesh(const std::vector<point>& vertices_p,
 		    const std::vector<triangle_t>& triangles_p,
+		    const std::vector<point>& face_orientations_p,
 		    trimesh_t mesh_p) :
-      vertices(vertices_p), tri_vertices(triangles_p), mesh(mesh_p) {}
+      vertices(vertices_p),
+      tri_vertices(triangles_p),
+      face_orientations(face_orientations_p),
+      mesh(mesh_p) {}
+
+    inline bool is_connected() const {
+      return mesh.boundary_vertices().size() == 0;
+    }
+
+    inline point face_orientation(index_t i) const
+    { return face_orientations[i]; }
+
+    bool is_constant_orientation_vertex(const point p,
+					double tolerance) const;
     
     std::vector<triangle> triangle_list() {
       std::vector<triangle> ts;

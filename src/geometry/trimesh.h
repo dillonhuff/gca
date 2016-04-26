@@ -146,9 +146,9 @@ namespace gca {
       }
     }
 
-    std::vector< index_t > vertex_face_neighbors( const index_t vertex_index ) const {
-      std::vector< index_t > result;
-      vertex_face_neighbors( vertex_index, result );
+    std::vector<index_t> vertex_face_neighbors(const index_t vertex_index) const {
+      std::vector<index_t> result;
+      vertex_face_neighbors(vertex_index, result);
       return result;
     }
     
