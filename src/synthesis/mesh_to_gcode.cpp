@@ -86,12 +86,6 @@ namespace gca {
 				    double tolerance) {
     assert(faces.size() > 0);
     auto f = faces;
-    cout << "Original size = " << f.size() << endl;
-    cout << "Original faces: " << endl;
-    for (auto i : f) {
-      cout << i << endl;
-    }
-
     sort(begin(f), end(f),
 	 [&part, normal](index_t l, index_t r)
 	 { return distance_along(normal, part.face_triangle(l)) >
@@ -103,10 +97,6 @@ namespace gca {
 				   distance_along(normal, part.face_triangle(i)),
 				   tolerance); });
     assert(f.size() > 0);
-    cout << "outermost faces: " << endl;
-    for (auto i : f) {
-      cout << i << endl;
-    }
     return f;
   }
 
