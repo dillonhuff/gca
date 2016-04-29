@@ -94,6 +94,7 @@ namespace gca {
       delete_if(faces_to_cut,
 		[&part_mesh, &next_orient](index_t i)
 		{ return face_is_millable_from(i, next_orient, part_mesh); });
+      orients.push_back(next_orient);
     }
     return orients;
   }
