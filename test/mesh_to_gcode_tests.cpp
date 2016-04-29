@@ -28,6 +28,14 @@ namespace gca {
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
+
+    SECTION("Box with hole has 6 clippings and two pocketings") {
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
+      auto mesh = make_mesh(box_triangles, 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      REQUIRE(result_programs.size() == 8);
+    }
+
   }
 
   TEST_CASE("Stable surfaces") {
