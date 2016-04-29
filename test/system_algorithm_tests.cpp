@@ -86,4 +86,21 @@ namespace gca {
       REQUIRE(res == correct);
     }
   }
+
+  TEST_CASE("Take while") {
+
+    SECTION("Take the whole list") {
+      vector<int> v{1, 3, 5, 2, 8, 34, 2};
+      take_while(v, [](int i) { return i < 500; });
+      vector<int> correct{1, 3, 5, 2, 8, 34, 2};
+      REQUIRE(v == correct);
+    }
+    
+    SECTION("Several values") {
+      vector<int> v{1, 3, 5, 2, 8, 34, 2};
+      take_while(v, [](int i) { return i < 5; });
+      vector<int> correct{1, 3};
+      REQUIRE(v == correct);
+    }
+  }
 }

@@ -39,6 +39,14 @@ namespace gca {
     inline point face_orientation(index_t i) const
     { return face_orientations[i]; }
 
+    inline triangle face_triangle(index_t i) const {
+      auto t = tri_vertices[i];
+      return triangle(face_orientations[i],
+		      vertices[t.i()],
+		      vertices[t.j()],
+		      vertices[t.k()]);
+    }
+
     bool is_constant_orientation_vertex(const point p,
 					double tolerance) const;
 

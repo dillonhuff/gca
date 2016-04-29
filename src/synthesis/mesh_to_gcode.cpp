@@ -74,11 +74,40 @@ namespace gca {
     return const_orient_face_indices;
   }
 
+  double distance_along(point normal, const triangle t) {
+    point p = t.v1;
+    point dir = normal.normalize();
+    return ((p.dot(dir))*dir).len();
+  }
+
   std::vector<index_t> outermost_by(point normal,
 				    const std::vector<index_t> faces,
+				    const triangular_mesh& part,
 				    double tolerance) {
+    assert(faces.size() > 0);
     auto f = faces;
-    return faces;
+    cout << "Original size = " << f.size() << endl;
+    cout << "Original faces: " << endl;
+    for (auto i : f) {
+      cout << i << endl;
+    }
+
+    sort(begin(f), end(f),
+	 [&part, normal](index_t l, index_t r)
+	 { return distance_along(normal, part.face_triangle(l)) >
+	   distance_along(normal, part.face_triangle(r)); });
+    double outer_dist = distance_along(normal, part.face_triangle(f.front()));
+    take_while(f,
+	       [&part, normal, outer_dist, tolerance](index_t i)
+	       { return within_eps(outer_dist,
+				   distance_along(normal, part.face_triangle(i)),
+				   tolerance); });
+    assert(f.size() > 0);
+    cout << "outermost faces: " << endl;
+    for (auto i : f) {
+      cout << i << endl;
+    }
+    return f;
   }
 
   std::vector<surface> part_stable_surfaces(const triangular_mesh& part) {
@@ -87,7 +116,7 @@ namespace gca {
     for (auto f : const_orient_face_indices) {
       assert(f.size() > 0);
       point face_normal = part.face_orientation(f.front());
-      vector<index_t> outer_face = outermost_by(face_normal, f, 0.001);
+      vector<index_t> outer_face = outermost_by(face_normal, f, part, 0.001);
       stable_face_indices.push_back(outer_face);
     }
     vector<surface> surfaces;

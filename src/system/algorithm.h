@@ -128,6 +128,14 @@ namespace gca {
     t.erase(t.begin() + t.size() - s, t.end());
   }
 
+  template<typename T, typename F>
+  void
+  take_while(T& t, F f) {
+    auto r = find_if_not(t.begin(), t.end(), f);
+    auto s = distance(t.begin(), r);
+    t.erase(t.begin() + s, t.end());
+  }
+
   // template<typename T, typename Q>
   // struct pair_iter {
   //   typename T::iterator t;
