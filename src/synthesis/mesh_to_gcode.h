@@ -22,14 +22,36 @@ namespace gca {
 
   class gcode_program {};
 
-  class surface {};
+  class surface {
+  protected:
+    const triangular_mesh* parent_mesh;
+    vector<index_t> tri_indexes;
+
+  public:
+    inline bool contains(index_t ind) {
+      for (unsigned i = 0; i < tri_indexes.size(); i++) {
+	if (ind == tri_indexes[i]) { return true; }
+      }
+      return false;
+    }
+
+    surface(const triangular_mesh* p_parent_mesh,
+	    const vector<index_t>& p_tri_indexes) :
+      parent_mesh(p_parent_mesh), tri_indexes(p_tri_indexes) {}
+  };
 
   class stock_orientation {};
+
+  std::vector<surface> part_stable_surfaces(const triangular_mesh& m);
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& m,
 					   const vice v,
 					   const vector<tool>& tools,
 					   const workpiece_dimensions w_dims);
+
+  void remove_sa_surfaces(const std::vector<surface>& surfaces,
+			  std::vector<index_t>& indices);
+
 }
 
 #endif

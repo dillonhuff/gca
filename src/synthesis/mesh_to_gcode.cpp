@@ -41,6 +41,9 @@ namespace gca {
 
   bool any_sa_surface_contains(index_t i,
 			       const std::vector<surface>& surfaces) {
+    for (auto surface : surfaces) {
+      if (surface.contains(i)) { return true; }
+    }
     return false;
   }
 
@@ -51,8 +54,46 @@ namespace gca {
 	      { return any_sa_surface_contains(i, surfaces); });
   }
 
-  std::vector<surface> part_stable_surfaces(const triangular_mesh& m) {
+  std::vector<std::vector<index_t>>
+  const_orientation_regions(const triangular_mesh& part) {
+    auto faces = part.face_indexes();
+    stable_sort(begin(faces), end(faces),
+		[&part](index_t l, index_t r)
+		{ return part.face_orientation(l).x < part.face_orientation(r).x; });
+    stable_sort(begin(faces), end(faces),
+		[&part](index_t l, index_t r)
+		{ return part.face_orientation(l).y < part.face_orientation(r).y; });
+    stable_sort(begin(faces), end(faces),
+		[&part](index_t l, index_t r)
+		{ return part.face_orientation(l).z < part.face_orientation(r).z; });
+    vector<vector<index_t>> const_orient_face_indices;
+    split_by(faces,
+	     const_orient_face_indices,
+	     [&part](index_t l, index_t r)
+	     { return within_eps(part.face_orientation(l), part.face_orientation(r)); });
+    return const_orient_face_indices;
+  }
+
+  std::vector<index_t> outermost_by(point normal,
+				    const std::vector<index_t> faces,
+				    double tolerance) {
+    auto f = faces;
+    return faces;
+  }
+
+  std::vector<surface> part_stable_surfaces(const triangular_mesh& part) {
+    auto const_orient_face_indices = const_orientation_regions(part);
+    vector<vector<index_t>> stable_face_indices;
+    for (auto f : const_orient_face_indices) {
+      assert(f.size() > 0);
+      point face_normal = part.face_orientation(f.front());
+      vector<index_t> outer_face = outermost_by(face_normal, f, 0.001);
+      stable_face_indices.push_back(outer_face);
+    }
     vector<surface> surfaces;
+    for (auto f : stable_face_indices) {
+      surfaces.push_back(surface(&part, f));
+    }
     return surfaces;
   }
 
@@ -107,9 +148,11 @@ namespace gca {
     auto workpiece_mesh = align_workpiece(part_ss, w_dims);
     classify_part_surfaces(part_ss, workpiece_mesh);
     vector<index_t> face_inds = part_mesh.face_indexes();
+    cout << "# initial faces = " << face_inds.size() << endl;
     remove_sa_surfaces(part_ss, face_inds);
     vector<gcode_program> ps =
       workpiece_clipping_programs(workpiece_mesh, part_mesh);
+    cout << "# faces left = " << face_inds.size() << endl;
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);
     for (auto orient : orients) {
