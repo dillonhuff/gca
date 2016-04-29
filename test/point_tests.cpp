@@ -66,6 +66,13 @@ namespace gca {
     REQUIRE(within_eps(a, 180, 0.00001));
   }
 
+  TEST_CASE("Angle between is 90") {
+    point p(1, 0, 0);
+    point q(0, 0, 1);
+    double a = angle_between(p, q);
+    REQUIRE(within_eps(a, 90, 0.00001));
+  }
+  
   TEST_CASE("Angle between is 180 2") {
     point p(-1, -1.75, 0);
     point q(1, 1.75, 0);

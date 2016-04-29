@@ -58,7 +58,7 @@ namespace gca {
     if (within_eps(u, v)) { return 0.0; }
     double l = u.len() * v.len();
     double d = u.dot(v);
-    if (within_eps(d, 0)) { return 180.0; }
+    if (within_eps(d, 0)) { return 90.0; }
     double m = (u.dot(v)) / l;
     double rads = safe_acos(m);
     return (180.0/M_PI)*rads;

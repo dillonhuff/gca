@@ -131,13 +131,54 @@ namespace gca {
   bool face_is_millable_from(index_t i,
 			     const stock_orientation& orient,
 			     const triangular_mesh& part_mesh) {
-    return true;
+    point top_normal = orient.top_normal();
+    point i_normal = part_mesh.face_orientation(i);
+    return within_eps(angle_between(top_normal, i_normal), 0, 95);
   }
 
+  bool orthogonal_flat_surfaces(const surface* l, const surface* r)
+  {
+    point l_orient = l->face_orientation(l->front());
+    point r_orient = r->face_orientation(r->front());
+    double theta = angle_between(l_orient, r_orient);
+    return within_eps(theta, 90, 0.1);
+  }
+
+  bool parallel_flat_surfaces(const surface* l, const surface* r)
+  {
+    point l_orient = l->face_orientation(l->front());
+    point r_orient = r->face_orientation(r->front());
+    double theta = angle_between(l_orient, r_orient);
+    return within_eps(theta, 180, 0.1);
+  }
+  
   std::vector<stock_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const triangular_mesh& part_mesh) {
-    vector<stock_orientation> orients{stock_orientation()};
+    vector<stock_orientation> orients;
+    for (unsigned i = 0; i < surfaces.size(); i++) {
+      const surface* next_top = &(surfaces[i]);
+      for (unsigned j = 0; j < surfaces.size(); j++) {
+	const surface* next_left = &(surfaces[j]);
+	if (orthogonal_flat_surfaces(next_top, next_left)) {
+	  for (unsigned k = 0; k < surfaces.size(); k++) {
+	    const surface* next_right = &(surfaces[k]);
+	    if (parallel_flat_surfaces(next_right, next_left)) {
+	      for (unsigned l = 0; l < surfaces.size(); l++) {
+		const surface* next_bottom = &(surfaces[l]);
+		if (parallel_flat_surfaces(next_bottom, next_top)) {
+		  orients.push_back(stock_orientation(next_top,
+						      next_left,
+						      next_right,
+						      next_bottom));
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    assert(orients.size() > 0);
     return orients;
   }
 
@@ -150,11 +191,17 @@ namespace gca {
     vector<stock_orientation> orients;
     while (faces_to_cut.size() > 0) {
       assert(all_orients.size() > 0);
-      auto next_orient = all_orients.front();
+      cout << "orientations_to_cut, # faces left = " << faces_to_cut.size() << endl;
+      cout << "Orientations left = " << all_orients.size() << endl;
+      auto next_orient = all_orients.back();
+      all_orients.pop_back();
+      unsigned old_size = faces_to_cut.size();
       delete_if(faces_to_cut,
 		[&part_mesh, &next_orient](index_t i)
 		{ return face_is_millable_from(i, next_orient, part_mesh); });
-      orients.push_back(next_orient);
+      if (faces_to_cut.size() != old_size) {
+	orients.push_back(next_orient);
+      }
     }
     return orients;
   }
