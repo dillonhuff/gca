@@ -41,7 +41,7 @@ namespace gca {
 
   bool any_sa_surface_contains(index_t i,
 			       const std::vector<surface>& surfaces) {
-    return true;
+    return false;
   }
 
   void remove_sa_surfaces(const std::vector<surface>& surfaces,
@@ -56,6 +56,7 @@ namespace gca {
     return surfaces;
   }
 
+  // TODO: Replace this dummy
   std::vector<gcode_program>
   workpiece_clipping_programs(const triangular_mesh& workpiece_mesh,
 			      const triangular_mesh& part_mesh) {
@@ -67,6 +68,36 @@ namespace gca {
     return clip_progs;
   }
 
+  bool face_is_millable_from(index_t i,
+			     const stock_orientation& orient,
+			     const triangular_mesh& part_mesh) {
+    return true;
+  }
+
+  std::vector<stock_orientation>
+  all_stable_orientations(const std::vector<surface>& surfaces,
+			  const triangular_mesh& part_mesh) {
+    vector<stock_orientation> orients{stock_orientation()};
+    return orients;
+  }
+
+  std::vector<stock_orientation>
+  orientations_to_cut(const triangular_mesh& part_mesh,
+		      const std::vector<surface>& surfaces,
+		      std::vector<index_t>& faces_to_cut) {
+    vector<stock_orientation> all_orients =
+      all_stable_orientations(surfaces, part_mesh);
+    vector<stock_orientation> orients;
+    while (faces_to_cut.size() > 0) {
+      assert(all_orients.size() > 0);
+      auto next_orient = all_orients.front();
+      delete_if(faces_to_cut,
+		[&part_mesh, &next_orient](index_t i)
+		{ return face_is_millable_from(i, next_orient, part_mesh); });
+    }
+    return orients;
+  }
+
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const vice v,
 					   const vector<tool>& tools,
@@ -76,9 +107,13 @@ namespace gca {
     classify_part_surfaces(part_ss, workpiece_mesh);
     vector<index_t> face_inds = part_mesh.face_indexes();
     remove_sa_surfaces(part_ss, face_inds);
-    assert(face_inds.size() == 0);
     vector<gcode_program> ps =
       workpiece_clipping_programs(workpiece_mesh, part_mesh);
+    vector<stock_orientation> orients =
+      orientations_to_cut(part_mesh, part_ss, face_inds);
+    for (auto orient : orients) {
+      ps.push_back(gcode_program());
+    }
     return ps;
   }
 }

@@ -24,6 +24,8 @@ namespace gca {
 
   class surface {};
 
+  class stock_orientation {};
+
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& m,
 					   const vice v,
 					   const vector<tool>& tools,

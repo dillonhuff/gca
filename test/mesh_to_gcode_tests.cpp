@@ -21,5 +21,13 @@ namespace gca {
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 6);
     }
+
+    SECTION("Box with hole has 6 clippings and one pocketing") {
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithTopHole.stl").triangles;
+      auto mesh = make_mesh(box_triangles, 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      REQUIRE(result_programs.size() == 7);
+    }
+
   }
 }
