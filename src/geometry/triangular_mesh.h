@@ -1,6 +1,8 @@
 #ifndef GCA_TRIANGULAR_MESH_H
 #define GCA_TRIANGULAR_MESH_H
 
+#include <numeric>
+
 #include "geometry/box.h"
 #include "geometry/triangle.h"
 #include "geometry/trimesh.h"
@@ -24,6 +26,12 @@ namespace gca {
       face_orientations(face_orientations_p),
       mesh(mesh_p) {}
 
+    inline std::vector<index_t> face_indexes() const {
+      std::vector<index_t> indices(tri_vertices.size());
+      std::iota(begin(indices), end(indices), 0);
+      return indices;
+    }
+
     inline bool is_connected() const {
       return mesh.boundary_vertices().size() == 0;
     }
@@ -43,8 +51,9 @@ namespace gca {
       std::vector<triangle> ts;
       // TODO: Add real triangle -> normal map or compute normals
       point dummy_normal(1, 0, 0);
-      for (auto t : tri_vertices) {
-	ts.push_back(triangle(dummy_normal,
+      for (unsigned i = 0; i < tri_vertices.size(); i++) {
+	auto t = tri_vertices[i];
+	ts.push_back(triangle(face_orientations[i],
 			      vertices[t.i()],
 			      vertices[t.j()],
 			      vertices[t.k()]));

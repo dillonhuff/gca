@@ -85,5 +85,20 @@ namespace gca {
     return pts;
   }
 
-
+  polyline shift(const polyline& p, const point s) {
+    std::vector<point> pts;
+    for (auto pt : p) {
+      pts.push_back(pt + s);
+    }
+    return polyline(pts);
+  }
+  
+  std::vector<polyline> shift_lines(const std::vector<polyline>& lines,
+				    const point s) {
+    vector<polyline> slines;
+    for (auto pl : lines) {
+      slines.push_back(shift(pl, s));
+    }
+    return slines;
+  }
 }

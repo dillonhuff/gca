@@ -65,8 +65,12 @@ namespace gca {
 
   polyline offset(const polyline& p, offset_dir d, double n);
 
-  vector<point> points(const polyline& p);
-  vector<point> points(const vector<polyline>& p);
+  std::vector<point> points(const polyline& p);
+  std::vector<point> points(const vector<polyline>& p);
+
+  std::vector<polyline> shift_lines(const std::vector<polyline>& lines,
+				    const point s);
+  polyline shift(const polyline& p, const point s);
 }
 
 #endif

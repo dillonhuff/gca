@@ -23,14 +23,16 @@ void visualize_polydata(vtkSmartPointer<vtkPolyData> polyData) {
   actor->SetMapper(mapper);
  
   vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
-  vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
+  renderer->AddActor(actor);
+  renderer->SetBackground(.1, .2, .3); // Background color green
+
+  vtkSmartPointer<vtkRenderWindow> renderWindow =
+    vtkSmartPointer<vtkRenderWindow>::New();
   renderWindow->AddRenderer(renderer);
+
   vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
     vtkSmartPointer<vtkRenderWindowInteractor>::New();
   renderWindowInteractor->SetRenderWindow(renderWindow);
- 
-  renderer->AddActor(actor);
-  renderer->SetBackground(.1, .2, .3); // Background color green
  
   renderWindow->Render();
   renderWindowInteractor->Start();

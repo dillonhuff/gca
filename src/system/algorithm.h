@@ -7,6 +7,16 @@ using namespace std;
 
 namespace gca {
 
+  template<typename E, typename T>
+  void remove(E e, T& t) {
+    t.erase(remove(begin(t), end(t), e), end(t));
+  }
+
+  template<typename E, typename T>
+  bool elem(E e, T t) {
+    return find(begin(t), end(t), e) != end(t);
+  }
+
   template<typename InputIt, typename OutputIt, typename F>
   OutputIt apply_between(InputIt s, InputIt e, OutputIt r, F f) {
     while (s != (e - 1)) {

@@ -42,6 +42,8 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/cut_scheduling_tests.cpp
 	       test/gcode_to_cuts_tests.cpp
 	       test/machine_state_tests.cpp
+	       test/orientation_scheduling_tests.cpp
+	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp)
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
@@ -56,10 +58,12 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/simulators/region.h
 	    ./src/simulators/sim_mill.h
 	    ./src/simulators/sim_res.h
+	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/cut.h
 	    ./src/synthesis/linear_cut.h
 	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
+	    ./src/synthesis/orientation_scheduling.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
 	    ./src/synthesis/axis_3.h
@@ -92,6 +96,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/trimesh.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
+	 ./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/synthesis/dxf_reader.cpp
@@ -101,6 +106,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
 	 ./src/synthesis/machine.cpp
+	 ./src/synthesis/orientation_scheduling.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp
@@ -123,6 +129,7 @@ add_executable(all-tests ${SRCS} ${TEST_FILES})
 # add_executable(misc examples/misc.cpp ${SRCS})
 # add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
+add_executable(cut-box examples/cut_box.cpp ${SRCS})
 #add_executable(face-graph examples/face_graph.cpp ${SRCS})
 
 ######### VTK Example ##########
