@@ -133,7 +133,7 @@ namespace gca {
 			     const triangular_mesh& part_mesh) {
     point top_normal = orient.top_normal();
     point i_normal = part_mesh.face_orientation(i);
-    return within_eps(angle_between(top_normal, i_normal), 0, 95);
+    return within_eps(angle_between(top_normal, i_normal), 0, 90);
   }
 
   bool orthogonal_flat_surfaces(const surface* l, const surface* r)
@@ -153,31 +153,29 @@ namespace gca {
   }
   
   std::vector<stock_orientation>
-  all_stable_orientations(const std::vector<surface>& surfaces,
-			  const triangular_mesh& part_mesh) {
+  all_stable_orientations(const std::vector<surface>& surfaces) {
     vector<stock_orientation> orients;
-    for (unsigned i = 0; i < surfaces.size(); i++) {
-      const surface* next_top = &(surfaces[i]);
+    // for (unsigned i = 0; i < surfaces.size(); i++) {
+    //   const surface* next_top = &(surfaces[i]);
       for (unsigned j = 0; j < surfaces.size(); j++) {
 	const surface* next_left = &(surfaces[j]);
-	if (orthogonal_flat_surfaces(next_top, next_left)) {
+	//	if (orthogonal_flat_surfaces(next_top, next_left)) {
 	  for (unsigned k = 0; k < surfaces.size(); k++) {
 	    const surface* next_right = &(surfaces[k]);
 	    if (parallel_flat_surfaces(next_right, next_left)) {
 	      for (unsigned l = 0; l < surfaces.size(); l++) {
 		const surface* next_bottom = &(surfaces[l]);
-		if (parallel_flat_surfaces(next_bottom, next_top)) {
-		  orients.push_back(stock_orientation(next_top,
-						      next_left,
+		if (orthogonal_flat_surfaces(next_bottom, next_left)) {
+		  orients.push_back(stock_orientation(next_left,
 						      next_right,
 						      next_bottom));
 		}
 	      }
 	    }
 	  }
-	}
+	  //}
       }
-    }
+      //    }
     assert(orients.size() > 0);
     return orients;
   }
@@ -186,13 +184,10 @@ namespace gca {
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& surfaces,
 		      std::vector<index_t>& faces_to_cut) {
-    vector<stock_orientation> all_orients =
-      all_stable_orientations(surfaces, part_mesh);
+    vector<stock_orientation> all_orients = all_stable_orientations(surfaces);
     vector<stock_orientation> orients;
     while (faces_to_cut.size() > 0) {
       assert(all_orients.size() > 0);
-      cout << "orientations_to_cut, # faces left = " << faces_to_cut.size() << endl;
-      cout << "Orientations left = " << all_orients.size() << endl;
       auto next_orient = all_orients.back();
       all_orients.pop_back();
       unsigned old_size = faces_to_cut.size();

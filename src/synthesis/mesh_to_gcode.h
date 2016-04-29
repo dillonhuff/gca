@@ -28,12 +28,8 @@ namespace gca {
     vector<index_t> tri_indexes;
 
   public:
-    // Change to binary search over sorted indexes
     inline bool contains(index_t ind) {
-      for (unsigned i = 0; i < tri_indexes.size(); i++) {
-	if (ind == tri_indexes[i]) { return true; }
-      }
-      return false;
+      return std::binary_search(begin(tri_indexes), end(tri_indexes), ind);
     }
 
     inline index_t front() const {
@@ -53,20 +49,20 @@ namespace gca {
 
   class stock_orientation {
   protected:
-    const surface* top;
     const surface* left;
     const surface* right;
     const surface* bottom;
 
   public:
-    inline point top_normal() const
-    {  return top->face_orientation(top->front()); }
+    inline point top_normal() const {
+      point bn = bottom->face_orientation(bottom->front());
+      return bn - 2*bn;
+    }
 
-    stock_orientation(const surface* p_top,
-		      const surface* p_left,
+    stock_orientation(const surface* p_left,
 		      const surface* p_right,
 		      const surface* p_bottom) :
-      top(p_top), left(p_left), right(p_right), bottom(p_bottom) {}
+      left(p_left), right(p_right), bottom(p_bottom) {}
   };
 
   std::vector<surface> part_stable_surfaces(const triangular_mesh& m);
