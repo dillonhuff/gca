@@ -29,7 +29,7 @@ namespace gca {
       REQUIRE(result_programs.size() == 7);
     }
 
-    SECTION("Box with hole has 6 clippings and two pocketings") {
+    SECTION("Box with two holes has 6 clippings and two pocketings") {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
@@ -42,19 +42,31 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
-    auto mesh = make_mesh(box_triangles, 0.001);
-    auto stable_surfaces = part_stable_surfaces(mesh);
+    SECTION("Simple box") {
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
+      auto mesh = make_mesh(box_triangles, 0.001);
+      auto stable_surfaces = part_stable_surfaces(mesh);
 
-    SECTION("Simple box produces only workpiece tightening programs") {
-      REQUIRE(stable_surfaces.size() == 6);
+      SECTION("Simple box produces only workpiece tightening programs") {
+	REQUIRE(stable_surfaces.size() == 6);
+      }
+
+      SECTION("All simple box surfaces are part of a stable face") {
+	vector<index_t> fis = mesh.face_indexes();
+	remove_sa_surfaces(stable_surfaces,
+			   fis);
+	REQUIRE(fis.size() == 0);
+      }
     }
 
-    SECTION("All simple box surfaces are part of a stable face") {
-      vector<index_t> fis = mesh.face_indexes();
-      remove_sa_surfaces(stable_surfaces,
-			 fis);
-      REQUIRE(fis.size() == 0);
+    SECTION("Box with a hole") {
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
+      auto mesh = make_mesh(box_triangles, 0.001);
+      auto stable_surfaces = part_stable_surfaces(mesh);
+
+      SECTION("Simple box produces only workpiece tightening programs") {
+	REQUIRE(stable_surfaces.size() == 6);
+      }
     }
   }
 }

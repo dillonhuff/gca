@@ -56,7 +56,9 @@ namespace gca {
   public:
     inline point top_normal() const {
       point bn = bottom->face_orientation(bottom->front());
-      return bn - 2*bn;
+      point n = bn - 2*bn;
+      assert(within_eps(angle_between(n, bn), 180, 0.1));
+      return n;
     }
 
     stock_orientation(const surface* p_left,

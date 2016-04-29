@@ -136,16 +136,14 @@ namespace gca {
     return within_eps(angle_between(top_normal, i_normal), 0, 90);
   }
 
-  bool orthogonal_flat_surfaces(const surface* l, const surface* r)
-  {
+  bool orthogonal_flat_surfaces(const surface* l, const surface* r) {
     point l_orient = l->face_orientation(l->front());
     point r_orient = r->face_orientation(r->front());
     double theta = angle_between(l_orient, r_orient);
     return within_eps(theta, 90, 0.1);
   }
 
-  bool parallel_flat_surfaces(const surface* l, const surface* r)
-  {
+  bool parallel_flat_surfaces(const surface* l, const surface* r) {
     point l_orient = l->face_orientation(l->front());
     point r_orient = r->face_orientation(r->front());
     double theta = angle_between(l_orient, r_orient);
@@ -155,27 +153,22 @@ namespace gca {
   std::vector<stock_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces) {
     vector<stock_orientation> orients;
-    // for (unsigned i = 0; i < surfaces.size(); i++) {
-    //   const surface* next_top = &(surfaces[i]);
-      for (unsigned j = 0; j < surfaces.size(); j++) {
-	const surface* next_left = &(surfaces[j]);
-	//	if (orthogonal_flat_surfaces(next_top, next_left)) {
-	  for (unsigned k = 0; k < surfaces.size(); k++) {
-	    const surface* next_right = &(surfaces[k]);
-	    if (parallel_flat_surfaces(next_right, next_left)) {
-	      for (unsigned l = 0; l < surfaces.size(); l++) {
-		const surface* next_bottom = &(surfaces[l]);
-		if (orthogonal_flat_surfaces(next_bottom, next_left)) {
-		  orients.push_back(stock_orientation(next_left,
-						      next_right,
-						      next_bottom));
-		}
-	      }
+    for (unsigned j = 0; j < surfaces.size(); j++) {
+      const surface* next_left = &(surfaces[j]);
+      for (unsigned k = 0; k < surfaces.size(); k++) {
+	const surface* next_right = &(surfaces[k]);
+	if (parallel_flat_surfaces(next_right, next_left)) {
+	  for (unsigned l = 0; l < surfaces.size(); l++) {
+	    const surface* next_bottom = &(surfaces[l]);
+	    if (orthogonal_flat_surfaces(next_bottom, next_left)) {
+	      orients.push_back(stock_orientation(next_left,
+						  next_right,
+						  next_bottom));
 	    }
 	  }
-	  //}
+	}
       }
-      //    }
+    }
     assert(orients.size() > 0);
     return orients;
   }
@@ -191,10 +184,14 @@ namespace gca {
       auto next_orient = all_orients.back();
       all_orients.pop_back();
       unsigned old_size = faces_to_cut.size();
+      for (auto f : faces_to_cut) {
+	cout << part_mesh.face_orientation(f) << endl;
+      }
       delete_if(faces_to_cut,
 		[&part_mesh, &next_orient](index_t i)
 		{ return face_is_millable_from(i, next_orient, part_mesh); });
       if (faces_to_cut.size() != old_size) {
+	cout << "Faces left = " << faces_to_cut.size() << endl;
 	orients.push_back(next_orient);
       }
     }
@@ -217,6 +214,7 @@ namespace gca {
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);
     for (auto orient : orients) {
+      cout << "top normal = " << orient.top_normal() << endl;
       ps.push_back(gcode_program());
     }
     return ps;
