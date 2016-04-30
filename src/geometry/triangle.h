@@ -1,6 +1,7 @@
 #ifndef GCA_TRIANGLE_H
 #define GCA_TRIANGLE_H
 
+#include <cmath>
 #include <vector>
 
 #include "geometry/point.h"
@@ -22,10 +23,19 @@ namespace gca {
     vector<line> edges() const {
       return {line(v1, v2), line(v2, v3), line(v3, v1)};
     }
+
+    double area() const {
+      double a = (v1  - v2).len();
+      double b = (v2  - v3).len();
+      double c = (v1  - v3).len();
+      double s = (a + b + c) / 2.0;
+      return sqrt(s*(s - a)*(s - b)*(s - c));
+    }
   };
 
   bool in_projection(const triangle t, const point p);
   bool below(const triangle t, const point p);
+  double z_at(const triangle t, double x, double y);
   bool intersects(const triangle t, const line l);
 
   double min_z(const vector<triangle>& triangles);

@@ -7,6 +7,21 @@ namespace gca {
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const triangular_mesh& workpiece_mesh) {
+    vector<point> normals;
+    normals.push_back(point(1, 0, 0));
+    normals.push_back(point(-1, 0, 0));
+    normals.push_back(point(0, 1, 0));
+    normals.push_back(point(0, -1, 0));
+    normals.push_back(point(0, 0, 1));
+    normals.push_back(point(0, 0, -1));
+
+    for (auto& sf : part_surfaces) {
+      for (auto n : normals) {
+	if (within_eps(angle_between(n, sf.face_orientation(sf.front())), 0, 0.001)) {
+	  sf.set_SA();
+	}
+      }
+    }
   }
 
   // TODO: Change to actually align instead of just making surfaces
@@ -34,24 +49,38 @@ namespace gca {
     vector<triangle> ts;
     ts.push_back(triangle(n4, p4, p7, p6));
     ts.push_back(triangle(n4, p5, p4, p6));
-    ts.push_back(triangle(n0, p1, p5, p6));
-    ts.push_back(triangle(n0, p5, p1, p4));
+    
+    // ts.push_back(triangle(n0, p1, p5, p6));
+    // ts.push_back(triangle(n0, p1, p2, p6));
+
+    // ts.push_back(triangle(n1, p3, p0, p4));
+    // ts.push_back(triangle(n1, p0, p3, p7));
+
+    // ts.push_back(triangle(n2, p3, p2, p7));
+    // ts.push_back(triangle(n2, p2, p3, p6));
+
+    // ts.push_back(triangle(n3, p4, p5, p1));
+    // ts.push_back(triangle(n3, p1, p0, p4));
+
+    // ts.push_back(triangle(n5, p0, p1, p2));
+    // ts.push_back(triangle(n5, p0, p3, p2));
+
     return make_mesh(ts, 0.001);
   }
 
-  bool any_sa_surface_contains(index_t i,
+  bool any_SA_surface_contains(index_t i,
 			       const std::vector<surface>& surfaces) {
     for (auto surface : surfaces) {
-      if (surface.contains(i)) { return true; }
+      if (surface.is_SA() && surface.contains(i)) { return true; }
     }
     return false;
   }
 
-  void remove_sa_surfaces(const std::vector<surface>& surfaces,
+  void remove_SA_surfaces(const std::vector<surface>& surfaces,
 			  std::vector<index_t>& indices) {
     delete_if(indices,
 	      [&surfaces](index_t i)
-	      { return any_sa_surface_contains(i, surfaces); });
+	      { return any_SA_surface_contains(i, surfaces); });
   }
 
   std::vector<std::vector<index_t>>
@@ -100,21 +129,64 @@ namespace gca {
     return f;
   }
 
-  std::vector<surface> part_stable_surfaces(const triangular_mesh& part) {
+  // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
+  bool is_outer_surface(const vector<index_t>& s, const triangular_mesh& part) {
+    assert(s.size() > 0);
+    triangle plane_rep = part.face_triangle(s.front());
+    bool all_below = true;
+    for (auto p : part.vertex_list()) {
+      if (p.z > z_at(plane_rep, p.x, p.y)) {
+	all_below = false;
+	break;
+      }
+    }
+    bool all_above = true;
+    for (auto p : part.vertex_list()) {
+      if (p.z < z_at(plane_rep, p.x, p.y)) {
+	all_above = false;
+	break;
+      }
+    }
+    return all_above || all_below;
+  }
+
+  std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
-    vector<vector<index_t>> stable_face_indices;
+    vector<surface> surfaces;
     for (auto f : const_orient_face_indices) {
       assert(f.size() > 0);
       point face_normal = part.face_orientation(f.front());
       vector<index_t> outer_face = outermost_by(face_normal, f, part, 0.001);
-      stable_face_indices.push_back(outer_face);
-    }
-    vector<surface> surfaces;
-    for (auto f : stable_face_indices) {
-      surfaces.push_back(surface(&part, f));
+      if (is_outer_surface(outer_face, part)) {
+	surfaces.push_back(surface(&part, outer_face));
+      }
     }
     return surfaces;
   }
+
+  // std::vector<surface> part_stable_surfaces(const triangular_mesh& part) {
+  //   auto const_orient_face_indices = const_orientation_regions(part);
+  //   vector<vector<index_t>> stable_face_indices;
+  //   for (auto f : const_orient_face_indices) {
+  //     assert(f.size() > 0);
+  //     point face_normal = part.face_orientation(f.front());
+  //     vector<index_t> outer_face = outermost_by(face_normal, f, part, 0.001);
+  //     stable_face_indices.push_back(outer_face);
+  //   }
+  //   double mesh_area = part.surface_area();
+  //   assert(mesh_area > 0);
+  //   vector<surface> surfaces;
+  //   const double MIN_SURFACE_AREA_FRACTION = 0.0005;
+  //   for (auto f : stable_face_indices) {
+  //     auto s = surface(&part, f);
+  //     double s_area = s.surface_area();
+  //     if (s_area / mesh_area > MIN_SURFACE_AREA_FRACTION) {
+  // 	surfaces.push_back(surface(&part, f));
+  //     }
+  //   }
+  //   assert(surfaces.size() > 0);
+  //   return surfaces;
+  // }
 
   // TODO: Replace this dummy
   std::vector<gcode_program>
@@ -184,9 +256,9 @@ namespace gca {
       auto next_orient = all_orients.back();
       all_orients.pop_back();
       unsigned old_size = faces_to_cut.size();
-      for (auto f : faces_to_cut) {
-	cout << part_mesh.face_orientation(f) << endl;
-      }
+      // for (auto f : faces_to_cut) {
+      // 	cout << part_mesh.face_orientation(f) << endl;
+      // }
       delete_if(faces_to_cut,
 		[&part_mesh, &next_orient](index_t i)
 		{ return face_is_millable_from(i, next_orient, part_mesh); });
@@ -202,12 +274,16 @@ namespace gca {
 					   const vice v,
 					   const vector<tool>& tools,
 					   const workpiece_dimensions w_dims) {
-    auto part_ss = part_stable_surfaces(part_mesh);
+    auto part_ss = outer_surfaces(part_mesh);
     auto workpiece_mesh = align_workpiece(part_ss, w_dims);
     classify_part_surfaces(part_ss, workpiece_mesh);
+    // Hack to prevent any unusual surfaces from escaping
+    delete_if(part_ss,
+	      [](const surface& s)
+	      { return !s.is_SA(); });
     vector<index_t> face_inds = part_mesh.face_indexes();
     cout << "# initial faces = " << face_inds.size() << endl;
-    remove_sa_surfaces(part_ss, face_inds);
+    remove_SA_surfaces(part_ss, face_inds);
     vector<gcode_program> ps =
       workpiece_clipping_programs(workpiece_mesh, part_mesh);
     cout << "# faces left = " << face_inds.size() << endl;

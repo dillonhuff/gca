@@ -26,14 +26,26 @@ namespace gca {
   protected:
     const triangular_mesh* parent_mesh;
     vector<index_t> tri_indexes;
+    bool SA;
 
   public:
     inline bool contains(index_t ind) {
       return std::binary_search(begin(tri_indexes), end(tri_indexes), ind);
     }
 
+    inline bool is_SA() const { return SA; }
+    inline void set_SA() { SA = true; }
+
     inline index_t front() const {
       return tri_indexes.front();
+    }
+
+    double surface_area() const {
+      double total = 0.0;
+      for (auto i : tri_indexes) {
+	total += (parent_mesh->face_triangle(i)).area();
+      }
+      return total;
     }
 
     inline point face_orientation(index_t ind) const
@@ -41,7 +53,7 @@ namespace gca {
 
     surface(const triangular_mesh* p_parent_mesh,
 	    const vector<index_t>& p_tri_indexes) :
-	parent_mesh(p_parent_mesh), tri_indexes(p_tri_indexes) {
+      parent_mesh(p_parent_mesh), tri_indexes(p_tri_indexes), SA(false) {
       assert(tri_indexes.size() > 0);
       std::sort(begin(tri_indexes), end(tri_indexes));
     }
@@ -67,16 +79,24 @@ namespace gca {
       left(p_left), right(p_right), bottom(p_bottom) {}
   };
 
-  std::vector<surface> part_stable_surfaces(const triangular_mesh& m);
+  //std::vector<surface> part_stable_surfaces(const triangular_mesh& m);
+
+  std::vector<surface> outer_surfaces(const triangular_mesh& m);
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& m,
 					   const vice v,
 					   const vector<tool>& tools,
 					   const workpiece_dimensions w_dims);
 
-  void remove_sa_surfaces(const std::vector<surface>& surfaces,
+  void remove_SA_surfaces(const std::vector<surface>& surfaces,
 			  std::vector<index_t>& indices);
 
+  void classify_part_surfaces(std::vector<surface>& part_surfaces,
+			      const triangular_mesh& workpiece_mesh);
+
+  triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
+				  const workpiece_dimensions w_dims);
+  
 }
 
 #endif

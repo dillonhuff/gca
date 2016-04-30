@@ -32,6 +32,15 @@ namespace gca {
       return indices;
     }
 
+    double surface_area() const {
+      double total = 0.0;
+      for (unsigned i = 0; i < tri_vertices.size(); i++) {
+	total += face_triangle(i).area();
+      }
+      return total;
+    }
+
+
     inline bool is_connected() const {
       return mesh.boundary_vertices().size() == 0;
     }
@@ -54,6 +63,10 @@ namespace gca {
 
     maybe<double> z_at(double x, double y) const;
     double z_at_unsafe(double x, double y) const;
+
+    inline const vector<point>& vertex_list() const {
+      return vertices;
+    }
     
     std::vector<triangle> triangle_list() {
       std::vector<triangle> ts;

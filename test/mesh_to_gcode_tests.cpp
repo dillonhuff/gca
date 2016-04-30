@@ -38,23 +38,25 @@ namespace gca {
 
   }
 
-  TEST_CASE("Stable surfaces") {
+  TEST_CASE("Outer surfaces") {
     arena_allocator a;
     set_system_allocator(&a);
 
     SECTION("Simple box") {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
-      auto stable_surfaces = part_stable_surfaces(mesh);
+      auto surfaces = outer_surfaces(mesh);
 
-      SECTION("Simple box produces only workpiece tightening programs") {
-	REQUIRE(stable_surfaces.size() == 6);
+      SECTION("Simple box has 6 outer surfaces") {
+	REQUIRE(surfaces.size() == 6);
       }
 
-      SECTION("All simple box surfaces are part of a stable face") {
+      SECTION("All simple box surfaces are part of a SA faces") {
 	vector<index_t> fis = mesh.face_indexes();
-	remove_sa_surfaces(stable_surfaces,
-			   fis);
+	workpiece_dimensions workpiece_dims(1.5, 1.2, 1.5);
+	auto workpiece_mesh = align_workpiece(surfaces, workpiece_dims);
+	classify_part_surfaces(surfaces, workpiece_mesh);
+	remove_SA_surfaces(surfaces, fis);
 	REQUIRE(fis.size() == 0);
       }
     }
@@ -62,10 +64,10 @@ namespace gca {
     SECTION("Box with a hole") {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
-      auto stable_surfaces = part_stable_surfaces(mesh);
+      auto surfaces = outer_surfaces(mesh);
 
-      SECTION("Simple box produces only workpiece tightening programs") {
-	REQUIRE(stable_surfaces.size() == 6);
+      SECTION("Box with a hole has 6 outer surfaces") {
+	REQUIRE(surfaces.size() == 6);
       }
     }
   }

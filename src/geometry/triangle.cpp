@@ -127,7 +127,6 @@ namespace gca {
     return a.z + y_c*(y - a.y) - x_c*(x - a.x);
   }
 
-  // TODO: Dont just compare to a vertex
   bool below(const triangle t, const point p) {
     return p.z < z_at(t, p.x, p.y);
   }
