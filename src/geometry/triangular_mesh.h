@@ -98,6 +98,42 @@ namespace gca {
 
   std::vector<std::vector<index_t>>
   const_orientation_regions(const triangular_mesh& part);
-  
+
+  void
+  transfer_face(index_t face_ind,
+		std::vector<index_t>& old_face_inds,
+		std::vector<index_t>& face_inds,
+		std::vector<index_t>& remaining_vertex_inds,
+		const triangular_mesh& part);
+
+  template<typename S, typename N>
+  std::vector<index_t> connected_region(vector<index_t>& face_indices,
+					const triangular_mesh& part,
+					S select_initial_face,
+					N neighboring_faces) {
+    assert(face_indices.size() > 0);
+    sort(begin(face_indices), end(face_indices));
+    vector<index_t> surface_face_inds;
+    vector<index_t> remaining_vertex_inds;
+    transfer_face(select_initial_face(part, face_indices),
+		  face_indices,
+		  surface_face_inds,
+		  remaining_vertex_inds,
+		  part);
+    while (remaining_vertex_inds.size() > 0) {
+      auto next_v = remaining_vertex_inds.back();
+      remaining_vertex_inds.pop_back();
+      for (auto f : neighboring_faces(part, next_v)) {
+	if (binary_search(begin(face_indices), end(face_indices), f)) {
+	  transfer_face(f,
+			face_indices,
+			surface_face_inds,
+			remaining_vertex_inds, part);
+	}
+      }
+    }
+    return surface_face_inds;
+  }
+
 }
 #endif

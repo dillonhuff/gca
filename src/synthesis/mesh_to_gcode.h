@@ -57,6 +57,9 @@ namespace gca {
       assert(tri_indexes.size() > 0);
       std::sort(begin(tri_indexes), end(tri_indexes));
     }
+
+    inline const triangular_mesh& get_parent_mesh() const
+    { return *parent_mesh; }
   };
 
   class stock_orientation {
@@ -72,6 +75,9 @@ namespace gca {
       assert(within_eps(angle_between(n, bn), 180, 0.1));
       return n;
     }
+
+    inline const triangular_mesh& get_mesh() const
+    { return left->get_parent_mesh(); }
 
     stock_orientation(const surface* p_left,
 		      const surface* p_right,

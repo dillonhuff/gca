@@ -140,6 +140,13 @@ namespace gca {
   }
 
   bool face_is_millable_from(index_t i,
+			     const point top_normal,
+			     const triangular_mesh& part_mesh) {
+    point i_normal = part_mesh.face_orientation(i);
+    return within_eps(angle_between(top_normal, i_normal), 0, 90);
+  }
+  
+  bool face_is_millable_from(index_t i,
 			     const stock_orientation& orient,
 			     const triangular_mesh& part_mesh) {
     point top_normal = orient.top_normal();
@@ -184,6 +191,46 @@ namespace gca {
     return orients;
   }
 
+  index_t farthest_by(const point p,
+		      const std::vector<index_t>& inds,
+		      const triangular_mesh& m) {
+    return inds.back();
+  }
+
+  std::vector<index_t> adjacent_millable(const point n,
+					 const triangular_mesh& m,
+					 const index_t next_vertex) {
+    vector<index_t> next_faces = m.vertex_face_neighbors(next_vertex);
+    remove_if(begin(next_faces), end(next_faces),
+	      [n, &m](const index_t i)
+	      { return !face_is_millable_from(i, n, m); });
+    return next_faces;
+  }
+
+  std::vector<index_t> millable_faces(const stock_orientation& orient) {
+    const triangular_mesh& part = orient.get_mesh();
+    auto faces = part.face_indexes();
+    return connected_region(faces,
+			    part,
+			    [&orient](const triangular_mesh& m,
+				      vector<index_t>& face_inds)
+			    { return farthest_by(orient.top_normal(), face_inds, m); },
+			    [&orient](const triangular_mesh& m,
+				      const index_t next_vertex)
+			    { return adjacent_millable(orient.top_normal(),
+						       m,
+						       next_vertex); });
+  }
+
+  void remove_millable_surfaces(const stock_orientation& orient,
+				std::vector<index_t>& faces_left) {
+    std::vector<index_t> millable = millable_faces(orient);
+    sort(begin(millable), end(millable));
+    delete_if(faces_left,
+	      [&millable](const index_t i)
+	      { return binary_search(begin(millable), end(millable), i); });
+  }
+
   std::vector<stock_orientation>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& surfaces,
@@ -198,14 +245,15 @@ namespace gca {
       auto next_orient = all_orients.back();
       all_orients.pop_back();
       unsigned old_size = faces_to_cut.size();
-      // for (auto f : faces_to_cut) {
-      // 	cout << part_mesh.face_orientation(f) << endl;
-      // }
-      delete_if(faces_to_cut,
-		[&part_mesh, &next_orient](index_t i)
-		{ return face_is_millable_from(i, next_orient, part_mesh); });
+      remove_millable_surfaces(next_orient, faces_to_cut);
+      // delete_if(faces_to_cut,
+      // 		[&part_mesh, &next_orient](index_t i)
+      // 		{ return face_is_millable_from(i, next_orient, part_mesh); });
       if (faces_to_cut.size() != old_size) {
 	cout << "Faces left = " << faces_to_cut.size() << endl;
+	for (auto f : faces_to_cut) {
+	  cout << part_mesh.face_triangle(f) << endl;
+	}
 	orients.push_back(next_orient);
       }
     }
@@ -219,7 +267,7 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto workpiece_mesh = align_workpiece(part_ss, w_dims);
     classify_part_surfaces(part_ss, workpiece_mesh);
-    //Hack to prevent any unusual surfaces from escaping
+    //TODO: Hack to prevent any unusual surfaces from escaping
     delete_if(part_ss,
     	      [](const surface& s)
     	      { return !s.is_SA(); });

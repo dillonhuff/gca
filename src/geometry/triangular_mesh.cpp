@@ -151,30 +151,12 @@ namespace gca {
     remaining_vertex_inds.push_back(t.v[2]);
   }
 
-  std::vector<index_t> connected_region(vector<index_t>& face_indices,
-					const triangular_mesh& part) {
-    assert(face_indices.size() > 0);
-    sort(begin(face_indices), end(face_indices));
-    vector<index_t> surface_face_inds;
-    vector<index_t> remaining_vertex_inds;
-    transfer_face(face_indices.back(),
-		  face_indices,
-		  surface_face_inds,
-		  remaining_vertex_inds,
-		  part);
-    while (remaining_vertex_inds.size() > 0) {
-      auto next_v = remaining_vertex_inds.back();
-      remaining_vertex_inds.pop_back();
-      for (auto f : part.vertex_face_neighbors(next_v)) {
-	if (binary_search(begin(face_indices), end(face_indices), f)) {
-	  transfer_face(f,
-			face_indices,
-			surface_face_inds,
-			remaining_vertex_inds, part);
-	}
-      }
-    }
-    return surface_face_inds;
+  index_t back_face(const triangular_mesh&, std::vector<index_t>& face_indices)
+  {  return face_indices.back(); }
+
+  std::vector<index_t> all_neighbors(const triangular_mesh& part,
+				     const index_t next_vertex) {
+    return part.vertex_face_neighbors(next_vertex);
   }
 
   std::vector<vector<index_t>>
@@ -183,7 +165,10 @@ namespace gca {
     assert(indices.size() > 0);
     vector<vector<index_t>> connected_regions;
     while (indices.size() > 0) {
-      connected_regions.push_back(connected_region(indices, part));
+      connected_regions.push_back(connected_region(indices,
+						   part,
+						   back_face,
+						   all_neighbors));
     }
     return connected_regions;
   }
