@@ -199,46 +199,18 @@ namespace gca {
     point v1 = plane_rep.v1;
     point n = plane_rep.normal.normalize();
     bool all_neg = true;
+    bool all_pos = true;
     for (auto p : part.vertex_list()) {
       double sgn = n.dot(p - v1);
       if (sgn > 0) {
     	all_neg = false;
-    	break;
       }
-    }
-    bool all_pos = true;
-    for (auto p : part.vertex_list()) {
-      //      if (n.dot(p) < 0) {//p.z < z_at(plane_rep, p.x, p.y)) {
-      double sgn = n.dot(p - v1);
       if (sgn < 0) {
-    	all_pos = false;
-    	break;
+	all_pos = false;
       }
+      if (!all_neg && !all_pos) { return false; }
     }
-    return all_neg || all_pos;
-
-    
-    // triangle plane_rep = part.face_triangle(s.front());
-    // cout << "plane rep triangle is" << endl << plane_rep << endl;
-    // bool all_below = true;
-    // for (auto p : part.vertex_list()) {
-    //   if (p.z > z_at(plane_rep, p.x, p.y) + 0.01) {
-    // 	//cout << "ERROR: " << p << " is above " << z_at(plane_rep, p.x, p.y) << endl;
-    // 	//cout << plane_rep << endl;
-    // 	all_below = false;
-    // 	break;
-    //   }
-    // }
-    // bool all_above = true;
-    // for (auto p : part.vertex_list()) {
-    //   if (p.z < z_at(plane_rep, p.x, p.y)) {
-    // 	//cout << "ERROR: " << p << " is below " << z_at(plane_rep, p.x, p.y) << endl;
-    // 	//cout << plane_rep << endl;
-    // 	all_above = false;
-    // 	break;
-    //   }
-    // }
-    // return all_above || all_below;
+    return true;
   }
 
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
@@ -248,14 +220,8 @@ namespace gca {
     for (auto f : const_orient_face_indices) {
       assert(f.size() > 0);
       point face_normal = part.face_orientation(f.front());
-      vector<index_t> outer_face = outermost_by(face_normal, f, part, 0.001);
-      if (outer_face.size() > 0) {
-	if (is_outer_surface(outer_face, part)) {
-	  //cout << "Is outer: " << face_normal << endl;
-	  surfaces.push_back(surface(&part, outer_face));
-	} else {
-	  //cout << "NOT outer: " << face_normal << endl;
-	}
+      if (is_outer_surface(f, part)) {
+	surfaces.push_back(surface(&part, f));
       }
     }
     return surfaces;
