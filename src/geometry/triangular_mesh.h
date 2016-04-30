@@ -32,6 +32,13 @@ namespace gca {
       return indices;
     }
 
+    inline triangle_t triangle_vertices(const index_t vi) const
+    { return tri_vertices[vi]; }
+
+    inline std::vector<index_t> vertex_face_neighbors(const index_t vi) const {
+      return mesh.vertex_face_neighbors(vi);
+    }
+
     double surface_area() const {
       double total = 0.0;
       for (unsigned i = 0; i < tri_vertices.size(); i++) {

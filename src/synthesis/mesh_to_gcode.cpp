@@ -83,6 +83,57 @@ namespace gca {
 	      { return any_SA_surface_contains(i, surfaces); });
   }
 
+  void
+  transfer_face(index_t face_ind,
+		std::vector<index_t>& old_face_inds,
+		std::vector<index_t>& face_inds,
+		std::vector<index_t>& remaining_vertex_inds,
+		const triangular_mesh& part) {
+    remove(face_ind, old_face_inds);
+    face_inds.push_back(face_ind);
+    triangle_t t = part.triangle_vertices(face_ind);
+    remaining_vertex_inds.push_back(t.v[0]);
+    remaining_vertex_inds.push_back(t.v[1]);
+    remaining_vertex_inds.push_back(t.v[2]);
+  }
+
+  std::vector<index_t> connected_region(vector<index_t>& face_indices,
+					const triangular_mesh& part) {
+    assert(face_indices.size() > 0);
+    sort(begin(face_indices), end(face_indices));
+    vector<index_t> surface_face_inds;
+    vector<index_t> remaining_vertex_inds;
+    transfer_face(face_indices.back(),
+		  face_indices,
+		  surface_face_inds,
+		  remaining_vertex_inds,
+		  part);
+    while (remaining_vertex_inds.size() > 0) {
+      auto next_v = remaining_vertex_inds.back();
+      remaining_vertex_inds.pop_back();
+      for (auto f : part.vertex_face_neighbors(next_v)) {
+	if (binary_search(begin(face_indices), end(face_indices), f)) {
+	  transfer_face(f,
+			face_indices,
+			surface_face_inds,
+			remaining_vertex_inds, part);
+	}
+      }
+    }
+    return surface_face_inds;
+  }
+
+  std::vector<vector<index_t>>
+  connect_regions(vector<index_t>& indices,
+		  const triangular_mesh& part) {
+    assert(indices.size() > 0);
+    vector<vector<index_t>> connected_regions;
+    while (indices.size() > 0) {
+      connected_regions.push_back(connected_region(indices, part));
+    }
+    return connected_regions;
+  }
+
   std::vector<std::vector<index_t>>
   const_orientation_regions(const triangular_mesh& part) {
     auto faces = part.face_indexes();
@@ -100,7 +151,19 @@ namespace gca {
 	     const_orient_face_indices,
 	     [&part](index_t l, index_t r)
 	     { return within_eps(part.face_orientation(l), part.face_orientation(r)); });
-    return const_orient_face_indices;
+    vector<vector<index_t>> const_connected_regions;
+    for (auto r : const_orient_face_indices) {
+      vector<vector<index_t>> connected_regions = connect_regions(r, part);
+      const_connected_regions.insert(end(const_connected_regions),
+				     begin(connected_regions),
+				     end(connected_regions));
+    }
+    return const_connected_regions;
+  }
+
+  point project_onto(point p, point proj_d) {
+    point proj_dir = proj_d.normalize();
+    return (p.dot(proj_dir))*proj_dir;
   }
 
   double distance_along(point normal, const triangle t) {
@@ -133,60 +196,70 @@ namespace gca {
   bool is_outer_surface(const vector<index_t>& s, const triangular_mesh& part) {
     assert(s.size() > 0);
     triangle plane_rep = part.face_triangle(s.front());
-    bool all_below = true;
+    point v1 = plane_rep.v1;
+    point n = plane_rep.normal.normalize();
+    bool all_neg = true;
     for (auto p : part.vertex_list()) {
-      if (p.z > z_at(plane_rep, p.x, p.y)) {
-	all_below = false;
-	break;
+      double sgn = n.dot(p - v1);
+      if (sgn > 0) {
+    	all_neg = false;
+    	break;
       }
     }
-    bool all_above = true;
+    bool all_pos = true;
     for (auto p : part.vertex_list()) {
-      if (p.z < z_at(plane_rep, p.x, p.y)) {
-	all_above = false;
-	break;
+      //      if (n.dot(p) < 0) {//p.z < z_at(plane_rep, p.x, p.y)) {
+      double sgn = n.dot(p - v1);
+      if (sgn < 0) {
+    	all_pos = false;
+    	break;
       }
     }
-    return all_above || all_below;
+    return all_neg || all_pos;
+
+    
+    // triangle plane_rep = part.face_triangle(s.front());
+    // cout << "plane rep triangle is" << endl << plane_rep << endl;
+    // bool all_below = true;
+    // for (auto p : part.vertex_list()) {
+    //   if (p.z > z_at(plane_rep, p.x, p.y) + 0.01) {
+    // 	//cout << "ERROR: " << p << " is above " << z_at(plane_rep, p.x, p.y) << endl;
+    // 	//cout << plane_rep << endl;
+    // 	all_below = false;
+    // 	break;
+    //   }
+    // }
+    // bool all_above = true;
+    // for (auto p : part.vertex_list()) {
+    //   if (p.z < z_at(plane_rep, p.x, p.y)) {
+    // 	//cout << "ERROR: " << p << " is below " << z_at(plane_rep, p.x, p.y) << endl;
+    // 	//cout << plane_rep << endl;
+    // 	all_above = false;
+    // 	break;
+    //   }
+    // }
+    // return all_above || all_below;
   }
 
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
+    cout << "# const orientation regions = " << const_orient_face_indices.size() << endl;
     vector<surface> surfaces;
     for (auto f : const_orient_face_indices) {
       assert(f.size() > 0);
       point face_normal = part.face_orientation(f.front());
       vector<index_t> outer_face = outermost_by(face_normal, f, part, 0.001);
-      if (is_outer_surface(outer_face, part)) {
-	surfaces.push_back(surface(&part, outer_face));
+      if (outer_face.size() > 0) {
+	if (is_outer_surface(outer_face, part)) {
+	  //cout << "Is outer: " << face_normal << endl;
+	  surfaces.push_back(surface(&part, outer_face));
+	} else {
+	  //cout << "NOT outer: " << face_normal << endl;
+	}
       }
     }
     return surfaces;
   }
-
-  // std::vector<surface> part_stable_surfaces(const triangular_mesh& part) {
-  //   auto const_orient_face_indices = const_orientation_regions(part);
-  //   vector<vector<index_t>> stable_face_indices;
-  //   for (auto f : const_orient_face_indices) {
-  //     assert(f.size() > 0);
-  //     point face_normal = part.face_orientation(f.front());
-  //     vector<index_t> outer_face = outermost_by(face_normal, f, part, 0.001);
-  //     stable_face_indices.push_back(outer_face);
-  //   }
-  //   double mesh_area = part.surface_area();
-  //   assert(mesh_area > 0);
-  //   vector<surface> surfaces;
-  //   const double MIN_SURFACE_AREA_FRACTION = 0.0005;
-  //   for (auto f : stable_face_indices) {
-  //     auto s = surface(&part, f);
-  //     double s_area = s.surface_area();
-  //     if (s_area / mesh_area > MIN_SURFACE_AREA_FRACTION) {
-  // 	surfaces.push_back(surface(&part, f));
-  //     }
-  //   }
-  //   assert(surfaces.size() > 0);
-  //   return surfaces;
-  // }
 
   // TODO: Replace this dummy
   std::vector<gcode_program>
@@ -277,10 +350,10 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto workpiece_mesh = align_workpiece(part_ss, w_dims);
     classify_part_surfaces(part_ss, workpiece_mesh);
-    // Hack to prevent any unusual surfaces from escaping
+    //Hack to prevent any unusual surfaces from escaping
     delete_if(part_ss,
-	      [](const surface& s)
-	      { return !s.is_SA(); });
+    	      [](const surface& s)
+    	      { return !s.is_SA(); });
     vector<index_t> face_inds = part_mesh.face_indexes();
     cout << "# initial faces = " << face_inds.size() << endl;
     remove_SA_surfaces(part_ss, face_inds);
