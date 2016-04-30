@@ -83,84 +83,6 @@ namespace gca {
 	      { return any_SA_surface_contains(i, surfaces); });
   }
 
-  void
-  transfer_face(index_t face_ind,
-		std::vector<index_t>& old_face_inds,
-		std::vector<index_t>& face_inds,
-		std::vector<index_t>& remaining_vertex_inds,
-		const triangular_mesh& part) {
-    remove(face_ind, old_face_inds);
-    face_inds.push_back(face_ind);
-    triangle_t t = part.triangle_vertices(face_ind);
-    remaining_vertex_inds.push_back(t.v[0]);
-    remaining_vertex_inds.push_back(t.v[1]);
-    remaining_vertex_inds.push_back(t.v[2]);
-  }
-
-  std::vector<index_t> connected_region(vector<index_t>& face_indices,
-					const triangular_mesh& part) {
-    assert(face_indices.size() > 0);
-    sort(begin(face_indices), end(face_indices));
-    vector<index_t> surface_face_inds;
-    vector<index_t> remaining_vertex_inds;
-    transfer_face(face_indices.back(),
-		  face_indices,
-		  surface_face_inds,
-		  remaining_vertex_inds,
-		  part);
-    while (remaining_vertex_inds.size() > 0) {
-      auto next_v = remaining_vertex_inds.back();
-      remaining_vertex_inds.pop_back();
-      for (auto f : part.vertex_face_neighbors(next_v)) {
-	if (binary_search(begin(face_indices), end(face_indices), f)) {
-	  transfer_face(f,
-			face_indices,
-			surface_face_inds,
-			remaining_vertex_inds, part);
-	}
-      }
-    }
-    return surface_face_inds;
-  }
-
-  std::vector<vector<index_t>>
-  connect_regions(vector<index_t>& indices,
-		  const triangular_mesh& part) {
-    assert(indices.size() > 0);
-    vector<vector<index_t>> connected_regions;
-    while (indices.size() > 0) {
-      connected_regions.push_back(connected_region(indices, part));
-    }
-    return connected_regions;
-  }
-
-  std::vector<std::vector<index_t>>
-  const_orientation_regions(const triangular_mesh& part) {
-    auto faces = part.face_indexes();
-    stable_sort(begin(faces), end(faces),
-		[&part](index_t l, index_t r)
-		{ return part.face_orientation(l).x < part.face_orientation(r).x; });
-    stable_sort(begin(faces), end(faces),
-		[&part](index_t l, index_t r)
-		{ return part.face_orientation(l).y < part.face_orientation(r).y; });
-    stable_sort(begin(faces), end(faces),
-		[&part](index_t l, index_t r)
-		{ return part.face_orientation(l).z < part.face_orientation(r).z; });
-    vector<vector<index_t>> const_orient_face_indices;
-    split_by(faces,
-	     const_orient_face_indices,
-	     [&part](index_t l, index_t r)
-	     { return within_eps(part.face_orientation(l), part.face_orientation(r)); });
-    vector<vector<index_t>> const_connected_regions;
-    for (auto r : const_orient_face_indices) {
-      vector<vector<index_t>> connected_regions = connect_regions(r, part);
-      const_connected_regions.insert(end(const_connected_regions),
-				     begin(connected_regions),
-				     end(connected_regions));
-    }
-    return const_connected_regions;
-  }
-
   point project_onto(point p, point proj_d) {
     point proj_dir = proj_d.normalize();
     return (p.dot(proj_dir))*proj_dir;
@@ -192,30 +114,8 @@ namespace gca {
     return f;
   }
 
-  // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
-  bool is_outer_surface(const vector<index_t>& s, const triangular_mesh& part) {
-    assert(s.size() > 0);
-    triangle plane_rep = part.face_triangle(s.front());
-    point v1 = plane_rep.v1;
-    point n = plane_rep.normal.normalize();
-    bool all_neg = true;
-    bool all_pos = true;
-    for (auto p : part.vertex_list()) {
-      double sgn = n.dot(p - v1);
-      if (sgn > 0) {
-    	all_neg = false;
-      }
-      if (sgn < 0) {
-	all_pos = false;
-      }
-      if (!all_neg && !all_pos) { return false; }
-    }
-    return true;
-  }
-
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
-    cout << "# const orientation regions = " << const_orient_face_indices.size() << endl;
     vector<surface> surfaces;
     for (auto f : const_orient_face_indices) {
       assert(f.size() > 0);
@@ -289,6 +189,9 @@ namespace gca {
 		      const std::vector<surface>& surfaces,
 		      std::vector<index_t>& faces_to_cut) {
     vector<stock_orientation> all_orients = all_stable_orientations(surfaces);
+    sort(begin(all_orients), end(all_orients),
+	 [](const stock_orientation l, const stock_orientation r)
+	 { return l.top_normal().x < r.top_normal().x; });
     vector<stock_orientation> orients;
     while (faces_to_cut.size() > 0) {
       assert(all_orients.size() > 0);
