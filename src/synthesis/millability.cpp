@@ -53,38 +53,35 @@ namespace gca {
     return within_eps(angle_between(t.normal, normal), 90, 0.5);
   }
 
+  // TODO: Handle surfaces along the normal that are
+  // several triangles deep
   std::vector<index_t> collect_side_faces(const point normal,
 					  std::vector<index_t>& inds,
 					  const triangular_mesh& part) {
     assert(inds.size() > 0);
     vector<index_t> faces = inds;
     sort(begin(faces), end(faces));
-    bool added_new = false;
     vector<index_t> face_inds_left = part.face_indexes();
     delete_if(face_inds_left,
 	      [&inds](const index_t i)
 	      { return find(begin(inds), end(inds), i) != end(inds); });
-    do {
-      added_new = false;
-      vector<index_t> to_remove;
-      for (auto i : face_inds_left) {
-	if (lies_along(normal, part.face_triangle(i))) {
-	  vector<index_t> to_add;
-	  for (auto f : faces) {
-	    if (adjacent_faces(i, f, part)) { 
-	      added_new = true;
-	      to_add.push_back(i);
-	      to_remove.push_back(i);
-	      break;
-	    }
+    vector<index_t> to_remove;
+    for (auto i : face_inds_left) {
+      if (lies_along(normal, part.face_triangle(i))) {
+	vector<index_t> to_add;
+	for (auto f : faces) {
+	  if (adjacent_faces(i, f, part)) { 
+	    to_add.push_back(i);
+	    to_remove.push_back(i);
+	    break;
 	  }
-	  faces.insert(end(faces), begin(to_add), end(to_add));
 	}
+	faces.insert(end(faces), begin(to_add), end(to_add));
       }
-      delete_if(face_inds_left,
-		[&to_remove](const index_t i)
-		{ return find(begin(to_remove), end(to_remove), i) != end(to_remove); });
-    } while (added_new);
+    }
+    delete_if(face_inds_left,
+	      [&to_remove](const index_t i)
+	      { return find(begin(to_remove), end(to_remove), i) != end(to_remove); });
     return faces;
   }
 

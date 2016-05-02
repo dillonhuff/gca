@@ -239,9 +239,11 @@ namespace gca {
       remove_millable_surfaces(next_orient, faces_to_cut);
       if (faces_to_cut.size() != old_size) {
 	cout << "Faces left = " << faces_to_cut.size() << endl;
-	// for (auto f : faces_to_cut) {
-	//   cout << part_mesh.face_triangle(f) << endl;
-	// }
+	if (within_eps(point(0, -1, 0), next_orient.top_normal())) {//, 0.01)) {
+	  for (auto f : faces_to_cut) {
+	    cout << part_mesh.face_triangle(f) << endl;
+	  }
+	}
 	orients.push_back(next_orient);
       }
     }
