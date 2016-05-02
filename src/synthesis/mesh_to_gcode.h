@@ -2,6 +2,7 @@
 #define MESH_TO_GCODE_H
 
 #include "geometry/triangular_mesh.h"
+#include "core/lexer.h"
 
 namespace gca {
 
@@ -20,7 +21,15 @@ namespace gca {
     tool(double p_diameter, tool_type t) {}
   };
 
-  class gcode_program {};
+  class gcode_program {
+  public:
+    std::string name;
+    std::vector<block> blocks;
+
+    gcode_program(const std::string& p_name,
+		  const std::vector<block>& p_blocks) :
+      name(p_name), blocks(p_blocks) {}
+  };
 
   class surface {
   protected:

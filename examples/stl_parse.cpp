@@ -3,6 +3,7 @@
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/axis_3.h"
+#include "synthesis/mesh_to_gcode.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
@@ -11,37 +12,29 @@
 using namespace gca;
 using namespace std;
 
-// auto triangles = parse_stl(argv[1]).triangles;
-
-// vector<point> pts_z =
-//   sample_filtered_points_2d(b, tool_radius / 3.0, tool_radius / 3.0, 1.0,
-// 			      [&mesh](const point p)
-// 			      { return !mesh.z_at(p.x, p.y).just; });
-// vector<point> pts;
-// for (auto pt : pts_z) {
-//   pts.push_back(point(pt.x, pt.y, mesh.z_at_unsafe(pt.x, pt.y)));
-// }
-
-//  select_visible_triangles(triangles);
-
-  // auto mesh = make_mesh(triangles, 0.0001);
-  // assert(mesh.is_connected());
-
-  // box b = mesh.bounding_box();
-
-
-
 int main(int argc, char* argv[]) {
   assert(argc == 2);
 
   arena_allocator a;
   set_system_allocator(&a);
 
-  auto triangles = parse_stl(argv[1]).triangles;
-  for (auto t : triangles) {
-    cout << t << endl;
-  }
+  auto box_triangles = parse_stl(argv[1]).triangles;
+  auto mesh = make_mesh(box_triangles, 0.001);
 
+  vice test_vice(1.5, 1.5, 0.75, Y_AXIS);
+  tool t1(0.3, FLAT_NOSE);
+  vector<tool> tools{t1};
+  workpiece_dimensions workpiece_dims(1.5, 1.2, 1.5);
+  auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+
+  cout << "All programs" << endl;
+
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
+  for (auto program : result_programs) {
+    cout << program.name << endl;
+    cout << program.blocks << endl;
+  }
   // double tool_radius = 0.5; //0.05;
   // double cut_depth = 0.1;
   // double workpiece_height = 1.0;

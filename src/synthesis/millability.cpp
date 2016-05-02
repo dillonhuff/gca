@@ -62,9 +62,7 @@ namespace gca {
     vector<index_t> faces = inds;
     sort(begin(faces), end(faces));
     vector<index_t> face_inds_left = part.face_indexes();
-    delete_if(face_inds_left,
-	      [&inds](const index_t i)
-	      { return find(begin(inds), end(inds), i) != end(inds); });
+    subtract(face_inds_left, inds);
     vector<index_t> to_remove;
     for (auto i : face_inds_left) {
       if (lies_along(normal, part.face_triangle(i))) {
@@ -79,10 +77,23 @@ namespace gca {
 	faces.insert(end(faces), begin(to_add), end(to_add));
       }
     }
-    delete_if(face_inds_left,
-	      [&to_remove](const index_t i)
-	      { return find(begin(to_remove), end(to_remove), i) != end(to_remove); });
+    subtract(face_inds_left, to_remove);
     return faces;
+  }
+
+  double greater_than_diameter(const point normal,
+			       const std::vector<point>& centroids) {
+    vector<point> face_projections(centroids.size());
+    transform(begin(centroids), end(centroids),
+	      begin(face_projections),
+	      [normal](const point cent) {
+		return project_onto(cent, normal);
+	      });
+    auto max_e = max_element(begin(face_projections), end(face_projections),
+			     [](const point l, const point r)
+			     { return l.len() < r.len(); });
+    double ray_len = 2*(*max_e).len();
+    return ray_len;
   }
 
   std::vector<index_t> millable_faces(const point normal,
@@ -95,16 +106,7 @@ namespace gca {
 		triangle t = part.face_triangle(i);
 		return t.centroid();
 	      });
-    vector<point> face_projections(all_face_inds.size());
-    transform(begin(centroids), end(centroids),
-	      begin(face_projections),
-	      [normal](const point cent) {
-		return project_onto(cent, normal);
-	      });
-    auto max_e = max_element(begin(face_projections), end(face_projections),
-			     [](const point l, const point r)
-			     { return l.len() < r.len(); });
-    double ray_len = 2*(*max_e).len();
+    double ray_len = greater_than_diameter(normal, centroids);
     vector<line> segments = construct_test_segments(normal, ray_len, centroids);
     vector<index_t> inds;
     for (auto test_segment : segments) {

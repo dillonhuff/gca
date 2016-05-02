@@ -1,5 +1,7 @@
 #include <set>
 
+#include "geometry/matrix.h"
+#include "synthesis/axis_3.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/millability.h"
 #include "system/algorithm.h"
@@ -128,9 +130,11 @@ namespace gca {
   workpiece_clipping_programs(const triangular_mesh& workpiece_mesh,
 			      const triangular_mesh& part_mesh) {
     vector<gcode_program> clip_progs;
+    vector<block> blks;
+    gcode_program gp("Clip workpiece", blks);
     for (int i = 0; i < 3; i++) {
-      clip_progs.push_back(gcode_program());
-      clip_progs.push_back(gcode_program());
+      clip_progs.push_back(gp);
+      clip_progs.push_back(gp);
     }
     return clip_progs;
   }
@@ -239,7 +243,7 @@ namespace gca {
       remove_millable_surfaces(next_orient, faces_to_cut);
       if (faces_to_cut.size() != old_size) {
 	cout << "Faces left = " << faces_to_cut.size() << endl;
-	if (within_eps(point(0, -1, 0), next_orient.top_normal())) {//, 0.01)) {
+	if (within_eps(point(0, -1, 0), next_orient.top_normal())) {
 	  for (auto f : faces_to_cut) {
 	    cout << part_mesh.face_triangle(f) << endl;
 	  }
@@ -248,6 +252,26 @@ namespace gca {
       }
     }
     return orients;
+  }
+
+  gcode_program cut_orientation(const stock_orientation& orient) {
+    auto mesh = orient.get_mesh();
+    point normal = orient.top_normal();
+    std::vector<index_t> millable = millable_faces(normal, mesh);
+    vector<triangle> tris;
+    matrix<3, 3> rotation_mat = rotate_onto(normal, point(0, 0, 1));
+    for (auto i : millable) {
+      tris.push_back(apply(rotation_mat, mesh.face_triangle(i)));
+    }
+    // TODO: Get rid of these magic numbers
+    double tool_diameter = 0.15;
+    double cut_depth = 0.1;
+    double workpiece_height = 1.0;
+    vector<block> blks = mill_surface(tris,
+				      tool_diameter,
+				      cut_depth,
+				      workpiece_height);
+    return gcode_program("Surface cut", blks);
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
@@ -271,7 +295,7 @@ namespace gca {
       orientations_to_cut(part_mesh, part_ss, face_inds);
     for (auto orient : orients) {
       cout << "top normal = " << orient.top_normal() << endl;
-      ps.push_back(gcode_program());
+      ps.push_back(cut_orientation(orient)); //gcode_program());
     }
     return ps;
   }

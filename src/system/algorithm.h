@@ -120,8 +120,7 @@ namespace gca {
   }
 
   template<typename T, typename F>
-  void
-  drop_while(T& t, F f) {
+  void drop_while(T& t, F f) {
     auto r = find_if_not(t.begin(), t.end(), f);
     auto s = distance(t.begin(), r);
     rotate(t.begin(), r, t.end());
@@ -129,11 +128,18 @@ namespace gca {
   }
 
   template<typename T, typename F>
-  void
-  take_while(T& t, F f) {
+  void take_while(T& t, F f) {
     auto r = find_if_not(t.begin(), t.end(), f);
     auto s = distance(t.begin(), r);
     t.erase(t.begin() + s, t.end());
+  }
+
+  template<typename T>
+  void subtract(T& a, T& b) {
+    delete_if(a,
+	      [&b](const typename T::value_type& i)
+	      { return find(begin(b), end(b), i) != end(b); });
+
   }
 
 }

@@ -6,6 +6,7 @@
 
 #include "geometry/point.h"
 #include "geometry/polygon.h"
+#include "geometry/matrix.h"
 
 using namespace std;
 
@@ -53,6 +54,8 @@ namespace gca {
 
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
   bool intersects_triangles(line l, const vector<triangle>& triangles);
+
+  triangle apply(const matrix<3, 3> m, const triangle& t);
 }
 
 #endif

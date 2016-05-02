@@ -927,6 +927,42 @@ src/geometry/line.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/line.cpp.s
 .PHONY : src/geometry/line.cpp.s
 
+src/geometry/matrix.o: src/geometry/matrix.cpp.o
+
+.PHONY : src/geometry/matrix.o
+
+# target to build an object file
+src/geometry/matrix.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/matrix.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/geometry/matrix.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/matrix.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/matrix.cpp.o
+.PHONY : src/geometry/matrix.cpp.o
+
+src/geometry/matrix.i: src/geometry/matrix.cpp.i
+
+.PHONY : src/geometry/matrix.i
+
+# target to preprocess a source file
+src/geometry/matrix.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/matrix.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/geometry/matrix.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/matrix.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/matrix.cpp.i
+.PHONY : src/geometry/matrix.cpp.i
+
+src/geometry/matrix.s: src/geometry/matrix.cpp.s
+
+.PHONY : src/geometry/matrix.s
+
+# target to generate assembly for a file
+src/geometry/matrix.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/matrix.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/geometry/matrix.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/matrix.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/matrix.cpp.s
+.PHONY : src/geometry/matrix.cpp.s
+
 src/geometry/point.o: src/geometry/point.cpp.o
 
 .PHONY : src/geometry/point.o
@@ -2931,6 +2967,9 @@ help:
 	@echo "... src/geometry/line.o"
 	@echo "... src/geometry/line.i"
 	@echo "... src/geometry/line.s"
+	@echo "... src/geometry/matrix.o"
+	@echo "... src/geometry/matrix.i"
+	@echo "... src/geometry/matrix.s"
 	@echo "... src/geometry/point.o"
 	@echo "... src/geometry/point.i"
 	@echo "... src/geometry/point.s"

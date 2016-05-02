@@ -53,6 +53,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
+	    ./src/geometry/matrix.h
 	    ./src/geometry/triangle.h
 	    ./src/geometry/triangular_mesh.h
 	    ./src/simulators/mill_tool.h
@@ -91,6 +92,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/line.cpp
+	 ./src/geometry/matrix.cpp
 	 ./src/geometry/polygon.cpp
 	 ./src/geometry/polyline.cpp
 	 ./src/geometry/triangle.cpp
