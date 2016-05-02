@@ -65,7 +65,6 @@ namespace gca {
 	      [&inds](const index_t i)
 	      { return find(begin(inds), end(inds), i) != end(inds); });
     do {
-      cout << "new" << endl;
       added_new = false;
       vector<index_t> to_remove;
       for (auto i : face_inds_left) {

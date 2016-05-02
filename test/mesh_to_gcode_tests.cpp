@@ -65,11 +65,6 @@ namespace gca {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithTopHole.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       auto surfaces = outer_surfaces(mesh);
-
-      for (auto s : surfaces) {
-	cout << s.face_orientation(s.front()) << endl;
-      }
-
       SECTION("A box with 1 hole has 6 outer surfaces") {
 	REQUIRE(surfaces.size() == 6);
       }
@@ -79,10 +74,6 @@ namespace gca {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       auto surfaces = outer_surfaces(mesh);
-
-      for (auto s : surfaces) {
-	cout << s.face_orientation(s.front()) << endl;
-      }
 
       SECTION("A box with 2 holes has 6 outer surfaces") {
 	REQUIRE(surfaces.size() == 6);
