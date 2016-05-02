@@ -24,6 +24,9 @@ namespace gca {
       return {line(v1, v2), line(v2, v3), line(v3, v1)};
     }
 
+    inline point centroid() const
+    { return (1.0 / 3.0) * (v1 + v2 + v3); }
+
     double area() const {
       double a = (v1  - v2).len();
       double b = (v2  - v3).len();

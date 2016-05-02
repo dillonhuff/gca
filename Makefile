@@ -1503,6 +1503,42 @@ src/synthesis/mesh_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/mesh_to_gcode.cpp.s
 .PHONY : src/synthesis/mesh_to_gcode.cpp.s
 
+src/synthesis/millability.o: src/synthesis/millability.cpp.o
+
+.PHONY : src/synthesis/millability.o
+
+# target to build an object file
+src/synthesis/millability.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/millability.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/millability.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/millability.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/millability.cpp.o
+.PHONY : src/synthesis/millability.cpp.o
+
+src/synthesis/millability.i: src/synthesis/millability.cpp.i
+
+.PHONY : src/synthesis/millability.i
+
+# target to preprocess a source file
+src/synthesis/millability.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/millability.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/millability.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/millability.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/millability.cpp.i
+.PHONY : src/synthesis/millability.cpp.i
+
+src/synthesis/millability.s: src/synthesis/millability.cpp.s
+
+.PHONY : src/synthesis/millability.s
+
+# target to generate assembly for a file
+src/synthesis/millability.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/millability.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/millability.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/millability.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/millability.cpp.s
+.PHONY : src/synthesis/millability.cpp.s
+
 src/synthesis/orientation_scheduling.o: src/synthesis/orientation_scheduling.cpp.o
 
 .PHONY : src/synthesis/orientation_scheduling.o
@@ -2412,6 +2448,33 @@ test/mill_simulator_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mill_simulator_tests.cpp.s
 .PHONY : test/mill_simulator_tests.cpp.s
 
+test/millability_tests.o: test/millability_tests.cpp.o
+
+.PHONY : test/millability_tests.o
+
+# target to build an object file
+test/millability_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.o
+.PHONY : test/millability_tests.cpp.o
+
+test/millability_tests.i: test/millability_tests.cpp.i
+
+.PHONY : test/millability_tests.i
+
+# target to preprocess a source file
+test/millability_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.i
+.PHONY : test/millability_tests.cpp.i
+
+test/millability_tests.s: test/millability_tests.cpp.s
+
+.PHONY : test/millability_tests.s
+
+# target to generate assembly for a file
+test/millability_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.s
+.PHONY : test/millability_tests.cpp.s
+
 test/orientation_scheduling_tests.o: test/orientation_scheduling_tests.cpp.o
 
 .PHONY : test/orientation_scheduling_tests.o
@@ -2916,6 +2979,9 @@ help:
 	@echo "... src/synthesis/mesh_to_gcode.o"
 	@echo "... src/synthesis/mesh_to_gcode.i"
 	@echo "... src/synthesis/mesh_to_gcode.s"
+	@echo "... src/synthesis/millability.o"
+	@echo "... src/synthesis/millability.i"
+	@echo "... src/synthesis/millability.s"
 	@echo "... src/synthesis/orientation_scheduling.o"
 	@echo "... src/synthesis/orientation_scheduling.i"
 	@echo "... src/synthesis/orientation_scheduling.s"
@@ -3003,6 +3069,9 @@ help:
 	@echo "... test/mill_simulator_tests.o"
 	@echo "... test/mill_simulator_tests.i"
 	@echo "... test/mill_simulator_tests.s"
+	@echo "... test/millability_tests.o"
+	@echo "... test/millability_tests.i"
+	@echo "... test/millability_tests.s"
 	@echo "... test/orientation_scheduling_tests.o"
 	@echo "... test/orientation_scheduling_tests.i"
 	@echo "... test/orientation_scheduling_tests.s"

@@ -63,7 +63,7 @@ namespace gca {
   double angle_between(point u, point v);
   ostream& operator<<(ostream& s, const point& p);
   ostream& operator<<(ostream& s, const vector<point>& p);
-  
+  point project_onto(point p, point proj_d);  
 }
 
 #endif

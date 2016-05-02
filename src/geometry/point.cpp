@@ -91,4 +91,9 @@ namespace gca {
     return point(x, y, z);
   }
 
+  point project_onto(point p, point proj_d) {
+    point proj_dir = proj_d.normalize();
+    return (p.dot(proj_dir))*proj_dir;
+  }
+
 }

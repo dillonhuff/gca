@@ -83,11 +83,6 @@ namespace gca {
 	      { return any_SA_surface_contains(i, surfaces); });
   }
 
-  point project_onto(point p, point proj_d) {
-    point proj_dir = proj_d.normalize();
-    return (p.dot(proj_dir))*proj_dir;
-  }
-
   double distance_along(point normal, const triangle t) {
     point p = t.v1;
     point dir = normal.normalize();
@@ -191,10 +186,17 @@ namespace gca {
     return orients;
   }
 
-  index_t farthest_by(const point p,
-		      const std::vector<index_t>& inds,
-		      const triangular_mesh& m) {
-    return inds.back();
+  index_t farthest_by(const point normal,
+		      const std::vector<index_t>& faces,
+		      const triangular_mesh& part) {
+    assert(faces.size() > 0);
+    auto f = faces;
+    sort(begin(f), end(f),
+	 [&part, normal](index_t l, index_t r)
+	 { return distance_along(normal, part.face_triangle(l)) >
+	   distance_along(normal, part.face_triangle(r)); });
+    double outer_dist = distance_along(normal, part.face_triangle(f.front()));
+    return f.front();
   }
 
   std::vector<index_t> adjacent_millable(const point n,
@@ -246,9 +248,6 @@ namespace gca {
       all_orients.pop_back();
       unsigned old_size = faces_to_cut.size();
       remove_millable_surfaces(next_orient, faces_to_cut);
-      // delete_if(faces_to_cut,
-      // 		[&part_mesh, &next_orient](index_t i)
-      // 		{ return face_is_millable_from(i, next_orient, part_mesh); });
       if (faces_to_cut.size() != old_size) {
 	cout << "Faces left = " << faces_to_cut.size() << endl;
 	for (auto f : faces_to_cut) {

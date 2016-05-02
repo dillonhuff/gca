@@ -17,6 +17,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/millability_tests.cpp
 	       test/polygon_tests.cpp
 	       test/polyline_tests.cpp
 	       test/triangle_tests.cpp
@@ -67,6 +68,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
 	    ./src/synthesis/axis_3.h
+	    ./src/synthesis/millability.h
 	    ./src/system/arena_allocator.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
@@ -112,6 +114,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/axis_3.cpp
+	 ./src/synthesis/millability.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/arena_allocator.cpp
