@@ -41,11 +41,18 @@ namespace gca {
     return sum;
   }
 
-  // TODO: Fill this in!
-  // template<int I, int J, int K>
-  // matrix<I, K> operator*(const matrix<I, J>& a, const matrix<J, K>& b) {
-  //   return matrix<I, K>();
-  // }
+  template<int I, int J, int K>
+  matrix<I, K> operator*(const matrix<I, J>& a, const matrix<J, K>& b) {
+    matrix<I, K> prod;
+    for (int i = 0; i < I; i++) {
+      for (int j = 0; j < J; j++) {
+	for (int k = 0; k < K; k++) {
+	  prod.set(i, k, a.get(i, j) + b.get(j, k));
+	}
+      }
+    }
+    return prod;
+  }
 
   template<int I, int J>
   matrix<I, J> operator*(const double c, const matrix<I, J>& a) {

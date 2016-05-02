@@ -17,7 +17,7 @@ namespace gca {
     matrix<3, 3> id = identity<3, 3>();
     double v_coeffs[] = {0, -v.z, v.y, v.z, 0, -v.x, -v.y, v.x, 0};
     matrix<3, 3> vx(v_coeffs);
-    return id + vx + cs*vx; //matrix<3, 3>();
+    return id + vx + cs*(vx*vx); //matrix<3, 3>();
   }
 
   point operator*(const matrix<3, 3>& m, const point a) {
