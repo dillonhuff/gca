@@ -254,6 +254,31 @@ namespace gca {
     return orients;
   }
 
+  std::vector<block> drop_sample(const std::vector<triangle>& triangles,
+				 double tool_radius) {
+    auto mesh = make_mesh(triangles, 0.01);
+    //assert(mesh.is_connected());
+
+    box b = mesh.bounding_box();
+    b.x_min += 0.01;
+    b.y_min += 0.01;
+    b.z_min += 0.01;
+
+    vector<point> pts_z = sample_points_2d(b, tool_radius, tool_radius, 1.0);
+
+    vector<point> pts;
+    for (auto pt : pts_z) {
+      maybe<double> za = mesh.z_at(pt.x, pt.y);
+      assert(za.just);
+      pts.push_back(point(pt.x, pt.y, za.t)); //mesh.z_at(pt.x, pt.y)));
+    }
+
+    vector<polyline> lines;
+    lines.push_back(pts);
+    auto bs = emco_f1_code(lines); //shifted_lines);
+    return bs;
+  }
+  
   gcode_program cut_orientation(const stock_orientation& orient) {
     auto mesh = orient.get_mesh();
     point normal = orient.top_normal();
@@ -267,10 +292,11 @@ namespace gca {
     double tool_diameter = 0.15;
     double cut_depth = 0.1;
     double workpiece_height = 1.0;
-    vector<block> blks = mill_surface(tris,
-				      tool_diameter,
-				      cut_depth,
-				      workpiece_height);
+    vector<block> blks = drop_sample(tris, tool_diameter / 2.0);
+    // vector<block> blks = mill_surface(tris,
+    // 				      tool_diameter,
+    // 				      cut_depth,
+    // 				      workpiece_height);
     return gcode_program("Surface cut", blks);
   }
 
