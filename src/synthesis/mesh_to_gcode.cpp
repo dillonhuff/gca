@@ -295,7 +295,7 @@ namespace gca {
       orientations_to_cut(part_mesh, part_ss, face_inds);
     for (auto orient : orients) {
       cout << "top normal = " << orient.top_normal() << endl;
-      ps.push_back(cut_orientation(orient)); //gcode_program());
+      ps.push_back(cut_orientation(orient));
     }
     return ps;
   }
