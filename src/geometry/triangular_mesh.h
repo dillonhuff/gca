@@ -32,8 +32,14 @@ namespace gca {
       return indices;
     }
 
-    inline triangle_t triangle_vertices(const index_t vi) const
-    { return tri_vertices[vi]; }
+    inline triangle_t triangle_vertices(const index_t vi) const {
+      if (!(vi < tri_vertices.size())) {
+	cout << "Error in triangular_mesh::triangle_vertices, ";
+	cout << "!(" << vi << " < " << tri_vertices.size() << ")" << endl;
+	assert(false);
+      }
+      return tri_vertices[vi];
+    }
 
     inline std::vector<index_t> vertex_face_neighbors(const index_t vi) const {
       return mesh.vertex_face_neighbors(vi);

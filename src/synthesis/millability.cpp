@@ -1,4 +1,5 @@
 #include "synthesis/millability.h"
+#include "system/algorithm.h"
 
 namespace gca {
 
@@ -32,6 +33,60 @@ namespace gca {
       test_segments.push_back(line(s, e));
     }
     return test_segments;
+  }
+
+  bool adjacent_faces(const index_t i,
+		      const index_t j,
+		      const triangular_mesh& m) {
+    triangle_t it = m.triangle_vertices(i);
+    triangle_t jt = m.triangle_vertices(j);
+    for (int ii = 0; ii < 3; ii++) {
+      for (int jj = 0; jj < 3; jj++) {
+	if (it.v[ii] == jt.v[jj]) { return true; }
+      }
+    }
+    return false;
+  }
+
+  bool lies_along(const point normal,
+		  const triangle& t) {
+    return within_eps(angle_between(t.normal, normal), 90, 0.5);
+  }
+
+  std::vector<index_t> collect_side_faces(const point normal,
+					  std::vector<index_t>& inds,
+					  const triangular_mesh& part) {
+    assert(inds.size() > 0);
+    vector<index_t> faces = inds;
+    sort(begin(faces), end(faces));
+    bool added_new = false;
+    vector<index_t> face_inds_left = part.face_indexes();
+    delete_if(face_inds_left,
+	      [&inds](const index_t i)
+	      { return find(begin(inds), end(inds), i) != end(inds); });
+    do {
+      cout << "new" << endl;
+      added_new = false;
+      vector<index_t> to_remove;
+      for (auto i : face_inds_left) {
+	if (lies_along(normal, part.face_triangle(i))) {
+	  vector<index_t> to_add;
+	  for (auto f : faces) {
+	    if (adjacent_faces(i, f, part)) { 
+	      added_new = true;
+	      to_add.push_back(i);
+	      to_remove.push_back(i);
+	      break;
+	    }
+	  }
+	  faces.insert(end(faces), begin(to_add), end(to_add));
+	}
+      }
+      delete_if(face_inds_left,
+		[&to_remove](const index_t i)
+		{ return find(begin(to_remove), end(to_remove), i) != end(to_remove); });
+    } while (added_new);
+    return faces;
   }
 
   std::vector<index_t> millable_faces(const point normal,
@@ -72,7 +127,10 @@ namespace gca {
     }
     sort(begin(inds), end(inds));
     inds.erase(unique(begin(inds), end(inds)), end(inds));
-    return inds;
+    auto res_inds = collect_side_faces(normal, inds, part);
+    sort(begin(res_inds), end(res_inds));
+    res_inds.erase(unique(begin(res_inds), end(res_inds)), end(res_inds));
+    return res_inds;
   }
 
 }

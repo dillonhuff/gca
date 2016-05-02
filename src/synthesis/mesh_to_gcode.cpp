@@ -1,6 +1,7 @@
 #include <set>
 
 #include "synthesis/mesh_to_gcode.h"
+#include "synthesis/millability.h"
 #include "system/algorithm.h"
 
 namespace gca {
@@ -209,24 +210,24 @@ namespace gca {
     return next_faces;
   }
 
-  std::vector<index_t> millable_faces(const stock_orientation& orient) {
-    const triangular_mesh& part = orient.get_mesh();
-    auto faces = part.face_indexes();
-    return connected_region(faces,
-			    part,
-			    [&orient](const triangular_mesh& m,
-				      vector<index_t>& face_inds)
-			    { return farthest_by(orient.top_normal(), face_inds, m); },
-			    [&orient](const triangular_mesh& m,
-				      const index_t next_vertex)
-			    { return adjacent_millable(orient.top_normal(),
-						       m,
-						       next_vertex); });
-  }
+  // std::vector<index_t> millable_faces(const stock_orientation& orient) {
+  //   const triangular_mesh& part = orient.get_mesh();
+  //   auto faces = part.face_indexes();
+  //   return connected_region(faces,
+  // 			    part,
+  // 			    [&orient](const triangular_mesh& m,
+  // 				      vector<index_t>& face_inds)
+  // 			    { return farthest_by(orient.top_normal(), face_inds, m); },
+  // 			    [&orient](const triangular_mesh& m,
+  // 				      const index_t next_vertex)
+  // 			    { return adjacent_millable(orient.top_normal(),
+  // 						       m,
+  // 						       next_vertex); });
+  // }
 
   void remove_millable_surfaces(const stock_orientation& orient,
 				std::vector<index_t>& faces_left) {
-    std::vector<index_t> millable = millable_faces(orient);
+    std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
     sort(begin(millable), end(millable));
     delete_if(faces_left,
 	      [&millable](const index_t i)
@@ -240,7 +241,7 @@ namespace gca {
     vector<stock_orientation> all_orients = all_stable_orientations(surfaces);
     sort(begin(all_orients), end(all_orients),
 	 [](const stock_orientation l, const stock_orientation r)
-	 { return l.top_normal().x < r.top_normal().x; });
+	 { return l.top_normal().z < r.top_normal().z; });
     vector<stock_orientation> orients;
     while (faces_to_cut.size() > 0) {
       assert(all_orients.size() > 0);
