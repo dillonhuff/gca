@@ -257,7 +257,6 @@ namespace gca {
   std::vector<block> drop_sample(const std::vector<triangle>& triangles,
 				 double tool_radius) {
     auto mesh = make_mesh(triangles, 0.01);
-    //assert(mesh.is_connected());
 
     box b = mesh.bounding_box();
     b.x_min += 0.01;
@@ -269,8 +268,9 @@ namespace gca {
     vector<point> pts;
     for (auto pt : pts_z) {
       maybe<double> za = mesh.z_at(pt.x, pt.y);
-      assert(za.just);
-      pts.push_back(point(pt.x, pt.y, za.t)); //mesh.z_at(pt.x, pt.y)));
+      if (za.just) {
+	pts.push_back(point(pt.x, pt.y, za.t)); //mesh.z_at(pt.x, pt.y)));
+      }
     }
 
     vector<polyline> lines;
