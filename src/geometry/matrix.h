@@ -44,10 +44,11 @@ namespace gca {
   template<int I, int J, int K>
   matrix<I, K> operator*(const matrix<I, J>& a, const matrix<J, K>& b) {
     matrix<I, K> prod;
-    for (int i = 0; i < I; i++) {
-      for (int j = 0; j < J; j++) {
-	for (int k = 0; k < K; k++) {
-	  prod.set(i, k, a.get(i, j) + b.get(j, k));
+    for (int k = 0; k < K; k++) {
+      for (int i = 0; i < I; i++) {
+	prod.set(i, k, 0.0);
+	for (int j = 0; j < J; j++) {
+	  prod.set(i, k, prod.get(i, k) + a.get(i, j) * b.get(j, k));
 	}
       }
     }
