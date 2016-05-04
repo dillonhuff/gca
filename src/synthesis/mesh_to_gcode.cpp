@@ -9,7 +9,7 @@
 namespace gca {
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const triangular_mesh& workpiece_mesh) {
+			      const workpiece workpiece_mesh) {
     vector<point> normals;
     normals.push_back(point(1, 0, 0));
     normals.push_back(point(-1, 0, 0));
@@ -29,46 +29,9 @@ namespace gca {
 
   // TODO: Change to actually align instead of just making surfaces
   // orthogonal to axes
-  triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
-				  const workpiece_dimensions w_dims) {
-    point p0(0, 0, 0);
-    point p1(w_dims.x, 0, 0);
-    point p2(w_dims.x, w_dims.y, 0);
-    point p3(0, w_dims.y, 0);
-    point p4(0, 0, w_dims.z);
-    point p5(w_dims.x, 0, w_dims.z);
-    point p6(w_dims.x, w_dims.y, w_dims.z);
-    point p7(0, w_dims.y, w_dims.z);
-
-    point n0(1, 0, 0);
-    point n1(-1, 0, 0);
-
-    point n2(0, 1, 0);
-    point n3(0, -1, 0);
-
-    point n4(0, 0, 1);
-    point n5(0, 0, -1);
-
-    vector<triangle> ts;
-    ts.push_back(triangle(n4, p4, p7, p6));
-    ts.push_back(triangle(n4, p5, p4, p6));
-    
-    // ts.push_back(triangle(n0, p1, p5, p6));
-    // ts.push_back(triangle(n0, p1, p2, p6));
-
-    // ts.push_back(triangle(n1, p3, p0, p4));
-    // ts.push_back(triangle(n1, p0, p3, p7));
-
-    // ts.push_back(triangle(n2, p3, p2, p7));
-    // ts.push_back(triangle(n2, p2, p3, p6));
-
-    // ts.push_back(triangle(n3, p4, p5, p1));
-    // ts.push_back(triangle(n3, p1, p0, p4));
-
-    // ts.push_back(triangle(n5, p0, p1, p2));
-    // ts.push_back(triangle(n5, p0, p3, p2));
-
-    return make_mesh(ts, 0.001);
+  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
+			    const workpiece w) {
+    return w;
   }
 
   bool any_SA_surface_contains(index_t i,
@@ -127,7 +90,7 @@ namespace gca {
 
   // TODO: Replace this dummy
   std::vector<gcode_program>
-  workpiece_clipping_programs(const triangular_mesh& workpiece_mesh,
+  workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh) {
     vector<gcode_program> clip_progs;
     vector<block> blks;
@@ -308,10 +271,10 @@ namespace gca {
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const vice v,
 					   const vector<tool>& tools,
-					   const workpiece_dimensions w_dims) {
+					   const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
-    auto workpiece_mesh = align_workpiece(part_ss, w_dims);
-    classify_part_surfaces(part_ss, workpiece_mesh);
+    auto aligned_workpiece = align_workpiece(part_ss, w);
+    classify_part_surfaces(part_ss, aligned_workpiece);
     // TODO: Hack to prevent any unusual surfaces from escaping
     delete_if(part_ss,
     	      [](const surface& s)
@@ -320,7 +283,7 @@ namespace gca {
     cout << "# initial faces = " << face_inds.size() << endl;
     remove_SA_surfaces(part_ss, face_inds);
     vector<gcode_program> ps =
-      workpiece_clipping_programs(workpiece_mesh, part_mesh);
+      workpiece_clipping_programs(aligned_workpiece, part_mesh);
     cout << "# faces left = " << face_inds.size() << endl;
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);

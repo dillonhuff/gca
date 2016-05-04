@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
   vice test_vice(1.5, 1.5, 0.75, Y_AXIS);
   tool t1(0.3, FLAT_NOSE);
   vector<tool> tools{t1};
-  workpiece_dimensions workpiece_dims(1.5, 1.2, 1.5);
+  workpiece workpiece_dims(1.5, 1.2, 1.5);
   auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
 
   cout << "All programs" << endl;

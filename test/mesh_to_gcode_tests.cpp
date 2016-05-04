@@ -13,7 +13,7 @@ namespace gca {
     vice test_vice(1.5, 1.5, 0.75, Y_AXIS);
     tool t1(0.3, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece_dimensions workpiece_dims(1.5, 1.2, 1.5);
+    workpiece workpiece_dims(1.5, 1.2, 1.5);
     
     SECTION("Simple box") {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
@@ -62,7 +62,7 @@ namespace gca {
 
       SECTION("All simple box surfaces are part of a SA faces") {
 	vector<index_t> fis = mesh.face_indexes();
-	workpiece_dimensions workpiece_dims(1.5, 1.2, 1.5);
+	workpiece workpiece_dims(1.5, 1.2, 1.5);
 	auto workpiece_mesh = align_workpiece(surfaces, workpiece_dims);
 	classify_part_surfaces(surfaces, workpiece_mesh);
 	remove_SA_surfaces(surfaces, fis);

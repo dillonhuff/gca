@@ -6,7 +6,15 @@
 
 namespace gca {
 
-  typedef point workpiece_dimensions;
+  struct workpiece {
+    point sides[3];
+
+    workpiece(double x, double y, double z) {
+      sides[0] = point(x, 0, 0);
+      sides[1] = point(0, y, 0);
+      sides[2] = point(0, 0, z);
+    }
+  };
 
   enum tool_type { FLAT_NOSE, BALL_NOSE };
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
@@ -101,16 +109,16 @@ namespace gca {
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& m,
 					   const vice v,
 					   const vector<tool>& tools,
-					   const workpiece_dimensions w_dims);
+					   const workpiece w_dims);
 
   void remove_SA_surfaces(const std::vector<surface>& surfaces,
 			  std::vector<index_t>& indices);
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const triangular_mesh& workpiece_mesh);
+			      const workpiece workpiece_mesh);
 
-  triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
-				  const workpiece_dimensions w_dims);
+  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
+			    const workpiece w);
   
 }
 
