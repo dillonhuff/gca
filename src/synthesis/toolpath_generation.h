@@ -1,6 +1,7 @@
 #ifndef GCA_TOOLPATH_GENERATION_H
 #define GCA_TOOLPATH_GENERATION_H
 
+#include "geometry/box.h"
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
@@ -43,37 +44,43 @@ namespace gca {
     }
   };
 
-  vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p);
+  std::vector<polyline> deepen_polyline(const std::vector<double>& depths,
+					const polyline& p);
 
-  vector<double> cut_depths(double start_depth,
-			    double end_depth,
-			    double cut_depth);
-
-  vector<polyline> tile_vertical(const vector<polyline>& ps,
-				 double start_depth,
+  std::vector<double> cut_depths(double start_depth,
 				 double end_depth,
 				 double cut_depth);
 
-  vector<polyline> repeated_offsets(const polyline& p,
-				    int num_repeats,
-				    offset_dir d,
-				    double inc);
+  std::vector<polyline> tile_vertical(const std::vector<polyline>& ps,
+				      double start_depth,
+				      double end_depth,
+				      double cut_depth);
 
-  vector<polyline> rough_pocket(const pocket& pocket,
-				double tool_radius,
-				double cut_depth);
+  std::vector<polyline> repeated_offsets(const polyline& p,
+					 int num_repeats,
+					 offset_dir d,
+					 double inc);
 
-  vector<polyline> rough_pockets(const vector<pocket>& pockets,
-				 double tool_radius,
-				 double cut_depth);
+  std::vector<polyline> rough_pocket(const pocket& pocket,
+				     double tool_radius,
+				     double cut_depth);
+
+  std::vector<polyline> rough_pockets(const std::vector<pocket>& pockets,
+				      double tool_radius,
+				      double cut_depth);
   
-  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_diameter,
-					double cut_depth);
+  std::vector<polyline> pocket_2P5D_interior(const pocket& pocket,
+					     double tool_diameter,
+					     double cut_depth);
 
-  vector<cut*> polyline_cuts(const polyline& p);
+  std::vector<cut*> polyline_cuts(const polyline& p);
 
   polyline compress_lines(const polyline& p, double tolerance);
+
+  std::vector<polyline> rough_box(const box b,
+				  double tool_radius,
+				  double cut_depth);
+  
 }
 
 #endif

@@ -131,11 +131,22 @@ namespace gca {
 			      const triangular_mesh& part_mesh) {
     vector<gcode_program> clip_progs;
     vector<block> blks;
-    gcode_program gp("Clip workpiece", blks);
-    for (int i = 0; i < 3; i++) {
-      clip_progs.push_back(gp);
-      clip_progs.push_back(gp);
-    }
+
+    gcode_program x_face("X_Face", blks);
+    gcode_program x_clip("X_Clip", blks);
+    clip_progs.push_back(x_face);
+    clip_progs.push_back(x_clip);
+
+    gcode_program y_face("Y_Face", blks);
+    gcode_program y_clip("Y_Clip", blks);
+    clip_progs.push_back(y_face);
+    clip_progs.push_back(y_clip);
+
+    gcode_program z_face("Z_Face", blks);
+    gcode_program z_clip("Z_Clip", blks);
+    clip_progs.push_back(z_face);
+    clip_progs.push_back(z_clip);
+
     return clip_progs;
   }
 
@@ -290,13 +301,7 @@ namespace gca {
     }
     // TODO: Get rid of these magic numbers
     double tool_diameter = 0.15;
-    double cut_depth = 0.1;
-    double workpiece_height = 1.0;
     vector<block> blks = drop_sample(tris, tool_diameter / 2.0);
-    // vector<block> blks = mill_surface(tris,
-    // 				      tool_diameter,
-    // 				      cut_depth,
-    // 				      workpiece_height);
     return gcode_program("Surface cut", blks);
   }
 
@@ -307,7 +312,7 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto workpiece_mesh = align_workpiece(part_ss, w_dims);
     classify_part_surfaces(part_ss, workpiece_mesh);
-    //TODO: Hack to prevent any unusual surfaces from escaping
+    // TODO: Hack to prevent any unusual surfaces from escaping
     delete_if(part_ss,
     	      [](const surface& s)
     	      { return !s.is_SA(); });

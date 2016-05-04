@@ -278,4 +278,28 @@ namespace gca {
     return polyline(pts);
   }
 
+  std::vector<polyline> rough_box(const box b,
+				  double tool_radius,
+				  double cut_depth) {
+    vector<point> pts = sample_points_2d(b,
+					 tool_radius / 2.0,
+					 tool_radius / 2.0,
+					 0.0);
+
+    vector<vector<point>> pt_lines;
+    split_by(pts, pt_lines,
+	     [](const point l, const point r)
+	     { return within_eps(l.x, r.x); });
+    vector<polyline> lines;
+    for (auto pt_group : pt_lines) {
+      lines.push_back(pt_group);
+    }
+
+    auto final_lines = tile_vertical(lines,
+				     b.z_max,
+				     b.z_min,
+				     cut_depth);
+    return final_lines;
+  }
+
 }
