@@ -106,6 +106,33 @@ namespace gca {
     return workpiece(x_d, y_d, z_d);
   }
 
+  std::pair<std::vector<block>,
+	    std::vector<block> >
+  clip_axis(double workpiece_width,
+	    double workpiece_length,
+	    double workpiece_height,
+	    double eps,
+	    double part_height,
+	    double tool_radius,
+	    double cut_depth) {
+    double z_max = workpiece_height + 0.01;
+
+    box b = box(0, workpiece_width,
+		0, workpiece_length,
+		z_max - eps, z_max);
+
+    vector<block> blks =
+      emco_f1_code(rough_box(b, tool_radius, cut_depth));
+
+    box b2 = box(0, workpiece_width,
+		 0, workpiece_length,
+		 part_height, z_max);
+    vector<block> clip_blocks =
+      emco_f1_code(rough_box(b2, tool_radius, cut_depth));
+    return pair<vector<block>, vector<block> >(blks, clip_blocks);
+  }
+    
+
   std::vector<gcode_program>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh) {
@@ -117,33 +144,54 @@ namespace gca {
     double cut_depth = 0.1;
     double eps = 0.05;
 
-    double workpiece_height = aligned_workpiece.sides[0].len();
-    double part_height = clipped.sides[0].len();
-
     double workpiece_width = aligned_workpiece.sides[1].len();
     double workpiece_length = aligned_workpiece.sides[2].len();
 
-    double z_max = workpiece_height + 0.01;
+    double workpiece_height = aligned_workpiece.sides[0].len();
+    double part_height = clipped.sides[0].len();
 
-    box b = box(0, workpiece_width,
-		0, workpiece_length,
-		z_max - eps, z_max);
+    auto clip_x = clip_axis(workpiece_width,
+			    workpiece_length,
+			    workpiece_height,
+			    eps,
+			    part_height,
+			    tool_radius,
+			    cut_depth);
 
-    vector<block> blks =
-      emco_f1_code(rough_box(b, tool_radius, cut_depth));
-
-    gcode_program x_face("X_Face", blks);
-    gcode_program x_clip("X_Clip", blks);
+    gcode_program x_face("X_Face", clip_x.first);
+    gcode_program x_clip("X_Clip", clip_x.second);
     clip_progs.push_back(x_face);
     clip_progs.push_back(x_clip);
 
-    gcode_program y_face("Y_Face", blks);
-    gcode_program y_clip("Y_Clip", blks);
+    workpiece_height = aligned_workpiece.sides[1].len();
+    part_height = clipped.sides[1].len();
+    
+    auto clip_y = clip_axis(workpiece_width,
+			    workpiece_length,
+			    workpiece_height,
+			    eps,
+			    part_height,
+			    tool_radius,
+			    cut_depth);
+    
+    gcode_program y_face("Y_Face", clip_y.first);
+    gcode_program y_clip("Y_Clip", clip_y.second);
     clip_progs.push_back(y_face);
     clip_progs.push_back(y_clip);
 
-    gcode_program z_face("Z_Face", blks);
-    gcode_program z_clip("Z_Clip", blks);
+    workpiece_height = aligned_workpiece.sides[2].len();
+    part_height = clipped.sides[2].len();
+    
+    auto clip_z = clip_axis(workpiece_width,
+			    workpiece_length,
+			    workpiece_height,
+			    eps,
+			    part_height,
+			    tool_radius,
+			    cut_depth);
+    
+    gcode_program z_face("Z_Face", clip_z.first);
+    gcode_program z_clip("Z_Clip", clip_z.second);
     clip_progs.push_back(z_face);
     clip_progs.push_back(z_clip);
 
