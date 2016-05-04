@@ -3,12 +3,6 @@
 
 namespace gca {
 
-  double signed_distance_along(const point p, const point proj_dir) {
-    point dir = proj_dir.normalize();
-    double len = p.dot(dir);
-    return len;
-  }
-
   std::vector<index_t> all_intersections(const vector<index_t>& all_face_inds,
 					 const triangular_mesh& part,
 					 const line test_segment) {
@@ -79,21 +73,6 @@ namespace gca {
     }
     subtract(face_inds_left, to_remove);
     return faces;
-  }
-
-  double greater_than_diameter(const point normal,
-			       const std::vector<point>& centroids) {
-    vector<point> face_projections(centroids.size());
-    transform(begin(centroids), end(centroids),
-	      begin(face_projections),
-	      [normal](const point cent) {
-		return project_onto(cent, normal);
-	      });
-    auto max_e = max_element(begin(face_projections), end(face_projections),
-			     [](const point l, const point r)
-			     { return l.len() < r.len(); });
-    double ray_len = 2*(*max_e).len();
-    return ray_len;
   }
 
   std::vector<index_t> millable_faces(const point normal,

@@ -63,7 +63,17 @@ namespace gca {
   double angle_between(point u, point v);
   ostream& operator<<(ostream& s, const point& p);
   ostream& operator<<(ostream& s, const vector<point>& p);
-  point project_onto(point p, point proj_d);  
+  point project_onto(point p, point proj_d);
+
+  double signed_distance_along(const point p, const point proj_dir);
+
+  double greater_than_diameter(const point normal,
+			       const std::vector<point>& centroids);
+
+  double diameter(const point normal,
+		  const std::vector<point>& pts);
+  
+  
 }
 
 #endif

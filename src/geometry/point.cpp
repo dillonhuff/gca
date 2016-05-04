@@ -96,4 +96,39 @@ namespace gca {
     return (p.dot(proj_dir))*proj_dir;
   }
 
+  double signed_distance_along(const point p, const point proj_dir) {
+    point dir = proj_dir.normalize();
+    double len = p.dot(dir);
+    return len;
+  }
+
+  double greater_than_diameter(const point normal,
+			       const std::vector<point>& centroids) {
+    vector<point> face_projections(centroids.size());
+    transform(begin(centroids), end(centroids),
+	      begin(face_projections),
+	      [normal](const point cent) {
+		return project_onto(cent, normal);
+	      });
+    auto max_e = max_element(begin(face_projections), end(face_projections),
+			     [](const point l, const point r)
+			     { return l.len() < r.len(); });
+    double ray_len = 2*(*max_e).len();
+    return ray_len;
+  }
+
+  double diameter(const point normal,
+		  const std::vector<point>& pts) {
+    vector<double> face_projections(pts.size());
+    transform(begin(pts), end(pts),
+	      begin(face_projections),
+	      [normal](const point cent) {
+		return signed_distance_along(cent, normal);
+	      });
+    auto max_e = max_element(begin(face_projections), end(face_projections));
+    auto min_e = min_element(begin(face_projections), end(face_projections));
+    return abs(*max_e - *min_e);
+  }
+
+
 }

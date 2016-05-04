@@ -4,6 +4,7 @@
 #include "synthesis/axis_3.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/millability.h"
+#include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 
 namespace gca {
@@ -88,12 +89,48 @@ namespace gca {
     return surfaces;
   }
 
-  // TODO: Replace this dummy
+  double diameter(const point normal, const triangular_mesh& m) {
+    return diameter(normal, m.vertex_list());
+  }
+
+  workpiece clipped_workpiece(const workpiece aligned_workpiece,
+			      const triangular_mesh& part_mesh) {
+    point x_n = aligned_workpiece.sides[0].normalize();
+    point y_n = aligned_workpiece.sides[1].normalize();
+    point z_n = aligned_workpiece.sides[2].normalize();
+    
+    point x_d = diameter(aligned_workpiece.sides[0], part_mesh) * x_n;
+    point y_d = diameter(aligned_workpiece.sides[1], part_mesh) * y_n;
+    point z_d = diameter(aligned_workpiece.sides[2], part_mesh) * z_n;
+
+    return workpiece(x_d, y_d, z_d);
+  }
+
   std::vector<gcode_program>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh) {
+    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
     vector<gcode_program> clip_progs;
-    vector<block> blks;
+
+    // TODO: Turn these magic numbers into parameters
+    double tool_radius = 0.32;
+    double cut_depth = 0.1;
+    double eps = 0.05;
+
+    double workpiece_height = aligned_workpiece.sides[0].len();
+    double part_height = clipped.sides[0].len();
+
+    double workpiece_width = aligned_workpiece.sides[1].len();
+    double workpiece_length = aligned_workpiece.sides[2].len();
+
+    double z_max = workpiece_height + 0.01;
+
+    box b = box(0, workpiece_width,
+		0, workpiece_length,
+		z_max - eps, z_max);
+
+    vector<block> blks =
+      emco_f1_code(rough_box(b, tool_radius, cut_depth));
 
     gcode_program x_face("X_Face", blks);
     gcode_program x_clip("X_Clip", blks);

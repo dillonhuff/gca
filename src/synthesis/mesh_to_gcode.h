@@ -14,6 +14,13 @@ namespace gca {
       sides[1] = point(0, y, 0);
       sides[2] = point(0, 0, z);
     }
+
+    workpiece(point x, point y, point z) {
+      sides[0] = x;
+      sides[1] = y;
+      sides[2] = z;
+    }
+
   };
 
   enum tool_type { FLAT_NOSE, BALL_NOSE };
