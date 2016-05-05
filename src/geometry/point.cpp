@@ -130,5 +130,27 @@ namespace gca {
     return abs(*max_e - *min_e);
   }
 
+  double max_distance_along(const std::vector<point>& pts, const point normal) {
+    vector<double> face_projections(pts.size());
+    transform(begin(pts), end(pts),
+	      begin(face_projections),
+	      [normal](const point cent) {
+		return signed_distance_along(cent, normal);
+	      });
+    auto max_e = max_element(begin(face_projections), end(face_projections));
+    return *max_e;
+  }
+
+  double min_distance_along(const std::vector<point>& pts, const point normal) {
+    vector<double> face_projections(pts.size());
+    transform(begin(pts), end(pts),
+	      begin(face_projections),
+	      [normal](const point cent) {
+		return signed_distance_along(cent, normal);
+	      });
+    auto min_e = min_element(begin(face_projections), end(face_projections));
+    return *min_e;
+  }
+  
 
 }

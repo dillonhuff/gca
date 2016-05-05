@@ -311,19 +311,63 @@ namespace gca {
     return orients;
   }
 
-  gcode_program cut_orientation(const stock_orientation& orient) {
-    auto mesh = orient.get_mesh();
+  triangular_mesh orient_mesh(const triangular_mesh& mesh,
+			      const stock_orientation& orient) {
     point normal = orient.top_normal();
-    std::vector<index_t> millable = millable_faces(normal, mesh);
-    vector<triangle> tris;
-    matrix<3, 3> rotation_mat = rotate_onto(normal, point(0, 0, 1));
-    for (auto i : millable) {
-      tris.push_back(apply(rotation_mat, mesh.face_triangle(i)));
-    }
+    matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
+    auto m = top_rotation_mat * mesh;
+    point left_normal = orient.left_normal();
+    matrix<3, 3> left_rotation_mat = rotate_onto(left_normal, point(0, 1, 0));
+    return left_rotation_mat * m;
+  }
+
+  double max_in_dir(const triangular_mesh& mesh,
+		    const point dir) {
+    return max_distance_along(mesh.vertex_list(), dir);
+  }
+
+  double min_in_dir(const triangular_mesh& mesh,
+		    const point dir) {
+    return min_distance_along(mesh.vertex_list(), dir);
+  }
+  
+  triangular_mesh shift_mesh(const triangular_mesh& mesh,
+			     const vice v) {
+    // TODO: Replace this magic number
+    double x_f = 0.0;
+    double y_f = v.fixed_clamp_y();
+    double z_f = v.base_z();
+    point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
+		y_f - max_in_dir(mesh, point(0, 1, 0)),
+		z_f - min_in_dir(mesh, point(0, 0, -1)));
+    cout << "shift_mesh by: " << shift << endl;
+    return mesh.apply([shift](const point p)
+		      { return p + point(shift.x, shift.y, shift.z); }); //shift; }); //point(0, 0, 0); }); //shift; });
+  }
+
+  triangular_mesh oriented_part_mesh(const stock_orientation& orient,
+				     const vice v) {
+    auto mesh = orient.get_mesh();
+    auto oriented_mesh = orient_mesh(mesh, orient);
+    return shift_mesh(oriented_mesh, v);
+  }
+
+  gcode_program cut_orientation(const stock_orientation& orient,
+				const vice v) {
+    auto mesh = oriented_part_mesh(orient, v);
     // TODO: Get rid of these magic numbers
     double tool_diameter = 0.15;
-    vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
+    vector<polyline> lines = drop_sample(mesh, tool_diameter / 2.0);
     return gcode_program("Surface cut", emco_f1_code(lines));
+  }
+
+  void cut_orientations(const std::vector<stock_orientation>& orients,
+			std::vector<gcode_program>& progs,
+			const vice v) {
+    for (auto orient : orients) {
+      cout << "top normal = " << orient.top_normal() << endl;
+      progs.push_back(cut_orientation(orient, v));
+    }
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
@@ -345,10 +389,7 @@ namespace gca {
       workpiece_clipping_programs(aligned_workpiece, part_mesh);
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);
-    for (auto orient : orients) {
-      cout << "top normal = " << orient.top_normal() << endl;
-      ps.push_back(cut_orientation(orient));
-    }
+    cut_orientations(orients, ps, v);
     return ps;
   }
 }

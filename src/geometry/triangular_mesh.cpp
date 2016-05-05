@@ -199,4 +199,8 @@ namespace gca {
     return const_connected_regions;
   }
 
+  triangular_mesh operator*(const matrix<3, 3>& m, const triangular_mesh& mesh) {
+    return mesh.apply([m](const point p) { return m*p; });
+  }
+
 }

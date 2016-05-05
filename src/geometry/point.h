@@ -67,6 +67,9 @@ namespace gca {
 
   double signed_distance_along(const point p, const point proj_dir);
 
+  double max_distance_along(const std::vector<point>& pts, const point proj_dir);
+  double min_distance_along(const std::vector<point>& pts, const point proj_dir);
+
   double greater_than_diameter(const point normal,
 			       const std::vector<point>& centroids);
 

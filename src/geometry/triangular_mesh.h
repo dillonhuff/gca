@@ -80,8 +80,11 @@ namespace gca {
     inline const vector<point>& vertex_list() const {
       return vertices;
     }
+
+    std::vector<triangle_t> triangle_verts() const
+    { return tri_vertices; }
     
-    std::vector<triangle> triangle_list() {
+    std::vector<triangle> triangle_list() const {
       std::vector<triangle> ts;
       // TODO: Add real triangle -> normal map or compute normals
       point dummy_normal(1, 0, 0);
@@ -93,6 +96,17 @@ namespace gca {
 			      vertices[t.k()]));
       }
       return ts;
+    }
+
+    template<typename F>
+    triangular_mesh apply(F f) const {
+      vector<point> tverts(vertices.size());
+      transform(begin(vertices), end(vertices), begin(tverts), f);
+      vector<point> torients(face_orientations.size());
+      transform(begin(face_orientations), end(face_orientations),
+		begin(torients),
+		f);
+      return triangular_mesh(tverts, tri_vertices, torients, mesh);
     }
   };
 
@@ -141,5 +155,7 @@ namespace gca {
     return surface_face_inds;
   }
 
+  triangular_mesh operator*(const matrix<3, 3>& m, const triangular_mesh& mesh);
+  
 }
 #endif

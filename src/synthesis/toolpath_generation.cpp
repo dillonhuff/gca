@@ -1,6 +1,5 @@
 #include <cmath>
 
-#include "geometry/triangular_mesh.h"
 #include "synthesis/cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/shape_layout.h"
@@ -326,5 +325,11 @@ namespace gca {
     lines.push_back(pts);
     return lines;
   }
+
+  std::vector<polyline> drop_sample(const triangular_mesh& mesh,
+				    double tool_radius) {
+    return drop_sample(mesh.triangle_list(), tool_radius);
+  }
+
   
 }

@@ -29,6 +29,15 @@ namespace gca {
   class vice {
   public:
     vice(double p_length, double p_width, double p_height, axis p_ax) {}
+
+    inline double fixed_clamp_y() const {
+      return 0;
+    }
+
+    inline double base_z() const {
+      return 0;
+    }
+
   };
 
   class tool {
@@ -100,6 +109,13 @@ namespace gca {
       return n;
     }
 
+    inline point left_normal() const {
+      point bn = left->face_orientation(bottom->front());
+      point n = bn - 2*bn;
+      assert(within_eps(angle_between(n, bn), 180, 0.1));
+      return n;
+    }
+    
     inline const triangular_mesh& get_mesh() const
     { return left->get_parent_mesh(); }
 
@@ -108,8 +124,6 @@ namespace gca {
 		      const surface* p_bottom) :
       left(p_left), right(p_right), bottom(p_bottom) {}
   };
-
-  //std::vector<surface> part_stable_surfaces(const triangular_mesh& m);
 
   std::vector<surface> outer_surfaces(const triangular_mesh& m);
 

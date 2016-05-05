@@ -84,6 +84,7 @@ namespace gca {
   matrix<3, 3> rotate_onto(point a, point b);
 
   point operator*(const matrix<3, 3>& m, const point a);
+
 }
 
 #endif

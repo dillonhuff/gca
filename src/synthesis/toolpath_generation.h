@@ -5,6 +5,7 @@
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
+#include "geometry/triangular_mesh.h"
 #include "synthesis/cut.h"
 
 namespace gca {
@@ -82,6 +83,9 @@ namespace gca {
 				  double cut_depth);
 
   std::vector<polyline> drop_sample(const std::vector<triangle>& triangles,
+				    double tool_radius);
+
+  std::vector<polyline> drop_sample(const triangular_mesh& mesh,
 				    double tool_radius);
   
 }
