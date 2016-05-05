@@ -108,6 +108,14 @@ namespace gca {
 		f);
       return triangular_mesh(tverts, tri_vertices, torients, mesh);
     }
+
+    template<typename F>
+    triangular_mesh apply_to_vertices(F f) const {
+      vector<point> tverts(vertices.size());
+      transform(begin(vertices), end(vertices), begin(tverts), f);
+      return triangular_mesh(tverts, tri_vertices, face_orientations, mesh);
+    }
+
   };
 
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,

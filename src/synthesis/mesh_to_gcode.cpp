@@ -341,8 +341,10 @@ namespace gca {
 		y_f - max_in_dir(mesh, point(0, 1, 0)),
 		z_f - min_in_dir(mesh, point(0, 0, -1)));
     cout << "shift_mesh by: " << shift << endl;
-    return mesh.apply([shift](const point p)
+    auto m = mesh.apply_to_vertices([shift](const point p)
 		      { return p + point(shift.x, shift.y, shift.z); }); //shift; }); //point(0, 0, 0); }); //shift; });
+    assert(m.vertex_list().size() == mesh.vertex_list().size());
+    return m;
   }
 
   triangular_mesh oriented_part_mesh(const stock_orientation& orient,
@@ -355,9 +357,14 @@ namespace gca {
   gcode_program cut_orientation(const stock_orientation& orient,
 				const vice v) {
     auto mesh = oriented_part_mesh(orient, v);
+    std::vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
+    std::vector<triangle> tris;
+    for (auto i : millable) {
+      tris.push_back(mesh.face_triangle(i));
+    }
     // TODO: Get rid of these magic numbers
     double tool_diameter = 0.15;
-    vector<polyline> lines = drop_sample(mesh, tool_diameter / 2.0);
+    vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
     return gcode_program("Surface cut", emco_f1_code(lines));
   }
 
