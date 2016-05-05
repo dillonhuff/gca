@@ -313,31 +313,6 @@ namespace gca {
     return orients;
   }
 
-  std::vector<block> drop_sample(const std::vector<triangle>& triangles,
-				 double tool_radius) {
-    auto mesh = make_mesh(triangles, 0.01);
-
-    box b = mesh.bounding_box();
-    b.x_min += 0.01;
-    b.y_min += 0.01;
-    b.z_min += 0.01;
-
-    vector<point> pts_z = sample_points_2d(b, tool_radius, tool_radius, 1.0);
-
-    vector<point> pts;
-    for (auto pt : pts_z) {
-      maybe<double> za = mesh.z_at(pt.x, pt.y);
-      if (za.just) {
-	pts.push_back(point(pt.x, pt.y, za.t)); //mesh.z_at(pt.x, pt.y)));
-      }
-    }
-
-    vector<polyline> lines;
-    lines.push_back(pts);
-    auto bs = emco_f1_code(lines); //shifted_lines);
-    return bs;
-  }
-  
   gcode_program cut_orientation(const stock_orientation& orient) {
     auto mesh = orient.get_mesh();
     point normal = orient.top_normal();
@@ -349,8 +324,8 @@ namespace gca {
     }
     // TODO: Get rid of these magic numbers
     double tool_diameter = 0.15;
-    vector<block> blks = drop_sample(tris, tool_diameter / 2.0);
-    return gcode_program("Surface cut", blks);
+    vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
+    return gcode_program("Surface cut", emco_f1_code(lines));
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,

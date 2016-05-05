@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "geometry/triangular_mesh.h"
 #include "synthesis/cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/shape_layout.h"
@@ -302,4 +303,28 @@ namespace gca {
     return final_lines;
   }
 
+  std::vector<polyline> drop_sample(const std::vector<triangle>& triangles,
+				    double tool_radius) {
+    auto mesh = make_mesh(triangles, 0.01);
+
+    box b = mesh.bounding_box();
+    b.x_min += 0.01;
+    b.y_min += 0.01;
+    b.z_min += 0.01;
+
+    vector<point> pts_z = sample_points_2d(b, tool_radius, tool_radius, 1.0);
+
+    vector<point> pts;
+    for (auto pt : pts_z) {
+      maybe<double> za = mesh.z_at(pt.x, pt.y);
+      if (za.just) {
+	pts.push_back(point(pt.x, pt.y, za.t)); //mesh.z_at(pt.x, pt.y)));
+      }
+    }
+
+    vector<polyline> lines;
+    lines.push_back(pts);
+    return lines;
+  }
+  
 }

@@ -80,6 +80,9 @@ namespace gca {
   std::vector<polyline> rough_box(const box b,
 				  double tool_radius,
 				  double cut_depth);
+
+  std::vector<polyline> drop_sample(const std::vector<triangle>& triangles,
+				    double tool_radius);
   
 }
 
