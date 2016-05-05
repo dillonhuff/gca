@@ -81,7 +81,6 @@ namespace gca {
     vector<surface> surfaces;
     for (auto f : const_orient_face_indices) {
       assert(f.size() > 0);
-      point face_normal = part.face_orientation(f.front());
       if (is_outer_surface(f, part)) {
 	surfaces.push_back(surface(&part, f));
       }
@@ -259,7 +258,6 @@ namespace gca {
 	 [&part, normal](index_t l, index_t r)
 	 { return distance_along(normal, part.face_triangle(l)) >
 	   distance_along(normal, part.face_triangle(r)); });
-    double outer_dist = distance_along(normal, part.face_triangle(f.front()));
     return f.front();
   }
 
@@ -342,9 +340,9 @@ namespace gca {
     vector<index_t> face_inds = part_mesh.face_indexes();
     cout << "# initial faces = " << face_inds.size() << endl;
     remove_SA_surfaces(part_ss, face_inds);
+    cout << "# faces left = " << face_inds.size() << endl;
     vector<gcode_program> ps =
       workpiece_clipping_programs(aligned_workpiece, part_mesh);
-    cout << "# faces left = " << face_inds.size() << endl;
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);
     for (auto orient : orients) {

@@ -67,7 +67,6 @@ namespace gca {
     unordered_edges_from_triangles(vertex_triangles.size(),
 				   &vertex_triangles[0],
 				   edges);
-    auto num_vertices = vertices.size();
     trimesh_t mesh;
     mesh.build(vertices.size(),
 	       triangles.size(),
