@@ -20,7 +20,7 @@ namespace gca {
     assert(pocket_lines.size() > 0);
     cut_params params;
     params.target_machine = EMCO_F1;
-    params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
+    //    params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
     return polylines_cuts(pocket_lines, params);
   }
 
