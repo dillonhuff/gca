@@ -316,9 +316,7 @@ namespace gca {
     point normal = orient.top_normal();
     matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
     auto m = top_rotation_mat * mesh;
-    point left_normal = orient.left_normal();
-    matrix<3, 3> left_rotation_mat = rotate_onto(left_normal, point(0, 1, 0));
-    return left_rotation_mat * m;
+    return m;
   }
 
   double max_in_dir(const triangular_mesh& mesh,
@@ -335,11 +333,11 @@ namespace gca {
 			     const vice v) {
     // TODO: Replace this magic number
     double x_f = 0.0;
-    double y_f = v.fixed_clamp_y();
-    double z_f = v.base_z();
+    double y_f = 0.0; //v.fixed_clamp_y();
+    double z_f = 0.0; //v.base_z();
     point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
 		y_f - max_in_dir(mesh, point(0, 1, 0)),
-		z_f - min_in_dir(mesh, point(0, 0, -1)));
+		z_f - min_in_dir(mesh, point(0, 0, 1)));
     cout << "shift_mesh by: " << shift << endl;
     auto m = mesh.apply_to_vertices([shift](const point p)
 		      { return p + point(shift.x, shift.y, shift.z); }); //shift; }); //point(0, 0, 0); }); //shift; });
@@ -358,6 +356,7 @@ namespace gca {
 				const vice v) {
     auto mesh = oriented_part_mesh(orient, v);
     std::vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
+    //    std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
     std::vector<triangle> tris;
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
