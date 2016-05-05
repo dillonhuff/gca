@@ -96,20 +96,6 @@ namespace gca {
     return out;
   }
 
-  vector<vector<triangle>> millable_surfaces(const vector<triangle>& tris) {
-    auto triangles = tris;
-    delete_if(triangles, [](const triangle& t)
-	      { return !is_upward_facing(t, 1e-2); });
-    vector<vector<triangle>> millable_surfaces;
-    stable_sort(begin(triangles), end(triangles),
-		[](const triangle l, const triangle r)
-		{ return l.v1.z < r.v1.z; });
-    split_by(triangles, millable_surfaces,
-    	     [](const triangle l, const triangle r)
-    	     { return within_eps(l.v1.z, r.v1.z); });
-    return millable_surfaces;
-  }
-
   bool in_projection(const triangle t, const point p) {
     vector<point> vs{t.v1, t.v2, t.v3, t.v1};
     return contains(oriented_polygon(t.normal, vs), p);

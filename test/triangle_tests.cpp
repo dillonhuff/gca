@@ -24,35 +24,8 @@ namespace gca {
     }
   }
 
-  TEST_CASE("Identify millable surfaces") {
-    arena_allocator a;
-    set_system_allocator(&a);
-
-    SECTION("Box") {
-      auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1x1x1.stl").triangles;
-      auto faces = millable_surfaces(triangles);
-      REQUIRE(faces.size() == 1);
-    }
-
-    SECTION("Multiple cylinders, 2 levels") {
-      auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders.stl").triangles;
-      auto faces = millable_surfaces(triangles);
-      REQUIRE(faces.size() == 2);
-    }
-    
-    SECTION("Multiple cylinders, 3 levels") {
-      auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders2.stl").triangles;
-      auto faces = millable_surfaces(triangles);
-      REQUIRE(faces.size() == 3);
-    }
-  }
-
   TEST_CASE("Segment intersection with triangles") {
     auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
-    // cout << "# triangles: " << triangles.size() << endl;
-    // for (auto t : triangles) {
-    //   cout << t << endl;
-    // }
 
     SECTION("Line at 10.0") {
       point s(0.332573, 0.612317, 10.0);
