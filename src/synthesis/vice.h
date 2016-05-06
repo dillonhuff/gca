@@ -24,12 +24,19 @@ namespace gca {
       top_height(p_top_height),
       clamp_width(p_clamp_width) {}
 
-    // TODO: Fill in with actual vice position parameters
+    inline double x_min() const { return pos.x; }
+    inline double y_min() const { return pos.y; }
+    inline double z_min() const { return pos.z; }
+
     inline double x_max() const { return pos.x + x_length; }
-    inline double y_max() const { return pos.x + y_length; }
-    inline double fixed_clamp_y() const { return pos.y + clamp_width; }
+    inline double y_max() const { return pos.y + y_length; }
+
+    inline double fixed_clamp_y() const { return y_max() - clamp_width; }
+
     inline double base_z() const { return pos.z + base_height; }
     inline double top_z() const { return pos.z + top_height; }
+
+    inline point position() const { return pos; }
 
   };
 

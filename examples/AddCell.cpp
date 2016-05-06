@@ -96,11 +96,12 @@ polydata_from_triangle_list(const std::vector<gca::triangle>& stl_triangles) {
 }
 
 box main_box(const vice v) {
-  return box(1, 2, 1, 2, 0, 1.75);
+  cout << "vice z min = " << v.z_min() << endl;
+  return box(v.x_min(), v.x_max(), v.y_min(), v.y_max(), v.z_min(), v.base_z());
 }
 
 box upper_clamp_box(const vice v) {
-  return main_box(v);
+  return box(v.x_min(), v.x_max(), v.fixed_clamp_y(), v.y_max(), v.base_z(), v.top_z());
 }
 
 box lower_clamp_box(const vice v) {
@@ -130,7 +131,13 @@ std::vector<triangle> box_triangles(box b) {
 
   tris.push_back(triangle(n, p2, p6, p3));
   tris.push_back(triangle(n, p7, p6, p3));
-  cout << "Box triangles: " << tris.size() << endl;
+
+  tris.push_back(triangle(n, p1, p3, p7));
+  tris.push_back(triangle(n, p1, p5, p7));
+
+  tris.push_back(triangle(n, p0, p2, p6));
+  tris.push_back(triangle(n, p0, p4, p6));
+  
   return tris;
 }
 
@@ -144,7 +151,6 @@ polydata_from_vice(const vice v) {
   concat(triangles, box_triangles(main));
   concat(triangles, box_triangles(upper_clamp));
   concat(triangles, box_triangles(lower_clamp));
-  cout << "Triangles size: " << triangles.size() << endl;
   return polydata_from_triangle_list(triangles);
 }
 
@@ -193,23 +199,7 @@ int main(int argc, char* argv[]) {
   color_polydata(poly_data, mesh);
   auto poly_actor = polydata_actor(poly_data);
 
-// Create a sphere
-  vtkSmartPointer<vtkCylinderSource> cylinderSource =
-    vtkSmartPointer<vtkCylinderSource>::New();
-  cylinderSource->SetCenter(1.0, 2.0, 0.0);
-  cylinderSource->SetRadius(0.5);
-  cylinderSource->SetHeight(0.1);
-  cylinderSource->SetResolution(100);
- 
-  // Create a cylinder
-  vtkSmartPointer<vtkPolyDataMapper> mapper =
-    vtkSmartPointer<vtkPolyDataMapper>::New();
-  mapper->SetInputConnection(cylinderSource->GetOutputPort());
-  vtkSmartPointer<vtkActor> cylinder_actor =
-    vtkSmartPointer<vtkActor>::New();
-  cylinder_actor->SetMapper(mapper);
-
-  vector<vtkSmartPointer<vtkActor>> actors{poly_actor, cylinder_actor, vice_poly};
+  vector<vtkSmartPointer<vtkActor>> actors{poly_actor, vice_poly};
   visualize_actors(actors);
  
   return EXIT_SUCCESS;

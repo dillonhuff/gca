@@ -20,11 +20,11 @@ namespace gca {
       y_min(y_minp), y_max(y_maxp),
       z_min(z_minp), z_max(z_maxp) {
       if (x_min > x_max)
-	{ cout << x_min << " > " << x_max << endl; assert(false); } 
+	{ cout << "Bad X range: " << x_min << " > " << x_max << endl; assert(false); } 
       if (y_min > y_max)
-	{ cout << y_min << " > " << y_max << endl; assert(false); } 
+	{ cout << "Bad Y range: " << y_min << " > " << y_max << endl; assert(false); } 
       if (z_min > z_max)
-	{ cout << z_min << " > " << z_max << endl; assert(false); } 
+	{ cout << "Bad Z range: " << z_min << " > " << z_max << endl; assert(false); } 
     }
   };
 
