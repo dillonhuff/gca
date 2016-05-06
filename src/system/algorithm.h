@@ -7,6 +7,11 @@ using namespace std;
 
 namespace gca {
 
+  template<typename T>
+  void concat(T& extend, const T& add) {
+    extend.insert(end(extend), begin(add), end(add));
+  }
+
   template<typename E, typename T>
   void remove(E e, T& t) {
     t.erase(remove(begin(t), end(t), e), end(t));
