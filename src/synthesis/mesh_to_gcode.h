@@ -24,19 +24,24 @@ namespace gca {
   };
 
   enum tool_type { FLAT_NOSE, BALL_NOSE };
+
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
 
   class vice {
+  private:
+    double length, width, height, ax;
+    point pos;
+    
   public:
-    vice(double p_length, double p_width, double p_height, axis p_ax) {}
+    vice(double p_length, double p_width, double p_height, axis p_ax) :
+      length(p_length), width(p_width), height(p_height), ax(p_ax) {}
 
-    inline double fixed_clamp_y() const {
-      return 0;
-    }
-
-    inline double base_z() const {
-      return 0;
-    }
+    // TODO: Fill in with actual vice position parameters
+    inline double x_max() const { return 0.0; }
+    
+    inline double fixed_clamp_y() const { return 0.0; }
+    
+    inline double base_z() const { return 0.0; }
 
   };
 

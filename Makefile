@@ -1575,42 +1575,6 @@ src/synthesis/millability.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/millability.cpp.s
 .PHONY : src/synthesis/millability.cpp.s
 
-src/synthesis/orientation_scheduling.o: src/synthesis/orientation_scheduling.cpp.o
-
-.PHONY : src/synthesis/orientation_scheduling.o
-
-# target to build an object file
-src/synthesis/orientation_scheduling.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/orientation_scheduling.cpp.o
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/orientation_scheduling.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/orientation_scheduling.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/orientation_scheduling.cpp.o
-.PHONY : src/synthesis/orientation_scheduling.cpp.o
-
-src/synthesis/orientation_scheduling.i: src/synthesis/orientation_scheduling.cpp.i
-
-.PHONY : src/synthesis/orientation_scheduling.i
-
-# target to preprocess a source file
-src/synthesis/orientation_scheduling.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/orientation_scheduling.cpp.i
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/orientation_scheduling.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/orientation_scheduling.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/orientation_scheduling.cpp.i
-.PHONY : src/synthesis/orientation_scheduling.cpp.i
-
-src/synthesis/orientation_scheduling.s: src/synthesis/orientation_scheduling.cpp.s
-
-.PHONY : src/synthesis/orientation_scheduling.s
-
-# target to generate assembly for a file
-src/synthesis/orientation_scheduling.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/orientation_scheduling.cpp.s
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/orientation_scheduling.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/orientation_scheduling.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/orientation_scheduling.cpp.s
-.PHONY : src/synthesis/orientation_scheduling.cpp.s
-
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -2511,33 +2475,6 @@ test/millability_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.s
 .PHONY : test/millability_tests.cpp.s
 
-test/orientation_scheduling_tests.o: test/orientation_scheduling_tests.cpp.o
-
-.PHONY : test/orientation_scheduling_tests.o
-
-# target to build an object file
-test/orientation_scheduling_tests.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/orientation_scheduling_tests.cpp.o
-.PHONY : test/orientation_scheduling_tests.cpp.o
-
-test/orientation_scheduling_tests.i: test/orientation_scheduling_tests.cpp.i
-
-.PHONY : test/orientation_scheduling_tests.i
-
-# target to preprocess a source file
-test/orientation_scheduling_tests.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/orientation_scheduling_tests.cpp.i
-.PHONY : test/orientation_scheduling_tests.cpp.i
-
-test/orientation_scheduling_tests.s: test/orientation_scheduling_tests.cpp.s
-
-.PHONY : test/orientation_scheduling_tests.s
-
-# target to generate assembly for a file
-test/orientation_scheduling_tests.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/orientation_scheduling_tests.cpp.s
-.PHONY : test/orientation_scheduling_tests.cpp.s
-
 test/point_tests.o: test/point_tests.cpp.o
 
 .PHONY : test/point_tests.o
@@ -3021,9 +2958,6 @@ help:
 	@echo "... src/synthesis/millability.o"
 	@echo "... src/synthesis/millability.i"
 	@echo "... src/synthesis/millability.s"
-	@echo "... src/synthesis/orientation_scheduling.o"
-	@echo "... src/synthesis/orientation_scheduling.i"
-	@echo "... src/synthesis/orientation_scheduling.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"
@@ -3111,9 +3045,6 @@ help:
 	@echo "... test/millability_tests.o"
 	@echo "... test/millability_tests.i"
 	@echo "... test/millability_tests.s"
-	@echo "... test/orientation_scheduling_tests.o"
-	@echo "... test/orientation_scheduling_tests.i"
-	@echo "... test/orientation_scheduling_tests.s"
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"

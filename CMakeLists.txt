@@ -43,7 +43,6 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/cut_scheduling_tests.cpp
 	       test/gcode_to_cuts_tests.cpp
 	       test/machine_state_tests.cpp
-	       test/orientation_scheduling_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp)
 
@@ -65,7 +64,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/linear_cut.h
 	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
-	    ./src/synthesis/orientation_scheduling.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
 	    ./src/synthesis/axis_3.h
@@ -110,7 +108,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
 	 ./src/synthesis/machine.cpp
-	 ./src/synthesis/orientation_scheduling.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp

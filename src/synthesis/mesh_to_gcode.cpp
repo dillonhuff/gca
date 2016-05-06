@@ -328,20 +328,17 @@ namespace gca {
 		    const point dir) {
     return min_distance_along(mesh.vertex_list(), dir);
   }
-  
+
   triangular_mesh shift_mesh(const triangular_mesh& mesh,
 			     const vice v) {
-    // TODO: Replace this magic number
-    double x_f = 0.0;
-    double y_f = 0.0; //v.fixed_clamp_y();
-    double z_f = 0.0; //v.base_z();
+    double x_f = v.x_max();
+    double y_f = v.fixed_clamp_y();
+    double z_f = v.base_z();
     point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
 		y_f - max_in_dir(mesh, point(0, 1, 0)),
 		z_f - min_in_dir(mesh, point(0, 0, 1)));
-    cout << "shift_mesh by: " << shift << endl;
     auto m = mesh.apply_to_vertices([shift](const point p)
-		      { return p + point(shift.x, shift.y, shift.z); }); //shift; }); //point(0, 0, 0); }); //shift; });
-    assert(m.vertex_list().size() == mesh.vertex_list().size());
+		      { return p + point(shift.x, shift.y, shift.z); });
     return m;
   }
 
@@ -356,7 +353,6 @@ namespace gca {
 				const vice v) {
     auto mesh = oriented_part_mesh(orient, v);
     std::vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
-    //    std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
     std::vector<triangle> tris;
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
