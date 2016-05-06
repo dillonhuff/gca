@@ -30,13 +30,14 @@ namespace gca {
 
   class tool {
   protected:
-    double diameter;
+    double diam;
 
   public:
     tool(double p_diameter, tool_type t) :
-      diameter(p_diameter) {}
+      diam(p_diameter) {}
 
-    inline double radius() const { return diameter / 2.0; }
+    inline double radius() const { return diam / 2.0; }
+    inline double diameter() const { return diam; }
   };
 
   class gcode_program {

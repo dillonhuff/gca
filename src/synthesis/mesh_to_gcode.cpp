@@ -139,8 +139,9 @@ namespace gca {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
     vector<gcode_program> clip_progs;
 
-    // TODO: Turn these magic numbers into parameters
     double tool_radius = tools.front().radius();
+
+    // TODO: Turn these magic numbers into parameters
     double cut_depth = 0.1;
     double eps = 0.05;
 
@@ -351,25 +352,26 @@ namespace gca {
   }
 
   gcode_program cut_orientation(const stock_orientation& orient,
-				const vice v) {
+				const vice v,
+				const std::vector<tool>& tools) {
     auto mesh = oriented_part_mesh(orient, v);
     std::vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
     std::vector<triangle> tris;
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
     }
-    // TODO: Get rid of these magic numbers
-    double tool_diameter = 0.15;
+    double tool_diameter = tools.front().diameter(); //0.15;
     vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
     return gcode_program("Surface cut", emco_f1_code(lines));
   }
 
   void cut_orientations(const std::vector<stock_orientation>& orients,
 			std::vector<gcode_program>& progs,
-			const vice v) {
+			const vice v,
+			const std::vector<tool>& tools) {
     for (auto orient : orients) {
       cout << "top normal = " << orient.top_normal() << endl;
-      progs.push_back(cut_orientation(orient, v));
+      progs.push_back(cut_orientation(orient, v, tools));
     }
   }
 
@@ -392,7 +394,7 @@ namespace gca {
       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools);
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);
-    cut_orientations(orients, ps, v);
+    cut_orientations(orients, ps, v, tools);
     return ps;
   }
 }
