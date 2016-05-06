@@ -108,11 +108,7 @@ void color_polydata(vtkSmartPointer<vtkPolyData> polyData,
 	      << (int)color[1] << " "
 	      << (int)color[2] << std::endl;
  
-#if VTK_MAJOR_VERSION < 7
-    colors->InsertNextTupleValue(color);
-#else
-    colors->InsertNextTypedTuple(color);
-#endif
+     colors->InsertNextTupleValue(color);
   }
  
   polyData->GetPointData()->SetScalars(colors);  

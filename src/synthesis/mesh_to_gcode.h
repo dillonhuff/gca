@@ -29,8 +29,14 @@ namespace gca {
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
 
   class tool {
+  protected:
+    double diameter;
+
   public:
-    tool(double p_diameter, tool_type t) {}
+    tool(double p_diameter, tool_type t) :
+      diameter(p_diameter) {}
+
+    inline double radius() const { return diameter / 2.0; }
   };
 
   class gcode_program {

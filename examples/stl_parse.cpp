@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
   auto box_triangles = parse_stl(argv[1]).triangles;
   auto mesh = make_mesh(box_triangles, 0.001);
 
-  vice test_vice = emco_vice(point(1.0, 1.0, 1.0)); //(1.5, 1.5, 0.75, Y_AXIS);
+  vice test_vice = emco_vice(point(1.0, 1.0, 1.0));
   tool t1(0.3, FLAT_NOSE);
   vector<tool> tools{t1};
   workpiece workpiece_dims(1.5, 1.2, 1.5);
@@ -35,38 +35,5 @@ int main(int argc, char* argv[]) {
     cout << program.name << endl;
     cout << program.blocks << endl;
   }
-  // double tool_radius = 0.5; //0.05;
-  // double cut_depth = 0.1;
-  // double workpiece_height = 1.0;
-  // double face_height = 0.8;
-
-  // box b(0, face_height,
-  // 	0, face_height,
-  // 	0, face_height);
-
-  // vector<point> pts = sample_points_2d(b,
-  // 				       tool_radius / 2.0,
-  // 				       tool_radius / 2.0,
-  // 				       0.0);
-
-  // vector<vector<point>> pt_lines;
-  // split_by(pts, pt_lines,
-  // 	   [](const point l, const point r)
-  // 	   { return within_eps(l.x, r.x); });
-  // vector<polyline> lines;
-  // for (auto pt_group : pt_lines) {
-  //   lines.push_back(pt_group);
-  // }
-
-  // auto final_lines = tile_vertical(lines,
-  // 				   workpiece_height,
-  // 				   face_height,
-  // 				   cut_depth);
-  // point shift(0, 0, -face_height);
-  // auto bs = emco_f1_code(shift_lines(final_lines, shift)); //shifted_lines);
-
-  // cout.setf(ios::fixed, ios::floatfield);
-  // cout.setf(ios::showpoint);
-  // cout << bs << endl;
 }
 

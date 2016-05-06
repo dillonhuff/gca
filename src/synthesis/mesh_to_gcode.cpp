@@ -134,12 +134,13 @@ namespace gca {
 
   std::vector<gcode_program>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
-			      const triangular_mesh& part_mesh) {
+			      const triangular_mesh& part_mesh,
+			      const std::vector<tool>& tools) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
     vector<gcode_program> clip_progs;
 
     // TODO: Turn these magic numbers into parameters
-    double tool_radius = 0.32;
+    double tool_radius = tools.front().radius();
     double cut_depth = 0.1;
     double eps = 0.05;
 
@@ -388,7 +389,7 @@ namespace gca {
     remove_SA_surfaces(part_ss, face_inds);
     cout << "# faces left = " << face_inds.size() << endl;
     vector<gcode_program> ps =
-      workpiece_clipping_programs(aligned_workpiece, part_mesh);
+      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools);
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss, face_inds);
     cut_orientations(orients, ps, v);
