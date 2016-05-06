@@ -1827,6 +1827,42 @@ src/synthesis/toolpath_generation.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/toolpath_generation.cpp.s
 .PHONY : src/synthesis/toolpath_generation.cpp.s
 
+src/synthesis/vice.o: src/synthesis/vice.cpp.o
+
+.PHONY : src/synthesis/vice.o
+
+# target to build an object file
+src/synthesis/vice.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/vice.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/vice.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/vice.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/vice.cpp.o
+.PHONY : src/synthesis/vice.cpp.o
+
+src/synthesis/vice.i: src/synthesis/vice.cpp.i
+
+.PHONY : src/synthesis/vice.i
+
+# target to preprocess a source file
+src/synthesis/vice.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/vice.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/vice.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/vice.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/vice.cpp.i
+.PHONY : src/synthesis/vice.cpp.i
+
+src/synthesis/vice.s: src/synthesis/vice.cpp.s
+
+.PHONY : src/synthesis/vice.s
+
+# target to generate assembly for a file
+src/synthesis/vice.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/vice.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/vice.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/vice.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/vice.cpp.s
+.PHONY : src/synthesis/vice.cpp.s
+
 src/system/arena_allocator.o: src/system/arena_allocator.cpp.o
 
 .PHONY : src/system/arena_allocator.o
@@ -2979,6 +3015,9 @@ help:
 	@echo "... src/synthesis/toolpath_generation.o"
 	@echo "... src/synthesis/toolpath_generation.i"
 	@echo "... src/synthesis/toolpath_generation.s"
+	@echo "... src/synthesis/vice.o"
+	@echo "... src/synthesis/vice.i"
+	@echo "... src/synthesis/vice.s"
 	@echo "... src/system/arena_allocator.o"
 	@echo "... src/system/arena_allocator.i"
 	@echo "... src/system/arena_allocator.s"

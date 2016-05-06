@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
   auto box_triangles = parse_stl(argv[1]).triangles;
   auto mesh = make_mesh(box_triangles, 0.001);
 
-  vice test_vice(1.5, 1.5, 0.75, Y_AXIS);
+  vice test_vice = emco_vice(point(1.0, 1.0, 1.0)); //(1.5, 1.5, 0.75, Y_AXIS);
   tool t1(0.3, FLAT_NOSE);
   vector<tool> tools{t1};
   workpiece workpiece_dims(1.5, 1.2, 1.5);

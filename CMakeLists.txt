@@ -68,6 +68,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/toolpath_generation.h
 	    ./src/synthesis/axis_3.h
 	    ./src/synthesis/millability.h
+	    ./src/synthesis/vice.h
 	    ./src/system/arena_allocator.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
@@ -114,6 +115,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/axis_3.cpp
 	 ./src/synthesis/millability.cpp
+	 ./src/synthesis/vice.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/arena_allocator.cpp

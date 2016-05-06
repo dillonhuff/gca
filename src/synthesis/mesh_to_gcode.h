@@ -1,8 +1,9 @@
 #ifndef MESH_TO_GCODE_H
 #define MESH_TO_GCODE_H
 
-#include "geometry/triangular_mesh.h"
 #include "core/lexer.h"
+#include "geometry/triangular_mesh.h"
+#include "synthesis/vice.h"
 
 namespace gca {
 
@@ -26,24 +27,6 @@ namespace gca {
   enum tool_type { FLAT_NOSE, BALL_NOSE };
 
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
-
-  class vice {
-  private:
-    double length, width, height, ax;
-    point pos;
-    
-  public:
-    vice(double p_length, double p_width, double p_height, axis p_ax) :
-      length(p_length), width(p_width), height(p_height), ax(p_ax) {}
-
-    // TODO: Fill in with actual vice position parameters
-    inline double x_max() const { return 0.0; }
-    
-    inline double fixed_clamp_y() const { return 0.0; }
-    
-    inline double base_z() const { return 0.0; }
-
-  };
 
   class tool {
   public:

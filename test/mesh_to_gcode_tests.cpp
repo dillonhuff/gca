@@ -10,7 +10,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice(1.5, 1.5, 0.75, Y_AXIS);
+    vice test_vice = emco_vice(point(1.0, 1.0, 1.0)); //(1.5, 1.5, 0.75, Y_AXIS);
     tool t1(0.3, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.5, 1.2, 1.5);
