@@ -47,7 +47,11 @@ namespace gca {
     }
 
     SECTION("Box with protrusion") {
-      assert(false);
+      workpiece workpiece_dims(1.5, 1.2, 2.0);
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl").triangles;
+      auto mesh = make_mesh(box_triangles, 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      REQUIRE(result_programs.size() == 7);
     }
 
     SECTION("Mesh box plinth has 6 clippings and one pocketing") {
@@ -56,7 +60,6 @@ namespace gca {
       auto mesh = make_mesh(box_triangles, 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
-      
     }
 
   }
