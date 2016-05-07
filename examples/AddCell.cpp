@@ -13,6 +13,7 @@
 #include <vtkPolyData.h>
 
 #include "geometry/triangular_mesh.h"
+#include "synthesis/mesh_to_gcode.h"
 #include "synthesis/vice.h"
 #include "system/algorithm.h"
 #include "system/parse_stl.h"
@@ -101,7 +102,9 @@ box main_box(const vice v) {
 }
 
 box upper_clamp_box(const vice v) {
-  return box(v.x_min(), v.x_max(), v.fixed_clamp_y(), v.y_max(), v.base_z(), v.top_z());
+  return box(v.x_min(), v.x_max(),
+	     v.fixed_clamp_y(), v.y_max(),
+	     v.base_z(), v.top_z());
 }
 
 box lower_clamp_box(const vice v) {
@@ -169,11 +172,7 @@ void color_polydata(vtkSmartPointer<vtkPolyData> polyData,
     polyData->GetPoint(i, p);
     gca::point pt(p[0], p[1], p[2]);
     unsigned char color[3];
-    if (mesh.is_constant_orientation_vertex(pt, 180.0)) {
-      color[0] = 200;
-    } else {
-      color[0] = 0;
-    }
+    color[0] = 200;
     color[1] = 0;
     color[2] = 0;
 
@@ -190,13 +189,17 @@ int main(int argc, char* argv[]) {
   auto stl_triangles = gca::parse_stl(file).triangles;
   auto mesh = make_mesh(stl_triangles, 0.0001);
   assert(mesh.is_connected());
-
+  
   vice v = emco_vice(point(2, 2, 0));
+  vector<triangular_mesh> arrangements = part_arrangements(mesh, v);
+  assert(arrangements.size() > 0);
+  
   auto vice_poly = polydata_actor(polydata_from_vice(v));
 
-  auto tl_list = mesh.triangle_list();
+  auto to_render = arrangements[3];
+  auto tl_list = to_render.triangle_list();
   auto poly_data = polydata_from_triangle_list(tl_list);
-  color_polydata(poly_data, mesh);
+  color_polydata(poly_data, to_render);
   auto poly_actor = polydata_actor(poly_data);
 
   vector<vtkSmartPointer<vtkActor>> actors{poly_actor, vice_poly};

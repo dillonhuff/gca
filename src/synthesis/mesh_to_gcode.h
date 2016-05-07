@@ -136,6 +136,10 @@ namespace gca {
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,
 			    const workpiece w);
   
+
+  std::vector<triangular_mesh>
+  part_arrangements(const triangular_mesh& part_mesh, const vice v);
+
 }
 
 #endif

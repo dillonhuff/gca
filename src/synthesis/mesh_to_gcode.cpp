@@ -351,18 +351,26 @@ namespace gca {
     return shift_mesh(oriented_mesh, v);
   }
 
-  gcode_program cut_orientation(const stock_orientation& orient,
-				const vice v,
-				const std::vector<tool>& tools) {
-    auto mesh = oriented_part_mesh(orient, v);
+  gcode_program cut_secured_mesh(const triangular_mesh& mesh,
+				 const vice v,
+				 const std::vector<tool>& tools) {
     std::vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
     std::vector<triangle> tris;
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
     }
-    double tool_diameter = tools.front().diameter(); //0.15;
+    double tool_diameter = tools.front().diameter();
     vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
     return gcode_program("Surface cut", emco_f1_code(lines));
+  }
+
+  void cut_secured_meshes(const std::vector<triangular_mesh>& meshes,
+			  std::vector<gcode_program>& progs,
+			  const vice v,
+			  const std::vector<tool>& tools) {
+    for (auto mesh : meshes) {
+      progs.push_back(cut_secured_mesh(mesh, v, tools));
+    }
   }
 
   void cut_orientations(const std::vector<stock_orientation>& orients,
@@ -371,30 +379,58 @@ namespace gca {
 			const std::vector<tool>& tools) {
     for (auto orient : orients) {
       cout << "top normal = " << orient.top_normal() << endl;
-      progs.push_back(cut_orientation(orient, v, tools));
+      auto mesh = oriented_part_mesh(orient, v);
+      progs.push_back(cut_secured_mesh(mesh, v, tools)); //orient, v, tools));
     }
   }
 
+  std::vector<triangular_mesh>
+  part_arrangements(const triangular_mesh& part_mesh,
+		    const vector<surface>& part_ss,
+		    const vice v) {
+    vector<index_t> face_inds = part_mesh.face_indexes();
+    cout << "# initial faces = " << face_inds.size() << endl;
+    remove_SA_surfaces(part_ss, face_inds);
+    cout << "# faces left = " << face_inds.size() << endl;
+    vector<stock_orientation> orients =
+      orientations_to_cut(part_mesh, part_ss, face_inds);
+    vector<triangular_mesh> meshes;
+    for (auto orient : orients) {
+      cout << "Top normal " << orient.top_normal() << endl;
+      meshes.push_back(oriented_part_mesh(orient, v));
+    }
+    return meshes;
+  }
+
+  std::vector<triangular_mesh>
+  part_arrangements(const triangular_mesh& part_mesh,
+		    const vice v) {
+    auto part_ss = outer_surfaces(part_mesh);
+    vector<index_t> face_inds = part_mesh.face_indexes();
+    cout << "# initial faces = " << face_inds.size() << endl;
+    remove_SA_surfaces(part_ss, face_inds);
+    cout << "# faces left = " << face_inds.size() << endl;
+    vector<stock_orientation> orients =
+      orientations_to_cut(part_mesh, part_ss, face_inds);
+    vector<triangular_mesh> meshes;
+    for (auto orient : orients) {
+      cout << "Top normal " << orient.top_normal() << endl;
+      meshes.push_back(oriented_part_mesh(orient, v));
+    }
+    return meshes;
+  }
+  
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const vice v,
 					   const vector<tool>& tools,
 					   const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
-    classify_part_surfaces(part_ss, aligned_workpiece);
-    // TODO: Hack to prevent any unusual surfaces from escaping
-    delete_if(part_ss,
-    	      [](const surface& s)
-    	      { return !s.is_SA(); });
-    vector<index_t> face_inds = part_mesh.face_indexes();
-    cout << "# initial faces = " << face_inds.size() << endl;
-    remove_SA_surfaces(part_ss, face_inds);
-    cout << "# faces left = " << face_inds.size() << endl;
     vector<gcode_program> ps =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools);
-    vector<stock_orientation> orients =
-      orientations_to_cut(part_mesh, part_ss, face_inds);
-    cut_orientations(orients, ps, v, tools);
+    classify_part_surfaces(part_ss, aligned_workpiece);
+    vector<triangular_mesh> meshes = part_arrangements(part_mesh, part_ss, v);
+    cut_secured_meshes(meshes, ps, v, tools);
     return ps;
   }
 }
