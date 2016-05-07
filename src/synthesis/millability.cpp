@@ -77,6 +77,7 @@ namespace gca {
 
   std::vector<index_t> millable_faces(const point normal,
 				      const triangular_mesh& part) {
+    cout << "Millable faces" << endl;
     vector<index_t> all_face_inds = part.face_indexes();
     vector<point> centroids(all_face_inds.size());
     transform(begin(all_face_inds), end(all_face_inds),
@@ -88,10 +89,12 @@ namespace gca {
     double ray_len = greater_than_diameter(normal, centroids);
     vector<line> segments = construct_test_segments(normal, ray_len, centroids);
     vector<index_t> inds;
+    cout << "Contructing segments" << endl;
     for (auto test_segment : segments) {
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
     							     part,
     							     test_segment);
+      // TODO: Replace with max along?
       auto m_e = max_element(begin(intersecting_faces), end(intersecting_faces),
     			     [&centroids, normal](const index_t l, const index_t r) {
     			       point cl = centroids[l];
