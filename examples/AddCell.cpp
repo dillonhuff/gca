@@ -191,12 +191,12 @@ int main(int argc, char* argv[]) {
   assert(mesh.is_connected());
   
   vice v = emco_vice(point(2, 2, 0));
-  vector<triangular_mesh> arrangements = part_arrangements(mesh, v);
-  assert(arrangements.size() > 0);
+  //  vector<triangular_mesh> arrangements = part_arrangements(mesh, v);
+  // assert(arrangements.size() > 0);
   
   auto vice_poly = polydata_actor(polydata_from_vice(v));
 
-  auto to_render = arrangements[3];
+  auto to_render = mesh; //arrangements[3];
   auto tl_list = to_render.triangle_list();
   auto poly_data = polydata_from_triangle_list(tl_list);
   color_polydata(poly_data, to_render);
