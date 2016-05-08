@@ -140,11 +140,22 @@ namespace gca {
   }
 
   template<typename T>
-  void subtract(T& a, T& b) {
+  void subtract(T& a, const T& b) {
     delete_if(a,
 	      [&b](const typename T::value_type& i)
-	      { return find(begin(b), end(b), i) != end(b); });
+	      { return std::find(begin(b), end(b), i) != end(b); });
 
+  }
+
+  template<typename T, typename F>
+  std::vector<T> select(const std::vector<T>& v, F f) {
+    std::vector<T> selected;
+    for (auto e : v) {
+      if (f(e)) {
+	selected.push_back(f);
+      }
+    }
+    return selected;
   }
 
 }

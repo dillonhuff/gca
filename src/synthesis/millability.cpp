@@ -47,37 +47,78 @@ namespace gca {
     return within_eps(angle_between(t.normal, normal), 90, 0.5);
   }
 
-  // TODO: Handle surfaces along the normal that are
-  // several triangles deep
-  std::vector<index_t> collect_side_faces(const point normal,
-					  std::vector<index_t>& inds,
+  bool parallel_to(const point normal,
+		   const triangle& t) {
+    return within_eps(angle_between(t.normal, normal), 0, 0.5);
+  }
+
+  std::vector<index_t> initial_side_faces(const point normal,
+					  const std::vector<index_t>& inds,
 					  const triangular_mesh& part) {
     assert(inds.size() > 0);
-    vector<index_t> faces = inds;
-    sort(begin(faces), end(faces));
     vector<index_t> face_inds_left = part.face_indexes();
     subtract(face_inds_left, inds);
+    vector<index_t> faces;
     vector<index_t> to_remove;
     for (auto i : face_inds_left) {
       if (lies_along(normal, part.face_triangle(i))) {
 	vector<index_t> to_add;
-	for (auto f : faces) {
+	for (auto f : inds) {
 	  if (adjacent_faces(i, f, part)) { 
 	    to_add.push_back(i);
 	    to_remove.push_back(i);
 	    break;
 	  }
 	}
-	faces.insert(end(faces), begin(to_add), end(to_add));
+	concat(faces, to_add);
       }
     }
     subtract(face_inds_left, to_remove);
     return faces;
   }
 
+  // TODO: Replace with triangular_mesh::connected_region?
+  void
+  collect_remaining_sides(std::vector<index_t>& side_inds,
+			  const triangular_mesh& part) {
+    assert(side_inds.size() > 0);
+    vector<index_t> face_inds_left = part.face_indexes();
+    subtract(face_inds_left, side_inds);
+    bool added_some;
+    do {
+      added_some = false;
+      vector<index_t> to_remove;
+      for (auto i : face_inds_left) {
+	vector<index_t> to_add;
+	for (auto f : side_inds) {
+	  if (adjacent_faces(i, f, part) &&
+	      parallel_to(part.face_orientation(f), part.face_triangle(i))) {
+	    to_add.push_back(i);
+	    added_some = true;
+	    to_remove.push_back(i);
+	    break;
+	  }
+	}
+	concat(side_inds, to_add);
+      }
+      subtract(face_inds_left, to_remove);
+    } while (added_some);
+  }
+
+  // TODO: Handle surfaces along the normal that are
+  // several triangles deep
+  std::vector<index_t> add_side_faces(const point normal,
+				      std::vector<index_t>& inds,
+				      const triangular_mesh& part) {
+    vector<index_t> side_faces = initial_side_faces(normal, inds, part);
+    collect_remaining_sides(side_faces, part);
+    concat(side_faces, inds);
+    return side_faces;
+  }
+
   std::vector<index_t> millable_faces(const point normal,
 				      const triangular_mesh& part) {
-    cout << "Millable faces" << endl;
+    //    cout << "Millable faces" << endl;
     vector<index_t> all_face_inds = part.face_indexes();
     vector<point> centroids(all_face_inds.size());
     transform(begin(all_face_inds), end(all_face_inds),
@@ -89,7 +130,7 @@ namespace gca {
     double ray_len = greater_than_diameter(normal, centroids);
     vector<line> segments = construct_test_segments(normal, ray_len, centroids);
     vector<index_t> inds;
-    cout << "Contructing segments" << endl;
+    //    cout << "Contructing segments" << endl;
     for (auto test_segment : segments) {
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
     							     part,
@@ -107,7 +148,7 @@ namespace gca {
     }
     sort(begin(inds), end(inds));
     inds.erase(unique(begin(inds), end(inds)), end(inds));
-    auto res_inds = collect_side_faces(normal, inds, part);
+    auto res_inds = add_side_faces(normal, inds, part);
     sort(begin(res_inds), end(res_inds));
     res_inds.erase(unique(begin(res_inds), end(res_inds)), end(res_inds));
     return res_inds;

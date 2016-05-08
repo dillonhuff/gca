@@ -1,4 +1,3 @@
-#include "synthesis/linear_cut.h"
 #include "synthesis/spline_sampling.h"
 
 namespace gca {

@@ -3,8 +3,6 @@
 
 #include "geometry/b_spline.h"
 #include "geometry/polyline.h"
-#include "synthesis/cut.h"
-#include "synthesis/toolpath.h"
 
 namespace gca {
   
