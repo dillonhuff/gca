@@ -3,8 +3,6 @@
 
 #include <utility>
 
-using namespace std;
-
 namespace gca {
 
   template<typename T>
@@ -14,12 +12,12 @@ namespace gca {
 
   template<typename E, typename T>
   void remove(E e, T& t) {
-    t.erase(remove(begin(t), end(t), e), end(t));
+    t.erase(std::remove(begin(t), end(t), e), end(t));
   }
 
   template<typename E, typename T>
   bool elem(E e, T t) {
-    return find(begin(t), end(t), e) != end(t);
+    return std::find(begin(t), end(t), e) != end(t);
   }
 
   template<typename InputIt, typename OutputIt, typename F>
@@ -63,7 +61,7 @@ namespace gca {
 	}
 	n++;
       }
-      if (found_adjacent) { swap(*(s + 1), *n); }
+      if (found_adjacent) { std::swap(*(s + 1), *n); }
       s++;
     }
   }
@@ -74,28 +72,28 @@ namespace gca {
   // iteration awkward when you want to construct new data structures
   // out of the subranges produced by calls to adjacent_find
   template<typename InputIt, typename F>
-  pair<InputIt, InputIt> find_between(InputIt s, InputIt e, F f) {
+  std::pair<InputIt, InputIt> find_between(InputIt s, InputIt e, F f) {
     while (s != (e - 1)) {
-      if (f(*s, *(s + 1))) { return pair<InputIt, InputIt>(s, s + 1); }
+      if (f(*s, *(s + 1))) { return std::pair<InputIt, InputIt>(s, s + 1); }
       ++s;
     }
-    return pair<InputIt, InputIt>(s, e);
+    return std::pair<InputIt, InputIt>(s, e);
   }
 
   template<typename I, typename F>
-  void split_by(const vector<I>& elems, vector<vector<I>>& res, F f) {
+  void split_by(const std::vector<I>& elems, std::vector<std::vector<I>>& res, F f) {
     auto it = elems.begin();
     auto not_f = [&f](const I& i, const I& j) { return !f(i, j); };
     while (it != elems.end()) {
-      auto r = find_between(it, elems.end(), not_f);
-      res.push_back(vector<I>(it, r.first + 1));
+      auto r = find_between(it, end(elems), not_f);
+      res.push_back(std::vector<I>(it, r.first + 1));
       it = r.second;
     }
   }
 
   template<typename I, typename F>
-  vector<vector<I>> group_unary(const vector<I>& elems, F f) {
-    vector<vector<I>> grouped;
+  std::vector<std::vector<I>> group_unary(const std::vector<I>& elems, F f) {
+    std::vector<std::vector<I>> grouped;
     auto match = [&f](const I& i, const I& j) { return f(i) == f(j); };
     split_by(elems, grouped, match);
     return grouped;
@@ -103,12 +101,12 @@ namespace gca {
 
   template<typename I, typename F>
   void delete_if(I& c, F f) {
-    c.erase(remove_if(c.begin(), c.end(), f), c.end());
+    c.erase(remove_if(begin(c), end(c), f), end(c));
   }
 
   template<typename T, typename Q>
-  pair<T, Q>
-  mk_pair(T t, Q q) { return pair<T, Q>(t, q); }
+  std::pair<T, Q>
+  mk_pair(T t, Q q) { return std::pair<T, Q>(t, q); }
 
   // TODO: Figure out why this implementation always calls
   // the default constructor
@@ -126,17 +124,17 @@ namespace gca {
 
   template<typename T, typename F>
   void drop_while(T& t, F f) {
-    auto r = find_if_not(t.begin(), t.end(), f);
-    auto s = distance(t.begin(), r);
-    rotate(t.begin(), r, t.end());
-    t.erase(t.begin() + t.size() - s, t.end());
+    auto r = std::find_if_not(begin(t), end(t), f);
+    auto s = std::distance(begin(t), r);
+    std::rotate(begin(t), r, end(t));
+    t.erase(begin(t) + t.size() - s, end(t));
   }
 
   template<typename T, typename F>
   void take_while(T& t, F f) {
-    auto r = find_if_not(t.begin(), t.end(), f);
-    auto s = distance(t.begin(), r);
-    t.erase(t.begin() + s, t.end());
+    auto r = find_if_not(begin(t), end(t), f);
+    auto s = distance(begin(t), r);
+    t.erase(begin(t) + s, end(t));
   }
 
   template<typename T>
@@ -144,7 +142,6 @@ namespace gca {
     delete_if(a,
 	      [&b](const typename T::value_type& i)
 	      { return std::find(begin(b), end(b), i) != end(b); });
-
   }
 
   template<typename T, typename F>
