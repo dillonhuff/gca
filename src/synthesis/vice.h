@@ -42,6 +42,7 @@ namespace gca {
 
   vice emco_vice(const point loc);
 
+  vice current_setup();  
 }
 
 #endif

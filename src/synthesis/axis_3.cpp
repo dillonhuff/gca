@@ -16,15 +16,26 @@ namespace gca {
     return cuts_to_gcode(cuts, params);
   }
 
-  vector<block> emco_f1_code(const vector<polyline>& pocket_lines) {
+  std::vector<polyline> reflect_y(const std::vector<polyline>& pocket_lines) {
+    vector<polyline> reflected;
+    for (auto p : pocket_lines) {
+      reflected.push_back(p.apply([](const point p)
+				  { return point(p.x, -p.y, p.z); }));
+    }
+    return reflected;
+  }
+
+  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines) {
     assert(pocket_lines.size() > 0);
     for (auto pl : pocket_lines) {
       assert(pl.num_points() > 0);
     }
+    auto reflected_lines = reflect_y(pocket_lines);
     cut_params params;
     params.target_machine = EMCO_F1;
-    params.safe_height = (*pocket_lines.front().begin()).z + 0.05;
-    return polylines_cuts(pocket_lines, params);
+    // TODO: Find safe height by searching for max value
+    params.safe_height = (*reflected_lines.front().begin()).z + 0.05;
+    return polylines_cuts(reflected_lines, params);
   }
 
   polyline extract_part_base_outline(const vector<triangle>& tris) {

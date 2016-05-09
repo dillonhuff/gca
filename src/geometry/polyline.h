@@ -38,6 +38,13 @@ namespace gca {
 	{ ls.push_back(line(*it, *(it + 1))); }
       return ls;
     }
+
+    template<typename F>
+    polyline apply(F f) const {
+      std::vector<point> pts = points;
+      std::transform(std::begin(points), std::end(points), std::begin(pts), f);
+      return polyline(pts);
+    }
       
   };
 

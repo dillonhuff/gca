@@ -103,6 +103,25 @@ namespace gca {
     return workpiece(x_d, y_d, z_d);
   }
 
+  double min_in_dir(const std::vector<polyline>& lines, const point dir) {
+    return min_distance_along(points(lines), dir);
+  }
+
+  double max_in_dir(const std::vector<polyline>& lines, const point dir) {
+    return max_distance_along(points(lines), dir);
+  }
+  
+  std::vector<polyline> shift_lines(const std::vector<polyline>& lines,
+				    const vice v) {
+    double x_f = v.x_max();
+    double y_f = v.fixed_clamp_y();
+    double z_f = v.base_z();
+    point shift(x_f - max_in_dir(lines, point(1, 0, 0)),
+		y_f - max_in_dir(lines, point(0, 1, 0)),
+		z_f - min_in_dir(lines, point(0, 0, 1)));
+    return shift_lines(lines, shift);
+  }
+  
   std::pair<std::vector<block>,
 	    std::vector<block> >
   clip_axis(double workpiece_width,
@@ -111,36 +130,39 @@ namespace gca {
 	    double eps,
 	    double part_height,
 	    double tool_radius,
-	    double cut_depth) {
+	    double cut_depth,
+	    const vice v) {
     double z_max = workpiece_height + 0.01;
 
     box b = box(0, workpiece_width,
 		0, workpiece_length,
 		z_max - eps, z_max);
 
+    vector<polyline> blk_lines = rough_box(b, tool_radius, cut_depth);
     vector<block> blks =
-      emco_f1_code(rough_box(b, tool_radius, cut_depth));
+      emco_f1_code(shift_lines(blk_lines, v));
 
     box b2 = box(0, workpiece_width,
 		 0, workpiece_length,
 		 part_height, z_max);
+    vector<polyline> lines = rough_box(b2, tool_radius, cut_depth);
     vector<block> clip_blocks =
-      emco_f1_code(rough_box(b2, tool_radius, cut_depth));
+      emco_f1_code(shift_lines(lines, v));
     return pair<vector<block>, vector<block> >(blks, clip_blocks);
   }
-    
 
   std::vector<gcode_program>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
-			      const std::vector<tool>& tools) {
+			      const std::vector<tool>& tools,
+			      const vice v) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
     vector<gcode_program> clip_progs;
 
     double tool_radius = tools.front().radius();
 
     // TODO: Turn these magic numbers into parameters
-    double cut_depth = 0.1;
+    double cut_depth = 0.15;
     double eps = 0.05;
 
     double workpiece_width = aligned_workpiece.sides[1].len();
@@ -155,7 +177,8 @@ namespace gca {
 			    eps,
 			    part_height,
 			    tool_radius,
-			    cut_depth);
+			    cut_depth,
+			    v);
 
     gcode_program x_face("X_Face", clip_x.first);
     gcode_program x_clip("X_Clip", clip_x.second);
@@ -171,7 +194,8 @@ namespace gca {
 			    eps,
 			    part_height,
 			    tool_radius,
-			    cut_depth);
+			    cut_depth,
+			    v);
     
     gcode_program y_face("Y_Face", clip_y.first);
     gcode_program y_clip("Y_Clip", clip_y.second);
@@ -187,7 +211,8 @@ namespace gca {
 			    eps,
 			    part_height,
 			    tool_radius,
-			    cut_depth);
+			    cut_depth,
+			    v);
     
     gcode_program z_face("Z_Face", clip_z.first);
     gcode_program z_clip("Z_Clip", clip_z.second);
@@ -417,7 +442,7 @@ namespace gca {
     }
     return meshes;
   }
-  
+
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const vice v,
 					   const vector<tool>& tools,
@@ -425,7 +450,7 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
     vector<gcode_program> ps =
-      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools);
+      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, v);
     classify_part_surfaces(part_ss, aligned_workpiece);
     vector<triangular_mesh> meshes = part_arrangements(part_mesh, part_ss, v);
     cut_secured_meshes(meshes, ps, v, tools);
