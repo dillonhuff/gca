@@ -49,7 +49,7 @@ namespace gca {
 
   bool parallel_to(const point normal,
 		   const triangle& t) {
-    return within_eps(angle_between(t.normal, normal), 0, 0.5);
+    return within_eps(angle_between(t.normal, normal), 0, 12.0);
   }
 
   std::vector<index_t> initial_side_faces(const point normal,

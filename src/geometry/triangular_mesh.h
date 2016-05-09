@@ -32,6 +32,16 @@ namespace gca {
       return indices;
     }
 
+    inline point vertex(const index_t i) const {
+      return vertices[i];
+    }
+    
+    inline std::vector<index_t> vertex_indexes() const {
+      std::vector<index_t> indices(vertices.size());
+      std::iota(begin(indices), end(indices), 0);
+      return indices;
+    }
+    
     inline triangle_t triangle_vertices(const index_t vi) const {
       if (!(vi < tri_vertices.size())) {
 	cout << "Error in triangular_mesh::triangle_vertices, ";

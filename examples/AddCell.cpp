@@ -14,6 +14,7 @@
 
 #include "geometry/triangular_mesh.h"
 #include "synthesis/mesh_to_gcode.h"
+#include "synthesis/millability.h"
 #include "synthesis/vice.h"
 #include "system/algorithm.h"
 #include "system/parse_stl.h"
@@ -62,6 +63,75 @@ void visualize_polydata(vtkSmartPointer<vtkPolyData> polyData) {
 }
 
 vtkSmartPointer<vtkPolyData>
+polydata_for_trimesh(const triangular_mesh& mesh) {
+  vtkSmartPointer<vtkPoints> points =
+    vtkSmartPointer<vtkPoints>::New();
+
+  for (auto i : mesh.vertex_indexes()) {
+    point p = mesh.vertex(i);
+    points->InsertNextPoint(p.x, p.y, p.z);
+    i++;
+  }
+
+  vtkSmartPointer<vtkCellArray> triangles =
+    vtkSmartPointer<vtkCellArray>::New();
+
+  for (auto i : mesh.face_indexes()) {
+    vtkSmartPointer<vtkTriangle> triangle =
+      vtkSmartPointer<vtkTriangle>::New();
+
+    auto t = mesh.triangle_vertices(i);
+    triangle->GetPointIds()->SetId(0, t.v[0]);
+    triangle->GetPointIds()->SetId(1, t.v[1]);
+    triangle->GetPointIds()->SetId(2, t.v[2]);
+
+    triangles->InsertNextCell(triangle);    
+  }
+
+  // Create a polydata object
+  vtkSmartPointer<vtkPolyData> polyData =
+    vtkSmartPointer<vtkPolyData>::New();
+ 
+  // Add the geometry and topology to the polydata
+  polyData->SetPoints(points);
+  polyData->SetPolys(triangles);
+
+  return polyData;
+}
+
+void color_polydata_by_millability(vtkSmartPointer<vtkPolyData> polyData,
+				   const gca::triangular_mesh& mesh) {
+  vtkSmartPointer<vtkUnsignedCharArray> colors = 
+    vtkSmartPointer<vtkUnsignedCharArray>::New();
+  colors->SetNumberOfComponents(3);
+  colors->SetName("Colors");
+ 
+  std::cout << "There are " << polyData->GetNumberOfPoints()
+            << " points." << std::endl;
+
+  vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
+  for(index_t i = 0; i < polyData->GetNumberOfPoints(); i++) {
+    double p[3];
+    polyData->GetPoint(i, p);
+    gca::point pt(p[0], p[1], p[2]);
+    unsigned char color[3];
+    color[0] = 0;
+    for (auto m : millable) {
+      auto t = mesh.triangle_vertices(m);
+      if (t.v[0] == i || t.v[1] == i || t.v[2] == i) {
+	color[0] = 200;
+      }
+    }
+    color[1] = 0;
+    color[2] = 0;
+
+    colors->InsertNextTupleValue(color);
+  }
+ 
+  polyData->GetPointData()->SetScalars(colors);  
+}
+
+vtkSmartPointer<vtkPolyData>
 polydata_from_triangle_list(const std::vector<gca::triangle>& stl_triangles) {
   vtkSmartPointer<vtkPoints> points =
     vtkSmartPointer<vtkPoints>::New();
@@ -90,8 +160,8 @@ polydata_from_triangle_list(const std::vector<gca::triangle>& stl_triangles) {
     vtkSmartPointer<vtkPolyData>::New();
  
   // Add the geometry and topology to the polydata
-  polyData->SetPoints ( points );
-  polyData->SetPolys ( triangles );
+  polyData->SetPoints(points);
+  polyData->SetPolys(triangles);
 
   return polyData;
 }
@@ -190,19 +260,20 @@ int main(int argc, char* argv[]) {
   auto mesh = make_mesh(stl_triangles, 0.0001);
   assert(mesh.is_connected());
   
-  vice v = emco_vice(point(2, 2, 0));
+  //  vice v = emco_vice(point(2, 2, 0));
   //  vector<triangular_mesh> arrangements = part_arrangements(mesh, v);
   // assert(arrangements.size() > 0);
   
-  auto vice_poly = polydata_actor(polydata_from_vice(v));
+  // auto vice_poly = polydata_actor(polydata_from_vice(v));
 
   auto to_render = mesh; //arrangements[3];
-  auto tl_list = to_render.triangle_list();
-  auto poly_data = polydata_from_triangle_list(tl_list);
-  color_polydata(poly_data, to_render);
+  // auto tl_list = to_render.triangle_list();
+  //polydata_from_triangle_list(tl_list);
+  auto poly_data = polydata_for_trimesh(to_render);
+  color_polydata_by_millability(poly_data, to_render);
   auto poly_actor = polydata_actor(poly_data);
 
-  vector<vtkSmartPointer<vtkActor>> actors{poly_actor, vice_poly};
+  vector<vtkSmartPointer<vtkActor>> actors{poly_actor}; //, vice_poly};
   visualize_actors(actors);
  
   return EXIT_SUCCESS;
