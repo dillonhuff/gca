@@ -1071,6 +1071,42 @@ src/geometry/polyline.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/polyline.cpp.s
 .PHONY : src/geometry/polyline.cpp.s
 
+src/geometry/spline_sampling.o: src/geometry/spline_sampling.cpp.o
+
+.PHONY : src/geometry/spline_sampling.o
+
+# target to build an object file
+src/geometry/spline_sampling.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/geometry/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/spline_sampling.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/spline_sampling.cpp.o
+.PHONY : src/geometry/spline_sampling.cpp.o
+
+src/geometry/spline_sampling.i: src/geometry/spline_sampling.cpp.i
+
+.PHONY : src/geometry/spline_sampling.i
+
+# target to preprocess a source file
+src/geometry/spline_sampling.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/geometry/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/spline_sampling.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/spline_sampling.cpp.i
+.PHONY : src/geometry/spline_sampling.cpp.i
+
+src/geometry/spline_sampling.s: src/geometry/spline_sampling.cpp.s
+
+.PHONY : src/geometry/spline_sampling.s
+
+# target to generate assembly for a file
+src/geometry/spline_sampling.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/geometry/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/geometry/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/geometry/spline_sampling.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/geometry/spline_sampling.cpp.s
+.PHONY : src/geometry/spline_sampling.cpp.s
+
 src/geometry/triangle.o: src/geometry/triangle.cpp.o
 
 .PHONY : src/geometry/triangle.o
@@ -1718,42 +1754,6 @@ src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
-
-src/synthesis/spline_sampling.o: src/synthesis/spline_sampling.cpp.o
-
-.PHONY : src/synthesis/spline_sampling.o
-
-# target to build an object file
-src/synthesis/spline_sampling.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/spline_sampling.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.o
-.PHONY : src/synthesis/spline_sampling.cpp.o
-
-src/synthesis/spline_sampling.i: src/synthesis/spline_sampling.cpp.i
-
-.PHONY : src/synthesis/spline_sampling.i
-
-# target to preprocess a source file
-src/synthesis/spline_sampling.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/spline_sampling.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.i
-.PHONY : src/synthesis/spline_sampling.cpp.i
-
-src/synthesis/spline_sampling.s: src/synthesis/spline_sampling.cpp.s
-
-.PHONY : src/synthesis/spline_sampling.s
-
-# target to generate assembly for a file
-src/synthesis/spline_sampling.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/spline_sampling.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/spline_sampling.cpp.s
-.PHONY : src/synthesis/spline_sampling.cpp.s
 
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
 
@@ -2952,6 +2952,9 @@ help:
 	@echo "... src/geometry/polyline.o"
 	@echo "... src/geometry/polyline.i"
 	@echo "... src/geometry/polyline.s"
+	@echo "... src/geometry/spline_sampling.o"
+	@echo "... src/geometry/spline_sampling.i"
+	@echo "... src/geometry/spline_sampling.s"
 	@echo "... src/geometry/triangle.o"
 	@echo "... src/geometry/triangle.i"
 	@echo "... src/geometry/triangle.s"
@@ -3006,9 +3009,6 @@ help:
 	@echo "... src/synthesis/shapes_to_toolpaths.o"
 	@echo "... src/synthesis/shapes_to_toolpaths.i"
 	@echo "... src/synthesis/shapes_to_toolpaths.s"
-	@echo "... src/synthesis/spline_sampling.o"
-	@echo "... src/synthesis/spline_sampling.i"
-	@echo "... src/synthesis/spline_sampling.s"
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"

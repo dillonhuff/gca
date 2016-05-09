@@ -1,4 +1,4 @@
-#include "synthesis/spline_sampling.h"
+#include "geometry/spline_sampling.h"
 
 namespace gca {
   

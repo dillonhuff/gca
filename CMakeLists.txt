@@ -52,6 +52,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
+	    ./src/geometry/spline_sampling.h
 	    ./src/geometry/matrix.h
 	    ./src/geometry/triangle.h
 	    ./src/geometry/triangular_mesh.h
@@ -94,6 +95,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/geometry/matrix.cpp
 	 ./src/geometry/polygon.cpp
 	 ./src/geometry/polyline.cpp
+	 ./src/geometry/spline_sampling.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/geometry/triangular_mesh.cpp
 	 ./src/geometry/trimesh.cpp
@@ -105,7 +107,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/dxf_reader.cpp
 	 ./src/synthesis/shapes_to_gcode.cpp
 	 ./src/synthesis/toolpath.cpp
-	 ./src/synthesis/spline_sampling.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
 	 ./src/synthesis/machine.cpp

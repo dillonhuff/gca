@@ -30,7 +30,7 @@ namespace gca {
       REQUIRE(millable.size() == 10);
     }
 
-    SECTION("Box with protrusion") {
+    SECTION("Mesh box plinth") {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
