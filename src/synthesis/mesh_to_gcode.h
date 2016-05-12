@@ -24,6 +24,8 @@ namespace gca {
 
   };
 
+  ostream& operator<<(ostream& out, const workpiece& w);
+
   enum tool_type { FLAT_NOSE, BALL_NOSE };
 
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
@@ -140,6 +142,12 @@ namespace gca {
   std::vector<triangular_mesh>
   part_arrangements(const triangular_mesh& part_mesh, const vice v);
 
+  std::vector<gcode_program>
+  workpiece_clipping_programs(const workpiece aligned_workpiece,
+			      const triangular_mesh& part_mesh,
+			      const std::vector<tool>& tools,
+			      const vice v);
+  
 }
 
 #endif

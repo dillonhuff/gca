@@ -1,3 +1,4 @@
+#include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/mesh_to_gcode.h"
@@ -103,6 +104,44 @@ namespace gca {
 
       SECTION("A box with 2 holes has 6 outer surfaces") {
 	REQUIRE(surfaces.size() == 6);
+      }
+    }
+  }
+
+  bool all_z_coords_above(const std::vector<block>& blocks, double z) {
+    vector<vector<cut*>> cuts;
+    auto r = gcode_to_cuts(blocks, cuts);
+    assert(r == GCODE_TO_CUTS_SUCCESS);
+    for (auto cb : cuts) {
+      for (auto c : cb) {
+	if (c->get_start().z <= z || c->get_end().z <= z) {
+	  cout << "Cut above " << z << " is " << endl << *c << endl;
+	  return false;
+	}
+      }
+    }
+    return true;
+  }
+
+  TEST_CASE("Workpiece clipping programs") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_vice = emco_vice(point(-1.8, -0.4, 3.3));
+    tool t1(0.35, FLAT_NOSE);
+    vector<tool> tools{t1};
+    workpiece workpiece_dims(1.7, 2.1, 1.65);
+
+    SECTION("Clipping programs never cut below vice") {
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
+      auto mesh = make_mesh(box_triangles, 0.001);
+      auto result_programs = workpiece_clipping_programs(workpiece_dims,
+							 mesh,
+							 tools,
+							 test_vice);
+
+      for (auto program : result_programs) {
+	REQUIRE(all_z_coords_above(program.blocks, test_vice.base_z()));
       }
     }
   }
