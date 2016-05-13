@@ -292,8 +292,7 @@ namespace gca {
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
     }
-    double tool_diameter = tools.front().diameter();
-    vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
+    vector<polyline> lines = drop_sample(tris, tools.front());
     double safe_z = max_in_dir(mesh, point(0, 0, 1));
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }

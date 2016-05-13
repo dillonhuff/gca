@@ -303,7 +303,7 @@ namespace gca {
   }
 
   std::vector<polyline> drop_sample(const std::vector<triangle>& triangles,
-				    double tool_radius) {
+				    const tool& tool) {
     auto mesh = make_mesh(triangles, 0.01);
 
     box b = mesh.bounding_box();
@@ -311,13 +311,13 @@ namespace gca {
     b.y_min += 0.01;
     b.z_min += 0.01;
 
-    vector<point> pts_z = sample_points_2d(b, tool_radius, tool_radius, 1.0);
+    vector<point> pts_z = sample_points_2d(b, tool.radius(), tool.radius(), 1.0);
 
     vector<point> pts;
     for (auto pt : pts_z) {
       maybe<double> za = mesh.z_at(pt.x, pt.y);
       if (za.just) {
-	pts.push_back(point(pt.x, pt.y, za.t)); //mesh.z_at(pt.x, pt.y)));
+	pts.push_back(point(pt.x, pt.y, za.t));
       }
     }
 
@@ -327,8 +327,8 @@ namespace gca {
   }
 
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,
-				    double tool_radius) {
-    return drop_sample(mesh.triangle_list(), tool_radius);
+				    const tool& tool) {
+    return drop_sample(mesh.triangle_list(), tool);
   }
 
   

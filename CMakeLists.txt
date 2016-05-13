@@ -70,6 +70,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/axis_3.h
 	    ./src/synthesis/millability.h
 	    ./src/synthesis/vice.h
+	    ./src/synthesis/tool.h
 	    ./src/system/arena_allocator.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h

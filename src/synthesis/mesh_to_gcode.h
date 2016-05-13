@@ -4,8 +4,20 @@
 #include "core/lexer.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/vice.h"
+#include "synthesis/tool.h"
 
 namespace gca {
+
+  class gcode_program {
+  public:
+    std::string name;
+    std::vector<block> blocks;
+
+    gcode_program(const std::string& p_name,
+		  const std::vector<block>& p_blocks) :
+      name(p_name), blocks(p_blocks) {}
+  };
+
 
   struct workpiece {
     point sides[3];
@@ -26,31 +38,7 @@ namespace gca {
 
   ostream& operator<<(ostream& out, const workpiece& w);
 
-  enum tool_type { FLAT_NOSE, BALL_NOSE };
-
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
-
-  class tool {
-  protected:
-    double diam;
-
-  public:
-    tool(double p_diameter, tool_type t) :
-      diam(p_diameter) {}
-
-    inline double radius() const { return diam / 2.0; }
-    inline double diameter() const { return diam; }
-  };
-
-  class gcode_program {
-  public:
-    std::string name;
-    std::vector<block> blocks;
-
-    gcode_program(const std::string& p_name,
-		  const std::vector<block>& p_blocks) :
-      name(p_name), blocks(p_blocks) {}
-  };
 
   class surface {
   protected:
