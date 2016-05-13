@@ -108,10 +108,12 @@ namespace gca {
 		0, workpiece_y,
 		z_max - eps, z_max);
 
+    double safe_height = workpiece_height + t.length() + 0.1;
+
     vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
 					     point(0, 0, t.length()));
     vector<block> blks =
-      emco_f1_code(shift_lines_xy(blk_lines, v), workpiece_height + 0.1);
+      emco_f1_code(shift_lines_xy(blk_lines, v), safe_height);
 
     box b2 = box(0, workpiece_x,
 		 0, workpiece_y,
@@ -119,7 +121,7 @@ namespace gca {
     vector<polyline> lines = shift_lines(rough_box(b2, t.radius(), cut_depth),
 					 point(0, 0, t.length()));
     vector<block> clip_blocks =
-      emco_f1_code(shift_lines_xy(lines, v), workpiece_height + 0.1);
+      emco_f1_code(shift_lines_xy(lines, v), safe_height);
     return pair<vector<block>, vector<block> >(blks, clip_blocks);
   }
 
@@ -294,8 +296,9 @@ namespace gca {
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
     }
-    vector<polyline> lines = drop_sample(tris, tools.front());
-    double safe_z = max_in_dir(mesh, point(0, 0, 1));
+    tool t = tools.front();
+    vector<polyline> lines = drop_sample(tris, t);
+    double safe_z = max_in_dir(mesh, point(0, 0, 1)) + t.length() + 0.1;
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }
 
