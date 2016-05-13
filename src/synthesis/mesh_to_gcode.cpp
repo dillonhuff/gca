@@ -148,14 +148,14 @@ namespace gca {
 
     vector<polyline> blk_lines = rough_box(b, tool_radius, cut_depth);
     vector<block> blks =
-      emco_f1_code(shift_lines_xy(blk_lines, v));
+      emco_f1_code(shift_lines_xy(blk_lines, v), workpiece_height + 0.1);
 
     box b2 = box(0, workpiece_width,
 		 0, workpiece_length,
 		 part_height, z_max);
     vector<polyline> lines = rough_box(b2, tool_radius, cut_depth);
     vector<block> clip_blocks =
-      emco_f1_code(shift_lines_xy(lines, v));
+      emco_f1_code(shift_lines_xy(lines, v), workpiece_height + 0.1);
     return pair<vector<block>, vector<block> >(blks, clip_blocks);
   }
 
@@ -402,7 +402,8 @@ namespace gca {
     }
     double tool_diameter = tools.front().diameter();
     vector<polyline> lines = drop_sample(tris, tool_diameter / 2.0);
-    return gcode_program("Surface cut", emco_f1_code(lines));
+    double safe_z = max_in_dir(mesh, point(0, 0, 1));
+    return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }
 
   void cut_secured_meshes(const std::vector<triangular_mesh>& meshes,

@@ -20,7 +20,8 @@ namespace gca {
 				      double cut_depth,
 				      double workpiece_height);
 
-  vector<block> emco_f1_code(const vector<polyline>& pocket_lines);
+  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
+				  const double safe_height);
 
   vector<pocket> make_pockets(vector<triangle>& triangles,
 			      double workpiece_height);  

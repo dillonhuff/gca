@@ -25,7 +25,8 @@ namespace gca {
     return reflected;
   }
 
-  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines) {
+  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
+				  const double safe_height) {
     assert(pocket_lines.size() > 0);
     for (auto pl : pocket_lines) {
       assert(pl.num_points() > 0);
@@ -35,7 +36,7 @@ namespace gca {
     params.target_machine = EMCO_F1;
     // TODO: Find safe height in a safe way. This safe height code
     // causes collisions. Maybe make safe_height a function parameter?
-    params.safe_height = (*reflected_lines.front().begin()).z + 0.05;
+    params.safe_height = safe_height; //(*reflected_lines.front().begin()).z + 0.05;
     return polylines_cuts(reflected_lines, params);
   }
 
@@ -162,7 +163,7 @@ namespace gca {
 			     double cut_depth,
 			     double workpiece_height) {
     auto pocket_lines = mill_surface_lines(triangles, tool_diameter, cut_depth, workpiece_height);
-    return emco_f1_code(pocket_lines);
+    return emco_f1_code(pocket_lines, workpiece_height + 0.1);
   }
 
 }
