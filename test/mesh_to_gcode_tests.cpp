@@ -123,7 +123,23 @@ namespace gca {
     return true;
   }
 
-  TEST_CASE("Workpiece clipping programs") {
+
+  bool all_safe_moves_above(const std::vector<block>& blocks, double z) {
+    vector<vector<cut*>> cuts;
+    auto r = gcode_to_cuts(blocks, cuts);
+    assert(r == GCODE_TO_CUTS_SUCCESS);
+    for (auto cb : cuts) {
+      for (auto c : cb) {
+	if (c->is_safe_move() && (c->get_end().z <= z)) {
+	  cout << "Cut above " << z << " is " << endl << *c << endl;
+	  return false;
+	}
+      }
+    }
+    return true;
+  }
+  
+  TEST_CASE("Toolpath bounds") {
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -132,16 +148,25 @@ namespace gca {
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.7, 2.1, 1.65);
 
-    SECTION("Clipping programs never cut below vice") {
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
+    SECTION("Box with 2 holes") {
+      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       auto result_programs = workpiece_clipping_programs(workpiece_dims,
 							 mesh,
 							 tools,
 							 test_vice);
 
-      for (auto program : result_programs) {
-	REQUIRE(all_z_coords_above(program.blocks, test_vice.base_z()));
+      SECTION("Never cut below vice") {
+	for (auto program : result_programs) {
+	  REQUIRE(all_z_coords_above(program.blocks, test_vice.base_z()));
+	}
+      }
+
+      SECTION("G0 moves are above the workpiece") {
+	double workpiece_height = test_vice.base_z() + workpiece_dims.sides[2].len();
+	for (auto program : result_programs) {
+	  REQUIRE(all_safe_moves_above(program.blocks, workpiece_height));
+	}
       }
     }
   }

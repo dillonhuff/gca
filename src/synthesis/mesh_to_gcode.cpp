@@ -62,26 +62,6 @@ namespace gca {
     return ((p.dot(dir))*dir).len();
   }
 
-  std::vector<index_t> outermost_by(point normal,
-				    const std::vector<index_t> faces,
-				    const triangular_mesh& part,
-				    double tolerance) {
-    assert(faces.size() > 0);
-    auto f = faces;
-    sort(begin(f), end(f),
-	 [&part, normal](index_t l, index_t r)
-	 { return distance_along(normal, part.face_triangle(l)) >
-	   distance_along(normal, part.face_triangle(r)); });
-    double outer_dist = distance_along(normal, part.face_triangle(f.front()));
-    take_while(f,
-	       [&part, normal, outer_dist, tolerance](index_t i)
-	       { return within_eps(outer_dist,
-				   distance_along(normal, part.face_triangle(i)),
-				   tolerance); });
-    assert(f.size() > 0);
-    return f;
-  }
-
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
     vector<surface> surfaces;
@@ -128,7 +108,7 @@ namespace gca {
 		0);
     return shift_lines(lines, shift);
   }
-  
+
   std::pair<std::vector<block>,
 	    std::vector<block> >
   clip_axis(double workpiece_width,
@@ -203,8 +183,8 @@ namespace gca {
     clip_progs.push_back(x_face);
     clip_progs.push_back(x_clip);
 
-    // workpiece_height = aligned_workpiece.sides[1].len() + v.base_z();
-    // part_height = clipped.sides[1].len() + v.base_z();
+    workpiece_height = aligned_workpiece.sides[1].len() + v.base_z();
+    part_height = clipped.sides[1].len() + v.base_z();
     
     auto clip_y = clip_axis(workpiece_width,
 			    workpiece_length,
@@ -220,8 +200,8 @@ namespace gca {
     clip_progs.push_back(y_face);
     clip_progs.push_back(y_clip);
 
-    // workpiece_height = aligned_workpiece.sides[2].len() + v.base_z();
-    // part_height = clipped.sides[2].len() + v.base_z();
+    workpiece_height = aligned_workpiece.sides[2].len() + v.base_z();
+    part_height = clipped.sides[2].len() + v.base_z();
     
     auto clip_z = clip_axis(workpiece_width,
 			    workpiece_length,
@@ -246,7 +226,7 @@ namespace gca {
     point i_normal = part_mesh.face_orientation(i);
     return within_eps(angle_between(top_normal, i_normal), 0, 90);
   }
-  
+
   bool face_is_millable_from(index_t i,
 			     const stock_orientation& orient,
 			     const triangular_mesh& part_mesh) {
@@ -290,28 +270,6 @@ namespace gca {
     }
     assert(orients.size() > 0);
     return orients;
-  }
-
-  index_t farthest_by(const point normal,
-		      const std::vector<index_t>& faces,
-		      const triangular_mesh& part) {
-    assert(faces.size() > 0);
-    auto f = faces;
-    sort(begin(f), end(f),
-	 [&part, normal](index_t l, index_t r)
-	 { return distance_along(normal, part.face_triangle(l)) >
-	   distance_along(normal, part.face_triangle(r)); });
-    return f.front();
-  }
-
-  std::vector<index_t> adjacent_millable(const point n,
-					 const triangular_mesh& m,
-					 const index_t next_vertex) {
-    vector<index_t> next_faces = m.vertex_face_neighbors(next_vertex);
-    remove_if(begin(next_faces), end(next_faces),
-	      [n, &m](const index_t i)
-	      { return !face_is_millable_from(i, n, m); });
-    return next_faces;
   }
 
   void remove_millable_surfaces(const stock_orientation& orient,
@@ -412,17 +370,6 @@ namespace gca {
 			  const std::vector<tool>& tools) {
     for (auto mesh : meshes) {
       progs.push_back(cut_secured_mesh(mesh, v, tools));
-    }
-  }
-
-  void cut_orientations(const std::vector<stock_orientation>& orients,
-			std::vector<gcode_program>& progs,
-			const vice v,
-			const std::vector<tool>& tools) {
-    for (auto orient : orients) {
-      cout << "top normal = " << orient.top_normal() << endl;
-      auto mesh = oriented_part_mesh(orient, v);
-      progs.push_back(cut_secured_mesh(mesh, v, tools)); //orient, v, tools));
     }
   }
 
