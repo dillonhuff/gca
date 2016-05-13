@@ -7,6 +7,6 @@ namespace gca {
   }
 
   vice current_setup() {
-    return emco_vice(point(-0.8, -4.4, -3.3));
+    return emco_vice(point(-0.8, -4.4, -6.3));
   }
 }

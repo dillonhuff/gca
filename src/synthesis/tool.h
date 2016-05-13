@@ -7,14 +7,15 @@ namespace gca {
 
   class tool {
   protected:
-    double diam;
+    double diam, len;
 
   public:
-    tool(double p_diameter, tool_type t) :
-      diam(p_diameter) {}
+    tool(double p_diameter, double p_length, tool_type t) :
+      diam(p_diameter), len(p_length) {}
 
     inline double radius() const { return diam / 2.0; }
     inline double diameter() const { return diam; }
+    inline double length() const { return len; }
   };
 
 }

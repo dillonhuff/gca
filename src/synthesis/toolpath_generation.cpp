@@ -323,7 +323,7 @@ namespace gca {
 
     vector<polyline> lines;
     lines.push_back(pts);
-    return lines;
+    return shift_lines(lines, point(0, 0, tool.length()));
   }
 
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,

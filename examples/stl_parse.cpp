@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   auto mesh = make_mesh(box_triangles, 0.001);
 
   vice test_vice = current_setup();
-  tool t1(0.3, FLAT_NOSE);
+  tool t1(0.3, 3.0, FLAT_NOSE);
   vector<tool> tools{t1};
   workpiece workpiece_dims(1.53, 1.87, 1.5);
   auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);

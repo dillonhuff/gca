@@ -12,7 +12,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));//emco_vice(point(1.0, 1.0, 1.0)); //(1.5, 1.5, 0.75, Y_AXIS);
-    tool t1(0.25, FLAT_NOSE);
+    tool t1(0.25, 3.0, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.5, 1.2, 1.5);
     
@@ -144,7 +144,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(-1.8, -0.4, 3.3));
-    tool t1(0.35, FLAT_NOSE);
+    tool t1(0.35, 3.0, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.7, 2.1, 1.65);
 
