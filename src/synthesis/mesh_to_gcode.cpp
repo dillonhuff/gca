@@ -177,8 +177,14 @@ namespace gca {
     double cut_depth = 0.15;
     double eps = 0.05;
 
-    double workpiece_width = aligned_workpiece.sides[1].len();
-    double workpiece_length = aligned_workpiece.sides[2].len();
+    auto s = aligned_workpiece.sides;
+    const point m_e = *(max_element(s, s + 3,
+		  [](const point& l, const point& r)
+      { return l.len() < r.len(); }));
+
+    double l = m_e.len();
+    double workpiece_width = l;//aligned_workpiece.sides[1].len();
+    double workpiece_length = l; //aligned_workpiece.sides[2].len();
 
     double workpiece_height = aligned_workpiece.sides[0].len() + v.base_z();
     double part_height = clipped.sides[0].len() + v.base_z();
@@ -197,8 +203,8 @@ namespace gca {
     clip_progs.push_back(x_face);
     clip_progs.push_back(x_clip);
 
-    workpiece_height = aligned_workpiece.sides[1].len() + v.base_z();
-    part_height = clipped.sides[1].len() + v.base_z();
+    // workpiece_height = aligned_workpiece.sides[1].len() + v.base_z();
+    // part_height = clipped.sides[1].len() + v.base_z();
     
     auto clip_y = clip_axis(workpiece_width,
 			    workpiece_length,
@@ -214,8 +220,8 @@ namespace gca {
     clip_progs.push_back(y_face);
     clip_progs.push_back(y_clip);
 
-    workpiece_height = aligned_workpiece.sides[2].len() + v.base_z();
-    part_height = clipped.sides[2].len() + v.base_z();
+    // workpiece_height = aligned_workpiece.sides[2].len() + v.base_z();
+    // part_height = clipped.sides[2].len() + v.base_z();
     
     auto clip_z = clip_axis(workpiece_width,
 			    workpiece_length,

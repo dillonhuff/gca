@@ -245,7 +245,7 @@ namespace gca {
   cut* mk_cut(const point l, const point r) {
     auto c = linear_cut::make(l, r);
     c->set_spindle_speed(lit::make(3000));
-    c->set_feedrate(lit::make(6.4));
+    c->set_feedrate(lit::make(8.0));
     return c;
   }
 
@@ -282,8 +282,8 @@ namespace gca {
 				  double tool_radius,
 				  double cut_depth) {
     vector<point> pts = sample_points_2d(b,
-					 tool_radius / 2.0,
-					 tool_radius / 2.0,
+					 tool_radius,
+					 tool_radius,
 					 0.0);
 
     vector<vector<point>> pt_lines;

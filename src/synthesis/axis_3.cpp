@@ -33,7 +33,8 @@ namespace gca {
     auto reflected_lines = reflect_y(pocket_lines);
     cut_params params;
     params.target_machine = EMCO_F1;
-    // TODO: Find safe height by searching for max value
+    // TODO: Find safe height in a safe way. This safe height code
+    // causes collisions. Maybe make safe_height a function parameter?
     params.safe_height = (*reflected_lines.front().begin()).z + 0.05;
     return polylines_cuts(reflected_lines, params);
   }
