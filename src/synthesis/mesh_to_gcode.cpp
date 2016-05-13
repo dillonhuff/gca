@@ -166,7 +166,7 @@ namespace gca {
     vector<gcode_program> clip_progs;
 
     // TODO: Turn these magic numbers into parameters
-    double cut_depth = 0.15;
+    double cut_depth = 0.2;
     double eps = 0.05;
 
     // TODO: Add proper tool selection
@@ -311,24 +311,6 @@ namespace gca {
   part_arrangements(const triangular_mesh& part_mesh,
 		    const vector<surface>& part_ss,
 		    const vice v) {
-    vector<index_t> face_inds = part_mesh.face_indexes();
-    cout << "# initial faces = " << face_inds.size() << endl;
-    remove_SA_surfaces(part_ss, face_inds);
-    cout << "# faces left = " << face_inds.size() << endl;
-    vector<stock_orientation> orients =
-      orientations_to_cut(part_mesh, part_ss, face_inds);
-    vector<triangular_mesh> meshes;
-    for (auto orient : orients) {
-      cout << "Top normal " << orient.top_normal() << endl;
-      meshes.push_back(oriented_part_mesh(orient, v));
-    }
-    return meshes;
-  }
-
-  std::vector<triangular_mesh>
-  part_arrangements(const triangular_mesh& part_mesh,
-		    const vice v) {
-    auto part_ss = outer_surfaces(part_mesh);
     vector<index_t> face_inds = part_mesh.face_indexes();
     cout << "# initial faces = " << face_inds.size() << endl;
     remove_SA_surfaces(part_ss, face_inds);
