@@ -78,6 +78,9 @@ namespace gca {
   std::vector<polyline> shift_lines(const std::vector<polyline>& lines,
 				    const point s);
   polyline shift(const polyline& p, const point s);
+
+  double max_in_dir(const std::vector<polyline>& lines, const point dir);
+  double min_in_dir(const std::vector<polyline>& lines, const point dir);
 }
 
 #endif

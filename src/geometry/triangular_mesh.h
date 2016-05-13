@@ -174,6 +174,11 @@ namespace gca {
   }
 
   triangular_mesh operator*(const matrix<3, 3>& m, const triangular_mesh& mesh);
-  
+
+  double diameter(const point normal, const triangular_mesh& m);
+
+  double min_in_dir(const triangular_mesh& mesh, const point dir);
+  double max_in_dir(const triangular_mesh& mesh, const point dir);
+
 }
 #endif

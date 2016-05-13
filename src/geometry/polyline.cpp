@@ -101,4 +101,13 @@ namespace gca {
     }
     return slines;
   }
+
+  double min_in_dir(const std::vector<polyline>& lines, const point dir) {
+    return min_distance_along(points(lines), dir);
+  }
+
+  double max_in_dir(const std::vector<polyline>& lines, const point dir) {
+    return max_distance_along(points(lines), dir);
+  }
+  
 }

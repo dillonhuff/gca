@@ -56,12 +56,6 @@ namespace gca {
 	      { return any_SA_surface_contains(i, surfaces); });
   }
 
-  double distance_along(point normal, const triangle t) {
-    point p = t.v1;
-    point dir = normal.normalize();
-    return ((p.dot(dir))*dir).len();
-  }
-
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
     vector<surface> surfaces;
@@ -72,10 +66,6 @@ namespace gca {
       }
     }
     return surfaces;
-  }
-
-  double diameter(const point normal, const triangular_mesh& m) {
-    return diameter(normal, m.vertex_list());
   }
 
   workpiece clipped_workpiece(const workpiece aligned_workpiece,
@@ -91,14 +81,6 @@ namespace gca {
     return workpiece(x_d, y_d, z_d);
   }
 
-  double min_in_dir(const std::vector<polyline>& lines, const point dir) {
-    return min_distance_along(points(lines), dir);
-  }
-
-  double max_in_dir(const std::vector<polyline>& lines, const point dir) {
-    return max_distance_along(points(lines), dir);
-  }
-  
   std::vector<polyline> shift_lines_xy(const std::vector<polyline>& lines,
 				       const vice v) {
     double x_f = v.x_max();
@@ -111,8 +93,8 @@ namespace gca {
 
   std::pair<std::vector<block>,
 	    std::vector<block> >
-  clip_axis(double workpiece_width,
-	    double workpiece_length,
+  clip_axis(double workpiece_x,
+	    double workpiece_y,
 	    double workpiece_height,
 	    double eps,
 	    double part_height,
@@ -122,21 +104,56 @@ namespace gca {
     assert(workpiece_height > part_height);
     double z_max = workpiece_height + 0.01;
 
-    box b = box(0, workpiece_width,
-		0, workpiece_length,
+    box b = box(0, workpiece_x,
+		0, workpiece_y,
 		z_max - eps, z_max);
 
     vector<polyline> blk_lines = rough_box(b, tool_radius, cut_depth);
     vector<block> blks =
       emco_f1_code(shift_lines_xy(blk_lines, v), workpiece_height + 0.1);
 
-    box b2 = box(0, workpiece_width,
-		 0, workpiece_length,
+    box b2 = box(0, workpiece_x,
+		 0, workpiece_y,
 		 part_height, z_max);
     vector<polyline> lines = rough_box(b2, tool_radius, cut_depth);
     vector<block> clip_blocks =
       emco_f1_code(shift_lines_xy(lines, v), workpiece_height + 0.1);
     return pair<vector<block>, vector<block> >(blks, clip_blocks);
+  }
+
+  void
+  append_clip_programs(const string& axis,
+		       const int axis_number,
+		       const workpiece aligned_workpiece,
+		       const workpiece clipped,
+		       const double eps,
+		       const double tool_radius,
+		       const double cut_depth,
+		       const vice v,
+		       std::vector<gcode_program>& clip_progs) {
+
+    double a1 = aligned_workpiece.sides[(axis_number + 1) % 3].len();
+    double a2 = aligned_workpiece.sides[(axis_number + 2) % 3].len();
+
+    double workpiece_x = max(a1, a2);
+    double workpiece_y = min(a1, a2);
+
+    double workpiece_height = aligned_workpiece.sides[axis_number].len() + v.base_z();
+    double part_height = clipped.sides[axis_number].len() + v.base_z();
+
+    auto clip_x = clip_axis(workpiece_x,
+			    workpiece_y,
+			    workpiece_height,
+			    eps,
+			    part_height,
+			    tool_radius,
+			    cut_depth,
+			    v);
+
+    gcode_program x_face(axis + "_Face", clip_x.first);
+    gcode_program x_clip(axis + "_Clip", clip_x.second);
+    clip_progs.push_back(x_face);
+    clip_progs.push_back(x_clip);
   }
 
   // TODO: Clean up and add vice height test
@@ -148,91 +165,18 @@ namespace gca {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
     vector<gcode_program> clip_progs;
 
-    double tool_radius = tools.front().radius();
-
-    cout << "Workpiece: " << aligned_workpiece << endl;
-    cout << "Clipped: " << clipped << endl;
-
     // TODO: Turn these magic numbers into parameters
     double cut_depth = 0.15;
     double eps = 0.05;
 
-    auto s = aligned_workpiece.sides;
-    const point m_e = *(max_element(s, s + 3,
-		  [](const point& l, const point& r)
-      { return l.len() < r.len(); }));
+    // TODO: Add proper tool selection
+    double tool_radius = tools.front().radius();
 
-    double l = m_e.len();
-    double workpiece_width = l;//aligned_workpiece.sides[1].len();
-    double workpiece_length = l; //aligned_workpiece.sides[2].len();
-
-    double workpiece_height = aligned_workpiece.sides[0].len() + v.base_z();
-    double part_height = clipped.sides[0].len() + v.base_z();
-
-    auto clip_x = clip_axis(workpiece_width,
-			    workpiece_length,
-			    workpiece_height,
-			    eps,
-			    part_height,
-			    tool_radius,
-			    cut_depth,
-			    v);
-
-    gcode_program x_face("X_Face", clip_x.first);
-    gcode_program x_clip("X_Clip", clip_x.second);
-    clip_progs.push_back(x_face);
-    clip_progs.push_back(x_clip);
-
-    workpiece_height = aligned_workpiece.sides[1].len() + v.base_z();
-    part_height = clipped.sides[1].len() + v.base_z();
-    
-    auto clip_y = clip_axis(workpiece_width,
-			    workpiece_length,
-			    workpiece_height,
-			    eps,
-			    part_height,
-			    tool_radius,
-			    cut_depth,
-			    v);
-    
-    gcode_program y_face("Y_Face", clip_y.first);
-    gcode_program y_clip("Y_Clip", clip_y.second);
-    clip_progs.push_back(y_face);
-    clip_progs.push_back(y_clip);
-
-    workpiece_height = aligned_workpiece.sides[2].len() + v.base_z();
-    part_height = clipped.sides[2].len() + v.base_z();
-    
-    auto clip_z = clip_axis(workpiece_width,
-			    workpiece_length,
-			    workpiece_height,
-			    eps,
-			    part_height,
-			    tool_radius,
-			    cut_depth,
-			    v);
-    
-    gcode_program z_face("Z_Face", clip_z.first);
-    gcode_program z_clip("Z_Clip", clip_z.second);
-    clip_progs.push_back(z_face);
-    clip_progs.push_back(z_clip);
+    append_clip_programs("X", 0, aligned_workpiece, clipped, eps, tool_radius, cut_depth, v, clip_progs);
+    append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, tool_radius, cut_depth, v, clip_progs);
+    append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, tool_radius, cut_depth, v, clip_progs);
 
     return clip_progs;
-  }
-
-  bool face_is_millable_from(index_t i,
-			     const point top_normal,
-			     const triangular_mesh& part_mesh) {
-    point i_normal = part_mesh.face_orientation(i);
-    return within_eps(angle_between(top_normal, i_normal), 0, 90);
-  }
-
-  bool face_is_millable_from(index_t i,
-			     const stock_orientation& orient,
-			     const triangular_mesh& part_mesh) {
-    point top_normal = orient.top_normal();
-    point i_normal = part_mesh.face_orientation(i);
-    return within_eps(angle_between(top_normal, i_normal), 0, 90);
   }
 
   bool orthogonal_flat_surfaces(const surface* l, const surface* r) {
@@ -318,16 +262,6 @@ namespace gca {
     matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
     auto m = top_rotation_mat * mesh;
     return m;
-  }
-
-  double max_in_dir(const triangular_mesh& mesh,
-		    const point dir) {
-    return max_distance_along(mesh.vertex_list(), dir);
-  }
-
-  double min_in_dir(const triangular_mesh& mesh,
-		    const point dir) {
-    return min_distance_along(mesh.vertex_list(), dir);
   }
 
   triangular_mesh shift_mesh(const triangular_mesh& mesh,

@@ -203,4 +203,18 @@ namespace gca {
     return mesh.apply([m](const point p) { return m*p; });
   }
 
+  double diameter(const point normal, const triangular_mesh& m) {
+    return diameter(normal, m.vertex_list());
+  }
+
+  double max_in_dir(const triangular_mesh& mesh,
+		    const point dir) {
+    return max_distance_along(mesh.vertex_list(), dir);
+  }
+
+  double min_in_dir(const triangular_mesh& mesh,
+		    const point dir) {
+    return min_distance_along(mesh.vertex_list(), dir);
+  }
+
 }

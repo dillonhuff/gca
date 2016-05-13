@@ -197,4 +197,11 @@ namespace gca {
 		    m*t.v3);
   }
 
+  double distance_along(point normal, const triangle t) {
+    point p = t.v1;
+    point dir = normal.normalize();
+    return ((p.dot(dir))*dir).len();
+  }
+
+  
 }

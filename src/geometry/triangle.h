@@ -54,6 +54,8 @@ namespace gca {
   bool intersects_triangles(line l, const vector<triangle>& triangles);
 
   triangle apply(const matrix<3, 3> m, const triangle& t);
+
+  double distance_along(point normal, const triangle t);
 }
 
 #endif
