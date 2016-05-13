@@ -98,7 +98,7 @@ namespace gca {
 	    double workpiece_height,
 	    double eps,
 	    double part_height,
-	    double tool_radius,
+	    const tool& t,
 	    double cut_depth,
 	    const vice v) {
     assert(workpiece_height > part_height);
@@ -108,14 +108,16 @@ namespace gca {
 		0, workpiece_y,
 		z_max - eps, z_max);
 
-    vector<polyline> blk_lines = rough_box(b, tool_radius, cut_depth);
+    vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
+					     point(0, 0, t.length()));
     vector<block> blks =
       emco_f1_code(shift_lines_xy(blk_lines, v), workpiece_height + 0.1);
 
     box b2 = box(0, workpiece_x,
 		 0, workpiece_y,
 		 part_height, z_max);
-    vector<polyline> lines = rough_box(b2, tool_radius, cut_depth);
+    vector<polyline> lines = shift_lines(rough_box(b2, t.radius(), cut_depth),
+					 point(0, 0, t.length()));
     vector<block> clip_blocks =
       emco_f1_code(shift_lines_xy(lines, v), workpiece_height + 0.1);
     return pair<vector<block>, vector<block> >(blks, clip_blocks);
@@ -127,7 +129,7 @@ namespace gca {
 		       const workpiece aligned_workpiece,
 		       const workpiece clipped,
 		       const double eps,
-		       const double tool_radius,
+		       const tool& t,
 		       const double cut_depth,
 		       const vice v,
 		       std::vector<gcode_program>& clip_progs) {
@@ -146,7 +148,7 @@ namespace gca {
 			    workpiece_height,
 			    eps,
 			    part_height,
-			    tool_radius,
+			    t,
 			    cut_depth,
 			    v);
 
@@ -170,11 +172,11 @@ namespace gca {
     double eps = 0.05;
 
     // TODO: Add proper tool selection
-    double tool_radius = tools.front().radius();
+    tool t = tools.front();
 
-    append_clip_programs("X", 0, aligned_workpiece, clipped, eps, tool_radius, cut_depth, v, clip_progs);
-    append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, tool_radius, cut_depth, v, clip_progs);
-    append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, tool_radius, cut_depth, v, clip_progs);
+    append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
+    append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
+    append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
 
     return clip_progs;
   }
