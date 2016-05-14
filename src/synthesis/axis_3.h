@@ -11,12 +11,12 @@ namespace gca {
   void select_visible_triangles(vector<triangle>& triangles);
 
   vector<block> mill_surface(vector<triangle>& triangles,
-			     double tool_diameter,
+			     const tool& t,
 			     double cut_depth,
 			     double workpiece_height);
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
-				      double tool_diameter,
+				      const tool& t,
 				      double cut_depth,
 				      double workpiece_height);
 

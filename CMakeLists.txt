@@ -49,6 +49,7 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
 	    ./src/gcode/value.h
+	    ./src/gcode/gcode_program.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h

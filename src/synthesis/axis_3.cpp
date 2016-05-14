@@ -1,6 +1,7 @@
 #include "geometry/polygon.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/shapes_to_gcode.h"
+#include "synthesis/tool.h"
 #include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 
@@ -150,19 +151,19 @@ namespace gca {
   }
 
   vector<polyline> mill_surface_lines(vector<triangle>& triangles,
-				      double tool_diameter,
+				      const tool& t,
 				      double cut_depth,
 				      double workpiece_height) {
     select_visible_triangles(triangles);
     auto pockets = make_pockets(triangles, workpiece_height);
-    return mill_pockets(pockets, tool_diameter, cut_depth);
+    return mill_pockets(pockets, t.diameter(), cut_depth);
   }
 
   vector<block> mill_surface(vector<triangle>& triangles,
-			     double tool_diameter,
+			     const tool& t,
 			     double cut_depth,
 			     double workpiece_height) {
-    auto pocket_lines = mill_surface_lines(triangles, tool_diameter, cut_depth, workpiece_height);
+    auto pocket_lines = mill_surface_lines(triangles, t, cut_depth, workpiece_height);
     return emco_f1_code(pocket_lines, workpiece_height + 0.1);
   }
 
