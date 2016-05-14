@@ -9,7 +9,7 @@
 #include <vtkRenderWindowInteractor.h>
 
 #include "analysis/gcode_to_cuts.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "geometry/point.h"
 
 using namespace gca;

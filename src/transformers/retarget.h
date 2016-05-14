@@ -4,7 +4,7 @@
 #include <map>
 
 #include "analysis/gcode_to_cuts.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "synthesis/cut.h"
 #include "synthesis/shapes_to_gcode.h"
 

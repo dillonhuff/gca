@@ -4,9 +4,9 @@
 #include <cassert>
 #include <iostream>
 
-#include "core/callback.h"
+#include "gcode/callback.h"
 
-#include "core/parser.h"
+#include "gcode/parser.h"
 
 using namespace gca;
 

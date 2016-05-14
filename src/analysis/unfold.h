@@ -1,7 +1,7 @@
 #ifndef GCA_UNFOLD_H
 #define GCA_UNFOLD_H
 
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

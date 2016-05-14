@@ -4,7 +4,7 @@
 #include "analysis/machine_state.h"
 #include "analysis/position_table.h"
 #include "analysis/utils.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/circular_helix_cut.h"
 #include "synthesis/linear_cut.h"

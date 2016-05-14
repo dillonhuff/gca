@@ -1,4 +1,4 @@
-#include "core/value.h"
+#include "gcode/value.h"
 
 namespace gca {
 

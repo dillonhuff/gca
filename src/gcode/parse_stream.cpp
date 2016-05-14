@@ -1,4 +1,4 @@
-#include "core/parse_stream.h"
+#include "gcode/parse_stream.h"
 
 namespace gca {
   

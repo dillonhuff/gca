@@ -4,7 +4,7 @@
 #include <set>
 
 
-#include "core/parser.h"
+#include "gcode/parser.h"
 
 using namespace gca;
 

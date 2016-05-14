@@ -4,7 +4,7 @@
 #include <cassert>
 
 #include "analysis/machine_state.h"
-#include "core/value.h"
+#include "gcode/value.h"
 #include "geometry/box.h"
 #include "geometry/line.h"
 #include "geometry/parametric_curve.h"

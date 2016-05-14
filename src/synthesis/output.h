@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "geometry/line.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/machine.h"

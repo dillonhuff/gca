@@ -639,114 +639,6 @@ src/checkers/unsafe_spindle_checker.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.s
 
-src/core/lexer.o: src/core/lexer.cpp.o
-
-.PHONY : src/core/lexer.o
-
-# target to build an object file
-src/core/lexer.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.o
-.PHONY : src/core/lexer.cpp.o
-
-src/core/lexer.i: src/core/lexer.cpp.i
-
-.PHONY : src/core/lexer.i
-
-# target to preprocess a source file
-src/core/lexer.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.i
-.PHONY : src/core/lexer.cpp.i
-
-src/core/lexer.s: src/core/lexer.cpp.s
-
-.PHONY : src/core/lexer.s
-
-# target to generate assembly for a file
-src/core/lexer.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/lexer.cpp.s
-.PHONY : src/core/lexer.cpp.s
-
-src/core/parse_stream.o: src/core/parse_stream.cpp.o
-
-.PHONY : src/core/parse_stream.o
-
-# target to build an object file
-src/core/parse_stream.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.o
-.PHONY : src/core/parse_stream.cpp.o
-
-src/core/parse_stream.i: src/core/parse_stream.cpp.i
-
-.PHONY : src/core/parse_stream.i
-
-# target to preprocess a source file
-src/core/parse_stream.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.i
-.PHONY : src/core/parse_stream.cpp.i
-
-src/core/parse_stream.s: src/core/parse_stream.cpp.s
-
-.PHONY : src/core/parse_stream.s
-
-# target to generate assembly for a file
-src/core/parse_stream.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/parse_stream.cpp.s
-.PHONY : src/core/parse_stream.cpp.s
-
-src/core/value.o: src/core/value.cpp.o
-
-.PHONY : src/core/value.o
-
-# target to build an object file
-src/core/value.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/value.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.o
-.PHONY : src/core/value.cpp.o
-
-src/core/value.i: src/core/value.cpp.i
-
-.PHONY : src/core/value.i
-
-# target to preprocess a source file
-src/core/value.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/value.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.i
-.PHONY : src/core/value.cpp.i
-
-src/core/value.s: src/core/value.cpp.s
-
-.PHONY : src/core/value.s
-
-# target to generate assembly for a file
-src/core/value.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/core/value.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/core/value.cpp.s
-.PHONY : src/core/value.cpp.s
-
 src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
 
 .PHONY : src/dxflib/dl_dxf.o
@@ -818,6 +710,114 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_writer_ascii.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
+
+src/gcode/lexer.o: src/gcode/lexer.cpp.o
+
+.PHONY : src/gcode/lexer.o
+
+# target to build an object file
+src/gcode/lexer.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/lexer.cpp.o
+.PHONY : src/gcode/lexer.cpp.o
+
+src/gcode/lexer.i: src/gcode/lexer.cpp.i
+
+.PHONY : src/gcode/lexer.i
+
+# target to preprocess a source file
+src/gcode/lexer.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/lexer.cpp.i
+.PHONY : src/gcode/lexer.cpp.i
+
+src/gcode/lexer.s: src/gcode/lexer.cpp.s
+
+.PHONY : src/gcode/lexer.s
+
+# target to generate assembly for a file
+src/gcode/lexer.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/lexer.cpp.s
+.PHONY : src/gcode/lexer.cpp.s
+
+src/gcode/parse_stream.o: src/gcode/parse_stream.cpp.o
+
+.PHONY : src/gcode/parse_stream.o
+
+# target to build an object file
+src/gcode/parse_stream.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/parse_stream.cpp.o
+.PHONY : src/gcode/parse_stream.cpp.o
+
+src/gcode/parse_stream.i: src/gcode/parse_stream.cpp.i
+
+.PHONY : src/gcode/parse_stream.i
+
+# target to preprocess a source file
+src/gcode/parse_stream.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/parse_stream.cpp.i
+.PHONY : src/gcode/parse_stream.cpp.i
+
+src/gcode/parse_stream.s: src/gcode/parse_stream.cpp.s
+
+.PHONY : src/gcode/parse_stream.s
+
+# target to generate assembly for a file
+src/gcode/parse_stream.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/parse_stream.cpp.s
+.PHONY : src/gcode/parse_stream.cpp.s
+
+src/gcode/value.o: src/gcode/value.cpp.o
+
+.PHONY : src/gcode/value.o
+
+# target to build an object file
+src/gcode/value.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/value.cpp.o
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/value.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/value.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/value.cpp.o
+.PHONY : src/gcode/value.cpp.o
+
+src/gcode/value.i: src/gcode/value.cpp.i
+
+.PHONY : src/gcode/value.i
+
+# target to preprocess a source file
+src/gcode/value.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/value.cpp.i
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/value.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/value.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/value.cpp.i
+.PHONY : src/gcode/value.cpp.i
+
+src/gcode/value.s: src/gcode/value.cpp.s
+
+.PHONY : src/gcode/value.s
+
+# target to generate assembly for a file
+src/gcode/value.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/value.cpp.s
+	$(MAKE) -f CMakeFiles/cut-box.dir/build.make CMakeFiles/cut-box.dir/src/gcode/value.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/value.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/value.cpp.s
+.PHONY : src/gcode/value.cpp.s
 
 src/geometry/arc.o: src/geometry/arc.cpp.o
 
@@ -2916,21 +2916,21 @@ help:
 	@echo "... src/checkers/unsafe_spindle_checker.o"
 	@echo "... src/checkers/unsafe_spindle_checker.i"
 	@echo "... src/checkers/unsafe_spindle_checker.s"
-	@echo "... src/core/lexer.o"
-	@echo "... src/core/lexer.i"
-	@echo "... src/core/lexer.s"
-	@echo "... src/core/parse_stream.o"
-	@echo "... src/core/parse_stream.i"
-	@echo "... src/core/parse_stream.s"
-	@echo "... src/core/value.o"
-	@echo "... src/core/value.i"
-	@echo "... src/core/value.s"
 	@echo "... src/dxflib/dl_dxf.o"
 	@echo "... src/dxflib/dl_dxf.i"
 	@echo "... src/dxflib/dl_dxf.s"
 	@echo "... src/dxflib/dl_writer_ascii.o"
 	@echo "... src/dxflib/dl_writer_ascii.i"
 	@echo "... src/dxflib/dl_writer_ascii.s"
+	@echo "... src/gcode/lexer.o"
+	@echo "... src/gcode/lexer.i"
+	@echo "... src/gcode/lexer.s"
+	@echo "... src/gcode/parse_stream.o"
+	@echo "... src/gcode/parse_stream.i"
+	@echo "... src/gcode/parse_stream.s"
+	@echo "... src/gcode/value.o"
+	@echo "... src/gcode/value.i"
+	@echo "... src/gcode/value.s"
 	@echo "... src/geometry/arc.o"
 	@echo "... src/geometry/arc.i"
 	@echo "... src/geometry/arc.s"

@@ -1,6 +1,6 @@
 #include "analysis/unfold.h"
 #include "catch.hpp"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

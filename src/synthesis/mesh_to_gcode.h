@@ -1,7 +1,7 @@
 #ifndef MESH_TO_GCODE_H
 #define MESH_TO_GCODE_H
 
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/vice.h"
 #include "synthesis/tool.h"

@@ -1,7 +1,7 @@
 #ifndef GCA_MACHINE_STATE_H
 #define GCA_MACHINE_STATE_H
 
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

@@ -9,7 +9,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
  
-#include "core/parser.h"
+#include "gcode/parser.h"
 #include "simulators/sim_mill.h"
 
 using namespace gca;

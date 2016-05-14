@@ -1,6 +1,6 @@
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "simulators/sim_mill.h"
 #include "synthesis/cut.h"
 #include "synthesis/shapes_to_gcode.h"

@@ -2,7 +2,7 @@
 
 #include "analysis/machine_state.h"
 #include "analysis/utils.h"
-#include "core/value.h"
+#include "gcode/value.h"
 
 namespace gca {
 

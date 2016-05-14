@@ -29,13 +29,7 @@ namespace gca {
       point s = (inc*dir) + p;
       point e = ((-inc)*dir) + p;
       line l(s, e);
-      // if (!(intersects(t, l))) {
-      // 	cout << "!(intersects(t, l))" << endl;
-      // 	cout << t << endl;
-      // 	cout << "DOES NOT INTERSECT LINE" << endl;
-      // 	cout << l << endl;
-      // 	assert(false);
-      // }
+
       test_segments.push_back(l);
     }
     return test_segments;
@@ -130,7 +124,6 @@ namespace gca {
 
   std::vector<index_t> millable_faces(const point normal,
 				      const triangular_mesh& part) {
-    cout << "Millable faces" << endl;
     vector<index_t> all_face_inds = part.face_indexes();
     vector<point> centroids(all_face_inds.size());
     transform(begin(all_face_inds), end(all_face_inds),
@@ -139,21 +132,15 @@ namespace gca {
 		triangle t = part.face_triangle(i);
 		return t.centroid();
 	      });
-    vector<line> segments = construct_test_segments(normal, centroids, part); //construct_test_segments(normal, ray_len, centroids);
+
+    vector<line> segments = construct_test_segments(normal, centroids, part);
     vector<index_t> inds;
-    cout << "Contructing " << segments.size() << " segments" << endl;
+
     for (auto test_segment : segments) {
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
     							     part,
     							     test_segment);
-      // if (!(intersecting_faces.size() > 0)) {
-      // 	cout << "!(intersecting_faces.size() > 0)" << endl;
-      // 	cout << "Segment: " << test_segment << endl;
-      // 	assert(false);
-      // }
-      //      cout << "# intersecting faces " << intersecting_faces.size() << endl;
       if (intersecting_faces.size() > 0) {
-      // TODO: Replace with max along?	
 	auto m_e = max_element(begin(intersecting_faces), end(intersecting_faces),
 			       [&centroids, normal](const index_t l, const index_t r) {
 				 point cl = centroids[l];
@@ -165,13 +152,13 @@ namespace gca {
 	inds.push_back(m);
       }
     }
-    cout << "Done constructing segments" << endl;
+
     sort(begin(inds), end(inds));
     inds.erase(unique(begin(inds), end(inds)), end(inds));
     auto res_inds = add_side_faces(normal, inds, part);
     sort(begin(res_inds), end(res_inds));
     res_inds.erase(unique(begin(res_inds), end(res_inds)), end(res_inds));
-    cout << "DONE millable_faces" << endl;
+
     return res_inds;
   }
 

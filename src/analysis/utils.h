@@ -1,7 +1,7 @@
 #ifndef GCA_ANALYSIS_UTILS_H
 #define GCA_ANALYSIS_UTILS_H
 
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "analysis/machine_state.h"
 
 namespace gca {

@@ -2,7 +2,7 @@
 #define GCA_EXTRACT_CUTS_H
 
 #include "analysis/machine_state.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

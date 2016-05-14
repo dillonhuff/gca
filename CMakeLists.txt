@@ -11,7 +11,7 @@ ENDIF()
 project(gca)
 
 #Add -Wextra ?
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O0 -Werror -Wall")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -Werror -Wall")
 # REINTRODUCE WHEN NOT USING VTK ? -pedantic -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
@@ -48,7 +48,7 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
-	    ./src/core/value.h
+	    ./src/gcode/value.h
 	    ./src/geometry/line.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
@@ -82,9 +82,9 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
 	 ./src/analysis/profiler.cpp
-	 ./src/core/value.cpp
-	 ./src/core/lexer.cpp
-	 ./src/core/parse_stream.cpp
+	 ./src/gcode/value.cpp
+	 ./src/gcode/lexer.cpp
+	 ./src/gcode/parse_stream.cpp
 	 ./src/checkers/bounds_checker.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp

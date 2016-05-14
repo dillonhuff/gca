@@ -3,8 +3,8 @@
 #include <sstream>
 #include <streambuf>
 
-#include "core/lexer.h"
-#include "core/parse_stream.h"
+#include "gcode/lexer.h"
+#include "gcode/parse_stream.h"
 
 namespace gca {
 

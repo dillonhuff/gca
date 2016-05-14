@@ -1,7 +1,7 @@
 #include "analysis/machine_state.h"
 #include "catch.hpp"
 #include "system/arena_allocator.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

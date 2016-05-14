@@ -1,6 +1,6 @@
 #include <cstdlib>
 
-#include "core/parser.h"
+#include "gcode/parser.h"
 #include "simulators/sim_mill.h"
 #include "system/bmp_output.h"
 

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "transformers/feed_changer.h"
 
 namespace gca {

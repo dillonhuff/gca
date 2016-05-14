@@ -3,7 +3,7 @@
 #include "checkers/bounds_checker.h"
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

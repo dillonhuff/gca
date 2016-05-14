@@ -173,8 +173,9 @@ namespace gca {
     double cut_depth = 0.2;
     double eps = 0.05;
 
-    // TODO: Add proper tool selection
-    tool t = tools.front();
+    tool t = *(max_element(begin(tools), end(tools),
+			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
 
     append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
     append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
@@ -296,7 +297,9 @@ namespace gca {
     for (auto i : millable) {
       tris.push_back(mesh.face_triangle(i));
     }
-    tool t = tools.front();
+    tool t = *(min_element(begin(tools), end(tools),
+			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
     vector<polyline> lines = drop_sample(tris, t);
     double safe_z = max_in_dir(mesh, point(0, 0, 1)) + t.length() + 0.1;
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));

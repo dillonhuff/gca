@@ -2,10 +2,10 @@
 #include <iostream>
 
 #include "analysis/extract_cuts.h"
-#include "core/basic_states.h"
-#include "core/callback.h"
+#include "gcode/basic_states.h"
+#include "gcode/callback.h"
 
-#include "core/parser.h"
+#include "gcode/parser.h"
 #include "synthesis/align_blade.h"
 #include "synthesis/output.h"
 

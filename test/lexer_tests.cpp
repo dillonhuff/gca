@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "catch.hpp"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 

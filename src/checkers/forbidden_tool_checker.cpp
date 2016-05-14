@@ -1,4 +1,4 @@
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "checkers/forbidden_tool_checker.h"
 
 namespace gca {

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "core/value.h"
+#include "gcode/value.h"
 
 using namespace std;
 

@@ -11,7 +11,7 @@
 #include "analysis/unfold.h"
 #include "analysis/utils.h"
 #include "checkers/block_rate_checker.h"
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 #include "geometry/box.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"

@@ -1,7 +1,7 @@
 #ifndef GCA_FEED_CHANGER_H
 #define GCA_FEED_CHANGER_H
 
-#include "core/lexer.h"
+#include "gcode/lexer.h"
 
 namespace gca {
 
