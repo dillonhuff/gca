@@ -35,9 +35,7 @@ namespace gca {
     auto reflected_lines = reflect_y(pocket_lines);
     cut_params params;
     params.target_machine = EMCO_F1;
-    // TODO: Find safe height in a safe way. This safe height code
-    // causes collisions. Maybe make safe_height a function parameter?
-    params.safe_height = safe_height; //(*reflected_lines.front().begin()).z + 0.05;
+    params.safe_height = safe_height;
     return polylines_cuts(reflected_lines, params);
   }
 
@@ -56,7 +54,6 @@ namespace gca {
   bool adjacent(const triangle l, const triangle r) {
     for (auto l_edge : l.edges()) {
       for (auto r_edge : r.edges()) {
-	// NOTE: Used to be 0.001
 	if (same_line(l_edge, r_edge, 0.001)) {
 	  return true;
 	}
@@ -150,20 +147,20 @@ namespace gca {
     return lines;
   }
 
-  vector<polyline> mill_surface_lines(vector<triangle>& triangles,
-				      const tool& t,
-				      double cut_depth,
-				      double workpiece_height) {
-    select_visible_triangles(triangles);
+  std::vector<polyline> mill_surface_lines(const triangular_mesh& mesh,
+					   const tool& t,
+					   double cut_depth,
+					   double workpiece_height) {
+    std::vector<triangle> triangles = select_visible_triangles(mesh);
     auto pockets = make_pockets(triangles, workpiece_height);
     return mill_pockets(pockets, t.diameter(), cut_depth);
   }
 
-  vector<block> mill_surface(vector<triangle>& triangles,
+  vector<block> mill_surface(const triangular_mesh& mesh,
 			     const tool& t,
 			     double cut_depth,
 			     double workpiece_height) {
-    auto pocket_lines = mill_surface_lines(triangles, t, cut_depth, workpiece_height);
+    auto pocket_lines = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
     return emco_f1_code(pocket_lines, workpiece_height + 0.1);
   }
 

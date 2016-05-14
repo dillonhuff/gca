@@ -90,9 +90,10 @@ namespace gca {
 
     SECTION("Rectangle cylinder") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
+      auto mesh = make_mesh(triangles, 0.001);
       double cut_depth = 0.25;
       tool t1(0.05, 3.0, FLAT_NOSE);
-      auto mill_paths = mill_surface(triangles,
+      auto mill_paths = mill_surface(mesh,
 				     t1,
 				     cut_depth,
 				     workpiece_height);
@@ -101,9 +102,10 @@ namespace gca {
 
     SECTION("Multiple cylinders") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders.stl").triangles;
+      auto mesh = make_mesh(triangles, 0.001);
       tool t1(0.2, 3.0, FLAT_NOSE);
       double cut_depth = 0.5;
-      auto mill_lines = mill_surface_lines(triangles, t1, cut_depth, workpiece_height);
+      auto mill_lines = mill_surface_lines(mesh, t1, cut_depth, workpiece_height);
       REQUIRE(mill_lines.size() > 0);
     }
   }

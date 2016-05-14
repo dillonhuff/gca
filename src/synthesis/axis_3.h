@@ -10,16 +10,16 @@ namespace gca {
 
   void select_visible_triangles(vector<triangle>& triangles);
 
-  vector<block> mill_surface(vector<triangle>& triangles,
-			     const tool& t,
-			     double cut_depth,
-			     double workpiece_height);
+  std::vector<polyline> mill_surface_lines(const triangular_mesh& mesh,
+					   const tool& t,
+					   double cut_depth,
+					   double workpiece_height);
 
-  vector<polyline> mill_surface_lines(vector<triangle>& triangles,
-				      const tool& t,
-				      double cut_depth,
-				      double workpiece_height);
-
+  std::vector<block> mill_surface(const triangular_mesh& mesh,
+				  const tool& t,
+				  double cut_depth,
+				  double workpiece_height);
+  
   std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
 				  const double safe_height);
 

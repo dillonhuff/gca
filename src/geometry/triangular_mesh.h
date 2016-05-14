@@ -180,5 +180,8 @@ namespace gca {
   double min_in_dir(const triangular_mesh& mesh, const point dir);
   double max_in_dir(const triangular_mesh& mesh, const point dir);
 
+  std::vector<triangle> select_visible_triangles(const triangular_mesh& mesh);
+
 }
+
 #endif
