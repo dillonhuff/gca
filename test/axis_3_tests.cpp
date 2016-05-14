@@ -22,11 +22,6 @@ namespace gca {
 	REQUIRE(polygons.size() == 4);
       }
 
-      // SECTION("Top polygon has height 0.35") {
-      // 	double top_polygon_height = polygons.back().height();
-      // 	REQUIRE(within_eps(top_polygon_height, 0.35, 0.00001));
-      // }
-      
     }
   }
 
@@ -38,9 +33,9 @@ namespace gca {
 
     SECTION("CylinderSquare") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
-
-      select_visible_triangles(triangles);
-      auto pockets = make_pockets(triangles, workpiece_depth);
+      auto mesh = make_mesh(triangles, 0.001);
+      auto face_inds = select_visible_triangles(mesh);
+      auto pockets = make_pockets(face_inds, mesh, workpiece_depth);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -72,8 +67,9 @@ namespace gca {
 
     SECTION("CylinderChimneySlot") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
-      select_visible_triangles(triangles);
-      auto pockets = make_pockets(triangles, workpiece_depth);
+      auto mesh = make_mesh(triangles, 0.001);
+      auto face_inds = select_visible_triangles(mesh);
+      auto pockets = make_pockets(face_inds, mesh, workpiece_depth);
       
       SECTION("4 pockets") {
 	REQUIRE(pockets.size() == 4);
@@ -120,8 +116,9 @@ namespace gca {
 
     SECTION("SlicedCone") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
-      select_visible_triangles(triangles);
-      auto pockets = make_pockets(triangles, workpiece_height);
+      auto mesh = make_mesh(triangles, 0.001);
+      auto face_inds = select_visible_triangles(mesh);
+      auto pockets = make_pockets(face_inds, mesh, workpiece_height);
       
       SECTION("1 pocket") {
 	REQUIRE(pockets.size() == 1);

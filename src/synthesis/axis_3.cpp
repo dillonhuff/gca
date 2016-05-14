@@ -39,18 +39,6 @@ namespace gca {
     return polylines_cuts(reflected_lines, params);
   }
 
-  polyline extract_part_base_outline(const vector<triangle>& tris) {
-    auto triangles = tris;
-    delete_if(triangles, [](const triangle& t)
-	      { return !within_eps(t.normal, point(0, 0, -1), 1e-2); });
-    auto outlines = mesh_bounds(triangles);
-    assert(outlines.size() == 1);
-    auto base_outline = outlines.front();
-    vector<point> vertices = base_outline.vertices;
-    vertices.push_back(vertices.front());
-    return polyline(vertices);
-  }
-
   bool adjacent(const triangle l, const triangle r) {
     for (auto l_edge : l.edges()) {
       for (auto r_edge : r.edges()) {
@@ -62,7 +50,7 @@ namespace gca {
     return false;
   }
 
-  vector<triangle> collect_surface(vector<triangle>& triangles) {
+  std::vector<triangle> collect_surface(std::vector<triangle>& triangles) {
     assert(triangles.size() > 0);
     vector<triangle> surface;
     surface.push_back(triangles.back());
@@ -88,7 +76,8 @@ namespace gca {
     return surface;
   }
 
-  vector<vector<triangle>> merge_surfaces(vector<triangle>& triangles) {
+  std::vector<std::vector<triangle>>
+  merge_surfaces(std::vector<triangle>& triangles) {
     vector<vector<triangle>> surfaces;
     while (triangles.size() > 0) {
       surfaces.push_back(collect_surface(triangles));
@@ -96,29 +85,18 @@ namespace gca {
     return surfaces;
   }
 
-  oriented_polygon extract_boundary(vector<oriented_polygon>& polygons) {
-    assert(polygons.size() > 0);
-    for (unsigned i = 0; i < polygons.size(); i++) {
-      auto possible_bound = polygons[i];
-      bool contains_all = true;
-      for (unsigned j = 0; j < polygons.size(); j++) {
-	if (i != j) {
-	  auto possible_hole = polygons[j];
-	  if (!contains(possible_bound, possible_hole)) {
-	    contains_all = false;
-	    break;
-	  }
-	}
-      }
-      if (contains_all) {
-	polygons.erase(polygons.begin() + i);
-	return possible_bound;
-      }
+  std::vector<std::vector<triangle>>
+  merge_surfaces(std::vector<index_t> face_inds,
+		 const triangular_mesh& mesh) {
+    vector<triangle> t;
+    for (auto i : face_inds) {
+      t.push_back(mesh.face_triangle(i));
     }
-    assert(false);
+    return merge_surfaces(t);
   }
 
-  pocket pocket_for_surface(const vector<triangle>& surface, double top_height) {
+  pocket pocket_for_surface(std::vector<triangle>& surface,
+			    double top_height) {
     auto bounds = mesh_bounds(surface);
     auto boundary = extract_boundary(bounds);
     vector<oriented_polygon> bound{boundary};
@@ -126,8 +104,10 @@ namespace gca {
     return pocket(bound, holes, top_height, surface);
   }
   
-  vector<pocket> make_pockets(vector<triangle>& triangles, double workpiece_height) {
-    vector<vector<triangle>> surfaces = merge_surfaces(triangles);
+  std::vector<pocket> make_pockets(std::vector<index_t>& face_inds,
+				   const triangular_mesh& mesh,
+				   double workpiece_height) {
+    vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
     vector<pocket> pockets;
     for (auto surface : surfaces) {
       pockets.push_back(pocket_for_surface(surface, workpiece_height));
@@ -151,8 +131,8 @@ namespace gca {
 					   const tool& t,
 					   double cut_depth,
 					   double workpiece_height) {
-    std::vector<triangle> triangles = select_visible_triangles(mesh);
-    auto pockets = make_pockets(triangles, workpiece_height);
+    std::vector<index_t> face_inds = select_visible_triangles(mesh);
+    auto pockets = make_pockets(face_inds, mesh, workpiece_height);
     return mill_pockets(pockets, t.diameter(), cut_depth);
   }
 

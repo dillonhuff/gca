@@ -217,16 +217,16 @@ namespace gca {
     return min_distance_along(mesh.vertex_list(), dir);
   }
 
-  std::vector<triangle> select_visible_triangles(const triangular_mesh& mesh) {
-    std::vector<triangle> tris;
+  std::vector<index_t> select_visible_triangles(const triangular_mesh& mesh) {
+    std::vector<index_t> tris;
     for (auto i : mesh.face_indexes()) {
       triangle t = mesh.face_triangle(i);
       if (is_upward_facing(t, 0.01)) {
-	tris.push_back(t);
+	tris.push_back(i);
       }
     }
     return tris;
   }
 
-  
+
 }

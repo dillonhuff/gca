@@ -116,4 +116,27 @@ namespace gca {
     v.push_back(p.vertices.front());
     return polyline(v);
   }
+
+  oriented_polygon extract_boundary(vector<oriented_polygon>& polygons) {
+    assert(polygons.size() > 0);
+    for (unsigned i = 0; i < polygons.size(); i++) {
+      auto possible_bound = polygons[i];
+      bool contains_all = true;
+      for (unsigned j = 0; j < polygons.size(); j++) {
+	if (i != j) {
+	  auto possible_hole = polygons[j];
+	  if (!contains(possible_bound, possible_hole)) {
+	    contains_all = false;
+	    break;
+	  }
+	}
+      }
+      if (contains_all) {
+	polygons.erase(polygons.begin() + i);
+	return possible_bound;
+      }
+    }
+    assert(false);
+  }
+
 }

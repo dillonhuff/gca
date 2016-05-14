@@ -23,10 +23,12 @@ namespace gca {
   std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
 				  const double safe_height);
 
-  vector<pocket> make_pockets(vector<triangle>& triangles,
-			      double workpiece_height);  
+  std::vector<pocket> make_pockets(std::vector<index_t>& face_inds,
+				   const triangular_mesh& mesh,
+				   double workpiece_height);
 
   vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
+
 }
 
 #endif

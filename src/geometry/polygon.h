@@ -46,7 +46,8 @@ namespace gca {
   oriented_polygon project(const oriented_polygon& p, double z);
 
   polyline to_polyline(const oriented_polygon& p);
-  
+
+  oriented_polygon extract_boundary(std::vector<oriented_polygon>& polygons);
 }
 
 #endif
