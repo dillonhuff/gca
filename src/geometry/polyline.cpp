@@ -46,7 +46,9 @@ namespace gca {
     vector<line> initial_lines;
     double degrees = d == OFFSET_LEFT ? 90.0 : -90.0;
     for (auto l : p.lines()) {
-      auto offset_vec = n * ((l.end - l.start).normalize()).rotate_z(degrees);
+      point diff = l.end - l.start;
+      diff.z = 0;
+      auto offset_vec = n * (diff.normalize()).rotate_z(degrees);
       initial_lines.push_back(line(l.start + offset_vec, l.end + offset_vec));
     }
     vector<point> new_points(initial_lines.size());

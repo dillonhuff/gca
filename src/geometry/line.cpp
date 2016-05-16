@@ -111,12 +111,28 @@ namespace gca {
     } else if (n_slope_m.just) {
       double x = prev.start.x;
       return maybe<point>(point(x, n_slope_m.t*x + y_intersect_2d(next).t, z));
+    } else if (!n_slope_m.just && !p_slope_m.just) {
+      return maybe<point>();
+      // cout << "prev = " << prev << endl;
+      // cout << "next = " << next << endl;
+      // assert(false);
     } else {
       assert(false);
     }
   }
 
+  bool parallel_2d(line l, line r) {
+    point d1 = l.end - l.start;
+    d1.z = 0;
+    point d2 = r.end - r.start;
+    d2.z = 0;
+    return within_eps(angle_between(d1, d2), 0, 0.0001);
+  }
+
   maybe<point> trim_or_extend(line prev, line next) {
+    if (parallel_2d(prev, next)) {
+      return maybe<point>(prev.end);
+    }
     auto intersection = segment_intersection_2d(prev, next);
     if (intersection.just) {
       return intersection.t;

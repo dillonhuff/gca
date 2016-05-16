@@ -92,6 +92,30 @@ namespace gca {
 
       REQUIRE(pointwise_within_eps(off, correct, 0.00001));
     }
+
+    SECTION("Adjacent parallel segments") {
+      point p1(0, 0, 3.4);
+      point p2(0, 1, 2.1);
+      point p3(0, 2, 0);
+
+      polyline p({p1, p2, p3});
+      double inc = 1.0;
+      double deg = 90;
+
+      auto off = offset(p, OFFSET_LEFT, inc);
+
+      point c1(-1, 0, 3.4);
+      point c2(-1, 1, 2.1);
+      point c3(-1, 2, 0);
+      polyline correct({c1, c2, c3});
+
+      cout << "Offset square" << endl;
+      for (auto pt : off) {
+      	cout << pt << endl;
+      }
+
+      REQUIRE(pointwise_within_eps(off, correct, 0.00001));
+    }
   }
 
   TEST_CASE("Exterior direction") {
