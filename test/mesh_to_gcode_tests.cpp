@@ -141,14 +141,11 @@ namespace gca {
     tool t1(0.35, 3.0, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.7, 2.1, 1.65);
+    cout << "Toolpath bounds, vice base = " << test_vice.base_z() << endl;
 
     SECTION("Box with 2 holes") {
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
-      auto mesh = make_mesh(box_triangles, 0.001);
-      auto result_programs = workpiece_clipping_programs(workpiece_dims,
-							 mesh,
-							 tools,
-							 test_vice);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
 
       SECTION("Never cut below vice") {
 	for (auto program : result_programs) {
