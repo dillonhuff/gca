@@ -113,9 +113,6 @@ namespace gca {
       return maybe<point>(point(x, n_slope_m.t*x + y_intersect_2d(next).t, z));
     } else if (!n_slope_m.just && !p_slope_m.just) {
       return maybe<point>();
-      // cout << "prev = " << prev << endl;
-      // cout << "next = " << next << endl;
-      // assert(false);
     } else {
       assert(false);
     }

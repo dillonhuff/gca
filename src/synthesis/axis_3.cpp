@@ -131,16 +131,20 @@ namespace gca {
 					   const tool& t,
 					   double cut_depth,
 					   double workpiece_height) {
+    cout << "START mill_surface_lines" << endl;
     std::vector<index_t> face_inds = select_visible_triangles(mesh);
     auto pockets = make_pockets(face_inds, mesh, workpiece_height);
-    return mill_pockets(pockets, t.diameter(), cut_depth);
+    auto lines = mill_pockets(pockets, t.diameter(), cut_depth);
+    cout << "END mill_surface_lines" << endl;
+    return lines;
   }
 
   vector<block> mill_surface(const triangular_mesh& mesh,
 			     const tool& t,
 			     double cut_depth,
 			     double workpiece_height) {
-    auto pocket_lines = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
+    auto pocket_lines = shift_lines(mill_surface_lines(mesh, t, cut_depth, workpiece_height), point(0, 0, t.length()));
+    
     return emco_f1_code(pocket_lines, workpiece_height + 0.1);
   }
 

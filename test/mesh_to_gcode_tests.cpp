@@ -11,14 +11,13 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));//emco_vice(point(1.0, 1.0, 1.0)); //(1.5, 1.5, 0.75, Y_AXIS);
+    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
     tool t1(0.25, 3.0, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.5, 1.2, 1.5);
-    
+
     SECTION("Simple box") {
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
-      auto mesh = make_mesh(box_triangles, 0.001);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
 
       SECTION("Produces only workpiece clipping programs") {
@@ -33,30 +32,25 @@ namespace gca {
     }
 
     SECTION("Box with hole has 6 clippings and one pocketing") {
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithTopHole.stl").triangles;
-      auto mesh = make_mesh(box_triangles, 0.001);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithTopHole.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
 
     SECTION("Box with two holes has 6 clippings and two pocketings") {
-      cout << "Starting box with 2 holes" << endl;
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl").triangles;
-      auto mesh = make_mesh(box_triangles, 0.001);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 8);
     }
 
     SECTION("Box with protrusion") {
       workpiece workpiece_dims(1.5, 1.2, 2.0);
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl").triangles;
-      auto mesh = make_mesh(box_triangles, 0.001);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
 
     SECTION("Mesh box plinth has 6 clippings and one pocketing") {
-      cout << "Mesh box plinth" << endl;
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);

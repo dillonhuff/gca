@@ -2,6 +2,7 @@
 #define GCA_PARSE_STL_H
 
 #include "geometry/triangle.h"
+#include "geometry/triangular_mesh.h"
 
 namespace gca {
 
@@ -13,6 +14,8 @@ namespace gca {
   };
 
   stl_data parse_stl(const string& stl_path);
+
+  triangular_mesh parse_stl(const string& stl_path, const double tolerance);
 
 }
 

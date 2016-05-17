@@ -49,4 +49,8 @@ namespace gca {
     return info;
   }
 
+  triangular_mesh parse_stl(const string& stl_path, const double tolerance) {
+    return make_mesh(parse_stl(stl_path).triangles, tolerance);
+  }
+
 }
