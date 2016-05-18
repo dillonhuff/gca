@@ -53,9 +53,10 @@ namespace gca {
 
   std::vector<index_t> preprocess_faces(const triangular_mesh& mesh) {
     std::vector<index_t> face_inds = millable_faces(point(0, 0, 1), mesh);
+    // TODO: Find a way to remove this ad-hoc tolerance
     delete_if(face_inds,
 	      [&mesh](const index_t i)
-	      { return !is_upward_facing(mesh.face_triangle(i), 0.01); });
+	      { return !is_upward_facing(mesh.face_triangle(i), 0.8); });
     return face_inds;
   }
 

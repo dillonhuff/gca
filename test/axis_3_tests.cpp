@@ -25,6 +25,12 @@ namespace gca {
       SECTION("4 surfaces to mill") {
 	auto face_inds = preprocess_faces(mesh);
 	auto surfaces = merge_surfaces(face_inds, mesh);
+	for (auto s : surfaces) {
+	  cout << "SURFACE" << endl;
+	  for (auto t : s) {
+	    cout << t << endl;
+	  }
+	}
 	REQUIRE(surfaces.size() == 4);
       }
 
