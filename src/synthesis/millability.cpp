@@ -87,7 +87,7 @@ namespace gca {
   void
   collect_remaining_sides(std::vector<index_t>& side_inds,
 			  const triangular_mesh& part) {
-    assert(side_inds.size() > 0);
+    if (side_inds.size() == 0) { return; }
     vector<index_t> face_inds_left = part.face_indexes();
     subtract(face_inds_left, side_inds);
     bool added_some;

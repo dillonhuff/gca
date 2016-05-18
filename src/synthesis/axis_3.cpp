@@ -66,15 +66,8 @@ namespace gca {
       triangles.push_back(mesh.face_triangle(i));
     }
     auto polygons = mesh_bounds(triangles);
-    // TODO: Use polygon height member function
-    stable_sort(begin(polygons), end(polygons),
-		[](const oriented_polygon& x,
-		   const oriented_polygon& y)
-		{ return x.vertices.front().z > y.vertices.front().z; });
     return polygons;
   }
-
-
 
   std::vector<triangle> collect_surface(std::vector<triangle>& triangles) {
     assert(triangles.size() > 0);
@@ -183,10 +176,7 @@ namespace gca {
 					   double cut_depth,
 					   double workpiece_height) {
     cout << "START mill_surface_lines" << endl;
-    std::vector<index_t> face_inds = preprocess_faces(mesh); //millable_faces(point(0, 0, 1), mesh);
-    // delete_if(face_inds,
-    // 	      [&mesh](const index_t i)
-    // 	      { return !is_upward_facing(mesh.face_triangle(i), 0.01); });
+    std::vector<index_t> face_inds = preprocess_faces(mesh);
     auto pockets = make_pockets(face_inds, mesh, workpiece_height);
     cout << "Made pockets" << endl;
     auto lines = mill_pockets(pockets, t.diameter(), cut_depth);
