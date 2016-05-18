@@ -65,16 +65,16 @@ namespace gca {
       }
     }
 
-    // SECTION("CylinderChimneySlot") {
-    //   vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
-    //   auto mesh = make_mesh(triangles, 0.001);
-    //   auto face_inds = preprocess_faces(mesh);
-    //   auto pockets = make_pockets(face_inds, mesh, workpiece_depth);
+    SECTION("CylinderChimneySlot") {
+      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
+      auto mesh = make_mesh(triangles, 0.001);
+      auto face_inds = preprocess_faces(mesh);
+      auto pockets = make_pockets(face_inds, mesh, workpiece_depth);
       
-    //   SECTION("4 pockets") {
-    // 	REQUIRE(pockets.size() == 4);
-    //   }
-    // }
+      SECTION("4 pockets") {
+    	REQUIRE(pockets.size() == 4);
+      }
+    }
 
   }
 

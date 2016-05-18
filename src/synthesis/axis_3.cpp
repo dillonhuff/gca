@@ -104,42 +104,33 @@ namespace gca {
     return surfaces;
   }
 
-  // index_t back_face(const triangular_mesh&, std::vector<index_t>& face_indices)
-  // {  return face_indices.back(); }
-  
-  // std::vector<triangle> collect_surface(std::vector<index_t>& face_inds,
-  // 					const triangular_mesh& mesh) {
-  //   vector<index_t> inds = connected_region(face_inds, mesh, back_face, neighbors);
-  //   vector<triangle> tris(inds.size());
-  //   transform(begin(inds), end(inds),
-  // 	      begin(tris),
-  // 	      [&mesh](const index_t i) { return mesh.face_triangle(i); });
-  //   return tris;
-  // }
-
   std::vector<std::vector<triangle>>
-  merge_surfaces(std::vector<index_t> face_inds,
+  merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh) {
-    // vector<triangle> t;
-    // for (auto i : face_inds) {
-    //   t.push_back(mesh.face_triangle(i));
-    // }
-    // return merge_surfaces(t);
-    vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
-    vector<vector<triangle>> tris;
-    for (auto s : surfaces) {
-      vector<triangle> ts;
-      for (auto i : s) {
-	ts.push_back(mesh.face_triangle(i));
-      }
-      tris.push_back(ts);
+    vector<triangle> t;
+    for (auto i : face_inds) {
+      t.push_back(mesh.face_triangle(i));
     }
-    return tris;
+    return merge_surfaces(t);
+    // vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
+    // vector<vector<triangle>> tris;
+    // for (auto s : surfaces) {
+    //   vector<triangle> ts;
+    //   for (auto i : s) {
+    // 	ts.push_back(mesh.face_triangle(i));
+    //   }
+    //   tris.push_back(ts);
+    // }
+    // return tris;
   }
 
   pocket pocket_for_surface(std::vector<triangle>& surface,
 			    double top_height) {
     auto bounds = mesh_bounds(surface);
+    cout << "# polygon bounds = " << bounds.size() << endl;
+    // for (auto p : bounds) {
+    //   cout << p << endl;
+    // }
     auto boundary = extract_boundary(bounds);
     vector<oriented_polygon> bound{boundary};
     vector<oriented_polygon> holes = bounds;
@@ -149,13 +140,13 @@ namespace gca {
   std::vector<pocket> make_pockets(std::vector<index_t>& face_inds,
 				   const triangular_mesh& mesh,
 				   double workpiece_height) {
-    cout << "START merge_surfaces" << endl;
+    cout << "START make_pockets" << endl;
     vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
-    cout << "END merge_surfaces" << endl;
     vector<pocket> pockets;
     for (auto surface : surfaces) {
       pockets.push_back(pocket_for_surface(surface, workpiece_height));
     }
+    cout << "END make_pockets" << endl;
     return pockets;
   }
 
