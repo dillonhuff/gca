@@ -107,21 +107,21 @@ namespace gca {
   std::vector<std::vector<triangle>>
   merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh) {
-    vector<triangle> t;
-    for (auto i : face_inds) {
-      t.push_back(mesh.face_triangle(i));
-    }
-    return merge_surfaces(t);
-    // vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
-    // vector<vector<triangle>> tris;
-    // for (auto s : surfaces) {
-    //   vector<triangle> ts;
-    //   for (auto i : s) {
-    // 	ts.push_back(mesh.face_triangle(i));
-    //   }
-    //   tris.push_back(ts);
+    // vector<triangle> t;
+    // for (auto i : face_inds) {
+    //   t.push_back(mesh.face_triangle(i));
     // }
-    // return tris;
+    // return merge_surfaces(t);
+    vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
+    vector<vector<triangle>> tris;
+    for (auto s : surfaces) {
+      vector<triangle> ts;
+      for (auto i : s) {
+    	ts.push_back(mesh.face_triangle(i));
+      }
+      tris.push_back(ts);
+    }
+    return tris;
   }
 
   pocket pocket_for_surface(std::vector<triangle>& surface,
@@ -142,6 +142,7 @@ namespace gca {
 				   double workpiece_height) {
     cout << "START make_pockets" << endl;
     vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
+    cout << "# surfaces after merging = " << surfaces.size() << endl;
     vector<pocket> pockets;
     for (auto surface : surfaces) {
       pockets.push_back(pocket_for_surface(surface, workpiece_height));

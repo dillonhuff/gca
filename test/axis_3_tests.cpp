@@ -22,9 +22,15 @@ namespace gca {
 	REQUIRE(polygons.size() == 4);
       }
 
+      SECTION("4 surfaces to mill") {
+	auto face_inds = preprocess_faces(mesh);
+	auto surfaces = merge_surfaces(face_inds, mesh);
+	REQUIRE(surfaces.size() == 4);
+      }
+
     }
   }
-
+  
   TEST_CASE("Pocketing") {
     arena_allocator a;
     set_system_allocator(&a);

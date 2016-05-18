@@ -31,6 +31,10 @@ namespace gca {
 
   std::vector<oriented_polygon> preprocess_triangles(const triangular_mesh& mesh);
 
+  std::vector<std::vector<triangle>>
+  merge_surfaces(std::vector<index_t>& face_inds,
+		 const triangular_mesh& mesh);
+  
 }
 
 #endif
