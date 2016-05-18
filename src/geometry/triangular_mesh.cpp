@@ -159,7 +159,7 @@ namespace gca {
   }
 
   std::vector<vector<index_t>>
-  connect_regions(vector<index_t>& indices,
+  connect_regions(std::vector<index_t>& indices,
 		  const triangular_mesh& part) {
     assert(indices.size() > 0);
     vector<vector<index_t>> connected_regions;

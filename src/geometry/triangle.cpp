@@ -159,7 +159,6 @@ namespace gca {
   }  
 
   bool intersects(const triangle t, const line l) {
-    //    return (below(t, l.start) != below(t, l.end));
     return ray_intersects_triangle(l.start, l.end - l.start,
     				   t.v1, t.v2, t.v3) &&
       ray_intersects_triangle(l.end, l.start - l.end,
@@ -170,17 +169,6 @@ namespace gca {
     delete_if(triangles,
 	      [](const triangle t)
 	      { return !is_upward_facing(t, 0.01); });
-  }
-
-  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles) {
-    select_visible_triangles(triangles);
-    auto polygons = mesh_bounds(triangles);
-    // TODO: Use polygon height member function
-    stable_sort(begin(polygons), end(polygons),
-		[](const oriented_polygon& x,
-		   const oriented_polygon& y)
-		{ return x.vertices.front().z > y.vertices.front().z; });
-    return polygons;
   }
 
   bool intersects_triangles(line l, const vector<triangle>& triangles) {

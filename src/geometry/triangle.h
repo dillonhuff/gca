@@ -21,7 +21,7 @@ namespace gca {
     triangle(point normalp, point v1p, point v2p, point v3p) :
       normal(normalp), v1(v1p), v2(v2p), v3(v3p) {}
 
-    vector<line> edges() const {
+    std::vector<line> edges() const {
       return {line(v1, v2), line(v2, v3), line(v3, v1)};
     }
 
@@ -42,16 +42,18 @@ namespace gca {
   double z_at(const triangle t, double x, double y);
   bool intersects(const triangle t, const line l);
 
-  double min_z(const vector<triangle>& triangles);
+  double min_z(const std::vector<triangle>& triangles);
   bool is_upward_facing(const triangle& t, double tolerance);
   bool same_orientation(const triangle& x, const triangle& y, double tolerance);
-  vector<oriented_polygon> mesh_bounds(const vector<triangle>& tris);
+
+  // TODO: Change this to operate on a triangular mesh
+  std::vector<oriented_polygon> mesh_bounds(const std::vector<triangle>& tris);
+  
   ostream& operator<<(ostream& out, const triangle& t);
 
-  void select_visible_triangles(vector<triangle>& triangles);
+  //  void select_visible_triangles(std::vector<triangle>& triangles);
 
-  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
-  bool intersects_triangles(line l, const vector<triangle>& triangles);
+  bool intersects_triangles(line l, const std::vector<triangle>& triangles);
 
   triangle apply(const matrix<3, 3> m, const triangle& t);
 

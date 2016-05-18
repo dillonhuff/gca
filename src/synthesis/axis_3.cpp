@@ -1,5 +1,6 @@
 #include "geometry/polygon.h"
 #include "synthesis/axis_3.h"
+#include "synthesis/millability.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/tool.h"
 #include "synthesis/toolpath_generation.h"
@@ -50,6 +51,31 @@ namespace gca {
     return false;
   }
 
+  std::vector<index_t> preprocess_faces(const triangular_mesh& mesh) {
+    std::vector<index_t> face_inds = millable_faces(point(0, 0, 1), mesh);
+    delete_if(face_inds,
+	      [&mesh](const index_t i)
+	      { return !is_upward_facing(mesh.face_triangle(i), 0.01); });
+    return face_inds;
+  }
+
+  std::vector<oriented_polygon> preprocess_triangles(const triangular_mesh& mesh) {
+    auto face_inds = preprocess_faces(mesh);
+    vector<triangle> triangles;
+    for (auto i : face_inds) {
+      triangles.push_back(mesh.face_triangle(i));
+    }
+    auto polygons = mesh_bounds(triangles);
+    // TODO: Use polygon height member function
+    stable_sort(begin(polygons), end(polygons),
+		[](const oriented_polygon& x,
+		   const oriented_polygon& y)
+		{ return x.vertices.front().z > y.vertices.front().z; });
+    return polygons;
+  }
+
+
+
   std::vector<triangle> collect_surface(std::vector<triangle>& triangles) {
     assert(triangles.size() > 0);
     vector<triangle> surface;
@@ -85,14 +111,37 @@ namespace gca {
     return surfaces;
   }
 
+  // index_t back_face(const triangular_mesh&, std::vector<index_t>& face_indices)
+  // {  return face_indices.back(); }
+  
+  // std::vector<triangle> collect_surface(std::vector<index_t>& face_inds,
+  // 					const triangular_mesh& mesh) {
+  //   vector<index_t> inds = connected_region(face_inds, mesh, back_face, neighbors);
+  //   vector<triangle> tris(inds.size());
+  //   transform(begin(inds), end(inds),
+  // 	      begin(tris),
+  // 	      [&mesh](const index_t i) { return mesh.face_triangle(i); });
+  //   return tris;
+  // }
+
   std::vector<std::vector<triangle>>
   merge_surfaces(std::vector<index_t> face_inds,
 		 const triangular_mesh& mesh) {
-    vector<triangle> t;
-    for (auto i : face_inds) {
-      t.push_back(mesh.face_triangle(i));
+    // vector<triangle> t;
+    // for (auto i : face_inds) {
+    //   t.push_back(mesh.face_triangle(i));
+    // }
+    // return merge_surfaces(t);
+    vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
+    vector<vector<triangle>> tris;
+    for (auto s : surfaces) {
+      vector<triangle> ts;
+      for (auto i : s) {
+	ts.push_back(mesh.face_triangle(i));
+      }
+      tris.push_back(ts);
     }
-    return merge_surfaces(t);
+    return tris;
   }
 
   pocket pocket_for_surface(std::vector<triangle>& surface,
@@ -107,7 +156,9 @@ namespace gca {
   std::vector<pocket> make_pockets(std::vector<index_t>& face_inds,
 				   const triangular_mesh& mesh,
 				   double workpiece_height) {
+    cout << "START merge_surfaces" << endl;
     vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
+    cout << "END merge_surfaces" << endl;
     vector<pocket> pockets;
     for (auto surface : surfaces) {
       pockets.push_back(pocket_for_surface(surface, workpiece_height));
@@ -132,8 +183,12 @@ namespace gca {
 					   double cut_depth,
 					   double workpiece_height) {
     cout << "START mill_surface_lines" << endl;
-    std::vector<index_t> face_inds = select_visible_triangles(mesh);
+    std::vector<index_t> face_inds = preprocess_faces(mesh); //millable_faces(point(0, 0, 1), mesh);
+    // delete_if(face_inds,
+    // 	      [&mesh](const index_t i)
+    // 	      { return !is_upward_facing(mesh.face_triangle(i), 0.01); });
     auto pockets = make_pockets(face_inds, mesh, workpiece_height);
+    cout << "Made pockets" << endl;
     auto lines = mill_pockets(pockets, t.diameter(), cut_depth);
     cout << "END mill_surface_lines" << endl;
     return shift_lines(lines, point(0, 0, t.length()));

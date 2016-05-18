@@ -182,6 +182,11 @@ namespace gca {
 
   std::vector<index_t> select_visible_triangles(const triangular_mesh& mesh);
 
+  std::vector<vector<index_t>>
+  connect_regions(std::vector<index_t>& indices,
+		  const triangular_mesh& part);
+
+
 }
 
 #endif

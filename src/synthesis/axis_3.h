@@ -27,7 +27,9 @@ namespace gca {
 				   const triangular_mesh& mesh,
 				   double workpiece_height);
 
-  vector<oriented_polygon> preprocess_triangles(vector<triangle>& triangles);
+  std::vector<index_t> preprocess_faces(const triangular_mesh& mesh);
+
+  std::vector<oriented_polygon> preprocess_triangles(const triangular_mesh& mesh);
 
 }
 
