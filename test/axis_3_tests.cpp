@@ -58,10 +58,6 @@ namespace gca {
 	REQUIRE(pockets.size() == 2);
       }
 
-      SECTION("First pocket has one boundary") {
-	REQUIRE(pockets.front().get_boundaries().size() == 1);
-      }
-
       SECTION("One pocket ends at 0.200001") {
 	REQUIRE(any_of(begin(pockets), end(pockets),
 		       [](const pocket& p) {
@@ -71,10 +67,6 @@ namespace gca {
 
       SECTION("First pocket has no holes") {
 	REQUIRE(pockets.front().get_holes().size() == 0);
-      }
-
-      SECTION("Last pocket has 1 boundary") {
-	REQUIRE(pockets.back().get_boundaries().size() == 1);
       }
 
       SECTION("Last pocket has one hole") {

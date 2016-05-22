@@ -13,7 +13,7 @@ namespace gca {
 
   struct pocket {
   private:
-    vector<oriented_polygon> boundaries;
+    oriented_polygon boundary;
     vector<oriented_polygon> holes;
 
     double start_depth;
@@ -22,19 +22,19 @@ namespace gca {
 
     vector<triangle> base;
 
-    pocket(vector<oriented_polygon>& boundariesp,
+    pocket(const oriented_polygon& boundary,
 	   vector<oriented_polygon>& holesp,
 	   double start_depthp,
 	   const vector<triangle>& basep) :
-      boundaries(boundariesp),
+      boundary(boundary),
       holes(holesp),
       start_depth(start_depthp),
       base(basep) {}
 
     inline const vector<oriented_polygon>& get_holes() const
     { return holes; }
-    inline const vector<oriented_polygon>& get_boundaries() const
-    { return boundaries; }
+    inline const oriented_polygon& get_boundary() const
+    { return boundary; }
     inline double get_start_depth() const { return start_depth; }
     inline double get_end_depth() const { return min_z(base); }
 

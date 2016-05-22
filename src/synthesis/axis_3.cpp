@@ -78,9 +78,8 @@ namespace gca {
 			    double top_height) {
     auto bounds = mesh_bounds(surface);
     auto boundary = extract_boundary(bounds);
-    vector<oriented_polygon> bound{boundary};
     vector<oriented_polygon> holes = bounds;
-    return pocket(bound, holes, top_height, surface);
+    return pocket(boundary, holes, top_height, surface);
   }
   
   std::vector<pocket> make_pockets(std::vector<std::vector<triangle>>& surfaces,
@@ -126,7 +125,9 @@ namespace gca {
   }
   
   std::vector<std::vector<index_t>>
-  normal_delta_regions(vector<index_t>& indices, const triangular_mesh& mesh, double delta_degrees) {
+  normal_delta_regions(vector<index_t>& indices,
+		       const triangular_mesh& mesh,
+		       double delta_degrees) {
     vector<vector<index_t>> connected_regions;
     auto within_delta = [delta_degrees](const index_t f,
 					const index_t i,

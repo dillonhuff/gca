@@ -110,7 +110,7 @@ namespace gca {
   vector<polyline> finish_pocket(const pocket& pocket,
 				 double tool_radius,
 				 double cut_depth) {
-    auto bounds = pocket.get_boundaries();
+    vector<oriented_polygon> bounds{pocket.get_boundary()};
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
     transform(begin(holes), end(holes), begin(offset_h),
@@ -197,7 +197,7 @@ namespace gca {
   vector<polyline> rough_pocket(const pocket& pocket,
 				double tool_radius,
 				double cut_depth) {
-    auto bounds = pocket.get_boundaries();
+    vector<oriented_polygon> bounds{pocket.get_boundary()};
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
     transform(begin(holes), end(holes), begin(offset_h),
