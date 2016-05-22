@@ -37,11 +37,11 @@ namespace gca {
       REQUIRE(result_programs.size() == 7);
     }
 
-    // SECTION("Box with two holes has 6 clippings and two pocketings") {
-    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
-    //   auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
-    //   REQUIRE(result_programs.size() == 8);
-    // }
+    SECTION("Box with two holes has 6 clippings and two pocketings") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      REQUIRE(result_programs.size() == 8);
+    }
 
     SECTION("Box with protrusion") {
       workpiece workpiece_dims(1.5, 1.2, 2.0);
@@ -143,22 +143,22 @@ namespace gca {
     workpiece workpiece_dims(1.7, 2.1, 1.65);
     cout << "Toolpath bounds, vice base = " << test_vice.base_z() << endl;
 
-    // SECTION("Box with 2 holes") {
-    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
-    //   auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+    SECTION("Box with 2 holes") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
 
-    //   SECTION("Never cut below vice") {
-    // 	for (auto program : result_programs) {
-    // 	  REQUIRE(all_z_coords_above(program.blocks, test_vice.base_z()));
-    // 	}
-    //   }
+      SECTION("Never cut below vice") {
+    	for (auto program : result_programs) {
+    	  REQUIRE(all_z_coords_above(program.blocks, test_vice.base_z()));
+    	}
+      }
 
-    //   SECTION("G0 moves are above the workpiece") {
-    // 	double workpiece_height = test_vice.base_z() + workpiece_dims.sides[2].len();
-    // 	for (auto program : result_programs) {
-    // 	  REQUIRE(all_safe_moves_above(program.blocks, workpiece_height));
-    // 	}
-    //   }
-    // }
+      SECTION("G0 moves are above the workpiece") {
+    	double workpiece_height = test_vice.base_z() + workpiece_dims.sides[2].len();
+    	for (auto program : result_programs) {
+    	  REQUIRE(all_safe_moves_above(program.blocks, workpiece_height));
+    	}
+      }
+    }
   }
 }

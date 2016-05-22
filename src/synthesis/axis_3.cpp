@@ -126,9 +126,8 @@ namespace gca {
   }
   
   std::vector<std::vector<index_t>>
-  normal_delta_regions(const triangular_mesh& mesh, double delta_degrees) {
+  normal_delta_regions(vector<index_t>& indices, const triangular_mesh& mesh, double delta_degrees) {
     vector<vector<index_t>> connected_regions;
-    auto indices = mesh.face_indexes();
     auto within_delta = [delta_degrees](const index_t f,
 					const index_t i,
 					const triangular_mesh& m) {
@@ -152,8 +151,9 @@ namespace gca {
 
   std::vector<std::vector<triangle>> make_surfaces(const triangular_mesh& mesh) {
     double normal_degrees_delta = 30.0;
+    auto inds = millable_faces(point(0, 0, 1), mesh);
     vector<vector<index_t>> delta_regions =
-      normal_delta_regions(mesh, normal_degrees_delta);
+      normal_delta_regions(inds, mesh, normal_degrees_delta);
     vector<vector<triangle>> tris;
     for (auto s : delta_regions) {
       vector<triangle> ts;
