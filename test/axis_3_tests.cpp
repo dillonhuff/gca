@@ -25,12 +25,6 @@ namespace gca {
       SECTION("4 surfaces to mill") {
 	auto face_inds = preprocess_faces(mesh);
 	auto surfaces = merge_surfaces(face_inds, mesh);
-	for (auto s : surfaces) {
-	  cout << "SURFACE" << endl;
-	  for (auto t : s) {
-	    cout << t << endl;
-	  }
-	}
 	REQUIRE(surfaces.size() == 4);
       }
 
@@ -46,8 +40,7 @@ namespace gca {
     SECTION("CylinderSquare") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
       auto mesh = make_mesh(triangles, 0.001);
-      auto face_inds = preprocess_faces(mesh);
-      auto pockets = make_pockets(face_inds, mesh, workpiece_depth);
+      auto pockets = make_pockets(mesh, workpiece_depth);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -80,8 +73,7 @@ namespace gca {
     SECTION("CylinderChimneySlot") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl").triangles;
       auto mesh = make_mesh(triangles, 0.001);
-      auto face_inds = preprocess_faces(mesh);
-      auto pockets = make_pockets(face_inds, mesh, workpiece_depth);
+      auto pockets = make_pockets(mesh, workpiece_depth);
       
       SECTION("4 pockets") {
     	REQUIRE(pockets.size() == 4);
@@ -129,8 +121,7 @@ namespace gca {
     SECTION("SlicedCone") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
       auto mesh = make_mesh(triangles, 0.001);
-      auto face_inds = preprocess_faces(mesh);
-      auto pockets = make_pockets(face_inds, mesh, workpiece_height);
+      auto pockets = make_pockets(mesh, workpiece_height);
       
       SECTION("1 pocket") {
     	REQUIRE(pockets.size() == 1);

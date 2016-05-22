@@ -40,17 +40,6 @@ namespace gca {
     return polylines_cuts(reflected_lines, params);
   }
 
-  bool adjacent(const triangle l, const triangle r) {
-    for (auto l_edge : l.edges()) {
-      for (auto r_edge : r.edges()) {
-	if (same_line(l_edge, r_edge, 0.001)) {
-	  return true;
-	}
-      }
-    }
-    return false;
-  }
-
   std::vector<index_t> preprocess_faces(const triangular_mesh& mesh) {
     std::vector<index_t> face_inds = millable_faces(point(0, 0, 1), mesh);
     // TODO: Find a way to remove this ad-hoc tolerance
@@ -70,49 +59,9 @@ namespace gca {
     return polygons;
   }
 
-  std::vector<triangle> collect_surface(std::vector<triangle>& triangles) {
-    assert(triangles.size() > 0);
-    vector<triangle> surface;
-    surface.push_back(triangles.back());
-    triangles.pop_back();
-    int i = 0;
-    while (triangles.size() > 0 && i < triangles.size()) {
-      auto t = triangles[i];
-      bool part_of_surface = false;
-      for (auto surface_triangle : surface) {
-	if (adjacent(surface_triangle, t)) {
-	  part_of_surface = true;
-	  break;
-	}
-      }
-      if (part_of_surface) {
-	surface.push_back(t);
-	triangles.erase(triangles.begin() + i);
-	i = 0;
-      } else {
-	i++;
-      }
-    }
-    return surface;
-  }
-
-  std::vector<std::vector<triangle>>
-  merge_surfaces(std::vector<triangle>& triangles) {
-    vector<vector<triangle>> surfaces;
-    while (triangles.size() > 0) {
-      surfaces.push_back(collect_surface(triangles));
-    }
-    return surfaces;
-  }
-
   std::vector<std::vector<triangle>>
   merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh) {
-    // vector<triangle> t;
-    // for (auto i : face_inds) {
-    //   t.push_back(mesh.face_triangle(i));
-    // }
-    // return merge_surfaces(t);
     vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
     vector<vector<triangle>> tris;
     for (auto s : surfaces) {
@@ -128,27 +77,18 @@ namespace gca {
   pocket pocket_for_surface(std::vector<triangle>& surface,
 			    double top_height) {
     auto bounds = mesh_bounds(surface);
-    cout << "# polygon bounds = " << bounds.size() << endl;
-    // for (auto p : bounds) {
-    //   cout << p << endl;
-    // }
     auto boundary = extract_boundary(bounds);
     vector<oriented_polygon> bound{boundary};
     vector<oriented_polygon> holes = bounds;
     return pocket(bound, holes, top_height, surface);
   }
   
-  std::vector<pocket> make_pockets(std::vector<index_t>& face_inds,
-				   const triangular_mesh& mesh,
+  std::vector<pocket> make_pockets(std::vector<std::vector<triangle>>& surfaces,
 				   double workpiece_height) {
-    cout << "START make_pockets" << endl;
-    vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
-    cout << "# surfaces after merging = " << surfaces.size() << endl;
     vector<pocket> pockets;
     for (auto surface : surfaces) {
       pockets.push_back(pocket_for_surface(surface, workpiece_height));
     }
-    cout << "END make_pockets" << endl;
     return pockets;
   }
 
@@ -164,16 +104,25 @@ namespace gca {
     return lines;
   }
 
+  std::vector<std::vector<triangle>> make_surfaces(const triangular_mesh& mesh) {
+    std::vector<index_t> face_inds = preprocess_faces(mesh);
+    vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
+    return surfaces;
+  }
+
+  std::vector<pocket> make_pockets(const triangular_mesh& mesh,
+				   const double workpiece_height) {
+    vector<vector<triangle>> surfaces = make_surfaces(mesh);
+    auto pockets = make_pockets(surfaces, workpiece_height);
+    return pockets;
+  }
+
   std::vector<polyline> mill_surface_lines(const triangular_mesh& mesh,
 					   const tool& t,
 					   double cut_depth,
 					   double workpiece_height) {
-    cout << "START mill_surface_lines" << endl;
-    std::vector<index_t> face_inds = preprocess_faces(mesh);
-    auto pockets = make_pockets(face_inds, mesh, workpiece_height);
-    cout << "Made pockets" << endl;
+    auto pockets = make_pockets(mesh, workpiece_height);    
     auto lines = mill_pockets(pockets, t.diameter(), cut_depth);
-    cout << "END mill_surface_lines" << endl;
     return shift_lines(lines, point(0, 0, t.length()));
   }
 
