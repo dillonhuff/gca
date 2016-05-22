@@ -5,6 +5,18 @@
 
 namespace gca {
 
+  TEST_CASE("Make surfaces") {
+    cout << "MAKE SURFACES" << endl;
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("Mesh box plinth") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl", 0.001);
+      auto surfaces = make_surfaces(mesh);
+      REQUIRE(surfaces.size() == 2);
+    }
+  }
+
   TEST_CASE("Triangle preprocessing") {
     arena_allocator a;
     set_system_allocator(&a);

@@ -6,6 +6,7 @@
 #include "geometry/box.h"
 #include "geometry/triangle.h"
 #include "geometry/trimesh.h"
+#include "system/algorithm.h"
 
 namespace gca {
 
@@ -32,6 +33,17 @@ namespace gca {
       return indices;
     }
 
+    inline std::vector<index_t> face_face_neighbors(const index_t i) const {
+      triangle_t t = triangle_vertices(i);
+      std::vector<index_t> face_neighbors;
+      concat(face_neighbors, mesh.vertex_face_neighbors(t.v[0]));
+      concat(face_neighbors, mesh.vertex_face_neighbors(t.v[1]));
+      concat(face_neighbors, mesh.vertex_face_neighbors(t.v[2]));
+      sort(begin(face_neighbors), end(face_neighbors));
+      unique(begin(face_neighbors), end(face_neighbors));
+      return face_neighbors;
+    }
+    
     inline point vertex(const index_t i) const {
       return vertices[i];
     }
@@ -173,6 +185,31 @@ namespace gca {
     return surface_face_inds;
   }
 
+  template<typename S, typename B>
+  std::vector<index_t> region(vector<index_t>& face_indices,
+			      const triangular_mesh& part,
+			      S select_initial_faces,
+			      B is_neighbor) {
+    assert(face_indices.size() > 0);
+    sort(begin(face_indices), end(face_indices));
+    vector<index_t> surface_face_inds = select_initial_faces(face_indices, part);
+    vector<index_t> unchecked_face_inds = surface_face_inds;
+    subtract(face_indices, surface_face_inds);
+    while (unchecked_face_inds.size() > 0) {
+      auto next_face = unchecked_face_inds.back();
+      unchecked_face_inds.pop_back();
+      for (auto f : part.face_face_neighbors(next_face)) {
+	if (binary_search(begin(face_indices), end(face_indices), f) &&
+	    is_neighbor(next_face, f, part)) {
+	  remove(f, face_indices);
+	  surface_face_inds.push_back(f);
+	  unchecked_face_inds.push_back(f);
+	}
+      }
+    }
+    return surface_face_inds;
+  }
+  
   triangular_mesh operator*(const matrix<3, 3>& m, const triangular_mesh& mesh);
 
   double diameter(const point normal, const triangular_mesh& m);

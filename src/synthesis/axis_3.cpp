@@ -104,10 +104,59 @@ namespace gca {
     return lines;
   }
 
+  bool all_orthogonal_to(const vector<triangle>& triangles,
+			 const point n,
+			 const double tolerance) {
+    for (auto t : triangles) {
+      if (!within_eps(angle_between(t.normal, n), 90, tolerance)) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  std::vector<std::vector<index_t>>
+  normal_delta_regions(const triangular_mesh& mesh, double delta_degrees) {
+    vector<vector<index_t>> regions;
+    vector<vector<index_t>> connected_regions;
+    auto indices = mesh.face_indexes();
+    auto within_delta = [delta_degrees](const index_t f,
+					const index_t i,
+					const triangular_mesh& m) {
+      return within_eps(angle_between(m.face_triangle(f).normal,
+				      m.face_triangle(i).normal),
+			0,
+			delta_degrees);
+    };
+    auto back_face_vec = [](const vector<index_t>& faces,
+			    const triangular_mesh& mesh) {
+      return vector<index_t>{faces.back()};
+    };
+    while (indices.size() > 0) {
+      connected_regions.push_back(region(indices,
+					 mesh,
+					 back_face_vec,
+					 within_delta));
+    }
+    return connected_regions;
+  }
+
   std::vector<std::vector<triangle>> make_surfaces(const triangular_mesh& mesh) {
-    std::vector<index_t> face_inds = preprocess_faces(mesh);
-    vector<vector<triangle>> surfaces = merge_surfaces(face_inds, mesh);
-    return surfaces;
+    double normal_degrees_delta = 30.0;
+    vector<vector<index_t>> delta_regions =
+      normal_delta_regions(mesh, normal_degrees_delta);
+    vector<vector<triangle>> tris;
+    for (auto s : delta_regions) {
+      vector<triangle> ts;
+      for (auto i : s) {
+    	ts.push_back(mesh.face_triangle(i));
+      }
+      tris.push_back(ts);
+    }
+    // delete_if(tris,
+    // 	      [](const vector<triangle>& surface)
+    // 	      { return all_orthogonal_to(surface, point(0, 0, 1), 5.0); });
+    return tris;
   }
 
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,

@@ -23,9 +23,6 @@ namespace gca {
   std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
 				  const double safe_height);
 
-  std::vector<pocket> make_pockets(std::vector<std::vector<triangle>>& surfaces,
-				   double workpiece_height);
-
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height);
 
@@ -36,7 +33,8 @@ namespace gca {
   std::vector<std::vector<triangle>>
   merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh);
-  
+
+  std::vector<std::vector<triangle>> make_surfaces(const triangular_mesh& mesh);
 }
 
 #endif
