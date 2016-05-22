@@ -115,9 +115,18 @@ namespace gca {
     return true;
   }
 
+  bool all_normals_below(const vector<triangle>& triangles,
+			 const double v) {
+    for (auto t : triangles) {
+      if (t.normal.normalize().z > v) {
+	return false;
+      }
+    }
+    return true;
+  }
+  
   std::vector<std::vector<index_t>>
   normal_delta_regions(const triangular_mesh& mesh, double delta_degrees) {
-    vector<vector<index_t>> regions;
     vector<vector<index_t>> connected_regions;
     auto indices = mesh.face_indexes();
     auto within_delta = [delta_degrees](const index_t f,
@@ -153,9 +162,12 @@ namespace gca {
       }
       tris.push_back(ts);
     }
-    // delete_if(tris,
-    // 	      [](const vector<triangle>& surface)
-    // 	      { return all_orthogonal_to(surface, point(0, 0, 1), 5.0); });
+    delete_if(tris,
+    	      [](const vector<triangle>& surface)
+    	      { return all_orthogonal_to(surface, point(0, 0, 1), 5.0); });
+    delete_if(tris,
+    	      [](const vector<triangle>& surface)
+    	      { return all_normals_below(surface, -0.1); });
     return tris;
   }
 

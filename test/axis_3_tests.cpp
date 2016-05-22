@@ -135,8 +135,8 @@ namespace gca {
       auto mesh = make_mesh(triangles, 0.001);
       auto pockets = make_pockets(mesh, workpiece_height);
       
-      SECTION("1 pocket") {
-    	REQUIRE(pockets.size() == 1);
+      SECTION("2 pocket") {
+    	REQUIRE(pockets.size() == 2);
       }
 
       SECTION("Roughing does not overlap the pocket base") {
