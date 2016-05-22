@@ -64,15 +64,15 @@ namespace gca {
 					 double inc);
 
   std::vector<polyline> rough_pocket(const pocket& pocket,
-				     double tool_radius,
+				     const tool& t,
 				     double cut_depth);
 
   std::vector<polyline> rough_pockets(const std::vector<pocket>& pockets,
-				      double tool_radius,
+				      const tool& t,
 				      double cut_depth);
   
   std::vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					     double tool_diameter,
+					     const tool& t,
 					     double cut_depth);
 
   std::vector<cut*> polyline_cuts(const polyline& p);

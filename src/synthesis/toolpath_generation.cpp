@@ -183,30 +183,29 @@ namespace gca {
   vector<polyline> roughing_passes(const vector<triangle>& base,
 				   const vector<oriented_polygon>& holes,
 				   const vector<oriented_polygon>& boundaries,
-				   // Make this ref
-				   vector<double> depths,
-				   double tool_radius) {
+				   vector<double>& depths,
+				   const tool& t) {
     vector<polyline> lines;
     for (auto depth : depths) {
-      auto rough_level = roughing_lines(base, holes, boundaries, depth, tool_radius);
-      lines.insert(end(lines), begin(rough_level), end(rough_level));
+      auto rough_level = roughing_lines(base, holes, boundaries, depth, t.radius());
+      concat(lines, rough_level);
     }
     return lines;
   }
 
   vector<polyline> rough_pocket(const pocket& pocket,
-				double tool_radius,
+				const tool& t,
 				double cut_depth) {
     vector<oriented_polygon> bounds{pocket.get_boundary()};
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
     transform(begin(holes), end(holes), begin(offset_h),
-  	      [tool_radius](const oriented_polygon& p)
-  	      { return exterior_offset(p, tool_radius); });
+  	      [t](const oriented_polygon& p)
+  	      { return exterior_offset(p, t.radius()); });
     vector<oriented_polygon> bound_polys(bounds.size());
     transform(begin(bounds), end(bounds), begin(bound_polys),
-  	      [tool_radius](const oriented_polygon& p)
-  	      { return interior_offset(p, tool_radius); });
+  	      [t](const oriented_polygon& p)
+  	      { return interior_offset(p, t.radius()); });
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth / 2.0);
@@ -214,26 +213,26 @@ namespace gca {
 						   offset_h,
 						   bound_polys,
 						   depths,
-						   tool_radius);
+						   t);
     return pocket_path;
   }
 
   vector<polyline> rough_pockets(const vector<pocket>& pockets,
-				 double tool_radius,
+				 const tool& t,
 				 double cut_depth) {
     vector<polyline> ps;
     for (auto pocket : pockets) {
-      auto ls = rough_pocket(pocket, tool_radius, cut_depth);
-      ps.insert(end(ps), begin(ls), end(ls));
+      auto ls = rough_pocket(pocket, t, cut_depth);
+      concat(ps, ls);
     }
     return ps;
   }
 
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					double tool_radius,
+					const tool& t,
 					double cut_depth) {
-    vector<polyline> pocket_path = rough_pocket(pocket, tool_radius, cut_depth);
-    auto finish_paths = finish_pocket(pocket, tool_radius, cut_depth);
+    vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
+    auto finish_paths = finish_pocket(pocket, t.radius(), cut_depth);
     pocket_path.insert(end(pocket_path), begin(finish_paths), end(finish_paths));
     return pocket_path;
   }

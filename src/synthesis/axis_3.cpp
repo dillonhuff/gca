@@ -92,12 +92,11 @@ namespace gca {
   }
 
   vector<polyline> mill_pockets(vector<pocket>& pockets,
-				double tool_diameter,
+				const tool& t,
 				double cut_depth) {
     vector<polyline> lines;
-    double tool_radius = tool_diameter / 2.0;
     for (auto pocket : pockets) {
-      auto pocket_paths = pocket_2P5D_interior(pocket, tool_radius, cut_depth);
+      auto pocket_paths = pocket_2P5D_interior(pocket, t, cut_depth);
       lines.insert(end(lines), begin(pocket_paths), end(pocket_paths));
     }
     return lines;
@@ -184,7 +183,7 @@ namespace gca {
 					   double cut_depth,
 					   double workpiece_height) {
     auto pockets = make_pockets(mesh, workpiece_height);    
-    auto lines = mill_pockets(pockets, t.diameter(), cut_depth);
+    auto lines = mill_pockets(pockets, t, cut_depth);
     return shift_lines(lines, point(0, 0, t.length()));
   }
 

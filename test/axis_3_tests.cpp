@@ -119,8 +119,8 @@ namespace gca {
     set_system_allocator(&a);
 
     double workpiece_height = 0.5;
+    tool t(0.075*2, 3.0, FLAT_NOSE);
     double cut_depth = 0.1;
-    double tool_radius = 0.075;
 
     SECTION("SlicedCone") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
@@ -132,7 +132,7 @@ namespace gca {
       }
 
       SECTION("Roughing does not overlap the pocket base") {
-    	auto rough_lines = rough_pocket(pockets.front(), tool_radius, cut_depth);
+    	auto rough_lines = rough_pocket(pockets.front(), t, cut_depth);
     	auto rough_points = points(rough_lines);
     	bool all_above_pocket_surface =
     	  all_of(begin(rough_points), end(rough_points),
