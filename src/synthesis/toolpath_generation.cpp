@@ -119,7 +119,7 @@ namespace gca {
     vector<oriented_polygon> bound_polys(bounds.size());
     transform(begin(bounds), end(bounds), begin(bound_polys),
   	      [tool_radius](const oriented_polygon& p)
-  	      { return p; }); //interior_offset(p, tool_radius); });
+  	      { return interior_offset(p, tool_radius); });
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth);
@@ -238,7 +238,6 @@ namespace gca {
   }
 
   // TODO: Move these to somewhere else, they really dont belong here
-
   
   // TODO: Make the spindle_speed and feedrate parameters explicit
   cut* mk_cut(const point l, const point r) {

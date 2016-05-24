@@ -75,7 +75,6 @@ namespace gca {
       return total;
     }
 
-
     inline bool is_connected() const {
       return mesh.boundary_vertices().size() == 0;
     }
@@ -223,7 +222,15 @@ namespace gca {
   connect_regions(std::vector<index_t>& indices,
 		  const triangular_mesh& part);
 
+  maybe<double> z_at(const double x,
+		     const double y,
+		     const std::vector<index_t>& faces,
+		     const triangular_mesh& mesh);
 
-}
+  double z_at_unsafe(const double x,
+		     const double y,
+		     const std::vector<index_t>& faces,
+		     const triangular_mesh& mesh);
+ }
 
 #endif

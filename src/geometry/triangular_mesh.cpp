@@ -229,4 +229,35 @@ namespace gca {
   }
 
 
+  maybe<double> z_at(const double x,
+		     const double y,
+		     const std::vector<index_t>& faces,
+		     const triangular_mesh& mesh) {
+    for (auto i : faces) {
+      auto t = mesh.face_triangle(i);
+      auto orient = t.normal;
+      if (point_in_triangle_2d(point(x, y, 0),
+			       t.v1,
+			       t.v2,
+			       t.v3) &&
+	  orient.z > 0.01) {
+	// TODO: Add proper triangle height computation
+	return maybe<double>(t.v1.z);
+      }
+    }
+    return maybe<double>();
+  }
+
+  double z_at_unsafe(const double x,
+		     const double y,
+		     const std::vector<index_t>& faces,
+		     const triangular_mesh& mesh) {
+    maybe<double> z = z_at(x, y, faces, mesh);
+    if (!(z.just)) {
+      cout << "ERROR: No z value for point: " << point(x, y, 0) << endl;
+      assert(false);
+    }
+    return z.t;
+  }
+
 }
