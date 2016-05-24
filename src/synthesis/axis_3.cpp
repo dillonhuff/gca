@@ -49,13 +49,47 @@ namespace gca {
     return face_inds;
   }
 
+  // TODO: Really should not be oriented polygons
+  vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
+				       const triangular_mesh& mesh) {
+    vector<oriented_polygon> ps;
+    if (faces.size() == 0) {
+      return ps;
+    }
+    point normal = mesh.face_orientation(faces.front());
+    typedef pair<index_t, index_t> iline;
+    vector<iline> tri_lines;
+    for (auto i : faces) {
+      auto t = mesh.triangle_vertices(i);
+      tri_lines.push_back(iline(t.v[0], t.v[1]));
+      tri_lines.push_back(iline(t.v[1], t.v[2]));
+      tri_lines.push_back(iline(t.v[2], t.v[0]));
+    }
+
+    // TODO: Change to sort and count, maybe add to system/algorithm?
+    vector<iline> no_ds;
+    for (auto l : tri_lines) {
+      int count = 0;
+      for (auto r : tri_lines) {
+	if ((l.first == r.first && l.second == r.second) ||
+	    (l.first == r.second && l.second == r.first)) {
+	  count++;
+	}
+      }
+      if (count == 1) {
+	no_ds.push_back(l);
+      }
+    }
+    vector<line> no_dups;
+    for (auto l : no_ds) {
+      no_dups.push_back(line(mesh.vertex(l.first), mesh.vertex(l.second)));
+    }
+    return unordered_segments_to_polygons(normal, no_dups);
+  }
+  
   std::vector<oriented_polygon> preprocess_triangles(const triangular_mesh& mesh) {
     auto face_inds = preprocess_faces(mesh);
-    vector<triangle> triangles;
-    for (auto i : face_inds) {
-      triangles.push_back(mesh.face_triangle(i));
-    }
-    auto polygons = mesh_bounds(triangles);
+    auto polygons = mesh_bounds(face_inds, mesh);
     return polygons;
   }
 
@@ -74,19 +108,21 @@ namespace gca {
     return tris;
   }
 
-  pocket pocket_for_surface(std::vector<triangle>& surface,
-			    double top_height) {
-    auto bounds = mesh_bounds(surface);
+  pocket pocket_for_surface(std::vector<index_t>& surface,
+			    double top_height,
+			    const triangular_mesh& mesh) {
+    auto bounds = mesh_bounds(surface, mesh);
     auto boundary = extract_boundary(bounds);
     vector<oriented_polygon> holes = bounds;
-    return pocket(boundary, holes, top_height, surface);
+    return pocket(boundary, holes, top_height, surface, mesh);
   }
   
-  std::vector<pocket> make_pockets(std::vector<std::vector<triangle>>& surfaces,
-				   double workpiece_height) {
+  std::vector<pocket> make_pockets(std::vector<std::vector<index_t>>& surfaces,
+				   double workpiece_height,
+				   const triangular_mesh& mesh) {
     vector<pocket> pockets;
     for (auto surface : surfaces) {
-      pockets.push_back(pocket_for_surface(surface, workpiece_height));
+      pockets.push_back(pocket_for_surface(surface, workpiece_height, mesh));
     }
     return pockets;
   }
@@ -102,10 +138,12 @@ namespace gca {
     return lines;
   }
 
-  bool all_orthogonal_to(const vector<triangle>& triangles,
+  bool all_orthogonal_to(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
 			 const point n,
 			 const double tolerance) {
-    for (auto t : triangles) {
+    for (auto i : triangles) {
+      auto t = mesh.face_triangle(i);
       if (!within_eps(angle_between(t.normal, n), 90, tolerance)) {
 	return false;
       }
@@ -113,9 +151,11 @@ namespace gca {
     return true;
   }
 
-  bool all_normals_below(const vector<triangle>& triangles,
+  bool all_normals_below(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
 			 const double v) {
-    for (auto t : triangles) {
+    for (auto i : triangles) {
+      auto t = mesh.face_triangle(i);
       if (t.normal.normalize().z > v) {
 	return false;
       }
@@ -149,32 +189,24 @@ namespace gca {
     return connected_regions;
   }
 
-  std::vector<std::vector<triangle>> make_surfaces(const triangular_mesh& mesh) {
+  std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh) {
     double normal_degrees_delta = 30.0;
     auto inds = millable_faces(point(0, 0, 1), mesh);
     vector<vector<index_t>> delta_regions =
       normal_delta_regions(inds, mesh, normal_degrees_delta);
-    vector<vector<triangle>> tris;
-    for (auto s : delta_regions) {
-      vector<triangle> ts;
-      for (auto i : s) {
-    	ts.push_back(mesh.face_triangle(i));
-      }
-      tris.push_back(ts);
-    }
-    delete_if(tris,
-    	      [](const vector<triangle>& surface)
-    	      { return all_orthogonal_to(surface, point(0, 0, 1), 5.0); });
-    delete_if(tris,
-    	      [](const vector<triangle>& surface)
-    	      { return all_normals_below(surface, -0.1); });
-    return tris;
+    delete_if(delta_regions,
+    	      [&mesh](const vector<index_t>& surface)
+    	      { return all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
+    delete_if(delta_regions,
+    	      [&mesh](const vector<index_t>& surface)
+    	      { return all_normals_below(surface, mesh, -0.1); });
+    return delta_regions;
   }
 
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height) {
-    vector<vector<triangle>> surfaces = make_surfaces(mesh);
-    auto pockets = make_pockets(surfaces, workpiece_height);
+    vector<vector<index_t>> surfaces = make_surfaces(mesh);
+    auto pockets = make_pockets(surfaces, workpiece_height, mesh);
     return pockets;
   }
 

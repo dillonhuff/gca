@@ -48,6 +48,10 @@ namespace gca {
 
   // TODO: Change this to operate on a triangular mesh
   std::vector<oriented_polygon> mesh_bounds(const std::vector<triangle>& tris);
+
+  vector<oriented_polygon>
+  unordered_segments_to_polygons(point normal,
+				 vector<line>& lines);
   
   ostream& operator<<(ostream& out, const triangle& t);
 

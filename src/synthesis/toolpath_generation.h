@@ -14,32 +14,56 @@ namespace gca {
   struct pocket {
   private:
     oriented_polygon boundary;
-    vector<oriented_polygon> holes;
+    std::vector<oriented_polygon> holes;
 
     double start_depth;
-    
+    std::vector<index_t> base_inds;
+    const triangular_mesh& mesh;
+
   public:
-
-    vector<triangle> base;
-
     pocket(const oriented_polygon& boundary,
-	   vector<oriented_polygon>& holesp,
+	   std::vector<oriented_polygon>& holesp,
 	   double start_depthp,
-	   const vector<triangle>& basep) :
+	   const std::vector<index_t>& basep,
+	   const triangular_mesh& p_mesh) :
       boundary(boundary),
       holes(holesp),
       start_depth(start_depthp),
-      base(basep) {}
+      base_inds(basep),
+      mesh(p_mesh) {
+      assert(base_inds.size() > 0);
+    }
 
     inline const vector<oriented_polygon>& get_holes() const
     { return holes; }
+
     inline const oriented_polygon& get_boundary() const
     { return boundary; }
+
     inline double get_start_depth() const { return start_depth; }
-    inline double get_end_depth() const { return min_z(base); }
+
+    inline double get_end_depth() const {
+      vector<point> base_points;
+      for (auto i : base_inds) {
+	triangle_t t = mesh.triangle_vertices(i);
+	base_points.push_back(mesh.vertex(t.v[0]));
+	base_points.push_back(mesh.vertex(t.v[1]));
+	base_points.push_back(mesh.vertex(t.v[2]));
+      }
+      return min_distance_along(base_points, point(0, 0, 1));
+    }
+
+    inline std::vector<triangle> base() const {
+      std::vector<triangle> base_tris;
+      for (auto i : base_inds) {
+	base_tris.push_back(mesh.face_triangle(i));
+      }
+      return base_tris;
+    }
 
     bool above_base(const point p) {
-      for (auto t : base) {
+      for (auto i : base_inds) {
+	auto t = mesh.face_triangle(i);
 	if (in_projection(t, p) && below(t, p)) { return false; }
       }
       return true;
@@ -70,7 +94,7 @@ namespace gca {
   std::vector<polyline> rough_pockets(const std::vector<pocket>& pockets,
 				      const tool& t,
 				      double cut_depth);
-  
+
   std::vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					     const tool& t,
 					     double cut_depth);

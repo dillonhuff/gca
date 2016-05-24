@@ -34,7 +34,7 @@ namespace gca {
   merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh);
 
-  std::vector<std::vector<triangle>> make_surfaces(const triangular_mesh& mesh);
+  std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
 }
 
 #endif

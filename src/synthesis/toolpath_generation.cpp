@@ -91,8 +91,8 @@ namespace gca {
 
   vector<polyline> finish_passes(const vector<oriented_polygon>& holes,
 				 const vector<oriented_polygon>& boundaries,
-				 vector<double> depths,
-				 double tool_radius) {
+				 const vector<double>& depths,
+				 const double tool_radius) {
     vector<polyline> lines;
     //Insert finishing lines
     for (auto bound : boundaries) {
@@ -103,7 +103,7 @@ namespace gca {
       polyline p(hole.vertices);
       lines.push_back(p);
     }
-    // Change to tile vertical
+    // TODO: Change to tile vertical
     return lines;
   }
 
@@ -119,7 +119,7 @@ namespace gca {
     vector<oriented_polygon> bound_polys(bounds.size());
     transform(begin(bounds), end(bounds), begin(bound_polys),
   	      [tool_radius](const oriented_polygon& p)
-  	      { return interior_offset(p, tool_radius); });
+  	      { return p; }); //interior_offset(p, tool_radius); });
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth);
@@ -183,7 +183,7 @@ namespace gca {
   vector<polyline> roughing_passes(const vector<triangle>& base,
 				   const vector<oriented_polygon>& holes,
 				   const vector<oriented_polygon>& boundaries,
-				   vector<double>& depths,
+				   const vector<double>& depths,
 				   const tool& t) {
     vector<polyline> lines;
     for (auto depth : depths) {
@@ -209,7 +209,7 @@ namespace gca {
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth / 2.0);
-    vector<polyline> pocket_path = roughing_passes(pocket.base,
+    vector<polyline> pocket_path = roughing_passes(pocket.base(),
 						   offset_h,
 						   bound_polys,
 						   depths,
@@ -330,5 +330,4 @@ namespace gca {
     return drop_sample(mesh.triangle_list(), tool);
   }
 
-  
 }

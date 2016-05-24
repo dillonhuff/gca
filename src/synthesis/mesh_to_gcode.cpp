@@ -292,15 +292,9 @@ namespace gca {
   gcode_program cut_secured_mesh(const triangular_mesh& mesh,
 				 const vice v,
 				 const std::vector<tool>& tools) {
-    // std::vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
-    // std::vector<triangle> tris;
-    // for (auto i : millable) {
-    //   tris.push_back(mesh.face_triangle(i));
-    // }
     tool t = *(min_element(begin(tools), end(tools),
 			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
-    //vector<polyline> lines = drop_sample(tris, t);
     double cut_depth = 0.2;
     double h = max_in_dir(mesh, point(0, 0, 1));
     vector<polyline> lines = mill_surface_lines(mesh, t, cut_depth, h);
