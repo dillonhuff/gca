@@ -192,5 +192,4 @@ namespace gca {
     return ((p.dot(dir))*dir).len();
   }
 
-  
 }

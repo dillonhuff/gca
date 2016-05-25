@@ -107,6 +107,22 @@ namespace gca {
     return pts;
   }
 
+  vector<polyline> sample_lines_2d(const box b, double x_inc, double y_inc, double z_level) {
+    vector<polyline> pts;
+    double x = b.x_min;
+    while (x < b.x_max) {
+      double y = b.y_min;
+      vector<point> pline;
+      while (y < b.y_max) {
+	pline.push_back(point(x, y, z_level));
+	y += y_inc;
+      }
+      pts.push_back(pline);
+      x += x_inc;
+    }
+    return pts;
+  }
+  
   vector<point> sample_points_3d(const box b,
 				 double x_inc,
 				 double y_inc,

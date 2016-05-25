@@ -228,7 +228,6 @@ namespace gca {
     return tris;
   }
 
-
   maybe<double> z_at(const double x,
 		     const double y,
 		     const std::vector<index_t>& faces,

@@ -48,6 +48,12 @@ namespace gca {
   polyline to_polyline(const oriented_polygon& p);
 
   oriented_polygon extract_boundary(std::vector<oriented_polygon>& polygons);
+
+
+  std::vector<polyline>
+  clip_polyline_along(const polyline& p,
+		      const std::vector<oriented_polygon>& holes);
+
 }
 
 #endif

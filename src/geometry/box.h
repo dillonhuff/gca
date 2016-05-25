@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "geometry/point.h"
+#include "geometry/polyline.h"
 
 using namespace std;
 
@@ -37,6 +38,8 @@ namespace gca {
   bool fits_inside(const box& inner, const box& outer);
 
   vector<point> sample_points_2d(const box b, double x_inc, double y_inc, double z_level);
+
+  vector<polyline> sample_lines_2d(const box b, double x_inc, double y_inc, double z_level);
   vector<point> sample_points_3d(const box b,
 				 double x_inc,
 				 double y_inc,

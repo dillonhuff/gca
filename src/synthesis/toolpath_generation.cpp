@@ -92,10 +92,8 @@ namespace gca {
 
   template<typename InputIt>
   bool overlaps_or_intersects_any(line l,
-				  const vector<triangle>& base,
 				  InputIt s,
 				  InputIt e) {
-    if (intersects_triangles(l, base)) { return true; }
     if (any_of(s, e,
 	       [l](const oriented_polygon& p)
 	       { return overlaps(l, p); })) {
@@ -161,13 +159,22 @@ namespace gca {
 				     const double cut_depth) {
     box b = p.bounding_box();
 
-    vector<point> pts_z = sample_points_2d(b, t.radius(), t.radius(), 1.0);
+    vector<polyline> pts_init = sample_lines_2d(b, t.radius(), t.radius(), 1.0);
 
-    vector<point> pts =
-      drop_points_onto(pts_z, p.base_face_indexes(), p.base_mesh(), t);
+    vector<polyline> pts_z;
+    for (auto pl : pts_init) {
+      concat(pts_z, clip_polyline_along(pl, p.get_holes()));
+    }
 
     vector<polyline> lines;
-    lines.push_back(pts);
+    for (auto pl : pts_z) {
+      vector<point> pts =
+	drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t);
+      if (pts.size() > 1) {
+	lines.push_back(pts);
+      }
+    }
+
     return lines;
   }
 
@@ -186,9 +193,8 @@ namespace gca {
 						     last_level,
 						     not_safe);
     auto overlaps =
-      [&base, &holes](const line l)
+      [&holes](const line l)
       { return overlaps_or_intersects_any(l, 
-    					  base,
     					  begin(holes),
     					  end(holes)); };
     vector<polyline> lines;

@@ -81,6 +81,13 @@ namespace gca {
   }
 
   template<typename I, typename F>
+  std::vector<std::vector<I>> split_by(const std::vector<I>& elems, F f) {
+    std::vector<std::vector<I>> split;
+    split_by(elems, split, f);
+    return split;
+  }
+  
+  template<typename I, typename F>
   void split_by(const std::vector<I>& elems, std::vector<std::vector<I>>& res, F f) {
     auto it = elems.begin();
     auto not_f = [&f](const I& i, const I& j) { return !f(i, j); };
