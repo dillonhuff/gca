@@ -34,6 +34,12 @@ namespace gca {
       assert(base_inds.size() > 0);
     }
 
+    const std::vector<index_t>& base_face_indexes() const
+    { return base_inds; }
+
+    const triangular_mesh& base_mesh() const
+    { return mesh; }
+    
     inline const vector<oriented_polygon>& get_holes() const
     { return holes; }
 
@@ -67,6 +73,10 @@ namespace gca {
 	if (in_projection(t, p) && below(t, p)) { return false; }
       }
       return true;
+    }
+
+    box bounding_box() const {
+      return mesh.bounding_box();
     }
   };
 
@@ -107,12 +117,13 @@ namespace gca {
 				  double tool_radius,
 				  double cut_depth);
 
-  std::vector<polyline> drop_sample(const std::vector<triangle>& triangles,
-				    const tool& tool);
-
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,
 				    const tool& tool);
-  
+
+  std::vector<point> drop_points_onto(const std::vector<point>& pts_z,
+				      const std::vector<index_t>& faces,
+				      const triangular_mesh& mesh,
+				      const tool& tool);
 }
 
 #endif

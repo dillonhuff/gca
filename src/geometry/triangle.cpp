@@ -102,6 +102,7 @@ namespace gca {
   }
 
   double z_at(const triangle t, double x, double y) {
+
     point a = t.v1;
     point b = t.v2;
     point c = t.v3;

@@ -99,8 +99,8 @@ namespace gca {
 			       vertices[t.v[1]],
 			       vertices[t.v[2]]) &&
 	  orient.z > 0.01) {
-	// TODO: Add proper triangle height computation
-	return maybe<double>(vertices[t.v[0]].z);
+	triangle tr = face_triangle(i);
+	return maybe<double>(gca::z_at(tr, x, y));
       }
     }
     return maybe<double>();
@@ -241,8 +241,7 @@ namespace gca {
 			       t.v2,
 			       t.v3) &&
 	  orient.z > 0.01) {
-	// TODO: Add proper triangle height computation
-	return maybe<double>(t.v1.z);
+	return maybe<double>(z_at(t, x, y));
       }
     }
     return maybe<double>();

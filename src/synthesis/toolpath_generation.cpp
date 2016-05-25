@@ -6,6 +6,23 @@
 #include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 
+// Q: What is the "right" way to do toolpath sampling?
+
+// Q: What are the problems I am actually having now?
+// A: 1. Sampling for freeform surfaces
+//    2. Sampling with holes without causing overlap or gouging
+//    3. Keeping toolpaths small (compression)
+
+// 3 is really a separate problem that can be dealt with in post
+// processing of the toolpaths
+
+// Maybe I just need to go the full way and start writing some
+// tests of pocket boundary behavior
+
+// Idea: Classify the kind of toolpath using an intermediate
+// data structure and then generate the actual toolpath based
+// on that classification
+
 namespace gca {
 
   template<typename T>
@@ -90,15 +107,13 @@ namespace gca {
   }
 
   vector<polyline> finish_passes(const vector<oriented_polygon>& holes,
-				 const vector<oriented_polygon>& boundaries,
+				 const oriented_polygon& boundary,
 				 const vector<double>& depths,
 				 const double tool_radius) {
     vector<polyline> lines;
-    //Insert finishing lines
-    for (auto bound : boundaries) {
-      polyline p(bound.vertices);
-      lines.push_back(p);
-    }
+    polyline p(boundary.vertices);
+    lines.push_back(p);
+    
     for (auto hole : holes) {
       polyline p(hole.vertices);
       lines.push_back(p);
@@ -110,21 +125,17 @@ namespace gca {
   vector<polyline> finish_pocket(const pocket& pocket,
 				 double tool_radius,
 				 double cut_depth) {
-    vector<oriented_polygon> bounds{pocket.get_boundary()};
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
     transform(begin(holes), end(holes), begin(offset_h),
   	      [tool_radius](const oriented_polygon& p)
   	      { return exterior_offset(p, tool_radius); });
-    vector<oriented_polygon> bound_polys(bounds.size());
-    transform(begin(bounds), end(bounds), begin(bound_polys),
-  	      [tool_radius](const oriented_polygon& p)
-  	      { return interior_offset(p, tool_radius); });
+    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), tool_radius);
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth);
     return finish_passes(offset_h,
-			 bound_polys,
+			 bound_poly,
 			 depths,
 			 tool_radius);
   }
@@ -132,14 +143,12 @@ namespace gca {
   bool not_in_safe_region(const point p,
 			  const vector<triangle>& base,
 			  const vector<oriented_polygon>& holes,
-			  const vector<oriented_polygon>& boundaries) {
+			  const oriented_polygon& boundary) {
     bool in_hole = any_of(begin(holes), end(holes),
 			  [p](const oriented_polygon& pl)
 			  { return contains(pl, p); });
     if (in_hole) { return true; }
-    bool outside_bounds = !any_of(begin(boundaries), end(boundaries),
-				  [p](const oriented_polygon& pl)
-				  { return contains(pl, p); });
+    bool outside_bounds = !contains(boundary, p);
     if (outside_bounds) { return true; }
     for (auto t : base) {
       if (in_projection(t, p) && below(t, p)) { return true; }
@@ -147,16 +156,30 @@ namespace gca {
     return false;
   }
 
+  vector<polyline> finish_base_lines(const pocket& p,
+				     const tool& t,
+				     const double cut_depth) {
+    box b = p.bounding_box();
+
+    vector<point> pts_z = sample_points_2d(b, t.radius(), t.radius(), 1.0);
+
+    vector<point> pts =
+      drop_points_onto(pts_z, p.base_face_indexes(), p.base_mesh(), t);
+
+    vector<polyline> lines;
+    lines.push_back(pts);
+    return lines;
+  }
+
   vector<polyline> roughing_lines(const vector<triangle>& base,
 				  const vector<oriented_polygon>& holes,
-  				  const vector<oriented_polygon>& boundaries,
+  				  const oriented_polygon& boundary,
   				  double last_level,
   				  double tool_radius) {
     double sample_increment = tool_radius;
-    assert(boundaries.size() == 1);
-    box b = bounding_box(begin(boundaries), end(boundaries));
-    auto not_safe = [&base, &holes, &boundaries](const point p)
-      { return not_in_safe_region(p, base, holes, boundaries); };
+    box b = bounding_box(boundary);
+    auto not_safe = [base, holes, boundary](const point p)
+      { return not_in_safe_region(p, base, holes, boundary); };
     auto toolpath_points = sample_filtered_points_2d(b,
 						     sample_increment,
 						     sample_increment,
@@ -182,12 +205,12 @@ namespace gca {
 
   vector<polyline> roughing_passes(const vector<triangle>& base,
 				   const vector<oriented_polygon>& holes,
-				   const vector<oriented_polygon>& boundaries,
+				   const oriented_polygon& boundary,
 				   const vector<double>& depths,
 				   const tool& t) {
     vector<polyline> lines;
     for (auto depth : depths) {
-      auto rough_level = roughing_lines(base, holes, boundaries, depth, t.radius());
+      auto rough_level = roughing_lines(base, holes, boundary, depth, t.radius());
       concat(lines, rough_level);
     }
     return lines;
@@ -196,22 +219,18 @@ namespace gca {
   vector<polyline> rough_pocket(const pocket& pocket,
 				const tool& t,
 				double cut_depth) {
-    vector<oriented_polygon> bounds{pocket.get_boundary()};
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
     transform(begin(holes), end(holes), begin(offset_h),
   	      [t](const oriented_polygon& p)
   	      { return exterior_offset(p, t.radius()); });
-    vector<oriented_polygon> bound_polys(bounds.size());
-    transform(begin(bounds), end(bounds), begin(bound_polys),
-  	      [t](const oriented_polygon& p)
-  	      { return interior_offset(p, t.radius()); });
+    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth / 2.0);
     vector<polyline> pocket_path = roughing_passes(pocket.base(),
 						   offset_h,
-						   bound_polys,
+						   bound_poly,
 						   depths,
 						   t);
     return pocket_path;
@@ -231,9 +250,12 @@ namespace gca {
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
-    vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
-    auto finish_paths = finish_pocket(pocket, t.radius(), cut_depth);
-    pocket_path.insert(end(pocket_path), begin(finish_paths), end(finish_paths));
+    vector<polyline> pocket_path;// = rough_pocket(pocket, t, cut_depth);
+    //auto finish_paths = finish_pocket(pocket, t.radius(), cut_depth);
+    //concat(pocket_path, finish_paths);
+    auto finish_surface = finish_base_lines(pocket, t, cut_depth);
+    concat(pocket_path, finish_surface);
+    //pocket_path.insert(end(pocket_path), begin(finish_paths), end(finish_paths));
     return pocket_path;
   }
 
@@ -300,10 +322,23 @@ namespace gca {
     return final_lines;
   }
 
-  std::vector<polyline> drop_sample(const std::vector<triangle>& triangles,
-				    const tool& tool) {
-    auto mesh = make_mesh(triangles, 0.01);
+  // TODO: Actually compensate for tool radius and shape
+  std::vector<point> drop_points_onto(const std::vector<point>& pts_z,
+				      const std::vector<index_t>& faces,
+				      const triangular_mesh& mesh,
+				      const tool& tool) {
+    vector<point> pts;
+    for (auto pt : pts_z) {
+      maybe<double> za = z_at(pt.x, pt.y, faces, mesh);
+      if (za.just) {
+	pts.push_back(point(pt.x, pt.y, za.t));
+      }
+    }
+    return pts;
+  }
 
+  std::vector<polyline> drop_sample(const triangular_mesh& mesh,
+				    const tool& tool) {
     box b = mesh.bounding_box();
     b.x_min += 0.01;
     b.y_min += 0.01;
@@ -311,22 +346,11 @@ namespace gca {
 
     vector<point> pts_z = sample_points_2d(b, tool.radius(), tool.radius(), 1.0);
 
-    vector<point> pts;
-    for (auto pt : pts_z) {
-      maybe<double> za = mesh.z_at(pt.x, pt.y);
-      if (za.just) {
-	pts.push_back(point(pt.x, pt.y, za.t));
-      }
-    }
+    vector<point> pts = drop_points_onto(pts_z, mesh.face_indexes(), mesh, tool);
 
     vector<polyline> lines;
     lines.push_back(pts);
     return shift_lines(lines, point(0, 0, tool.length()));
-  }
-
-  std::vector<polyline> drop_sample(const triangular_mesh& mesh,
-				    const tool& tool) {
-    return drop_sample(mesh.triangle_list(), tool);
   }
 
 }
