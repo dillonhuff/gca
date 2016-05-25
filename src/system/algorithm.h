@@ -49,6 +49,15 @@ namespace gca {
   }
 
   template<typename InputIt, typename F>
+  bool any_between(InputIt s, InputIt e, F f) {
+    while (s != (e - 1)) {
+      if (f(*s, *(s + 1))) { return true; };
+      ++s;
+    }
+    return false;
+  }
+  
+  template<typename InputIt, typename F>
   void greedy_adjacent_chains(InputIt s, InputIt e, F f) {
     if (s == e) { return; }
     while (s < e - 1) {

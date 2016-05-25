@@ -142,4 +142,45 @@ namespace gca {
       }
     }
   }
+
+  bool intersects(const line l, const triangular_mesh& mesh) {
+    for (auto i : mesh.face_indexes()) {
+      auto t = mesh.face_triangle(i);
+      if (intersects(t, l)) {
+	return true;
+      }
+    }
+    return false;
+  }
+
+  bool all_above(const std::vector<polyline>& pls,
+		 const tool t,
+		 const triangular_mesh& mesh,
+		 const double shift) {
+    // The shift is to undo tool radius compensation
+    for (auto pl : shift_lines(pls, point(0, 0, -t.length()))) {
+      if (any_between(begin(pl), end(pl),
+		       [mesh](const point a, const point b) {
+			 return intersects(line(a, b), mesh);
+		       })) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  TEST_CASE("Toolpaths do not overlap the mesh") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    SECTION("MeshBoxPlinth") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl", 0.001);
+      tool t(0.32, 3.0, FLAT_NOSE);
+      double cut_depth = 0.2;
+      double workpiece_height = 1.7;
+      auto toolpaths = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
+      REQUIRE(all_above(toolpaths, t, mesh, -0.1));
+    }
+  }
+
 }

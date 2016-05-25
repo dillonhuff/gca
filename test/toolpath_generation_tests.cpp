@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "synthesis/toolpath_generation.h"
+#include "system/parse_stl.h"
 
 namespace gca {
 

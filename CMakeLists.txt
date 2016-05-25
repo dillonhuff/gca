@@ -136,7 +136,6 @@ add_executable(all-tests ${SRCS} ${TEST_FILES})
 # add_executable(misc examples/misc.cpp ${SRCS})
 # add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
-add_executable(cut-box examples/cut_box.cpp ${SRCS})
 #add_executable(face-graph examples/face_graph.cpp ${SRCS})
 
 ######### VTK Example ##########

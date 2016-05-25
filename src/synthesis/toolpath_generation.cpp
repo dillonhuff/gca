@@ -163,7 +163,8 @@ namespace gca {
 
     vector<polyline> pts_z;
     for (auto pl : pts_init) {
-      concat(pts_z, clip_polyline_along(pl, p.get_holes()));
+      pts_z.push_back(pl);
+      //concat(pts_z, pl); ////clip_polyline_along(pl, p.get_holes()));
     }
 
     vector<polyline> lines;
