@@ -178,8 +178,16 @@ namespace gca {
       tool t(0.32, 3.0, FLAT_NOSE);
       double cut_depth = 0.2;
       double workpiece_height = 1.7;
-      auto toolpaths = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
-      REQUIRE(all_above(toolpaths, t, mesh, -0.1));
+
+      SECTION("2 pockets") {
+	auto pockets = make_pockets(mesh, workpiece_height);
+	REQUIRE(pockets.size() == 2);
+      }
+
+      SECTION("Toolpaths dont overlap the mesh") {
+	auto toolpaths = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
+	REQUIRE(all_above(toolpaths, t, mesh, -0.1));
+      }
     }
   }
 

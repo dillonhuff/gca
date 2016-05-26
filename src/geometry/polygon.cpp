@@ -150,18 +150,18 @@ namespace gca {
 		    });
     };
 
-    auto intersects_any =
+    auto intersects_none =
       [holes](const point a, const point b) {
-      return any_of(begin(holes), end(holes),
+      return !any_of(begin(holes), end(holes),
 		    [a, b](const oriented_polygon& pg) {
 		      return overlaps(line(a, b), pg);
-		    });
+		     });
     };
 
     vector<point> pts(begin(p), end(p));
     // TODO: Deal with convex case
     delete_if(pts, inside_any);
-    vector<vector<point>> lgs = split_by(pts, intersects_any);
+    vector<vector<point>> lgs = split_by(pts, intersects_none);
     vector<polyline> lines;
     for (auto l : lgs) {
       lines.push_back(polyline(l));

@@ -161,18 +161,23 @@ namespace gca {
 
     vector<polyline> pts_init = sample_lines_2d(b, t.radius(), t.radius(), 1.0);
 
-    vector<polyline> pts_z;
-    for (auto pl : pts_init) {
-      pts_z.push_back(pl);
-      //concat(pts_z, pl); ////clip_polyline_along(pl, p.get_holes()));
-    }
+    // vector<polyline> pts_z;
+    // for (auto pl : pts_init) {
+    //   vector<point> pts =
+    // 	drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t);
+    //   pts_z.push_back(pts);
+    //   //concat(pts_z, pl); ////clip_polyline_along(pl, p.get_holes()));
+    // }
 
     vector<polyline> lines;
-    for (auto pl : pts_z) {
-      vector<point> pts =
-	drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t);
-      if (pts.size() > 1) {
-	lines.push_back(pts);
+    for (auto pl : pts_init) {
+      polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
+      pts = shift(pts, point(0, 0, 0));
+      vector<polyline> clipped = clip_polyline_along(pts, p.get_holes());
+      for (auto clipped_line : clipped) {
+	if (clipped_line.num_points() > 1) {
+	  lines.push_back(clipped_line);
+	}
       }
     }
 

@@ -51,4 +51,14 @@ namespace gca {
       REQUIRE(polys.size() > constant_orientation_groups.size());
     }
   }
+
+  TEST_CASE("Clipping polylines") {
+
+    SECTION("Empty polygon") {
+      vector<point> pts{point(0, 0, 0), point(0, 1, 0), point(1, 1, 2)};
+      vector<oriented_polygon> polys;
+      vector<polyline> results = clip_polyline_along(pts, polys);
+      REQUIRE(results.size() == 1);
+    }
+  }
 }
