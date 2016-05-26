@@ -57,11 +57,12 @@ namespace gca {
       REQUIRE(result_programs.size() == 7);
     }
 
-    SECTION("Simple box") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
+    SECTION("More complex part has 6 clippings and 4 pocketings") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+      workpiece workpiece_dims(1.9, 1.87, 1.9);
       auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      REQUIRE(result_programs.size() == 10);
     }
-
   }
 
   TEST_CASE("Outer surfaces") {
@@ -159,6 +160,7 @@ namespace gca {
       }
 
       SECTION("G0 moves are above the workpiece") {
+	workpiece workpiece_dims(2.0, 2.0, 2.0);
     	double workpiece_height = test_vice.base_z() + workpiece_dims.sides[2].len();
     	for (auto program : result_programs) {
     	  REQUIRE(all_safe_moves_above(program.blocks, workpiece_height));
