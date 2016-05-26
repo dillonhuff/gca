@@ -6,23 +6,6 @@
 #include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 
-// Q: What is the "right" way to do toolpath sampling?
-
-// Q: What are the problems I am actually having now?
-// A: 1. Sampling for freeform surfaces
-//    2. Sampling with holes without causing overlap or gouging
-//    3. Keeping toolpaths small (compression)
-
-// 3 is really a separate problem that can be dealt with in post
-// processing of the toolpaths
-
-// Maybe I just need to go the full way and start writing some
-// tests of pocket boundary behavior
-
-// Idea: Classify the kind of toolpath using an intermediate
-// data structure and then generate the actual toolpath based
-// on that classification
-
 namespace gca {
 
   template<typename T>
@@ -161,18 +144,9 @@ namespace gca {
 
     vector<polyline> pts_init = sample_lines_2d(b, t.radius(), t.radius(), 1.0);
 
-    // vector<polyline> pts_z;
-    // for (auto pl : pts_init) {
-    //   vector<point> pts =
-    // 	drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t);
-    //   pts_z.push_back(pts);
-    //   //concat(pts_z, pl); ////clip_polyline_along(pl, p.get_holes()));
-    // }
-
     vector<polyline> lines;
     for (auto pl : pts_init) {
       polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
-      pts = shift(pts, point(0, 0, 0));
       vector<polyline> clipped = clip_polyline_along(pts, p.get_holes());
       for (auto clipped_line : clipped) {
 	if (clipped_line.num_points() > 1) {
