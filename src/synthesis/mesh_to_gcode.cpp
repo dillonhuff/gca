@@ -335,10 +335,10 @@ namespace gca {
 					   const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
-    vector<gcode_program> ps =
-      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, v);
     classify_part_surfaces(part_ss, aligned_workpiece);
     vector<triangular_mesh> meshes = part_arrangements(part_mesh, part_ss, v);
+    vector<gcode_program> ps =
+      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, v);
     cut_secured_meshes(meshes, ps, v, tools);
     return ps;
   }

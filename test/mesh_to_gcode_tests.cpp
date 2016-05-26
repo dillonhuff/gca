@@ -57,6 +57,11 @@ namespace gca {
       REQUIRE(result_programs.size() == 7);
     }
 
+    SECTION("Simple box") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+    }
+
   }
 
   TEST_CASE("Outer surfaces") {
