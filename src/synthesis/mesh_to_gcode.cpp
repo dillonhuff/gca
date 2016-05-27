@@ -268,7 +268,6 @@ namespace gca {
   std::vector<stock_orientation>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces) {
-		      //		      std::vector<index_t>& faces_to_cut) {
     vector<stock_orientation> all_orients = all_stable_orientations(stable_surfaces);
     vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
     cout << "# initial faces = " << surfaces_to_cut.size() << endl;
@@ -289,12 +288,6 @@ namespace gca {
       remove_millable_surfaces(next_orient, surfaces_to_cut);
       if (surfaces_to_cut.size() != old_size) {
 	cout << "Surfaces left = " << surfaces_to_cut.size() << endl;
-	// TODO: Delete this? Pretty sure it is an old debug printout
-	// if (within_eps(point(0, -1, 0), next_orient.top_normal())) {
-	//   for (auto f : faces_to_cut) {
-	//     cout << part_mesh.face_triangle(f) << endl;
-	//   }
-	// }
 	orients.push_back(next_orient);
       }
     }
@@ -355,10 +348,6 @@ namespace gca {
   part_arrangements(const triangular_mesh& part_mesh,
 		    const vector<surface>& part_ss,
 		    const vice v) {
-    // vector<index_t> face_inds = part_mesh.face_indexes();
-    // cout << "# initial faces = " << face_inds.size() << endl;
-    // remove_SA_surfaces(part_ss, face_inds);
-    // cout << "# faces left = " << face_inds.size() << endl;
     vector<stock_orientation> orients =
       orientations_to_cut(part_mesh, part_ss); //, face_inds);
     vector<triangular_mesh> meshes;
