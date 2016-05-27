@@ -40,6 +40,19 @@ namespace gca {
       return std::binary_search(begin(tri_indexes), end(tri_indexes), ind);
     }
 
+    bool contained_by_sorted(const std::vector<index_t>& inds) const {
+      for (auto i : tri_indexes) {
+	if (!binary_search(begin(inds), end(inds), i)) {
+	  return false;
+	}
+      }
+      return true;
+    }
+
+    bool contained_by(const surface& other) const {
+      return contained_by_sorted(other.tri_indexes);
+    }
+    
     inline bool is_SA() const { return SA; }
     inline void set_SA() { SA = true; }
 

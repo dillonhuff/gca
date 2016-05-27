@@ -142,7 +142,7 @@ namespace gca {
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance);
 
-    // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
+  // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
   bool is_outer_surface(const std::vector<index_t>& s, const triangular_mesh& part);
 
   std::vector<std::vector<index_t>>
@@ -231,6 +231,12 @@ namespace gca {
 		     const double y,
 		     const std::vector<index_t>& faces,
 		     const triangular_mesh& mesh);
- }
+
+  std::vector<std::vector<index_t>>
+  normal_delta_regions(vector<index_t>& indices,
+		       const triangular_mesh& mesh,
+		       double delta_degrees);
+
+}
 
 #endif

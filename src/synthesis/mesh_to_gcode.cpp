@@ -56,6 +56,19 @@ namespace gca {
 	      { return any_SA_surface_contains(i, surfaces); });
   }
 
+  void remove_SA_surfaces(const std::vector<surface>& stable_surfaces,
+			  std::vector<surface>& cut_surfaces) {
+    delete_if(cut_surfaces,
+    	      [&stable_surfaces](const surface& s) {
+		for (auto other : stable_surfaces) {
+		  if (s.contained_by(other)) {
+		    return true;
+		  }
+		}
+		return false;
+	      });
+  }
+  
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
     vector<surface> surfaces;
@@ -230,11 +243,37 @@ namespace gca {
 	      { return binary_search(begin(millable), end(millable), i); });
   }
 
+  void remove_millable_surfaces(const stock_orientation& orient,
+				std::vector<surface>& surfaces_left) {
+    std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
+    sort(begin(millable), end(millable));
+    delete_if(surfaces_left,
+    	      [&millable](const surface& s)
+    	      { return s.contained_by_sorted(millable); });
+  }
+  
+  std::vector<surface>
+  cut_surfaces(const triangular_mesh& part) {
+    double normal_degrees_delta = 30.0;
+    auto inds = part.face_indexes();
+    vector<vector<index_t>> delta_regions =
+      normal_delta_regions(inds, part, normal_degrees_delta);
+    vector<surface> surfaces;
+    for (auto r : delta_regions) {
+      surfaces.push_back(surface(&part, r));
+    }
+    return surfaces;
+  }
+
   std::vector<stock_orientation>
   orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& surfaces,
-		      std::vector<index_t>& faces_to_cut) {
-    vector<stock_orientation> all_orients = all_stable_orientations(surfaces);
+		      const std::vector<surface>& stable_surfaces) {
+		      //		      std::vector<index_t>& faces_to_cut) {
+    vector<stock_orientation> all_orients = all_stable_orientations(stable_surfaces);
+    vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
+    cout << "# initial faces = " << surfaces_to_cut.size() << endl;
+    remove_SA_surfaces(stable_surfaces, surfaces_to_cut);
+    cout << "# faces left = " << surfaces_to_cut.size() << endl;
     sort(begin(all_orients), end(all_orients),
 	 [](const stock_orientation l, const stock_orientation r)
 	 { return l.top_normal().x < r.top_normal().x; });
@@ -242,19 +281,20 @@ namespace gca {
 	 [](const stock_orientation l, const stock_orientation r)
 	 { return l.top_normal().z < r.top_normal().z; });
     vector<stock_orientation> orients;
-    while (faces_to_cut.size() > 0) {
+    while (surfaces_to_cut.size() > 0) {
       assert(all_orients.size() > 0);
       auto next_orient = all_orients.back();
       all_orients.pop_back();
-      unsigned old_size = faces_to_cut.size();
-      remove_millable_surfaces(next_orient, faces_to_cut);
-      if (faces_to_cut.size() != old_size) {
-	cout << "Faces left = " << faces_to_cut.size() << endl;
-	if (within_eps(point(0, -1, 0), next_orient.top_normal())) {
-	  for (auto f : faces_to_cut) {
-	    cout << part_mesh.face_triangle(f) << endl;
-	  }
-	}
+      unsigned old_size = surfaces_to_cut.size();
+      remove_millable_surfaces(next_orient, surfaces_to_cut);
+      if (surfaces_to_cut.size() != old_size) {
+	cout << "Surfaces left = " << surfaces_to_cut.size() << endl;
+	// TODO: Delete this? Pretty sure it is an old debug printout
+	// if (within_eps(point(0, -1, 0), next_orient.top_normal())) {
+	//   for (auto f : faces_to_cut) {
+	//     cout << part_mesh.face_triangle(f) << endl;
+	//   }
+	// }
 	orients.push_back(next_orient);
       }
     }
@@ -315,12 +355,12 @@ namespace gca {
   part_arrangements(const triangular_mesh& part_mesh,
 		    const vector<surface>& part_ss,
 		    const vice v) {
-    vector<index_t> face_inds = part_mesh.face_indexes();
-    cout << "# initial faces = " << face_inds.size() << endl;
-    remove_SA_surfaces(part_ss, face_inds);
-    cout << "# faces left = " << face_inds.size() << endl;
+    // vector<index_t> face_inds = part_mesh.face_indexes();
+    // cout << "# initial faces = " << face_inds.size() << endl;
+    // remove_SA_surfaces(part_ss, face_inds);
+    // cout << "# faces left = " << face_inds.size() << endl;
     vector<stock_orientation> orients =
-      orientations_to_cut(part_mesh, part_ss, face_inds);
+      orientations_to_cut(part_mesh, part_ss); //, face_inds);
     vector<triangular_mesh> meshes;
     for (auto orient : orients) {
       cout << "Top normal " << orient.top_normal() << endl;

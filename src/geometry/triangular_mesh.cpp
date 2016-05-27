@@ -258,4 +258,30 @@ namespace gca {
     return z.t;
   }
 
+  std::vector<std::vector<index_t>>
+  normal_delta_regions(vector<index_t>& indices,
+		       const triangular_mesh& mesh,
+		       double delta_degrees) {
+    vector<vector<index_t>> connected_regions;
+    auto within_delta = [delta_degrees](const index_t f,
+					const index_t i,
+					const triangular_mesh& m) {
+      return within_eps(angle_between(m.face_triangle(f).normal,
+				      m.face_triangle(i).normal),
+			0,
+			delta_degrees);
+    };
+    auto back_face_vec = [](const vector<index_t>& faces,
+			    const triangular_mesh& mesh) {
+      return vector<index_t>{faces.back()};
+    };
+    while (indices.size() > 0) {
+      connected_regions.push_back(region(indices,
+					 mesh,
+					 back_face_vec,
+					 within_delta));
+    }
+    return connected_regions;
+  }
+
 }
