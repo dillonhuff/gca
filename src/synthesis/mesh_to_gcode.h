@@ -40,6 +40,10 @@ namespace gca {
       return std::binary_search(begin(tri_indexes), end(tri_indexes), ind);
     }
 
+    std::vector<index_t> index_list() const {
+      return tri_indexes;
+    }
+
     bool contained_by_sorted(const std::vector<index_t>& inds) const {
       for (auto i : tri_indexes) {
 	if (!binary_search(begin(inds), end(inds), i)) {
