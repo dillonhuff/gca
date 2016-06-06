@@ -185,7 +185,7 @@ namespace gca {
   }
 
   std::vector<polyline>
-  mill_surfaces(std::vector<std::vector<index_t>>& surfaces,
+  mill_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 		const triangular_mesh& mesh,
 		const tool& t,
 		double cut_depth,

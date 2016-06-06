@@ -31,11 +31,12 @@ namespace gca {
   std::vector<oriented_polygon> preprocess_triangles(const triangular_mesh& mesh);
 
   std::vector<polyline>
-  mill_surfaces(std::vector<std::vector<index_t>>& surfaces,
+  mill_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 		const triangular_mesh& mesh,
 		const tool& t,
 		double cut_depth,
 		double workpiece_height);
+
   std::vector<std::vector<triangle>>
   merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh);
