@@ -127,7 +127,16 @@ namespace gca {
 
   std::vector<index_t> millable_faces(const point normal,
 				      const triangular_mesh& part) {
-    vector<index_t> all_face_inds = part.face_indexes();    
+    vector<index_t> all_face_inds = part.face_indexes();
+    cout << "# face inds = " << all_face_inds.size() << endl;
+    delete_if(all_face_inds,
+    	      [part, normal](const index_t i) {
+    		return angle_between(part.face_triangle(i).normal, normal) > 100;
+    	      });
+    cout << "# face inds after deletion = " << all_face_inds.size() << endl;
+    // for (auto i : all_face_inds) {
+    //   cout << part.face_triangle(i) << endl;
+    // }
 
     vector<point> centroids(all_face_inds.size());
     transform(begin(all_face_inds), end(all_face_inds),
@@ -141,14 +150,6 @@ namespace gca {
 
     vector<index_t> inds;
 
-    double ray_len = 2*diameter(normal, part);
-    point dir = normal.normalize();
-
-    // for (auto i : all_face_inds) { //auto test_segment : segments) {
-    //   auto t = part.face_triangle(i);
-    //   line test_segment = gca::test_segment(ray_len, dir, t);
-
-    // for (auto test_segment : segments) {
     for (unsigned i = 0; i < all_face_inds.size(); i++) {
       auto test_segment = segments[i];
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
@@ -163,18 +164,10 @@ namespace gca {
 				 signed_distance_along(cr, normal);
 			       });
 	index_t m = *m_e;
-	inds.push_back(m);
-      }
-
-      triangle t = part.face_triangle(i);
-      if (lies_along(normal, t)) {
-	line ts = gca::test_segment(ray_len, dir, t);
-	auto d = t.normal.normalize();
-	line test_seg(ts.start + (0.01)*d, ts.end + (0.01)*d);
-	auto inters = all_intersections(all_face_inds, part, test_seg);
-
-	if (inters.size() == 0) {
-	  inds.push_back(i);
+	if (std::binary_search(begin(all_face_inds),
+			       end(all_face_inds),
+			       m)) {//m == all_face_inds[i]) {
+	  inds.push_back(m);
 	}
       }
     }
