@@ -167,12 +167,12 @@ namespace gca {
   std::vector<index_t> side_millable_faces(const point normal,
 					   const std::vector<index_t>& all_face_inds,
 					   const triangular_mesh& part) {
-    vector<index_t> vertical_faces(all_face_inds.size());
-    copy_if(begin(all_face_inds), end(all_face_inds), begin(vertical_faces),
-	    [part, normal](const index_t i) {
-	      return lies_along(normal, part.face_triangle(i));
-	    });
-
+    vector<index_t> vertical_faces;
+    for (auto i : all_face_inds) {
+      if (lies_along(normal, part.face_triangle(i))) {
+	vertical_faces.push_back(i);
+      }
+    }
     vector<index_t> inds;
 
     // NOTE: Centroids adjusted along triangle normal
@@ -181,12 +181,12 @@ namespace gca {
     	      begin(centroids),
     	      [&part](const index_t i) {
     		triangle t = part.face_triangle(i);
+		// TODO: Better alternative to this ad-hoc tolerance?
     		return t.centroid() + 0.01*(t.normal.normalize());
     	      });
 
     double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
     vector<line> segments = construct_test_segments(normal, centroids, ray_len);
-
 
     assert(vertical_faces.size() == segments.size());
     assert(centroids.size() == segments.size());
@@ -196,9 +196,34 @@ namespace gca {
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
     							     part,
     							     test_segment);
-      if (intersecting_faces.size() == 0) {
+      bool found_larger = false;;
+      point pc = part.face_triangle(vertical_faces[i]).centroid();
+      for (auto k : intersecting_faces) {
+	point cl = part.face_triangle(k).centroid();
+	if (signed_distance_along(cl, normal) > signed_distance_along(pc, normal)) {
+	  found_larger = true;
+	  break;
+	}
+      }
+      if (!found_larger) {
 	inds.push_back(vertical_faces[i]);
       }
+
+      // if (intersecting_faces.size() > 0) {
+      // 	auto m_e = max_element(begin(intersecting_faces), end(intersecting_faces),
+      // 			       [normal, part](const index_t l, const index_t r) {
+      // 				 point cl = part.face_triangle(l).centroid(); //centroids[l];
+      // 				 point cr = part.face_triangle(r).centroid(); //centroids[r];
+      // 				 return signed_distance_along(cl, normal) <
+      // 				 signed_distance_along(cr, normal);
+      // 			       });
+      // 	index_t m = *m_e;
+      // 	//	if (m == all_face_inds[i]) {
+      // 	  inds.push_back(m);
+      // 	  //	}
+      // } else if (intersecting_faces.size() == 0) {
+      // 	
+      // }
     }
     return inds;
   }

@@ -57,11 +57,6 @@ namespace gca {
       auto mesh = make_mesh(box_triangles, 0.001);
       point p(0, 0, -1);
       vector<index_t> millable = millable_faces(p, mesh);
-      cout << "MILL FROM " << p << endl;
-      for (auto i : millable) {
-	cout << mesh.face_triangle(i) << endl;
-      }
-      cout << "END" << endl;
       REQUIRE(millable.size() == 10);
     }
 
