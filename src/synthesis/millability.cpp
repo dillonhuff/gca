@@ -24,12 +24,6 @@ namespace gca {
     return line(s, e);
   }
   
-  line test_segment(const double inc,
-		    const point dir,
-		    const triangle t) {
-    return test_segment(inc, dir, t.centroid());
-  }
-
   std::vector<line> construct_test_segments(const point normal,
 					    const std::vector<point>& centroids,
 					    const triangular_mesh& part) {
@@ -134,10 +128,10 @@ namespace gca {
 				      const triangular_mesh& part) {
     vector<index_t> all_face_inds = part.face_indexes();
     cout << "# face inds = " << all_face_inds.size() << endl;
-    delete_if(all_face_inds,
-    	      [part, normal](const index_t i) {
-    		return angle_between(part.face_triangle(i).normal, normal) > 100;
-    	      });
+    // delete_if(all_face_inds,
+    // 	      [part, normal](const index_t i) {
+    // 		return angle_between(part.face_triangle(i).normal, normal) > 100;
+    // 	      });
     cout << "# face inds after deletion = " << all_face_inds.size() << endl;
     // for (auto i : all_face_inds) {
     //   cout << part.face_triangle(i) << endl;
