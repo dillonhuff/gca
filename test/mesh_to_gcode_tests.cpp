@@ -50,12 +50,13 @@ namespace gca {
       REQUIRE(result_programs.size() == 7);
     }
 
-    SECTION("Mesh box plinth has 6 clippings and one pocketing") {
-      auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl").triangles;
-      auto mesh = make_mesh(box_triangles, 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 7);
-    }
+    // TODO: Reintroduce this test
+    // SECTION("Mesh box plinth has 6 clippings and one pocketing") {
+    //   auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl").triangles;
+    //   auto mesh = make_mesh(box_triangles, 0.001);
+    //   auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+    //   REQUIRE(result_programs.size() == 7);
+    // }
 
     SECTION("More complex part has 6 clippings and 4 pocketings") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);

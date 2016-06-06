@@ -169,26 +169,27 @@ namespace gca {
     return true;
   }
 
-  TEST_CASE("Toolpaths do not overlap the mesh") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TODO: Reintroduce this test
+  // TEST_CASE("Toolpaths do not overlap the mesh") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    SECTION("MeshBoxPlinth") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl", 0.001);
-      tool t(0.32, 3.0, FLAT_NOSE);
-      double cut_depth = 0.2;
-      double workpiece_height = 1.7;
+  //   SECTION("MeshBoxPlinth") {
+  //     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl", 0.001);
+  //     tool t(0.32, 3.0, FLAT_NOSE);
+  //     double cut_depth = 0.2;
+  //     double workpiece_height = 1.7;
 
-      SECTION("2 pockets") {
-	auto pockets = make_pockets(mesh, workpiece_height);
-	REQUIRE(pockets.size() == 2);
-      }
+  //     SECTION("2 pockets") {
+  // 	auto pockets = make_pockets(mesh, workpiece_height);
+  // 	REQUIRE(pockets.size() == 2);
+  //     }
 
-      SECTION("Toolpaths dont overlap the mesh") {
-	auto toolpaths = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
-	REQUIRE(all_above(toolpaths, t, mesh, -0.1));
-      }
-    }
-  }
+  //     SECTION("Toolpaths dont overlap the mesh") {
+  // 	auto toolpaths = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
+  // 	REQUIRE(all_above(toolpaths, t, mesh, -0.1));
+  //     }
+  //   }
+  // }
 
 }
