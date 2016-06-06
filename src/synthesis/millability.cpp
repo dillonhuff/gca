@@ -18,21 +18,26 @@ namespace gca {
 
   line test_segment(const double inc,
 		    const point dir,
-		    const triangle t) {
-    point p = t.centroid();
+		    point p) {
     point s = (inc*dir) + p;
     point e = ((-inc)*dir) + p;
     return line(s, e);
+  }
+  
+  line test_segment(const double inc,
+		    const point dir,
+		    const triangle t) {
+    return test_segment(inc, dir, t.centroid());
   }
 
   std::vector<line> construct_test_segments(const point normal,
 					    const std::vector<point>& centroids,
 					    const triangular_mesh& part) {
-    double ray_len = 2*greater_than_diameter(normal, centroids);
+    double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
     vector<line> test_segments;
     point dir = normal.normalize();
-    for (auto i : part.face_indexes()) {
-      line l = test_segment(ray_len, dir, part.face_triangle(i));
+    for (auto p : centroids) {
+      line l = test_segment(ray_len, dir, p); //part.face_triangle(i));
       test_segments.push_back(l);
     }
     return test_segments;
@@ -164,11 +169,11 @@ namespace gca {
 				 signed_distance_along(cr, normal);
 			       });
 	index_t m = *m_e;
-	if (std::binary_search(begin(all_face_inds),
-			       end(all_face_inds),
-			       m)) {//m == all_face_inds[i]) {
+	if (m == all_face_inds[i]) {
 	  inds.push_back(m);
 	}
+      } else if (intersecting_faces.size() == 0) {
+	inds.push_back(all_face_inds[i]);
       }
     }
 

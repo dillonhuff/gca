@@ -96,4 +96,11 @@ namespace gca {
     REQUIRE(within_eps(cross(a, b), c));
   }
 
+  TEST_CASE("Signed distance along") {
+    point n(0, 0, -1);
+    point q(0, 0, 0.5);
+    point s(0, 0, -0.5);
+    REQUIRE(signed_distance_along(q, s) < signed_distance_along(s, n));
+  }
+
 }
