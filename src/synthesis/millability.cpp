@@ -26,12 +26,11 @@ namespace gca {
   
   std::vector<line> construct_test_segments(const point normal,
 					    const std::vector<point>& centroids,
-					    const triangular_mesh& part) {
-    double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
+					    const double ray_len) {
     vector<line> test_segments;
     point dir = normal.normalize();
     for (auto p : centroids) {
-      line l = test_segment(ray_len, dir, p); //part.face_triangle(i));
+      line l = test_segment(ray_len, dir, p);
       test_segments.push_back(l);
     }
     return test_segments;
@@ -124,19 +123,10 @@ namespace gca {
     return side_faces;
   }
 
-  std::vector<index_t> millable_faces(const point normal,
-				      const triangular_mesh& part) {
-    vector<index_t> all_face_inds = part.face_indexes();
-    cout << "# face inds = " << all_face_inds.size() << endl;
-    // delete_if(all_face_inds,
-    // 	      [part, normal](const index_t i) {
-    // 		return angle_between(part.face_triangle(i).normal, normal) > 100;
-    // 	      });
-    cout << "# face inds after deletion = " << all_face_inds.size() << endl;
-    // for (auto i : all_face_inds) {
-    //   cout << part.face_triangle(i) << endl;
-    // }
-
+  std::vector<index_t> top_millable_faces(const point normal,
+					  const std::vector<index_t>& all_face_inds,
+					  const triangular_mesh& part) {
+    vector<index_t> inds;
     vector<point> centroids(all_face_inds.size());
     transform(begin(all_face_inds), end(all_face_inds),
     	      begin(centroids),
@@ -145,10 +135,13 @@ namespace gca {
     		return t.centroid();
     	      });
 
-    vector<line> segments = construct_test_segments(normal, centroids, part);
+    double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
+    vector<line> segments = construct_test_segments(normal, centroids, ray_len);
 
-    vector<index_t> inds;
 
+    assert(all_face_inds.size() == segments.size());
+    assert(centroids.size() == segments.size());
+    
     for (unsigned i = 0; i < all_face_inds.size(); i++) {
       auto test_segment = segments[i];
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
@@ -166,18 +159,70 @@ namespace gca {
 	if (m == all_face_inds[i]) {
 	  inds.push_back(m);
 	}
-      } else if (intersecting_faces.size() == 0) {
-	inds.push_back(all_face_inds[i]);
       }
     }
+    return inds;
+  }
 
+  std::vector<index_t> side_millable_faces(const point normal,
+					   const std::vector<index_t>& all_face_inds,
+					   const triangular_mesh& part) {
+    vector<index_t> vertical_faces(all_face_inds.size());
+    copy_if(begin(all_face_inds), end(all_face_inds), begin(vertical_faces),
+	    [part, normal](const index_t i) {
+	      return lies_along(normal, part.face_triangle(i));
+	    });
+
+    vector<index_t> inds;
+
+    // NOTE: Centroids adjusted along triangle normal
+    vector<point> centroids(vertical_faces.size());
+    transform(begin(vertical_faces), end(vertical_faces),
+    	      begin(centroids),
+    	      [&part](const index_t i) {
+    		triangle t = part.face_triangle(i);
+    		return t.centroid() + 0.01*(t.normal.normalize());
+    	      });
+
+    double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
+    vector<line> segments = construct_test_segments(normal, centroids, ray_len);
+
+
+    assert(vertical_faces.size() == segments.size());
+    assert(centroids.size() == segments.size());
+    
+    for (unsigned i = 0; i < vertical_faces.size(); i++) {
+      auto test_segment = segments[i];
+      vector<index_t> intersecting_faces = all_intersections(all_face_inds,
+    							     part,
+    							     test_segment);
+      if (intersecting_faces.size() == 0) {
+	inds.push_back(vertical_faces[i]);
+      }
+    }
+    return inds;
+  }
+  
+  std::vector<index_t> millable_faces(const point normal,
+				      const triangular_mesh& part) {
+    vector<index_t> all_face_inds = part.face_indexes();
+    
+    //    cout << "# face inds = " << all_face_inds.size() << endl;
+    // delete_if(all_face_inds,
+    // 	      [part, normal](const index_t i) {
+    // 		return angle_between(part.face_triangle(i).normal, normal) > 100;
+    // 	      });
+    //    cout << "# face inds after deletion = " << all_face_inds.size() << endl;
+    // for (auto i : all_face_inds) {
+    //   cout << part.face_triangle(i) << endl;
+    // }
+
+    vector<index_t> inds = top_millable_faces(normal, all_face_inds, part);
+    vector<index_t> side_inds = side_millable_faces(normal, all_face_inds, part);
+    concat(inds, side_inds);
     sort(begin(inds), end(inds));
     inds.erase(unique(begin(inds), end(inds)), end(inds));
-    auto res_inds = add_side_faces(normal, inds, part);
-    sort(begin(res_inds), end(res_inds));
-    res_inds.erase(unique(begin(res_inds), end(res_inds)), end(res_inds));
-
-    return res_inds;
+    return inds;
   }
 
 }
