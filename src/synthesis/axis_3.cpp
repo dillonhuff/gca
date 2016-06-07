@@ -204,45 +204,6 @@ namespace gca {
     return false;
   }
 
-  template<typename I, typename P>
-  std::vector<unsigned>
-  dfs_by(std::vector<unsigned>& inds, const std::vector<I>& elems, P p) {
-    std::vector<unsigned> comp;
-    if (inds.size() == 0) {
-      return comp;
-    }
-    std::vector<unsigned> buf;
-    buf.push_back(inds.back());
-    inds.pop_back();
-    while (buf.size() > 0) {
-      auto next = buf.back();
-      buf.pop_back();
-      comp.push_back(next);
-      std::vector<unsigned> inds_to_remove;
-      for (unsigned i = 0; i < inds.size(); i++) {
-	unsigned u = inds[i];
-	if (u != next && p(elems[u], elems[next])) {
-	  buf.push_back(u);
-	  inds_to_remove.push_back(u);
-	}
-      }
-      subtract(inds, inds_to_remove);
-    }
-    return comp;
-  }
-
-  template<typename I, typename P>
-  std::vector<std::vector<unsigned>>
-  connected_components_by(const std::vector<I>& elems, P p) {
-    std::vector<std::vector<unsigned>> components;
-    std::vector<unsigned> inds(elems.size());
-    std::iota(begin(inds), end(inds), 0);
-    while (inds.size() > 0) {
-      components.push_back(dfs_by(inds, elems, p));
-    }
-    return components;
-  }
-
   std::vector<std::vector<index_t>>
   merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 			   const triangular_mesh& part) {
