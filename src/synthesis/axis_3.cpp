@@ -177,9 +177,31 @@ namespace gca {
     return delta_regions;
   }
 
+  bool share_edge(const index_t l,
+		  const index_t r,
+		  const triangular_mesh& part) {
+    auto tl = part.triangle_vertices(l);
+    auto tr = part.triangle_vertices(r);
+    int num_eq = 0;
+    for (unsigned i = 0; i < 3; i++) {
+      for (unsigned j = 0; j < 3; j++) {
+	num_eq += (tl.v[i] == tr.v[j]) ? 1 : 0;
+      }
+    }
+    return num_eq > 1;
+  }
+  
   bool share_edge(const std::vector<index_t>& l_faces,
 		  const std::vector<index_t>& r_faces,
 		  const triangular_mesh& part) {
+    for (auto l : l_faces) {
+      for (auto r : r_faces) {
+	if (share_edge(l, r, part)) {
+	  cout << "$$$ 2 surfaces share an edge!" << endl;
+	  return true;
+	}
+      }
+    }
     return false;
   }
 
@@ -197,13 +219,15 @@ namespace gca {
       auto next = buf.back();
       buf.pop_back();
       comp.push_back(next);
+      std::vector<unsigned> inds_to_remove;
       for (unsigned i = 0; i < inds.size(); i++) {
 	unsigned u = inds[i];
 	if (u != next && p(elems[u], elems[next])) {
 	  buf.push_back(u);
-	  remove(u, inds);
+	  inds_to_remove.push_back(u);
 	}
       }
+      subtract(inds, inds_to_remove);
     }
     return comp;
   }
@@ -244,8 +268,10 @@ namespace gca {
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height) {
     vector<vector<index_t>> surfaces = make_surfaces(mesh);
+    cout << "%%% # surfaces = " << surfaces.size() << endl;
     auto merged_surfaces = merge_connected_surfaces(surfaces, mesh);
-    auto pockets = make_pockets(surfaces, workpiece_height, mesh);
+    cout << "%%% # merged surfaces = " << merged_surfaces.size() << endl;
+    auto pockets = make_pockets(merged_surfaces, workpiece_height, mesh);
     return pockets;
   }
 
