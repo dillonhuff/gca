@@ -240,15 +240,15 @@ namespace gca {
     auto finish_surface = finish_base_lines(pocket, t, cut_depth);
     concat(pocket_path, finish_surface);
 
-    if (pocket_path.size() == 0) {
-      cout << "No lines for pocket" << endl;
-      cout << "# triangles: " << pocket.base_face_indexes().size() << endl;
-      cout << "# holes: " << pocket.get_holes().size() << endl;
-      for (auto i : pocket.base_face_indexes()) {
-	cout << pocket.base_mesh().face_triangle(i) << endl;
-      }
-      assert(false);
-    }
+    // if (pocket_path.size() == 0) {
+    //   cout << "No lines for pocket" << endl;
+    //   cout << "# triangles: " << pocket.base_face_indexes().size() << endl;
+    //   cout << "# holes: " << pocket.get_holes().size() << endl;
+    //   for (auto i : pocket.base_face_indexes()) {
+    // 	cout << pocket.base_mesh().face_triangle(i) << endl;
+    //   }
+    //   assert(false);
+    // }
 
     return pocket_path;
   }
