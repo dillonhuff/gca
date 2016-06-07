@@ -162,18 +162,23 @@ namespace gca {
     }
     return true;
   }
-  
-  std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh) {
-    double normal_degrees_delta = 30.0;
-    auto inds = millable_faces(point(0, 0, 1), mesh);
-    vector<vector<index_t>> delta_regions =
-      normal_delta_regions(inds, mesh, normal_degrees_delta);
+
+  void filter_vertical_surfaces(std::vector<std::vector<index_t>>& delta_regions,
+				const triangular_mesh& mesh) {
     delete_if(delta_regions,
     	      [&mesh](const vector<index_t>& surface)
     	      { return all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
     delete_if(delta_regions,
     	      [&mesh](const vector<index_t>& surface)
     	      { return all_normals_below(surface, mesh, -0.1); });
+  }
+  
+  std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh) {
+    double normal_degrees_delta = 30.0;
+    auto inds = millable_faces(point(0, 0, 1), mesh);
+    vector<vector<index_t>> delta_regions =
+      normal_delta_regions(inds, mesh, normal_degrees_delta);
+    filter_vertical_surfaces(delta_regions, mesh);
     return delta_regions;
   }
 
@@ -185,11 +190,15 @@ namespace gca {
   }
 
   std::vector<polyline>
-  mill_surfaces(const std::vector<std::vector<index_t>>& surfaces,
+  mill_surfaces(const std::vector<std::vector<index_t>>& sfs,
 		const triangular_mesh& mesh,
 		const tool& t,
 		double cut_depth,
 		double workpiece_height) {
+    // TODO: Optimize this away
+    std::vector<std::vector<index_t>> surfaces = sfs;
+    filter_vertical_surfaces(surfaces, mesh);
+    assert(surfaces.size() > 0);
     auto pockets = make_pockets(surfaces, workpiece_height, mesh);
     auto lines = mill_pockets(pockets, t, cut_depth);
     return shift_lines(lines, point(0, 0, t.length()));

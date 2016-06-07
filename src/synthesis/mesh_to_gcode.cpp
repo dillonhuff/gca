@@ -248,8 +248,8 @@ namespace gca {
   surface_list remove_millable_surfaces(const stock_orientation& orient,
 					std::vector<surface>& surfaces_left) {
     std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
-    surface_list mill_surfaces;
     sort(begin(millable), end(millable));
+    surface_list mill_surfaces;
     // TODO: Side effect free way to do this?
     delete_if(surfaces_left,
     	      [&millable, &mill_surfaces](const surface& s) {
@@ -279,22 +279,24 @@ namespace gca {
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces) {
     vector<stock_orientation> all_orients = all_stable_orientations(stable_surfaces);
+
     vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
     cout << "# initial faces = " << surfaces_to_cut.size() << endl;
     remove_SA_surfaces(stable_surfaces, surfaces_to_cut);
     cout << "# faces left = " << surfaces_to_cut.size() << endl;
+
     sort(begin(all_orients), end(all_orients),
     	 [](const stock_orientation l, const stock_orientation r)
     	 { return l.top_normal().x < r.top_normal().x; });
     sort(begin(all_orients), end(all_orients),
     	 [](const stock_orientation l, const stock_orientation r)
     	 { return l.top_normal().z < r.top_normal().z; });
+
     vector<pair<stock_orientation, surface_list>> orients;
     while (surfaces_to_cut.size() > 0) {
       assert(all_orients.size() > 0);
       auto next_orient = all_orients.back();
       all_orients.pop_back();
-      //unsigned old_size = surfaces_to_cut.size();
       auto surfaces_cut = remove_millable_surfaces(next_orient, surfaces_to_cut);
       if (surfaces_cut.size() > 0) {
     	cout << "Surfaces left = " << surfaces_to_cut.size() << endl;
@@ -328,7 +330,7 @@ namespace gca {
 
   std::pair<triangular_mesh, std::vector<std::vector<index_t>>>
   oriented_part_mesh(const stock_orientation& orient,
-		     const surface_list surfaces,
+		     const surface_list& surfaces,
 		     const vice v) {
     auto mesh = orient.get_mesh();
     auto oriented_mesh = orient_mesh(mesh, orient);
@@ -352,7 +354,7 @@ namespace gca {
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }
 
-  void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, std::vector<std::vector<index_t>>>>& meshes,
+  void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
 			  std::vector<gcode_program>& progs,
 			  const vice v,
 			  const std::vector<tool>& tools) {
@@ -361,13 +363,13 @@ namespace gca {
     }
   }
 
-  std::vector<std::pair<triangular_mesh, std::vector<std::vector<index_t>>>>
+  std::vector<std::pair<triangular_mesh, surface_list>>
   part_arrangements(const triangular_mesh& part_mesh,
 		    const vector<surface>& part_ss,
 		    const vice v) {
-    vector<pair<stock_orientation, vector<vector<index_t>>>> orients =
-      orientations_to_cut(part_mesh, part_ss); //, face_inds);
-    vector<pair<triangular_mesh, vector<vector<index_t>>>> meshes;
+    vector<pair<stock_orientation, surface_list>> orients =
+      orientations_to_cut(part_mesh, part_ss);
+    vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : orients) {
       cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
       meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
@@ -384,7 +386,7 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    vector<pair<triangular_mesh, vector<vector<index_t>>>> meshes = part_arrangements(part_mesh, part_ss, v);
+    vector<pair<triangular_mesh, surface_list>> meshes = part_arrangements(part_mesh, part_ss, v);
     vector<gcode_program> ps =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, v);
     cut_secured_meshes(meshes, ps, v, tools);
