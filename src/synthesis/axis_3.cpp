@@ -177,7 +177,6 @@ namespace gca {
     return delta_regions;
   }
 
-
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height) {
     vector<vector<index_t>> surfaces = make_surfaces(mesh);
