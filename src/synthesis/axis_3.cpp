@@ -197,7 +197,6 @@ namespace gca {
     for (auto l : l_faces) {
       for (auto r : r_faces) {
 	if (share_edge(l, r, part)) {
-	  cout << "$$$ 2 surfaces share an edge!" << endl;
 	  return true;
 	}
       }
@@ -268,9 +267,7 @@ namespace gca {
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height) {
     vector<vector<index_t>> surfaces = make_surfaces(mesh);
-    cout << "%%% # surfaces = " << surfaces.size() << endl;
     auto merged_surfaces = merge_connected_surfaces(surfaces, mesh);
-    cout << "%%% # merged surfaces = " << merged_surfaces.size() << endl;
     auto pockets = make_pockets(merged_surfaces, workpiece_height, mesh);
     return pockets;
   }
