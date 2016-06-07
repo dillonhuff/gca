@@ -104,21 +104,29 @@ namespace gca {
   }
 
   vector<polyline> finish_pocket(const pocket& pocket,
-				 double tool_radius,
-				 double cut_depth) {
+				 const tool& t,
+				 const double cut_depth) {
     auto holes = pocket.get_holes();
     vector<oriented_polygon> offset_h(holes.size());
     transform(begin(holes), end(holes), begin(offset_h),
-  	      [tool_radius](const oriented_polygon& p)
-  	      { return exterior_offset(p, tool_radius); });
-    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), tool_radius);
+  	      [t](const oriented_polygon& p)
+  	      { return exterior_offset(p, t.radius()); });
+    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth);
-    return finish_passes(offset_h,
-			 bound_poly,
-			 depths,
-			 tool_radius);
+    auto ls = finish_passes(offset_h, bound_poly, depths, t.radius());
+    vector<polyline> lines;
+    for (auto pl : ls) {
+      auto pts = drop_points_onto(vector<point>(begin(pl), end(pl)),
+				  pocket.base_face_indexes(),
+				  pocket.base_mesh(),
+				  t);
+      if (pts.size() > 0) {
+	lines.push_back(pts);
+      }
+    }
+    return lines;
   }
 
   bool not_in_safe_region(const point p,
@@ -239,7 +247,8 @@ namespace gca {
     vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
     auto finish_surface = finish_base_lines(pocket, t, cut_depth);
     concat(pocket_path, finish_surface);
-
+    auto finish_edges = finish_pocket(pocket, t, cut_depth);
+    concat(pocket_path, finish_edges);
     // if (pocket_path.size() == 0) {
     //   cout << "No lines for pocket" << endl;
     //   cout << "# triangles: " << pocket.base_face_indexes().size() << endl;
