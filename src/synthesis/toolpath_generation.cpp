@@ -236,12 +236,20 @@ namespace gca {
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
-    vector<polyline> pocket_path;// = rough_pocket(pocket, t, cut_depth);
-    //auto finish_paths = finish_pocket(pocket, t.radius(), cut_depth);
-    //concat(pocket_path, finish_paths);
+    vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
     auto finish_surface = finish_base_lines(pocket, t, cut_depth);
     concat(pocket_path, finish_surface);
-    //pocket_path.insert(end(pocket_path), begin(finish_paths), end(finish_paths));
+
+    if (pocket_path.size() == 0) {
+      cout << "No lines for pocket" << endl;
+      cout << "# triangles: " << pocket.base_face_indexes().size() << endl;
+      cout << "# holes: " << pocket.get_holes().size() << endl;
+      for (auto i : pocket.base_face_indexes()) {
+	cout << pocket.base_mesh().face_triangle(i) << endl;
+      }
+      assert(false);
+    }
+
     return pocket_path;
   }
 
