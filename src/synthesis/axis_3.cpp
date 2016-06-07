@@ -177,53 +177,6 @@ namespace gca {
     return delta_regions;
   }
 
-  bool share_edge(const index_t l,
-		  const index_t r,
-		  const triangular_mesh& part) {
-    auto tl = part.triangle_vertices(l);
-    auto tr = part.triangle_vertices(r);
-    int num_eq = 0;
-    for (unsigned i = 0; i < 3; i++) {
-      for (unsigned j = 0; j < 3; j++) {
-	num_eq += (tl.v[i] == tr.v[j]) ? 1 : 0;
-      }
-    }
-    return num_eq > 1;
-  }
-  
-  bool share_edge(const std::vector<index_t>& l_faces,
-		  const std::vector<index_t>& r_faces,
-		  const triangular_mesh& part) {
-    for (auto l : l_faces) {
-      for (auto r : r_faces) {
-	if (share_edge(l, r, part)) {
-	  return true;
-	}
-      }
-    }
-    return false;
-  }
-
-  std::vector<std::vector<index_t>>
-  merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
-			   const triangular_mesh& part) {
-    assert(surfaces.size() > 0);
-    vector<vector<unsigned>> components =
-      connected_components_by(surfaces,
-			      [part](const vector<index_t>& l,
-				     const vector<index_t>& r) {
-				return share_edge(l, r, part);
-			      });
-    vector<vector<index_t>> merged;
-    for (auto component : components) {
-      vector<index_t> s;
-      for (auto i : component) {
-	concat(s, surfaces[i]);
-      }
-      merged.push_back(s);
-    }
-    return merged;
-  }
 
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height) {

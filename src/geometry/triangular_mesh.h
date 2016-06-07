@@ -237,6 +237,14 @@ namespace gca {
 		       const triangular_mesh& mesh,
 		       double delta_degrees);
 
+  bool share_edge(const index_t l,
+		  const index_t r,
+		  const triangular_mesh& part);
+  
+  std::vector<std::vector<index_t>>
+  merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
+			   const triangular_mesh& part);
+  
 }
 
 #endif
