@@ -66,11 +66,11 @@ namespace gca {
       }
 
       SECTION("First pocket has no holes") {
-	REQUIRE(pockets.front().get_holes().size() == 0);
+	REQUIRE(pockets.front().get_holes().size() == 1);
       }
 
       SECTION("Last pocket has one hole") {
-	REQUIRE(pockets.back().get_holes().size() == 1);
+	REQUIRE(pockets.back().get_holes().size() == 0);
       }
     }
 
@@ -128,7 +128,7 @@ namespace gca {
       auto pockets = make_pockets(mesh, workpiece_height);
       
       SECTION("2 pocket") {
-    	REQUIRE(pockets.size() == 2);
+    	REQUIRE(pockets.size() == 1);
       }
 
       SECTION("Roughing does not overlap the pocket base") {
