@@ -177,9 +177,74 @@ namespace gca {
     return delta_regions;
   }
 
+  bool share_edge(const std::vector<index_t>& l_faces,
+		  const std::vector<index_t>& r_faces,
+		  const triangular_mesh& part) {
+    return false;
+  }
+
+  template<typename I, typename P>
+  std::vector<unsigned>
+  dfs_by(std::vector<unsigned>& inds, const std::vector<I>& elems, P p) {
+    std::vector<unsigned> comp;
+    if (inds.size() == 0) {
+      return comp;
+    }
+    std::vector<unsigned> buf;
+    buf.push_back(inds.back());
+    inds.pop_back();
+    while (buf.size() > 0) {
+      auto next = buf.back();
+      buf.pop_back();
+      comp.push_back(next);
+      for (unsigned i = 0; i < inds.size(); i++) {
+	unsigned u = inds[i];
+	if (u != next && p(elems[u], elems[next])) {
+	  buf.push_back(u);
+	  remove(u, inds);
+	}
+      }
+    }
+    return comp;
+  }
+
+  template<typename I, typename P>
+  std::vector<std::vector<unsigned>>
+  connected_components_by(const std::vector<I>& elems, P p) {
+    std::vector<std::vector<unsigned>> components;
+    std::vector<unsigned> inds(elems.size());
+    std::iota(begin(inds), end(inds), 0);
+    while (inds.size() > 0) {
+      components.push_back(dfs_by(inds, elems, p));
+    }
+    return components;
+  }
+
+  std::vector<std::vector<index_t>>
+  merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
+			   const triangular_mesh& part) {
+    assert(surfaces.size() > 0);
+    vector<vector<unsigned>> components =
+      connected_components_by(surfaces,
+			      [part](const vector<index_t>& l,
+				     const vector<index_t>& r) {
+				return share_edge(l, r, part);
+			      });
+    vector<vector<index_t>> merged;
+    for (auto component : components) {
+      vector<index_t> s;
+      for (auto i : component) {
+	concat(s, surfaces[i]);
+      }
+      merged.push_back(s);
+    }
+    return merged;
+  }
+
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height) {
     vector<vector<index_t>> surfaces = make_surfaces(mesh);
+    auto merged_surfaces = merge_connected_surfaces(surfaces, mesh);
     auto pockets = make_pockets(surfaces, workpiece_height, mesh);
     return pockets;
   }
