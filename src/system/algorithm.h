@@ -5,6 +5,13 @@
 
 namespace gca {
 
+  template<typename I>
+  std::vector<unsigned> inds(const std::vector<I>& elems) {
+    std::vector<unsigned> is(elems.size());
+    std::iota(begin(is), end(is), 0);
+    return is;
+  }
+
   template<typename T>
   void concat(T& extend, const T& add) {
     extend.insert(end(extend), begin(add), end(add));

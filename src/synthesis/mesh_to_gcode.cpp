@@ -292,14 +292,12 @@ namespace gca {
     	 { return l.top_normal().z < r.top_normal().z; });
 
     orientation_map orient_map;
-    vector<unsigned> surfaces_left;
-    vector<unsigned> orients_left(all_orients.size());
-    std::iota(begin(orients_left), end(orients_left), 0);
+    vector<unsigned> surfaces_left = inds(surfaces);
+    vector<unsigned> orients_left = inds(all_orients);//(all_orients.size());
     while (surfaces_left.size() > 0) {
       assert(orients_left.size() > 0);
-      unsigned next_orient = orients_left.back(); //.back());
+      unsigned next_orient = orients_left.back();
       orients_left.pop_back();
-      //all_orients.pop_back();
       auto surfaces_cut = surfaces_millable_from(all_orients[next_orient], surfaces);
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
@@ -401,6 +399,17 @@ namespace gca {
   // 				    possible_orientations);
   // }
 
+  template<typename I>
+  I pick_intersection(const std::vector<I>& e1,
+		      const std::vector<I>& e2) {
+    for (auto i : e1) {
+      if (elem(i, e2)) {
+	return i;
+      }
+    }
+    assert(false);
+  }
+  
   std::vector<std::pair<stock_orientation, surface_list>>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces) {
@@ -414,10 +423,50 @@ namespace gca {
 
     orientation_map possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients);
-
-
-    vector<unsigned> orients_used;
+    assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
     
+    vector<unsigned> surfaces_left = inds(surfaces_to_cut);
+    vector<unsigned> orientations_left = inds(all_orients);
+    vector<pair<stock_orientation, surface_list>> orients;
+    for (auto orient : possible_orientations) {
+      if (surfaces_left.size() == 0) {
+	return orients;
+      }
+      cout << "Choosing next orient" << endl;
+      vector<unsigned> orients_to_choose_from = orient.second;
+      bool have_intersection = false;
+      unsigned orient_ind = 0;
+      for (auto i : orients_to_choose_from) {
+	if (elem(i, orientations_left)) {
+	  have_intersection = true;
+	  orient_ind = i;
+	}
+      }
+      if (have_intersection) {
+	cout << "Got orientation " << orient_ind << " with normal = " << all_orients[orient_ind].top_normal() << endl;
+	remove(orient_ind, orientations_left);
+	vector<unsigned> surfaces_cut;
+	surface_list surfaces;
+	for (auto i : surfaces_left) {
+	  vector<unsigned> viable_orients = possible_orientations.find(i)->second;
+	  cout << "Viable orientations for surface " << i << " are " << endl;
+	  for (auto v : viable_orients) {
+	    cout << v << endl;
+	  }
+	  cout << "END" << endl;
+	  if (elem(orient_ind, viable_orients)) {
+	    surfaces.push_back(surfaces_to_cut[i].index_list());
+	    surfaces_cut.push_back(i);
+	  }
+	}
+	orients.push_back(mk_pair(all_orients[orient_ind], surfaces));
+	subtract(surfaces_left, surfaces_cut);
+	cout << "# surfaces left = " << surfaces_left.size() << endl;
+      }
+    }
+
+    assert(surfaces_left.size() == 0);
+    return orients;
   }
 
   triangular_mesh orient_mesh(const triangular_mesh& mesh,
