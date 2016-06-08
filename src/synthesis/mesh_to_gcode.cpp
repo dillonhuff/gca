@@ -236,30 +236,47 @@ namespace gca {
     return orients;
   }
 
-  void remove_millable_surfaces(const stock_orientation& orient,
-				std::vector<index_t>& faces_left) {
-    std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
+  std::vector<unsigned>
+  surfaces_millable_from(const stock_orientation& orient,
+			 const std::vector<surface>& surfaces_left) {
+    std::vector<index_t> millable =
+      millable_faces(orient.top_normal(), orient.get_mesh());
     sort(begin(millable), end(millable));
-    delete_if(faces_left,
-	      [&millable](const index_t i)
-	      { return binary_search(begin(millable), end(millable), i); });
+    vector<unsigned> mill_surfaces;
+    for (unsigned i = 0; i < surfaces_left.size(); i++) {
+      if (surfaces_left[i].contained_by_sorted(millable)) {
+	mill_surfaces.push_back(i);
+      }
+    }
+    return mill_surfaces;
+  }
+
+  template<typename I>
+  std::vector<I>
+  copy_not_indexes(const std::vector<I>& elems,
+		   std::vector<unsigned>& inds) {
+    std::sort(begin(inds), end(inds));
+    std::vector<I> cp_elems;
+    for (unsigned i = 0; i < elems.size(); i++) {
+      if (!(std::binary_search(begin(inds), end(inds), i))) {
+    	cp_elems.push_back(elems[i]);
+      }
+    }
+    return cp_elems;
   }
 
   surface_list remove_millable_surfaces(const stock_orientation& orient,
 					std::vector<surface>& surfaces_left) {
-    std::vector<index_t> millable = millable_faces(orient.top_normal(), orient.get_mesh());
-    sort(begin(millable), end(millable));
-    surface_list mill_surfaces;
-    // TODO: Side effect free way to do this?
-    delete_if(surfaces_left,
-    	      [&millable, &mill_surfaces](const surface& s) {
-		if (s.contained_by_sorted(millable)) {
-		  mill_surfaces.push_back(s.index_list());
-		  return true;
-		}
-		return false;
-	      });
-    return mill_surfaces;
+    vector<unsigned> sfs = surfaces_millable_from(orient, surfaces_left);
+    sort(begin(sfs), end(sfs));
+    surface_list surfaces;
+    for (unsigned i = 0; i < surfaces_left.size(); i++) {
+      if (binary_search(begin(sfs), end(sfs), i)) {
+	surfaces.push_back(surfaces_left[i].index_list());
+      }
+    }
+    surfaces_left = copy_not_indexes(surfaces_left, sfs);
+    return surfaces;
   }
   
   std::vector<surface>
@@ -276,8 +293,8 @@ namespace gca {
   }
 
   std::vector<std::pair<stock_orientation, surface_list>>
-  orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& stable_surfaces) {
+  greedy_select_orientations(const triangular_mesh& part_mesh,
+			     const std::vector<surface>& stable_surfaces) {
     vector<stock_orientation> all_orients = all_stable_orientations(stable_surfaces);
 
     vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
@@ -304,7 +321,12 @@ namespace gca {
       }
     }
     return orients;
-    assert(false);
+  }
+  
+  std::vector<std::pair<stock_orientation, surface_list>>
+  orientations_to_cut(const triangular_mesh& part_mesh,
+		      const std::vector<surface>& stable_surfaces) {
+    return greedy_select_orientations(part_mesh, stable_surfaces);
   }
 
   triangular_mesh orient_mesh(const triangular_mesh& mesh,
@@ -386,7 +408,8 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    vector<pair<triangular_mesh, surface_list>> meshes = part_arrangements(part_mesh, part_ss, v);
+    vector<pair<triangular_mesh, surface_list>> meshes =
+      part_arrangements(part_mesh, part_ss, v);
     vector<gcode_program> ps =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, v);
     cut_secured_meshes(meshes, ps, v, tools);
