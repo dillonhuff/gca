@@ -251,20 +251,6 @@ namespace gca {
     return mill_surfaces;
   }
 
-  template<typename I>
-  std::vector<I>
-  copy_not_indexes(const std::vector<I>& elems,
-		   std::vector<unsigned>& inds) {
-    std::sort(begin(inds), end(inds));
-    std::vector<I> cp_elems;
-    for (unsigned i = 0; i < elems.size(); i++) {
-      if (!(std::binary_search(begin(inds), end(inds), i))) {
-    	cp_elems.push_back(elems[i]);
-      }
-    }
-    return cp_elems;
-  }
-
   surface_list remove_millable_surfaces(const stock_orientation& orient,
 					std::vector<surface>& surfaces_left) {
     vector<unsigned> sfs = surfaces_millable_from(orient, surfaces_left);
@@ -292,7 +278,7 @@ namespace gca {
     return surfaces;
   }
 
-  typedef std::map<unsigned, std::vector<stock_orientation>> orientation_map;
+  typedef std::map<unsigned, std::vector<stock_orientation*>> orientation_map;
 
   // TODO: Is part needed here?
   orientation_map
@@ -309,11 +295,14 @@ namespace gca {
 
     orientation_map orient_map;
     vector<unsigned> surfaces_left;
+    vector<unsigned> orients_left(all_orients.size());
+    std::iota(begin(orients_left), end(orients_left), 0);
     while (surfaces_left.size() > 0) {
-      assert(all_orients.size() > 0);
-      auto next_orient = all_orients.back();
-      all_orients.pop_back();
-      auto surfaces_cut = surfaces_millable_from(next_orient, surfaces);
+      assert(orients_left.size() > 0);
+      stock_orientation* next_orient = &(all_orients[orients_left.back()]); //.back());
+      orients_left.pop_back();
+      //all_orients.pop_back();
+      auto surfaces_cut = surfaces_millable_from(*next_orient, surfaces);
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
 	if (orient_map.find(surface_ind) != end(orient_map)) {
@@ -322,7 +311,7 @@ namespace gca {
 	  orients.push_back(next_orient);
 	  orient_map[surface_ind] = orients;
 	} else {
-	  vector<stock_orientation> orients{next_orient};
+	  vector<stock_orientation*> orients{next_orient};
 	  orient_map[surface_ind] = orients;
 	}
       }
@@ -346,47 +335,32 @@ namespace gca {
     return false;
   }
 
-  std::pair<unsigned, stock_orientation>
+  std::pair<unsigned, stock_orientation*>
   select_min(const std::vector<unsigned>& inds,
 	     const orientation_map& orient_map) {
+    // TODO: Add actual comparison
     unsigned i = *min_element(begin(inds), end(inds),
 			      [orient_map](const unsigned i, const unsigned j)
 			      { return true; });
     return mk_pair(i, (orient_map.find(i)->second).back());
   }
 
-  template<typename I, typename F>
-  vector<I>
-  greedy_chain(const I& init, const std::vector<I>& elems, F f) {
-    std::vector<I> chain;
-    chain.push_back(init);
-    if (elems.size() == 0) { return chain; }
-    vector<unsigned> used;
-    bool found_next = true;
-    while (found_next) {
-      found_next = false;
-      for (unsigned i = 0; i < elems.size(); i++) {
-	if (!elem(i, used) && f(elems[i], chain.back())) {
-	  chain.push_back(elems[i]);
-	  used.push_back(i);
-	  found_next = true;
-	}
-      }
-    }
-    return chain;
+  void delete_orient(const stock_orientation* orient,
+		     orientation_map& orient_map) {
   }
 
   std::vector<std::pair<stock_orientation, surface_list>>
     greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
 			     const triangular_mesh& part,
-			     const orientation_map& orient_map) {
+			     orientation_map& orient_map) {
     // TODO: Turn this into system/algorithm.h function?
     vector<unsigned> inds(surfaces_to_cut.size());
     std::iota(begin(inds), end(inds), 0);
 
     vector<pair<stock_orientation, surface_list>> orients;
+    // TODO: Make this fail if no orientations are left?
     while (inds.size() > 0) {
-      pair<unsigned, stock_orientation> next_surface_ind =
+      pair<unsigned, stock_orientation*> next_surface_ind =
 	select_min(inds, orient_map);
       remove(next_surface_ind.first, inds);
       vector<unsigned> rest =
@@ -397,13 +371,15 @@ namespace gca {
 		       return connected_by(i, j, surfaces_to_cut, part, orient_map);
 		     });
       rest.push_back(next_surface_ind.first);
+      delete_orient(next_surface_ind.second, orient_map);
 
       surface_list surfaces;
       for (auto i : rest) {
 	surfaces.push_back(surfaces_to_cut[i].index_list());
       }
-      
-      orients.push_back(mk_pair(next_surface_ind.second,
+      stock_orientation s = *next_surface_ind.second;
+      cout << "Selected orient normal = " << s.top_normal() << endl;
+      orients.push_back(mk_pair(s,
 				surfaces));
     }
     return orients;
@@ -426,7 +402,6 @@ namespace gca {
 				    part_mesh,
 				    possible_orientations);
   }
-  // }
   
   std::vector<std::pair<stock_orientation, surface_list>>
   orientations_to_cut(const triangular_mesh& part_mesh,
@@ -496,6 +471,7 @@ namespace gca {
 		    const vice v) {
     vector<pair<stock_orientation, surface_list>> orients =
       orientations_to_cut(part_mesh, part_ss);
+    cout << "Computed orientations to cut" << endl;
     vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : orients) {
       cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;

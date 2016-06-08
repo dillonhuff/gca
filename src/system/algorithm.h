@@ -209,6 +209,43 @@ namespace gca {
     }
     return components;
   }
+
+  // TODO: system/algorithm ?
+  template<typename I, typename F>
+  vector<I>
+  greedy_chain(const I& init, const std::vector<I>& elems, F f) {
+    std::vector<I> chain;
+    chain.push_back(init);
+    if (elems.size() == 0) { return chain; }
+    vector<unsigned> used;
+    bool found_next = true;
+    while (found_next) {
+      found_next = false;
+      for (unsigned i = 0; i < elems.size(); i++) {
+	if (!elem(i, used) && f(elems[i], chain.back())) {
+	  chain.push_back(elems[i]);
+	  used.push_back(i);
+	  found_next = true;
+	}
+      }
+    }
+    return chain;
+  }
+
+
+  template<typename I>
+  std::vector<I>
+  copy_not_indexes(const std::vector<I>& elems,
+		   std::vector<unsigned>& inds) {
+    std::sort(begin(inds), end(inds));
+    std::vector<I> cp_elems;
+    for (unsigned i = 0; i < elems.size(); i++) {
+      if (!(std::binary_search(begin(inds), end(inds), i))) {
+    	cp_elems.push_back(elems[i]);
+      }
+    }
+    return cp_elems;
+  }
   
 }
 
