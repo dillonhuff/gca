@@ -254,6 +254,18 @@ namespace gca {
     return cp_elems;
   }
   
+  template<typename I>
+  std::vector<I> intersection(const std::vector<I>& l,
+			      const std::vector<I>& r) {
+    std::vector<I> inter;
+    for (auto i : l) {
+      if (elem(i, r)) {
+	inter.push_back(i);
+      }
+    }
+    return inter;
+  }
+
 }
 
 #endif

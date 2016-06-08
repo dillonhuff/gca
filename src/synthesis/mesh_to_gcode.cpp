@@ -381,24 +381,6 @@ namespace gca {
   //   return orients;
   // }
 
-  // std::vector<std::pair<stock_orientation, surface_list>>
-  //   greedy_select_orientations(const triangular_mesh& part_mesh,
-  // 			       const std::vector<surface>& stable_surfaces) {
-  //   vector<stock_orientation> all_orients =
-  //     all_stable_orientations(stable_surfaces);
-
-  //   vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
-  //   cout << "# initial faces = " << surfaces_to_cut.size() << endl;
-  //   remove_SA_surfaces(stable_surfaces, surfaces_to_cut);
-  //   cout << "# faces left = " << surfaces_to_cut.size() << endl;
-
-  //   auto possible_orientations =
-  //     greedy_possible_orientations(surfaces_to_cut, all_orients, part_mesh);
-  //   return greedy_pick_orientations(surfaces_to_cut,
-  // 				    part_mesh,
-  // 				    possible_orientations);
-  // }
-
   std::vector<std::pair<stock_orientation, surface_list>>
     greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
 			     const std::vector<stock_orientation>& all_orients,
@@ -411,15 +393,10 @@ namespace gca {
 	return orients;
       }
       vector<unsigned> orients_to_choose_from = orient.second;
-      bool have_intersection = false;
-      unsigned orient_ind = 0;
-      for (auto i : orients_to_choose_from) {
-	if (elem(i, orientations_left)) {
-	  have_intersection = true;
-	  orient_ind = i;
-	}
-      }
-      if (have_intersection) {
+      auto inter_orients = intersection(orients_to_choose_from,
+					orientations_left);
+      if (inter_orients.size() > 0) {
+	unsigned orient_ind = inter_orients.back();
 	remove(orient_ind, orientations_left);
 	vector<unsigned> surfaces_cut;
 	surface_list surfaces;
