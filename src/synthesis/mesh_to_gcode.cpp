@@ -459,7 +459,9 @@ namespace gca {
 	    surfaces_cut.push_back(i);
 	  }
 	}
-	orients.push_back(mk_pair(all_orients[orient_ind], surfaces));
+	if (surfaces.size() > 0) {
+	  orients.push_back(mk_pair(all_orients[orient_ind], surfaces));
+	}
 	subtract(surfaces_left, surfaces_cut);
 	cout << "# surfaces left = " << surfaces_left.size() << endl;
       }
