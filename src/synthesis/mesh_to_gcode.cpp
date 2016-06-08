@@ -315,21 +315,18 @@ namespace gca {
     return orient_map;
   }
 
-  // bool connected_by(const unsigned i,
-  // 		    const unsigned j,
-  // 		    const std::vector<surface>& surfaces,
-  // 		    const triangular_mesh& part,
-  // 		    const orientation_map& orient_map) {
-  //   auto ind1 = surfaces[i].index_list();
-  //   auto ind2 = surfaces[j].index_list();
-  //   if (share_edge(ind1, ind2, part)) {
-  //     // return share_orientation(orient_map[i]->second,
-  //     // 			       orient_map[j]->second,
-  //     // 			       );
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  bool connected_by(const unsigned i,
+  		    const unsigned j,
+  		    const std::vector<surface>& surfaces,
+  		    const triangular_mesh& part,
+  		    const orientation_map& orient_map) {
+    auto ind1 = surfaces[i].index_list();
+    auto ind2 = surfaces[j].index_list();
+    if (share_edge(ind1, ind2, part)) {
+      return intersection(orient_map.find(i)->second, orient_map.find(j)->second).size() > 0;
+    }
+    return false;
+  }
 
   // std::pair<unsigned, stock_orientation*>
   // select_min(const std::vector<unsigned>& inds,
@@ -383,18 +380,28 @@ namespace gca {
 
   std::vector<unsigned>
   select_surfaces(unsigned orient_ind,
-		  const std::vector<unsigned>& surfaces_left,
-		  const orientation_map& possible_orientations) {
+		  std::vector<unsigned>& surfaces_left,
+		  const std::vector<surface>& surfaces_to_cut,
+		  const orientation_map& possible_orientations,
+		  const triangular_mesh& part) {
     vector<unsigned> initial_surfaces;
     for (auto i : surfaces_left) {
       vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-      if (elem(orient_ind, viable_orients) && viable_orients.size() == 1) {
+      if (elem(orient_ind, viable_orients)) {// && viable_orients.size() == 1) {
 	initial_surfaces.push_back(i);
       }
     }
     vector<unsigned> surfaces_cut;
     for (auto s_ind : initial_surfaces) {
-      
+      vector<unsigned> rest =
+  	greedy_chain(s_ind,
+		     surfaces_left,
+  		     [part, possible_orientations, surfaces_to_cut]
+		     (const unsigned i, const unsigned j) {
+  		       return connected_by(i, j, surfaces_to_cut, part, possible_orientations);
+  		     });
+      subtract(surfaces_left, rest);
+      concat(surfaces_cut, rest);
     }
     return surfaces_cut;
   }
@@ -402,7 +409,8 @@ namespace gca {
   std::vector<std::pair<stock_orientation, surface_list>>
     greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
 			     const std::vector<stock_orientation>& all_orients,
-  			     orientation_map& possible_orientations) {
+  			     orientation_map& possible_orientations,
+			     const triangular_mesh& part) {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
     vector<pair<stock_orientation, surface_list>> orients;
@@ -415,9 +423,12 @@ namespace gca {
 
       if (inter_orients.size() > 0) {
 	unsigned orient_ind = inter_orients.back();
+	cout << "Trying orientation " << orient_ind << " with top normal ";
+	cout << all_orients[orient_ind].top_normal() << endl;
 	remove(orient_ind, orientations_left);
 	vector<unsigned> surfaces_cut =
-	  select_surfaces(orient_ind, surfaces_left, possible_orientations);
+	  select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
+	cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
 	surface_list surfaces;
 	if (surfaces_cut.size() > 0) {
 	  for (auto i : surfaces_cut) {
@@ -450,7 +461,8 @@ namespace gca {
 
     return greedy_pick_orientations(surfaces_to_cut,
 				    all_orients,
-				    possible_orientations);
+				    possible_orientations,
+				    part_mesh);
   }
 
   triangular_mesh orient_mesh(const triangular_mesh& mesh,
