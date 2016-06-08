@@ -381,6 +381,20 @@ namespace gca {
   //   return orients;
   // }
 
+  std::vector<unsigned>
+  select_surfaces(unsigned orient_ind,
+		  const std::vector<unsigned>& surfaces_left,
+		  const orientation_map& possible_orientations) {
+    vector<unsigned> surfaces_cut;
+    for (auto i : surfaces_left) {
+      vector<unsigned> viable_orients = possible_orientations.find(i)->second;
+      if (elem(orient_ind, viable_orients)) {
+	surfaces_cut.push_back(i);
+      }
+    }
+    return surfaces_cut;
+  }
+
   std::vector<std::pair<stock_orientation, surface_list>>
     greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
 			     const std::vector<stock_orientation>& all_orients,
@@ -389,25 +403,22 @@ namespace gca {
     vector<unsigned> orientations_left = inds(all_orients);
     vector<pair<stock_orientation, surface_list>> orients;
     for (auto orient : possible_orientations) {
-      if (surfaces_left.size() == 0) {
-	return orients;
-      }
+      if (surfaces_left.size() == 0) { return orients; }
+
       vector<unsigned> orients_to_choose_from = orient.second;
       auto inter_orients = intersection(orients_to_choose_from,
 					orientations_left);
+
       if (inter_orients.size() > 0) {
 	unsigned orient_ind = inter_orients.back();
 	remove(orient_ind, orientations_left);
-	vector<unsigned> surfaces_cut;
+	vector<unsigned> surfaces_cut =
+	  select_surfaces(orient_ind, surfaces_left, possible_orientations);
 	surface_list surfaces;
-	for (auto i : surfaces_left) {
-	  vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-	  if (elem(orient_ind, viable_orients)) {
+	if (surfaces_cut.size() > 0) {
+	  for (auto i : surfaces_cut) {
 	    surfaces.push_back(surfaces_to_cut[i].index_list());
-	    surfaces_cut.push_back(i);
 	  }
-	}
-	if (surfaces.size() > 0) {
 	  orients.push_back(mk_pair(all_orients[orient_ind], surfaces));
 	}
 	subtract(surfaces_left, surfaces_cut);
