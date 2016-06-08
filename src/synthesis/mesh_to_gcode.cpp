@@ -378,6 +378,7 @@ namespace gca {
   //   return orients;
   // }
 
+  // TODO: Is there a way to do this without const?
   std::vector<unsigned>
   select_surfaces(unsigned orient_ind,
 		  std::vector<unsigned>& surfaces_left,
@@ -387,7 +388,9 @@ namespace gca {
     vector<unsigned> initial_surfaces;
     for (auto i : surfaces_left) {
       vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-      if (elem(orient_ind, viable_orients)) {// && viable_orients.size() == 1) {
+      if (elem(orient_ind, viable_orients)) { // && identical_normals(viable_orients,
+					      // 			all_orients,
+					      // 			0.001)) {
 	initial_surfaces.push_back(i);
       }
     }
@@ -458,6 +461,14 @@ namespace gca {
     orientation_map possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients);
     assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
+
+    cout << "ORIENTATION MAP: " << endl;
+    for (auto m : possible_orientations) {
+      cout << "Surface " << m.first << " can be cut from orientations" << endl;
+      for (auto orient_ind : m.second) {
+	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
+      }
+    }
 
     return greedy_pick_orientations(surfaces_to_cut,
 				    all_orients,
