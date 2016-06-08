@@ -292,16 +292,14 @@ namespace gca {
     return surfaces;
   }
 
-  std::vector<std::pair<stock_orientation, surface_list>>
-  greedy_select_orientations(const triangular_mesh& part_mesh,
-			     const std::vector<surface>& stable_surfaces) {
-    vector<stock_orientation> all_orients = all_stable_orientations(stable_surfaces);
+  typedef std::map<unsigned, std::vector<stock_orientation>> orientation_map;
 
-    vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
-    cout << "# initial faces = " << surfaces_to_cut.size() << endl;
-    remove_SA_surfaces(stable_surfaces, surfaces_to_cut);
-    cout << "# faces left = " << surfaces_to_cut.size() << endl;
-
+  // TODO: Is part needed here?
+  orientation_map
+  greedy_possible_orientations(const std::vector<surface>& surfaces,
+			       std::vector<stock_orientation>& all_orients,
+			       const triangular_mesh& part) {
+    // TODO: Better way to do this?
     sort(begin(all_orients), end(all_orients),
     	 [](const stock_orientation l, const stock_orientation r)
     	 { return l.top_normal().x < r.top_normal().x; });
@@ -309,19 +307,126 @@ namespace gca {
     	 [](const stock_orientation l, const stock_orientation r)
     	 { return l.top_normal().z < r.top_normal().z; });
 
-    vector<pair<stock_orientation, surface_list>> orients;
-    while (surfaces_to_cut.size() > 0) {
+    orientation_map orient_map;
+    vector<unsigned> surfaces_left;
+    while (surfaces_left.size() > 0) {
       assert(all_orients.size() > 0);
       auto next_orient = all_orients.back();
       all_orients.pop_back();
-      auto surfaces_cut = remove_millable_surfaces(next_orient, surfaces_to_cut);
-      if (surfaces_cut.size() > 0) {
-    	cout << "Surfaces left = " << surfaces_to_cut.size() << endl;
-    	orients.push_back(mk_pair(next_orient, surfaces_cut));
+      auto surfaces_cut = surfaces_millable_from(next_orient, surfaces);
+      subtract(surfaces_left, surfaces_cut);
+      for (auto surface_ind : surfaces_cut) {
+	if (orient_map.find(surface_ind) != end(orient_map)) {
+	  auto k = orient_map.find(surface_ind);
+	  auto orients = k->second;
+	  orients.push_back(next_orient);
+	  orient_map[surface_ind] = orients;
+	} else {
+	  vector<stock_orientation> orients{next_orient};
+	  orient_map[surface_ind] = orients;
+	}
       }
+    }
+    return orient_map;
+  }
+
+  bool connected_by(const unsigned i,
+		    const unsigned j,
+		    const std::vector<surface>& surfaces,
+		    const triangular_mesh& part,
+		    const orientation_map& orient_map) {
+    auto ind1 = surfaces[i].index_list();
+    auto ind2 = surfaces[j].index_list();
+    if (share_edge(ind1, ind2, part)) {
+      // return share_orientation(orient_map[i]->second,
+      // 			       orient_map[j]->second,
+      // 			       );
+      return true;
+    }
+    return false;
+  }
+
+  std::pair<unsigned, stock_orientation>
+  select_min(const std::vector<unsigned>& inds,
+	     const orientation_map& orient_map) {
+    unsigned i = *min_element(begin(inds), end(inds),
+			      [orient_map](const unsigned i, const unsigned j)
+			      { return true; });
+    return mk_pair(i, (orient_map.find(i)->second).back());
+  }
+
+  template<typename I, typename F>
+  vector<I>
+  greedy_chain(const I& init, const std::vector<I>& elems, F f) {
+    std::vector<I> chain;
+    chain.push_back(init);
+    if (elems.size() == 0) { return chain; }
+    vector<unsigned> used;
+    bool found_next = true;
+    while (found_next) {
+      found_next = false;
+      for (unsigned i = 0; i < elems.size(); i++) {
+	if (!elem(i, used) && f(elems[i], chain.back())) {
+	  chain.push_back(elems[i]);
+	  used.push_back(i);
+	  found_next = true;
+	}
+      }
+    }
+    return chain;
+  }
+
+  std::vector<std::pair<stock_orientation, surface_list>>
+    greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
+			     const triangular_mesh& part,
+			     const orientation_map& orient_map) {
+    // TODO: Turn this into system/algorithm.h function?
+    vector<unsigned> inds(surfaces_to_cut.size());
+    std::iota(begin(inds), end(inds), 0);
+
+    vector<pair<stock_orientation, surface_list>> orients;
+    while (inds.size() > 0) {
+      pair<unsigned, stock_orientation> next_surface_ind =
+	select_min(inds, orient_map);
+      remove(next_surface_ind.first, inds);
+      vector<unsigned> rest =
+	greedy_chain(next_surface_ind.first,
+		     inds,
+		     [part, orient_map, surfaces_to_cut]
+		      (const unsigned i, const unsigned j) {
+		       return connected_by(i, j, surfaces_to_cut, part, orient_map);
+		     });
+      rest.push_back(next_surface_ind.first);
+
+      surface_list surfaces;
+      for (auto i : rest) {
+	surfaces.push_back(surfaces_to_cut[i].index_list());
+      }
+      
+      orients.push_back(mk_pair(next_surface_ind.second,
+				surfaces));
     }
     return orients;
   }
+
+  std::vector<std::pair<stock_orientation, surface_list>>
+    greedy_select_orientations(const triangular_mesh& part_mesh,
+			       const std::vector<surface>& stable_surfaces) {
+    vector<stock_orientation> all_orients =
+      all_stable_orientations(stable_surfaces);
+
+    vector<surface> surfaces_to_cut = cut_surfaces(part_mesh);
+    cout << "# initial faces = " << surfaces_to_cut.size() << endl;
+    remove_SA_surfaces(stable_surfaces, surfaces_to_cut);
+    cout << "# faces left = " << surfaces_to_cut.size() << endl;
+
+    auto possible_orientations =
+      greedy_possible_orientations(surfaces_to_cut, all_orients, part_mesh);
+    return greedy_pick_orientations(surfaces_to_cut,
+				    part_mesh,
+				    possible_orientations);
+  }
+  // }
   
   std::vector<std::pair<stock_orientation, surface_list>>
   orientations_to_cut(const triangular_mesh& part_mesh,

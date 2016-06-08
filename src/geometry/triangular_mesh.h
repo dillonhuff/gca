@@ -240,7 +240,11 @@ namespace gca {
   bool share_edge(const index_t l,
 		  const index_t r,
 		  const triangular_mesh& part);
-  
+
+  bool share_edge(const std::vector<index_t>& l_faces,
+		  const std::vector<index_t>& r_faces,
+		  const triangular_mesh& part);
+
   std::vector<std::vector<index_t>>
   merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 			   const triangular_mesh& part);
