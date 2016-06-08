@@ -399,15 +399,46 @@ namespace gca {
   // 				    possible_orientations);
   // }
 
-  template<typename I>
-  I pick_intersection(const std::vector<I>& e1,
-		      const std::vector<I>& e2) {
-    for (auto i : e1) {
-      if (elem(i, e2)) {
-	return i;
+  std::vector<std::pair<stock_orientation, surface_list>>
+    greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
+			     const std::vector<stock_orientation>& all_orients,
+  			     orientation_map& possible_orientations) {
+    vector<unsigned> surfaces_left = inds(surfaces_to_cut);
+    vector<unsigned> orientations_left = inds(all_orients);
+    vector<pair<stock_orientation, surface_list>> orients;
+    for (auto orient : possible_orientations) {
+      if (surfaces_left.size() == 0) {
+	return orients;
+      }
+      vector<unsigned> orients_to_choose_from = orient.second;
+      bool have_intersection = false;
+      unsigned orient_ind = 0;
+      for (auto i : orients_to_choose_from) {
+	if (elem(i, orientations_left)) {
+	  have_intersection = true;
+	  orient_ind = i;
+	}
+      }
+      if (have_intersection) {
+	remove(orient_ind, orientations_left);
+	vector<unsigned> surfaces_cut;
+	surface_list surfaces;
+	for (auto i : surfaces_left) {
+	  vector<unsigned> viable_orients = possible_orientations.find(i)->second;
+	  if (elem(orient_ind, viable_orients)) {
+	    surfaces.push_back(surfaces_to_cut[i].index_list());
+	    surfaces_cut.push_back(i);
+	  }
+	}
+	if (surfaces.size() > 0) {
+	  orients.push_back(mk_pair(all_orients[orient_ind], surfaces));
+	}
+	subtract(surfaces_left, surfaces_cut);
       }
     }
-    assert(false);
+
+    assert(surfaces_left.size() == 0);
+    return orients;
   }
   
   std::vector<std::pair<stock_orientation, surface_list>>
@@ -424,51 +455,10 @@ namespace gca {
     orientation_map possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients);
     assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
-    
-    vector<unsigned> surfaces_left = inds(surfaces_to_cut);
-    vector<unsigned> orientations_left = inds(all_orients);
-    vector<pair<stock_orientation, surface_list>> orients;
-    for (auto orient : possible_orientations) {
-      if (surfaces_left.size() == 0) {
-	return orients;
-      }
-      cout << "Choosing next orient" << endl;
-      vector<unsigned> orients_to_choose_from = orient.second;
-      bool have_intersection = false;
-      unsigned orient_ind = 0;
-      for (auto i : orients_to_choose_from) {
-	if (elem(i, orientations_left)) {
-	  have_intersection = true;
-	  orient_ind = i;
-	}
-      }
-      if (have_intersection) {
-	cout << "Got orientation " << orient_ind << " with normal = " << all_orients[orient_ind].top_normal() << endl;
-	remove(orient_ind, orientations_left);
-	vector<unsigned> surfaces_cut;
-	surface_list surfaces;
-	for (auto i : surfaces_left) {
-	  vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-	  cout << "Viable orientations for surface " << i << " are " << endl;
-	  for (auto v : viable_orients) {
-	    cout << v << endl;
-	  }
-	  cout << "END" << endl;
-	  if (elem(orient_ind, viable_orients)) {
-	    surfaces.push_back(surfaces_to_cut[i].index_list());
-	    surfaces_cut.push_back(i);
-	  }
-	}
-	if (surfaces.size() > 0) {
-	  orients.push_back(mk_pair(all_orients[orient_ind], surfaces));
-	}
-	subtract(surfaces_left, surfaces_cut);
-	cout << "# surfaces left = " << surfaces_left.size() << endl;
-      }
-    }
 
-    assert(surfaces_left.size() == 0);
-    return orients;
+    return greedy_pick_orientations(surfaces_to_cut,
+				    all_orients,
+				    possible_orientations);
   }
 
   triangular_mesh orient_mesh(const triangular_mesh& mesh,
@@ -533,7 +523,6 @@ namespace gca {
 		    const vice v) {
     vector<pair<stock_orientation, surface_list>> orients =
       orientations_to_cut(part_mesh, part_ss);
-    cout << "Computed orientations to cut" << endl;
     vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : orients) {
       cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
