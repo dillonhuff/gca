@@ -50,6 +50,18 @@ namespace gca {
   std::vector<std::pair<stock_orientation, surface_list>>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces);
+
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
+				       const std::vector<surface>& stable_surfaces);
+
+  std::vector<stock_orientation>
+  all_stable_orientations(const std::vector<surface>& surfaces);
+
+  // TODO: Should this really be a map?
+  std::vector<std::pair<stock_orientation, vector<unsigned>>>
+  pick_orientations(const triangular_mesh& part_mesh,
+		    const std::vector<surface>& surfaces_to_cut,
+		    std::vector<stock_orientation>& all_orients);
   
 }
 
