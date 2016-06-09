@@ -319,11 +319,13 @@ namespace gca {
   		    const unsigned j,
   		    const std::vector<surface>& surfaces,
   		    const triangular_mesh& part,
+		    const unsigned orient_ind,
   		    const orientation_map& orient_map) {
     auto ind1 = surfaces[i].index_list();
     auto ind2 = surfaces[j].index_list();
     if (share_edge(ind1, ind2, part)) {
-      return intersection(orient_map.find(i)->second, orient_map.find(j)->second).size() > 0;
+      return elem(orient_ind, orient_map.find(i)->second) &&
+	elem(orient_ind, orient_map.find(j)->second); //).size() > 0;
     }
     return false;
   }
@@ -388,9 +390,7 @@ namespace gca {
     vector<unsigned> initial_surfaces;
     for (auto i : surfaces_left) {
       vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-      if (elem(orient_ind, viable_orients)) { // && identical_normals(viable_orients,
-					      // 			all_orients,
-					      // 			0.001)) {
+      if (elem(orient_ind, viable_orients)) {
 	initial_surfaces.push_back(i);
       }
     }
@@ -399,9 +399,9 @@ namespace gca {
       vector<unsigned> rest =
   	greedy_chain(s_ind,
 		     surfaces_left,
-  		     [part, possible_orientations, surfaces_to_cut]
+  		     [orient_ind, part, possible_orientations, surfaces_to_cut]
 		     (const unsigned i, const unsigned j) {
-  		       return connected_by(i, j, surfaces_to_cut, part, possible_orientations);
+  		       return connected_by(i, j, surfaces_to_cut, part, orient_ind, possible_orientations);
   		     });
       subtract(surfaces_left, rest);
       concat(surfaces_cut, rest);
