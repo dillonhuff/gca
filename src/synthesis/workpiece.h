@@ -1,3 +1,6 @@
+#ifndef GCA_WORKPIECE_H
+#define GCA_WORKPIECE_H
+
 #include "geometry/point.h"
 
 namespace gca {
@@ -20,3 +23,5 @@ namespace gca {
   };
 
 }
+
+#endif

@@ -1,0 +1,56 @@
+#ifndef GCA_FIXTURE_ANALYSIS_H
+#define GCA_FIXTURE_ANALYSIS_H
+
+#include "geometry/surface.h"
+#include "synthesis/vice.h"
+#include "synthesis/workpiece.h"
+
+namespace gca {
+
+  class stock_orientation {
+  protected:
+    const surface* left;
+    const surface* right;
+    const surface* bottom;
+
+  public:
+    inline point top_normal() const {
+      point bn = bottom->face_orientation(bottom->front());
+      point n = bn - 2*bn;
+      assert(within_eps(angle_between(n, bn), 180, 0.1));
+      return n;
+    }
+
+    inline point left_normal() const {
+      point bn = left->face_orientation(bottom->front());
+      point n = bn - 2*bn;
+      assert(within_eps(angle_between(n, bn), 180, 0.1));
+      return n;
+    }
+    
+    inline const triangular_mesh& get_mesh() const
+    { return left->get_parent_mesh(); }
+
+    stock_orientation(const surface* p_left,
+		      const surface* p_right,
+		      const surface* p_bottom) :
+      left(p_left), right(p_right), bottom(p_bottom) {}
+  };
+  
+  typedef std::vector<std::vector<index_t>> surface_list;
+
+  std::vector<surface> outer_surfaces(const triangular_mesh& part);
+
+  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
+			    const workpiece w);
+
+  void classify_part_surfaces(std::vector<surface>& part_surfaces,
+			      const workpiece workpiece_mesh);
+
+  std::vector<std::pair<stock_orientation, surface_list>>
+  orientations_to_cut(const triangular_mesh& part_mesh,
+		      const std::vector<surface>& stable_surfaces);
+  
+}
+
+#endif

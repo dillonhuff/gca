@@ -17,6 +17,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp
 	       test/polygon_tests.cpp
 	       test/polyline_tests.cpp
@@ -51,6 +52,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/gcode/value.h
 	    ./src/gcode/gcode_program.h
 	    ./src/geometry/line.h
+	    ./src/geometry/surface.h
 	    ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/spline_sampling.h
@@ -120,6 +122,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/axis_3.cpp
+	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/vice.cpp
 	 ./src/system/settings.cpp

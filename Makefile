@@ -1325,6 +1325,39 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
+src/synthesis/fixture_analysis.o: src/synthesis/fixture_analysis.cpp.o
+
+.PHONY : src/synthesis/fixture_analysis.o
+
+# target to build an object file
+src/synthesis/fixture_analysis.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/fixture_analysis.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/fixture_analysis.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/fixture_analysis.cpp.o
+.PHONY : src/synthesis/fixture_analysis.cpp.o
+
+src/synthesis/fixture_analysis.i: src/synthesis/fixture_analysis.cpp.i
+
+.PHONY : src/synthesis/fixture_analysis.i
+
+# target to preprocess a source file
+src/synthesis/fixture_analysis.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/fixture_analysis.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/fixture_analysis.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/fixture_analysis.cpp.i
+.PHONY : src/synthesis/fixture_analysis.cpp.i
+
+src/synthesis/fixture_analysis.s: src/synthesis/fixture_analysis.cpp.s
+
+.PHONY : src/synthesis/fixture_analysis.s
+
+# target to generate assembly for a file
+src/synthesis/fixture_analysis.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/fixture_analysis.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/fixture_analysis.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/fixture_analysis.cpp.s
+.PHONY : src/synthesis/fixture_analysis.cpp.s
+
 src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
 
 .PHONY : src/synthesis/linear_cut.o
@@ -2135,6 +2168,33 @@ test/dxf_to_gcode_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.s
 .PHONY : test/dxf_to_gcode_tests.cpp.s
 
+test/fixture_analysis_tests.o: test/fixture_analysis_tests.cpp.o
+
+.PHONY : test/fixture_analysis_tests.o
+
+# target to build an object file
+test/fixture_analysis_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fixture_analysis_tests.cpp.o
+.PHONY : test/fixture_analysis_tests.cpp.o
+
+test/fixture_analysis_tests.i: test/fixture_analysis_tests.cpp.i
+
+.PHONY : test/fixture_analysis_tests.i
+
+# target to preprocess a source file
+test/fixture_analysis_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fixture_analysis_tests.cpp.i
+.PHONY : test/fixture_analysis_tests.cpp.i
+
+test/fixture_analysis_tests.s: test/fixture_analysis_tests.cpp.s
+
+.PHONY : test/fixture_analysis_tests.s
+
+# target to generate assembly for a file
+test/fixture_analysis_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fixture_analysis_tests.cpp.s
+.PHONY : test/fixture_analysis_tests.cpp.s
+
 test/gcode_to_cuts_tests.o: test/gcode_to_cuts_tests.cpp.o
 
 .PHONY : test/gcode_to_cuts_tests.o
@@ -2821,6 +2881,9 @@ help:
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"
+	@echo "... src/synthesis/fixture_analysis.o"
+	@echo "... src/synthesis/fixture_analysis.i"
+	@echo "... src/synthesis/fixture_analysis.s"
 	@echo "... src/synthesis/linear_cut.o"
 	@echo "... src/synthesis/linear_cut.i"
 	@echo "... src/synthesis/linear_cut.s"
@@ -2899,6 +2962,9 @@ help:
 	@echo "... test/dxf_to_gcode_tests.o"
 	@echo "... test/dxf_to_gcode_tests.i"
 	@echo "... test/dxf_to_gcode_tests.s"
+	@echo "... test/fixture_analysis_tests.o"
+	@echo "... test/fixture_analysis_tests.i"
+	@echo "... test/fixture_analysis_tests.s"
 	@echo "... test/gcode_to_cuts_tests.o"
 	@echo "... test/gcode_to_cuts_tests.i"
 	@echo "... test/gcode_to_cuts_tests.s"

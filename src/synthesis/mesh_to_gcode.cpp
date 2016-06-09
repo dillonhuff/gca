@@ -1,5 +1,6 @@
 #include "geometry/matrix.h"
 #include "synthesis/axis_3.h"
+#include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/millability.h"
 #include "synthesis/toolpath_generation.h"
@@ -7,40 +8,12 @@
 
 namespace gca {
 
-  typedef std::vector<std::vector<index_t>> surface_list;
-
   ostream& operator<<(ostream& out, const workpiece& w) {
     out << "WORKPIECE" << endl;
     out << w.sides[0] << endl;
     out << w.sides[1] << endl;
     out << w.sides[2] << endl;
     return out;
-  }
-
-  void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const workpiece workpiece_mesh) {
-    vector<point> normals;
-    normals.push_back(point(1, 0, 0));
-    normals.push_back(point(-1, 0, 0));
-    normals.push_back(point(0, 1, 0));
-    normals.push_back(point(0, -1, 0));
-    normals.push_back(point(0, 0, 1));
-    normals.push_back(point(0, 0, -1));
-
-    for (auto& sf : part_surfaces) {
-      for (auto n : normals) {
-	if (within_eps(angle_between(n, sf.face_orientation(sf.front())), 0, 0.001)) {
-	  sf.set_SA();
-	}
-      }
-    }
-  }
-
-  // TODO: Change to actually align instead of just making surfaces
-  // orthogonal to axes
-  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
-			    const workpiece w) {
-    return w;
   }
 
   bool any_SA_surface_contains(index_t i,
@@ -326,6 +299,22 @@ namespace gca {
     return mk_pair(shift_mesh(oriented_mesh, v), surfaces);
   }
 
+  std::vector<std::pair<triangular_mesh, surface_list>>
+  part_arrangements(const triangular_mesh& part_mesh,
+		    const vector<surface>& part_ss,
+		    const vice v) {
+    vector<pair<stock_orientation, surface_list>> orients =
+      orientations_to_cut(part_mesh, part_ss);
+    vector<pair<triangular_mesh, surface_list>> meshes;
+    for (auto orient_surfaces_pair : orients) {
+      cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
+      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
+					  orient_surfaces_pair.second,
+					  v));
+    }
+    return meshes;
+  }
+
   gcode_program cut_secured_mesh(const std::pair<triangular_mesh, std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
 				 const vice v,
 				 const std::vector<tool>& tools) {
@@ -350,22 +339,6 @@ namespace gca {
     for (auto mesh_surface_pair : meshes) {
       progs.push_back(cut_secured_mesh(mesh_surface_pair, v, tools));
     }
-  }
-
-  std::vector<std::pair<triangular_mesh, surface_list>>
-  part_arrangements(const triangular_mesh& part_mesh,
-		    const vector<surface>& part_ss,
-		    const vice v) {
-    vector<pair<stock_orientation, surface_list>> orients =
-      orientations_to_cut(part_mesh, part_ss);
-    vector<pair<triangular_mesh, surface_list>> meshes;
-    for (auto orient_surfaces_pair : orients) {
-      cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
-      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
-					  orient_surfaces_pair.second,
-					  v));
-    }
-    return meshes;
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
