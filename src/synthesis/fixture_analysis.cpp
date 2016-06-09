@@ -201,19 +201,6 @@ namespace gca {
 	initial_surfaces.push_back(i);
       }
     }
-    // vector<unsigned> surfaces_cut;
-    // for (auto s_ind : initial_surfaces) {
-    //   vector<unsigned> rest =
-    // 	greedy_chain(s_ind,
-    // 		     surfaces_left,
-    // 		     [orient_ind, part, possible_orientations, surfaces_to_cut]
-    // 		     (const unsigned i, const unsigned j) {
-    // 		       return connected_by(i, j, surfaces_to_cut, part, orient_ind, possible_orientations);
-    // 		     });
-    //   
-    //   concat(surfaces_cut, rest);
-    // }
-    //subtract(surfaces_left, rest);
     return initial_surfaces;
   }
 
