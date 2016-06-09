@@ -126,9 +126,11 @@ namespace gca {
     double d = -(v1.dot(n));
     for (auto p : part.vertex_list()) {
       double sgn = n.dot(p) + d; // - v1);
+      // TODO: Eliminate ad hoc tolerance
       if (sgn > 0.0001) {
     	all_neg = false;
       }
+      // TODO: Eliminate ad hoc tolerance
       if (sgn < 0.00001) {
 	all_pos = false;
       }
