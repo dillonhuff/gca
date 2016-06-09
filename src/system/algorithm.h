@@ -1,6 +1,7 @@
 #ifndef GCA_SYSTEM_ALGORITHM_H
 #define GCA_SYSTEM_ALGORITHM_H
 
+#include <numeric>
 #include <utility>
 
 namespace gca {
@@ -219,12 +220,12 @@ namespace gca {
 
   // TODO: system/algorithm ?
   template<typename I, typename F>
-  vector<I>
+  std::vector<I>
   greedy_chain(const I& init, const std::vector<I>& elems, F f) {
     std::vector<I> chain;
     chain.push_back(init);
     if (elems.size() == 0) { return chain; }
-    vector<unsigned> used;
+    std::vector<unsigned> used;
     bool found_next = true;
     while (found_next) {
       found_next = false;

@@ -124,6 +124,10 @@ namespace gca {
 				      const std::vector<index_t>& faces,
 				      const triangular_mesh& mesh,
 				      const tool& tool);
+
+  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
+				  const double safe_height);
+
 }
 
 #endif

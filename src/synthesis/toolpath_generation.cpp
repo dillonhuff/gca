@@ -3,6 +3,7 @@
 #include "synthesis/cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/shape_layout.h"
+#include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 
@@ -354,6 +355,38 @@ namespace gca {
     vector<polyline> lines;
     lines.push_back(pts);
     return shift_lines(lines, point(0, 0, tool.length()));
+  }
+
+  std::vector<polyline> reflect_y(const std::vector<polyline>& pocket_lines) {
+    vector<polyline> reflected;
+    for (auto p : pocket_lines) {
+      reflected.push_back(p.apply([](const point p)
+				  { return point(p.x, -p.y, p.z); }));
+    }
+    return reflected;
+  }
+
+  vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
+			       const cut_params params) {
+    vector<cut*> cuts;
+    for (auto p : pocket_lines) {
+      auto cs = polyline_cuts(p);
+      cuts.insert(cuts.end(), cs.begin(), cs.end());
+    }
+    return cuts_to_gcode(cuts, params);
+  }
+
+  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
+				  const double safe_height) {
+    assert(pocket_lines.size() > 0);
+    for (auto pl : pocket_lines) {
+      assert(pl.num_points() > 0);
+    }
+    auto reflected_lines = reflect_y(pocket_lines);
+    cut_params params;
+    params.target_machine = EMCO_F1;
+    params.safe_height = safe_height;
+    return polylines_cuts(reflected_lines, params);
   }
 
 }

@@ -62,6 +62,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/simulators/sim_mill.h
 	    ./src/simulators/sim_res.h
 	    ./src/synthesis/mesh_to_gcode.h
+	    ./src/synthesis/workpiece_clipping.h
 	    ./src/synthesis/cut.h
 	    ./src/synthesis/linear_cut.h
 	    ./src/synthesis/circular_arc.h
@@ -72,6 +73,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/millability.h
 	    ./src/synthesis/vice.h
 	    ./src/synthesis/tool.h
+	    ./src/synthesis/workpiece.h
 	    ./src/system/arena_allocator.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
@@ -112,6 +114,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
 	 ./src/synthesis/machine.cpp
+	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp

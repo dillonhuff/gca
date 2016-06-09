@@ -1688,6 +1688,39 @@ src/synthesis/vice.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/vice.cpp.s
 .PHONY : src/synthesis/vice.cpp.s
 
+src/synthesis/workpiece_clipping.o: src/synthesis/workpiece_clipping.cpp.o
+
+.PHONY : src/synthesis/workpiece_clipping.o
+
+# target to build an object file
+src/synthesis/workpiece_clipping.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/workpiece_clipping.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/workpiece_clipping.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/workpiece_clipping.cpp.o
+.PHONY : src/synthesis/workpiece_clipping.cpp.o
+
+src/synthesis/workpiece_clipping.i: src/synthesis/workpiece_clipping.cpp.i
+
+.PHONY : src/synthesis/workpiece_clipping.i
+
+# target to preprocess a source file
+src/synthesis/workpiece_clipping.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/workpiece_clipping.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/workpiece_clipping.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/workpiece_clipping.cpp.i
+.PHONY : src/synthesis/workpiece_clipping.cpp.i
+
+src/synthesis/workpiece_clipping.s: src/synthesis/workpiece_clipping.cpp.s
+
+.PHONY : src/synthesis/workpiece_clipping.s
+
+# target to generate assembly for a file
+src/synthesis/workpiece_clipping.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/workpiece_clipping.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/workpiece_clipping.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/workpiece_clipping.cpp.s
+.PHONY : src/synthesis/workpiece_clipping.cpp.s
+
 src/system/arena_allocator.o: src/system/arena_allocator.cpp.o
 
 .PHONY : src/system/arena_allocator.o
@@ -2821,6 +2854,9 @@ help:
 	@echo "... src/synthesis/vice.o"
 	@echo "... src/synthesis/vice.i"
 	@echo "... src/synthesis/vice.s"
+	@echo "... src/synthesis/workpiece_clipping.o"
+	@echo "... src/synthesis/workpiece_clipping.i"
+	@echo "... src/synthesis/workpiece_clipping.s"
 	@echo "... src/system/arena_allocator.o"
 	@echo "... src/system/arena_allocator.i"
 	@echo "... src/system/arena_allocator.s"

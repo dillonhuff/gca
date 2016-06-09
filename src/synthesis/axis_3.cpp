@@ -8,38 +8,6 @@
 
 namespace gca {
 
-  vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
-			       const cut_params params) {
-    vector<cut*> cuts;
-    for (auto p : pocket_lines) {
-      auto cs = polyline_cuts(p);
-      cuts.insert(cuts.end(), cs.begin(), cs.end());
-    }
-    return cuts_to_gcode(cuts, params);
-  }
-
-  std::vector<polyline> reflect_y(const std::vector<polyline>& pocket_lines) {
-    vector<polyline> reflected;
-    for (auto p : pocket_lines) {
-      reflected.push_back(p.apply([](const point p)
-				  { return point(p.x, -p.y, p.z); }));
-    }
-    return reflected;
-  }
-
-  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
-				  const double safe_height) {
-    assert(pocket_lines.size() > 0);
-    for (auto pl : pocket_lines) {
-      assert(pl.num_points() > 0);
-    }
-    auto reflected_lines = reflect_y(pocket_lines);
-    cut_params params;
-    params.target_machine = EMCO_F1;
-    params.safe_height = safe_height;
-    return polylines_cuts(reflected_lines, params);
-  }
-
   std::vector<index_t> preprocess_faces(const triangular_mesh& mesh) {
     std::vector<index_t> face_inds = millable_faces(point(0, 0, 1), mesh);
     // TODO: Find a way to remove this ad-hoc tolerance
