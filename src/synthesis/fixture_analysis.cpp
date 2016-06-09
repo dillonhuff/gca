@@ -12,10 +12,10 @@ namespace gca {
   }
 
   void remove_SA_surfaces(const std::vector<surface>& surfaces,
-			  std::vector<index_t>& indices) {
+  			  std::vector<index_t>& indices) {
     delete_if(indices,
-	      [&surfaces](index_t i)
-	      { return any_SA_surface_contains(i, surfaces); });
+  	      [&surfaces](index_t i)
+  	      { return any_SA_surface_contains(i, surfaces); });
   }
 
   void remove_SA_surfaces(const std::vector<surface>& stable_surfaces,
@@ -120,9 +120,10 @@ namespace gca {
     }
     return mill_surfaces;
   }
-  
+
   std::vector<surface>
   cut_surfaces(const triangular_mesh& part) {
+    // TODO: Surface this magic number as a parameter
     double normal_degrees_delta = 30.0;
     auto inds = part.face_indexes();
     vector<vector<index_t>> delta_regions =

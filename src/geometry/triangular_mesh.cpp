@@ -123,12 +123,13 @@ namespace gca {
     point n = plane_rep.normal.normalize();
     bool all_neg = true;
     bool all_pos = true;
+    double d = -(v1.dot(n));
     for (auto p : part.vertex_list()) {
-      double sgn = n.dot(p - v1);
-      if (sgn > 0) {
+      double sgn = n.dot(p) + d; // - v1);
+      if (sgn > 0.0001) {
     	all_neg = false;
       }
-      if (sgn < 0) {
+      if (sgn < 0.00001) {
 	all_pos = false;
       }
       if (!all_neg && !all_pos) { return false; }
