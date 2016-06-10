@@ -218,6 +218,8 @@ namespace gca {
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth / 2.0);
+    // Leave the final level to the finishing pass
+    depths.pop_back();
     vector<polyline> pocket_path = roughing_passes(pocket.base(),
 						   offset_h,
 						   bound_poly,
