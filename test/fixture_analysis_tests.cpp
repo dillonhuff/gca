@@ -102,7 +102,7 @@ namespace gca {
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients);
 
-      REQUIRE(orients.size() == 2);
+      REQUIRE(orients.size() == 1);
     }
 
     SECTION("each orientation has 1 connected component") {
