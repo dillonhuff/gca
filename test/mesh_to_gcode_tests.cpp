@@ -58,12 +58,6 @@ namespace gca {
     //   REQUIRE(result_programs.size() == 7);
     // }
 
-    SECTION("More complex part has 6 clippings and 4 pocketings") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
-      workpiece workpiece_dims(1.9, 1.87, 1.9);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 10);
-    }
   }
 
   TEST_CASE("Outer surfaces") {
