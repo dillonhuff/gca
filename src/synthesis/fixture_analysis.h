@@ -42,6 +42,9 @@ namespace gca {
 		      const surface* p_right,
 		      const surface* p_bottom) :
       left(p_left), right(p_right), bottom(p_bottom) {}
+
+    stock_orientation() :
+      left(nullptr), right(nullptr), bottom(nullptr) {}
   };
   
   typedef std::vector<std::vector<index_t>> surface_list;

@@ -110,6 +110,23 @@ namespace gca {
 	}
       }
     }
+
+    // TODO: Consider left and right normals as well, this filtering
+    // criterion is too aggressive when all 
+    sort(begin(orients), end(orients),
+    	 [](const stock_orientation l, const stock_orientation r)
+    	 { return l.top_normal().x < r.top_normal().x; });
+    sort(begin(orients), end(orients),
+    	 [](const stock_orientation l, const stock_orientation r)
+    	 { return l.top_normal().y < r.top_normal().z; });
+    sort(begin(orients), end(orients),
+    	 [](const stock_orientation l, const stock_orientation r)
+    	 { return l.top_normal().z < r.top_normal().z; });
+    auto it = unique(begin(orients), end(orients),
+		     [](const stock_orientation& l, const stock_orientation& r) {
+		       return within_eps(l.top_normal(), r.top_normal(), 0.0001);
+		     });
+    orients.resize(std::distance(begin(orients), it));
     assert(orients.size() > 0);
     return orients;
   }
