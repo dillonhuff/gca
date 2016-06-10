@@ -291,7 +291,7 @@ namespace gca {
   simplify_orientations(const surface_map& surface_allocations,
 			const orientation_map& possible_orients,
 			const std::vector<surface>& surfaces_to_cut) {
-    surface_map simplified = surface_allocations;
+    surface_map simplified = possible_orients;
     // for (auto p : surface_allocations) {
     //   auto orient_ind = p.first;
     //   auto ccs =

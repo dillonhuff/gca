@@ -99,9 +99,13 @@ namespace gca {
       // NO DUPLICATION
       for (unsigned i = 0; i < orients.size(); i++) {
 	for (unsigned j = i + 1; j < orients.size(); j++) {
-	  vector<unsigned> ig = orients[i];
-	  vector<unsigned> jg = orients[j];
-	  REQUIRE(intersection(ig, jg).size() == 0);
+	  if (orients.find(i) != end(orients) &&
+	      orients.find(j) != end(orients) &&
+	      i != j) {
+	    vector<unsigned> ig = orients[i];
+	    vector<unsigned> jg = orients[j];
+	    REQUIRE(intersection(ig, jg).size() == 0);
+	  }
 	}
       }
     }
@@ -133,9 +137,13 @@ namespace gca {
       // NO DUPLICATION
       for (unsigned i = 0; i < orients.size(); i++) {
 	for (unsigned j = i + 1; j < orients.size(); j++) {
-	  vector<unsigned> ig = orients[i];
-	  vector<unsigned> jg = orients[j];
-	  REQUIRE(intersection(ig, jg).size() == 0);
+	  if (orients.find(i) != end(orients) &&
+	      orients.find(j) != end(orients) &&
+	      i != j) {
+	    vector<unsigned> ig = orients[i];
+	    vector<unsigned> jg = orients[j];
+	    REQUIRE(intersection(ig, jg).size() == 0);
+	  }
 	}
       }
       
