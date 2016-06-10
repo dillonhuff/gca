@@ -70,8 +70,22 @@ namespace gca {
     classify_part_surfaces(outer_surfs, aligned_workpiece);
     auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
 
+    SECTION("4 surfaces to cut") {
+      REQUIRE(surfs_to_cut.size() == 4);
+    }
+    
     SECTION("10 outer surfaces") {
       REQUIRE(outer_surfs.size() == 10);
+    }
+
+    SECTION("6 surfaces that are always stable") {
+      unsigned num_stable = 0;
+      for (auto s : outer_surfs) {
+	if (s.is_SA()) {
+	  num_stable++;
+	}
+      }
+      REQUIRE(num_stable == 6);
     }
 
     SECTION("1 setup") {

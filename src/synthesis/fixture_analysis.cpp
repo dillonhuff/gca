@@ -31,7 +31,7 @@ namespace gca {
     delete_if(cut_surfaces,
     	      [&stable_surfaces](const surface& s) {
 		for (auto other : stable_surfaces) {
-		  if (s.contained_by(other)) {
+		  if (other.is_SA() && s.contained_by(other)) {
 		    return true;
 		  }
 		}
@@ -41,6 +41,7 @@ namespace gca {
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh) {
+    // TODO: Actually compute workpiece normals
     vector<point> normals;
     normals.push_back(point(1, 0, 0));
     normals.push_back(point(-1, 0, 0));
@@ -382,10 +383,11 @@ namespace gca {
       greedy_possible_orientations(surfaces_to_cut, all_orients);
     assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
 
-    auto greedy_orients =  greedy_pick_orientations(surfaces_to_cut,
-						    all_orients,
-						    possible_orientations,
-						    part_mesh);
+    auto greedy_orients = greedy_pick_orientations(surfaces_to_cut,
+						   all_orients,
+						   possible_orientations,
+						   part_mesh);
+
     return simplify_orientations(greedy_orients,
     				 possible_orientations,
     				 surfaces_to_cut);
