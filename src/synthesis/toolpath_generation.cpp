@@ -137,27 +137,6 @@ namespace gca {
     return false;
   }
 
-  vector<polyline> finish_base_lines(const pocket& p,
-				     const tool& t,
-				     const double cut_depth) {
-    box b = p.bounding_box();
-
-    vector<polyline> pts_init = sample_lines_2d(b, t.radius(), t.radius(), 1.0);
-
-    vector<polyline> lines;
-    for (auto pl : pts_init) {
-      polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
-      vector<polyline> clipped = clip_polyline_along(pts, p.get_holes());
-      for (auto clipped_line : clipped) {
-	if (clipped_line.num_points() > 1) {
-	  lines.push_back(clipped_line);
-	}
-      }
-    }
-
-    return lines;
-  }
-
   vector<polyline> roughing_lines(const vector<triangle>& base,
 				  const vector<oriented_polygon>& holes,
   				  const oriented_polygon& boundary,
@@ -186,6 +165,31 @@ namespace gca {
 	lines.push_back(polyline(pts));
       }
     }
+    return lines;
+  }
+
+  vector<polyline> finish_base_lines(const pocket& p,
+				     const tool& t,
+				     const double cut_depth) {
+    auto holes = p.get_holes();
+    vector<oriented_polygon> offset_h(holes.size());
+    transform(begin(holes), end(holes), begin(offset_h),
+  	      [t](const oriented_polygon& p)
+  	      { return exterior_offset(p, t.radius()); });
+    oriented_polygon bound_poly = interior_offset(p.get_boundary(), t.radius());
+
+    vector<polyline> plines = roughing_lines(p.base(),
+					     offset_h,
+					     bound_poly,
+					     1.0,
+					     t.radius());
+
+    vector<polyline> lines;
+    for (auto pl : plines) {
+      polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
+      lines.push_back(pts);
+    }
+
     return lines;
   }
 
