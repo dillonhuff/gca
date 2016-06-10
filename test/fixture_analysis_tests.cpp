@@ -28,7 +28,7 @@ namespace gca {
     SECTION("6 outer surfaces") {
       REQUIRE(outer_surfs.size() == 6);
     }
-    
+
     SECTION("2 setups") {
 
       cout << "$$$ " << surfs_to_cut.size() << " surfaces to cut" << endl;

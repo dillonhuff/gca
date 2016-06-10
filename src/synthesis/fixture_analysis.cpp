@@ -242,6 +242,25 @@ namespace gca {
     return orients;
   }
 
+  void print_orient_map(const orientation_map& possible_orientations,
+			const std::vector<stock_orientation>& all_orients) {
+    cout << "ORIENTATION MAP: " << endl;
+    for (auto m : possible_orientations) {
+      cout << "Surface " << m.first << " can be cut from orientations" << endl;
+      for (auto orient_ind : m.second) {
+    	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
+      }
+    }
+  }
+
+  std::vector<std::pair<stock_orientation, vector<unsigned>>>
+  simplify_orientations(const std::vector<std::pair<stock_orientation, vector<unsigned>>>& orients,
+			const orientation_map& possible_orients,
+			const std::vector<surface>& surfaces_to_cut) {
+    //std::vector<std::pair<stock_orientation, vector<unsigned>>> simplified;
+    return orients;
+  }
+
   std::vector<std::pair<stock_orientation, vector<unsigned>>>
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
@@ -250,18 +269,14 @@ namespace gca {
       greedy_possible_orientations(surfaces_to_cut, all_orients);
     assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
 
-    cout << "ORIENTATION MAP: " << endl;
-    for (auto m : possible_orientations) {
-      cout << "Surface " << m.first << " can be cut from orientations" << endl;
-      for (auto orient_ind : m.second) {
-    	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
-      }
-    }
+    auto greedy_orients =  greedy_pick_orientations(surfaces_to_cut,
+						    all_orients,
+						    possible_orientations,
+						    part_mesh);
 
-    return greedy_pick_orientations(surfaces_to_cut,
-    				    all_orients,
-    				    possible_orientations,
-    				    part_mesh);
+    return simplify_orientations(greedy_orients,
+				 possible_orientations,
+				 surfaces_to_cut);
   }
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
