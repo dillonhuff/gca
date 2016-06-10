@@ -2,6 +2,7 @@
 #define MESH_TO_GCODE_H
 
 #include "gcode/gcode_program.h"
+#include "geometry/surface.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/vice.h"
 #include "synthesis/tool.h"

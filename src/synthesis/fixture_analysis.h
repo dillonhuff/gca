@@ -7,6 +7,9 @@
 
 namespace gca {
 
+  typedef std::map<unsigned, std::vector<unsigned>> orientation_map;
+  typedef std::vector<std::pair<unsigned, std::vector<unsigned>>> surface_map;
+
   class stock_orientation {
   protected:
     const surface* left;
@@ -58,7 +61,7 @@ namespace gca {
   all_stable_orientations(const std::vector<surface>& surfaces);
 
   // TODO: Should this really be a map?
-  std::vector<std::pair<stock_orientation, vector<unsigned>>>
+  surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
 		    std::vector<stock_orientation>& all_orients);

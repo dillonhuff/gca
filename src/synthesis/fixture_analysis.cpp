@@ -135,8 +135,6 @@ namespace gca {
     return surfaces;
   }
 
-  typedef std::map<unsigned, std::vector<unsigned>> orientation_map;
-
   orientation_map
   greedy_possible_orientations(const std::vector<surface>& surfaces,
 			       std::vector<stock_orientation>& all_orients) {
@@ -205,14 +203,14 @@ namespace gca {
     return initial_surfaces;
   }
 
-  std::vector<std::pair<stock_orientation, vector<unsigned>>>
-    greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
-			     const std::vector<stock_orientation>& all_orients,
-  			     orientation_map& possible_orientations,
-			     const triangular_mesh& part) {
+  surface_map
+  greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
+			   const std::vector<stock_orientation>& all_orients,
+			   orientation_map& possible_orientations,
+			   const triangular_mesh& part) {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
-    vector<pair<stock_orientation, vector<unsigned>>> orients;
+    surface_map orients;
     for (auto orient : possible_orientations) {
       if (surfaces_left.size() == 0) { return orients; }
 
@@ -232,7 +230,7 @@ namespace gca {
 	  cout << "\t" << s << endl;
 	}
 	if (surfaces_cut.size() > 0) {
-	  orients.push_back(mk_pair(all_orients[orient_ind], surfaces_cut));
+	  orients.push_back(mk_pair(orient_ind, surfaces_cut));
 	}
 	subtract(surfaces_left, surfaces_cut);
       }
@@ -253,15 +251,15 @@ namespace gca {
     }
   }
 
-  std::vector<std::pair<stock_orientation, vector<unsigned>>>
-  simplify_orientations(const std::vector<std::pair<stock_orientation, vector<unsigned>>>& orients,
+  surface_map
+  simplify_orientations(const surface_map& surface_allocations,
 			const orientation_map& possible_orients,
 			const std::vector<surface>& surfaces_to_cut) {
     //std::vector<std::pair<stock_orientation, vector<unsigned>>> simplified;
-    return orients;
+    return surface_allocations;
   }
 
-  std::vector<std::pair<stock_orientation, vector<unsigned>>>
+  surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
 		    std::vector<stock_orientation>& all_orients) {
@@ -296,17 +294,17 @@ namespace gca {
 
     auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
 
-    vector<pair<stock_orientation, vector<unsigned>>> os =
+    surface_map os =
       pick_orientations(part_mesh, surfs_to_cut, all_orients);
 
     vector<pair<stock_orientation, surface_list>> orients;
     for (auto p : os) {
-      stock_orientation ori = p.first;
+      unsigned ori = p.first;
       surface_list surfaces;
       for (auto i : p.second) {
 	surfaces.push_back(surfs_to_cut[i].index_list());
       }
-      orients.push_back(mk_pair(ori, surfaces));
+      orients.push_back(mk_pair(all_orients[ori], surfaces));
     }
     return orients;
   }

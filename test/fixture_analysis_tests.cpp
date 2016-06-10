@@ -40,7 +40,7 @@ namespace gca {
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
 
-      vector<pair<stock_orientation, vector<unsigned>>> orients =
+      surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients);
 
       REQUIRE(orients.size() == 2);
@@ -50,7 +50,7 @@ namespace gca {
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
 
-      vector<pair<stock_orientation, vector<unsigned>>> orients =
+      surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients);
       
       for (auto p : orients) {
@@ -97,7 +97,7 @@ namespace gca {
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
       
-      vector<pair<stock_orientation, vector<unsigned>>> orients =
+      surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients);
 
       // TEST: 1 setup
@@ -131,7 +131,7 @@ namespace gca {
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
       
-      vector<pair<stock_orientation, vector<unsigned>>> orients =
+      surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients);
 
       // TEST: 4 setups
