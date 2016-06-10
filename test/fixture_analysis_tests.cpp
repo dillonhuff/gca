@@ -22,13 +22,6 @@ namespace gca {
     }
 
     SECTION("2 setups") {
-
-      cout << "$$$ " << surfs_to_cut.size() << " surfaces to cut" << endl;
-      for (auto s : surfs_to_cut) {
-	auto inds = s.index_list();
-	cout << "Normal of first index = " << s.face_orientation(inds.front()) << endl;
-      }
-
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
 
@@ -89,13 +82,6 @@ namespace gca {
     }
 
     SECTION("1 setup") {
-
-      cout << "$$$ " << surfs_to_cut.size() << " surfaces to cut" << endl;
-      for (auto s : surfs_to_cut) {
-	auto inds = s.index_list();
-	cout << "Normal of first index = " << s.face_orientation(inds.front()) << endl;
-      }
-
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
 
@@ -143,11 +129,7 @@ namespace gca {
     SECTION("1 setup, no duplicates, each orientation has 1 connected component") {
 
       auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
-      cout << "$$$ " << surfs_to_cut.size() << " surfaces to cut" << endl;
-      for (auto s : surfs_to_cut) {
-	auto inds = s.index_list();
-	cout << "Normal of first index = " << s.face_orientation(inds.front()) << endl;
-      }
+
       // All faces that need to be cut are at least somewhat upward facing
       REQUIRE(all_of(begin(surfs_to_cut), end(surfs_to_cut),
 		     [](const surface& s) {
