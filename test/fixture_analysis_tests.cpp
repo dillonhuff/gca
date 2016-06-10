@@ -5,14 +5,6 @@
 
 namespace gca {
 
-  bool surfaces_share_edge(const unsigned i,
-			   const unsigned j,
-			   const std::vector<surface>& surfaces) {
-    auto ind1 = surfaces[i].index_list();
-    auto ind2 = surfaces[j].index_list();
-    return share_edge(ind1, ind2, surfaces[i].get_parent_mesh());
-  }
-
   TEST_CASE("Tapered extrude top and side") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -107,8 +99,8 @@ namespace gca {
       // NO DUPLICATION
       for (unsigned i = 0; i < orients.size(); i++) {
 	for (unsigned j = i + 1; j < orients.size(); j++) {
-	  vector<unsigned> ig = orients[i].second;
-	  vector<unsigned> jg = orients[j].second;
+	  vector<unsigned> ig = orients[i];
+	  vector<unsigned> jg = orients[j];
 	  REQUIRE(intersection(ig, jg).size() == 0);
 	}
       }
@@ -141,8 +133,8 @@ namespace gca {
       // NO DUPLICATION
       for (unsigned i = 0; i < orients.size(); i++) {
 	for (unsigned j = i + 1; j < orients.size(); j++) {
-	  vector<unsigned> ig = orients[i].second;
-	  vector<unsigned> jg = orients[j].second;
+	  vector<unsigned> ig = orients[i];
+	  vector<unsigned> jg = orients[j];
 	  REQUIRE(intersection(ig, jg).size() == 0);
 	}
       }

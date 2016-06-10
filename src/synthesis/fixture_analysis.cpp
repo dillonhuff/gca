@@ -3,6 +3,14 @@
 
 namespace gca {
 
+  bool surfaces_share_edge(const unsigned i,
+			   const unsigned j,
+			   const std::vector<surface>& surfaces) {
+    auto ind1 = surfaces[i].index_list();
+    auto ind2 = surfaces[j].index_list();
+    return share_edge(ind1, ind2, surfaces[i].get_parent_mesh());
+  }
+
   bool any_SA_surface_contains(index_t i,
 			       const std::vector<surface>& surfaces) {
     for (auto surface : surfaces) {
@@ -230,7 +238,7 @@ namespace gca {
 	  cout << "\t" << s << endl;
 	}
 	if (surfaces_cut.size() > 0) {
-	  orients.push_back(mk_pair(orient_ind, surfaces_cut));
+	  orients[orient_ind] = surfaces_cut;
 	}
 	subtract(surfaces_left, surfaces_cut);
       }
@@ -251,12 +259,58 @@ namespace gca {
     }
   }
 
+  // TODO: Send to system/algorithm
+  template<typename A, typename B>
+  void map_insert(std::map<A, std::vector<B>>& m, A a, B b) {
+    if (m.find(a) == end(m)) {
+      vector<B> bs{b};
+      m[a] = bs;
+    } else {
+      auto elems = m[a];
+      elems.push_back(b);
+      m[a] = elems;
+    }
+  }
+
+  void
+  insert_component(const unsigned orient_ind,
+		   const vector<unsigned>& cc,
+		   surface_map& simplified,
+		   const surface_map& surface_allocations,
+		   const orientation_map& possible_orients,
+		   const std::vector<surface>& surfaces_to_cut) {
+    bool found_better_orient = false;
+    if (!found_better_orient) {
+      for (auto i : cc) {
+	map_insert(simplified, orient_ind, i);
+      }
+    }
+  }
+  
   surface_map
   simplify_orientations(const surface_map& surface_allocations,
 			const orientation_map& possible_orients,
 			const std::vector<surface>& surfaces_to_cut) {
-    //std::vector<std::pair<stock_orientation, vector<unsigned>>> simplified;
-    return surface_allocations;
+    surface_map simplified = surface_allocations;
+    // for (auto p : surface_allocations) {
+    //   auto orient_ind = p.first;
+    //   auto ccs =
+    // 	connected_components_by(p.second,
+    // 				[surfaces_to_cut](const unsigned i, const unsigned j)
+    // 				{
+    // 				  return surfaces_share_edge(i, j, surfaces_to_cut);
+    // 				});
+    //   for (auto cc : ccs) {
+    // 	insert_component(orient_ind,
+    // 			 cc,
+    // 			 simplified,
+    // 			 surface_allocations,
+    // 			 possible_orients,
+    // 			 surfaces_to_cut);
+    //   }
+    // }
+    assert(simplified.size() <= surface_allocations.size());
+    return simplified;
   }
 
   surface_map
@@ -271,10 +325,10 @@ namespace gca {
 						    all_orients,
 						    possible_orientations,
 						    part_mesh);
-
-    return simplify_orientations(greedy_orients,
-				 possible_orientations,
-				 surfaces_to_cut);
+    return greedy_orients;
+    // return simplify_orientations(greedy_orients,
+    // 				 possible_orientations,
+    // 				 surfaces_to_cut);
   }
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
