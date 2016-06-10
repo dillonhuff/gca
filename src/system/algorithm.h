@@ -6,6 +6,15 @@
 
 namespace gca {
 
+  template<typename T>
+  int num_elems(std::vector<std::vector<T>>& v) {
+    int i = 0;
+    for (auto t : v) {
+      i += t.size();
+    }
+    return i;
+  }
+
   template<typename I>
   std::vector<unsigned> inds(const std::vector<I>& elems) {
     std::vector<unsigned> is(elems.size());
@@ -191,8 +200,8 @@ namespace gca {
     inds.pop_back();
     while (buf.size() > 0) {
       auto next = buf.back();
-      buf.pop_back();
       comp.push_back(next);
+      buf.pop_back();
       std::vector<unsigned> inds_to_remove;
       for (unsigned i = 0; i < inds.size(); i++) {
 	unsigned u = inds[i];
@@ -267,6 +276,23 @@ namespace gca {
     return inter;
   }
 
+  template<typename I>
+  std::vector<I> concat_all(const std::vector<std::vector<I>>& vs) {
+    std::vector<I> all_vs;
+    for (auto v : vs) {
+      concat(all_vs, v);
+    }
+    return all_vs;
+  }
+
+  template<typename I>
+  std::vector<I> sort_unique(const std::vector<I>& elems) {
+    auto elems_cp = elems;
+    sort(begin(elems_cp), end(elems_cp));
+    auto it = unique(begin(elems_cp), end(elems_cp));
+    elems_cp.resize(std::distance(begin(elems_cp), it));
+    return elems_cp;
+  }
 }
 
 #endif

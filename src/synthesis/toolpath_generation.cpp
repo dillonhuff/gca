@@ -9,15 +9,6 @@
 
 namespace gca {
 
-  template<typename T>
-  int num_elems(vector<vector<T>> v) {
-    int i = 0;
-    for (auto t : v) {
-      i += t.size();
-    }
-    return i;
-  }
-
   vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p) {
     vector<polyline> ps;
     for (auto depth : depths) {

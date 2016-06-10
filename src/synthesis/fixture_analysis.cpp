@@ -281,8 +281,9 @@ namespace gca {
 		   const std::vector<surface>& surfaces_to_cut) {
     bool found_better_orient = false;
     if (!found_better_orient) {
+      //concat(simplified[orient_ind], cc);
       for (auto i : cc) {
-	map_insert(simplified, orient_ind, i);
+      	map_insert(simplified, orient_ind, i);
       }
     }
   }
@@ -291,24 +292,44 @@ namespace gca {
   simplify_orientations(const surface_map& surface_allocations,
 			const orientation_map& possible_orients,
 			const std::vector<surface>& surfaces_to_cut) {
-    surface_map simplified = possible_orients;
-    // for (auto p : surface_allocations) {
-    //   auto orient_ind = p.first;
-    //   auto ccs =
-    // 	connected_components_by(p.second,
-    // 				[surfaces_to_cut](const unsigned i, const unsigned j)
-    // 				{
-    // 				  return surfaces_share_edge(i, j, surfaces_to_cut);
-    // 				});
-    //   for (auto cc : ccs) {
-    // 	insert_component(orient_ind,
-    // 			 cc,
-    // 			 simplified,
-    // 			 surface_allocations,
-    // 			 possible_orients,
-    // 			 surfaces_to_cut);
-    //   }
-    // }
+    surface_map simplified;
+    for (auto p : surface_allocations) {
+      auto orient_ind = p.first;
+      //concat(simplified[orient_ind], p.second);
+      cout << "# elems in p = " << p.second.size() << endl;
+      for (auto i : p.second) {
+	cout << "\t" << i << endl;
+      }
+      auto ccs =
+      	connected_components_by(p.second,
+      				[surfaces_to_cut](const unsigned i, const unsigned j)
+      				{
+      				  return surfaces_share_edge(i, j, surfaces_to_cut);
+      				});
+      assert(num_elems(ccs) == p.second.size());
+      assert(sort_unique(concat_all(ccs)).size() == p.second.size());
+      auto elems = p.second;
+      for (auto cc_inds : ccs) {
+	vector<unsigned> cc(cc_inds.size());
+	std::transform(begin(cc_inds), end(cc_inds), begin(cc),
+		       [elems](const unsigned i)
+		       { return elems[i]; });
+	//	concat(simplified[orient_ind], cc);
+	cout << "cc size = " << cc.size() << endl;
+	cout << "simplified[orient_ind] size = " << simplified[orient_ind].size() << endl;
+      	insert_component(orient_ind,
+      			 cc,
+      			 simplified,
+      			 surface_allocations,
+      			 possible_orients,
+      			 surfaces_to_cut);
+      }
+      cout << "# elems in simplified[orient_ind] = " << simplified[orient_ind].size() << endl;
+      for (auto i : simplified[orient_ind]) {
+	cout << "\t" << i << endl;
+      }
+      assert(intersection(simplified[orient_ind], p.second).size() == p.second.size());
+    }
     assert(simplified.size() <= surface_allocations.size());
     return simplified;
   }
@@ -325,10 +346,9 @@ namespace gca {
 						    all_orients,
 						    possible_orientations,
 						    part_mesh);
-    return greedy_orients;
-    // return simplify_orientations(greedy_orients,
-    // 				 possible_orientations,
-    // 				 surfaces_to_cut);
+    return simplify_orientations(greedy_orients,
+    				 possible_orientations,
+    				 surfaces_to_cut);
   }
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
