@@ -33,6 +33,8 @@ namespace gca {
 
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
 
+    inline double jaw_height() const { return top_height - base_height; }
+
     inline double base_z() const { return pos.z + base_height; }
     inline double top_z() const { return pos.z + top_height; }
 

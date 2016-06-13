@@ -25,6 +25,12 @@ namespace gca {
     inline const surface& get_left() const { return *left; }
     inline const surface& get_right() const { return *right; }
     inline const surface& get_bottom() const { return *bottom; }
+
+    inline point bottom_plane_point() const {
+      const triangular_mesh& m = bottom->get_parent_mesh();
+      triangle_t t = m.triangle_vertices(bottom->front());
+      return m.vertex(t.v[0]);
+    }
     
     inline point top_normal() const {
       point bn = bottom->face_orientation(bottom->front());

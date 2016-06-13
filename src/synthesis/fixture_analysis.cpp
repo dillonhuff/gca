@@ -154,8 +154,15 @@ namespace gca {
     return inds;
   }
 
-  bool above_vice(const index_t i, const stock_orientation& orient, const vice& v) {
-    return true;
+  bool point_above_vice(const index_t i,
+			const stock_orientation& orient,
+			const vice& v) {
+    const triangular_mesh& part = orient.get_mesh();
+    point p = part.vertex(i);
+    point vice_dir = orient.top_normal();
+    point vice_jaw_top = orient.bottom_plane_point() + (v.jaw_height() * vice_dir);
+    return signed_distance_along(p, vice_dir) >
+      signed_distance_along(vice_jaw_top, vice_dir);
   }
 
   std::vector<index_t> vertexes_touching_fixture(const stock_orientation& orient,
@@ -166,7 +173,7 @@ namespace gca {
     concat(vert_inds, surface_vertexes(orient.get_bottom()));
     delete_if(vert_inds,
 	      [v, orient](const index_t i)
-	      { return above_vice(i, orient, v); });
+	      { return point_above_vice(i, orient, v); });
     return vert_inds;
   }
 
