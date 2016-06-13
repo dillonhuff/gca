@@ -92,6 +92,7 @@ namespace gca {
     return within_eps(theta, 180, 0.1);
   }
 
+  // TODO: Include SB surfaces in this analysis
   std::vector<stock_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces) {
     vector<stock_orientation> orients;
@@ -105,7 +106,8 @@ namespace gca {
 	    for (unsigned l = 0; l < surfaces.size(); l++) {
 	      const surface* next_bottom = &(surfaces[l]);
 	      if (next_bottom->is_SA() &&
-		  orthogonal_flat_surfaces(next_bottom, next_left)) {
+		  orthogonal_flat_surfaces(next_bottom, next_left) &&
+		  orthogonal_flat_surfaces(next_bottom, next_right)) {
 		orients.push_back(stock_orientation(next_left,
 						    next_right,
 						    next_bottom));
