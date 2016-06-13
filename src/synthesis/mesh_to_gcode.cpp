@@ -50,7 +50,7 @@ namespace gca {
 		    const vector<surface>& part_ss,
 		    const vice v) {
     vector<pair<stock_orientation, surface_list>> orients =
-      orientations_to_cut(part_mesh, part_ss);
+      orientations_to_cut(part_mesh, part_ss, v);
     vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : orients) {
       cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;

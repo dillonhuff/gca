@@ -132,11 +132,48 @@ namespace gca {
     return orients;
   }
 
+  bool any_vertex_in(const triangle_t tri,
+		     const std::vector<index_t>& inds) {
+    for (auto i : tri.v) {
+      if (binary_search(begin(inds), end(inds), i)) {
+	return true;
+      }
+    }
+    return false;
+  }
+
+  std::vector<index_t> surface_vertexes(const surface& s) {
+    vector<index_t> inds;
+    for (auto i : s.index_list()) {
+      triangle_t t = s.get_parent_mesh().triangle_vertices(i);
+      inds.push_back(t.v[0]);
+      inds.push_back(t.v[1]);
+      inds.push_back(t.v[2]);
+    }
+    sort(begin(inds), end(inds));
+    return inds;
+  }
+
+  std::vector<index_t> vertexes_touching_fixture(const stock_orientation& orient) {
+    vector<index_t> vert_inds;
+    concat(vert_inds, surface_vertexes(orient.get_left()));
+    concat(vert_inds, surface_vertexes(orient.get_right()));
+    concat(vert_inds, surface_vertexes(orient.get_bottom()));
+    return vert_inds;
+  }
+
   std::vector<unsigned>
   surfaces_millable_from(const stock_orientation& orient,
 			 const std::vector<surface>& surfaces_left) {
+    const triangular_mesh& part = orient.get_mesh();
     std::vector<index_t> millable =
-      millable_faces(orient.top_normal(), orient.get_mesh());
+      millable_faces(orient.top_normal(), part);
+    vector<index_t> verts_touching_fixture =
+      vertexes_touching_fixture(orient);
+    delete_if(millable,
+	      [&verts_touching_fixture, part](const index_t face_ind)
+	      { return any_vertex_in(part.triangle_vertices(face_ind),
+				     verts_touching_fixture); });
     sort(begin(millable), end(millable));
     vector<unsigned> mill_surfaces;
     for (unsigned i = 0; i < surfaces_left.size(); i++) {
@@ -163,7 +200,8 @@ namespace gca {
 
   orientation_map
   greedy_possible_orientations(const std::vector<surface>& surfaces,
-			       std::vector<stock_orientation>& all_orients) {
+			       std::vector<stock_orientation>& all_orients,
+			       const vice& v) {
     // TODO: Better way to do this?
     sort(begin(all_orients), end(all_orients),
     	 [](const stock_orientation l, const stock_orientation r)
@@ -378,9 +416,10 @@ namespace gca {
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
-		    std::vector<stock_orientation>& all_orients) {
+		    std::vector<stock_orientation>& all_orients,
+		    const vice& v) {
     orientation_map possible_orientations =
-      greedy_possible_orientations(surfaces_to_cut, all_orients);
+      greedy_possible_orientations(surfaces_to_cut, all_orients, v);
     assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
 
     auto greedy_orients = greedy_pick_orientations(surfaces_to_cut,
@@ -404,14 +443,15 @@ namespace gca {
 
   std::vector<std::pair<stock_orientation, surface_list>>
   orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& stable_surfaces) {
+		      const std::vector<surface>& stable_surfaces,
+		      const vice& v) {
     vector<stock_orientation> all_orients =
       all_stable_orientations(stable_surfaces);
 
     auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
 
     surface_map os =
-      pick_orientations(part_mesh, surfs_to_cut, all_orients);
+      pick_orientations(part_mesh, surfs_to_cut, all_orients, v);
 
     vector<pair<stock_orientation, surface_list>> orients;
     for (auto p : os) {

@@ -21,6 +21,11 @@ namespace gca {
     const surface* bottom;
 
   public:
+
+    inline const surface& get_left() const { return *left; }
+    inline const surface& get_right() const { return *right; }
+    inline const surface& get_bottom() const { return *bottom; }
+    
     inline point top_normal() const {
       point bn = bottom->face_orientation(bottom->front());
       point n = bn - 2*bn;
@@ -59,7 +64,8 @@ namespace gca {
 
   std::vector<std::pair<stock_orientation, surface_list>>
   orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& stable_surfaces);
+		      const std::vector<surface>& stable_surfaces,
+		      const vice& v);
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
 				       const std::vector<surface>& stable_surfaces);
@@ -71,7 +77,8 @@ namespace gca {
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
-		    std::vector<stock_orientation>& all_orients);
+		    std::vector<stock_orientation>& all_orients,
+		    const vice& v);
   
 }
 

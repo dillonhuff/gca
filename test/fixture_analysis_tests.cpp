@@ -32,7 +32,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
 
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
       REQUIRE(orients.size() == 3);
     }
@@ -60,7 +60,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
 
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
       REQUIRE(orients.size() == 2);
     }
@@ -70,7 +70,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
 
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
       
       for (auto p : orients) {
 	auto surface_inds = p.second;
@@ -120,7 +120,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
 
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
       REQUIRE(orients.size() == 1);
     }
@@ -130,7 +130,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
 
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
       
       for (auto p : orients) {
 	auto surface_inds = p.second;
@@ -173,7 +173,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
       
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
       // TEST: 1 setup
       REQUIRE(orients.size() == 1);
@@ -211,7 +211,7 @@ namespace gca {
 	all_stable_orientations(outer_surfs);
       
       surface_map orients =
-	pick_orientations(mesh, surfs_to_cut, all_orients);
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
       // TEST: 4 setups
       REQUIRE(orients.size() == 4);
