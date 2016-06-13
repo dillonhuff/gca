@@ -5,9 +5,43 @@
 
 namespace gca {
 
+  TEST_CASE("Tapered top and several slanted verticals") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_vice = emco_vice(point(1.2, -4.4, 3.3));
+    workpiece workpiece_dims(4.0, 4.0, 3.98);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
+
+    auto outer_surfs = outer_surfaces(mesh);
+    auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
+    classify_part_surfaces(outer_surfs, aligned_workpiece);
+    auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
+
+    SECTION("14 outer surfaces") {
+      REQUIRE(outer_surfs.size() == 14);
+    }
+
+    SECTION("8 surfaces to cut") {
+      REQUIRE(surfs_to_cut.size() == 8);
+    }
+
+    SECTION("3 setups") {
+      vector<stock_orientation> all_orients =
+	all_stable_orientations(outer_surfs);
+
+      surface_map orients =
+	pick_orientations(mesh, surfs_to_cut, all_orients);
+
+      REQUIRE(orients.size() == 3);
+    }
+  }
+  
   TEST_CASE("Tapered extrude top and side") {
     arena_allocator a;
     set_system_allocator(&a);
+
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
     workpiece workpiece_dims(3.5, 2.5, 2.3);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);

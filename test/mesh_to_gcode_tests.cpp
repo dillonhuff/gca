@@ -142,7 +142,6 @@ namespace gca {
     tool t1(0.35, 3.0, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.7, 2.1, 1.65);
-    cout << "Toolpath bounds, vice base = " << test_vice.base_z() << endl;
 
     SECTION("Box with 2 holes") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
