@@ -39,6 +39,16 @@ namespace gca {
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const vice v);
+
+  std::vector<std::pair<triangular_mesh, surface_list>>
+  part_arrangements(const triangular_mesh& part_mesh,
+		    const vector<surface>& part_ss,
+		    const vice v);
+
+  void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
+			  std::vector<gcode_program>& progs,
+			  const vice v,
+			  const std::vector<tool>& tools);
   
 }
 

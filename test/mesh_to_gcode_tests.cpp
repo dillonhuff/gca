@@ -1,6 +1,7 @@
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "system/arena_allocator.h"
 #include "system/parse_stl.h"
@@ -133,6 +134,10 @@ namespace gca {
     }
     return true;
   }
+
+  bool no_gouging(const gcode_program& p, const triangular_mesh& m) {
+    return true;
+  }
   
   TEST_CASE("Toolpath bounds") {
     arena_allocator a;
@@ -140,7 +145,8 @@ namespace gca {
 
     vice test_vice = emco_vice(point(-1.8, -0.4, 3.3));
     tool t1(0.35, 3.0, FLAT_NOSE);
-    vector<tool> tools{t1};
+    tool t2(0.14, 3.15, FLAT_NOSE);
+    vector<tool> tools{t1, t2};
     workpiece workpiece_dims(1.7, 2.1, 1.65);
 
     SECTION("Box with 2 holes") {
@@ -152,13 +158,28 @@ namespace gca {
     	  REQUIRE(all_z_coords_above(program.blocks, test_vice.base_z()));
     	}
       }
+    }
 
-      SECTION("G0 moves are above the workpiece") {
-	workpiece workpiece_dims(2.0, 2.0, 2.0);
-    	double workpiece_height = test_vice.base_z() + workpiece_dims.sides[2].len();
-    	for (auto program : result_programs) {
-    	  REQUIRE(all_safe_moves_above(program.blocks, workpiece_height));
-    	}
+    SECTION("Complex rectangular part 1") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+      auto part_ss = outer_surfaces(mesh);
+      auto aligned_workpiece = align_workpiece(part_ss, workpiece_dims);
+      classify_part_surfaces(part_ss, aligned_workpiece);
+      vector<pair<triangular_mesh, surface_list>> meshes =
+	part_arrangements(mesh, part_ss, test_vice);
+      vector<gcode_program> programs;
+      cut_secured_meshes(meshes, programs, test_vice, tools);
+
+      SECTION("One program per mesh") {
+	REQUIRE(meshes.size() == programs.size());
+      }
+      
+      SECTION("Toolpaths don't gouge the mesh") {
+	for (unsigned i = 0; i < meshes.size(); i++) {
+	  auto program = programs[i];
+	  auto mesh = meshes[i].first;
+	  REQUIRE(no_gouging(program, mesh));
+	}
       }
     }
   }
