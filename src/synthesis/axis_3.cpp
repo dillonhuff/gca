@@ -151,7 +151,7 @@ namespace gca {
   }
 
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
-				   const double workpiece_height) {
+  				   const double workpiece_height) {
     vector<vector<index_t>> surfaces = make_surfaces(mesh);
     auto merged_surfaces = merge_connected_surfaces(surfaces, mesh);
     auto pockets = make_pockets(merged_surfaces, workpiece_height, mesh);
@@ -167,6 +167,7 @@ namespace gca {
     // TODO: Optimize this away
     std::vector<std::vector<index_t>> surfaces = sfs;
     filter_vertical_surfaces(surfaces, mesh);
+    surfaces = merge_connected_surfaces(surfaces, mesh);
     assert(surfaces.size() > 0);
     auto pockets = make_pockets(surfaces, workpiece_height, mesh);
     auto lines = mill_pockets(pockets, t, cut_depth);
