@@ -91,21 +91,25 @@ namespace gca {
     double theta = angle_between(l_orient, r_orient);
     return within_eps(theta, 180, 0.1);
   }
-  
+
   std::vector<stock_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces) {
     vector<stock_orientation> orients;
     for (unsigned j = 0; j < surfaces.size(); j++) {
       const surface* next_left = &(surfaces[j]);
-      for (unsigned k = 0; k < surfaces.size(); k++) {
-	const surface* next_right = &(surfaces[k]);
-	if (parallel_flat_surfaces(next_right, next_left)) {
-	  for (unsigned l = 0; l < surfaces.size(); l++) {
-	    const surface* next_bottom = &(surfaces[l]);
-	    if (orthogonal_flat_surfaces(next_bottom, next_left)) {
-	      orients.push_back(stock_orientation(next_left,
-						  next_right,
-						  next_bottom));
+      if (next_left->is_SA()) {
+	for (unsigned k = 0; k < surfaces.size(); k++) {
+	  const surface* next_right = &(surfaces[k]);
+	  if (next_right->is_SA() &&
+	      parallel_flat_surfaces(next_right, next_left)) {
+	    for (unsigned l = 0; l < surfaces.size(); l++) {
+	      const surface* next_bottom = &(surfaces[l]);
+	      if (next_bottom->is_SA() &&
+		  orthogonal_flat_surfaces(next_bottom, next_left)) {
+		orients.push_back(stock_orientation(next_left,
+						    next_right,
+						    next_bottom));
+	      }
 	    }
 	  }
 	}
