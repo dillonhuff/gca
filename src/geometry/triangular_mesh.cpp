@@ -177,29 +177,6 @@ namespace gca {
 
   std::vector<std::vector<index_t>>
   const_orientation_regions(const triangular_mesh& part) {
-    // auto faces = part.face_indexes();
-    // stable_sort(begin(faces), end(faces),
-    // 		[&part](index_t l, index_t r)
-    // 		{ return part.face_orientation(l).x < part.face_orientation(r).x; });
-    // stable_sort(begin(faces), end(faces),
-    // 		[&part](index_t l, index_t r)
-    // 		{ return part.face_orientation(l).y < part.face_orientation(r).y; });
-    // stable_sort(begin(faces), end(faces),
-    // 		[&part](index_t l, index_t r)
-    // 		{ return part.face_orientation(l).z < part.face_orientation(r).z; });
-    // vector<vector<index_t>> const_orient_face_indices;
-    // split_by(faces,
-    // 	     const_orient_face_indices,
-    // 	     [&part](index_t l, index_t r)
-    // 	     { return within_eps(part.face_orientation(l), part.face_orientation(r), 0.0001); });
-    // vector<vector<index_t>> const_connected_regions;
-    // for (auto r : const_orient_face_indices) {
-    //   vector<vector<index_t>> connected_regions = connect_regions(r, part);
-    //   const_connected_regions.insert(end(const_connected_regions),
-    // 				     begin(connected_regions),
-    // 				     end(connected_regions));
-    // }
-    // return const_connected_regions;
     vector<index_t> inds = part.face_indexes();
     return normal_delta_regions(inds, part, 0.0001);
   }
