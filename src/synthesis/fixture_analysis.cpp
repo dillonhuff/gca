@@ -154,22 +154,31 @@ namespace gca {
     return inds;
   }
 
-  std::vector<index_t> vertexes_touching_fixture(const stock_orientation& orient) {
+  bool above_vice(const index_t i, const stock_orientation& orient, const vice& v) {
+    return true;
+  }
+
+  std::vector<index_t> vertexes_touching_fixture(const stock_orientation& orient,
+						 const vice& v) {
     vector<index_t> vert_inds;
     concat(vert_inds, surface_vertexes(orient.get_left()));
     concat(vert_inds, surface_vertexes(orient.get_right()));
     concat(vert_inds, surface_vertexes(orient.get_bottom()));
+    delete_if(vert_inds,
+	      [v, orient](const index_t i)
+	      { return above_vice(i, orient, v); });
     return vert_inds;
   }
 
   std::vector<unsigned>
   surfaces_millable_from(const stock_orientation& orient,
-			 const std::vector<surface>& surfaces_left) {
+			 const std::vector<surface>& surfaces_left,
+			 const vice& v) {
     const triangular_mesh& part = orient.get_mesh();
     std::vector<index_t> millable =
       millable_faces(orient.top_normal(), part);
     vector<index_t> verts_touching_fixture =
-      vertexes_touching_fixture(orient);
+      vertexes_touching_fixture(orient, v);
     delete_if(millable,
 	      [&verts_touching_fixture, part](const index_t face_ind)
 	      { return any_vertex_in(part.triangle_vertices(face_ind),
@@ -217,7 +226,9 @@ namespace gca {
       assert(orients_left.size() > 0);
       unsigned next_orient = orients_left.back();
       orients_left.pop_back();
-      auto surfaces_cut = surfaces_millable_from(all_orients[next_orient], surfaces);
+      auto surfaces_cut = surfaces_millable_from(all_orients[next_orient],
+						 surfaces,
+						 v);
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
 	if (orient_map.find(surface_ind) != end(orient_map)) {
