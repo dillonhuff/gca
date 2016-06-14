@@ -236,6 +236,15 @@ namespace gca {
     return surfaces;
   }
 
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
+				       const std::vector<surface>& stable_surfaces) {
+    vector<surface> surfs_to_cut = cut_surfaces(part_mesh);
+    cout << "# initial faces = " << surfs_to_cut.size() << endl;
+    remove_SA_surfaces(stable_surfaces, surfs_to_cut);
+    cout << "# faces left = " << surfs_to_cut.size() << endl;
+    return surfs_to_cut;
+  }
+
   orientation_map
   greedy_possible_orientations(const std::vector<surface>& surfaces,
 			       std::vector<stock_orientation>& all_orients,
@@ -492,15 +501,6 @@ namespace gca {
     return simplify_orientations(greedy_orients,
     				 possible_orientations,
     				 surfaces_to_cut);
-  }
-
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
-				       const std::vector<surface>& stable_surfaces) {
-    vector<surface> surfs_to_cut = cut_surfaces(part_mesh);
-    cout << "# initial faces = " << surfs_to_cut.size() << endl;
-    remove_SA_surfaces(stable_surfaces, surfs_to_cut);
-    cout << "# faces left = " << surfs_to_cut.size() << endl;
-    return surfs_to_cut;
   }
 
   std::vector<std::pair<stock_orientation, surface_list>>
