@@ -135,7 +135,9 @@ namespace gca {
     return true;
   }
 
-  bool no_gouging(const std::vector<block>& blocks, const triangular_mesh& m) {
+  bool no_gouging_within(const std::vector<block>& blocks,
+			 const triangular_mesh& m,
+			 const double tolerance) {
     vector<vector<cut*>> cuts;
     auto r = gcode_to_cuts(blocks, cuts);
     assert(r == GCODE_TO_CUTS_SUCCESS);
@@ -146,9 +148,9 @@ namespace gca {
 	  // Reverse the y negation in emco_f1_code
 	  maybe<double> mv = m.z_at(v.x, -v.y);
 	  double tool_head_z = v.z - 3.15;
-	  double mesh_z = mv.t - 0.2;
-	  if (mv.just && tool_head_z < mesh_z) {//(v.z - 3.15) < (mv.t - 0.01)) {
-	    
+	  double mesh_z = mv.t - tolerance;
+	  if (mv.just && tool_head_z < mesh_z) {
+	    cout << "Cut is \n" << *c << endl;
 	    cout << "Mesh z = " << mv.t << endl;
 	    cout << "Tool head position = " << v << endl;
 	    cout << "tool head z - mesh z = " << tool_head_z - mesh_z << endl;
@@ -182,6 +184,7 @@ namespace gca {
     }
 
     SECTION("Complex rectangular part 1") {
+      vice test_vice = current_setup();
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
       auto part_ss = outer_surfaces(mesh);
       auto aligned_workpiece = align_workpiece(part_ss, workpiece_dims);
@@ -200,7 +203,7 @@ namespace gca {
 	  cout << "Surface # " << i << endl;
 	  auto program = programs[i];
 	  auto mesh = meshes[i].first;
-	  REQUIRE(no_gouging(program.blocks, mesh));
+	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.01));
 	}
       }
     }

@@ -65,20 +65,6 @@ namespace gca {
     return paths;
   }
 
-  // template<typename InputIt>
-  // bool overlaps_or_intersects_any(line l,
-  // 				  InputIt s,
-  // 				  InputIt e) {
-  //   if (any_of(s, e,
-  // 	       [l](const oriented_polygon& p)
-  // 	       { return overlaps(l, p); })) {
-  //     return true;
-  //   }
-  //   return any_of(s, e,
-  // 		  [l](const oriented_polygon& p)
-  // 		  { return contains(p, l.end) || contains(p, l.start); });
-  // }
-
   vector<polyline> finish_passes(const vector<oriented_polygon>& holes,
 				 const oriented_polygon& boundary,
 				 const vector<double>& depths,
@@ -120,22 +106,6 @@ namespace gca {
     }
     return lines;
   }
-
-  // bool not_in_safe_region(const point p,
-  // 			  const vector<triangle>& base,
-  // 			  const vector<oriented_polygon>& holes,
-  // 			  const oriented_polygon& boundary) {
-  //   bool in_hole = any_of(begin(holes), end(holes),
-  // 			  [p](const oriented_polygon& pl)
-  // 			  { return contains(pl, p); });
-  //   if (in_hole) { return true; }
-  //   bool outside_bounds = !contains(boundary, p);
-  //   if (outside_bounds) { return true; }
-  //   for (auto t : base) {
-  //     if (in_projection(t, p) && below(t, p)) { return true; }
-  //   }
-  //   return false;
-  // }
 
   vector<polyline> roughing_lines(const pocket& p,
 				  const vector<triangle>& base,
