@@ -140,10 +140,14 @@ namespace gca {
 
   bool any_vertex_in(const triangle_t tri,
 		     const std::vector<index_t>& inds) {
-    for (auto i : tri.v) {
-      if (binary_search(begin(inds), end(inds), i)) {
-	return true;
-      }
+    if (binary_search(begin(inds), end(inds), tri.v[0])) {
+      return true;
+    }
+    if (binary_search(begin(inds), end(inds), tri.v[1])) {
+      return true;
+    }
+    if (binary_search(begin(inds), end(inds), tri.v[2])) {
+      return true;
     }
     return false;
   }
@@ -177,6 +181,7 @@ namespace gca {
     concat(vert_inds, surface_vertexes(orient.get_left()));
     concat(vert_inds, surface_vertexes(orient.get_right()));
     concat(vert_inds, surface_vertexes(orient.get_bottom()));
+    sort(begin(vert_inds), end(vert_inds));
     delete_if(vert_inds,
 	      [v, orient](const index_t i)
 	      { return point_above_vice(i, orient, v); });
