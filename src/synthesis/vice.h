@@ -8,7 +8,7 @@ namespace gca {
   class vice {
   private:
     point pos;
-    double x_length, y_length, base_height, top_height, clamp_width;
+    double x_length, y_length, base_height, top_height, clamp_width, max_jaw_width;
     
   public:
     vice(point p_pos,
@@ -16,13 +16,15 @@ namespace gca {
 	 double p_y_length,
 	 double p_base_height,
 	 double p_top_height,
-	 double p_clamp_width) :
+	 double p_clamp_width,
+	 double p_max_jaw_width) :
       pos(p_pos),
       x_length(p_x_length),
       y_length(p_y_length),
       base_height(p_base_height),
       top_height(p_top_height),
-      clamp_width(p_clamp_width) {}
+      clamp_width(p_clamp_width),
+      max_jaw_width(p_max_jaw_width) {}
 
     inline double x_min() const { return pos.x; }
     inline double y_min() const { return pos.y; }
@@ -39,6 +41,8 @@ namespace gca {
     inline double top_z() const { return pos.z + top_height; }
 
     inline point position() const { return pos; }
+
+    inline double maximum_jaw_width() const { return max_jaw_width; }
 
   };
 

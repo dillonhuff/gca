@@ -94,7 +94,8 @@ namespace gca {
 
   // TODO: Include SB surfaces in this analysis
   std::vector<stock_orientation>
-  all_stable_orientations(const std::vector<surface>& surfaces) {
+  all_stable_orientations(const std::vector<surface>& surfaces,
+			  const vice& v) {
     vector<stock_orientation> orients;
     for (unsigned j = 0; j < surfaces.size(); j++) {
       const surface* next_left = &(surfaces[j]);
@@ -117,6 +118,16 @@ namespace gca {
 	}
       }
     }
+
+    // delete_if(orients,
+    // 	      [v](const stock_orientation& orient)
+    // 	      {
+    // 		auto part = orient.get_left().get_parent_mesh();
+    // 		auto left_pt = part.face_triangle(orient.get_left().front()).v1;
+    // 		auto right_pt = part.face_triangle(orient.get_right().front()).v1;
+    // 		return signed_distance_along(left_pt - right_pt, orient.left_normal())
+    // 		  < v.maximum_jaw_width();
+    // 	      });
 
     // TODO: Consider left and right normals as well, this filtering
     // criterion is too aggressive when all 
@@ -497,7 +508,7 @@ namespace gca {
 		      const std::vector<surface>& stable_surfaces,
 		      const vice& v) {
     vector<stock_orientation> all_orients =
-      all_stable_orientations(stable_surfaces);
+      all_stable_orientations(stable_surfaces, v);
 
     auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
 

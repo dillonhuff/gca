@@ -3,7 +3,7 @@
 namespace gca {
 
   vice emco_vice(const point loc) {
-    return vice(loc, 2.5, 5.5, 1.1, 1.87, 1.3);
+    return vice(loc, 2.5, 5.5, 1.1, 1.87, 1.3, 2.0);
   }
 
   vice current_setup() {

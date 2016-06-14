@@ -62,6 +62,8 @@ namespace gca {
     { return *parent_mesh; }
   };
 
+  typedef std::vector<std::vector<index_t>> surface_list;
+
 }
 
 #endif

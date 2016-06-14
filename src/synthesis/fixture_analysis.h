@@ -77,8 +77,9 @@ namespace gca {
 				       const std::vector<surface>& stable_surfaces);
 
   std::vector<stock_orientation>
-  all_stable_orientations(const std::vector<surface>& surfaces);
-
+  all_stable_orientations(const std::vector<surface>& surfaces,
+			  const vice& v);
+  
   // TODO: Should this really be a map?
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
