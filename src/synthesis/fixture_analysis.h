@@ -58,8 +58,6 @@ namespace gca {
       left(nullptr), right(nullptr), bottom(nullptr) {}
   };
   
-  typedef std::vector<std::vector<index_t>> surface_list;
-
   std::vector<surface> outer_surfaces(const triangular_mesh& part);
 
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,

@@ -119,15 +119,15 @@ namespace gca {
       }
     }
 
-    // delete_if(orients,
-    // 	      [v](const stock_orientation& orient)
-    // 	      {
-    // 		auto part = orient.get_left().get_parent_mesh();
-    // 		auto left_pt = part.face_triangle(orient.get_left().front()).v1;
-    // 		auto right_pt = part.face_triangle(orient.get_right().front()).v1;
-    // 		return signed_distance_along(left_pt - right_pt, orient.left_normal())
-    // 		  < v.maximum_jaw_width();
-    // 	      });
+    delete_if(orients,
+    	      [v](const stock_orientation& orient)
+    	      {
+    		auto part = orient.get_left().get_parent_mesh();
+    		auto left_pt = part.face_triangle(orient.get_left().front()).v1;
+    		auto right_pt = part.face_triangle(orient.get_right().front()).v1;
+    		return abs(signed_distance_along(left_pt - right_pt, orient.left_normal()))
+    		  > v.maximum_jaw_width();
+    	      });
 
     // TODO: Consider left and right normals as well, this filtering
     // criterion is too aggressive when all 
