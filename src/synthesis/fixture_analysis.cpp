@@ -296,23 +296,26 @@ namespace gca {
     return initial_surfaces;
   }
 
-  std::pair<unsigned, std::vector<unsigned>>
+  unsigned
   orient_with_most_surfaces(const orientation_map& possible_orientations,
 			    const std::vector<unsigned>& orients_left,
 			    const std::vector<unsigned>& surfaces_left) {
     unsigned max_surfs = 0;
     bool selected_some = false;
-    std::pair<unsigned, std::vector<unsigned>> p(0, {});
-    for (auto orient : possible_orientations) {
-      if (elem(orient.first, orients_left)) {
-	auto num_surfs_visible =
-	  intersection(orient.second, surfaces_left).size();
-	cout << "num_surfs_visible = " << num_surfs_visible << endl;
-	if (num_surfs_visible > max_surfs) {
-	  p = orient;
-	  max_surfs = num_surfs_visible;
-	  selected_some = true;
+    unsigned p = 0;
+    for (auto orient : orients_left) {
+      auto num_surfs_visible = 0;
+      for (auto surf_ind : surfaces_left) {
+	auto surf_orient_pair = *(possible_orientations.find(surf_ind));
+	if (elem(orient, surf_orient_pair.second)) {
+	  num_surfs_visible++;
 	}
+      }
+      cout << "num_surfs_visible = " << num_surfs_visible << endl;
+      if (num_surfs_visible > max_surfs) {
+	p = orient;
+	max_surfs = num_surfs_visible;
+	selected_some = true;
       }
     }
     assert(selected_some);
@@ -340,7 +343,9 @@ namespace gca {
       // 					orientations_left);
 
       // if (inter_orients.size() > 0) {
-	unsigned orient_ind = orient_with_most_surfaces(); //inter_orients.back();
+      unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
+						      orientations_left,
+						      surfaces_left); //inter_orients.back();
 	cout << "Trying orientation " << orient_ind << " with top normal ";
 	cout << all_orients[orient_ind].top_normal() << endl;
 	remove(orient_ind, orientations_left);
@@ -354,7 +359,7 @@ namespace gca {
 	  orients[orient_ind] = surfaces_cut;
 	}
 	subtract(surfaces_left, surfaces_cut);
-      }
+	//      }
     }
 
     assert(surfaces_left.size() == 0);
