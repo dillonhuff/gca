@@ -296,6 +296,29 @@ namespace gca {
     return initial_surfaces;
   }
 
+  std::pair<unsigned, std::vector<unsigned>>
+  orient_with_most_surfaces(const orientation_map& possible_orientations,
+			    const std::vector<unsigned>& orients_left,
+			    const std::vector<unsigned>& surfaces_left) {
+    unsigned max_surfs = 0;
+    bool selected_some = false;
+    std::pair<unsigned, std::vector<unsigned>> p(0, {});
+    for (auto orient : possible_orientations) {
+      if (elem(orient.first, orients_left)) {
+	auto num_surfs_visible =
+	  intersection(orient.second, surfaces_left).size();
+	cout << "num_surfs_visible = " << num_surfs_visible << endl;
+	if (num_surfs_visible > max_surfs) {
+	  p = orient;
+	  max_surfs = num_surfs_visible;
+	  selected_some = true;
+	}
+      }
+    }
+    assert(selected_some);
+    return p;
+  }
+
   surface_map
   greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
 			   const std::vector<stock_orientation>& all_orients,
@@ -304,15 +327,20 @@ namespace gca {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
     surface_map orients;
-    for (auto orient : possible_orientations) {
-      if (surfaces_left.size() == 0) { return orients; }
+    //    for (auto orient : possible_orientations) {
+    //      if (surfaces_left.size() == 0) { return orients; }
+    while (surfaces_left.size() > 0) {
 
-      vector<unsigned> orients_to_choose_from = orient.second;
-      auto inter_orients = intersection(orients_to_choose_from,
-					orientations_left);
+      // auto orient = orient_with_most_surfaces(possible_orientations,
+      // 					      orientations_left,
+      // 					      surfaces_left);
 
-      if (inter_orients.size() > 0) {
-	unsigned orient_ind = inter_orients.back();
+      // vector<unsigned> orients_to_choose_from = orient.second;
+      // auto inter_orients = intersection(orients_to_choose_from,
+      // 					orientations_left);
+
+      // if (inter_orients.size() > 0) {
+	unsigned orient_ind = orient_with_most_surfaces(); //inter_orients.back();
 	cout << "Trying orientation " << orient_ind << " with top normal ";
 	cout << all_orients[orient_ind].top_normal() << endl;
 	remove(orient_ind, orientations_left);

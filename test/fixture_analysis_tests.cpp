@@ -27,14 +27,14 @@ namespace gca {
       REQUIRE(surfs_to_cut.size() == 8);
     }
 
-    SECTION("More than 1 setup") {
+    SECTION("3 setups") {
       vector<stock_orientation> all_orients =
 	all_stable_orientations(outer_surfs);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
-      REQUIRE(orients.size() > 1);
+      REQUIRE(orients.size() == 3);
     }
   }
   
