@@ -169,4 +169,18 @@ namespace gca {
     return lines;
   }
 
+  vector<polyline> sample_lines_2d(const oriented_polygon& b, double x_inc, double y_inc, double z_level) {
+    vector<polyline> box_lines =
+      sample_lines_2d(bounding_box(b), x_inc, y_inc, z_level);
+    vector<polyline> lines;
+    for (auto bl : box_lines) {
+      vector<point> pts(begin(bl), end(bl));
+      delete_if(pts,
+		[b](const point p)
+		{ return !contains(b, p); });
+      lines.push_back(pts);
+    }
+    return lines;
+  }
+
 }

@@ -144,7 +144,7 @@ namespace gca {
   				  double last_level,
 				  const tool& t) {
     double sample_increment = t.radius();
-    box b = bounding_box(boundary);
+    // box b = bounding_box(boundary);
     // auto not_safe = [base, holes, boundary](const point p)
     //   { return not_in_safe_region(p, base, holes, boundary); };
     // auto toolpath_pts = sample_filtered_points_2d(b,
@@ -154,7 +154,7 @@ namespace gca {
     // 						     not_safe);
 
     vector<polyline> ls =
-      sample_lines_2d(b, sample_increment, sample_increment, last_level);
+      sample_lines_2d(boundary, sample_increment, sample_increment, last_level);
 
     vector<polyline> lines;
     for (auto l : ls) {
