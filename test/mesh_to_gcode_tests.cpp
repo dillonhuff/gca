@@ -146,7 +146,7 @@ namespace gca {
 	  // Reverse the y negation in emco_f1_code
 	  maybe<double> mv = m.z_at(v.x, -v.y);
 	  double tool_head_z = v.z - 3.15;
-	  double mesh_z = mv.t - 0.05;
+	  double mesh_z = mv.t - 0.2;
 	  if (mv.just && tool_head_z < mesh_z) {//(v.z - 3.15) < (mv.t - 0.01)) {
 	    
 	    cout << "Mesh z = " << mv.t << endl;

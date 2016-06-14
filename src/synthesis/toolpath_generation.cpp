@@ -65,19 +65,19 @@ namespace gca {
     return paths;
   }
 
-  template<typename InputIt>
-  bool overlaps_or_intersects_any(line l,
-				  InputIt s,
-				  InputIt e) {
-    if (any_of(s, e,
-	       [l](const oriented_polygon& p)
-	       { return overlaps(l, p); })) {
-      return true;
-    }
-    return any_of(s, e,
-		  [l](const oriented_polygon& p)
-		  { return contains(p, l.end) || contains(p, l.start); });
-  }
+  // template<typename InputIt>
+  // bool overlaps_or_intersects_any(line l,
+  // 				  InputIt s,
+  // 				  InputIt e) {
+  //   if (any_of(s, e,
+  // 	       [l](const oriented_polygon& p)
+  // 	       { return overlaps(l, p); })) {
+  //     return true;
+  //   }
+  //   return any_of(s, e,
+  // 		  [l](const oriented_polygon& p)
+  // 		  { return contains(p, l.end) || contains(p, l.start); });
+  // }
 
   vector<polyline> finish_passes(const vector<oriented_polygon>& holes,
 				 const oriented_polygon& boundary,
@@ -121,21 +121,21 @@ namespace gca {
     return lines;
   }
 
-  bool not_in_safe_region(const point p,
-			  const vector<triangle>& base,
-			  const vector<oriented_polygon>& holes,
-			  const oriented_polygon& boundary) {
-    bool in_hole = any_of(begin(holes), end(holes),
-			  [p](const oriented_polygon& pl)
-			  { return contains(pl, p); });
-    if (in_hole) { return true; }
-    bool outside_bounds = !contains(boundary, p);
-    if (outside_bounds) { return true; }
-    for (auto t : base) {
-      if (in_projection(t, p) && below(t, p)) { return true; }
-    }
-    return false;
-  }
+  // bool not_in_safe_region(const point p,
+  // 			  const vector<triangle>& base,
+  // 			  const vector<oriented_polygon>& holes,
+  // 			  const oriented_polygon& boundary) {
+  //   bool in_hole = any_of(begin(holes), end(holes),
+  // 			  [p](const oriented_polygon& pl)
+  // 			  { return contains(pl, p); });
+  //   if (in_hole) { return true; }
+  //   bool outside_bounds = !contains(boundary, p);
+  //   if (outside_bounds) { return true; }
+  //   for (auto t : base) {
+  //     if (in_projection(t, p) && below(t, p)) { return true; }
+  //   }
+  //   return false;
+  // }
 
   vector<polyline> roughing_lines(const pocket& p,
 				  const vector<triangle>& base,
@@ -144,14 +144,6 @@ namespace gca {
   				  double last_level,
 				  const tool& t) {
     double sample_increment = t.radius();
-    // box b = bounding_box(boundary);
-    // auto not_safe = [base, holes, boundary](const point p)
-    //   { return not_in_safe_region(p, base, holes, boundary); };
-    // auto toolpath_pts = sample_filtered_points_2d(b,
-    // 						     sample_increment,
-    // 						     sample_increment,
-    // 						     last_level,
-    // 						     not_safe);
 
     vector<polyline> ls =
       sample_lines_2d(boundary, sample_increment, sample_increment, last_level);
@@ -169,20 +161,6 @@ namespace gca {
       }
     }
 
-    // auto overlaps =
-    //   [&holes](const line l)
-    //   { return overlaps_or_intersects_any(l, 
-    // 					  begin(holes),
-    // 					  end(holes)); };
-    // vector<polyline> lines;
-    // if (toolpath_points.size() > 1) {
-    //   auto path_lines = make_lines(toolpath_points);
-    //   delete_if(path_lines, overlaps);
-    //   for (auto ls : path_lines) {
-    // 	vector<point> pts{ls.start, ls.end};
-    // 	lines.push_back(polyline(pts));
-    //   }
-    // }
     return lines;
   }
 
@@ -202,12 +180,6 @@ namespace gca {
 					     bound_poly,
 					     -1.0e16,
 					     t);
-
-    // vector<polyline> lines;
-    // for (auto pl : plines) {
-    //   polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
-    //   lines.push_back(pts);
-    // }
 
     return plines;
   }
@@ -261,7 +233,8 @@ namespace gca {
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
-    vector<polyline> pocket_path;// = rough_pocket(pocket, t, cut_depth);
+    // TODO: Reintroduce roughing
+    vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
     auto finish_surface = finish_base_lines(pocket, t, cut_depth);
     concat(pocket_path, finish_surface);
     auto finish_edges = finish_pocket(pocket, t, cut_depth);
