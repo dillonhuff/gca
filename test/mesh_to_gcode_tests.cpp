@@ -145,9 +145,13 @@ namespace gca {
 	  point v = c->value_at(t);
 	  // Reverse the y negation in emco_f1_code
 	  maybe<double> mv = m.z_at(v.x, -v.y);
-	  cout << "Mesh z = " << mv.t << endl;
-	  cout << "Cut value = " << v << endl;
-	  if (mv.just && (v.z - 3.15) < mv.t) {
+	  double tool_head_z = v.z - 3.15;
+	  double mesh_z = mv.t - 0.05;
+	  if (mv.just && tool_head_z < mesh_z) {//(v.z - 3.15) < (mv.t - 0.01)) {
+	    
+	    cout << "Mesh z = " << mv.t << endl;
+	    cout << "Tool head position = " << v << endl;
+	    cout << "tool head z - mesh z = " << tool_head_z - mesh_z << endl;
 	    return false;
 	  }
 	}
@@ -193,6 +197,7 @@ namespace gca {
       
       SECTION("Toolpaths don't gouge the mesh") {
 	for (unsigned i = 0; i < meshes.size(); i++) {
+	  cout << "Surface # " << i << endl;
 	  auto program = programs[i];
 	  auto mesh = meshes[i].first;
 	  REQUIRE(no_gouging(program.blocks, mesh));

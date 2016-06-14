@@ -137,34 +137,52 @@ namespace gca {
     return false;
   }
 
-  vector<polyline> roughing_lines(const vector<triangle>& base,
+  vector<polyline> roughing_lines(const pocket& p,
+				  const vector<triangle>& base,
 				  const vector<oriented_polygon>& holes,
   				  const oriented_polygon& boundary,
   				  double last_level,
-  				  double tool_radius) {
-    double sample_increment = tool_radius;
+				  const tool& t) {
+    double sample_increment = t.radius();
     box b = bounding_box(boundary);
-    auto not_safe = [base, holes, boundary](const point p)
-      { return not_in_safe_region(p, base, holes, boundary); };
-    auto toolpath_points = sample_filtered_points_2d(b,
-						     sample_increment,
-						     sample_increment,
-						     last_level,
-						     not_safe);
-    auto overlaps =
-      [&holes](const line l)
-      { return overlaps_or_intersects_any(l, 
-    					  begin(holes),
-    					  end(holes)); };
+    // auto not_safe = [base, holes, boundary](const point p)
+    //   { return not_in_safe_region(p, base, holes, boundary); };
+    // auto toolpath_pts = sample_filtered_points_2d(b,
+    // 						     sample_increment,
+    // 						     sample_increment,
+    // 						     last_level,
+    // 						     not_safe);
+
+    vector<polyline> ls =
+      sample_lines_2d(b, sample_increment, sample_increment, last_level);
+
     vector<polyline> lines;
-    if (toolpath_points.size() > 1) {
-      auto path_lines = make_lines(toolpath_points);
-      delete_if(path_lines, overlaps);
-      for (auto ls : path_lines) {
-	vector<point> pts{ls.start, ls.end};
-	lines.push_back(polyline(pts));
+    for (auto l : ls) {
+      vector<point> toolpath_points =
+	drop_points_onto_max(vector<point>(begin(l), end(l)),
+			     p.base_face_indexes(),
+			     p.base_mesh(),
+			     last_level,
+			     t);
+      if (toolpath_points.size() > 1) {
+	lines.push_back(toolpath_points);
       }
     }
+
+    // auto overlaps =
+    //   [&holes](const line l)
+    //   { return overlaps_or_intersects_any(l, 
+    // 					  begin(holes),
+    // 					  end(holes)); };
+    // vector<polyline> lines;
+    // if (toolpath_points.size() > 1) {
+    //   auto path_lines = make_lines(toolpath_points);
+    //   delete_if(path_lines, overlaps);
+    //   for (auto ls : path_lines) {
+    // 	vector<point> pts{ls.start, ls.end};
+    // 	lines.push_back(polyline(pts));
+    //   }
+    // }
     return lines;
   }
 
@@ -178,29 +196,30 @@ namespace gca {
   	      { return exterior_offset(p, t.radius()); });
     oriented_polygon bound_poly = interior_offset(p.get_boundary(), t.radius());
 
-    vector<polyline> plines = roughing_lines(p.base(),
+    vector<polyline> plines = roughing_lines(p,
+					     p.base(),
 					     offset_h,
 					     bound_poly,
-					     1.0,
-					     t.radius());
+					     -1.0e16,
+					     t);
 
-    vector<polyline> lines;
-    for (auto pl : plines) {
-      polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
-      lines.push_back(pts);
-    }
+    // vector<polyline> lines;
+    // for (auto pl : plines) {
+    //   polyline pts(drop_points_onto(vector<point>(begin(pl), end(pl)), p.base_face_indexes(), p.base_mesh(), t));
+    //   lines.push_back(pts);
+    // }
 
-    return lines;
+    return plines;
   }
 
-  vector<polyline> roughing_passes(const vector<triangle>& base,
+  vector<polyline> roughing_passes(const pocket& p,
 				   const vector<oriented_polygon>& holes,
 				   const oriented_polygon& boundary,
 				   const vector<double>& depths,
 				   const tool& t) {
     vector<polyline> lines;
     for (auto depth : depths) {
-      auto rough_level = roughing_lines(base, holes, boundary, depth, t.radius());
+      auto rough_level = roughing_lines(p, p.base(), holes, boundary, depth, t);
       concat(lines, rough_level);
     }
     return lines;
@@ -220,7 +239,7 @@ namespace gca {
 				       cut_depth / 2.0);
     // Leave the final level to the finishing pass
     depths.pop_back();
-    vector<polyline> pocket_path = roughing_passes(pocket.base(),
+    vector<polyline> pocket_path = roughing_passes(pocket,
 						   offset_h,
 						   bound_poly,
 						   depths,
@@ -242,7 +261,7 @@ namespace gca {
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
-    vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
+    vector<polyline> pocket_path;// = rough_pocket(pocket, t, cut_depth);
     auto finish_surface = finish_base_lines(pocket, t, cut_depth);
     concat(pocket_path, finish_surface);
     auto finish_edges = finish_pocket(pocket, t, cut_depth);
@@ -328,6 +347,38 @@ namespace gca {
     return pts;
   }
 
+  // TODO: Compensate for tool radius / shape and come up with a
+  // more descriptive name
+  std::vector<point> drop_points_onto_max(const std::vector<point>& pts_z,
+					  const std::vector<index_t>& faces,
+					  const triangular_mesh& mesh,
+					  const double max,
+					  const tool& tool) {
+    vector<point> pts;
+    for (auto pt : pts_z) {
+      maybe<double> za = z_at(pt.x, pt.y, faces, mesh);
+      if (za.just) {
+	if (za.t > max) {
+	  pts.push_back(point(pt.x, pt.y, za.t));
+	} else {
+	  pts.push_back(point(pt.x, pt.y, max));
+	}
+      } else {
+	maybe<double> zb = mesh.z_at(pt.x, pt.y);
+	if (zb.just) {
+	  if (zb.t > max) {
+	    pts.push_back(point(pt.x, pt.y, zb.t));
+	  } else {
+	    pts.push_back(point(pt.x, pt.y, max));
+	  }
+	} else {
+	  pts.push_back(point(pt.x, pt.y, max));
+	}
+      }
+    }
+    return pts;
+  }
+  
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,
 				    const tool& tool) {
     box b = mesh.bounding_box();
