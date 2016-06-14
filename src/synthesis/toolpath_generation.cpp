@@ -148,7 +148,7 @@ namespace gca {
 					     p.base(),
 					     offset_h,
 					     bound_poly,
-					     -1.0e16,
+					     p.get_end_depth(),
 					     t);
 
     return plines;

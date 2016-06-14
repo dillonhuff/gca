@@ -203,7 +203,7 @@ namespace gca {
 	  cout << "Surface # " << i << endl;
 	  auto program = programs[i];
 	  auto mesh = meshes[i].first;
-	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.01));
+	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
 	}
       }
     }

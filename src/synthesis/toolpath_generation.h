@@ -48,6 +48,7 @@ namespace gca {
 
     inline double get_start_depth() const { return start_depth; }
 
+    // TODO: Optimize to use vertex list
     inline double get_end_depth() const {
       vector<point> base_points;
       for (auto i : base_inds) {
