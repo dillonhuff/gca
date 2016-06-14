@@ -222,28 +222,8 @@ namespace gca {
     return mill_surfaces;
   }
 
-  // std::vector<surface>
-  // cut_surfaces(const triangular_mesh& part) {
-  //   // TODO: Surface this magic number as a parameter
-  //   double normal_degrees_delta = 30.0;
-  //   auto inds = part.face_indexes();
-  //   vector<vector<index_t>> delta_regions =
-  //     normal_delta_regions(inds, part, normal_degrees_delta);
-  //   vector<surface> surfaces;
-  //   for (auto r : delta_regions) {
-  //     surfaces.push_back(surface(&part, r));
-  //   }
-  //   return surfaces;
-  // }
-
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part,
 				       const std::vector<surface>& stable_surfaces) {
-    // vector<surface> surfs_to_cut = cut_surfaces(part_mesh);
-    // cout << "# initial faces = " << surfs_to_cut.size() << endl;
-    // remove_SA_surfaces(stable_surfaces, surfs_to_cut);
-    // cout << "# faces left = " << surfs_to_cut.size() << endl;
-    // return surfs_to_cut;
-
     // TODO: Turn this magic number into a parameter?
     vector<index_t> stable_surface_inds;
     for (auto s : stable_surfaces) {
