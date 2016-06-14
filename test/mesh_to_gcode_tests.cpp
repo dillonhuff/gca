@@ -135,7 +135,24 @@ namespace gca {
     return true;
   }
 
-  bool no_gouging(const gcode_program& p, const triangular_mesh& m) {
+  bool no_gouging(const std::vector<block>& blocks, const triangular_mesh& m) {
+    vector<vector<cut*>> cuts;
+    auto r = gcode_to_cuts(blocks, cuts);
+    assert(r == GCODE_TO_CUTS_SUCCESS);
+    for (auto cb : cuts) {
+      for (auto c : cb) {
+	for (double t = 0.0; t < 1.0; t += 0.2) {
+	  point v = c->value_at(t);
+	  // Reverse the y negation in emco_f1_code
+	  maybe<double> mv = m.z_at(v.x, -v.y);
+	  cout << "Mesh z = " << mv.t << endl;
+	  cout << "Cut value = " << v << endl;
+	  if (mv.just && (v.z - 3.15) < mv.t) {
+	    return false;
+	  }
+	}
+      }
+    }
     return true;
   }
   
@@ -178,7 +195,7 @@ namespace gca {
 	for (unsigned i = 0; i < meshes.size(); i++) {
 	  auto program = programs[i];
 	  auto mesh = meshes[i].first;
-	  REQUIRE(no_gouging(program, mesh));
+	  REQUIRE(no_gouging(program.blocks, mesh));
 	}
       }
     }

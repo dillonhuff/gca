@@ -61,7 +61,8 @@ namespace gca {
     return meshes;
   }
 
-  gcode_program cut_secured_mesh(const std::pair<triangular_mesh, std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
+  gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
+				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
 				 const vice v,
 				 const std::vector<tool>& tools) {
     tool t = *(min_element(begin(tools), end(tools),
