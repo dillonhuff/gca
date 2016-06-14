@@ -222,11 +222,44 @@ namespace gca {
     return mill_surfaces;
   }
 
-  std::vector<surface>
-  cut_surfaces(const triangular_mesh& part) {
-    // TODO: Surface this magic number as a parameter
+  // std::vector<surface>
+  // cut_surfaces(const triangular_mesh& part) {
+  //   // TODO: Surface this magic number as a parameter
+  //   double normal_degrees_delta = 30.0;
+  //   auto inds = part.face_indexes();
+  //   vector<vector<index_t>> delta_regions =
+  //     normal_delta_regions(inds, part, normal_degrees_delta);
+  //   vector<surface> surfaces;
+  //   for (auto r : delta_regions) {
+  //     surfaces.push_back(surface(&part, r));
+  //   }
+  //   return surfaces;
+  // }
+
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part,
+				       const std::vector<surface>& stable_surfaces) {
+    // vector<surface> surfs_to_cut = cut_surfaces(part_mesh);
+    // cout << "# initial faces = " << surfs_to_cut.size() << endl;
+    // remove_SA_surfaces(stable_surfaces, surfs_to_cut);
+    // cout << "# faces left = " << surfs_to_cut.size() << endl;
+    // return surfs_to_cut;
+
+    // TODO: Turn this magic number into a parameter?
+    vector<index_t> stable_surface_inds;
+    for (auto s : stable_surfaces) {
+      if (s.is_SA()) {
+	concat(stable_surface_inds, s.index_list());
+      }
+    }
+    sort(begin(stable_surface_inds), end(stable_surface_inds));
+
     double normal_degrees_delta = 30.0;
     auto inds = part.face_indexes();
+    delete_if(inds,
+	      [&stable_surface_inds](const index_t i)
+	      { return binary_search(begin(stable_surface_inds),
+				     end(stable_surface_inds), i); });
+    
     vector<vector<index_t>> delta_regions =
       normal_delta_regions(inds, part, normal_degrees_delta);
     vector<surface> surfaces;
@@ -234,15 +267,7 @@ namespace gca {
       surfaces.push_back(surface(&part, r));
     }
     return surfaces;
-  }
-
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
-				       const std::vector<surface>& stable_surfaces) {
-    vector<surface> surfs_to_cut = cut_surfaces(part_mesh);
-    cout << "# initial faces = " << surfs_to_cut.size() << endl;
-    remove_SA_surfaces(stable_surfaces, surfs_to_cut);
-    cout << "# faces left = " << surfs_to_cut.size() << endl;
-    return surfs_to_cut;
+    
   }
 
   orientation_map
