@@ -311,7 +311,7 @@ namespace gca {
 	  num_surfs_visible++;
 	}
       }
-      cout << "num_surfs_visible = " << num_surfs_visible << endl;
+
       if (num_surfs_visible > max_surfs) {
 	p = orient;
 	max_surfs = num_surfs_visible;
@@ -330,36 +330,25 @@ namespace gca {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
     surface_map orients;
-    //    for (auto orient : possible_orientations) {
-    //      if (surfaces_left.size() == 0) { return orients; }
+
     while (surfaces_left.size() > 0) {
 
-      // auto orient = orient_with_most_surfaces(possible_orientations,
-      // 					      orientations_left,
-      // 					      surfaces_left);
-
-      // vector<unsigned> orients_to_choose_from = orient.second;
-      // auto inter_orients = intersection(orients_to_choose_from,
-      // 					orientations_left);
-
-      // if (inter_orients.size() > 0) {
       unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
 						      orientations_left,
-						      surfaces_left); //inter_orients.back();
-	cout << "Trying orientation " << orient_ind << " with top normal ";
-	cout << all_orients[orient_ind].top_normal() << endl;
-	remove(orient_ind, orientations_left);
-	vector<unsigned> surfaces_cut =
-	  select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
-	cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
-	for (auto s : surfaces_cut) {
-	  cout << "\t" << s << endl;
-	}
-	if (surfaces_cut.size() > 0) {
-	  orients[orient_ind] = surfaces_cut;
-	}
-	subtract(surfaces_left, surfaces_cut);
-	//      }
+						      surfaces_left);
+      cout << "Trying orientation " << orient_ind << " with top normal ";
+      cout << all_orients[orient_ind].top_normal() << endl;
+      remove(orient_ind, orientations_left);
+      vector<unsigned> surfaces_cut =
+	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
+      cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
+      for (auto s : surfaces_cut) {
+	cout << "\t" << s << endl;
+      }
+      if (surfaces_cut.size() > 0) {
+	orients[orient_ind] = surfaces_cut;
+      }
+      subtract(surfaces_left, surfaces_cut);
     }
 
     assert(surfaces_left.size() == 0);
