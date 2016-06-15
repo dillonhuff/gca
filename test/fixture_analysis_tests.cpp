@@ -5,6 +5,45 @@
 
 namespace gca {
 
+  TEST_CASE("Box with thru hole") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
+    workpiece workpiece_dims(3.81, 3.2, 3.98);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
+
+    auto outer_surfs = outer_surfaces(mesh);
+    auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
+    classify_part_surfaces(outer_surfs, aligned_workpiece);
+    auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
+
+    SECTION("6 surfaces that are always stable") {
+      unsigned num_stable = 0;
+      for (auto s : outer_surfs) {
+	if (s.is_SA()) {
+	  num_stable++;
+	}
+      }
+      REQUIRE(num_stable == 6);
+    }
+
+    SECTION("1 surface to cut") {
+      REQUIRE(surfs_to_cut.size() == 1);
+    }
+
+    SECTION("1 setup") {
+      vector<stock_orientation> all_orients =
+	all_stable_orientations(outer_surfs, test_vice);
+
+      surface_map orients =
+	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
+
+      REQUIRE(orients.size() == 1);
+    }
+  }
+
   TEST_CASE("Clipped pill") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -44,7 +83,6 @@ namespace gca {
       REQUIRE(orients.size() == 2);
     }
   }
-  
 
   TEST_CASE("Tapered top and several slanted verticals") {
     arena_allocator a;
