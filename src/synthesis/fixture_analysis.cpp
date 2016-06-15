@@ -149,6 +149,17 @@ namespace gca {
     return orients;
   }
 
+  std::vector<fixture>
+  all_stable_fixtures(const std::vector<surface>& surfaces,
+		      const vice& v) {
+    auto orients = all_stable_orientations(surfaces, v);
+    vector<fixture> fixtures;
+    for (auto orient : orients) {
+      fixtures.push_back(orient);
+    }
+    return fixtures;
+  }
+
   bool any_vertex_in(const triangle_t tri,
 		     const std::vector<index_t>& inds) {
     if (binary_search(begin(inds), end(inds), tri.v[0])) {
@@ -256,13 +267,13 @@ namespace gca {
   select_orientations(orientation_map& orient_map,
 		      std::vector<unsigned>& surfaces_left,
 		      const std::vector<surface>& surfaces,
-		      std::vector<stock_orientation>& all_orients,
+		      std::vector<fixture>& all_orients,
 		      const vice& v) {
     vector<unsigned> orients_left = inds(all_orients);
     while (surfaces_left.size() > 0 && orients_left.size() > 0) {
       unsigned next_orient = orients_left.back();
       orients_left.pop_back();
-      auto surfaces_cut = surfaces_millable_from(all_orients[next_orient],
+      auto surfaces_cut = surfaces_millable_from(all_orients[next_orient].orient,
 						 surfaces,
 						 v);
       subtract(surfaces_left, surfaces_cut);
@@ -274,7 +285,7 @@ namespace gca {
 
   orientation_map
   greedy_possible_orientations(const std::vector<surface>& surfaces,
-			       std::vector<stock_orientation>& all_orients,
+			       std::vector<fixture>& all_orients,
 			       const vice& v) {
     orientation_map orient_map;
     vector<unsigned> surfaces_left = inds(surfaces);
@@ -338,7 +349,7 @@ namespace gca {
 
   surface_map
   greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
-			   const std::vector<stock_orientation>& all_orients,
+			   const std::vector<fixture>& all_orients,
 			   orientation_map& possible_orientations,
 			   const triangular_mesh& part) {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
@@ -351,7 +362,7 @@ namespace gca {
 						      orientations_left,
 						      surfaces_left);
       cout << "Trying orientation " << orient_ind << " with top normal ";
-      cout << all_orients[orient_ind].top_normal() << endl;
+      cout << all_orients[orient_ind].orient.top_normal() << endl;
       remove(orient_ind, orientations_left);
       vector<unsigned> surfaces_cut =
 	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
@@ -468,7 +479,7 @@ namespace gca {
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
-		    std::vector<stock_orientation>& all_orients,
+		    std::vector<fixture>& all_orients,
 		    const vice& v) {
     orientation_map possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients, v);
@@ -489,8 +500,8 @@ namespace gca {
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const vice& v) {
-    vector<stock_orientation> all_orients =
-      all_stable_orientations(stable_surfaces, v);
+    vector<fixture> all_orients =
+      all_stable_fixtures(stable_surfaces, v);
 
     auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
 
@@ -504,7 +515,7 @@ namespace gca {
       for (auto i : p.second) {
 	surfaces.push_back(surfs_to_cut[i].index_list());
       }
-      orients.push_back(mk_pair(all_orients[ori], surfaces));
+      orients.push_back(mk_pair(all_orients[ori].orient, surfaces));
     }
     return mk_pair(surfs_to_cut, orients);
   }

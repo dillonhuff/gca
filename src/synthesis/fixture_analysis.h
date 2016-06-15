@@ -61,6 +61,12 @@ namespace gca {
 
   typedef std::vector<std::pair<stock_orientation, surface_list>> fixture_list;
 
+  struct fixture {
+    stock_orientation orient;
+    fixture(const stock_orientation& p_orient)
+      : orient(p_orient) {}
+  };
+
   class fixture_plan {
   protected:
     const triangular_mesh& part;
@@ -102,11 +108,15 @@ namespace gca {
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v);
 
+  std::vector<fixture>
+  all_stable_fixtures(const std::vector<surface>& surfaces,
+		      const vice& v);
+  
   // TODO: Should this really be a map?
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
-		    std::vector<stock_orientation>& all_orients,
+		    std::vector<fixture>& all_orients,
 		    const vice& v);
   
 

@@ -35,8 +35,8 @@ namespace gca {
     }
 
     SECTION("2 setups") {
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -68,8 +68,8 @@ namespace gca {
     }
 
     SECTION("3 setups") {
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -96,8 +96,8 @@ namespace gca {
     }
 
     SECTION("2 setups") {
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -106,8 +106,8 @@ namespace gca {
     }
 
     SECTION("each orientation has 1 connected component") {
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -156,8 +156,8 @@ namespace gca {
     }
 
     SECTION("1 setup") {
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -166,8 +166,8 @@ namespace gca {
     }
 
     SECTION("each orientation has 1 connected component") {
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -209,8 +209,8 @@ namespace gca {
 		     [](const surface& s) {
 		       return s.face_orientation(s.index_list().front()).z > 0.2; }));
       
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
       
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -247,8 +247,8 @@ namespace gca {
       classify_part_surfaces(outer_surfs, aligned_workpiece);
 
       auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
-      vector<stock_orientation> all_orients =
-	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+	all_stable_fixtures(outer_surfs, test_vice);
       
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -313,8 +313,8 @@ namespace gca {
     }
 
     SECTION("1 setup") {
-      vector<stock_orientation> all_orients =
-  	all_stable_orientations(outer_surfs, test_vice);
+      vector<fixture> all_orients =
+  	all_stable_fixtures(outer_surfs, test_vice);
 
       surface_map orients =
   	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
