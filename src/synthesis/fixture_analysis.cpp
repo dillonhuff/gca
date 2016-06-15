@@ -254,19 +254,10 @@ namespace gca {
   greedy_possible_orientations(const std::vector<surface>& surfaces,
 			       std::vector<stock_orientation>& all_orients,
 			       const vice& v) {
-    // TODO: Better way to do this?
-    sort(begin(all_orients), end(all_orients),
-    	 [](const stock_orientation l, const stock_orientation r)
-    	 { return l.top_normal().x < r.top_normal().x; });
-    sort(begin(all_orients), end(all_orients),
-    	 [](const stock_orientation l, const stock_orientation r)
-    	 { return l.top_normal().z < r.top_normal().z; });
-
     orientation_map orient_map;
     vector<unsigned> surfaces_left = inds(surfaces);
     vector<unsigned> orients_left = inds(all_orients);
-    while (surfaces_left.size() > 0) {
-      assert(orients_left.size() > 0);
+    while (surfaces_left.size() > 0 && orients_left.size() > 0) {
       unsigned next_orient = orients_left.back();
       orients_left.pop_back();
       auto surfaces_cut = surfaces_millable_from(all_orients[next_orient],
@@ -285,6 +276,8 @@ namespace gca {
 	}
       }
     }
+    
+    assert(orients_left.size() > 0);
     return orient_map;
   }
 
@@ -508,6 +501,7 @@ namespace gca {
     				 surfaces_to_cut);
   }
 
+  // TODO: I dont think the surface vector is actually needed
   std::pair<std::vector<surface>, fixture_list>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
