@@ -250,12 +250,12 @@ namespace gca {
     
   }
 
-  orientation_map
-  greedy_possible_orientations(const std::vector<surface>& surfaces,
-			       std::vector<stock_orientation>& all_orients,
-			       const vice& v) {
-    orientation_map orient_map;
-    vector<unsigned> surfaces_left = inds(surfaces);
+  void
+  select_orientations(orientation_map& orient_map,
+		      std::vector<unsigned>& surfaces_left,
+		      const std::vector<surface>& surfaces,
+		      std::vector<stock_orientation>& all_orients,
+		      const vice& v) {
     vector<unsigned> orients_left = inds(all_orients);
     while (surfaces_left.size() > 0 && orients_left.size() > 0) {
       unsigned next_orient = orients_left.back();
@@ -265,36 +265,30 @@ namespace gca {
 						 v);
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
-	if (orient_map.find(surface_ind) != end(orient_map)) {
-	  auto k = orient_map.find(surface_ind);
-	  auto orients = k->second;
-	  orients.push_back(next_orient);
-	  orient_map[surface_ind] = orients;
-	} else {
-	  vector<unsigned> orients{next_orient};
-	  orient_map[surface_ind] = orients;
-	}
+	map_insert(orient_map, surface_ind, next_orient);
       }
     }
-    
-    assert(orients_left.size() > 0);
-    return orient_map;
   }
 
-  // TODO: Replace part by call to get surface underlying mesh?
-  bool connected_by(const unsigned i,
-  		    const unsigned j,
-  		    const std::vector<surface>& surfaces,
-  		    const triangular_mesh& part,
-		    const unsigned orient_ind,
-  		    const orientation_map& orient_map) {
-    auto ind1 = surfaces[i].index_list();
-    auto ind2 = surfaces[j].index_list();
-    if (share_edge(ind1, ind2, part)) {
-      return elem(orient_ind, orient_map.find(i)->second) &&
-	elem(orient_ind, orient_map.find(j)->second);
+  orientation_map
+  greedy_possible_orientations(const std::vector<surface>& surfaces,
+			       std::vector<stock_orientation>& all_orients,
+			       const vice& v) {
+    orientation_map orient_map;
+    vector<unsigned> surfaces_left = inds(surfaces);
+    select_orientations(orient_map, surfaces_left, surfaces, all_orients, v);
+    if (surfaces_left.size() > 0) {
+      // TODO: Surface the protective lower slot height as a parameter
+      double slot_height = 0.2;
+      vice vice_with_lower_slot(v, slot_height);
+      select_orientations(orient_map,
+			  surfaces_left,
+			  surfaces,
+			  all_orients,
+			  vice_with_lower_slot);
     }
-    return false;
+    assert(surfaces_left.size() == 0);
+    return orient_map;
   }
 
   // TODO: Is there a way to do this without const?
@@ -381,19 +375,6 @@ namespace gca {
       for (auto orient_ind : m.second) {
     	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
       }
-    }
-  }
-
-  // TODO: Send to system/algorithm
-  template<typename A, typename B>
-  void map_insert(std::map<A, std::vector<B>>& m, A a, B b) {
-    if (m.find(a) == end(m)) {
-      vector<B> bs{b};
-      m[a] = bs;
-    } else {
-      auto elems = m[a];
-      elems.push_back(b);
-      m[a] = elems;
     }
   }
 

@@ -1,6 +1,7 @@
 #ifndef GCA_SYSTEM_ALGORITHM_H
 #define GCA_SYSTEM_ALGORITHM_H
 
+#include <map>
 #include <numeric>
 #include <utility>
 
@@ -293,6 +294,19 @@ namespace gca {
     elems_cp.resize(std::distance(begin(elems_cp), it));
     return elems_cp;
   }
+
+  template<typename A, typename B>
+  void map_insert(std::map<A, std::vector<B>>& m, A a, B b) {
+    if (m.find(a) == std::end(m)) {
+      std::vector<B> bs{b};
+      m[a] = bs;
+    } else {
+      auto elems = m[a];
+      elems.push_back(b);
+      m[a] = elems;
+    }
+  }
+
 }
 
 #endif
