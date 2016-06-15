@@ -59,13 +59,15 @@ namespace gca {
       left(nullptr), right(nullptr), bottom(nullptr) {}
   };
 
-  typedef std::vector<std::pair<stock_orientation, surface_list>> fixture_list;
-
   struct fixture {
     stock_orientation orient;
-    fixture(const stock_orientation& p_orient)
-      : orient(p_orient) {}
+    vice v;
+    fixture(const stock_orientation& p_orient,
+	    const vice& p_v)
+      : orient(p_orient), v(p_v) {}
   };
+
+  typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
 
   class fixture_plan {
   protected:

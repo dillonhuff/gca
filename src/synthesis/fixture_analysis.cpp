@@ -155,7 +155,7 @@ namespace gca {
     auto orients = all_stable_orientations(surfaces, v);
     vector<fixture> fixtures;
     for (auto orient : orients) {
-      fixtures.push_back(orient);
+      fixtures.push_back(fixture(orient, v));
     }
     return fixtures;
   }
@@ -508,14 +508,14 @@ namespace gca {
     surface_map os =
       pick_orientations(part_mesh, surfs_to_cut, all_orients, v);
 
-    vector<pair<stock_orientation, surface_list>> orients;
+    fixture_list orients;
     for (auto p : os) {
       unsigned ori = p.first;
       surface_list surfaces;
       for (auto i : p.second) {
 	surfaces.push_back(surfs_to_cut[i].index_list());
       }
-      orients.push_back(mk_pair(all_orients[ori].orient, surfaces));
+      orients.push_back(mk_pair(all_orients[ori], surfaces));
     }
     return mk_pair(surfs_to_cut, orients);
   }
@@ -530,5 +530,5 @@ namespace gca {
     auto orients = orientations_to_cut(part_mesh, part_ss, v);
     return fixture_plan(part_mesh, aligned_workpiece, orients.second);
   }
-  
+
 }

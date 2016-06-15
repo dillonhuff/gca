@@ -57,10 +57,10 @@ namespace gca {
       orientations_to_cut(part_mesh, part_ss, v);
     vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : orients.second) {
-      cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
-      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
+      cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
+      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first.orient,
   					  orient_surfaces_pair.second,
-  					  v));
+  					  orient_surfaces_pair.first.v));
     }
     return meshes;
   }
@@ -99,11 +99,12 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     fixture_plan plan = make_fixture_plan(part_mesh, part_ss, v, tools, w);
     vector<pair<triangular_mesh, surface_list>> meshes;
+    // Remove duplication between here and part_arrangements
     for (auto orient_surfaces_pair : plan.fixtures()) {
-      cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
-      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
+      cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
+      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first.orient,
 					  orient_surfaces_pair.second,
-					  v));
+					  orient_surfaces_pair.first.v));
     }
 
     vector<gcode_program> ps =
