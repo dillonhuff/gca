@@ -320,6 +320,10 @@ namespace gca {
   	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
 
       REQUIRE(orients.size() == 1);
+
+      for (auto fixture : orients) {
+	REQUIRE(all_orients[fixture.first].v.has_protective_base_plate());
+      }
     }
   }
 

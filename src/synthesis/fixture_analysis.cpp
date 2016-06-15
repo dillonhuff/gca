@@ -157,6 +157,13 @@ namespace gca {
     for (auto orient : orients) {
       fixtures.push_back(fixture(orient, v));
     }
+    // TODO: Surface the protective lower slot height as a parameter
+    double slot_height = 0.2;
+    vice vice_with_lower_slot(v, slot_height);
+    for (auto orient : orients) {
+      fixtures.push_back(fixture(orient, vice_with_lower_slot));
+    }
+
     return fixtures;
   }
 
@@ -267,15 +274,14 @@ namespace gca {
   select_orientations(orientation_map& orient_map,
 		      std::vector<unsigned>& surfaces_left,
 		      const std::vector<surface>& surfaces,
-		      std::vector<fixture>& all_orients,
-		      const vice& v) {
+		      std::vector<fixture>& all_orients) {
     vector<unsigned> orients_left = inds(all_orients);
     while (surfaces_left.size() > 0 && orients_left.size() > 0) {
       unsigned next_orient = orients_left.back();
       orients_left.pop_back();
       auto surfaces_cut = surfaces_millable_from(all_orients[next_orient].orient,
 						 surfaces,
-						 v);
+						 all_orients[next_orient].v);
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
 	map_insert(orient_map, surface_ind, next_orient);
@@ -289,17 +295,7 @@ namespace gca {
 			       const vice& v) {
     orientation_map orient_map;
     vector<unsigned> surfaces_left = inds(surfaces);
-    select_orientations(orient_map, surfaces_left, surfaces, all_orients, v);
-    if (surfaces_left.size() > 0) {
-      // TODO: Surface the protective lower slot height as a parameter
-      double slot_height = 0.2;
-      vice vice_with_lower_slot(v, slot_height);
-      select_orientations(orient_map,
-			  surfaces_left,
-			  surfaces,
-			  all_orients,
-			  vice_with_lower_slot);
-    }
+    select_orientations(orient_map, surfaces_left, surfaces, all_orients);
     assert(surfaces_left.size() == 0);
     return orient_map;
   }
