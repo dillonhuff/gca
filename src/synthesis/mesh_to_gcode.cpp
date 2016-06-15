@@ -96,7 +96,8 @@ namespace gca {
 					   const vice v,
 					   const vector<tool>& tools,
 					   const workpiece w) {
-    fixture_plan plan = make_fixture_plan(part_mesh, v, tools, w);
+    auto part_ss = outer_surfaces(part_mesh);
+    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, v, tools, w);
     vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : plan.fixtures()) {
       cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
