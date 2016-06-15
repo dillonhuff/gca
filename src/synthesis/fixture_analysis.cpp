@@ -191,7 +191,9 @@ namespace gca {
     vector<index_t> vert_inds;
     concat(vert_inds, surface_vertexes(orient.get_left()));
     concat(vert_inds, surface_vertexes(orient.get_right()));
-    concat(vert_inds, surface_vertexes(orient.get_bottom()));
+    if (!v.has_protective_base_plate()) {
+      concat(vert_inds, surface_vertexes(orient.get_bottom()));
+    }
     sort(begin(vert_inds), end(vert_inds));
     delete_if(vert_inds,
 	      [v, orient](const index_t i)

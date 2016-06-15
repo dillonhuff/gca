@@ -37,6 +37,9 @@ namespace gca {
       clamp_width(v.clamp_width),
       max_jaw_width(v.max_jaw_width),
       protective_base_plate_height(p_protective_base_plate_height) {}
+
+    inline bool has_protective_base_plate() const
+    { return protective_base_plate_height != 0.0; }
     
     inline double x_min() const { return pos.x; }
     inline double y_min() const { return pos.y; }
@@ -47,9 +50,9 @@ namespace gca {
 
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
 
-    inline double jaw_height() const { return top_height - base_height; }
+    inline double jaw_height() const { return top_height - (base_height + protective_base_plate_height); }
 
-    inline double base_z() const { return pos.z + base_height; }
+    inline double base_z() const { return pos.z + base_height + protective_base_plate_height; }
     inline double top_z() const { return pos.z + top_height; }
 
     inline point position() const { return pos; }
