@@ -154,14 +154,16 @@ namespace gca {
 		      const vice& v) {
     auto orients = all_stable_orientations(surfaces, v);
     vector<fixture> fixtures;
-    for (auto orient : orients) {
-      fixtures.push_back(fixture(orient, v));
-    }
+
     // TODO: Surface the protective lower slot height as a parameter
     double slot_height = 0.2;
     vice vice_with_lower_slot(v, slot_height);
     for (auto orient : orients) {
       fixtures.push_back(fixture(orient, vice_with_lower_slot));
+    }
+
+    for (auto orient : orients) {
+      fixtures.push_back(fixture(orient, v));
     }
 
     return fixtures;
