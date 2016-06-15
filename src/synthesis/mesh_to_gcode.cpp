@@ -17,9 +17,13 @@ namespace gca {
   
   triangular_mesh orient_mesh(const triangular_mesh& mesh,
 			      const stock_orientation& orient) {
+    cout << "About to get normal" << endl;
     point normal = orient.top_normal();
+    cout << "Got normal" << endl;
     matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
+    cout << "got top rotation matrix" << endl;
     auto m = top_rotation_mat * mesh;
+    cout << "Created rotation matrix" << endl;
     return m;
   }
 
@@ -47,16 +51,16 @@ namespace gca {
 
   std::vector<std::pair<triangular_mesh, surface_list>>
   part_arrangements(const triangular_mesh& part_mesh,
-		    const vector<surface>& part_ss,
-		    const vice v) {
-    vector<pair<stock_orientation, surface_list>> orients =
+  		    const vector<surface>& part_ss,
+  		    const vice v) {
+    pair<vector<surface>, fixture_list> orients =
       orientations_to_cut(part_mesh, part_ss, v);
     vector<pair<triangular_mesh, surface_list>> meshes;
-    for (auto orient_surfaces_pair : orients) {
+    for (auto orient_surfaces_pair : orients.second) {
       cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
       meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
-					  orient_surfaces_pair.second,
-					  v));
+  					  orient_surfaces_pair.second,
+  					  v));
     }
     return meshes;
   }
@@ -92,13 +96,17 @@ namespace gca {
 					   const vice v,
 					   const vector<tool>& tools,
 					   const workpiece w) {
-    auto part_ss = outer_surfaces(part_mesh);
-    auto aligned_workpiece = align_workpiece(part_ss, w);
-    classify_part_surfaces(part_ss, aligned_workpiece);
-    vector<pair<triangular_mesh, surface_list>> meshes =
-      part_arrangements(part_mesh, part_ss, v);
+    fixture_plan plan = make_fixture_plan(part_mesh, v, tools, w);
+    vector<pair<triangular_mesh, surface_list>> meshes;
+    for (auto orient_surfaces_pair : plan.fixtures()) {
+      cout << "Top normal " << orient_surfaces_pair.first.top_normal() << endl;
+      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first,
+					  orient_surfaces_pair.second,
+					  v));
+    }
+
     vector<gcode_program> ps =
-      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, v);
+      workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, v);
     cut_secured_meshes(meshes, ps, v, tools);
     return ps;
   }

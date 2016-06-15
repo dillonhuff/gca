@@ -2,6 +2,7 @@
 #define GCA_FIXTURE_ANALYSIS_H
 
 #include "geometry/surface.h"
+#include "synthesis/tool.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece.h"
 
@@ -57,6 +58,29 @@ namespace gca {
     stock_orientation() :
       left(nullptr), right(nullptr), bottom(nullptr) {}
   };
+
+  typedef std::vector<std::pair<stock_orientation, surface_list>> fixture_list;
+
+  class fixture_plan {
+  protected:
+    const triangular_mesh& part;
+    workpiece stock;
+    fixture_list fixture_pairs;
+    
+  public:
+    fixture_plan(const triangular_mesh& p_part,
+		 const workpiece& p_stock,
+		 const fixture_list& p_fixture_pairs) :
+      part(p_part), stock(p_stock), fixture_pairs(p_fixture_pairs) {
+      std::cout << "Fixture plan: # of pairs = " << fixture_pairs.size() << endl;
+    }
+
+    workpiece aligned_workpiece() const
+    { return stock; }
+
+    const fixture_list& fixtures() const
+    { return fixture_pairs; }
+  };
   
   std::vector<surface> outer_surfaces(const triangular_mesh& part);
 
@@ -66,7 +90,7 @@ namespace gca {
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh);
 
-  std::vector<std::pair<stock_orientation, surface_list>>
+  std::pair<std::vector<surface>, fixture_list>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const vice& v);
@@ -85,6 +109,12 @@ namespace gca {
 		    std::vector<stock_orientation>& all_orients,
 		    const vice& v);
   
+
+  fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
+				 const vice v,
+				 const vector<tool>& tools,
+				 const workpiece w);
+
 }
 
 #endif

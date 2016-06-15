@@ -508,7 +508,7 @@ namespace gca {
     				 surfaces_to_cut);
   }
 
-  std::vector<std::pair<stock_orientation, surface_list>>
+  std::pair<std::vector<surface>, fixture_list>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const vice& v) {
@@ -529,7 +529,18 @@ namespace gca {
       }
       orients.push_back(mk_pair(all_orients[ori], surfaces));
     }
-    return orients;
+    return mk_pair(surfs_to_cut, orients);
   }
 
+  fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
+				 const vice v,
+				 const vector<tool>& tools,
+				 const workpiece w) {
+    auto part_ss = outer_surfaces(part_mesh);
+    auto aligned_workpiece = align_workpiece(part_ss, w);
+    classify_part_surfaces(part_ss, aligned_workpiece);
+    auto orients = orientations_to_cut(part_mesh, part_ss, v);
+    return fixture_plan(part_mesh, aligned_workpiece, orients.second);
+  }
+  
 }
