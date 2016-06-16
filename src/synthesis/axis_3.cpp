@@ -160,16 +160,38 @@ namespace gca {
 
   bool has_no_base(const std::vector<index_t>& surface,
 		   const triangular_mesh& part) {
-    assert(false);
+    auto side_faces = side_millable_faces(point(0, 0, 1),
+					  surface,
+					  part);
+    cout << "side_faces.size() == " << side_faces.size() << endl;
+    cout << "surface.size() == " << surface.size() << endl;
+    if (side_faces.size() == surface.size()) {
+      return true;
+    }
+    return false;
   }
 
   oriented_polygon base_outline(const std::vector<index_t>& surface,
 				const triangular_mesh& part) {
-    assert(false);
+    auto bounds = mesh_bounds(surface, part);
+    // TODO: Add real check for lowest point in mesh
+    return bounds.front();
   }
 
+  // TODO: Add proper triangulation algorithm
   triangular_mesh triangulate(const oriented_polygon& p) {
-    assert(false);
+    assert(p.vertices.size() > 1);
+    point c(0, 0, 0);
+    for (auto p : p.vertices) {
+      c = c + p;
+    }
+    c = (1.0 / p.vertices.size()) * c;
+    vector<triangle> tris;
+    for (unsigned i = 0; i < p.vertices.size() - 1; i++) {
+      tris.push_back(triangle(point(0, 0, 1), p.vertices[i], c, p.vertices[i+1]));
+    }
+    cout << "Making triangular mesh" << endl;
+    return make_mesh(tris, 0.001);
   }
 
   std::vector<pocket>
@@ -181,22 +203,26 @@ namespace gca {
     std::vector<std::vector<index_t>> surfaces = sfs;
     delete_if(surfaces,
     	      [&mesh](const vector<index_t>& surface)
-    	      { return all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
+    	      { return !all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
     vector<pocket> pockets;
     double base_z = mesh.bounding_box().z_min;
     for (auto surface : surfaces) {
       if (has_no_base(surface, mesh)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
 	triangular_mesh new_base = triangulate(outline);
+	cout << "Allocating triangular mesh" << endl;
 	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
+	cout << "Copying triangular mesh" << endl;
 	*new_base_cpy = new_base;
+	cout << "Copied mesh" << endl;
 	vector<oriented_polygon> holes;
 	pockets.push_back(pocket(outline, holes, workpiece_height, new_base.face_indexes(), new_base_cpy));
+	cout << "Added pocket" << endl;
       }
     }
+    cout << "# vertical pockets = " << pockets.size() << endl;
     return pockets;
   }
-  
 
   std::vector<polyline>
   mill_surfaces(const std::vector<std::vector<index_t>>& sfs,
@@ -217,7 +243,7 @@ namespace gca {
     auto lines = mill_pockets(pockets, t, cut_depth);
     return shift_lines(lines, point(0, 0, t.length()));
   }
-  
+
   std::vector<polyline> mill_surface_lines(const triangular_mesh& mesh,
 					   const tool& t,
 					   double cut_depth,
