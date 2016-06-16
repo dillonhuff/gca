@@ -158,6 +158,20 @@ namespace gca {
     return pockets;
   }
 
+  bool has_no_base(const std::vector<index_t>& surface,
+		   const triangular_mesh& part) {
+    assert(false);
+  }
+
+  oriented_polygon base_outline(const std::vector<index_t>& surface,
+				const triangular_mesh& part) {
+    assert(false);
+  }
+
+  triangular_mesh triangulate(const oriented_polygon& p) {
+    assert(false);
+  }
+
   std::vector<pocket>
   closed_vertical_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
 				  const triangular_mesh& mesh,
@@ -168,9 +182,19 @@ namespace gca {
     delete_if(surfaces,
     	      [&mesh](const vector<index_t>& surface)
     	      { return all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
+    vector<pocket> pockets;
+    double base_z = mesh.bounding_box().z_min;
     for (auto surface : surfaces) {
+      if (has_no_base(surface, mesh)) {
+	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
+	triangular_mesh new_base = triangulate(outline);
+	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
+	*new_base_cpy = new_base;
+	vector<oriented_polygon> holes;
+	pockets.push_back(pocket(outline, holes, workpiece_height, new_base.face_indexes(), new_base_cpy));
+      }
     }
-    assert(false);
+    return pockets;
   }
   
 
