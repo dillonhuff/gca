@@ -82,7 +82,7 @@ namespace gca {
     auto bounds = mesh_bounds(surface, mesh);
     auto boundary = extract_boundary(bounds);
     vector<oriented_polygon> holes = bounds;
-    return pocket(boundary, holes, top_height, surface, mesh);
+    return pocket(boundary, holes, top_height, surface, &mesh);
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
@@ -158,6 +158,22 @@ namespace gca {
     return pockets;
   }
 
+  std::vector<pocket>
+  closed_vertical_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
+				  const triangular_mesh& mesh,
+				  const tool& t,
+				  double cut_depth,
+				  double workpiece_height) {
+    std::vector<std::vector<index_t>> surfaces = sfs;
+    delete_if(surfaces,
+    	      [&mesh](const vector<index_t>& surface)
+    	      { return all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
+    for (auto surface : surfaces) {
+    }
+    assert(false);
+  }
+  
+
   std::vector<polyline>
   mill_surfaces(const std::vector<std::vector<index_t>>& sfs,
 		const triangular_mesh& mesh,
@@ -166,10 +182,14 @@ namespace gca {
 		double workpiece_height) {
     // TODO: Optimize this away
     std::vector<std::vector<index_t>> surfaces = sfs;
+    vector<pocket> pockets =
+      closed_vertical_surface_pockets(sfs, mesh, t, cut_depth, workpiece_height);
     filter_vertical_surfaces(surfaces, mesh);
-    surfaces = merge_connected_surfaces(surfaces, mesh);
-    assert(surfaces.size() > 0);
-    auto pockets = make_pockets(surfaces, workpiece_height, mesh);
+    if (surfaces.size() > 0) {
+      surfaces = merge_connected_surfaces(surfaces, mesh);
+      auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
+      concat(pockets, nv_pockets);
+    }
     auto lines = mill_pockets(pockets, t, cut_depth);
     return shift_lines(lines, point(0, 0, t.length()));
   }

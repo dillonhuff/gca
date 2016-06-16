@@ -18,14 +18,14 @@ namespace gca {
 
     double start_depth;
     std::vector<index_t> base_inds;
-    const triangular_mesh& mesh;
+    const triangular_mesh* mesh;
 
   public:
     pocket(const oriented_polygon& boundary,
 	   std::vector<oriented_polygon>& holesp,
 	   double start_depthp,
 	   const std::vector<index_t>& basep,
-	   const triangular_mesh& p_mesh) :
+	   const triangular_mesh* p_mesh) :
       boundary(boundary),
       holes(holesp),
       start_depth(start_depthp),
@@ -38,7 +38,7 @@ namespace gca {
     { return base_inds; }
 
     const triangular_mesh& base_mesh() const
-    { return mesh; }
+    { return *mesh; }
     
     inline const vector<oriented_polygon>& get_holes() const
     { return holes; }
@@ -52,10 +52,10 @@ namespace gca {
     inline double get_end_depth() const {
       vector<point> base_points;
       for (auto i : base_inds) {
-	triangle_t t = mesh.triangle_vertices(i);
-	base_points.push_back(mesh.vertex(t.v[0]));
-	base_points.push_back(mesh.vertex(t.v[1]));
-	base_points.push_back(mesh.vertex(t.v[2]));
+	triangle_t t = mesh->triangle_vertices(i);
+	base_points.push_back(mesh->vertex(t.v[0]));
+	base_points.push_back(mesh->vertex(t.v[1]));
+	base_points.push_back(mesh->vertex(t.v[2]));
       }
       return min_distance_along(base_points, point(0, 0, 1));
     }
@@ -63,21 +63,21 @@ namespace gca {
     inline std::vector<triangle> base() const {
       std::vector<triangle> base_tris;
       for (auto i : base_inds) {
-	base_tris.push_back(mesh.face_triangle(i));
+	base_tris.push_back(mesh->face_triangle(i));
       }
       return base_tris;
     }
 
     bool above_base(const point p) {
       for (auto i : base_inds) {
-	auto t = mesh.face_triangle(i);
+	auto t = mesh->face_triangle(i);
 	if (in_projection(t, p) && below(t, p)) { return false; }
       }
       return true;
     }
 
     box bounding_box() const {
-      return mesh.bounding_box();
+      return mesh->bounding_box();
     }
   };
 

@@ -6,7 +6,6 @@
 namespace gca {
 
   TEST_CASE("Make surfaces") {
-    cout << "MAKE SURFACES" << endl;
     arena_allocator a;
     set_system_allocator(&a);
 

@@ -51,6 +51,13 @@ namespace gca {
       REQUIRE(result_programs.size() == 7);
     }
 
+    SECTION("Box with thru hole") {
+      workpiece workpiece_dims(1.51, 1.51, 2.0);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
+      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      REQUIRE(result_programs.size() == 7);
+    }
+    
     // TODO: Reintroduce this test
     // SECTION("Mesh box plinth has 6 clippings and one pocketing") {
     //   auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl").triangles;
@@ -200,7 +207,6 @@ namespace gca {
       
       SECTION("Toolpaths don't gouge the mesh") {
 	for (unsigned i = 0; i < meshes.size(); i++) {
-	  cout << "Surface # " << i << endl;
 	  auto program = programs[i];
 	  auto mesh = meshes[i].first;
 	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
