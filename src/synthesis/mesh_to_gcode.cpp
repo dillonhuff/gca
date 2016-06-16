@@ -17,13 +17,9 @@ namespace gca {
   
   triangular_mesh orient_mesh(const triangular_mesh& mesh,
 			      const stock_orientation& orient) {
-    cout << "About to get normal" << endl;
     point normal = orient.top_normal();
-    cout << "Got normal" << endl;
     matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
-    cout << "got top rotation matrix" << endl;
     auto m = top_rotation_mat * mesh;
-    cout << "Created rotation matrix" << endl;
     return m;
   }
 
