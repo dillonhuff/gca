@@ -172,7 +172,7 @@ namespace gca {
 
   double min_z(const oriented_polygon& p) {
     auto min_z =
-      max_element(begin(p.vertices), end(p.vertices),
+      max_element(begin(p.vertices()), end(p.vertices()),
 		  [](const point l, const point r)
 		  { return l.z < r.z; });
     return (*min_z).z;
@@ -188,19 +188,34 @@ namespace gca {
     return *min_poly;
   }
 
-  // TODO: Add proper triangulation algorithm
-  triangular_mesh triangulate(const oriented_polygon& p) {
-    assert(p.vertices.size() > 1);
+  std::vector<triangle> triangulate_polygon(const oriented_polygon& p) {
+    assert(p.vertices().size() > 2);
+    vector<point> pts = p.vertices();
+    assert(within_eps(pts.front(), pts.back(), 0.001));
+    vector<triangle> tris;
+    if (p.vertices().size() == 3) {
+      tris.push_back(triangle(point(0, 0, 1),
+			      p.vertices()[0],
+			      p.vertices()[1],
+			      p.vertices()[2]));
+      return tris;
+    }
+    
     point c(0, 0, 0);
-    for (auto p : p.vertices) {
+    for (auto p : p.vertices()) {
       c = c + p;
     }
-    c = (1.0 / p.vertices.size()) * c;
-    vector<triangle> tris;
-    for (unsigned i = 0; i < p.vertices.size() - 1; i++) {
-      tris.push_back(triangle(point(0, 0, 1), p.vertices[i], c, p.vertices[i+1]));
+    c = (1.0 / p.vertices().size()) * c;
+    for (unsigned i = 0; i < p.vertices().size() - 1; i++) {
+      tris.push_back(triangle(point(0, 0, 1), p.vertices()[i], c, p.vertices()[i+1]));
     }
+    return tris;
+  }
+
+  // TODO: Add proper triangulation algorithm
+  triangular_mesh triangulate(const oriented_polygon& p) {
     cout << "Making triangular mesh" << endl;
+    auto tris = triangulate_polygon(p);
     return make_mesh(tris, 0.001);
   }
 

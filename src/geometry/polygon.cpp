@@ -28,7 +28,7 @@ namespace gca {
 
   bool contains(const oriented_polygon& poly,
 		const oriented_polygon& maybe_contained) {
-    for (auto pt : maybe_contained.vertices) {
+    for (auto pt : maybe_contained.vertices()) {
       if (!contains(poly, pt)) {
 	return false;
       }
@@ -40,7 +40,7 @@ namespace gca {
   {
     double angle = 0;
     point p1, p2;
-    int n = poly.vertices.size();
+    int n = poly.vertices().size();
 
     for (int i = 0; i < n; i++) {
       p1.x = poly.pt(i).x - p.x;
@@ -61,11 +61,11 @@ namespace gca {
   }
 
   box bounding_box(const oriented_polygon& p) {
-    return bound_positions(p.vertices);
+    return bound_positions(p.vertices());
   }
 
   bool overlaps(line l, const oriented_polygon& p) {
-    polyline pl(p.vertices);
+    polyline pl(p.vertices());
     for (auto pll : pl.lines()) {
       if (segment_intersection_2d(l, pll).just)
 	{ return true; }
@@ -86,8 +86,8 @@ namespace gca {
 
   oriented_polygon exterior_offset(const oriented_polygon& p,
 				   double inc) {
-    auto vs = p.vertices;
-    vs.push_back(p.vertices.front());
+    auto vs = p.vertices();
+    vs.push_back(p.vertices().front());
     polyline pl(vs);
     auto off_l = offset(pl, exterior_direction(pl), inc);
     vector<point> pts(begin(off_l), end(off_l));
@@ -96,8 +96,8 @@ namespace gca {
 
   oriented_polygon interior_offset(const oriented_polygon& p,
 				   double inc) {
-    auto vs = p.vertices;
-    vs.push_back(p.vertices.front());
+    auto vs = p.vertices();
+    vs.push_back(p.vertices().front());
     polyline pl(vs);
     auto off_l = offset(pl, interior_direction(pl), inc);
     vector<point> pts(begin(off_l), end(off_l));
@@ -106,15 +106,15 @@ namespace gca {
 
   oriented_polygon project(const oriented_polygon& p, double z) {
     vector<point> pts;
-    for (auto pt : p.vertices) {
+    for (auto pt : p.vertices()) {
       pts.push_back(point(pt.x, pt.y, z));
     }
     return oriented_polygon(p.normal, pts);
   }
 
   polyline to_polyline(const oriented_polygon& p) {
-    auto v = p.vertices;
-    v.push_back(p.vertices.front());
+    auto v = p.vertices();
+    v.push_back(p.vertices().front());
     return polyline(v);
   }
 

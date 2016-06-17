@@ -70,11 +70,11 @@ namespace gca {
 				 const vector<double>& depths,
 				 const double tool_radius) {
     vector<polyline> lines;
-    polyline p(boundary.vertices);
+    polyline p(boundary.vertices());
     lines.push_back(p);
     
     for (auto hole : holes) {
-      polyline p(hole.vertices);
+      polyline p(hole.vertices());
       lines.push_back(p);
     }
     // TODO: Change to tile vertical

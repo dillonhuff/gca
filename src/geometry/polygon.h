@@ -9,19 +9,26 @@
 namespace gca {
 
   class oriented_polygon {
+  protected:
+    vector<point> verts;
+
   public:
     point normal;
-    vector<point> vertices;
 
     oriented_polygon() :
-      normal(point(0, 0, 0)), vertices({}) {}
+      verts({}), normal(point(0, 0, 0)) {}
 
+    // TODO: Add assertion about vertex values at start and end?
     oriented_polygon(point normalp, const vector<point>& verticesp) :
-      normal(normalp), vertices(verticesp) {}
+      verts(verticesp), normal(normalp) {
+      assert(within_eps(verts.front(), verts.back()));
+    }
 
-    inline point pt(unsigned i) const { return vertices[i]; }
+    inline const vector<point>& vertices() const { return verts; }
+
+    inline point pt(unsigned i) const { return vertices()[i]; }
     inline double height() const
-    { return vertices.front().z; }
+    { return vertices().front().z; }
   };
 
   bool contains(const oriented_polygon& g, point p);
