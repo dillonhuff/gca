@@ -135,8 +135,7 @@ namespace gca {
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
-		    std::vector<fixture>& all_orients,
-		    const vice& v);
+		    std::vector<fixture>& all_orients);
   
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
