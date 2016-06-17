@@ -208,7 +208,7 @@ namespace gca {
       vector<pair<triangular_mesh, surface_list>> meshes =
 	part_arrangements(mesh, part_ss, test_vice);
       vector<gcode_program> programs;
-      cut_secured_meshes(meshes, programs, test_vice, tools);
+      cut_secured_meshes(meshes, programs, tools);
 
       SECTION("One program per mesh") {
 	REQUIRE(meshes.size() == programs.size());

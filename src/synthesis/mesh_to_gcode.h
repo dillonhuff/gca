@@ -4,6 +4,7 @@
 #include "gcode/gcode_program.h"
 #include "geometry/surface.h"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/fixture_analysis.h"
 #include "synthesis/vice.h"
 #include "synthesis/tool.h"
 #include "synthesis/workpiece.h"
@@ -47,7 +48,6 @@ namespace gca {
 
   void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
 			  std::vector<gcode_program>& progs,
-			  const vice v,
 			  const std::vector<tool>& tools);
   
 }

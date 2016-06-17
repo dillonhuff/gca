@@ -62,10 +62,8 @@ namespace gca {
     return meshes;
   }
 
-  // TODO: Eliminate vice v parameter
   gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
 				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
-				 const vice v,
 				 const std::vector<tool>& tools) {
     tool t = *(min_element(begin(tools), end(tools),
 			   [](const tool& l, const tool& r)
@@ -84,10 +82,9 @@ namespace gca {
   // TODO: Eliminate vice v parameter
   void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
 			  std::vector<gcode_program>& progs,
-			  const vice v,
 			  const std::vector<tool>& tools) {
     for (auto mesh_surface_pair : meshes) {
-      progs.push_back(cut_secured_mesh(mesh_surface_pair, v, tools));
+      progs.push_back(cut_secured_mesh(mesh_surface_pair, tools));
     }
   }
 
@@ -108,7 +105,7 @@ namespace gca {
 
     vector<gcode_program> ps =
       workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f.get_vice());
-    cut_secured_meshes(meshes, ps, f.get_vice(), tools);
+    cut_secured_meshes(meshes, ps, tools);
     return ps;
   }
 
