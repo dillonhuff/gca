@@ -67,6 +67,17 @@ namespace gca {
       : orient(p_orient), v(p_v) {}
   };
 
+  class fixtures {
+  protected:
+    vice v;
+    
+  public:
+
+    fixtures(const vice& p_v) : v(p_v) {}
+    
+    inline const vice& get_vice() const { return v; }
+  };
+
   typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
 
   class fixture_plan {
@@ -124,7 +135,7 @@ namespace gca {
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 std::vector<surface>& part_ss,
-				 const vice v,
+				 const fixtures& fixes,
 				 const vector<tool>& tools,
 				 const workpiece w);
 

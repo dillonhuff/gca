@@ -93,7 +93,8 @@ namespace gca {
 					   const vector<tool>& tools,
 					   const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
-    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, v, tools, w);
+    fixtures fixes(v);
+    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, fixes, tools, w);
     vector<pair<triangular_mesh, surface_list>> meshes;
     // Remove duplication between here and part_arrangements
     for (auto orient_surfaces_pair : plan.fixtures()) {

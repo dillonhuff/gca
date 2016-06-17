@@ -11,6 +11,10 @@
 
 namespace gca {
 
+  vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
+				       const triangular_mesh& mesh);
+
+
   struct pocket {
   private:
     oriented_polygon boundary;
@@ -21,17 +25,17 @@ namespace gca {
     const triangular_mesh* mesh;
 
   public:
-    pocket(const oriented_polygon& boundary,
-	   std::vector<oriented_polygon>& holesp,
-	   double start_depthp,
+    pocket(double start_depthp,
 	   const std::vector<index_t>& basep,
 	   const triangular_mesh* p_mesh) :
-      boundary(boundary),
-      holes(holesp),
       start_depth(start_depthp),
       base_inds(basep),
-      mesh(p_mesh) {
+      mesh(p_mesh)
+    {
       assert(base_inds.size() > 0);
+      auto bounds = mesh_bounds(base_inds, base_mesh());
+      boundary = extract_boundary(bounds);
+      holes = bounds;
     }
 
     const std::vector<index_t>& base_face_indexes() const

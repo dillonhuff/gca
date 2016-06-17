@@ -79,10 +79,10 @@ namespace gca {
   pocket pocket_for_surface(const std::vector<index_t>& surface,
 			    double top_height,
 			    const triangular_mesh& mesh) {
-    auto bounds = mesh_bounds(surface, mesh);
-    auto boundary = extract_boundary(bounds);
-    vector<oriented_polygon> holes = bounds;
-    return pocket(boundary, holes, top_height, surface, &mesh);
+    // auto bounds = mesh_bounds(surface, mesh);
+    // auto boundary = extract_boundary(bounds);
+    // vector<oriented_polygon> holes = bounds;
+    return pocket(top_height, surface, &mesh); //boundary, holes, top_height, surface, &mesh);
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
@@ -163,8 +163,6 @@ namespace gca {
     auto side_faces = side_millable_faces(point(0, 0, -1),
 					  part.face_indexes(),
 					  part);
-    cout << "side_faces.size() == " << side_faces.size() << endl;
-    cout << "surface.size() == " << surface.size() << endl;
     // TODO: Sort first? This is disgustingly inefficient
     if (intersection(side_faces, surface).size() == surface.size()) {
       return true;
@@ -222,16 +220,12 @@ namespace gca {
       if (has_no_base(surface, mesh)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
 	triangular_mesh new_base = triangulate(outline);
-	cout << "Allocating triangular mesh" << endl;
 	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
 	triangular_mesh* base_mesh = new (new_base_cpy) triangular_mesh();
 	assert(base_mesh == new_base_cpy);
-	cout << "Copying triangular mesh" << endl;
 	*base_mesh = new_base;
-	cout << "Copied mesh" << endl;
 	vector<oriented_polygon> holes;
-	pockets.push_back(pocket(outline, holes, workpiece_height, base_mesh->face_indexes(), new_base_cpy));
-	cout << "Added pocket" << endl;
+	pockets.push_back(pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
       }
     }
     cout << "# vertical pockets = " << pockets.size() << endl;

@@ -520,12 +520,12 @@ namespace gca {
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 std::vector<surface>& part_ss,
-				 const vice v,
+				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    auto orients = orientations_to_cut(part_mesh, part_ss, v);
+    auto orients = orientations_to_cut(part_mesh, part_ss, f.get_vice());
     return fixture_plan(part_mesh, aligned_workpiece, orients.second);
   }
 
