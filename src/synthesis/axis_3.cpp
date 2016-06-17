@@ -172,11 +172,22 @@ namespace gca {
     return false;
   }
 
+  double min_z(const oriented_polygon& p) {
+    auto min_z =
+      max_element(begin(p.vertices), end(p.vertices),
+		  [](const point l, const point r)
+		  { return l.z < r.z; });
+    return (*min_z).z;
+  }
+
   oriented_polygon base_outline(const std::vector<index_t>& surface,
 				const triangular_mesh& part) {
     auto bounds = mesh_bounds(surface, part);
-    // TODO: Add real check for lowest point in mesh
-    return bounds.front();
+    auto min_poly =
+      min_element(begin(bounds), end(bounds),
+		  [](const oriented_polygon& l, const oriented_polygon& r)
+		  { return min_z(l) < min_z(r); });
+    return *min_poly;
   }
 
   // TODO: Add proper triangulation algorithm
