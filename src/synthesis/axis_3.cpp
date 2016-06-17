@@ -188,28 +188,53 @@ namespace gca {
     return *min_poly;
   }
 
+  unsigned find_ear_index(const std::vector<point>& pts) {
+    assert(pts.size() > 2);
+    for (unsigned i = 1, j = 0; i < pts.size(); i++, j++) {
+      unsigned ip1 = (i + 1) % pts.size();
+      point l = pts[ip1];
+      l.z = 0.0;
+      point r = pts[j];
+      r.z = 0.0;
+      point mid = (1/2.0) * (l - r);
+      if (contains(oriented_polygon(point(0, 0, 1), pts), mid)) {
+	return i;
+      }
+    }
+    cout << "Error: no ears left in " << endl;
+    assert(false);
+  }
+
+  triangle clip_ear(const unsigned ear_ind,
+		    std::vector<point>& pts) {
+    assert(false);
+  }
+
+  // TODO: Add more complex ear finding?
   std::vector<triangle> triangulate_polygon(const oriented_polygon& p) {
     assert(p.vertices().size() > 2);
     vector<point> pts = p.vertices();
-    assert(within_eps(pts.front(), pts.back(), 0.001));
     vector<triangle> tris;
-    if (p.vertices().size() == 3) {
-      tris.push_back(triangle(point(0, 0, 1),
-			      p.vertices()[0],
-			      p.vertices()[1],
-			      p.vertices()[2]));
-      return tris;
+    while (pts.size() > 3) {
+      unsigned next_ear = find_ear_index(pts);
+      tris.push_back(clip_ear(next_ear, pts));
     }
-    
-    point c(0, 0, 0);
-    for (auto p : p.vertices()) {
-      c = c + p;
-    }
-    c = (1.0 / p.vertices().size()) * c;
-    for (unsigned i = 0; i < p.vertices().size() - 1; i++) {
-      tris.push_back(triangle(point(0, 0, 1), p.vertices()[i], c, p.vertices()[i+1]));
-    }
+    assert(pts.size() == 3);
+    tris.push_back(triangle(point(0, 0, 1),
+			    p.vertices()[0],
+			    p.vertices()[1],
+			    p.vertices()[2]));
     return tris;
+    
+    // point c(0, 0, 0);
+    // for (auto p : p.vertices()) {
+    //   c = c + p;
+    // }
+    // c = (1.0 / p.vertices().size()) * c;
+    // for (unsigned i = 0; i < p.vertices().size() - 1; i++) {
+    //   tris.push_back(triangle(point(0, 0, 1), p.vertices()[i], c, p.vertices()[i+1]));
+    // }
+    // return tris;
   }
 
   // TODO: Add proper triangulation algorithm

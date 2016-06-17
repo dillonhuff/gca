@@ -60,7 +60,6 @@ namespace gca {
     auto ls = lines;
     while (ls.size() > 0) {
       vector<point> vertices = collect_polygon(ls);
-      vertices.push_back(vertices.front());
       ps.push_back(oriented_polygon(normal, vertices));
     }
     return ps;

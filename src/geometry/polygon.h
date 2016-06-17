@@ -21,7 +21,6 @@ namespace gca {
     // TODO: Add assertion about vertex values at start and end?
     oriented_polygon(point normalp, const vector<point>& verticesp) :
       verts(verticesp), normal(normalp) {
-      assert(within_eps(verts.front(), verts.back()));
     }
 
     inline const vector<point>& vertices() const { return verts; }
