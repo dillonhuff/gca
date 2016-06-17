@@ -62,6 +62,7 @@ namespace gca {
     return meshes;
   }
 
+  // TODO: Eliminate vice v parameter
   gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
 				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
 				 const vice v,
@@ -80,6 +81,7 @@ namespace gca {
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }
 
+  // TODO: Eliminate vice v parameter
   void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
 			  std::vector<gcode_program>& progs,
 			  const vice v,
@@ -90,12 +92,11 @@ namespace gca {
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
-					   const vice v,
+					   const fixtures& f,
 					   const vector<tool>& tools,
 					   const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
-    fixtures fixes(v);
-    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, fixtures(v), tools, w);
+    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, f, tools, w);
     vector<pair<triangular_mesh, surface_list>> meshes;
     // Remove duplication between here and part_arrangements
     for (auto orient_surfaces_pair : plan.fixtures()) {
@@ -106,8 +107,8 @@ namespace gca {
     }
 
     vector<gcode_program> ps =
-      workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, v);
-    cut_secured_meshes(meshes, ps, v, tools);
+      workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f.get_vice());
+    cut_secured_meshes(meshes, ps, f.get_vice(), tools);
     return ps;
   }
 

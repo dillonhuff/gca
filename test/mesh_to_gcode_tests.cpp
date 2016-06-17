@@ -13,13 +13,16 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    std::vector<plate_height> plates{0.1, 0.3};
+    fixtures fixes(test_vice, plates);
+
     tool t1(0.25, 3.0, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.5, 1.2, 1.5);
 
     SECTION("Simple box") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
 
       SECTION("Produces only workpiece clipping programs") {
 	REQUIRE(result_programs.size() == 6);
@@ -34,27 +37,27 @@ namespace gca {
 
     SECTION("Box with hole has 6 clippings and one pocketing") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithTopHole.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
 
     SECTION("Box with two holes has 6 clippings and two pocketings") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 8);
     }
 
     SECTION("Box with protrusion") {
       workpiece workpiece_dims(1.5, 1.2, 2.0);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
 
     SECTION("Box with thru hole") {
       workpiece workpiece_dims(1.51, 1.51, 2.0);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
     
@@ -174,6 +177,9 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(-1.8, -0.4, 3.3));
+    std::vector<plate_height> plates{0.15, 0.03};
+    fixtures fixes(test_vice, plates);
+
     tool t1(0.35, 3.0, FLAT_NOSE);
     tool t2(0.14, 3.15, FLAT_NOSE);
     vector<tool> tools{t1, t2};
@@ -181,7 +187,7 @@ namespace gca {
 
     SECTION("Box with 2 holes") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
+      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
 
       SECTION("Never cut below vice") {
     	for (auto program : result_programs) {
@@ -192,6 +198,9 @@ namespace gca {
 
     SECTION("Complex rectangular part 1") {
       vice test_vice = current_setup();
+      std::vector<plate_height> plates{0.1, 0.3};
+      fixtures fixes(test_vice, plates);
+
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
       auto part_ss = outer_surfaces(mesh);
       auto aligned_workpiece = align_workpiece(part_ss, workpiece_dims);

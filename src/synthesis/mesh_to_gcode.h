@@ -17,7 +17,7 @@ namespace gca {
   std::vector<surface> outer_surfaces(const triangular_mesh& m);
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& m,
-					   const vice v,
+					   const fixtures& v,
 					   const vector<tool>& tools,
 					   const workpiece w_dims);
 

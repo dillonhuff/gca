@@ -320,7 +320,8 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
-    fixtures fixes(test_vice);
+    std::vector<plate_height> plates{0.1, 0.3};
+    fixtures fixes(test_vice, plates);
     workpiece workpiece_dims(3.81, 3.2, 3.98);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);

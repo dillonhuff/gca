@@ -70,12 +70,18 @@ namespace gca {
   class fixtures {
   protected:
     vice v;
+    std::vector<plate_height> plates;
     
   public:
 
-    fixtures(const vice& p_v) : v(p_v) {}
+    fixtures(const vice& p_v)
+      : v(p_v) {}
+    
+    fixtures(const vice& p_v, const std::vector<plate_height>& p_plates)
+      : v(p_v), plates(p_plates) {}
     
     inline const vice& get_vice() const { return v; }
+    inline const std::vector<plate_height>& base_plates() const { return plates; }
   };
 
   typedef std::vector<std::pair<fixture, surface_list>> fixture_list;

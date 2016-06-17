@@ -5,6 +5,8 @@
 
 namespace gca {
 
+  typedef double plate_height;
+
   class vice {
   private:
     point pos;
