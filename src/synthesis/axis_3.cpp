@@ -196,7 +196,7 @@ namespace gca {
       l.z = 0.0;
       point r = pts[j];
       r.z = 0.0;
-      point mid = (1/2.0) * (l - r);
+      point mid = (1/2.0) * (l + r);
       if (contains(oriented_polygon(point(0, 0, 1), pts), mid)) {
 	return i;
       }
@@ -207,7 +207,11 @@ namespace gca {
 
   triangle clip_ear(const unsigned ear_ind,
 		    std::vector<point>& pts) {
-    assert(false);
+    unsigned l = ear_ind == 0 ? pts.size() : ear_ind - 1;
+    unsigned r = (ear_ind + 1) % pts.size();
+    triangle t = triangle(point(0, 0, 1), pts[l], pts[ear_ind], pts[r]);
+    pts.erase(begin(pts) + ear_ind);
+    return t;
   }
 
   // TODO: Add more complex ear finding?
@@ -225,19 +229,8 @@ namespace gca {
 			    p.vertices()[1],
 			    p.vertices()[2]));
     return tris;
-    
-    // point c(0, 0, 0);
-    // for (auto p : p.vertices()) {
-    //   c = c + p;
-    // }
-    // c = (1.0 / p.vertices().size()) * c;
-    // for (unsigned i = 0; i < p.vertices().size() - 1; i++) {
-    //   tris.push_back(triangle(point(0, 0, 1), p.vertices()[i], c, p.vertices()[i+1]));
-    // }
-    // return tris;
   }
 
-  // TODO: Add proper triangulation algorithm
   triangular_mesh triangulate(const oriented_polygon& p) {
     cout << "Making triangular mesh" << endl;
     auto tris = triangulate_polygon(p);
