@@ -160,12 +160,13 @@ namespace gca {
 
   bool has_no_base(const std::vector<index_t>& surface,
 		   const triangular_mesh& part) {
-    auto side_faces = side_millable_faces(point(0, 0, 1),
-					  surface,
+    auto side_faces = side_millable_faces(point(0, 0, -1),
+					  part.face_indexes(),
 					  part);
     cout << "side_faces.size() == " << side_faces.size() << endl;
     cout << "surface.size() == " << surface.size() << endl;
-    if (side_faces.size() == surface.size()) {
+    // TODO: Sort first? This is disgustingly inefficient
+    if (intersection(side_faces, surface).size() == surface.size()) {
       return true;
     }
     return false;
@@ -212,11 +213,13 @@ namespace gca {
 	triangular_mesh new_base = triangulate(outline);
 	cout << "Allocating triangular mesh" << endl;
 	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
+	triangular_mesh* base_mesh = new (new_base_cpy) triangular_mesh();
+	assert(base_mesh == new_base_cpy);
 	cout << "Copying triangular mesh" << endl;
-	*new_base_cpy = new_base;
+	*base_mesh = new_base;
 	cout << "Copied mesh" << endl;
 	vector<oriented_polygon> holes;
-	pockets.push_back(pocket(outline, holes, workpiece_height, new_base.face_indexes(), new_base_cpy));
+	pockets.push_back(pocket(outline, holes, workpiece_height, base_mesh->face_indexes(), new_base_cpy));
 	cout << "Added pocket" << endl;
       }
     }

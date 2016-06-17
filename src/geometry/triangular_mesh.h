@@ -18,6 +18,8 @@ namespace gca {
     trimesh_t mesh;
 
   public:
+    triangular_mesh() {}
+    
     triangular_mesh(const std::vector<point>& vertices_p,
 		    const std::vector<triangle_t>& triangles_p,
 		    const std::vector<point>& face_orientations_p,
@@ -139,9 +141,15 @@ namespace gca {
 
   };
 
+  void make_mesh(const std::vector<triangle>& triangles,
+		 triangular_mesh* dest,
+		 double tolerance);
+
+  
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance);
 
+  
   // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
   bool is_outer_surface(const std::vector<index_t>& s, const triangular_mesh& part);
 
