@@ -10,6 +10,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(3.81, 3.2, 3.98);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
@@ -36,7 +37,7 @@ namespace gca {
 
     SECTION("2 setups") {
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -55,6 +56,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(1.2, -4.4, 3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(4.0, 4.0, 3.98);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
@@ -74,7 +76,7 @@ namespace gca {
 
     SECTION("3 setups") {
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -88,6 +90,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(3.5, 2.5, 2.3);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
 
@@ -102,7 +105,7 @@ namespace gca {
 
     SECTION("2 setups") {
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -117,7 +120,7 @@ namespace gca {
 
     SECTION("each orientation has 1 connected component") {
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -139,6 +142,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
     vice test_vice = emco_vice(point(1.8, 4.2, 3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(2.0, 2.0, 2.0);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/LittleHouse.stl", 0.001);
 
@@ -167,7 +171,7 @@ namespace gca {
 
     SECTION("1 setup") {
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -182,7 +186,7 @@ namespace gca {
 
     SECTION("each orientation has 1 connected component") {
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -204,6 +208,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(3.5, 2.5, 2.3);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudeTop.stl", 0.001);
 
@@ -225,7 +230,7 @@ namespace gca {
 		       return s.face_orientation(s.index_list().front()).z > 0.2; }));
       
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
       
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -258,6 +263,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(3.5, 2.5, 2.3);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
     
@@ -268,7 +274,7 @@ namespace gca {
 
       auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
       vector<fixture> all_orients =
-	all_stable_fixtures(outer_surfs, test_vice);
+	all_stable_fixtures(outer_surfs, fixes);
       
       surface_map orients =
 	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);
@@ -314,6 +320,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
+    fixtures fixes(test_vice);
     workpiece workpiece_dims(3.81, 3.2, 3.98);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
@@ -339,7 +346,7 @@ namespace gca {
 
     SECTION("1 setup") {
       vector<fixture> all_orients =
-  	all_stable_fixtures(outer_surfs, test_vice);
+  	all_stable_fixtures(outer_surfs, fixes);
 
       surface_map orients =
   	pick_orientations(mesh, surfs_to_cut, all_orients, test_vice);

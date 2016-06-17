@@ -151,7 +151,8 @@ namespace gca {
 
   std::vector<fixture>
   all_stable_fixtures(const std::vector<surface>& surfaces,
-		      const vice& v) {
+		      const fixtures& f) {
+    const vice& v = f.get_vice();
     auto orients = all_stable_orientations(surfaces, v);
     vector<fixture> fixtures;
 
@@ -474,6 +475,7 @@ namespace gca {
     return simplified;
   }
 
+  // TODO: Delete vice& v?
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
@@ -497,14 +499,14 @@ namespace gca {
   std::pair<std::vector<surface>, fixture_list>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
-		      const vice& v) {
+		      const fixtures& f) {
     vector<fixture> all_orients =
-      all_stable_fixtures(stable_surfaces, v);
+      all_stable_fixtures(stable_surfaces, f);
 
     auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
 
     surface_map os =
-      pick_orientations(part_mesh, surfs_to_cut, all_orients, v);
+      pick_orientations(part_mesh, surfs_to_cut, all_orients, f.get_vice());
 
     fixture_list orients;
     for (auto p : os) {
@@ -525,7 +527,7 @@ namespace gca {
 				 const workpiece w) {
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    auto orients = orientations_to_cut(part_mesh, part_ss, f.get_vice());
+    auto orients = orientations_to_cut(part_mesh, part_ss, f);
     return fixture_plan(part_mesh, aligned_workpiece, orients.second);
   }
 

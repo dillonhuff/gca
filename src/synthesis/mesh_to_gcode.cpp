@@ -49,8 +49,9 @@ namespace gca {
   part_arrangements(const triangular_mesh& part_mesh,
   		    const vector<surface>& part_ss,
   		    const vice v) {
+    fixtures fixes(v);
     pair<vector<surface>, fixture_list> orients =
-      orientations_to_cut(part_mesh, part_ss, v);
+      orientations_to_cut(part_mesh, part_ss, fixes);
     vector<pair<triangular_mesh, surface_list>> meshes;
     for (auto orient_surfaces_pair : orients.second) {
       cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
@@ -94,7 +95,7 @@ namespace gca {
 					   const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
     fixtures fixes(v);
-    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, fixes, tools, w);
+    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, fixtures(v), tools, w);
     vector<pair<triangular_mesh, surface_list>> meshes;
     // Remove duplication between here and part_arrangements
     for (auto orient_surfaces_pair : plan.fixtures()) {

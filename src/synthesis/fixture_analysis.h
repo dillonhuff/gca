@@ -112,7 +112,7 @@ namespace gca {
   std::pair<std::vector<surface>, fixture_list>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
-		      const vice& v);
+		      const fixtures& v);
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
 				       const std::vector<surface>& stable_surfaces);
@@ -123,7 +123,7 @@ namespace gca {
 
   std::vector<fixture>
   all_stable_fixtures(const std::vector<surface>& surfaces,
-		      const vice& v);
+		      const fixtures& v);
   
   // TODO: Should this really be a map?
   surface_map
