@@ -277,6 +277,9 @@ namespace gca {
       auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
       concat(pockets, nv_pockets);
     }
+    sort(begin(pockets), end(pockets),
+	 [](const pocket& l, const pocket& r)
+	 { return l.get_end_depth() > r.get_end_depth(); });
     return pockets;
   }
 
