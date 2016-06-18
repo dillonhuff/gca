@@ -93,16 +93,21 @@ namespace gca {
     fixture_plan plan =
       make_fixture_plan(mesh, outer_surfs, fixes, tools, workpiece_dims);
 
+    // Test pocket ordering
     for (auto orient_surfaces_pair : plan.fixtures()) {
       auto m = oriented_part_mesh(orient_surfaces_pair.first.orient,
 				  orient_surfaces_pair.second,
 				  orient_surfaces_pair.first.v);
+      double workpiece_height = aligned_workpiece.sides[2].len();
       vector<pocket> pockets =
-	make_surface_pockets(m.second, m.first, aligned_workpiece.sides[2].len());
-      REQUIRE(false);
+	make_surface_pockets(m.second, m.first, workpiece_height);
+      double last_depth = workpiece_height;
+      for (auto p : pockets) {
+	REQUIRE(p.get_end_depth() <= last_depth);
+	last_depth = p.get_end_depth();
+      }
     }
   }
-
 
   TEST_CASE("Outer surfaces") {
     arena_allocator a;
