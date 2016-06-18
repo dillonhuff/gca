@@ -240,8 +240,6 @@ namespace gca {
   std::vector<pocket>
   closed_vertical_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
 				  const triangular_mesh& mesh,
-				  const tool& t,
-				  double cut_depth,
 				  double workpiece_height) {
     std::vector<std::vector<index_t>> surfaces = sfs;
     delete_if(surfaces,
@@ -265,22 +263,30 @@ namespace gca {
     return pockets;
   }
 
-  std::vector<polyline>
-  mill_surfaces(const std::vector<std::vector<index_t>>& sfs,
-		const triangular_mesh& mesh,
-		const tool& t,
-		double cut_depth,
-		double workpiece_height) {
+  std::vector<pocket>
+  make_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
+		       const triangular_mesh& mesh,
+		       double workpiece_height) {
     // TODO: Optimize this away
     std::vector<std::vector<index_t>> surfaces = sfs;
     vector<pocket> pockets =
-      closed_vertical_surface_pockets(sfs, mesh, t, cut_depth, workpiece_height);
+      closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
     filter_vertical_surfaces(surfaces, mesh);
     if (surfaces.size() > 0) {
       surfaces = merge_connected_surfaces(surfaces, mesh);
       auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
       concat(pockets, nv_pockets);
     }
+    return pockets;
+  }
+
+  std::vector<polyline>
+  mill_surfaces(const std::vector<std::vector<index_t>>& sfs,
+		const triangular_mesh& mesh,
+		const tool& t,
+		double cut_depth,
+		double workpiece_height) {
+    auto pockets = make_surface_pockets(sfs, mesh, workpiece_height);
     auto lines = mill_pockets(pockets, t, cut_depth);
     return shift_lines(lines, point(0, 0, t.length()));
   }

@@ -1,8 +1,10 @@
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
+#include "synthesis/toolpath_generation.h"
 #include "system/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -71,6 +73,37 @@ namespace gca {
 
   }
 
+  TEST_CASE("Complex part pocket ordering") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
+    fixtures fixes(test_vice);
+    workpiece workpiece_dims(3.81, 3.2, 3.98);
+    tool t1(0.25, 3.0, FLAT_NOSE);
+    vector<tool> tools{t1};
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+
+    auto outer_surfs = outer_surfaces(mesh);
+    auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
+    classify_part_surfaces(outer_surfs, aligned_workpiece);
+    auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
+
+    fixture_plan plan =
+      make_fixture_plan(mesh, outer_surfs, fixes, tools, workpiece_dims);
+
+    for (auto orient_surfaces_pair : plan.fixtures()) {
+      auto m = oriented_part_mesh(orient_surfaces_pair.first.orient,
+				  orient_surfaces_pair.second,
+				  orient_surfaces_pair.first.v);
+      vector<pocket> pockets =
+	make_surface_pockets(m.second, m.first, aligned_workpiece.sides[2].len());
+      REQUIRE(false);
+    }
+  }
+
+
   TEST_CASE("Outer surfaces") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -79,6 +112,8 @@ namespace gca {
       auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl").triangles;
       auto mesh = make_mesh(box_triangles, 0.001);
       auto surfaces = outer_surfaces(mesh);
+
+      
 
       SECTION("Simple box has 6 outer surfaces") {
 	REQUIRE(surfaces.size() == 6);

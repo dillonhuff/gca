@@ -41,6 +41,12 @@ namespace gca {
   merge_surfaces(std::vector<index_t>& face_inds,
 		 const triangular_mesh& mesh);
 
+
+  std::vector<pocket>
+  make_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
+		       const triangular_mesh& mesh,
+		       double workpiece_height);
+  
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
 }
 
