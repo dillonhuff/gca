@@ -101,11 +101,15 @@ namespace gca {
       double workpiece_height = aligned_workpiece.sides[2].len();
       vector<pocket> pockets =
 	make_surface_pockets(m.second, m.first, workpiece_height);
-      double last_depth = workpiece_height;
+      double last_depth = max_distance_along(m.first.vertex_list(), point(0, 0, 1));
+      cout << "START ORIENT" << endl;
+      cout << "last_depth = " << last_depth << endl;
       for (auto p : pockets) {
 	REQUIRE(p.get_end_depth() <= last_depth);
 	last_depth = p.get_end_depth();
+	cout << "last_depth = " << last_depth << endl;
       }
+      cout << "END ORIENT" << endl;
     }
   }
 
