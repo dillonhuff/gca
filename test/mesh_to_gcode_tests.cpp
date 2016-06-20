@@ -93,7 +93,6 @@ namespace gca {
     fixture_plan plan =
       make_fixture_plan(mesh, outer_surfs, fixes, tools, workpiece_dims);
 
-    // Test pocket ordering
     for (auto orient_surfaces_pair : plan.fixtures()) {
       auto m = oriented_part_mesh(orient_surfaces_pair.first.orient,
 				  orient_surfaces_pair.second,
@@ -102,14 +101,10 @@ namespace gca {
       vector<pocket> pockets =
 	make_surface_pockets(m.second, m.first, workpiece_height);
       double last_depth = max_distance_along(m.first.vertex_list(), point(0, 0, 1));
-      cout << "START ORIENT" << endl;
-      cout << "last_depth = " << last_depth << endl;
       for (auto p : pockets) {
 	REQUIRE(p.get_end_depth() <= last_depth);
 	last_depth = p.get_end_depth();
-	cout << "last_depth = " << last_depth << endl;
       }
-      cout << "END ORIENT" << endl;
     }
   }
 
