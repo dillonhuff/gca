@@ -99,14 +99,14 @@ ptree encode_json(const triangular_mesh& m) {
 
 ptree encode_json(const fabrication_setup& prog) {
   ptree p;
-  p.add_child("part-mesh", encode_json(prog.part));
+  p.add_child("partMesh", encode_json(prog.part));
   p.add_child("gcode", encode_json(prog.prog));
   return p;
 }
 
 ptree encode_json(const fabrication_plan& plan) {
   ptree p;
-  p.add_child("clipping-programs", encode_json(plan.stock_clipping_programs()));
+  p.add_child("clippingPrograms", encode_json(plan.stock_clipping_programs()));
   p.add_child("setups", encode_json(plan.steps()));
   return p;
 }

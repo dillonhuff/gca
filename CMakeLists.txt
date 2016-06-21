@@ -139,6 +139,7 @@ SET(SRCS ${CPPS} ${HEADERS})
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
 add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
+add_executable(json-plan examples/json_plan.cpp ${SRCS})
 # add_executable(hello-world examples/hello_world.cpp ${SRCS})
 # add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
 # add_executable(misc examples/misc.cpp ${SRCS})
