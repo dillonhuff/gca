@@ -11,6 +11,33 @@
 
 namespace gca {
 
+  struct fabrication_setup {
+    triangular_mesh part;
+    vice v;
+    gcode_program prog;
+
+    fabrication_setup(const triangular_mesh& m,
+		      const vice& p_v,
+		      const gcode_program& p)
+      : part(m), v(p_v), prog(p) {}
+  };
+
+  class fabrication_plan {
+  protected:
+    std::vector<gcode_program> stock_clipping_progs;
+    std::vector<fabrication_setup> fab_steps;
+    
+  public:
+    fabrication_plan(const std::vector<gcode_program>& p_stock_clipping_programs,
+		     const std::vector<fabrication_setup>& p_fab_steps)
+      : stock_clipping_progs(p_stock_clipping_programs),
+	fab_steps(p_fab_steps){}
+
+    const std::vector<gcode_program>& stock_clipping_programs() const
+    { return stock_clipping_progs; }
+    const std::vector<fabrication_setup>& steps() const { return fab_steps; }
+  };
+
   ostream& operator<<(ostream& out, const workpiece& w);
 
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
@@ -22,6 +49,11 @@ namespace gca {
 					   const vector<tool>& tools,
 					   const workpiece w_dims);
 
+  fabrication_plan make_fabrication_plan(const triangular_mesh& m,
+					 const fixtures& v,
+					 const vector<tool>& tools,
+					 const workpiece w_dims);
+  
   void remove_SA_surfaces(const std::vector<surface>& surfaces,
 			  std::vector<index_t>& indices);
 

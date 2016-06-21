@@ -91,21 +91,36 @@ namespace gca {
 					   const fixtures& f,
 					   const vector<tool>& tools,
 					   const workpiece w) {
+    fabrication_plan plan = make_fabrication_plan(part_mesh, f, tools, w);
+    auto progs = plan.stock_clipping_programs();
+    for (auto f : plan.steps()) {
+      progs.push_back(f.prog);
+    }
+    return progs;
+  }
+
+  fabrication_plan make_fabrication_plan(const triangular_mesh& part_mesh,
+					 const fixtures& f,
+					 const vector<tool>& tools,
+					 const workpiece w) {
     auto part_ss = outer_surfaces(part_mesh);
     fixture_plan plan = make_fixture_plan(part_mesh, part_ss, f, tools, w);
-    vector<pair<triangular_mesh, surface_list>> meshes;
-    // Remove duplication between here and part_arrangements
+    vector<fabrication_setup> setups;
     for (auto orient_surfaces_pair : plan.fixtures()) {
       cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
-      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first.orient,
-					  orient_surfaces_pair.second,
-					  orient_surfaces_pair.first.v));
+      auto v = orient_surfaces_pair.first.v;
+      auto m = oriented_part_mesh(orient_surfaces_pair.first.orient,
+				  orient_surfaces_pair.second,
+				  v);
+      gcode_program gprog = cut_secured_mesh(m, tools);
+      setups.push_back(fabrication_setup(m.first, v, gprog));
     }
 
     vector<gcode_program> ps =
       workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f.get_vice());
-    cut_secured_meshes(meshes, ps, tools);
-    return ps;
+    return fabrication_plan(ps, setups);
+    
   }
+
 
 }
