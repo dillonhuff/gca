@@ -2,9 +2,16 @@
 #include <boost/property_tree/ptree.hpp>
 #include <fstream>
 
+#include "geometry/polygon.h"
+#include "geometry/polyline.h"
+#include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/axis_3.h"
+#include "synthesis/fixture_analysis.h"
+#include "synthesis/mesh_to_gcode.h"
+#include "synthesis/shapes_to_gcode.h"
+#include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
-#include "system/arena_allocator.h"
 #include "system/parse_stl.h"
 
 using boost::property_tree::ptree;
@@ -12,30 +19,13 @@ using boost::property_tree::ptree;
 using namespace gca;
 using namespace std;
 
-std::string json_string(const triangular_mesh& m) {
-  string s = "{";
-  s += "\"pts\" : [";
-  for (unsigned i = 0; i < m.vertex_list().size(); i++) {
-    point p = m.vertex_list()[i];
-    s += "[" + std::to_string(p.x) + ", " + std::to_string(p.y) + ", " + std::to_string(p.z) + "]";
-    if (i < m.vertex_list().size() - 1) {
-      s += ", ";
-    }
-  }
-  s += "], ";
-  s += "\"faces\" : [";
-  for (unsigned i = 0; i < m.face_indexes().size(); i++) {
-    triangle_t t = m.triangle_vertices(i);
-       s += "[" + std::to_string(t.v[0]) + ", " + std::to_string(t.v[1]) + ", " + std::to_string(t.v[2]) + "]";
-    if (i < m.face_indexes().size() - 1) {
-      s += ", ";
-    }
-  }
-  s += "]";
-  s += "}";
-  return s;
-
-}
+ptree encode_json(const triangle_t t);
+ptree encode_json(const point p);
+ptree encode_json(const gcode_program& prog);
+ptree encode_face_list_json(const triangular_mesh& m);
+ptree encode_json(const triangular_mesh& m);
+ptree encode_json(const fabrication_setup& prog);
+ptree encode_json(const fabrication_plan& plan);
 
 ptree encode_json(const triangle_t t) {
   ptree children;
@@ -55,17 +45,37 @@ ptree encode_json(const triangle_t t) {
   return children;
 }
 
-std::string encode_json(const point p) {
-  return "pt";
+ptree encode_json(const point p) {
+  ptree children;
+
+  ptree v1;
+  v1.put("", p.x);
+  children.push_back(std::make_pair("", v1));
+
+  ptree v2;
+  v2.put("", p.y);
+  children.push_back(std::make_pair("", v2));
+
+  ptree v3;
+  v3.put("", p.z);
+  children.push_back(std::make_pair("", v3));
+
+  return children;
+}
+
+ptree encode_json(const gcode_program& prog) {
+  ptree p;
+  stringstream ss;
+  ss << prog.blocks;
+  p.put("", ss.str());
+  return p;
 }
 
 template<typename T>
 ptree encode_json(const std::vector<T>& elems) {
   ptree children;
   for (auto e : elems) {
-    ptree p;
-    p.put("", encode_json(e));
-    children.push_back(std::make_pair("", p));
+    children.push_back(std::make_pair("", encode_json(e)));
   }
   return children;
 }
@@ -87,18 +97,43 @@ ptree encode_json(const triangular_mesh& m) {
   return p;
 }
 
+ptree encode_json(const fabrication_setup& prog) {
+  ptree p;
+  p.add_child("part-mesh", encode_json(prog.part));
+  p.add_child("gcode", encode_json(prog.prog));
+  return p;
+}
+
+ptree encode_json(const fabrication_plan& plan) {
+  ptree p;
+  p.add_child("clipping-programs", encode_json(plan.stock_clipping_programs()));
+  p.add_child("setups", encode_json(plan.steps()));
+  return p;
+}
+
 int main(int argc, char* argv[]) {
   assert(argc == 3);
 
   arena_allocator a;
   set_system_allocator(&a);
 
+  
   auto mesh = parse_stl(argv[1], 0.001);
-  ptree json_tree = encode_json(mesh);
+
+
+  vice v = current_setup();
+  std::vector<plate_height> plates{0.1, 0.3};
+  fixtures fixes(v, plates);
+
+  tool t1(0.30, 3.0, FLAT_NOSE);
+  tool t2(0.14, 3.15, FLAT_NOSE);
+  vector<tool> tools{t1, t2};
+  workpiece workpiece_dims(3.5, 3.0, 3.0);
+  auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+
+  
+
+  ptree json_tree = encode_json(plan);
   write_json(argv[2], json_tree);
-  // string json = json_string(mesh);
-  // ofstream json_out(argv[2], ofstream::out);
-  // json_out << json;
-  // json_out.close();
 }
 
