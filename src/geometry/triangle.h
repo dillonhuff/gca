@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 
+#include "geometry/box.h"
 #include "geometry/point.h"
 #include "geometry/polygon.h"
 #include "geometry/matrix.h"
@@ -62,6 +63,8 @@ namespace gca {
   triangle apply(const matrix<3, 3> m, const triangle& t);
 
   double distance_along(point normal, const triangle t);
+
+  std::vector<triangle> box_triangles(box b);
 }
 
 #endif

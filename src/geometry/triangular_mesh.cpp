@@ -5,7 +5,7 @@ namespace gca {
 
   index_t find_index(point p, std::vector<point>& vertices, double tolerance) {
     for (unsigned i = 0; i < vertices.size(); i++) {
-      if (within_eps(p, vertices[i])) { return i; }
+      if (within_eps(p, vertices[i], tolerance)) { return i; }
     }
     vertices.push_back(p);
     return vertices.size() - 1;

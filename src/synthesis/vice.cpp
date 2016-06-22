@@ -9,4 +9,20 @@ namespace gca {
   vice current_setup() {
     return emco_vice(point(-0.8, -4.4, -6.3));
   }
+
+  box main_box(const vice v) {
+    cout << "vice z min = " << v.z_min() << endl;
+    return box(v.x_min(), v.x_max(), v.y_min(), v.y_max(), v.z_min(), v.base_z());
+  }
+
+  box upper_clamp_box(const vice v) {
+    return box(v.x_min(), v.x_max(),
+	       v.fixed_clamp_y(), v.y_max(),
+	       v.base_z(), v.top_z());
+  }
+
+  box lower_clamp_box(const vice v) {
+    return main_box(v);
+  }
+
 }

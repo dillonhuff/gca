@@ -192,4 +192,41 @@ namespace gca {
     return ((p.dot(dir))*dir).len();
   }
 
+  std::vector<triangle> box_triangles(box b) {
+    point n(1, 0, 0);
+    point p0(b.x_min, b.y_min, b.z_min);
+    point p1(b.x_min, b.y_min, b.z_max);
+    point p2(b.x_min, b.y_max, b.z_min);
+    point p3(b.x_min, b.y_max, b.z_max);
+    point p4(b.x_max, b.y_min, b.z_min);
+    point p5(b.x_max, b.y_min, b.z_max);
+    point p6(b.x_max, b.y_max, b.z_min);
+    point p7(b.x_max, b.y_max, b.z_max);
+
+    //    assert(false);
+
+    std::vector<triangle> tris;
+
+    tris.push_back(triangle(n, p0, p1, p2));
+    tris.push_back(triangle(n, p3, p1, p2));
+
+    tris.push_back(triangle(n, p0, p1, p5));
+    tris.push_back(triangle(n, p0, p5, p4));
+
+    tris.push_back(triangle(n, p4, p6, p7));
+    tris.push_back(triangle(n, p4, p5, p7));
+
+    tris.push_back(triangle(n, p2, p6, p3));
+    tris.push_back(triangle(n, p7, p6, p3));
+
+    tris.push_back(triangle(n, p1, p3, p7));
+    tris.push_back(triangle(n, p1, p5, p7));
+
+    tris.push_back(triangle(n, p0, p2, p6));
+    tris.push_back(triangle(n, p4, p0, p6));
+
+    return tris;
+  }
+
+  
 }

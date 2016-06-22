@@ -1,6 +1,7 @@
 #ifndef GCA_VICE_H
 #define GCA_VICE_H
 
+#include "geometry/box.h"
 #include "geometry/point.h"
 
 namespace gca {
@@ -66,6 +67,13 @@ namespace gca {
   vice emco_vice(const point loc);
 
   vice current_setup();
+
+  box main_box(const vice v);
+
+  box upper_clamp_box(const vice v);
+
+  box lower_clamp_box(const vice v);
+
 }
 
 #endif
