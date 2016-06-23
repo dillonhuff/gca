@@ -143,20 +143,23 @@ T decode_json(const ptree& p) {
   assert(false);
 }
 
+template<>
+double decode_json(const ptree& p) {
+  std::string s = p.get<std::string>("");
+  return std::stod(s);
+}
+
 // TODO: Actual decoding for elements
 template<>
 tool decode_json(const ptree& p) {
-  return tool(0.3, 3.0, FLAT_NOSE);
+  double diam = decode_json<double>(p.get_child("tool_diameter"));
+  double length = decode_json<double>(p.get_child("tool_length"));
+  return tool(diam, length, FLAT_NOSE);
 }
 
 template<>
 vice decode_json(const ptree& p) {
   return current_setup();
-}
-
-template<>
-plate_height decode_json(const ptree& p) {
-  assert(false);
 }
 
 template<typename T>
@@ -186,9 +189,18 @@ fixtures decode_fixtures_json(const ptree& p) {
   return fixtures(v, plates);
 }
 
+template<>
+point decode_json(const ptree& p) {
+  std::vector<double> coords = decode_vector<double>(p.get_child(""));
+  return point(coords[0], coords[1], coords[2]);
+}
+
 workpiece decode_workpiece_json(const ptree& p) {
+  point x = decode_json<point>(p.get_child("x"));
+  point y = decode_json<point>(p.get_child("y"));
+  point z = decode_json<point>(p.get_child("z"));
   // workpiece workpiece_dims(3.5, 3.0, 3.0);
-  assert(false);
+  return workpiece(x, y, z);
 }
 
 plan_inputs parse_inputs_json(const std::string& s) {
@@ -197,6 +209,7 @@ plan_inputs parse_inputs_json(const std::string& s) {
   read_json(ins, inputs);
 
   std::vector<tool> tools = decode_tools_json(inputs.get_child("tools"));
+  assert(tools.size() > 0);
   fixtures fixes = decode_fixtures_json(inputs.get_child("fixtures"));
   workpiece workpiece_dims = decode_workpiece_json(inputs.get_child("workpiece"));
 

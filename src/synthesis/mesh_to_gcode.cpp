@@ -64,6 +64,7 @@ namespace gca {
   gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
 				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
 				 const std::vector<tool>& tools) {
+    assert(tools.size() > 0);
     tool t = *(min_element(begin(tools), end(tools),
 			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
