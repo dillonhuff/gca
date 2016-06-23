@@ -32,12 +32,6 @@ namespace gca {
 			const unsigned long num_edges,
 			const edge_t* edges )
   {
-    std::cout << "num vertices = " << num_vertices << std::endl;
-    std::cout << "num triangles = " << num_triangles << std::endl;
-    std::cout << "num edges = " << num_edges << std::endl;
-    for (unsigned i = 0; i < num_edges; i++) {
-      std::cout << "Edge " << i << " = (" << edges[i].start() << ", " << edges[i].end() << ")" << std::endl;
-    }
     /*
       Generates all half edge data structures for the mesh given by its vertices 'self.vs'
       and faces 'self.faces'.

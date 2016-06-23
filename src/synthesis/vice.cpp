@@ -22,7 +22,9 @@ namespace gca {
   }
 
   box lower_clamp_box(const vice v) {
-    return main_box(v);
+    return box(v.x_min(), v.x_max(),
+	       v.y_min(), v.y_min() + v.clamp_y_length(),
+	       v.base_z(), v.top_z());
   }
 
 }

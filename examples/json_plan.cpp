@@ -1,3 +1,4 @@
+#include <boost/foreach.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <fstream>
@@ -125,26 +126,96 @@ ptree encode_json(const fabrication_plan& plan) {
   return p;
 }
 
+struct plan_inputs {
+  std::vector<tool> tools;
+  workpiece workpiece_dims;
+  fixtures fixes;
+
+  plan_inputs(const std::vector<tool>& p_tools,
+	      const workpiece& p_workpiece_dims,
+	      const fixtures& p_fixes)
+    : tools(p_tools), workpiece_dims(p_workpiece_dims), fixes(p_fixes) {}
+
+};
+
+template<typename T>
+T decode_json(const ptree& p) {
+  assert(false);
+}
+
+// TODO: Actual decoding for elements
+template<>
+tool decode_json(const ptree& p) {
+  return tool(0.3, 3.0, FLAT_NOSE);
+}
+
+template<>
+vice decode_json(const ptree& p) {
+  return current_setup();
+}
+
+template<>
+plate_height decode_json(const ptree& p) {
+  assert(false);
+}
+
+template<typename T>
+std::vector<T> decode_vector(const ptree& p) {
+  std::vector<T> elems;
+  BOOST_FOREACH(const ptree::value_type& v, p.get_child("")) {
+    elems.push_back(decode_json<T>(v.second));
+  }
+  return elems;
+}
+
+std::vector<tool> decode_tools_json(const ptree& p) {
+  return decode_vector<tool>(p);
+  // tool t1(0.30, 3.0, FLAT_NOSE);
+  // tool t2(0.14, 3.15, FLAT_NOSE);
+  // vector<tool> tools{t1, t2};
+}
+
+fixtures decode_fixtures_json(const ptree& p) {
+  vice v = decode_json<vice>(p.get_child("vice"));
+  std::vector<plate_height> plates =
+    decode_vector<plate_height>(p.get_child("base_plates"));
+  // vice v = current_setup();
+  // std::vector<plate_height> plates{0.1, 0.3};
+  // fixtures fixes(v, plates);
+  //  return fixes;
+  return fixtures(v, plates);
+}
+
+workpiece decode_workpiece_json(const ptree& p) {
+  // workpiece workpiece_dims(3.5, 3.0, 3.0);
+  assert(false);
+}
+
+plan_inputs parse_inputs_json(const std::string& s) {
+  ifstream ins(s);
+  ptree inputs;
+  read_json(ins, inputs);
+
+  std::vector<tool> tools = decode_tools_json(inputs.get_child("tools"));
+  fixtures fixes = decode_fixtures_json(inputs.get_child("fixtures"));
+  workpiece workpiece_dims = decode_workpiece_json(inputs.get_child("workpiece"));
+
+  return plan_inputs(tools, workpiece_dims, fixes);
+}
+
 int main(int argc, char* argv[]) {
-  assert(argc == 3);
+  assert(argc == 4);
 
   arena_allocator a;
   set_system_allocator(&a);
 
-  auto mesh = parse_stl(argv[1], 0.001);
+  triangular_mesh mesh = parse_stl(argv[1], 0.001);
 
-  vice v = current_setup();
-  std::vector<plate_height> plates{0.1, 0.3};
-  fixtures fixes(v, plates);
+  plan_inputs inputs = parse_inputs_json(argv[2]);
 
-  tool t1(0.30, 3.0, FLAT_NOSE);
-  tool t2(0.14, 3.15, FLAT_NOSE);
-  vector<tool> tools{t1, t2};
-  workpiece workpiece_dims(3.5, 3.0, 3.0);
-
-  auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+  auto plan = make_fabrication_plan(mesh, inputs.fixes, inputs.tools, inputs.workpiece_dims);
 
   ptree json_tree = encode_json(plan);
-  write_json(argv[2], json_tree);
+  write_json(argv[3], json_tree);
 }
 
