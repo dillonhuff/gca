@@ -108,7 +108,7 @@ ptree encode_json(const vice& v) {
   vice_boxes.push_back(make_mesh(box_triangles(upper_clamp), 0.001));
   vice_boxes.push_back(make_mesh(box_triangles(lower_clamp), 0.001));
 
-  return encode_json(vice_boxes); //encode_json(m);
+  return encode_json(vice_boxes);
 }
 
 ptree encode_json(const fabrication_setup& prog) {
@@ -173,19 +173,12 @@ std::vector<T> decode_vector(const ptree& p) {
 
 std::vector<tool> decode_tools_json(const ptree& p) {
   return decode_vector<tool>(p);
-  // tool t1(0.30, 3.0, FLAT_NOSE);
-  // tool t2(0.14, 3.15, FLAT_NOSE);
-  // vector<tool> tools{t1, t2};
 }
 
 fixtures decode_fixtures_json(const ptree& p) {
   vice v = decode_json<vice>(p.get_child("vice"));
   std::vector<plate_height> plates =
     decode_vector<plate_height>(p.get_child("base_plates"));
-  // vice v = current_setup();
-  // std::vector<plate_height> plates{0.1, 0.3};
-  // fixtures fixes(v, plates);
-  //  return fixes;
   return fixtures(v, plates);
 }
 
@@ -199,7 +192,6 @@ workpiece decode_workpiece_json(const ptree& p) {
   point x = decode_json<point>(p.get_child("x"));
   point y = decode_json<point>(p.get_child("y"));
   point z = decode_json<point>(p.get_child("z"));
-  // workpiece workpiece_dims(3.5, 3.0, 3.0);
   return workpiece(x, y, z);
 }
 

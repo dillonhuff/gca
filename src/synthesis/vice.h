@@ -30,6 +30,23 @@ namespace gca {
       max_jaw_width(p_max_jaw_width),
       protective_base_plate_height(0.0) {}
 
+    vice(point p_pos,
+	 double p_x_length,
+	 double p_y_length,
+	 double p_base_height,
+	 double p_top_height,
+	 double p_clamp_width,
+	 double p_max_jaw_width,
+	 double p_protective_base_plate_height) :
+      pos(p_pos),
+      x_length(p_x_length),
+      y_length(p_y_length),
+      base_height(p_base_height),
+      top_height(p_top_height),
+      clamp_width(p_clamp_width),
+      max_jaw_width(p_max_jaw_width),
+      protective_base_plate_height(p_protective_base_plate_height) {}
+    
     vice(const vice& v,
 	 double p_protective_base_plate_height) :
       pos(v.pos),
