@@ -18,7 +18,7 @@ namespace gca {
     std::vector<plate_height> plates{0.1, 0.3};
     fixtures fixes(test_vice, plates);
 
-    tool t1(0.25, 3.0, FLAT_NOSE);
+    tool t1(0.25, 3.0, 4, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(1.5, 1.2, 1.5);
 
@@ -80,7 +80,7 @@ namespace gca {
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
     fixtures fixes(test_vice);
     workpiece workpiece_dims(3.81, 3.2, 3.98);
-    tool t1(0.25, 3.0, FLAT_NOSE);
+    tool t1(0.25, 3.0, 4, FLAT_NOSE);
     vector<tool> tools{t1};
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
@@ -219,8 +219,8 @@ namespace gca {
     std::vector<plate_height> plates{0.15, 0.03};
     fixtures fixes(test_vice, plates);
 
-    tool t1(0.35, 3.0, FLAT_NOSE);
-    tool t2(0.14, 3.15, FLAT_NOSE);
+    tool t1(0.35, 3.0, 4, FLAT_NOSE);
+    tool t2(0.14, 3.15, 2, FLAT_NOSE);
     vector<tool> tools{t1, t2};
     workpiece workpiece_dims(1.7, 2.1, 1.65);
 

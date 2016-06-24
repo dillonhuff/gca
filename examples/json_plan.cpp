@@ -149,12 +149,19 @@ double decode_json(const ptree& p) {
   return std::stod(s);
 }
 
+template<>
+unsigned decode_json(const ptree& p) {
+  std::string s = p.get<std::string>("");
+  return std::stoul(s);
+}
+
 // TODO: Actual decoding for elements
 template<>
 tool decode_json(const ptree& p) {
   double diam = decode_json<double>(p.get_child("tool_diameter"));
   double length = decode_json<double>(p.get_child("tool_length"));
-  return tool(diam, length, FLAT_NOSE);
+  unsigned num_flutes = decode_json<unsigned>(p.get_child("tool_num_flutes"));
+  return tool(diam, length, num_flutes, FLAT_NOSE);
 }
 
 template<>
