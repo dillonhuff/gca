@@ -1,8 +1,3 @@
-#include <boost/foreach.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <fstream>
-
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
@@ -14,6 +9,7 @@
 #include "synthesis/toolpath_generation.h"
 #include "system/algorithm.h"
 #include "system/parse_stl.h"
+#include "system/json.h"
 
 using boost::property_tree::ptree;
 
@@ -27,6 +23,15 @@ ptree encode_face_list_json(const triangular_mesh& m);
 ptree encode_json(const triangular_mesh& m);
 ptree encode_json(const fabrication_setup& prog);
 ptree encode_json(const fabrication_plan& plan);
+
+template<typename T>
+ptree encode_json(const std::vector<T>& elems) {
+  ptree children;
+  for (auto e : elems) {
+    children.push_back(std::make_pair("", encode_json(e)));
+  }
+  return children;
+}
 
 ptree encode_json(const triangle_t t) {
   ptree children;
@@ -70,15 +75,6 @@ ptree encode_json(const gcode_program& prog) {
   ss << prog.blocks;
   p.put("", ss.str());
   return p;
-}
-
-template<typename T>
-ptree encode_json(const std::vector<T>& elems) {
-  ptree children;
-  for (auto e : elems) {
-    children.push_back(std::make_pair("", encode_json(e)));
-  }
-  return children;
 }
 
 ptree encode_face_list_json(const triangular_mesh& m) {
@@ -138,46 +134,6 @@ struct plan_inputs {
 
 };
 
-template<typename T>
-T decode_json(const ptree& p) {
-  assert(false);
-}
-
-template<>
-double decode_json(const ptree& p) {
-  std::string s = p.get<std::string>("");
-  return std::stod(s);
-}
-
-template<>
-unsigned decode_json(const ptree& p) {
-  std::string s = p.get<std::string>("");
-  return std::stoul(s);
-}
-
-// TODO: Actual decoding for elements
-template<>
-tool decode_json(const ptree& p) {
-  double diam = decode_json<double>(p.get_child("tool_diameter"));
-  double length = decode_json<double>(p.get_child("tool_length"));
-  unsigned num_flutes = decode_json<unsigned>(p.get_child("tool_num_flutes"));
-  return tool(diam, length, num_flutes, FLAT_NOSE);
-}
-
-template<>
-vice decode_json(const ptree& p) {
-  return current_setup();
-}
-
-template<typename T>
-std::vector<T> decode_vector(const ptree& p) {
-  std::vector<T> elems;
-  BOOST_FOREACH(const ptree::value_type& v, p.get_child("")) {
-    elems.push_back(decode_json<T>(v.second));
-  }
-  return elems;
-}
-
 std::vector<tool> decode_tools_json(const ptree& p) {
   return decode_vector<tool>(p);
 }
@@ -187,12 +143,6 @@ fixtures decode_fixtures_json(const ptree& p) {
   std::vector<plate_height> plates =
     decode_vector<plate_height>(p.get_child("base_plates"));
   return fixtures(v, plates);
-}
-
-template<>
-point decode_json(const ptree& p) {
-  std::vector<double> coords = decode_vector<double>(p.get_child(""));
-  return point(coords[0], coords[1], coords[2]);
 }
 
 workpiece decode_workpiece_json(const ptree& p) {

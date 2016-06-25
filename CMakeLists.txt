@@ -78,6 +78,7 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/workpiece.h
 	    ./src/synthesis/fixture_analysis.h
 	    ./src/system/arena_allocator.h
+	    ./src/system/json.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/retarget.h)
