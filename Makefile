@@ -2194,6 +2194,45 @@ src/system/file.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/file.cpp.s
 .PHONY : src/system/file.cpp.s
 
+src/system/json.o: src/system/json.cpp.o
+
+.PHONY : src/system/json.o
+
+# target to build an object file
+src/system/json.cpp.o:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/json.cpp.o
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/system/json.cpp.o
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/system/json.cpp.o
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/system/json.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/json.cpp.o
+.PHONY : src/system/json.cpp.o
+
+src/system/json.i: src/system/json.cpp.i
+
+.PHONY : src/system/json.i
+
+# target to preprocess a source file
+src/system/json.cpp.i:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/json.cpp.i
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/system/json.cpp.i
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/system/json.cpp.i
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/system/json.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/json.cpp.i
+.PHONY : src/system/json.cpp.i
+
+src/system/json.s: src/system/json.cpp.s
+
+.PHONY : src/system/json.s
+
+# target to generate assembly for a file
+src/system/json.cpp.s:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/json.cpp.s
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/system/json.cpp.s
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/system/json.cpp.s
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/system/json.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/json.cpp.s
+.PHONY : src/system/json.cpp.s
+
 src/system/parse_stl.o: src/system/parse_stl.cpp.o
 
 .PHONY : src/system/parse_stl.o
@@ -3332,6 +3371,9 @@ help:
 	@echo "... src/system/file.o"
 	@echo "... src/system/file.i"
 	@echo "... src/system/file.s"
+	@echo "... src/system/json.o"
+	@echo "... src/system/json.i"
+	@echo "... src/system/json.s"
 	@echo "... src/system/parse_stl.o"
 	@echo "... src/system/parse_stl.i"
 	@echo "... src/system/parse_stl.s"

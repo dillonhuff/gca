@@ -127,9 +127,10 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/vice.cpp
+	 ./src/system/arena_allocator.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
-	 ./src/system/arena_allocator.cpp
+	 ./src/system/json.cpp
 	 ./src/system/parse_stl.cpp
 	 ./src/transformers/feed_changer.cpp
 	 ./src/transformers/retarget.cpp
