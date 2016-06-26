@@ -1,10 +1,11 @@
 #ifndef GCA_TOOL_H
 #define GCA_TOOL_H
 
+#include "synthesis/material.h"
+
 namespace gca {
 
   enum tool_type { FLAT_NOSE, BALL_NOSE };
-  enum material { CARBIDE, HSS, ACETAL, ALUMINUM, BRASS };
 
   class tool {
   protected:

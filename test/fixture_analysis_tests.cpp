@@ -11,7 +11,7 @@ namespace gca {
 
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(3.81, 3.2, 3.98);
+    workpiece workpiece_dims(3.81, 3.2, 3.98, ACETAL);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
@@ -57,7 +57,7 @@ namespace gca {
 
     vice test_vice = emco_vice(point(1.2, -4.4, 3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(4.0, 4.0, 3.98);
+    workpiece workpiece_dims(4.0, 4.0, 3.98, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
 
@@ -91,7 +91,7 @@ namespace gca {
 
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(3.5, 2.5, 2.3);
+    workpiece workpiece_dims(3.5, 2.5, 2.3, BRASS);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
 
     auto outer_surfs = outer_surfaces(mesh);
@@ -143,7 +143,7 @@ namespace gca {
     set_system_allocator(&a);
     vice test_vice = emco_vice(point(1.8, 4.2, 3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(2.0, 2.0, 2.0);
+    workpiece workpiece_dims(2.0, 2.0, 2.0, ACETAL);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/LittleHouse.stl", 0.001);
 
     auto outer_surfs = outer_surfaces(mesh);
@@ -209,7 +209,7 @@ namespace gca {
     set_system_allocator(&a);
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(3.5, 2.5, 2.3);
+    workpiece workpiece_dims(3.5, 2.5, 2.3, ACETAL);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudeTop.stl", 0.001);
 
     auto outer_surfs = outer_surfaces(mesh);
@@ -264,7 +264,7 @@ namespace gca {
     set_system_allocator(&a);
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(3.5, 2.5, 2.3);
+    workpiece workpiece_dims(3.5, 2.5, 2.3, ALUMINUM);
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
     
     SECTION("4 setups, no duplicates, each orientation has 1 connected component") {
@@ -322,7 +322,7 @@ namespace gca {
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
     std::vector<plate_height> plates{0.1, 0.3};
     fixtures fixes(test_vice, plates);
-    workpiece workpiece_dims(3.81, 3.2, 3.98);
+    workpiece workpiece_dims(3.81, 3.2, 3.98, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
 

@@ -74,6 +74,10 @@ namespace gca {
       return HSS;
     } else if (name == "CARBIDE") {
       return CARBIDE;
+    } else if (name == "ACETAL") {
+      return ACETAL;
+    } else if (name == "BRASS") {
+      return BRASS;
     } else {
       assert(false);
     }

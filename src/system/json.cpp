@@ -106,7 +106,8 @@ namespace gca {
     point x = decode_json<point>(p.get_child("x"));
     point y = decode_json<point>(p.get_child("y"));
     point z = decode_json<point>(p.get_child("z"));
-    return workpiece(x, y, z);
+    material m = decode_json<material>(p.get_child("workpiece_material"));
+    return workpiece(x, y, z, m);
   }
 
   plan_inputs parse_inputs_json(const std::string& s) {

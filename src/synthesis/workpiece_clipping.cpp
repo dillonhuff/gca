@@ -18,7 +18,7 @@ namespace gca {
     point y_d = diameter(aligned_workpiece.sides[1], part_mesh) * y_n;
     point z_d = diameter(aligned_workpiece.sides[2], part_mesh) * z_n;
 
-    return workpiece(x_d, y_d, z_d);
+    return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
   }
   
   std::vector<polyline> shift_lines_xy(const std::vector<polyline>& lines,

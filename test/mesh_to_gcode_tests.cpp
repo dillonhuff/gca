@@ -20,7 +20,7 @@ namespace gca {
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece workpiece_dims(1.5, 1.2, 1.5);
+    workpiece workpiece_dims(1.5, 1.2, 1.5, ACETAL);
 
     SECTION("Simple box") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
@@ -50,14 +50,14 @@ namespace gca {
     }
 
     SECTION("Box with protrusion") {
-      workpiece workpiece_dims(1.5, 1.2, 2.0);
+      workpiece workpiece_dims(1.5, 1.2, 2.0, ALUMINUM);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
     }
 
     SECTION("Box with thru hole") {
-      workpiece workpiece_dims(1.51, 1.51, 2.0);
+      workpiece workpiece_dims(1.51, 1.51, 2.0, ACETAL);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 7);
@@ -79,7 +79,7 @@ namespace gca {
 
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(3.81, 3.2, 3.98);
+    workpiece workpiece_dims(3.81, 3.2, 3.98, BRASS);
     tool t1(0.25, 3.0, 4, CARBIDE, FLAT_NOSE);
     vector<tool> tools{t1};
 
@@ -125,7 +125,7 @@ namespace gca {
 
       SECTION("All simple box surfaces are part of a SA faces") {
 	vector<index_t> fis = mesh.face_indexes();
-	workpiece workpiece_dims(1.5, 1.2, 1.5);
+	workpiece workpiece_dims(1.5, 1.2, 1.5, ALUMINUM);
 	auto workpiece_mesh = align_workpiece(surfaces, workpiece_dims);
 	classify_part_surfaces(surfaces, workpiece_mesh);
 	remove_SA_surfaces(surfaces, fis);
@@ -222,7 +222,7 @@ namespace gca {
     tool t1(0.35, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
     vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(1.7, 2.1, 1.65);
+    workpiece workpiece_dims(1.7, 2.1, 1.65, ACETAL);
 
     SECTION("Box with 2 holes") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);

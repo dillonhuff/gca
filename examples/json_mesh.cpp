@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
   tool t1(0.30, 3.0, 4, HSS, FLAT_NOSE);
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   vector<tool> tools{t1, t2};
-  workpiece workpiece_dims(3.5, 3.0, 3.0);
+  workpiece workpiece_dims(3.5, 3.0, 3.0, ACETAL);
 
   auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
 
