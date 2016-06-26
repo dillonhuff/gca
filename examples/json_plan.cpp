@@ -25,7 +25,6 @@ int main(int argc, char* argv[]) {
   triangular_mesh mesh = parse_stl(argv[1], 0.001);
 
   plan_inputs inputs = parse_inputs_json(argv[2]);
-
   auto plan = make_fabrication_plan(mesh, inputs.fixes, inputs.tools, inputs.workpiece_dims);
 
   ptree json_tree = encode_json(plan);

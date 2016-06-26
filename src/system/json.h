@@ -53,9 +53,7 @@ namespace gca {
   }
   
   template<typename T>
-  T decode_json(const ptree& p) {
-    assert(false);
-  }
+  T decode_json(const ptree& p);
 
   template<>
   inline double decode_json(const ptree& p) {
@@ -69,6 +67,18 @@ namespace gca {
     return std::stoul(s);
   }
 
+  template<>
+  inline material decode_json(const ptree& p) {
+    std::string name = p.get<std::string>("");
+    if (name == "HSS") {
+      return HSS;
+    } else if (name == "CARBIDE") {
+      return CARBIDE;
+    } else {
+      assert(false);
+    }
+  }
+  
   // TODO: Actual decoding for elements
   template<>
   inline tool decode_json(const ptree& p) {
@@ -79,6 +89,7 @@ namespace gca {
     return tool(diam, length, num_flutes, mat, FLAT_NOSE);
   }
 
+  // TODO: Actually decode the vice
   template<>
   inline vice decode_json(const ptree& p) {
     return current_setup();
