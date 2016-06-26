@@ -95,7 +95,7 @@ namespace gca {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
       auto mesh = make_mesh(triangles, 0.001);
       double cut_depth = 0.25;
-      tool t1(0.05, 3.0, 2, FLAT_NOSE);
+      tool t1(0.05, 3.0, 2, HSS, FLAT_NOSE);
       auto mill_paths = mill_surface(mesh,
 				     t1,
 				     cut_depth,
@@ -106,7 +106,7 @@ namespace gca {
     SECTION("Multiple cylinders") {
       vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MultipleCylinders.stl").triangles;
       auto mesh = make_mesh(triangles, 0.001);
-      tool t1(0.2, 3.0, 4, FLAT_NOSE);
+      tool t1(0.2, 3.0, 4, HSS, FLAT_NOSE);
       double cut_depth = 0.5;
       auto mill_lines = mill_surface_lines(mesh, t1, cut_depth, workpiece_height);
       REQUIRE(mill_lines.size() > 0);
@@ -118,7 +118,7 @@ namespace gca {
     set_system_allocator(&a);
 
     double workpiece_height = 0.5;
-    tool t(0.075*2, 3.0, 2, FLAT_NOSE);
+    tool t(0.075*2, 3.0, 2, HSS, FLAT_NOSE);
     double cut_depth = 0.1;
 
     SECTION("SlicedCone") {

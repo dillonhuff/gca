@@ -75,7 +75,8 @@ namespace gca {
     double diam = decode_json<double>(p.get_child("tool_diameter"));
     double length = decode_json<double>(p.get_child("tool_length"));
     unsigned num_flutes = decode_json<unsigned>(p.get_child("tool_num_flutes"));
-    return tool(diam, length, num_flutes, FLAT_NOSE);
+    material mat = decode_json<material>(p.get_child("tool_material"));
+    return tool(diam, length, num_flutes, mat, FLAT_NOSE);
   }
 
   template<>
