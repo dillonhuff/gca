@@ -72,12 +72,6 @@ namespace gca {
   std::vector<triangular_mesh>
   part_arrangements(const triangular_mesh& part_mesh, const vice v);
 
-  std::vector<gcode_program>
-  workpiece_clipping_programs(const workpiece aligned_workpiece,
-			      const triangular_mesh& part_mesh,
-			      const std::vector<tool>& tools,
-			      const vice v);
-
   std::vector<std::pair<triangular_mesh, surface_list>>
   part_arrangements(const triangular_mesh& part_mesh,
 		    const vector<surface>& part_ss,

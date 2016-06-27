@@ -2,6 +2,7 @@
 #include "synthesis/axis_3.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
+#include "synthesis/workpiece_clipping.h"
 #include "system/algorithm.h"
 
 namespace gca {
