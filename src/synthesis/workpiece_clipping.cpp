@@ -115,18 +115,21 @@ namespace gca {
     double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
     double alpha = leftover / 2.0;
 
-    box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		v.y_max() - clipped.sides[1].len(), v.y_max(),
-		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
-    
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
-					     point(0, 0, t.length()));
+    double z_max = v.base_z() + plate_height + aligned_z_height;
+    double z_min = z_max - alpha;
 
-    
-    double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + 0.2;
+    box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+		 v.y_max() - aligned.sides[1].len(), v.y_max(),
+		 z_min, z_max);
+
+    vector<polyline> blk_lines_1 = shift_lines(rough_box(b1, t.radius(), cut_depth),
+					       point(0, 0, t.length()));
+
+    // TODO: Add in the 4 additional clipping programs
+    double safe_height = z_max + 0.2;
     vector<block> blks =
-      emco_f1_code(blk_lines, safe_height);
-    return gcode_program("Clip base", blks);
+      emco_f1_code(blk_lines_1, safe_height);
+    return gcode_program("Clip top and sides", blks);
   }
 
   gcode_program
