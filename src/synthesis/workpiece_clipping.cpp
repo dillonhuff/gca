@@ -107,9 +107,16 @@ namespace gca {
 		     const double cut_depth,
 		     const vice& v,
 		     const double plate_height) {
+    double aligned_x = aligned.sides[0].len();
+    double clipped_x = clipped.sides[0].len();
+
+    double aligned_y = aligned.sides[1].len();
+    double clipped_y = clipped.sides[1].len();
+
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped.sides[2].len();
-
+    
+    
     double adjusted_jaw_height = v.jaw_height() - plate_height;
     assert(adjusted_jaw_height > 0);
     double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
@@ -118,17 +125,48 @@ namespace gca {
     double z_max = v.base_z() + plate_height + aligned_z_height;
     double z_min = z_max - alpha;
 
+    double safe_height = z_max + 0.2;
+
+    // Top outer box
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
 		 v.y_max() - aligned.sides[1].len(), v.y_max(),
 		 z_min, z_max);
 
-    vector<polyline> blk_lines_1 = shift_lines(rough_box(b1, t.radius(), cut_depth),
-					       point(0, 0, t.length()));
+    z_max = z_min;
+    z_min = z_min - clipped_z_height;
+
+    box b2 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+		 v.y_max() - (aligned_y - clipped_y) / 2.0, v.y_max(),
+		 z_min, z_max);
+
+    box b3 = box(v.x_max() - (aligned_x - clipped_x) / 2.0, v.x_max(),
+		 v.y_max() - aligned.sides[1].len(), v.y_max(),
+		 z_min, z_max);
+
+    box b4 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+		 v.y_max() - aligned.sides[1].len(), v.y_max(),
+		 z_min, z_max);
+
+    box b5 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+		 v.y_max() - aligned.sides[1].len(), v.y_max(),
+		 z_min, z_max);
+
+    vector<polyline> blk_lines;
+    concat(blk_lines, shift_lines(rough_box(b1, t.radius(), cut_depth),
+				  point(0, 0, t.length())));
+    concat(blk_lines, shift_lines(rough_box(b2, t.radius(), cut_depth),
+				  point(0, 0, t.length())));
+    concat(blk_lines, shift_lines(rough_box(b3, t.radius(), cut_depth),
+				  point(0, 0, t.length())));
+    concat(blk_lines, shift_lines(rough_box(b4, t.radius(), cut_depth),
+				  point(0, 0, t.length())));
+    concat(blk_lines, shift_lines(rough_box(b5, t.radius(), cut_depth),
+				  point(0, 0, t.length())));
+    
 
     // TODO: Add in the 4 additional clipping programs
-    double safe_height = z_max + 0.2;
     vector<block> blks =
-      emco_f1_code(blk_lines_1, safe_height);
+      emco_f1_code(blk_lines, safe_height);
     return gcode_program("Clip top and sides", blks);
   }
 
