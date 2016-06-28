@@ -4,7 +4,6 @@
 #include "synthesis/tool.h"
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
-#include "synthesis/workpiece.h"
 #include "synthesis/workpiece_clipping.h"
 
 namespace gca {
@@ -101,6 +100,36 @@ namespace gca {
     clip_progs.push_back(x_clip);
   }
 
+  std::vector<gcode_program>
+  parallel_plate_clipping(const workpiece& aligned,
+			  const workpiece& clipped,
+			  const tool& t,
+			  const double cut_depth,
+			  const fixtures& f) {
+    
+  }
+
+  bool can_clip_parallel(const workpiece& aligned,
+			 const workpiece& clipped,
+			 const fixtures& f) {
+    double aligned_z_height = aligned.sides[2].len();
+    double clipped_z_height = clipped.sides[2].len();
+
+    const vice& v = f.get_vice();
+    assert(!v.has_protective_base_plate());
+    
+    for (auto p : f.parallel_plates()) {
+      double adjusted_jaw_height = v.jaw_height() - p;
+      assert(adjusted_jaw_height > 0);
+      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+      // TODO: Compute this magic number via friction analysis?
+      if (leftover > 0.01) {
+	return true;
+      }
+    }
+    return false;
+  }
+
   // TODO: Clean up and add vice height test
   std::vector<gcode_program>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
@@ -108,7 +137,6 @@ namespace gca {
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
-    vector<gcode_program> clip_progs;
 
     // TODO: Turn these magic numbers into parameters
     double cut_depth = 0.2;
@@ -118,11 +146,15 @@ namespace gca {
 			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
 
-    append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-    append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-    append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-
-    return clip_progs;
+    if (can_clip_parallel(aligned_workpiece, clipped, f)) {
+      return parallel_plate_clipping(aligned_workpiece, clipped, t, cut_depth, f);
+    } else {
+      vector<gcode_program> clip_progs;
+      append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+      append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+      append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+      return clip_progs;
+    }
   }
 
 }
