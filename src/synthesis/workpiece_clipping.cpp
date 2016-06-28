@@ -125,7 +125,7 @@ namespace gca {
     double z_max = v.base_z() + plate_height + aligned_z_height;
     double z_min = z_max - alpha;
 
-    double safe_height = z_max + 0.2;
+    double safe_height = z_max + t.length() + 0.2;
 
     // Top outer box
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
@@ -135,21 +135,21 @@ namespace gca {
     z_max = z_min;
     z_min = z_min - clipped_z_height;
 
-    box b2 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		 v.y_max() - (aligned_y - clipped_y) / 2.0, v.y_max(),
-		 z_min, z_max);
+    // TODO: Actually add box clipping proper
+    double x1 = v.x_max();
+    double x2 = x1 - (aligned_x - clipped_x) / 2.0;
+    double x3 = x2 - clipped_x;
+    double x4 = x3 - (aligned_x - clipped_x) / 2.0;
 
-    box b3 = box(v.x_max() - (aligned_x - clipped_x) / 2.0, v.x_max(),
-		 v.y_max() - aligned.sides[1].len(), v.y_max(),
-		 z_min, z_max);
+    double y1 = v.y_max();
+    double y2 = y1 - (aligned_y - clipped_y) / 2.0;
+    double y3 = y2 - clipped_y;
+    double y4 = y3 - (aligned_y - clipped_y) / 2.0;
 
-    box b4 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		 v.y_max() - aligned.sides[1].len(), v.y_max(),
-		 z_min, z_max);
-
-    box b5 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		 v.y_max() - aligned.sides[1].len(), v.y_max(),
-		 z_min, z_max);
+    box b2 = box(x4, x1, y2, y1, z_min, z_max);
+    box b3 = box(x4, x1, y4, y3, z_min, z_max);
+    box b4 = box(x4, x3, y3, y2, z_min, z_max);
+    box b5 = box(x2, x1, y3, y2, z_min, z_max);
 
     vector<polyline> blk_lines;
     concat(blk_lines, shift_lines(rough_box(b1, t.radius(), cut_depth),
@@ -193,7 +193,7 @@ namespace gca {
 					     point(0, 0, t.length()));
 
     
-    double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + 0.2;
+    double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + t.length() + 0.2;
     vector<block> blks =
       emco_f1_code(blk_lines, safe_height);
     return gcode_program("Clip base", blks);
