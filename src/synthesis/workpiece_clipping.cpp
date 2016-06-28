@@ -100,6 +100,64 @@ namespace gca {
     clip_progs.push_back(x_clip);
   }
 
+  gcode_program
+  clip_top_and_sides(const workpiece& aligned,
+		     const workpiece& clipped,
+		     const tool& t,
+		     const double cut_depth,
+		     const vice& v,
+		     const double plate_height) {
+    double aligned_z_height = aligned.sides[2].len();
+    double clipped_z_height = clipped.sides[2].len();
+
+    double adjusted_jaw_height = v.jaw_height() - plate_height;
+    assert(adjusted_jaw_height > 0);
+    double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+    double alpha = leftover / 2.0;
+
+    box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+		v.y_max() - clipped.sides[1].len(), v.y_max(),
+		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
+    
+    vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
+					     point(0, 0, t.length()));
+
+    
+    double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + 0.2;
+    vector<block> blks =
+      emco_f1_code(blk_lines, safe_height);
+    return gcode_program("Clip base", blks);
+  }
+
+  gcode_program
+  clip_base(const workpiece& aligned,
+	    const workpiece& clipped,
+	    const tool& t,
+	    const double cut_depth,
+	    const vice& v,
+	    const double plate_height) {
+    double aligned_z_height = aligned.sides[2].len();
+    double clipped_z_height = clipped.sides[2].len();
+
+    double adjusted_jaw_height = v.jaw_height() - plate_height;
+    assert(adjusted_jaw_height > 0);
+    double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+    double alpha = leftover / 2.0;
+
+    box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+		v.y_max() - clipped.sides[1].len(), v.y_max(),
+		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
+    
+    vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
+					     point(0, 0, t.length()));
+
+    
+    double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + 0.2;
+    vector<block> blks =
+      emco_f1_code(blk_lines, safe_height);
+    return gcode_program("Clip base", blks);
+  }
+  
   std::vector<gcode_program>
   parallel_clipping_programs(const workpiece& aligned,
 			     const workpiece& clipped,
@@ -109,10 +167,8 @@ namespace gca {
 			     const double plate_height) {
     // TODO: Fill in the actual clipping code
     std::vector<gcode_program> progs;
-    std::vector<block> blks1;
-    progs.push_back(gcode_program("Clip top and sides", blks1));
-    std::vector<block> blks2;
-    progs.push_back(gcode_program("Clip base", blks1));
+    progs.push_back(clip_top_and_sides(aligned, clipped, t, cut_depth, v, plate_height));
+    progs.push_back(clip_base(aligned, clipped, t, cut_depth, v, plate_height));
     return progs;
   }
   

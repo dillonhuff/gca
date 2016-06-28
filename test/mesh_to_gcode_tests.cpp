@@ -91,6 +91,9 @@ namespace gca {
       auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(programs.size() == 6);
 
+      for (auto p : programs) {
+	REQUIRE(p.blocks.size() > 0);
+      }
     }
 
   TEST_CASE("Complex part pocket ordering") {
