@@ -101,12 +101,49 @@ namespace gca {
   }
 
   std::vector<gcode_program>
+  parallel_clipping_programs(const workpiece& aligned,
+			     const workpiece& clipped,
+			     const tool& t,
+			     const double cut_depth,
+			     const vice& v,
+			     const double plate_height) {
+    // TODO: Fill in the actual clipping code
+    std::vector<gcode_program> progs;
+    std::vector<block> blks1;
+    progs.push_back(gcode_program("Clip top and sides", blks1));
+    std::vector<block> blks2;
+    progs.push_back(gcode_program("Clip base", blks1));
+    return progs;
+  }
+  
+  // TODO: Reduce duplication between here and can_clip_parallel
+  std::vector<gcode_program>
   parallel_plate_clipping(const workpiece& aligned,
 			  const workpiece& clipped,
 			  const tool& t,
 			  const double cut_depth,
 			  const fixtures& f) {
+    double aligned_z_height = aligned.sides[2].len();
+    double clipped_z_height = clipped.sides[2].len();
+
+    const vice& v = f.get_vice();
+    assert(!v.has_protective_base_plate());
     
+    for (auto p : f.parallel_plates()) {
+      double adjusted_jaw_height = v.jaw_height() - p;
+      assert(adjusted_jaw_height > 0);
+      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+      // TODO: Compute this magic number via friction analysis?
+      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
+	return parallel_clipping_programs(aligned,
+					  clipped,
+					  t,
+					  cut_depth,
+					  f.get_vice(),
+					  p);
+      }
+    }
+    assert(false);
   }
 
   bool can_clip_parallel(const workpiece& aligned,
@@ -123,7 +160,7 @@ namespace gca {
       assert(adjusted_jaw_height > 0);
       double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
       // TODO: Compute this magic number via friction analysis?
-      if (leftover > 0.01) {
+      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
 	return true;
       }
     }
