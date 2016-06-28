@@ -5,6 +5,7 @@
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece.h"
+#include "synthesis/workpiece_clipping.h"
 
 namespace gca {
 
@@ -105,7 +106,7 @@ namespace gca {
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
-			      const vice v) {
+			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
     vector<gcode_program> clip_progs;
 
@@ -117,9 +118,9 @@ namespace gca {
 			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
 
-    append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
-    append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
-    append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, v, clip_progs);
+    append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+    append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+    append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
 
     return clip_progs;
   }

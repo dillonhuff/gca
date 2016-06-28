@@ -119,7 +119,7 @@ namespace gca {
     }
 
     vector<gcode_program> ps =
-      workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f.get_vice());
+      workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f);
     return fabrication_plan(ps, setups);
     
   }

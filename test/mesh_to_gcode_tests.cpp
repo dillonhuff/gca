@@ -73,6 +73,26 @@ namespace gca {
 
   }
 
+    TEST_CASE("Mesh to gcode with parallel plates") {
+      arena_allocator a;
+      set_system_allocator(&a);
+
+      vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+      std::vector<plate_height> base_plates{};
+      std::vector<plate_height> parallel_plates{0.5};
+      fixtures fixes(test_vice, base_plates, parallel_plates);
+
+      tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+      vector<tool> tools{t1};
+      workpiece workpiece_dims(4.0, 3.0, 4.0, ACETAL);
+
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+
+      auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+      REQUIRE(programs.size() == 6);
+
+    }
+
   TEST_CASE("Complex part pocket ordering") {
     arena_allocator a;
     set_system_allocator(&a);
