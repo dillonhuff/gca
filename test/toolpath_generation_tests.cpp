@@ -24,13 +24,25 @@ namespace gca {
     set_system_allocator(&a);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    
-    box b(0, 1.2,
-	  0, 1.4,
-	  0, 0.5);
 
-    vector<polyline> lines = rough_box(b, t1, 0.2);
-    REQUIRE(lines.size() > 0);
+    SECTION("Cut depth < box z") {
+      box b(0, 1.2,
+	    0, 1.4,
+	    0, 0.5);
+
+      vector<polyline> lines = rough_box(b, t1, 0.2);
+      REQUIRE(lines.size() > 0);
+    }
+
+    SECTION("Cut depth > box z") {
+      box b(0, 1.2,
+	    0, 1.4,
+	    0, 0.1);
+
+      vector<polyline> lines = rough_box(b, t1, 0.2);
+      REQUIRE(lines.size() > 0);
+    }
+
   }
 
 }

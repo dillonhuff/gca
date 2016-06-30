@@ -197,7 +197,7 @@ namespace gca {
     double alpha = leftover / 2.0;
 
     box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		v.y_max() - clipped.sides[1].len(), v.y_max(),
+		v.y_max() - aligned.sides[1].len(), v.y_max(),
 		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
     
     vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
@@ -287,7 +287,7 @@ namespace gca {
     double cut_depth = 0.2;
     double eps = 0.05;
 
-    tool t = *(max_element(begin(tools), end(tools),
+    tool t = *(min_element(begin(tools), end(tools),
     			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
 
