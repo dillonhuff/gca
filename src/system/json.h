@@ -93,11 +93,6 @@ namespace gca {
     return tool(diam, length, num_flutes, mat, FLAT_NOSE);
   }
 
-  // TODO: Actually decode the vice
-  template<>
-  inline vice decode_json(const ptree& p) {
-    return current_setup();
-  }
 
   template<typename T>
   std::vector<T> decode_vector(const ptree& p) {
@@ -114,6 +109,20 @@ namespace gca {
     return point(coords[0], coords[1], coords[2]);
   }
 
+  // TODO: Actually decode the vice
+  template<>
+  inline vice decode_json(const ptree& p) {
+    point pos = decode_json<point>(p.get_child("vice_pos"));
+    double x_len = decode_json<double>(p.get_child("vice_x_length"));
+    double y_len = decode_json<double>(p.get_child("vice_y_length"));
+    double base_height = decode_json<double>(p.get_child("vice_base_height"));
+    double top_height = decode_json<double>(p.get_child("vice_top_height"));
+    double clamp_width = decode_json<double>(p.get_child("vice_clamp_width"));
+    double max_jaw_width = decode_json<double>(p.get_child("vice_max_jaw_width"));
+    double protective_base_plate_height =
+      decode_json<double>(p.get_child("vice_protective_base_plate_height"));
+      return vice(pos, x_len, y_len, base_height, top_height, clamp_width, max_jaw_width, protective_base_plate_height);
+  }
   plan_inputs parse_inputs_json(const std::string& s);
 
 }

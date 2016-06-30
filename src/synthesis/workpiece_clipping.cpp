@@ -23,6 +23,9 @@ namespace gca {
   
   std::vector<polyline> shift_lines_xy(const std::vector<polyline>& lines,
 				       const vice v) {
+    if (lines.size() == 0) {
+      return lines;
+    }
     double x_f = v.x_max();
     double y_f = v.fixed_clamp_y();
     point shift(x_f - max_in_dir(lines, point(1, 0, 0)),
@@ -50,18 +53,26 @@ namespace gca {
 
     double safe_height = workpiece_height + t.length() + 0.1;
 
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
+    vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
 					     point(0, 0, t.length()));
-    vector<block> blks =
-      emco_f1_code(shift_lines_xy(blk_lines, v), safe_height);
+
+    vector<block> blks;
+    if (blk_lines.size() > 0) {
+      blks =
+	emco_f1_code(shift_lines_xy(blk_lines, v), safe_height);
+    }
 
     box b2 = box(0, workpiece_x,
 		 0, workpiece_y,
 		 part_height, z_max);
-    vector<polyline> lines = shift_lines(rough_box(b2, t.radius(), cut_depth),
+    vector<polyline> lines = shift_lines(rough_box(b2, t, cut_depth),
 					 point(0, 0, t.length()));
-    vector<block> clip_blocks =
-      emco_f1_code(shift_lines_xy(lines, v), safe_height);
+
+    vector<block> clip_blocks;
+    if (lines.size() > 0) {
+      clip_blocks =
+	emco_f1_code(shift_lines_xy(lines, v), safe_height);
+    }
     return pair<vector<block>, vector<block> >(blks, clip_blocks);
   }
 
@@ -152,15 +163,15 @@ namespace gca {
     box b5 = box(x2, x1, y3, y2, z_min, z_max);
 
     vector<polyline> blk_lines;
-    concat(blk_lines, shift_lines(rough_box(b1, t.radius(), cut_depth),
+    concat(blk_lines, shift_lines(rough_box(b1, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b2, t.radius(), cut_depth),
+    concat(blk_lines, shift_lines(rough_box(b2, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b3, t.radius(), cut_depth),
+    concat(blk_lines, shift_lines(rough_box(b3, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b4, t.radius(), cut_depth),
+    concat(blk_lines, shift_lines(rough_box(b4, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b5, t.radius(), cut_depth),
+    concat(blk_lines, shift_lines(rough_box(b5, t, cut_depth),
 				  point(0, 0, t.length())));
     
 
@@ -189,7 +200,7 @@ namespace gca {
 		v.y_max() - clipped.sides[1].len(), v.y_max(),
 		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
     
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t.radius(), cut_depth),
+    vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
 					     point(0, 0, t.length()));
 
     

@@ -131,6 +131,7 @@ namespace gca {
   }
 
   double max_distance_along(const std::vector<point>& pts, const point normal) {
+    assert(pts.size() > 0);
     vector<double> face_projections(pts.size());
     transform(begin(pts), end(pts),
 	      begin(face_projections),

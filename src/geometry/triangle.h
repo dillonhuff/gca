@@ -65,6 +65,10 @@ namespace gca {
   double distance_along(point normal, const triangle t);
 
   std::vector<triangle> box_triangles(box b);
+
+
+  std::vector<triangle> triangulate_polygon(const oriented_polygon& p);
+
 }
 
 #endif

@@ -109,6 +109,7 @@ namespace gca {
   }
 
   double max_in_dir(const std::vector<polyline>& lines, const point dir) {
+    assert(lines.size() > 0);
     return max_distance_along(points(lines), dir);
   }
   

@@ -257,6 +257,8 @@ namespace gca {
   merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 			   const triangular_mesh& part);
   
+  triangular_mesh triangulate(const oriented_polygon& p);
+
 }
 
 #endif

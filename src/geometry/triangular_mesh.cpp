@@ -313,5 +313,11 @@ namespace gca {
     }
     return merged;
   }
+
+  triangular_mesh triangulate(const oriented_polygon& p) {
+    cout << "Making triangular mesh" << endl;
+    auto tris = triangulate_polygon(p);
+    return make_mesh(tris, 0.001);
+  }
   
 }

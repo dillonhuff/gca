@@ -29,5 +29,7 @@ int main(int argc, char* argv[]) {
 
   ptree json_tree = encode_json(plan);
   write_json(argv[3], json_tree);
+
+  cout << "Finished Plan" << endl;
 }
 

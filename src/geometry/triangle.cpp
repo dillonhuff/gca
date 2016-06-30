@@ -78,12 +78,14 @@ namespace gca {
       tri_lines.push_back(line(t.v2, t.v3));
       tri_lines.push_back(line(t.v3, t.v1));
     }
+    
     vector<line> no_dups;
     for (auto l : tri_lines) {
       if (count_in(l, tri_lines) == 1) {
 	no_dups.push_back(l);
       }
     }
+
     return unordered_segments_to_polygons(normal, no_dups);
   }
 
@@ -228,5 +230,50 @@ namespace gca {
     return tris;
   }
 
-  
+
+
+  unsigned find_ear_index(const std::vector<point>& pts) {
+    assert(pts.size() > 2);
+    for (unsigned i = 1, j = 0; i < pts.size(); i++, j++) {
+      unsigned ip1 = (i + 1) % pts.size();
+      point l = pts[ip1];
+      l.z = 0.0;
+      point r = pts[j];
+      r.z = 0.0;
+      point mid = (1/2.0) * (l + r);
+      if (contains(oriented_polygon(point(0, 0, 1), pts), mid)) {
+	return i;
+      }
+    }
+    cout << "Error: no ears left in " << endl;
+    assert(false);
+  }
+
+  triangle clip_ear(const unsigned ear_ind,
+		    std::vector<point>& pts) {
+    unsigned l = ear_ind == 0 ? pts.size() : ear_ind - 1;
+    unsigned r = (ear_ind + 1) % pts.size();
+    triangle t = triangle(point(0, 0, 1), pts[l], pts[ear_ind], pts[r]);
+    pts.erase(begin(pts) + ear_ind);
+    return t;
+  }
+
+  // TODO: Add more complex ear finding?
+  std::vector<triangle> triangulate_polygon(const oriented_polygon& p) {
+    assert(p.vertices().size() > 2);
+    vector<point> pts = p.vertices();
+    vector<triangle> tris;
+    while (pts.size() > 3) {
+      unsigned next_ear = find_ear_index(pts);
+      tris.push_back(clip_ear(next_ear, pts));
+    }
+
+    assert(pts.size() == 3);
+    tris.push_back(triangle(point(0, 0, 1),
+			    pts[0],
+			    pts[1],
+			    pts[2]));
+
+    return tris;
+  }
 }

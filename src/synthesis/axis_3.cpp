@@ -44,14 +44,17 @@ namespace gca {
 	  count++;
 	}
       }
+      assert(count > 0);
       if (count == 1) {
 	no_ds.push_back(l);
       }
     }
+
     vector<line> no_dups;
     for (auto l : no_ds) {
       no_dups.push_back(line(mesh.vertex(l.first), mesh.vertex(l.second)));
     }
+
     return unordered_segments_to_polygons(normal, no_dups);
   }
   
@@ -186,55 +189,6 @@ namespace gca {
 		  [](const oriented_polygon& l, const oriented_polygon& r)
 		  { return min_z(l) < min_z(r); });
     return *min_poly;
-  }
-
-  unsigned find_ear_index(const std::vector<point>& pts) {
-    assert(pts.size() > 2);
-    for (unsigned i = 1, j = 0; i < pts.size(); i++, j++) {
-      unsigned ip1 = (i + 1) % pts.size();
-      point l = pts[ip1];
-      l.z = 0.0;
-      point r = pts[j];
-      r.z = 0.0;
-      point mid = (1/2.0) * (l + r);
-      if (contains(oriented_polygon(point(0, 0, 1), pts), mid)) {
-	return i;
-      }
-    }
-    cout << "Error: no ears left in " << endl;
-    assert(false);
-  }
-
-  triangle clip_ear(const unsigned ear_ind,
-		    std::vector<point>& pts) {
-    unsigned l = ear_ind == 0 ? pts.size() : ear_ind - 1;
-    unsigned r = (ear_ind + 1) % pts.size();
-    triangle t = triangle(point(0, 0, 1), pts[l], pts[ear_ind], pts[r]);
-    pts.erase(begin(pts) + ear_ind);
-    return t;
-  }
-
-  // TODO: Add more complex ear finding?
-  std::vector<triangle> triangulate_polygon(const oriented_polygon& p) {
-    assert(p.vertices().size() > 2);
-    vector<point> pts = p.vertices();
-    vector<triangle> tris;
-    while (pts.size() > 3) {
-      unsigned next_ear = find_ear_index(pts);
-      tris.push_back(clip_ear(next_ear, pts));
-    }
-    assert(pts.size() == 3);
-    tris.push_back(triangle(point(0, 0, 1),
-			    p.vertices()[0],
-			    p.vertices()[1],
-			    p.vertices()[2]));
-    return tris;
-  }
-
-  triangular_mesh triangulate(const oriented_polygon& p) {
-    cout << "Making triangular mesh" << endl;
-    auto tris = triangulate_polygon(p);
-    return make_mesh(tris, 0.001);
   }
 
   std::vector<pocket>

@@ -34,6 +34,7 @@ namespace gca {
     {
       assert(base_inds.size() > 0);
       auto bounds = mesh_bounds(base_inds, base_mesh());
+      assert(bounds.size() > 0);
       boundary = extract_boundary(bounds);
       holes = bounds;
     }
@@ -119,7 +120,7 @@ namespace gca {
   polyline compress_lines(const polyline& p, double tolerance);
 
   std::vector<polyline> rough_box(const box b,
-				  double tool_radius,
+				  const tool& t,
 				  double cut_depth);
 
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,
