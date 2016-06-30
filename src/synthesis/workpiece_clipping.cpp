@@ -288,7 +288,7 @@ namespace gca {
     double eps = 0.05;
 
     tool t = *(max_element(begin(tools), end(tools),
-			   [](const tool& l, const tool& r)
+    			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
 
     if (can_clip_parallel(aligned_workpiece, clipped, f)) {

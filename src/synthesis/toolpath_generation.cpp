@@ -264,25 +264,6 @@ namespace gca {
     tris.push_back(triangle(point(0, 0, 1), p3, p4, p1));
     triangular_mesh m = make_mesh(tris, 0.001);
     return rough_pocket(pocket(b.z_max, m.face_indexes(), &m), t, cut_depth);
-    // vector<point> pts = sample_points_2d(b,
-    // 					 tool_radius,
-    // 					 tool_radius,
-    // 					 0.0);
-
-    // vector<vector<point>> pt_lines;
-    // split_by(pts, pt_lines,
-    // 	     [](const point l, const point r)
-    // 	     { return within_eps(l.x, r.x); });
-    // vector<polyline> lines;
-    // for (auto pt_group : pt_lines) {
-    //   lines.push_back(pt_group);
-    // }
-
-    // auto final_lines = tile_vertical(lines,
-    // 				     b.z_max,
-    // 				     b.z_min,
-    // 				     cut_depth);
-    // return final_lines;
   }
 
   // TODO: Actually compensate for tool radius and shape

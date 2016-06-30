@@ -19,7 +19,8 @@ namespace gca {
     fixtures fixes(test_vice, plates);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    vector<tool> tools{t1};
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    vector<tool> tools{t1, t2};
     workpiece workpiece_dims(1.5, 1.2, 1.5, ACETAL);
 
     SECTION("Simple box") {

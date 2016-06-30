@@ -19,4 +19,18 @@ namespace gca {
     REQUIRE(compress_lines(p, 0.001).num_points() == 2);
   }
 
+  TEST_CASE("Box clipping") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    
+    box b(0, 1.2,
+	  0, 1.4,
+	  0, 0.5);
+
+    vector<polyline> lines = rough_box(b, t1, 0.2);
+    REQUIRE(lines.size() > 0);
+  }
+
 }
