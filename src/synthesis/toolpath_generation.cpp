@@ -263,7 +263,7 @@ namespace gca {
     tris.push_back(triangle(point(0, 0, 1), p1, p2, p3));
     tris.push_back(triangle(point(0, 0, 1), p3, p4, p1));
     triangular_mesh m = make_mesh(tris, 0.001);
-    return rough_pocket(pocket(b.z_max, m.face_indexes(), &m), t, cut_depth);
+    return pocket_2P5D_interior(pocket(b.z_max, m.face_indexes(), &m), t, cut_depth);
   }
 
   // TODO: Actually compensate for tool radius and shape
