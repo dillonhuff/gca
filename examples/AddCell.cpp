@@ -211,21 +211,14 @@ int main(int argc, char* argv[]) {
   auto stl_triangles = gca::parse_stl(file).triangles;
   auto mesh = make_mesh(stl_triangles, 0.0001);
   assert(mesh.is_connected());
-  
-  //  vice v = emco_vice(point(2, 2, 0));
-  //  vector<triangular_mesh> arrangements = part_arrangements(mesh, v);
-  // assert(arrangements.size() > 0);
-  
-  // auto vice_poly = polydata_actor(polydata_from_vice(v));
 
-  auto to_render = mesh; //arrangements[3];
-  // auto tl_list = to_render.triangle_list();
-  //polydata_from_triangle_list(tl_list);
+  auto to_render = mesh;
+
   auto poly_data = polydata_for_trimesh(to_render);
   color_polydata_by_millability(poly_data, to_render);
   auto poly_actor = polydata_actor(poly_data);
 
-  vector<vtkSmartPointer<vtkActor>> actors{poly_actor}; //, vice_poly};
+  vector<vtkSmartPointer<vtkActor>> actors{poly_actor};
   visualize_actors(actors);
  
   return EXIT_SUCCESS;

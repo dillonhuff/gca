@@ -164,10 +164,14 @@ include(${VTK_USE_FILE})
  
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
 target_link_libraries(AddCell geometry)
- 
+
+add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp ${SRCS})
+target_link_libraries(surface-test geometry)
+
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})
+  target_link_libraries(surface-test ${VTK_LIBRARIES})
 else()
   target_link_libraries(AddCell vtkHybrid vtkWidgets)
+  target_link_libraries(surface-test vtkHybrid vtkWidgets)
 endif()
-
