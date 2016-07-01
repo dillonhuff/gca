@@ -10,9 +10,7 @@ ENDIF()
 
 project(gca)
 
-#Add -Wextra ?
 SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -Werror -Wall")
-# REINTRODUCE WHEN NOT USING VTK ? -pedantic -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -47,18 +45,20 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp)
 
-SET(HEADERS ./src/analysis/extract_cuts.cpp
-	    ./src/checkers/bounds_checker.h
-	    ./src/gcode/value.h
-	    ./src/gcode/gcode_program.h
-	    ./src/geometry/line.h
-	    ./src/geometry/surface.h
-	    ./src/geometry/point.h
+SET(GEOMETRY_HEADERS ./src/geometry/line.h
+		     ./src/geometry/surface.h
+		     ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/spline_sampling.h
 	    ./src/geometry/matrix.h
 	    ./src/geometry/triangle.h
-	    ./src/geometry/triangular_mesh.h
+	    ./src/geometry/triangular_mesh.h)
+
+SET(HEADERS ${GEOMETRY_HEADERS}
+	    ./src/analysis/extract_cuts.cpp
+	    ./src/checkers/bounds_checker.h
+	    ./src/gcode/value.h
+	    ./src/gcode/gcode_program.h
 	    ./src/simulators/mill_tool.h
 	    ./src/simulators/region.h
 	    ./src/simulators/sim_mill.h
@@ -83,7 +83,21 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/retarget.h)
 
-SET(CPPS ./src/analysis/gcode_to_cuts.cpp
+SET(GEOMETRY_CPPS ./src/geometry/point.cpp
+	 ./src/geometry/arc.cpp
+	 ./src/geometry/box.cpp
+	 ./src/geometry/line.cpp
+	 ./src/geometry/matrix.cpp
+	 ./src/geometry/polygon.cpp
+	 ./src/geometry/polyline.cpp
+	 ./src/geometry/spline_sampling.cpp
+	 ./src/geometry/triangle.cpp
+	 ./src/geometry/triangular_mesh.cpp
+	 ./src/geometry/trimesh.cpp)
+
+
+SET(CPPS ${GEOMETRY_CPPS}
+	 ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
 	 ./src/analysis/utils.cpp
 	 ./src/analysis/unfold.cpp
@@ -96,17 +110,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
 	 ./src/checkers/block_rate_checker.cpp
-	 ./src/geometry/point.cpp
-	 ./src/geometry/arc.cpp
-	 ./src/geometry/box.cpp
-	 ./src/geometry/line.cpp
-	 ./src/geometry/matrix.cpp
-	 ./src/geometry/polygon.cpp
-	 ./src/geometry/polyline.cpp
-	 ./src/geometry/spline_sampling.cpp
-	 ./src/geometry/triangle.cpp
-	 ./src/geometry/triangular_mesh.cpp
-	 ./src/geometry/trimesh.cpp
 	 ./src/simulators/mill_tool.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/synthesis/mesh_to_gcode.cpp
@@ -142,12 +145,7 @@ SET(SRCS ${CPPS} ${HEADERS})
 add_executable(all-tests ${SRCS} ${TEST_FILES})
 add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
 add_executable(json-plan examples/json_plan.cpp ${SRCS})
-# add_executable(hello-world examples/hello_world.cpp ${SRCS})
-# add_executable(print-dxf examples/print_dxf.cpp ${SRCS})
-# add_executable(misc examples/misc.cpp ${SRCS})
-# add_executable(analyze-gcodes examples/analyze_gcodes.cpp ${SRCS})
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
-#add_executable(face-graph examples/face_graph.cpp ${SRCS})
 
 ######### VTK Example ##########
 
