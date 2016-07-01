@@ -2,6 +2,7 @@
 *.tap
 *~
 *.o
+*.a
 all-tests
 simple-prog
 *.dSYM

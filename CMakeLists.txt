@@ -45,17 +45,7 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp)
 
-SET(GEOMETRY_HEADERS ./src/geometry/line.h
-		     ./src/geometry/surface.h
-		     ./src/geometry/point.h
-	    ./src/geometry/b_spline.h
-	    ./src/geometry/spline_sampling.h
-	    ./src/geometry/matrix.h
-	    ./src/geometry/triangle.h
-	    ./src/geometry/triangular_mesh.h)
-
-SET(HEADERS ${GEOMETRY_HEADERS}
-	    ./src/analysis/extract_cuts.cpp
+SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
 	    ./src/gcode/value.h
 	    ./src/gcode/gcode_program.h
@@ -83,6 +73,16 @@ SET(HEADERS ${GEOMETRY_HEADERS}
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/retarget.h)
 
+
+SET(GEOMETRY_HEADERS ./src/geometry/line.h
+		     ./src/geometry/surface.h
+		     ./src/geometry/point.h
+	    ./src/geometry/b_spline.h
+	    ./src/geometry/spline_sampling.h
+	    ./src/geometry/matrix.h
+	    ./src/geometry/triangle.h
+	    ./src/geometry/triangular_mesh.h)
+
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
@@ -95,9 +95,9 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/triangular_mesh.cpp
 	 ./src/geometry/trimesh.cpp)
 
+add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
 
-SET(CPPS ${GEOMETRY_CPPS}
-	 ./src/analysis/gcode_to_cuts.cpp
+SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
 	 ./src/analysis/utils.cpp
 	 ./src/analysis/unfold.cpp
@@ -143,23 +143,27 @@ SET(CPPS ${GEOMETRY_CPPS}
 SET(SRCS ${CPPS} ${HEADERS})
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
+target_link_libraries(all-tests geometry)
+
 add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
+target_link_libraries(json-mesh geometry)
+
 add_executable(json-plan examples/json_plan.cpp ${SRCS})
+target_link_libraries(json-plan geometry)
+
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
+target_link_libraries(stl-parse geometry)
 
 ######### VTK Example ##########
 
 # Make command:
 # /opt/local/bin/cmake -DVTK_DIR:PATH=/Users/dillon/Downloads/VTK-build/ .
 
-cmake_minimum_required(VERSION 2.8)
- 
-PROJECT(AddCell)
-
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
  
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
+target_link_libraries(AddCell geometry)
  
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})
@@ -167,16 +171,3 @@ else()
   target_link_libraries(AddCell vtkHybrid vtkWidgets)
 endif()
 
-# find_package(VTK REQUIRED)
-# include(${VTK_USE_FILE})
- 
-# #add_executable(TriangulateTerrainMap MACOSX_BUNDLE examples/TriangulateTerrainMap.cxx ${SRCS})
-# #add_executable(DataAnimationSubclass MACOSX_BUNDLE examples/DataAnimationSubclass ${SRCS})
-
-# add_executable(tool-simulator MACOSX_BUNDLE examples/tool_simulator ${SRCS})
- 
-# if(VTK_LIBRARIES)
-#   target_link_libraries(tool-simulator ${VTK_LIBRARIES})
-# else()
-#   target_link_libraries(tool-simulator vtkHybrid vtkWidgets)
-# endif()
