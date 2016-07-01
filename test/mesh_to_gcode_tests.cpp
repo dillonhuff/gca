@@ -87,13 +87,26 @@ namespace gca {
       vector<tool> tools{t1};
       workpiece workpiece_dims(4.0, 3.0, 4.0, ACETAL);
 
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+      SECTION("Complex rectangle part") {
+	auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
 
-      auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      REQUIRE(programs.size() == 6);
+	auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+	REQUIRE(programs.size() == 6);
 
-      for (auto p : programs) {
-	REQUIRE(p.blocks.size() > 0);
+	for (auto p : programs) {
+	  REQUIRE(p.blocks.size() > 0);
+	}
+      }
+
+      SECTION("Clipped Pill") {
+	auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
+
+	auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+	REQUIRE(programs.size() == 2);
+
+	for (auto p : programs) {
+	  REQUIRE(p.blocks.size() > 0);
+	}
       }
     }
 
