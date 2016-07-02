@@ -6,7 +6,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/tool.h"
 
 namespace gca {

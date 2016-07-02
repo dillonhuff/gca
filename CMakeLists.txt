@@ -79,7 +79,6 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
-	    ./src/synthesis/cut.h
 	    ./src/gcode/value.h
 	    ./src/gcode/gcode_program.h
 	    ./src/simulators/mill_tool.h

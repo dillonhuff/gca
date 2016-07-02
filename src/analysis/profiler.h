@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 using namespace std;
 

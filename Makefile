@@ -895,6 +895,48 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
+src/gcode/cut.o: src/gcode/cut.cpp.o
+
+.PHONY : src/gcode/cut.o
+
+# target to build an object file
+src/gcode/cut.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/cut.cpp.o
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/cut.cpp.o
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/cut.cpp.o
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/cut.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/cut.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/cut.cpp.o
+.PHONY : src/gcode/cut.cpp.o
+
+src/gcode/cut.i: src/gcode/cut.cpp.i
+
+.PHONY : src/gcode/cut.i
+
+# target to preprocess a source file
+src/gcode/cut.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/cut.cpp.i
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/cut.cpp.i
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/cut.cpp.i
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/cut.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/cut.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/cut.cpp.i
+.PHONY : src/gcode/cut.cpp.i
+
+src/gcode/cut.s: src/gcode/cut.cpp.s
+
+.PHONY : src/gcode/cut.s
+
+# target to generate assembly for a file
+src/gcode/cut.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/cut.cpp.s
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/cut.cpp.s
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/cut.cpp.s
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/cut.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/cut.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/cut.cpp.s
+.PHONY : src/gcode/cut.cpp.s
+
 src/gcode/lexer.o: src/gcode/lexer.cpp.o
 
 .PHONY : src/gcode/lexer.o
@@ -1512,48 +1554,6 @@ src/synthesis/axis_3.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/axis_3.cpp.s
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/axis_3.cpp.s
 .PHONY : src/synthesis/axis_3.cpp.s
-
-src/synthesis/cut.o: src/synthesis/cut.cpp.o
-
-.PHONY : src/synthesis/cut.o
-
-# target to build an object file
-src/synthesis/cut.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.o
-.PHONY : src/synthesis/cut.cpp.o
-
-src/synthesis/cut.i: src/synthesis/cut.cpp.i
-
-.PHONY : src/synthesis/cut.i
-
-# target to preprocess a source file
-src/synthesis/cut.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.i
-.PHONY : src/synthesis/cut.cpp.i
-
-src/synthesis/cut.s: src/synthesis/cut.cpp.s
-
-.PHONY : src/synthesis/cut.s
-
-# target to generate assembly for a file
-src/synthesis/cut.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.s
-.PHONY : src/synthesis/cut.cpp.s
 
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
 
@@ -3344,6 +3344,9 @@ help:
 	@echo "... src/dxflib/dl_writer_ascii.o"
 	@echo "... src/dxflib/dl_writer_ascii.i"
 	@echo "... src/dxflib/dl_writer_ascii.s"
+	@echo "... src/gcode/cut.o"
+	@echo "... src/gcode/cut.i"
+	@echo "... src/gcode/cut.s"
 	@echo "... src/gcode/lexer.o"
 	@echo "... src/gcode/lexer.i"
 	@echo "... src/gcode/lexer.s"
@@ -3401,9 +3404,6 @@ help:
 	@echo "... src/synthesis/axis_3.o"
 	@echo "... src/synthesis/axis_3.i"
 	@echo "... src/synthesis/axis_3.s"
-	@echo "... src/synthesis/cut.o"
-	@echo "... src/synthesis/cut.i"
-	@echo "... src/synthesis/cut.s"
 	@echo "... src/synthesis/cut_to_gcode.o"
 	@echo "... src/synthesis/cut_to_gcode.i"
 	@echo "... src/synthesis/cut_to_gcode.s"

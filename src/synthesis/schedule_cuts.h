@@ -1,7 +1,7 @@
 #ifndef GCA_SCHEDULE_CUTS_H
 #define GCA_SCHEDULE_CUTS_H
 
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

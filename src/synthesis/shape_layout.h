@@ -2,7 +2,7 @@
 #define GCA_SHAPE_READER_H
 
 #include "geometry/b_spline.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/hole_punch.h"
 #include "synthesis/machine.h"
 

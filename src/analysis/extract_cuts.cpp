@@ -1,7 +1,7 @@
 #include <sstream>
 
 #include "analysis/extract_cuts.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "utils/algorithm.h"
 
 namespace gca {

@@ -1,6 +1,6 @@
 // #include "analysis/gcode_to_cuts.h"
 // #include "gcode/lexer.h"
-// #include "synthesis/cut.h"
+// #include "gcode/cut.h"
 // #include "synthesis/shapes_to_gcode.h"
 // #include "system/file.h"
 // #include "transformers/retarget.h"

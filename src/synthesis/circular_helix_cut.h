@@ -3,7 +3,7 @@
 
 #include "utils/arena_allocator.h"
 #include "geometry/direction.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

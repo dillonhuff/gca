@@ -2,7 +2,7 @@
 #define GCA_HOLE_PUNCH_H
 
 #include "utils/arena_allocator.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

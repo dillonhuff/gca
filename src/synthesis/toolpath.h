@@ -5,7 +5,7 @@
 
 #include "analysis/machine_state.h"
 #include "geometry/parametric_curve.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 using namespace std;
 

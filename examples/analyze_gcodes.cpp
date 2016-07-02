@@ -15,7 +15,7 @@
 #include "geometry/box.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/output.h"
 #include "utils/algorithm.h"

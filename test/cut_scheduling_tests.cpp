@@ -3,7 +3,7 @@
 
 #include "catch.hpp"
 #include "synthesis/circular_arc.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/hole_punch.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/schedule_cuts.h"

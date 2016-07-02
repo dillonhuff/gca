@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
