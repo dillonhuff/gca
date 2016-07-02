@@ -84,6 +84,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 	    ./src/geometry/triangular_mesh.h)
 
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
+		  ./src/geometry/surface.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/line.cpp

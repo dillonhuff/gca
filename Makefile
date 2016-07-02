@@ -1224,6 +1224,33 @@ src/geometry/spline_sampling.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/spline_sampling.cpp.s
 .PHONY : src/geometry/spline_sampling.cpp.s
 
+src/geometry/surface.o: src/geometry/surface.cpp.o
+
+.PHONY : src/geometry/surface.o
+
+# target to build an object file
+src/geometry/surface.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/surface.cpp.o
+.PHONY : src/geometry/surface.cpp.o
+
+src/geometry/surface.i: src/geometry/surface.cpp.i
+
+.PHONY : src/geometry/surface.i
+
+# target to preprocess a source file
+src/geometry/surface.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/surface.cpp.i
+.PHONY : src/geometry/surface.cpp.i
+
+src/geometry/surface.s: src/geometry/surface.cpp.s
+
+.PHONY : src/geometry/surface.s
+
+# target to generate assembly for a file
+src/geometry/surface.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/surface.cpp.s
+.PHONY : src/geometry/surface.cpp.s
+
 src/geometry/triangle.o: src/geometry/triangle.cpp.o
 
 .PHONY : src/geometry/triangle.o
@@ -3351,6 +3378,9 @@ help:
 	@echo "... src/geometry/spline_sampling.o"
 	@echo "... src/geometry/spline_sampling.i"
 	@echo "... src/geometry/spline_sampling.s"
+	@echo "... src/geometry/surface.o"
+	@echo "... src/geometry/surface.i"
+	@echo "... src/geometry/surface.s"
 	@echo "... src/geometry/triangle.o"
 	@echo "... src/geometry/triangle.i"
 	@echo "... src/geometry/triangle.s"

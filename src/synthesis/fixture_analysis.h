@@ -11,10 +11,6 @@ namespace gca {
   typedef std::map<unsigned, std::vector<unsigned>> orientation_map;
   typedef std::map<unsigned, std::vector<unsigned>> surface_map;
 
-  bool surfaces_share_edge(const unsigned i,
-			   const unsigned j,
-			   const std::vector<surface>& surfaces);
-
   class stock_orientation {
   protected:
     const surface* left;
