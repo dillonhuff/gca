@@ -46,6 +46,22 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
 target_link_libraries(geometry utils)
 
+SET(GCODE_HEADERS ./src/gcode/value.h
+	    	  ./src/gcode/gcode_program.h
+	    	  ./src/gcode/circular_arc.h
+	    	  ./src/gcode/linear_cut.h
+	    	  ./src/gcode/safe_move.h
+	    	  ./src/gcode/hole_punch.h)
+
+SET(GCODE_CPPS 	 ./src/gcode/cut.cpp
+	 ./src/gcode/value.cpp
+	 ./src/gcode/lexer.cpp
+	 ./src/gcode/parse_stream.cpp
+	 ./src/gcode/linear_cut.cpp)
+
+add_library(gcode ${GCODE_HEADERS} ${GCODE_CPPS})
+target_link_libraries(gcode geometry utils)
+
 SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp
@@ -79,12 +95,6 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
-	    ./src/gcode/value.h
-	    ./src/gcode/gcode_program.h
-	    ./src/gcode/circular_arc.h
-	    ./src/gcode/linear_cut.h
-	    ./src/gcode/safe_move.h
-	    ./src/gcode/hole_punch.h
 	    ./src/simulators/mill_tool.h
 	    ./src/simulators/region.h
 	    ./src/simulators/sim_mill.h
@@ -111,11 +121,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
 	 ./src/analysis/profiler.cpp
-	 ./src/gcode/cut.cpp
-	 ./src/gcode/value.cpp
-	 ./src/gcode/lexer.cpp
-	 ./src/gcode/parse_stream.cpp
-	 ./src/gcode/linear_cut.cpp
 	 ./src/checkers/bounds_checker.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
@@ -150,16 +155,16 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 SET(SRCS ${CPPS} ${HEADERS})
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
-target_link_libraries(all-tests geometry utils)
+target_link_libraries(all-tests geometry utils gcode)
 
 add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
-target_link_libraries(json-mesh geometry utils)
+target_link_libraries(json-mesh geometry utils gcode)
 
 add_executable(json-plan examples/json_plan.cpp ${SRCS})
-target_link_libraries(json-plan geometry utils)
+target_link_libraries(json-plan geometry utils gcode)
 
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
-target_link_libraries(stl-parse geometry utils)
+target_link_libraries(stl-parse geometry utils gcode)
 
 ######### VTK Example ##########
 
@@ -170,10 +175,10 @@ find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
  
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
-target_link_libraries(AddCell geometry utils)
+target_link_libraries(AddCell geometry utils gcode)
 
 add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp ${SRCS})
-target_link_libraries(surface-test geometry utils)
+target_link_libraries(surface-test geometry utils gcode)
 
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})

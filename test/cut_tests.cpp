@@ -6,7 +6,7 @@
 #include "synthesis/align_blade.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/output.h"
-#include "synthesis/safe_move.h"
+#include "gcode/safe_move.h"
 #include "system/settings.h"
 
 namespace gca {
