@@ -5,10 +5,10 @@
 #include "analysis/position_table.h"
 #include "analysis/utils.h"
 #include "gcode/lexer.h"
-#include "synthesis/circular_arc.h"
-#include "synthesis/circular_helix_cut.h"
-#include "synthesis/linear_cut.h"
-#include "synthesis/safe_move.h"
+#include "gcode/circular_arc.h"
+#include "gcode/circular_helix_cut.h"
+#include "gcode/linear_cut.h"
+#include "gcode/safe_move.h"
 #include "utils/algorithm.h"
 
 namespace gca {

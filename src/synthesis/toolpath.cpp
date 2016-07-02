@@ -3,7 +3,7 @@
 #include "geometry/arc.h"
 #include "geometry/line.h"
 #include "geometry/point.h"
-#include "synthesis/circular_arc.h"
+#include "gcode/circular_arc.h"
 #include "synthesis/toolpath.h"
 #include "utils/algorithm.h"
 

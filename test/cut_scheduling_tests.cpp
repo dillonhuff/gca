@@ -2,10 +2,10 @@
 #include <vector>
 
 #include "catch.hpp"
-#include "synthesis/circular_arc.h"
+#include "gcode/circular_arc.h"
 #include "gcode/cut.h"
-#include "synthesis/hole_punch.h"
-#include "synthesis/linear_cut.h"
+#include "gcode/hole_punch.h"
+#include "gcode/linear_cut.h"
 #include "synthesis/schedule_cuts.h"
 
 using namespace std;

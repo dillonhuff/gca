@@ -1,4 +1,4 @@
-#include "synthesis/linear_cut.h"
+#include "gcode/linear_cut.h"
 
 namespace gca {
 

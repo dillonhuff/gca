@@ -3,7 +3,7 @@
 
 #include "geometry/b_spline.h"
 #include "gcode/cut.h"
-#include "synthesis/hole_punch.h"
+#include "gcode/hole_punch.h"
 #include "synthesis/machine.h"
 
 namespace gca {

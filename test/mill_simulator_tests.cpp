@@ -7,8 +7,8 @@
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
-#include "synthesis/circular_arc.h"
-#include "synthesis/linear_cut.h"
+#include "gcode/circular_arc.h"
+#include "gcode/linear_cut.h"
 #include "synthesis/safe_move.h"
 #include "system/file.h"
 

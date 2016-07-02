@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "gcode/cut.h"
-#include "synthesis/linear_cut.h"
+#include "gcode/linear_cut.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"

@@ -81,13 +81,15 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
 	    ./src/gcode/value.h
 	    ./src/gcode/gcode_program.h
+	    ./src/gcode/circular_arc.h
+	    ./src/gcode/linear_cut.h
+	    ./src/gcode/safe_move.h
+	    ./src/gcode/hole_punch.h
 	    ./src/simulators/mill_tool.h
 	    ./src/simulators/region.h
 	    ./src/simulators/sim_mill.h
 	    ./src/simulators/sim_res.h
 	    ./src/synthesis/mesh_to_gcode.h
-	    ./src/synthesis/linear_cut.h
-	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
@@ -113,6 +115,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/gcode/value.cpp
 	 ./src/gcode/lexer.cpp
 	 ./src/gcode/parse_stream.cpp
+	 ./src/gcode/linear_cut.cpp
 	 ./src/checkers/bounds_checker.cpp
 	 ./src/checkers/forbidden_tool_checker.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
@@ -130,7 +133,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/machine.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
-	 ./src/synthesis/linear_cut.cpp
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/axis_3.cpp
 	 ./src/synthesis/fixture_analysis.cpp

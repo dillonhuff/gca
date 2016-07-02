@@ -1,8 +1,8 @@
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "utils/arena_allocator.h"
-#include "synthesis/circular_arc.h"
-#include "synthesis/linear_cut.h"
+#include "gcode/circular_arc.h"
+#include "gcode/linear_cut.h"
 #include "synthesis/safe_move.h"
 
 namespace gca {

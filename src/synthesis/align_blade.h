@@ -2,7 +2,7 @@
 #define GCA_ALIGN_BLADE_H
 
 #include "geometry/point.h"
-#include "synthesis/circular_arc.h"
+#include "gcode/circular_arc.h"
 
 namespace gca {
 

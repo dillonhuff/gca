@@ -979,6 +979,48 @@ src/gcode/lexer.cpp.s:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.s
 .PHONY : src/gcode/lexer.cpp.s
 
+src/gcode/linear_cut.o: src/gcode/linear_cut.cpp.o
+
+.PHONY : src/gcode/linear_cut.o
+
+# target to build an object file
+src/gcode/linear_cut.cpp.o:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/linear_cut.cpp.o
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/linear_cut.cpp.o
+.PHONY : src/gcode/linear_cut.cpp.o
+
+src/gcode/linear_cut.i: src/gcode/linear_cut.cpp.i
+
+.PHONY : src/gcode/linear_cut.i
+
+# target to preprocess a source file
+src/gcode/linear_cut.cpp.i:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/linear_cut.cpp.i
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/linear_cut.cpp.i
+.PHONY : src/gcode/linear_cut.cpp.i
+
+src/gcode/linear_cut.s: src/gcode/linear_cut.cpp.s
+
+.PHONY : src/gcode/linear_cut.s
+
+# target to generate assembly for a file
+src/gcode/linear_cut.cpp.s:
+	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/linear_cut.cpp.s
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/linear_cut.cpp.s
+.PHONY : src/gcode/linear_cut.cpp.s
+
 src/gcode/parse_stream.o: src/gcode/parse_stream.cpp.o
 
 .PHONY : src/gcode/parse_stream.o
@@ -1680,48 +1722,6 @@ src/synthesis/fixture_analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/fixture_analysis.cpp.s
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/fixture_analysis.cpp.s
 .PHONY : src/synthesis/fixture_analysis.cpp.s
-
-src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
-
-.PHONY : src/synthesis/linear_cut.o
-
-# target to build an object file
-src/synthesis/linear_cut.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.o
-.PHONY : src/synthesis/linear_cut.cpp.o
-
-src/synthesis/linear_cut.i: src/synthesis/linear_cut.cpp.i
-
-.PHONY : src/synthesis/linear_cut.i
-
-# target to preprocess a source file
-src/synthesis/linear_cut.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.i
-.PHONY : src/synthesis/linear_cut.cpp.i
-
-src/synthesis/linear_cut.s: src/synthesis/linear_cut.cpp.s
-
-.PHONY : src/synthesis/linear_cut.s
-
-# target to generate assembly for a file
-src/synthesis/linear_cut.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.s
-.PHONY : src/synthesis/linear_cut.cpp.s
 
 src/synthesis/machine.o: src/synthesis/machine.cpp.o
 
@@ -3350,6 +3350,9 @@ help:
 	@echo "... src/gcode/lexer.o"
 	@echo "... src/gcode/lexer.i"
 	@echo "... src/gcode/lexer.s"
+	@echo "... src/gcode/linear_cut.o"
+	@echo "... src/gcode/linear_cut.i"
+	@echo "... src/gcode/linear_cut.s"
 	@echo "... src/gcode/parse_stream.o"
 	@echo "... src/gcode/parse_stream.i"
 	@echo "... src/gcode/parse_stream.s"
@@ -3413,9 +3416,6 @@ help:
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
-	@echo "... src/synthesis/linear_cut.o"
-	@echo "... src/synthesis/linear_cut.i"
-	@echo "... src/synthesis/linear_cut.s"
 	@echo "... src/synthesis/machine.o"
 	@echo "... src/synthesis/machine.i"
 	@echo "... src/synthesis/machine.s"
