@@ -459,7 +459,6 @@ namespace gca {
     				 surfaces_to_cut);
   }
 
-  // TODO: I dont think the surface vector is actually needed
   fixture_list
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
