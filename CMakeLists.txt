@@ -14,6 +14,37 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
+SET(UTILS_CPPS ./src/utils/arena_allocator.cpp)
+SET(UTILS_HEADERS ./src/utils/algorithm.h
+		  ./src/utils/arena_allocator.h)
+
+add_library(utils ${UTILS_CPPS} ${UTILS_HEADERS})
+
+SET(GEOMETRY_HEADERS ./src/geometry/line.h
+		     ./src/geometry/surface.h
+		     ./src/geometry/point.h
+	    ./src/geometry/b_spline.h
+	    ./src/geometry/spline_sampling.h
+	    ./src/geometry/matrix.h
+	    ./src/geometry/triangle.h
+	    ./src/geometry/triangular_mesh.h)
+
+SET(GEOMETRY_CPPS ./src/geometry/point.cpp
+		  ./src/geometry/surface.cpp
+	 ./src/geometry/arc.cpp
+	 ./src/geometry/box.cpp
+	 ./src/geometry/line.cpp
+	 ./src/geometry/matrix.cpp
+	 ./src/geometry/polygon.cpp
+	 ./src/geometry/polyline.cpp
+	 ./src/geometry/spline_sampling.cpp
+	 ./src/geometry/triangle.cpp
+	 ./src/geometry/triangular_mesh.cpp
+	 ./src/geometry/trimesh.cpp)
+
+add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
+target_link_libraries(geometry utils)
+
 SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp
@@ -67,36 +98,10 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/synthesis/workpiece.h
 	    ./src/synthesis/fixture_analysis.h
 	    ./src/synthesis/workpiece_clipping.h
-	    ./src/system/arena_allocator.h
 	    ./src/system/json.h
 	    ./src/system/parse_stl.h
 	    ./src/transformers/feed_changer.h
 	    ./src/transformers/retarget.h)
-
-
-SET(GEOMETRY_HEADERS ./src/geometry/line.h
-		     ./src/geometry/surface.h
-		     ./src/geometry/point.h
-	    ./src/geometry/b_spline.h
-	    ./src/geometry/spline_sampling.h
-	    ./src/geometry/matrix.h
-	    ./src/geometry/triangle.h
-	    ./src/geometry/triangular_mesh.h)
-
-SET(GEOMETRY_CPPS ./src/geometry/point.cpp
-		  ./src/geometry/surface.cpp
-	 ./src/geometry/arc.cpp
-	 ./src/geometry/box.cpp
-	 ./src/geometry/line.cpp
-	 ./src/geometry/matrix.cpp
-	 ./src/geometry/polygon.cpp
-	 ./src/geometry/polyline.cpp
-	 ./src/geometry/spline_sampling.cpp
-	 ./src/geometry/triangle.cpp
-	 ./src/geometry/triangular_mesh.cpp
-	 ./src/geometry/trimesh.cpp)
-
-add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
 
 SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
@@ -131,7 +136,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/vice.cpp
-	 ./src/system/arena_allocator.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/json.cpp
@@ -144,16 +148,16 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 SET(SRCS ${CPPS} ${HEADERS})
 
 add_executable(all-tests ${SRCS} ${TEST_FILES})
-target_link_libraries(all-tests geometry)
+target_link_libraries(all-tests geometry utils)
 
 add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
-target_link_libraries(json-mesh geometry)
+target_link_libraries(json-mesh geometry utils)
 
 add_executable(json-plan examples/json_plan.cpp ${SRCS})
-target_link_libraries(json-plan geometry)
+target_link_libraries(json-plan geometry utils)
 
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
-target_link_libraries(stl-parse geometry)
+target_link_libraries(stl-parse geometry utils)
 
 ######### VTK Example ##########
 
@@ -164,10 +168,10 @@ find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
  
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
-target_link_libraries(AddCell geometry)
+target_link_libraries(AddCell geometry utils)
 
 add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp ${SRCS})
-target_link_libraries(surface-test geometry)
+target_link_libraries(surface-test geometry utils)
 
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})

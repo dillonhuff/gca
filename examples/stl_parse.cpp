@@ -7,7 +7,7 @@
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 #include "system/parse_stl.h"
 
 using namespace gca;

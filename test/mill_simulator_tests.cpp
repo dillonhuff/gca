@@ -2,7 +2,7 @@
 
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "geometry/line.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"

@@ -7,7 +7,7 @@
 #include "synthesis/shapes_to_toolpaths.h"
 #include "geometry/spline_sampling.h"
 #include "synthesis/toolpath_generation.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

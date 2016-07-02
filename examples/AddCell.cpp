@@ -16,7 +16,7 @@
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/millability.h"
 #include "synthesis/vice.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 #include "system/parse_stl.h"
 
 using namespace gca;

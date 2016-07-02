@@ -1,6 +1,6 @@
 #include "analysis/position_table.h"
 #include "analysis/utils.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

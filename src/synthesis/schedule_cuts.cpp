@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "synthesis/schedule_cuts.h"
 
 namespace gca {

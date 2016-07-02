@@ -6,7 +6,7 @@
 #include "geometry/box.h"
 #include "geometry/triangle.h"
 #include "geometry/trimesh.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 
@@ -259,6 +259,9 @@ namespace gca {
   
   triangular_mesh triangulate(const oriented_polygon& p);
 
+  bool any_vertex_in(const triangle_t tri,
+		     const std::vector<index_t>& inds);
+  
 }
 
 #endif

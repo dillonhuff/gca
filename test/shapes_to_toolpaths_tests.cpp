@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"

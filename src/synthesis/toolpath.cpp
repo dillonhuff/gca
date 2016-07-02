@@ -5,7 +5,7 @@
 #include "geometry/point.h"
 #include "synthesis/circular_arc.h"
 #include "synthesis/toolpath.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

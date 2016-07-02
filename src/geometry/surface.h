@@ -68,7 +68,13 @@ namespace gca {
 
   void remove_SA_surfaces(const std::vector<surface>& surfaces,
   			  std::vector<index_t>& indices);
-  
+
+  std::vector<index_t> surface_vertexes(const surface& s);
+
+  bool orthogonal_flat_surfaces(const surface* l, const surface* r);
+  bool parallel_flat_surfaces(const surface* l, const surface* r);
+  std::vector<surface> outer_surfaces(const triangular_mesh& part);
+
   typedef std::vector<std::vector<index_t>> surface_list;
 
 }

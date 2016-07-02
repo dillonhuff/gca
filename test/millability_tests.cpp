@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "synthesis/millability.h"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
 namespace gca {

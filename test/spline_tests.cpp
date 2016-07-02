@@ -1,4 +1,4 @@
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "catch.hpp"
 #include "geometry/b_spline.h"
 

@@ -18,8 +18,8 @@
 #include "synthesis/cut.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/output.h"
-#include "system/algorithm.h"
-#include "system/arena_allocator.h"
+#include "utils/algorithm.h"
+#include "utils/arena_allocator.h"
 #include "system/file.h"
 
 using namespace gca;

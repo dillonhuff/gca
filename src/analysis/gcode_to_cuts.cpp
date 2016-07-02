@@ -9,7 +9,7 @@
 #include "synthesis/circular_helix_cut.h"
 #include "synthesis/linear_cut.h"
 #include "synthesis/safe_move.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

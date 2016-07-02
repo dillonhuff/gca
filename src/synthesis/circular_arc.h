@@ -1,7 +1,7 @@
 #ifndef GCA_CIRCULAR_ARC_H
 #define GCA_CIRCULAR_ARC_H
 
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "geometry/arc.h"
 #include "geometry/direction.h"
 #include "synthesis/cut.h"
