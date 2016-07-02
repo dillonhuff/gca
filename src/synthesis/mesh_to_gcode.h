@@ -24,17 +24,12 @@ namespace gca {
 
   class fabrication_plan {
   protected:
-    std::vector<gcode_program> stock_clipping_progs;
     std::vector<fabrication_setup> fab_steps;
-    
-  public:
-    fabrication_plan(const std::vector<gcode_program>& p_stock_clipping_programs,
-		     const std::vector<fabrication_setup>& p_fab_steps)
-      : stock_clipping_progs(p_stock_clipping_programs),
-	fab_steps(p_fab_steps){}
 
-    const std::vector<gcode_program>& stock_clipping_programs() const
-    { return stock_clipping_progs; }
+  public:
+    fabrication_plan(const std::vector<fabrication_setup>& p_fab_steps)
+      : fab_steps(p_fab_steps){}
+
     const std::vector<fabrication_setup>& steps() const { return fab_steps; }
   };
 

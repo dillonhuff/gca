@@ -94,7 +94,7 @@ namespace gca {
 					   const vector<tool>& tools,
 					   const workpiece w) {
     fabrication_plan plan = make_fabrication_plan(part_mesh, f, tools, w);
-    auto progs = plan.stock_clipping_programs();
+    vector<gcode_program> progs;
     for (auto f : plan.steps()) {
       progs.push_back(f.prog);
     }
@@ -108,6 +108,13 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     fixture_plan plan = make_fixture_plan(part_mesh, part_ss, f, tools, w);
     vector<fabrication_setup> setups;
+    // TODO: Create actual mesh and vice for clipping
+    box b(0, 1, 0, 1, 0, 1);
+    triangular_mesh m = make_mesh(box_triangles(b), 0.001);
+    for (auto p : workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f)) {
+      setups.push_back(fabrication_setup(m, f.get_vice(), p));
+    }
+
     for (auto orient_surfaces_pair : plan.fixtures()) {
       cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
       auto v = orient_surfaces_pair.first.v;
@@ -118,9 +125,7 @@ namespace gca {
       setups.push_back(fabrication_setup(m.first, v, gprog));
     }
 
-    vector<gcode_program> ps =
-      workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f);
-    return fabrication_plan(ps, setups);
+    return fabrication_plan(setups);
   }
 
 
