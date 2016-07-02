@@ -50,10 +50,10 @@ namespace gca {
   		    const vector<surface>& part_ss,
   		    const vice v) {
     fixtures fixes(v);
-    pair<vector<surface>, fixture_list> orients =
+    fixture_list orients =
       orientations_to_cut(part_mesh, part_ss, fixes);
     vector<pair<triangular_mesh, surface_list>> meshes;
-    for (auto orient_surfaces_pair : orients.second) {
+    for (auto orient_surfaces_pair : orients) {
       cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
       meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first.orient,
   					  orient_surfaces_pair.second,

@@ -460,7 +460,7 @@ namespace gca {
   }
 
   // TODO: I dont think the surface vector is actually needed
-  std::pair<std::vector<surface>, fixture_list>
+  fixture_list
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const fixtures& f) {
@@ -481,7 +481,7 @@ namespace gca {
       }
       orients.push_back(mk_pair(all_orients[ori], surfaces));
     }
-    return mk_pair(surfs_to_cut, orients);
+    return orients;
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
@@ -492,7 +492,7 @@ namespace gca {
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
     auto orients = orientations_to_cut(part_mesh, part_ss, f);
-    return fixture_plan(part_mesh, aligned_workpiece, orients.second);
+    return fixture_plan(part_mesh, aligned_workpiece, orients);
   }
 
 }
