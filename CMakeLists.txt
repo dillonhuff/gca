@@ -15,6 +15,7 @@ SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 SET(UTILS_CPPS ./src/utils/arena_allocator.cpp)
+
 SET(UTILS_HEADERS ./src/utils/algorithm.h
 		  ./src/utils/arena_allocator.h)
 
@@ -78,6 +79,7 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 
 SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/checkers/bounds_checker.h
+	    ./src/synthesis/cut.h
 	    ./src/gcode/value.h
 	    ./src/gcode/gcode_program.h
 	    ./src/simulators/mill_tool.h
@@ -85,7 +87,6 @@ SET(HEADERS ./src/analysis/extract_cuts.cpp
 	    ./src/simulators/sim_mill.h
 	    ./src/simulators/sim_res.h
 	    ./src/synthesis/mesh_to_gcode.h
-	    ./src/synthesis/cut.h
 	    ./src/synthesis/linear_cut.h
 	    ./src/synthesis/circular_arc.h
 	    ./src/synthesis/output.h
@@ -109,6 +110,7 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/unfold.cpp
 	 ./src/analysis/machine_state.cpp
 	 ./src/analysis/profiler.cpp
+	 ./src/gcode/cut.cpp
 	 ./src/gcode/value.cpp
 	 ./src/gcode/lexer.cpp
 	 ./src/gcode/parse_stream.cpp
@@ -129,7 +131,6 @@ SET(CPPS ./src/analysis/gcode_to_cuts.cpp
 	 ./src/synthesis/machine.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
-	 ./src/synthesis/cut.cpp
 	 ./src/synthesis/linear_cut.cpp
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/axis_3.cpp
