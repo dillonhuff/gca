@@ -106,7 +106,7 @@ namespace gca {
       auto pocket_paths = pocket_2P5D_interior(pocket, t, cut_depth);
       lines.insert(end(lines), begin(pocket_paths), end(pocket_paths));
     }
-    return lines;
+    return shift_lines(lines, point(0, 0, t.length()));
   }
 
   bool all_orthogonal_to(const vector<index_t>& triangles,
@@ -244,8 +244,7 @@ namespace gca {
 		double cut_depth,
 		double workpiece_height) {
     auto pockets = make_surface_pockets(sfs, mesh, workpiece_height);
-    auto lines = mill_pockets(pockets, t, cut_depth);
-    return shift_lines(lines, point(0, 0, t.length()));
+    return mill_pockets(pockets, t, cut_depth);
   }
 
   std::vector<polyline> mill_surface_lines(const triangular_mesh& mesh,
