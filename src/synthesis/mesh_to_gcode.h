@@ -37,8 +37,6 @@ namespace gca {
 
   enum axis { X_AXIS, Y_AXIS, Z_AXIS, A_AXIS, B_AXIS, C_AXIS };
 
-  std::vector<surface> outer_surfaces(const triangular_mesh& m);
-
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& m,
 					   const fixtures& v,
 					   const vector<tool>& tools,

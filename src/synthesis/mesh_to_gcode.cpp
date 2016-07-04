@@ -128,5 +128,4 @@ namespace gca {
     return fabrication_plan(setups);
   }
 
-
 }

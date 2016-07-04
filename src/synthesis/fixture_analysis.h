@@ -111,8 +111,6 @@ namespace gca {
     { return fixture_pairs; }
   };
   
-  std::vector<surface> outer_surfaces(const triangular_mesh& part);
-
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,
 			    const workpiece w);
 
