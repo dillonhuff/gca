@@ -3,6 +3,7 @@
 
 #include "geometry/surface.h"
 #include "synthesis/tool.h"
+#include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece.h"
 
@@ -88,27 +89,32 @@ namespace gca {
     { return par_plates; }
   };
 
+  struct fixture_setup {
+    fixture fix;
+    std::vector<pocket> pockets;
+  };
+
   typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
 
   class fixture_plan {
   protected:
     const triangular_mesh& part;
     workpiece stock;
-    fixture_list fixture_pairs;
+    std::vector<fixture_setup> setups;
     
   public:
     fixture_plan(const triangular_mesh& p_part,
 		 const workpiece& p_stock,
-		 const fixture_list& p_fixture_pairs) :
-      part(p_part), stock(p_stock), fixture_pairs(p_fixture_pairs) {
-      std::cout << "Fixture plan: # of pairs = " << fixture_pairs.size() << endl;
+		 const std::vector<fixture_setup>& p_fixture_pairs) :
+      part(p_part), stock(p_stock), setups(p_fixture_pairs) {
+      std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
 
     workpiece aligned_workpiece() const
     { return stock; }
 
-    const fixture_list& fixtures() const
-    { return fixture_pairs; }
+    const std::vector<fixture_setup>& fixtures() const
+    { return setups; }
   };
   
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,

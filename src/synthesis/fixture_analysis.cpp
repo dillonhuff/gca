@@ -436,10 +436,11 @@ namespace gca {
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {
-    auto aligned_workpiece = align_workpiece(part_ss, w);
-    classify_part_surfaces(part_ss, aligned_workpiece);
-    auto orients = orientations_to_cut(part_mesh, part_ss, f);
-    return fixture_plan(part_mesh, aligned_workpiece, orients);
+    assert(false);
+    // auto aligned_workpiece = align_workpiece(part_ss, w);
+    // classify_part_surfaces(part_ss, aligned_workpiece);
+    // auto orients = orientations_to_cut(part_mesh, part_ss, f);
+    // return fixture_plan(part_mesh, aligned_workpiece, orients);
   }
 
 }

@@ -62,27 +62,28 @@ namespace gca {
     return meshes;
   }
 
-  std::vector<pocket> make_surface_pockets(const std::pair<triangular_mesh,
-					   std::vector<std::vector<index_t>>>& mesh_surfaces_pair) {
-    double h = max_in_dir(mesh_surfaces_pair.first, point(0, 0, 1));
-    vector<pocket> pockets = make_surface_pockets(mesh_surfaces_pair.second,
-						  mesh_surfaces_pair.first,
-						  h);
+  std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
+					   std::vector<std::vector<index_t>>& surfaces) {
+					   
+    double h = max_in_dir(mesh, point(0, 0, 1));
+    vector<pocket> pockets =
+      make_surface_pockets(surfaces, mesh, h);
     return pockets;
   }
 
   // TODO: Simplify this huge type signature in the first argument
-  gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
-  				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
+  gcode_program cut_secured_mesh(vector<pocket>& pockets,
   				 const std::vector<tool>& tools) {
-    auto pockets = make_surface_pockets(mesh_surfaces_pair);
     assert(tools.size() > 0);
+
     double h = (*(max_element(begin(pockets), end(pockets),
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
+
     tool t = *(min_element(begin(tools), end(tools),
   			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
+
     double cut_depth = 0.2;
     vector<polyline> lines = mill_pockets(pockets, t, cut_depth);
 
@@ -91,10 +92,12 @@ namespace gca {
   }
 
   void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
-			  std::vector<gcode_program>& progs,
-			  const std::vector<tool>& tools) {
-    for (auto mesh_surface_pair : meshes) {
-      progs.push_back(cut_secured_mesh(mesh_surface_pair, tools));
+  			  std::vector<gcode_program>& progs,
+  			  const std::vector<tool>& tools) {
+    for (auto mesh_surfaces_pair : meshes) {
+      vector<pocket> pockets = make_surface_pockets(mesh_surfaces_pair.first,
+						    mesh_surfaces_pair.second);
+      progs.push_back(cut_secured_mesh(pockets, tools));
     }
   }
 
@@ -124,13 +127,14 @@ namespace gca {
       setups.push_back(fabrication_setup(m, f.get_vice(), p));
     }
 
-    for (auto orient_surfaces_pair : plan.fixtures()) {
-      cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
-      auto v = orient_surfaces_pair.first.v;
-      auto m = oriented_part_mesh(orient_surfaces_pair.first.orient,
-				  orient_surfaces_pair.second,
-				  v);
-      gcode_program gprog = cut_secured_mesh(m, tools);
+    for (auto setup : plan.fixtures()) {
+      //      cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
+      auto v = setup.fix.v;
+      auto m = oriented_part_mesh(fixture_setups.fix.orient,
+      				  fixture_setups.,
+      				  v);
+      // vector<pocket> pockets = make_surface_pockets(m.first, m.second);
+      gcode_program gprog = cut_secured_mesh(setup.pockets, tools);
       setups.push_back(fabrication_setup(m.first, v, gprog));
     }
 
