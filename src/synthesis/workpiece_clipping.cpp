@@ -139,7 +139,7 @@ namespace gca {
     double z_min = z_max - alpha;
 
     // TODO: Use actual workpiece mesh
-    box bx(0, 1, 0, 1, 0, z_max);
+    box bx(0, 1, 0, 1, z_max - 3.0, z_max);
     triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     
