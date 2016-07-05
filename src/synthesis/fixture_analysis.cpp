@@ -434,8 +434,9 @@ namespace gca {
   fixture_setup
   make_fabrication_setup(const fixture& f,
 			 surface_list& surfaces) {
-    auto mesh = oriented_part_mesh(f.orient, f.v);
-    auto pockets = make_surface_pockets(mesh, surfaces);
+    triangular_mesh m = oriented_part_mesh(f.orient, f.v);
+    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
+    auto pockets = make_surface_pockets(*mesh, surfaces);
     return fixture_setup(f, pockets);
   }
 
