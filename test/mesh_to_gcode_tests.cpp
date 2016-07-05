@@ -115,7 +115,7 @@ namespace gca {
     auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
 
     fixture_plan plan =
-      make_fixture_plan(mesh, outer_surfs, fixes, tools, workpiece_dims);
+      make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
     for (auto setup : plan.fixtures()) {
       double last_depth = max_distance_along(setup.m->vertex_list(), point(0, 0, 1));

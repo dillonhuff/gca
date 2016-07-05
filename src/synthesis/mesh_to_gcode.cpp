@@ -59,8 +59,8 @@ namespace gca {
 					 const fixtures& f,
 					 const vector<tool>& tools,
 					 const workpiece w) {
-    auto part_ss = outer_surfaces(part_mesh);
-    fixture_plan plan = make_fixture_plan(part_mesh, part_ss, f, tools, w);
+    //    auto part_ss = outer_surfaces(part_mesh);
+    fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
     vector<fabrication_setup> setups;
     // TODO: Create actual mesh and vice for clipping
     box b(0, 1, 0, 1, 0, 1);
