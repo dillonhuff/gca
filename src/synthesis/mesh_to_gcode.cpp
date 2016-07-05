@@ -62,26 +62,34 @@ namespace gca {
     return meshes;
   }
 
-  // TODO: Simplify this huge type signature in the first argument
-  gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
-  				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
-  				 const std::vector<tool>& tools) {
-    assert(tools.size() > 0);
-    tool t = *(min_element(begin(tools), end(tools),
-  			   [](const tool& l, const tool& r)
-      { return l.diameter() < r.diameter(); }));
-    double cut_depth = 0.2;
+  std::vector<pocket> make_surface_pockets(const std::pair<triangular_mesh,
+					   std::vector<std::vector<index_t>>>& mesh_surfaces_pair) {
     double h = max_in_dir(mesh_surfaces_pair.first, point(0, 0, 1));
     vector<pocket> pockets = make_surface_pockets(mesh_surfaces_pair.second,
 						  mesh_surfaces_pair.first,
 						  h);
+    return pockets;
+  }
+
+  // TODO: Simplify this huge type signature in the first argument
+  gcode_program cut_secured_mesh(const std::pair<triangular_mesh,
+  				 std::vector<std::vector<index_t>>>& mesh_surfaces_pair,
+  				 const std::vector<tool>& tools) {
+    auto pockets = make_surface_pockets(mesh_surfaces_pair);
+    assert(tools.size() > 0);
+    double h = (*(max_element(begin(pockets), end(pockets),
+			      [](const pocket& l, const pocket& r)
+      { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
+    tool t = *(min_element(begin(tools), end(tools),
+  			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
+    double cut_depth = 0.2;
     vector<polyline> lines = mill_pockets(pockets, t, cut_depth);
 
     double safe_z = h + t.length() + 0.1;
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }
 
-  // TODO: Eliminate vice v parameter
   void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
 			  std::vector<gcode_program>& progs,
 			  const std::vector<tool>& tools) {
