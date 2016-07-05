@@ -53,7 +53,8 @@ namespace gca {
 
     double safe_height = workpiece_height + t.length() + 0.1;
 
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
+    pocket p = box_pocket(b);
+    vector<polyline> blk_lines = shift_lines(pocket_2P5D_interior(p, t, cut_depth),
 					     point(0, 0, t.length()));
 
     vector<block> blks;
@@ -65,7 +66,8 @@ namespace gca {
     box b2 = box(0, workpiece_x,
 		 0, workpiece_y,
 		 part_height, z_max);
-    vector<polyline> lines = shift_lines(rough_box(b2, t, cut_depth),
+    pocket q = box_pocket(b2);
+    vector<polyline> lines = shift_lines(pocket_2P5D_interior(q, t, cut_depth),
 					 point(0, 0, t.length()));
 
     vector<block> clip_blocks;
@@ -142,11 +144,11 @@ namespace gca {
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
 		 v.y_max() - aligned.sides[1].len(), v.y_max(),
 		 z_min, z_max);
-
+    pocket p1 = box_pocket(b1);
+    
     z_max = z_min;
     z_min = z_min - clipped_z_height;
 
-    // TODO: Actually add box clipping proper
     double x1 = v.x_max();
     double x2 = x1 - (aligned_x - clipped_x) / 2.0;
     double x3 = x2 - clipped_x;
@@ -162,16 +164,21 @@ namespace gca {
     box b4 = box(x4, x3, y3, y2, z_min, z_max);
     box b5 = box(x2, x1, y3, y2, z_min, z_max);
 
+    pocket p2 = box_pocket(b2);
+    pocket p3 = box_pocket(b3);
+    pocket p4 = box_pocket(b4);
+    pocket p5 = box_pocket(b5);
+
     vector<polyline> blk_lines;
-    concat(blk_lines, shift_lines(rough_box(b1, t, cut_depth),
+    concat(blk_lines, shift_lines(pocket_2P5D_interior(p1, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b2, t, cut_depth),
+    concat(blk_lines, shift_lines(pocket_2P5D_interior(p2, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b3, t, cut_depth),
+    concat(blk_lines, shift_lines(pocket_2P5D_interior(p3, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b4, t, cut_depth),
+    concat(blk_lines, shift_lines(pocket_2P5D_interior(p4, t, cut_depth),
 				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b5, t, cut_depth),
+    concat(blk_lines, shift_lines(pocket_2P5D_interior(p5, t, cut_depth),
 				  point(0, 0, t.length())));
     
 
@@ -201,10 +208,8 @@ namespace gca {
 		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
 
     pocket p = box_pocket(b);
-    
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
+    vector<polyline> blk_lines = shift_lines(pocket_2P5D_interior(p, t, cut_depth),
 					     point(0, 0, t.length()));
-
     
     double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + t.length() + 0.2;
     vector<block> blks =
