@@ -1,5 +1,6 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
+#include "synthesis/workpiece_clipping.h"
 
 namespace gca {
   
@@ -476,7 +477,8 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    vector<fixture_setup> setups;
+    vector<fixture_setup> setups =
+      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, f);
     fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
     for (auto orient : orients) {
       setups.push_back(make_fabrication_setup(orient.first, orient.second));

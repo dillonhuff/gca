@@ -160,8 +160,8 @@ namespace gca {
   oriented_part_mesh(const stock_orientation& orient,
 		     const vice v);
 
-    std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
-					     std::vector<std::vector<index_t>>& surfaces);
+  std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
+					   std::vector<std::vector<index_t>>& surfaces);
 }
 
 #endif
