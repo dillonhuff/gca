@@ -462,8 +462,8 @@ namespace gca {
   }
 
   fixture_setup
-  make_fabrication_setup(const fixture& f,
-			 surface_list& surfaces) {
+  make_fixture_setup(const fixture& f,
+		     surface_list& surfaces) {
     triangular_mesh m = oriented_part_mesh(f.orient, f.v);
     triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
     auto pockets = make_surface_pockets(*mesh, surfaces);
@@ -481,7 +481,7 @@ namespace gca {
       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, f);
     fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
     for (auto orient : orients) {
-      setups.push_back(make_fabrication_setup(orient.first, orient.second));
+      setups.push_back(make_fixture_setup(orient.first, orient.second));
     }
     return fixture_plan(part_mesh, aligned_workpiece, setups);
   }
