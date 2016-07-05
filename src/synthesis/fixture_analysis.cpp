@@ -447,8 +447,8 @@ namespace gca {
 				 const workpiece w) {
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
     vector<fixture_setup> setups;
+    fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
     for (auto orient : orients) {
       setups.push_back(make_fabrication_setup(orient.first, orient.second));
     }

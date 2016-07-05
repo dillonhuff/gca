@@ -287,7 +287,7 @@ namespace gca {
     double cut_depth = 0.2;
     double eps = 0.05;
 
-    tool t = *(min_element(begin(tools), end(tools),
+    tool t = *(max_element(begin(tools), end(tools),
     			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
 
