@@ -92,6 +92,10 @@ namespace gca {
   struct fixture_setup {
     fixture fix;
     std::vector<pocket> pockets;
+
+    fixture_setup(const fixture& f,
+		  const std::vector<pocket>& p)
+      : fix(f), pockets(p) {}
   };
 
   typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
@@ -151,6 +155,12 @@ namespace gca {
 				 const vector<tool>& tools,
 				 const workpiece w);
 
+  triangular_mesh
+  oriented_part_mesh(const stock_orientation& orient,
+		     const vice v);
+
+    std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
+					     std::vector<std::vector<index_t>>& surfaces);
 }
 
 #endif

@@ -431,16 +431,27 @@ namespace gca {
     return orients;
   }
 
+  fixture_setup
+  make_fabrication_setup(const fixture& f,
+			 surface_list& surfaces) {
+    auto mesh = oriented_part_mesh(f.orient, f.v);
+    auto pockets = make_surface_pockets(mesh, surfaces);
+    return fixture_setup(f, pockets);
+  }
+
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 std::vector<surface>& part_ss,
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {
-    assert(false);
-    // auto aligned_workpiece = align_workpiece(part_ss, w);
-    // classify_part_surfaces(part_ss, aligned_workpiece);
-    // auto orients = orientations_to_cut(part_mesh, part_ss, f);
-    // return fixture_plan(part_mesh, aligned_workpiece, orients);
+    auto aligned_workpiece = align_workpiece(part_ss, w);
+    classify_part_surfaces(part_ss, aligned_workpiece);
+    fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
+    vector<fixture_setup> setups;
+    for (auto orient : orients) {
+      setups.push_back(make_fabrication_setup(orient.first, orient.second));
+    }
+    return fixture_plan(part_mesh, aligned_workpiece, setups);
   }
 
 }

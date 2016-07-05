@@ -36,31 +36,29 @@ namespace gca {
     return m;
   }
 
-  std::pair<triangular_mesh, std::vector<std::vector<index_t>>>
+  triangular_mesh
   oriented_part_mesh(const stock_orientation& orient,
-		     const surface_list& surfaces,
 		     const vice v) {
     auto mesh = orient.get_mesh();
     auto oriented_mesh = orient_mesh(mesh, orient);
-    return mk_pair(shift_mesh(oriented_mesh, v), surfaces);
+    return shift_mesh(oriented_mesh, v);
   }
 
-  std::vector<std::pair<triangular_mesh, surface_list>>
-  part_arrangements(const triangular_mesh& part_mesh,
-  		    const vector<surface>& part_ss,
-  		    const vice v) {
-    fixtures fixes(v);
-    fixture_list orients =
-      orientations_to_cut(part_mesh, part_ss, fixes);
-    vector<pair<triangular_mesh, surface_list>> meshes;
-    for (auto orient_surfaces_pair : orients) {
-      cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
-      meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first.orient,
-  					  orient_surfaces_pair.second,
-  					  orient_surfaces_pair.first.v));
-    }
-    return meshes;
-  }
+  // std::vector<std::pair<triangular_mesh, surface_list>>
+  // part_arrangements(const triangular_mesh& part_mesh,
+  // 		    const vector<surface>& part_ss,
+  // 		    const vice v) {
+  //   fixtures fixes(v);
+  //   fixture_list orients =
+  //     orientations_to_cut(part_mesh, part_ss, fixes);
+  //   vector<pair<triangular_mesh, surface_list>> meshes;
+  //   for (auto orient_surfaces_pair : orients) {
+  //     cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
+  //     meshes.push_back(oriented_part_mesh(orient_surfaces_pair.first.orient,
+  // 					  orient_surfaces_pair.first.v));
+  //   }
+  //   return meshes;
+  // }
 
   std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
 					   std::vector<std::vector<index_t>>& surfaces) {
@@ -130,12 +128,10 @@ namespace gca {
     for (auto setup : plan.fixtures()) {
       //      cout << "Top normal " << orient_surfaces_pair.first.orient.top_normal() << endl;
       auto v = setup.fix.v;
-      auto m = oriented_part_mesh(fixture_setups.fix.orient,
-      				  fixture_setups.,
-      				  v);
+      auto m = oriented_part_mesh(setup.fix.orient, v);
       // vector<pocket> pockets = make_surface_pockets(m.first, m.second);
       gcode_program gprog = cut_secured_mesh(setup.pockets, tools);
-      setups.push_back(fabrication_setup(m.first, v, gprog));
+      setups.push_back(fabrication_setup(m, v, gprog));
     }
 
     return fabrication_plan(setups);
