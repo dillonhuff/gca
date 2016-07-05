@@ -3,7 +3,7 @@
 
 #include "gcode/lexer.h"
 #include "gcode/cut.h"
-#include "synthesis/machine.h"
+#include "gcode/machine.h"
 
 namespace gca {
 

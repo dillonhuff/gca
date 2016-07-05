@@ -837,6 +837,33 @@ src/gcode/linear_cut.cpp.s:
 	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/linear_cut.cpp.s
 .PHONY : src/gcode/linear_cut.cpp.s
 
+src/gcode/machine.o: src/gcode/machine.cpp.o
+
+.PHONY : src/gcode/machine.o
+
+# target to build an object file
+src/gcode/machine.cpp.o:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/machine.cpp.o
+.PHONY : src/gcode/machine.cpp.o
+
+src/gcode/machine.i: src/gcode/machine.cpp.i
+
+.PHONY : src/gcode/machine.i
+
+# target to preprocess a source file
+src/gcode/machine.cpp.i:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/machine.cpp.i
+.PHONY : src/gcode/machine.cpp.i
+
+src/gcode/machine.s: src/gcode/machine.cpp.s
+
+.PHONY : src/gcode/machine.s
+
+# target to generate assembly for a file
+src/gcode/machine.cpp.s:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/machine.cpp.s
+.PHONY : src/gcode/machine.cpp.s
+
 src/gcode/parse_stream.o: src/gcode/parse_stream.cpp.o
 
 .PHONY : src/gcode/parse_stream.o
@@ -1478,48 +1505,6 @@ src/synthesis/fixture_analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/fixture_analysis.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/fixture_analysis.cpp.s
 .PHONY : src/synthesis/fixture_analysis.cpp.s
-
-src/synthesis/machine.o: src/synthesis/machine.cpp.o
-
-.PHONY : src/synthesis/machine.o
-
-# target to build an object file
-src/synthesis/machine.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.o
-.PHONY : src/synthesis/machine.cpp.o
-
-src/synthesis/machine.i: src/synthesis/machine.cpp.i
-
-.PHONY : src/synthesis/machine.i
-
-# target to preprocess a source file
-src/synthesis/machine.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.i
-.PHONY : src/synthesis/machine.cpp.i
-
-src/synthesis/machine.s: src/synthesis/machine.cpp.s
-
-.PHONY : src/synthesis/machine.s
-
-# target to generate assembly for a file
-src/synthesis/machine.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.s
-.PHONY : src/synthesis/machine.cpp.s
 
 src/synthesis/mesh_to_gcode.o: src/synthesis/mesh_to_gcode.cpp.o
 
@@ -3081,6 +3066,9 @@ help:
 	@echo "... src/gcode/linear_cut.o"
 	@echo "... src/gcode/linear_cut.i"
 	@echo "... src/gcode/linear_cut.s"
+	@echo "... src/gcode/machine.o"
+	@echo "... src/gcode/machine.i"
+	@echo "... src/gcode/machine.s"
 	@echo "... src/gcode/parse_stream.o"
 	@echo "... src/gcode/parse_stream.i"
 	@echo "... src/gcode/parse_stream.s"
@@ -3144,9 +3132,6 @@ help:
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
-	@echo "... src/synthesis/machine.o"
-	@echo "... src/synthesis/machine.i"
-	@echo "... src/synthesis/machine.s"
 	@echo "... src/synthesis/mesh_to_gcode.o"
 	@echo "... src/synthesis/mesh_to_gcode.i"
 	@echo "... src/synthesis/mesh_to_gcode.s"

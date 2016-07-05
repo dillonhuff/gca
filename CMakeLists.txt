@@ -50,12 +50,14 @@ SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h
 	    	  ./src/gcode/circular_arc.h
 	    	  ./src/gcode/linear_cut.h
+		  ./src/gcode/machine.h
 	    	  ./src/gcode/safe_move.h
 	    	  ./src/gcode/hole_punch.h)
 
 SET(GCODE_CPPS 	 ./src/gcode/cut.cpp
 	 ./src/gcode/value.cpp
 	 ./src/gcode/lexer.cpp
+	 ./src/gcode/machine.cpp
 	 ./src/gcode/parse_stream.cpp
 	 ./src/gcode/linear_cut.cpp)
 
@@ -113,7 +115,6 @@ SET(CPPS
 	 ./src/synthesis/toolpath.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
-	 ./src/synthesis/machine.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/toolpath_generation.cpp
