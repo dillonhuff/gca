@@ -199,6 +199,8 @@ namespace gca {
     box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
 		v.y_max() - aligned.sides[1].len(), v.y_max(),
 		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
+
+    pocket p = box_pocket(b);
     
     vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
 					     point(0, 0, t.length()));

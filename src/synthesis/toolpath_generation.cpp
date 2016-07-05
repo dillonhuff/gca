@@ -9,6 +9,20 @@
 
 namespace gca {
 
+  pocket box_pocket(const box b) {
+    point p1(b.x_min, b.y_min, b.z_min);
+    point p2(b.x_min, b.y_max, b.z_min);
+    point p3(b.x_max, b.y_max, b.z_min);
+    point p4(b.x_max, b.y_min, b.z_min);
+    
+    vector<triangle> tris;
+    tris.push_back(triangle(point(0, 0, 1), p1, p2, p3));
+    tris.push_back(triangle(point(0, 0, 1), p3, p4, p1));
+    triangular_mesh m = make_mesh(tris, 0.001);
+    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
+    return pocket(b.z_max, mesh->face_indexes(), mesh);
+  }
+
   vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p) {
     vector<polyline> ps;
     for (auto depth : depths) {

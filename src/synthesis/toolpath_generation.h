@@ -86,6 +86,8 @@ namespace gca {
     }
   };
 
+  pocket box_pocket(const box b);
+
   std::vector<polyline> deepen_polyline(const std::vector<double>& depths,
 					const polyline& p);
 
