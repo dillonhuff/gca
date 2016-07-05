@@ -20,7 +20,7 @@ namespace gca {
 
     return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
   }
-  
+
   std::vector<polyline> shift_lines_xy(const std::vector<polyline>& lines,
 				       const vice v) {
     if (lines.size() == 0) {
@@ -267,6 +267,7 @@ namespace gca {
   std::vector<fixture_setup>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
+			      const std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);

@@ -271,7 +271,7 @@ namespace gca {
 
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
       fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
-      
+
       SECTION("Toolpaths don't gouge the mesh") {
 	for (unsigned i = 0; i < p.steps().size(); i++) {
 	  auto program = p.steps()[i].prog;
