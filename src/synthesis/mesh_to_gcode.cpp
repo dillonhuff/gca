@@ -72,16 +72,6 @@ namespace gca {
     return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
   }
 
-  void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
-  			  std::vector<gcode_program>& progs,
-  			  const std::vector<tool>& tools) {
-    for (auto mesh_surfaces_pair : meshes) {
-      vector<pocket> pockets = make_surface_pockets(mesh_surfaces_pair.first,
-						    mesh_surfaces_pair.second);
-      progs.push_back(cut_secured_mesh(pockets, tools));
-    }
-  }
-
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const fixtures& f,
 					   const vector<tool>& tools,

@@ -56,11 +56,6 @@ namespace gca {
   triangular_mesh
   oriented_part_mesh(const stock_orientation& orient, const vice v);
   
-
-  void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
-			  std::vector<gcode_program>& progs,
-			  const std::vector<tool>& tools);
-  
 }
 
 #endif
