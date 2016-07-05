@@ -119,9 +119,7 @@ namespace gca {
 
     for (auto setup : plan.fixtures()) {
       auto m = oriented_part_mesh(setup.fix.orient, setup.fix.v);
-      // double workpiece_height = aligned_workpiece.sides[2].len();
-      // vector<pocket> pockets = setup.pockets;
-      // 	make_surface_pockets(m.second, m.first, workpiece_height);
+
       double last_depth = max_distance_along(m.vertex_list(), point(0, 0, 1));
       for (auto p : setup.pockets) {
 	REQUIRE(p.get_end_depth() <= last_depth);
@@ -264,17 +262,6 @@ namespace gca {
 
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
       fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
-      // auto part_ss = outer_surfaces(mesh);
-      // auto aligned_workpiece = align_workpiece(part_ss, workpiece_dims);
-      // classify_part_surfaces(part_ss, aligned_workpiece);
-      // vector<pair<triangular_mesh, surface_list>> meshes =
-      // 	part_arrangements(mesh, part_ss, test_vice);
-      // vector<gcode_program> programs;
-      // cut_secured_meshes(meshes, programs, tools);
-
-      // SECTION("One program per mesh") {
-      // 	REQUIRE(meshes.size() == programs.size());
-      // }
       
       SECTION("Toolpaths don't gouge the mesh") {
 	for (unsigned i = 0; i < p.steps().size(); i++) {

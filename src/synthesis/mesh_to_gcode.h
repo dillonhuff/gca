@@ -47,9 +47,6 @@ namespace gca {
 					 const vector<tool>& tools,
 					 const workpiece w_dims);
   
-  // void remove_SA_surfaces(const std::vector<surface>& surfaces,
-  // 			  std::vector<index_t>& indices);
-
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh);
 
@@ -59,11 +56,6 @@ namespace gca {
   triangular_mesh
   oriented_part_mesh(const stock_orientation& orient, const vice v);
   
-
-  std::vector<std::pair<triangular_mesh, surface_list>>
-  part_arrangements(const triangular_mesh& part_mesh,
-		    const vector<surface>& part_ss,
-		    const vice v);
 
   void cut_secured_meshes(const std::vector<std::pair<triangular_mesh, surface_list>>& meshes,
 			  std::vector<gcode_program>& progs,
