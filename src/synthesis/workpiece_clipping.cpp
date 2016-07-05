@@ -44,12 +44,13 @@ namespace gca {
 	    const vice v) {
     assert(workpiece_height > part_height);
 
+    double z_max = workpiece_height + 0.01;
+
     // TODO: Use actual workpiece mesh
-    box bx(0, 1, 0, 1, 0, 1);
+    box bx(0, 1, 0, 1, z_max - 5.0, z_max);
     triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     
-    double z_max = workpiece_height + 0.01;
 
     box b = box(0, workpiece_x,
 		0, workpiece_y,
@@ -137,6 +138,11 @@ namespace gca {
     double z_max = v.base_z() + plate_height + aligned_z_height;
     double z_min = z_max - alpha;
 
+    // TODO: Use actual workpiece mesh
+    box bx(0, 1, 0, 1, 0, z_max);
+    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    
     // Top outer box
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
     		 v.y_max() - aligned.sides[1].len(), v.y_max(),
@@ -168,11 +174,6 @@ namespace gca {
     pockets.push_back(box_pocket(b4));
     pockets.push_back(box_pocket(b5));
 
-    // TODO: Use actual workpiece mesh
-    box bx(0, 1, 0, 1, 0, 1);
-    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
-    
     return fixture_setup(m, v, pockets);
   }
 
