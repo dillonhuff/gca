@@ -53,9 +53,6 @@ namespace gca {
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,
 			    const workpiece w);
 
-  triangular_mesh
-  oriented_part_mesh(const stock_orientation& orient, const vice v);
-  
 }
 
 #endif

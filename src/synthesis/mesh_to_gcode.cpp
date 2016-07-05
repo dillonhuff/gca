@@ -14,35 +14,6 @@ namespace gca {
     out << w.sides[2] << endl;
     return out;
   }
-  
-  triangular_mesh orient_mesh(const triangular_mesh& mesh,
-			      const stock_orientation& orient) {
-    point normal = orient.top_normal();
-    matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
-    auto m = top_rotation_mat * mesh;
-    return m;
-  }
-
-  triangular_mesh shift_mesh(const triangular_mesh& mesh,
-			     const vice v) {
-    double x_f = v.x_max();
-    double y_f = v.fixed_clamp_y();
-    double z_f = v.base_z();
-    point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
-		y_f - max_in_dir(mesh, point(0, 1, 0)),
-		z_f - min_in_dir(mesh, point(0, 0, 1)));
-    auto m = mesh.apply_to_vertices([shift](const point p)
-		      { return p + point(shift.x, shift.y, shift.z); });
-    return m;
-  }
-
-  triangular_mesh
-  oriented_part_mesh(const stock_orientation& orient,
-		     const vice v) {
-    auto mesh = orient.get_mesh();
-    auto oriented_mesh = orient_mesh(mesh, orient);
-    return shift_mesh(oriented_mesh, v);
-  }
 
   std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
 					   std::vector<std::vector<index_t>>& surfaces) {
@@ -93,16 +64,16 @@ namespace gca {
     vector<fabrication_setup> setups;
     // TODO: Create actual mesh and vice for clipping
     box b(0, 1, 0, 1, 0, 1);
-    triangular_mesh m = make_mesh(box_triangles(b), 0.001);
+    triangular_mesh mesh = make_mesh(box_triangles(b), 0.001);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     for (auto p : workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f)) {
-      setups.push_back(fabrication_setup(m, f.get_vice(), p));
+      setups.push_back(fabrication_setup(*m, f.get_vice(), p));
     }
 
     for (auto setup : plan.fixtures()) {
-      auto v = setup.fix.v;
-      auto m = oriented_part_mesh(setup.fix.orient, v);
+      //      auto m = oriented_part_mesh(setup.fix.orient, v);
       gcode_program gprog = cut_secured_mesh(setup.pockets, tools);
-      setups.push_back(fabrication_setup(m, v, gprog));
+      setups.push_back(fabrication_setup(*(setup.m), setup.v, gprog));
     }
 
     return fabrication_plan(setups);

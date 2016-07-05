@@ -90,12 +90,14 @@ namespace gca {
   };
 
   struct fixture_setup {
-    fixture fix;
+    const triangular_mesh* m;
+    vice v;
     std::vector<pocket> pockets;
 
-    fixture_setup(const fixture& f,
+    fixture_setup(const triangular_mesh* p_m,
+		  const vice& p_v,
 		  const std::vector<pocket>& p)
-      : fix(f), pockets(p) {}
+      : m(p_m), v(p_v), pockets(p) {}
   };
 
   typedef std::vector<std::pair<fixture, surface_list>> fixture_list;

@@ -118,9 +118,7 @@ namespace gca {
       make_fixture_plan(mesh, outer_surfs, fixes, tools, workpiece_dims);
 
     for (auto setup : plan.fixtures()) {
-      auto m = oriented_part_mesh(setup.fix.orient, setup.fix.v);
-
-      double last_depth = max_distance_along(m.vertex_list(), point(0, 0, 1));
+      double last_depth = max_distance_along(setup.m->vertex_list(), point(0, 0, 1));
       for (auto p : setup.pockets) {
 	REQUIRE(p.get_end_depth() <= last_depth);
 	last_depth = p.get_end_depth();

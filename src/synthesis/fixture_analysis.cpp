@@ -2,7 +2,36 @@
 #include "synthesis/millability.h"
 
 namespace gca {
+  
+  triangular_mesh orient_mesh(const triangular_mesh& mesh,
+			      const stock_orientation& orient) {
+    point normal = orient.top_normal();
+    matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
+    auto m = top_rotation_mat * mesh;
+    return m;
+  }
 
+  triangular_mesh shift_mesh(const triangular_mesh& mesh,
+			     const vice v) {
+    double x_f = v.x_max();
+    double y_f = v.fixed_clamp_y();
+    double z_f = v.base_z();
+    point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
+		y_f - max_in_dir(mesh, point(0, 1, 0)),
+		z_f - min_in_dir(mesh, point(0, 0, 1)));
+    auto m = mesh.apply_to_vertices([shift](const point p)
+		      { return p + point(shift.x, shift.y, shift.z); });
+    return m;
+  }
+
+  triangular_mesh
+  oriented_part_mesh(const stock_orientation& orient,
+		     const vice v) {
+    auto mesh = orient.get_mesh();
+    auto oriented_mesh = orient_mesh(mesh, orient);
+    return shift_mesh(oriented_mesh, v);
+  }
+  
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh) {
     // TODO: Actually compute workpiece normals
@@ -437,7 +466,7 @@ namespace gca {
     triangular_mesh m = oriented_part_mesh(f.orient, f.v);
     triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
     auto pockets = make_surface_pockets(*mesh, surfaces);
-    return fixture_setup(f, pockets);
+    return fixture_setup(mesh, f.v, pockets);
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
