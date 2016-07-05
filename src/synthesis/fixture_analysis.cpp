@@ -215,7 +215,6 @@ namespace gca {
       surfaces.push_back(surface(&part, r));
     }
     return surfaces;
-    
   }
 
   void
@@ -440,11 +439,10 @@ namespace gca {
   fixture_list
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
+		      const std::vector<surface>& surfs_to_cut,
 		      const fixtures& f) {
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
-
-    auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
 
     surface_map os =
       pick_orientations(part_mesh, surfs_to_cut, all_orients);
@@ -477,12 +475,17 @@ namespace gca {
     auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
+
+    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh, part_ss);
     vector<fixture_setup> setups =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, f);
-    fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
+
+    fixture_list orients =
+      orientations_to_cut(part_mesh, part_ss, surfs_to_cut, f);
     for (auto orient : orients) {
       setups.push_back(make_fixture_setup(orient.first, orient.second));
     }
+
     return fixture_plan(part_mesh, aligned_workpiece, setups);
   }
 
