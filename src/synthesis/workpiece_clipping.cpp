@@ -262,15 +262,35 @@ namespace gca {
     return false;
   }
 
+  void remove_clipped_surfaces(const workpiece& aligned_workpiece,
+			       const triangular_mesh& part_mesh,
+			       std::vector<surface>& surfaces_to_cut) {
+    auto stable_surfaces = outer_surfaces(part_mesh);
+    classify_part_surfaces(stable_surfaces, aligned_workpiece);
+
+    vector<index_t> stable_surface_inds;
+    for (auto s : stable_surfaces) {
+      if (s.is_SA()) {
+    	concat(stable_surface_inds, s.index_list());
+      }
+    }
+    sort(begin(stable_surface_inds), end(stable_surface_inds));
+    delete_if(surfaces_to_cut,
+	      [&stable_surface_inds](const surface& s)
+	      { return s.contained_by_sorted(stable_surface_inds); });
+  }
+
   // TODO: Clean up and add vice height test
   // TODO: Use tool lengths in can_clip_parallel test
   std::vector<fixture_setup>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
-			      const std::vector<surface>& surfaces_to_cut,
+			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
+
+    remove_clipped_surfaces(aligned_workpiece, part_mesh, surfaces_to_cut);
 
     if (can_clip_parallel(aligned_workpiece, clipped, f)) {
       return parallel_plate_clipping(aligned_workpiece, clipped, f);

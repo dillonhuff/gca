@@ -323,41 +323,16 @@ namespace gca {
     std::vector<plate_height> plates{0.1, 0.3};
     fixtures fixes(test_vice, plates);
     workpiece workpiece_dims(3.81, 3.2, 3.98, ALUMINUM);
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    vector<tool> tools{t1, t2};
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
 
-    auto outer_surfs = outer_surfaces(mesh);
-    auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
-    classify_part_surfaces(outer_surfs, aligned_workpiece);
-    auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
+    fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-    SECTION("6 surfaces that are always stable") {
-      unsigned num_stable = 0;
-      for (auto s : outer_surfs) {
-  	if (s.is_SA()) {
-  	  num_stable++;
-  	}
-      }
-      REQUIRE(num_stable == 6);
-    }
-
-    SECTION("1 surface to cut") {
-      REQUIRE(surfs_to_cut.size() == 1);
-    }
-
-    SECTION("1 setup") {
-      vector<fixture> all_orients =
-  	all_stable_fixtures(outer_surfs, fixes);
-
-      surface_map orients =
-  	pick_orientations(mesh, surfs_to_cut, all_orients);
-
-      REQUIRE(orients.size() == 1);
-
-      for (auto fixture : orients) {
-	REQUIRE(all_orients[fixture.first].v.has_protective_base_plate());
-      }
-    }
+    // TODO: Eventually with optimizations this will be 6
+    REQUIRE(p.fixtures().size() == 7);
   }
 
 }
