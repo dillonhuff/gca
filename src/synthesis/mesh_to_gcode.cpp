@@ -62,11 +62,12 @@ namespace gca {
     fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
     vector<fabrication_setup> setups;
     // TODO: Create actual mesh and vice for clipping
-    box b(0, 1, 0, 1, 0, 1);
-    triangular_mesh mesh = make_mesh(box_triangles(b), 0.001);
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    // box b(0, 1, 0, 1, 0, 1);
+    // triangular_mesh mesh = make_mesh(box_triangles(b), 0.001);
+    // triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     for (auto p : workpiece_clipping_programs(plan.aligned_workpiece(), part_mesh, tools, f)) {
-      setups.push_back(fabrication_setup(*m, f.get_vice(), p));
+      gcode_program gprog = cut_secured_mesh(p.pockets, tools);
+      setups.push_back(fabrication_setup(*(p.m), p.v, gprog));
     }
 
     for (auto setup : plan.fixtures()) {

@@ -283,30 +283,31 @@ namespace gca {
   }
 
   // TODO: Clean up and add vice height test
-  std::vector<gcode_program>
+  std::vector<fixture_setup>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
-    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
+    assert(false);
+    // workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
-    // TODO: Turn these magic numbers into parameters
-    double cut_depth = 0.2;
-    double eps = 0.05;
+    // // TODO: Turn these magic numbers into parameters
+    // double cut_depth = 0.2;
+    // double eps = 0.05;
 
-    tool t = *(max_element(begin(tools), end(tools),
-    			   [](const tool& l, const tool& r)
-      { return l.diameter() < r.diameter(); }));
+    // tool t = *(max_element(begin(tools), end(tools),
+    // 			   [](const tool& l, const tool& r)
+    //   { return l.diameter() < r.diameter(); }));
 
-    if (can_clip_parallel(aligned_workpiece, clipped, f)) {
-      return parallel_plate_clipping(aligned_workpiece, clipped, t, cut_depth, f);
-    } else {
-      vector<gcode_program> clip_progs;
-      append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-      append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-      append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-      return clip_progs;
-    }
+    // if (can_clip_parallel(aligned_workpiece, clipped, f)) {
+    //   return parallel_plate_clipping(aligned_workpiece, clipped, t, cut_depth, f);
+    // } else {
+    //   vector<gcode_program> clip_progs;
+    //   append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+    //   append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+    //   append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
+    //   return clip_progs;
+    // }
   }
 
 }
