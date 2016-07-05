@@ -2,7 +2,7 @@
 #define GCA_CUT_TO_GCODE_H
 
 #include "gcode/lexer.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/shape_layout.h"
 
 namespace gca {

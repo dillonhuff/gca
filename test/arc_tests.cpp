@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "geometry/arc.h"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 
 namespace gca {
 

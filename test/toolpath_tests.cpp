@@ -1,9 +1,9 @@
 #include "catch.hpp"
 #include "geometry/arc.h"
-#include "synthesis/circular_arc.h"
-#include "synthesis/linear_cut.h"
+#include "gcode/circular_arc.h"
+#include "gcode/linear_cut.h"
 #include "synthesis/toolpath.h"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 
 namespace gca {
 

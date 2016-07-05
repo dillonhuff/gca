@@ -2,12 +2,12 @@
 #include <numeric>
 
 #include "geometry/polyline.h"
-#include "synthesis/circular_arc.h"
-#include "synthesis/linear_cut.h"
+#include "gcode/circular_arc.h"
+#include "gcode/linear_cut.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "geometry/spline_sampling.h"
 #include "synthesis/toolpath_generation.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

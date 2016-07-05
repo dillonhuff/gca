@@ -34,59 +34,67 @@ namespace gca {
     return shift_lines(lines, shift);
   }
 
-  std::pair<std::vector<block>,
-	    std::vector<block> >
+  // TODO: Correctly place boxes in space relative to the vices
+  std::pair<fixture_setup, fixture_setup>
   clip_axis(double workpiece_x,
 	    double workpiece_y,
 	    double workpiece_height,
 	    double eps,
 	    double part_height,
-	    const tool& t,
-	    double cut_depth,
 	    const vice v) {
     assert(workpiece_height > part_height);
+
     double z_max = workpiece_height + 0.01;
+
+    // TODO: Use actual workpiece mesh
+    box bx(0, 1, 0, 1, z_max - 5.0, z_max);
+    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    
 
     box b = box(0, workpiece_x,
 		0, workpiece_y,
 		z_max - eps, z_max);
 
-    double safe_height = workpiece_height + t.length() + 0.1;
-
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
-					     point(0, 0, t.length()));
-
-    vector<block> blks;
-    if (blk_lines.size() > 0) {
-      blks =
-	emco_f1_code(shift_lines_xy(blk_lines, v), safe_height);
-    }
+    pocket p = box_pocket(b);
+    vector<pocket> ps{p};
 
     box b2 = box(0, workpiece_x,
 		 0, workpiece_y,
 		 part_height, z_max);
-    vector<polyline> lines = shift_lines(rough_box(b2, t, cut_depth),
-					 point(0, 0, t.length()));
+    pocket q = box_pocket(b2);
+    vector<pocket> qs{q};
 
-    vector<block> clip_blocks;
-    if (lines.size() > 0) {
-      clip_blocks =
-	emco_f1_code(shift_lines_xy(lines, v), safe_height);
-    }
-    return pair<vector<block>, vector<block> >(blks, clip_blocks);
+    return std::make_pair(fixture_setup(m, v, ps), fixture_setup(m, v, qs));
+
+    // vector<polyline> blk_lines = shift_lines(pocket_2P5D_interior(p, t, cut_depth),
+    // 					     point(0, 0, t.length()));
+
+    // vector<block> blks;
+    // if (blk_lines.size() > 0) {
+    //   blks =
+    // 	emco_f1_code(shift_lines_xy(blk_lines, v), safe_height);
+    // }
+
+    // vector<polyline> lines = shift_lines(pocket_2P5D_interior(q, t, cut_depth),
+    // 					 point(0, 0, t.length()));
+
+    // vector<block> clip_blocks;
+    // if (lines.size() > 0) {
+    //   clip_blocks =
+    // 	emco_f1_code(shift_lines_xy(lines, v), safe_height);
+    // }
+    //    return pair<vector<block>, vector<block> >(blks, clip_blocks);
   }
 
   void
-  append_clip_programs(const string& axis,
+  append_clip_setups(const string& axis,
 		       const int axis_number,
 		       const workpiece aligned_workpiece,
 		       const workpiece clipped,
 		       const double eps,
-		       const tool& t,
-		       const double cut_depth,
 		       const vice v,
-		       std::vector<gcode_program>& clip_progs) {
-
+		       std::vector<fixture_setup>& clip_progs) {
     double a1 = aligned_workpiece.sides[(axis_number + 1) % 3].len();
     double a2 = aligned_workpiece.sides[(axis_number + 2) % 3].len();
 
@@ -97,25 +105,19 @@ namespace gca {
     double part_height = clipped.sides[axis_number].len() + v.base_z();
 
     auto clip_x = clip_axis(workpiece_x,
-			    workpiece_y,
-			    workpiece_height,
-			    eps,
-			    part_height,
-			    t,
-			    cut_depth,
-			    v);
+    			    workpiece_y,
+    			    workpiece_height,
+    			    eps,
+    			    part_height,
+    			    v);
 
-    gcode_program x_face(axis + "_Face", clip_x.first);
-    gcode_program x_clip(axis + "_Clip", clip_x.second);
-    clip_progs.push_back(x_face);
-    clip_progs.push_back(x_clip);
+    clip_progs.push_back(clip_x.first);
+    clip_progs.push_back(clip_x.second);
   }
 
-  gcode_program
+  fixture_setup
   clip_top_and_sides(const workpiece& aligned,
 		     const workpiece& clipped,
-		     const tool& t,
-		     const double cut_depth,
 		     const vice& v,
 		     const double plate_height) {
     double aligned_x = aligned.sides[0].len();
@@ -136,17 +138,22 @@ namespace gca {
     double z_max = v.base_z() + plate_height + aligned_z_height;
     double z_min = z_max - alpha;
 
-    double safe_height = z_max + t.length() + 0.2;
-
+    // TODO: Use actual workpiece mesh
+    box bx(0, 1, 0, 1, 0, z_max);
+    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    
     // Top outer box
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		 v.y_max() - aligned.sides[1].len(), v.y_max(),
-		 z_min, z_max);
+    		 v.y_max() - aligned.sides[1].len(), v.y_max(),
+    		 z_min, z_max);
 
+    vector<pocket> pockets;
+    pockets.push_back(box_pocket(b1));
+    
     z_max = z_min;
     z_min = z_min - clipped_z_height;
 
-    // TODO: Actually add box clipping proper
     double x1 = v.x_max();
     double x2 = x1 - (aligned_x - clipped_x) / 2.0;
     double x3 = x2 - clipped_x;
@@ -162,30 +169,17 @@ namespace gca {
     box b4 = box(x4, x3, y3, y2, z_min, z_max);
     box b5 = box(x2, x1, y3, y2, z_min, z_max);
 
-    vector<polyline> blk_lines;
-    concat(blk_lines, shift_lines(rough_box(b1, t, cut_depth),
-				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b2, t, cut_depth),
-				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b3, t, cut_depth),
-				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b4, t, cut_depth),
-				  point(0, 0, t.length())));
-    concat(blk_lines, shift_lines(rough_box(b5, t, cut_depth),
-				  point(0, 0, t.length())));
-    
+    pockets.push_back(box_pocket(b2));
+    pockets.push_back(box_pocket(b3));
+    pockets.push_back(box_pocket(b4));
+    pockets.push_back(box_pocket(b5));
 
-    // TODO: Add in the 4 additional clipping programs
-    vector<block> blks =
-      emco_f1_code(blk_lines, safe_height);
-    return gcode_program("Clip top and sides", blks);
+    return fixture_setup(m, v, pockets);
   }
 
-  gcode_program
+  fixture_setup
   clip_base(const workpiece& aligned,
 	    const workpiece& clipped,
-	    const tool& t,
-	    const double cut_depth,
 	    const vice& v,
 	    const double plate_height) {
     double aligned_z_height = aligned.sides[2].len();
@@ -197,39 +191,34 @@ namespace gca {
     double alpha = leftover / 2.0;
 
     box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-		v.y_max() - aligned.sides[1].len(), v.y_max(),
-		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
-    
-    vector<polyline> blk_lines = shift_lines(rough_box(b, t, cut_depth),
-					     point(0, 0, t.length()));
+    		v.y_max() - aligned.sides[1].len(), v.y_max(),
+    		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
 
-    
-    double safe_height = v.base_z() + plate_height + clipped_z_height + alpha + t.length() + 0.2;
-    vector<block> blks =
-      emco_f1_code(blk_lines, safe_height);
-    return gcode_program("Clip base", blks);
+    pocket p = box_pocket(b);
+    vector<pocket> pockets{p};
+
+    // TODO: Use actual workpiece mesh
+    box bx(0, 1, 0, 1, 0, 1);
+    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    return fixture_setup(m, v, pockets);
   }
   
-  std::vector<gcode_program>
+  std::vector<fixture_setup>
   parallel_clipping_programs(const workpiece& aligned,
 			     const workpiece& clipped,
-			     const tool& t,
-			     const double cut_depth,
 			     const vice& v,
 			     const double plate_height) {
-    // TODO: Fill in the actual clipping code
-    std::vector<gcode_program> progs;
-    progs.push_back(clip_top_and_sides(aligned, clipped, t, cut_depth, v, plate_height));
-    progs.push_back(clip_base(aligned, clipped, t, cut_depth, v, plate_height));
+    std::vector<fixture_setup> progs;
+    progs.push_back(clip_top_and_sides(aligned, clipped, v, plate_height));
+    progs.push_back(clip_base(aligned, clipped, v, plate_height));
     return progs;
   }
   
   // TODO: Reduce duplication between here and can_clip_parallel
-  std::vector<gcode_program>
+  std::vector<fixture_setup>
   parallel_plate_clipping(const workpiece& aligned,
 			  const workpiece& clipped,
-			  const tool& t,
-			  const double cut_depth,
 			  const fixtures& f) {
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped.sides[2].len();
@@ -243,12 +232,10 @@ namespace gca {
       double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
       // TODO: Compute this magic number via friction analysis?
       if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
-	return parallel_clipping_programs(aligned,
-					  clipped,
-					  t,
-					  cut_depth,
-					  f.get_vice(),
-					  p);
+    	return parallel_clipping_programs(aligned,
+    					  clipped,
+    					  f.get_vice(),
+    					  p);
       }
     }
     assert(false);
@@ -276,29 +263,23 @@ namespace gca {
   }
 
   // TODO: Clean up and add vice height test
-  std::vector<gcode_program>
+  // TODO: Use tool lengths in can_clip_parallel test
+  std::vector<fixture_setup>
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
-    // TODO: Turn these magic numbers into parameters
-    double cut_depth = 0.2;
-    double eps = 0.05;
-
-    tool t = *(min_element(begin(tools), end(tools),
-    			   [](const tool& l, const tool& r)
-      { return l.diameter() < r.diameter(); }));
-
     if (can_clip_parallel(aligned_workpiece, clipped, f)) {
-      return parallel_plate_clipping(aligned_workpiece, clipped, t, cut_depth, f);
+      return parallel_plate_clipping(aligned_workpiece, clipped, f);
     } else {
-      vector<gcode_program> clip_progs;
-      append_clip_programs("X", 0, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-      append_clip_programs("Y", 1, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-      append_clip_programs("Z", 2, aligned_workpiece, clipped, eps, t, cut_depth, f.get_vice(), clip_progs);
-      return clip_progs;
+      double eps = 0.05;
+      vector<fixture_setup> clip_setups;
+      append_clip_setups("X", 0, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+      append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+      append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+      return clip_setups;
     }
   }
 

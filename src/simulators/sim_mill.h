@@ -4,7 +4,7 @@
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_res.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

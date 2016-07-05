@@ -44,3 +44,7 @@ tool-simulator.app/
 face-graph
 AddCell.app/*
 cut-box
+*.json
+json-mesh
+json-plan
+surface-test.app/*

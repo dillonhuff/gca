@@ -1,9 +1,9 @@
 #ifndef GCA_LINEAR_CUT_H
 #define GCA_LINEAR_CUT_H
 
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "geometry/point.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

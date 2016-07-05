@@ -1,4 +1,4 @@
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

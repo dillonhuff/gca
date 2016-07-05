@@ -1,7 +1,7 @@
 #include <vector>
 
 #include "catch.hpp"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 using namespace std;
 

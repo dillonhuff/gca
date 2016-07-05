@@ -2,7 +2,7 @@
 
 #include "geometry/line.h"
 #include "geometry/triangle.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

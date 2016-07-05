@@ -9,7 +9,7 @@
 #include "geometry/line.h"
 #include "geometry/parametric_curve.h"
 #include "geometry/point.h"
-#include "synthesis/machine.h"
+#include "gcode/machine.h"
 
 namespace gca {
 

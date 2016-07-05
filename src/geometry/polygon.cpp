@@ -2,7 +2,7 @@
 
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

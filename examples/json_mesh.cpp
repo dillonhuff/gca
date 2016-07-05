@@ -11,105 +11,11 @@
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 #include "system/parse_stl.h"
-
-using boost::property_tree::ptree;
+#include "system/json.h"
 
 using namespace gca;
-using namespace std;
-
-ptree encode_json(const triangle_t t);
-ptree encode_json(const point p);
-ptree encode_json(const gcode_program& prog);
-ptree encode_face_list_json(const triangular_mesh& m);
-ptree encode_json(const triangular_mesh& m);
-ptree encode_json(const fabrication_setup& prog);
-ptree encode_json(const fabrication_plan& plan);
-
-ptree encode_json(const triangle_t t) {
-  ptree children;
-
-  ptree v1;
-  v1.put("", t.v[0]);
-  children.push_back(std::make_pair("", v1));
-
-  ptree v2;
-  v2.put("", t.v[1]);
-  children.push_back(std::make_pair("", v2));
-
-  ptree v3;
-  v3.put("", t.v[2]);
-  children.push_back(std::make_pair("", v3));
-
-  return children;
-}
-
-ptree encode_json(const point p) {
-  ptree children;
-
-  ptree v1;
-  v1.put("", p.x);
-  children.push_back(std::make_pair("", v1));
-
-  ptree v2;
-  v2.put("", p.y);
-  children.push_back(std::make_pair("", v2));
-
-  ptree v3;
-  v3.put("", p.z);
-  children.push_back(std::make_pair("", v3));
-
-  return children;
-}
-
-ptree encode_json(const gcode_program& prog) {
-  ptree p;
-  stringstream ss;
-  ss << prog.blocks;
-  p.put("", ss.str());
-  return p;
-}
-
-template<typename T>
-ptree encode_json(const std::vector<T>& elems) {
-  ptree children;
-  for (auto e : elems) {
-    children.push_back(std::make_pair("", encode_json(e)));
-  }
-  return children;
-}
-
-ptree encode_face_list_json(const triangular_mesh& m) {
-  ptree children;
-  for (auto i : m.face_indexes()) {
-    triangle_t t = m.triangle_vertices(i);
-    ptree p = encode_json(t);
-    children.push_back(std::make_pair("", p));
-  }
-  return children;
-}
-
-ptree encode_json(const triangular_mesh& m) {
-  ptree p;
-  p.add_child("pts", encode_json(m.vertex_list()));
-  p.add_child("faces", encode_face_list_json(m));
-  return p;
-}
-
-ptree encode_json(const fabrication_setup& prog) {
-  ptree p;
-  p.add_child("part-mesh", encode_json(prog.part));
-  p.add_child("gcode", encode_json(prog.prog));
-  return p;
-}
-
-ptree encode_json(const fabrication_plan& plan) {
-  ptree p;
-  p.add_child("clipping-programs", encode_json(plan.stock_clipping_programs()));
-  p.add_child("setups", encode_json(plan.steps()));
-  return p;
-}
 
 int main(int argc, char* argv[]) {
   assert(argc == 3);

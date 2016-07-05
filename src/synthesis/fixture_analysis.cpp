@@ -1,44 +1,38 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
+#include "synthesis/workpiece_clipping.h"
 
 namespace gca {
-
-  bool surfaces_share_edge(const unsigned i,
-			   const unsigned j,
-			   const std::vector<surface>& surfaces) {
-    auto ind1 = surfaces[i].index_list();
-    auto ind2 = surfaces[j].index_list();
-    return share_edge(ind1, ind2, surfaces[i].get_parent_mesh());
+  
+  triangular_mesh orient_mesh(const triangular_mesh& mesh,
+			      const stock_orientation& orient) {
+    point normal = orient.top_normal();
+    matrix<3, 3> top_rotation_mat = rotate_onto(normal, point(0, 0, 1));
+    auto m = top_rotation_mat * mesh;
+    return m;
   }
 
-  bool any_SA_surface_contains(index_t i,
-			       const std::vector<surface>& surfaces) {
-    for (auto surface : surfaces) {
-      if (surface.is_SA() && surface.contains(i)) { return true; }
-    }
-    return false;
+  triangular_mesh shift_mesh(const triangular_mesh& mesh,
+			     const vice v) {
+    double x_f = v.x_max();
+    double y_f = v.fixed_clamp_y();
+    double z_f = v.base_z();
+    point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
+		y_f - max_in_dir(mesh, point(0, 1, 0)),
+		z_f - min_in_dir(mesh, point(0, 0, 1)));
+    auto m = mesh.apply_to_vertices([shift](const point p)
+		      { return p + point(shift.x, shift.y, shift.z); });
+    return m;
   }
 
-  void remove_SA_surfaces(const std::vector<surface>& surfaces,
-  			  std::vector<index_t>& indices) {
-    delete_if(indices,
-  	      [&surfaces](index_t i)
-  	      { return any_SA_surface_contains(i, surfaces); });
+  triangular_mesh
+  oriented_part_mesh(const stock_orientation& orient,
+		     const vice v) {
+    auto mesh = orient.get_mesh();
+    auto oriented_mesh = orient_mesh(mesh, orient);
+    return shift_mesh(oriented_mesh, v);
   }
-
-  void remove_SA_surfaces(const std::vector<surface>& stable_surfaces,
-			  std::vector<surface>& cut_surfaces) {
-    delete_if(cut_surfaces,
-    	      [&stable_surfaces](const surface& s) {
-		for (auto other : stable_surfaces) {
-		  if (other.is_SA() && s.contained_by(other)) {
-		    return true;
-		  }
-		}
-		return false;
-	      });
-  }
-
+  
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh) {
     // TODO: Actually compute workpiece normals
@@ -64,32 +58,6 @@ namespace gca {
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,
 			    const workpiece w) {
     return w;
-  }
-
-  std::vector<surface> outer_surfaces(const triangular_mesh& part) {
-    auto const_orient_face_indices = const_orientation_regions(part);
-    vector<surface> surfaces;
-    for (auto f : const_orient_face_indices) {
-      assert(f.size() > 0);
-      if (is_outer_surface(f, part)) {
-	surfaces.push_back(surface(&part, f));
-      }
-    }
-    return surfaces;
-  }
-
-  bool orthogonal_flat_surfaces(const surface* l, const surface* r) {
-    point l_orient = l->face_orientation(l->front());
-    point r_orient = r->face_orientation(r->front());
-    double theta = angle_between(l_orient, r_orient);
-    return within_eps(theta, 90, 0.1);
-  }
-
-  bool parallel_flat_surfaces(const surface* l, const surface* r) {
-    point l_orient = l->face_orientation(l->front());
-    point r_orient = r->face_orientation(r->front());
-    double theta = angle_between(l_orient, r_orient);
-    return within_eps(theta, 180, 0.1);
   }
 
   // TODO: Include SB surfaces in this analysis
@@ -172,32 +140,6 @@ namespace gca {
     }
 
     return fixtures;
-  }
-
-  bool any_vertex_in(const triangle_t tri,
-		     const std::vector<index_t>& inds) {
-    if (binary_search(begin(inds), end(inds), tri.v[0])) {
-      return true;
-    }
-    if (binary_search(begin(inds), end(inds), tri.v[1])) {
-      return true;
-    }
-    if (binary_search(begin(inds), end(inds), tri.v[2])) {
-      return true;
-    }
-    return false;
-  }
-
-  std::vector<index_t> surface_vertexes(const surface& s) {
-    vector<index_t> inds;
-    for (auto i : s.index_list()) {
-      triangle_t t = s.get_parent_mesh().triangle_vertices(i);
-      inds.push_back(t.v[0]);
-      inds.push_back(t.v[1]);
-      inds.push_back(t.v[2]);
-    }
-    sort(begin(inds), end(inds));
-    return inds;
   }
 
   bool point_above_vice(const index_t i,
@@ -495,8 +437,7 @@ namespace gca {
     				 surfaces_to_cut);
   }
 
-  // TODO: I dont think the surface vector is actually needed
-  std::pair<std::vector<surface>, fixture_list>
+  fixture_list
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const fixtures& f) {
@@ -517,18 +458,32 @@ namespace gca {
       }
       orients.push_back(mk_pair(all_orients[ori], surfaces));
     }
-    return mk_pair(surfs_to_cut, orients);
+    return orients;
+  }
+
+  fixture_setup
+  make_fixture_setup(const fixture& f,
+		     surface_list& surfaces) {
+    triangular_mesh m = oriented_part_mesh(f.orient, f.v);
+    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
+    auto pockets = make_surface_pockets(*mesh, surfaces);
+    return fixture_setup(mesh, f.v, pockets);
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
-				 std::vector<surface>& part_ss,
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {
+    auto part_ss = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
-    auto orients = orientations_to_cut(part_mesh, part_ss, f);
-    return fixture_plan(part_mesh, aligned_workpiece, orients.second);
+    vector<fixture_setup> setups =
+      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, f);
+    fixture_list orients = orientations_to_cut(part_mesh, part_ss, f);
+    for (auto orient : orients) {
+      setups.push_back(make_fixture_setup(orient.first, orient.second));
+    }
+    return fixture_plan(part_mesh, aligned_workpiece, setups);
   }
 
 }

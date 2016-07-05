@@ -86,7 +86,6 @@ namespace gca {
 
   ptree encode_json(const fabrication_plan& plan) {
     ptree p;
-    p.add_child("clippingPrograms", encode_json(plan.stock_clipping_programs()));
     p.add_child("setups", encode_json(plan.steps()));
     return p;
   }

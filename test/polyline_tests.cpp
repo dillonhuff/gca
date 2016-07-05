@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "geometry/line.h"
 #include "geometry/polyline.h"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 
 namespace gca {
 

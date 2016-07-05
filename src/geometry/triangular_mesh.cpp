@@ -1,5 +1,5 @@
 #include "geometry/triangular_mesh.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 
@@ -318,6 +318,20 @@ namespace gca {
     cout << "Making triangular mesh" << endl;
     auto tris = triangulate_polygon(p);
     return make_mesh(tris, 0.001);
+  }
+
+  bool any_vertex_in(const triangle_t tri,
+		     const std::vector<index_t>& inds) {
+    if (binary_search(begin(inds), end(inds), tri.v[0])) {
+      return true;
+    }
+    if (binary_search(begin(inds), end(inds), tri.v[1])) {
+      return true;
+    }
+    if (binary_search(begin(inds), end(inds), tri.v[2])) {
+      return true;
+    }
+    return false;
   }
   
 }

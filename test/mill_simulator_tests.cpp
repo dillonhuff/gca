@@ -2,14 +2,14 @@
 
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "geometry/line.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
-#include "synthesis/circular_arc.h"
-#include "synthesis/linear_cut.h"
-#include "synthesis/safe_move.h"
+#include "gcode/circular_arc.h"
+#include "gcode/linear_cut.h"
+#include "gcode/safe_move.h"
 #include "system/file.h"
 
 namespace gca {

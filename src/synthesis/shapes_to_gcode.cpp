@@ -4,7 +4,7 @@
 
 #include "synthesis/dxf_reader.h"
 #include "synthesis/cut_to_gcode.h"
-#include "synthesis/safe_move.h"
+#include "gcode/safe_move.h"
 #include "synthesis/schedule_cuts.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"

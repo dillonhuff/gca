@@ -3,6 +3,7 @@
 
 #include "geometry/surface.h"
 #include "synthesis/tool.h"
+#include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece.h"
 
@@ -10,10 +11,6 @@ namespace gca {
 
   typedef std::map<unsigned, std::vector<unsigned>> orientation_map;
   typedef std::map<unsigned, std::vector<unsigned>> surface_map;
-
-  bool surfaces_share_edge(const unsigned i,
-			   const unsigned j,
-			   const std::vector<surface>& surfaces);
 
   class stock_orientation {
   protected:
@@ -92,38 +89,47 @@ namespace gca {
     { return par_plates; }
   };
 
+  struct fixture_setup {
+    const triangular_mesh* m;
+    vice v;
+    std::vector<pocket> pockets;
+
+    fixture_setup(const triangular_mesh* p_m,
+		  const vice& p_v,
+		  const std::vector<pocket>& p)
+      : m(p_m), v(p_v), pockets(p) {}
+  };
+
   typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
 
   class fixture_plan {
   protected:
     const triangular_mesh& part;
     workpiece stock;
-    fixture_list fixture_pairs;
+    std::vector<fixture_setup> setups;
     
   public:
     fixture_plan(const triangular_mesh& p_part,
 		 const workpiece& p_stock,
-		 const fixture_list& p_fixture_pairs) :
-      part(p_part), stock(p_stock), fixture_pairs(p_fixture_pairs) {
-      std::cout << "Fixture plan: # of pairs = " << fixture_pairs.size() << endl;
+		 const std::vector<fixture_setup>& p_fixture_pairs) :
+      part(p_part), stock(p_stock), setups(p_fixture_pairs) {
+      std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
 
     workpiece aligned_workpiece() const
     { return stock; }
 
-    const fixture_list& fixtures() const
-    { return fixture_pairs; }
+    const std::vector<fixture_setup>& fixtures() const
+    { return setups; }
   };
   
-  std::vector<surface> outer_surfaces(const triangular_mesh& part);
-
   workpiece align_workpiece(const std::vector<surface>& part_surfaces,
 			    const workpiece w);
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh);
 
-  std::pair<std::vector<surface>, fixture_list>
+  fixture_list
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const fixtures& v);
@@ -144,14 +150,18 @@ namespace gca {
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
 		    std::vector<fixture>& all_orients);
-  
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
-				 std::vector<surface>& part_ss,
 				 const fixtures& fixes,
 				 const vector<tool>& tools,
 				 const workpiece w);
 
+  triangular_mesh
+  oriented_part_mesh(const stock_orientation& orient,
+		     const vice v);
+
+  std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
+					   std::vector<std::vector<index_t>>& surfaces);
 }
 
 #endif

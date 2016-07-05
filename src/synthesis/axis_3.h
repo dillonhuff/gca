@@ -48,6 +48,11 @@ namespace gca {
 		       double workpiece_height);
   
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
+
+  vector<polyline> mill_pockets(vector<pocket>& pockets,
+				const tool& t,
+				double cut_depth);
+
 }
 
 #endif

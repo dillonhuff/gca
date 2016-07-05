@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named gprocess
+
+# Build rule for target.
+gprocess: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gprocess
+.PHONY : gprocess
+
+# fast build rule for target.
+gprocess/fast:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/build
+.PHONY : gprocess/fast
+
+#=============================================================================
 # Target rules for targets named AddCell
 
 # Build rule for target.
@@ -135,6 +148,19 @@ stl-parse: cmake_check_build_system
 stl-parse/fast:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
 .PHONY : stl-parse/fast
+
+#=============================================================================
+# Target rules for targets named geometry
+
+# Build rule for target.
+geometry: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry
+.PHONY : geometry
+
+# fast build rule for target.
+geometry/fast:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
+.PHONY : geometry/fast
 
 #=============================================================================
 # Target rules for targets named surface-test
@@ -189,17 +215,30 @@ all-tests/fast:
 .PHONY : all-tests/fast
 
 #=============================================================================
-# Target rules for targets named geometry
+# Target rules for targets named gcode
 
 # Build rule for target.
-geometry: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 geometry
-.PHONY : geometry
+gcode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gcode
+.PHONY : gcode
 
 # fast build rule for target.
-geometry/fast:
-	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
-.PHONY : geometry/fast
+gcode/fast:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
+.PHONY : gcode/fast
+
+#=============================================================================
+# Target rules for targets named utils
+
+# Build rule for target.
+utils: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 utils
+.PHONY : utils
+
+# fast build rule for target.
+utils/fast:
+	$(MAKE) -f CMakeFiles/utils.dir/build.make CMakeFiles/utils.dir/build
+.PHONY : utils/fast
 
 examples/AddCell.o: examples/AddCell.cpp.o
 
@@ -342,12 +381,7 @@ src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
 # target to build an object file
 src/analysis/extract_cuts.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/extract_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/extract_cuts.cpp.o
 .PHONY : src/analysis/extract_cuts.cpp.o
 
 src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
@@ -356,12 +390,7 @@ src/analysis/extract_cuts.i: src/analysis/extract_cuts.cpp.i
 
 # target to preprocess a source file
 src/analysis/extract_cuts.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/extract_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/extract_cuts.cpp.i
 .PHONY : src/analysis/extract_cuts.cpp.i
 
 src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
@@ -370,12 +399,7 @@ src/analysis/extract_cuts.s: src/analysis/extract_cuts.cpp.s
 
 # target to generate assembly for a file
 src/analysis/extract_cuts.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/extract_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/extract_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
 src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
@@ -384,12 +408,7 @@ src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
 
 # target to build an object file
 src/analysis/gcode_to_cuts.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/gcode_to_cuts.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/gcode_to_cuts.cpp.o
 .PHONY : src/analysis/gcode_to_cuts.cpp.o
 
 src/analysis/gcode_to_cuts.i: src/analysis/gcode_to_cuts.cpp.i
@@ -398,12 +417,7 @@ src/analysis/gcode_to_cuts.i: src/analysis/gcode_to_cuts.cpp.i
 
 # target to preprocess a source file
 src/analysis/gcode_to_cuts.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/gcode_to_cuts.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/gcode_to_cuts.cpp.i
 .PHONY : src/analysis/gcode_to_cuts.cpp.i
 
 src/analysis/gcode_to_cuts.s: src/analysis/gcode_to_cuts.cpp.s
@@ -412,12 +426,7 @@ src/analysis/gcode_to_cuts.s: src/analysis/gcode_to_cuts.cpp.s
 
 # target to generate assembly for a file
 src/analysis/gcode_to_cuts.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/gcode_to_cuts.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/gcode_to_cuts.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/gcode_to_cuts.cpp.s
 .PHONY : src/analysis/gcode_to_cuts.cpp.s
 
 src/analysis/machine_state.o: src/analysis/machine_state.cpp.o
@@ -426,12 +435,7 @@ src/analysis/machine_state.o: src/analysis/machine_state.cpp.o
 
 # target to build an object file
 src/analysis/machine_state.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/machine_state.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/machine_state.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/machine_state.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/machine_state.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/machine_state.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/machine_state.cpp.o
 .PHONY : src/analysis/machine_state.cpp.o
 
 src/analysis/machine_state.i: src/analysis/machine_state.cpp.i
@@ -440,12 +444,7 @@ src/analysis/machine_state.i: src/analysis/machine_state.cpp.i
 
 # target to preprocess a source file
 src/analysis/machine_state.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/machine_state.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/machine_state.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/machine_state.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/machine_state.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/machine_state.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/machine_state.cpp.i
 .PHONY : src/analysis/machine_state.cpp.i
 
 src/analysis/machine_state.s: src/analysis/machine_state.cpp.s
@@ -454,12 +453,7 @@ src/analysis/machine_state.s: src/analysis/machine_state.cpp.s
 
 # target to generate assembly for a file
 src/analysis/machine_state.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/machine_state.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/machine_state.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/machine_state.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/machine_state.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/machine_state.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/machine_state.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/machine_state.cpp.s
 .PHONY : src/analysis/machine_state.cpp.s
 
 src/analysis/position_table.o: src/analysis/position_table.cpp.o
@@ -468,12 +462,7 @@ src/analysis/position_table.o: src/analysis/position_table.cpp.o
 
 # target to build an object file
 src/analysis/position_table.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/position_table.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/position_table.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/position_table.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/position_table.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/position_table.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/position_table.cpp.o
 .PHONY : src/analysis/position_table.cpp.o
 
 src/analysis/position_table.i: src/analysis/position_table.cpp.i
@@ -482,12 +471,7 @@ src/analysis/position_table.i: src/analysis/position_table.cpp.i
 
 # target to preprocess a source file
 src/analysis/position_table.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/position_table.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/position_table.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/position_table.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/position_table.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/position_table.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/position_table.cpp.i
 .PHONY : src/analysis/position_table.cpp.i
 
 src/analysis/position_table.s: src/analysis/position_table.cpp.s
@@ -496,12 +480,7 @@ src/analysis/position_table.s: src/analysis/position_table.cpp.s
 
 # target to generate assembly for a file
 src/analysis/position_table.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/position_table.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/position_table.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/position_table.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/position_table.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/position_table.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/position_table.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/position_table.cpp.s
 .PHONY : src/analysis/position_table.cpp.s
 
 src/analysis/profiler.o: src/analysis/profiler.cpp.o
@@ -510,12 +489,7 @@ src/analysis/profiler.o: src/analysis/profiler.cpp.o
 
 # target to build an object file
 src/analysis/profiler.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/profiler.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/profiler.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/profiler.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/profiler.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/profiler.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/profiler.cpp.o
 .PHONY : src/analysis/profiler.cpp.o
 
 src/analysis/profiler.i: src/analysis/profiler.cpp.i
@@ -524,12 +498,7 @@ src/analysis/profiler.i: src/analysis/profiler.cpp.i
 
 # target to preprocess a source file
 src/analysis/profiler.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/profiler.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/profiler.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/profiler.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/profiler.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/profiler.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/profiler.cpp.i
 .PHONY : src/analysis/profiler.cpp.i
 
 src/analysis/profiler.s: src/analysis/profiler.cpp.s
@@ -538,12 +507,7 @@ src/analysis/profiler.s: src/analysis/profiler.cpp.s
 
 # target to generate assembly for a file
 src/analysis/profiler.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/profiler.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/profiler.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/profiler.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/profiler.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/profiler.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/profiler.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/profiler.cpp.s
 .PHONY : src/analysis/profiler.cpp.s
 
 src/analysis/unfold.o: src/analysis/unfold.cpp.o
@@ -552,12 +516,7 @@ src/analysis/unfold.o: src/analysis/unfold.cpp.o
 
 # target to build an object file
 src/analysis/unfold.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/unfold.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/unfold.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/unfold.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/unfold.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/unfold.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/unfold.cpp.o
 .PHONY : src/analysis/unfold.cpp.o
 
 src/analysis/unfold.i: src/analysis/unfold.cpp.i
@@ -566,12 +525,7 @@ src/analysis/unfold.i: src/analysis/unfold.cpp.i
 
 # target to preprocess a source file
 src/analysis/unfold.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/unfold.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/unfold.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/unfold.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/unfold.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/unfold.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/unfold.cpp.i
 .PHONY : src/analysis/unfold.cpp.i
 
 src/analysis/unfold.s: src/analysis/unfold.cpp.s
@@ -580,12 +534,7 @@ src/analysis/unfold.s: src/analysis/unfold.cpp.s
 
 # target to generate assembly for a file
 src/analysis/unfold.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/unfold.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/unfold.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/unfold.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/unfold.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/unfold.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/unfold.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/unfold.cpp.s
 .PHONY : src/analysis/unfold.cpp.s
 
 src/analysis/utils.o: src/analysis/utils.cpp.o
@@ -594,12 +543,7 @@ src/analysis/utils.o: src/analysis/utils.cpp.o
 
 # target to build an object file
 src/analysis/utils.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/utils.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/utils.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/utils.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/utils.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/utils.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/utils.cpp.o
 .PHONY : src/analysis/utils.cpp.o
 
 src/analysis/utils.i: src/analysis/utils.cpp.i
@@ -608,12 +552,7 @@ src/analysis/utils.i: src/analysis/utils.cpp.i
 
 # target to preprocess a source file
 src/analysis/utils.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/utils.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/utils.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/utils.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/utils.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/utils.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/utils.cpp.i
 .PHONY : src/analysis/utils.cpp.i
 
 src/analysis/utils.s: src/analysis/utils.cpp.s
@@ -622,12 +561,7 @@ src/analysis/utils.s: src/analysis/utils.cpp.s
 
 # target to generate assembly for a file
 src/analysis/utils.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/analysis/utils.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/analysis/utils.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/analysis/utils.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/analysis/utils.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/analysis/utils.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/analysis/utils.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/utils.cpp.s
 .PHONY : src/analysis/utils.cpp.s
 
 src/checkers/block_rate_checker.o: src/checkers/block_rate_checker.cpp.o
@@ -636,12 +570,7 @@ src/checkers/block_rate_checker.o: src/checkers/block_rate_checker.cpp.o
 
 # target to build an object file
 src/checkers/block_rate_checker.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/block_rate_checker.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/block_rate_checker.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/block_rate_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/block_rate_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/block_rate_checker.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/block_rate_checker.cpp.o
 .PHONY : src/checkers/block_rate_checker.cpp.o
 
 src/checkers/block_rate_checker.i: src/checkers/block_rate_checker.cpp.i
@@ -650,12 +579,7 @@ src/checkers/block_rate_checker.i: src/checkers/block_rate_checker.cpp.i
 
 # target to preprocess a source file
 src/checkers/block_rate_checker.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/block_rate_checker.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/block_rate_checker.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/block_rate_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/block_rate_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/block_rate_checker.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/block_rate_checker.cpp.i
 .PHONY : src/checkers/block_rate_checker.cpp.i
 
 src/checkers/block_rate_checker.s: src/checkers/block_rate_checker.cpp.s
@@ -664,12 +588,7 @@ src/checkers/block_rate_checker.s: src/checkers/block_rate_checker.cpp.s
 
 # target to generate assembly for a file
 src/checkers/block_rate_checker.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/block_rate_checker.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/block_rate_checker.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/block_rate_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/block_rate_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/block_rate_checker.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/block_rate_checker.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/block_rate_checker.cpp.s
 .PHONY : src/checkers/block_rate_checker.cpp.s
 
 src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
@@ -678,12 +597,7 @@ src/checkers/bounds_checker.o: src/checkers/bounds_checker.cpp.o
 
 # target to build an object file
 src/checkers/bounds_checker.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/bounds_checker.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/bounds_checker.cpp.o
 .PHONY : src/checkers/bounds_checker.cpp.o
 
 src/checkers/bounds_checker.i: src/checkers/bounds_checker.cpp.i
@@ -692,12 +606,7 @@ src/checkers/bounds_checker.i: src/checkers/bounds_checker.cpp.i
 
 # target to preprocess a source file
 src/checkers/bounds_checker.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/bounds_checker.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/bounds_checker.cpp.i
 .PHONY : src/checkers/bounds_checker.cpp.i
 
 src/checkers/bounds_checker.s: src/checkers/bounds_checker.cpp.s
@@ -706,12 +615,7 @@ src/checkers/bounds_checker.s: src/checkers/bounds_checker.cpp.s
 
 # target to generate assembly for a file
 src/checkers/bounds_checker.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/bounds_checker.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/bounds_checker.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/bounds_checker.cpp.s
 .PHONY : src/checkers/bounds_checker.cpp.s
 
 src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
@@ -720,12 +624,7 @@ src/checkers/forbidden_tool_checker.o: src/checkers/forbidden_tool_checker.cpp.o
 
 # target to build an object file
 src/checkers/forbidden_tool_checker.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/forbidden_tool_checker.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/forbidden_tool_checker.cpp.o
 .PHONY : src/checkers/forbidden_tool_checker.cpp.o
 
 src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
@@ -734,12 +633,7 @@ src/checkers/forbidden_tool_checker.i: src/checkers/forbidden_tool_checker.cpp.i
 
 # target to preprocess a source file
 src/checkers/forbidden_tool_checker.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/forbidden_tool_checker.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/forbidden_tool_checker.cpp.i
 .PHONY : src/checkers/forbidden_tool_checker.cpp.i
 
 src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
@@ -748,12 +642,7 @@ src/checkers/forbidden_tool_checker.s: src/checkers/forbidden_tool_checker.cpp.s
 
 # target to generate assembly for a file
 src/checkers/forbidden_tool_checker.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/forbidden_tool_checker.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/forbidden_tool_checker.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/forbidden_tool_checker.cpp.s
 .PHONY : src/checkers/forbidden_tool_checker.cpp.s
 
 src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
@@ -762,12 +651,7 @@ src/checkers/unsafe_spindle_checker.o: src/checkers/unsafe_spindle_checker.cpp.o
 
 # target to build an object file
 src/checkers/unsafe_spindle_checker.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/unsafe_spindle_checker.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/unsafe_spindle_checker.cpp.o
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.o
 
 src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
@@ -776,12 +660,7 @@ src/checkers/unsafe_spindle_checker.i: src/checkers/unsafe_spindle_checker.cpp.i
 
 # target to preprocess a source file
 src/checkers/unsafe_spindle_checker.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/unsafe_spindle_checker.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/unsafe_spindle_checker.cpp.i
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.i
 
 src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
@@ -790,12 +669,7 @@ src/checkers/unsafe_spindle_checker.s: src/checkers/unsafe_spindle_checker.cpp.s
 
 # target to generate assembly for a file
 src/checkers/unsafe_spindle_checker.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/checkers/unsafe_spindle_checker.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/checkers/unsafe_spindle_checker.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/checkers/unsafe_spindle_checker.cpp.s
 .PHONY : src/checkers/unsafe_spindle_checker.cpp.s
 
 src/dxflib/dl_dxf.o: src/dxflib/dl_dxf.cpp.o
@@ -882,18 +756,40 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
+src/gcode/cut.o: src/gcode/cut.cpp.o
+
+.PHONY : src/gcode/cut.o
+
+# target to build an object file
+src/gcode/cut.cpp.o:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/cut.cpp.o
+.PHONY : src/gcode/cut.cpp.o
+
+src/gcode/cut.i: src/gcode/cut.cpp.i
+
+.PHONY : src/gcode/cut.i
+
+# target to preprocess a source file
+src/gcode/cut.cpp.i:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/cut.cpp.i
+.PHONY : src/gcode/cut.cpp.i
+
+src/gcode/cut.s: src/gcode/cut.cpp.s
+
+.PHONY : src/gcode/cut.s
+
+# target to generate assembly for a file
+src/gcode/cut.cpp.s:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/cut.cpp.s
+.PHONY : src/gcode/cut.cpp.s
+
 src/gcode/lexer.o: src/gcode/lexer.cpp.o
 
 .PHONY : src/gcode/lexer.o
 
 # target to build an object file
 src/gcode/lexer.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/lexer.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/lexer.cpp.o
 .PHONY : src/gcode/lexer.cpp.o
 
 src/gcode/lexer.i: src/gcode/lexer.cpp.i
@@ -902,12 +798,7 @@ src/gcode/lexer.i: src/gcode/lexer.cpp.i
 
 # target to preprocess a source file
 src/gcode/lexer.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/lexer.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/lexer.cpp.i
 .PHONY : src/gcode/lexer.cpp.i
 
 src/gcode/lexer.s: src/gcode/lexer.cpp.s
@@ -916,13 +807,62 @@ src/gcode/lexer.s: src/gcode/lexer.cpp.s
 
 # target to generate assembly for a file
 src/gcode/lexer.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/lexer.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/lexer.cpp.s
 .PHONY : src/gcode/lexer.cpp.s
+
+src/gcode/linear_cut.o: src/gcode/linear_cut.cpp.o
+
+.PHONY : src/gcode/linear_cut.o
+
+# target to build an object file
+src/gcode/linear_cut.cpp.o:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/linear_cut.cpp.o
+.PHONY : src/gcode/linear_cut.cpp.o
+
+src/gcode/linear_cut.i: src/gcode/linear_cut.cpp.i
+
+.PHONY : src/gcode/linear_cut.i
+
+# target to preprocess a source file
+src/gcode/linear_cut.cpp.i:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/linear_cut.cpp.i
+.PHONY : src/gcode/linear_cut.cpp.i
+
+src/gcode/linear_cut.s: src/gcode/linear_cut.cpp.s
+
+.PHONY : src/gcode/linear_cut.s
+
+# target to generate assembly for a file
+src/gcode/linear_cut.cpp.s:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/linear_cut.cpp.s
+.PHONY : src/gcode/linear_cut.cpp.s
+
+src/gcode/machine.o: src/gcode/machine.cpp.o
+
+.PHONY : src/gcode/machine.o
+
+# target to build an object file
+src/gcode/machine.cpp.o:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/machine.cpp.o
+.PHONY : src/gcode/machine.cpp.o
+
+src/gcode/machine.i: src/gcode/machine.cpp.i
+
+.PHONY : src/gcode/machine.i
+
+# target to preprocess a source file
+src/gcode/machine.cpp.i:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/machine.cpp.i
+.PHONY : src/gcode/machine.cpp.i
+
+src/gcode/machine.s: src/gcode/machine.cpp.s
+
+.PHONY : src/gcode/machine.s
+
+# target to generate assembly for a file
+src/gcode/machine.cpp.s:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/machine.cpp.s
+.PHONY : src/gcode/machine.cpp.s
 
 src/gcode/parse_stream.o: src/gcode/parse_stream.cpp.o
 
@@ -930,12 +870,7 @@ src/gcode/parse_stream.o: src/gcode/parse_stream.cpp.o
 
 # target to build an object file
 src/gcode/parse_stream.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/parse_stream.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/parse_stream.cpp.o
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/parse_stream.cpp.o
 .PHONY : src/gcode/parse_stream.cpp.o
 
 src/gcode/parse_stream.i: src/gcode/parse_stream.cpp.i
@@ -944,12 +879,7 @@ src/gcode/parse_stream.i: src/gcode/parse_stream.cpp.i
 
 # target to preprocess a source file
 src/gcode/parse_stream.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/parse_stream.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/parse_stream.cpp.i
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/parse_stream.cpp.i
 .PHONY : src/gcode/parse_stream.cpp.i
 
 src/gcode/parse_stream.s: src/gcode/parse_stream.cpp.s
@@ -958,12 +888,7 @@ src/gcode/parse_stream.s: src/gcode/parse_stream.cpp.s
 
 # target to generate assembly for a file
 src/gcode/parse_stream.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/parse_stream.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/parse_stream.cpp.s
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/parse_stream.cpp.s
 .PHONY : src/gcode/parse_stream.cpp.s
 
 src/gcode/value.o: src/gcode/value.cpp.o
@@ -972,12 +897,7 @@ src/gcode/value.o: src/gcode/value.cpp.o
 
 # target to build an object file
 src/gcode/value.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/value.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/value.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/value.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/value.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/value.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/value.cpp.o
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/value.cpp.o
 .PHONY : src/gcode/value.cpp.o
 
 src/gcode/value.i: src/gcode/value.cpp.i
@@ -986,12 +906,7 @@ src/gcode/value.i: src/gcode/value.cpp.i
 
 # target to preprocess a source file
 src/gcode/value.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/value.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/value.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/value.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/value.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/value.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/value.cpp.i
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/value.cpp.i
 .PHONY : src/gcode/value.cpp.i
 
 src/gcode/value.s: src/gcode/value.cpp.s
@@ -1000,12 +915,7 @@ src/gcode/value.s: src/gcode/value.cpp.s
 
 # target to generate assembly for a file
 src/gcode/value.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/gcode/value.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/gcode/value.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/gcode/value.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/gcode/value.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/gcode/value.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/gcode/value.cpp.s
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/value.cpp.s
 .PHONY : src/gcode/value.cpp.s
 
 src/geometry/arc.o: src/geometry/arc.cpp.o
@@ -1224,6 +1134,33 @@ src/geometry/spline_sampling.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/spline_sampling.cpp.s
 .PHONY : src/geometry/spline_sampling.cpp.s
 
+src/geometry/surface.o: src/geometry/surface.cpp.o
+
+.PHONY : src/geometry/surface.o
+
+# target to build an object file
+src/geometry/surface.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/surface.cpp.o
+.PHONY : src/geometry/surface.cpp.o
+
+src/geometry/surface.i: src/geometry/surface.cpp.i
+
+.PHONY : src/geometry/surface.i
+
+# target to preprocess a source file
+src/geometry/surface.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/surface.cpp.i
+.PHONY : src/geometry/surface.cpp.i
+
+src/geometry/surface.s: src/geometry/surface.cpp.s
+
+.PHONY : src/geometry/surface.s
+
+# target to generate assembly for a file
+src/geometry/surface.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/surface.cpp.s
+.PHONY : src/geometry/surface.cpp.s
+
 src/geometry/triangle.o: src/geometry/triangle.cpp.o
 
 .PHONY : src/geometry/triangle.o
@@ -1311,12 +1248,7 @@ src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 # target to build an object file
 src/simulators/mill_tool.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/simulators/mill_tool.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/mill_tool.cpp.o
 .PHONY : src/simulators/mill_tool.cpp.o
 
 src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
@@ -1325,12 +1257,7 @@ src/simulators/mill_tool.i: src/simulators/mill_tool.cpp.i
 
 # target to preprocess a source file
 src/simulators/mill_tool.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/simulators/mill_tool.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/mill_tool.cpp.i
 .PHONY : src/simulators/mill_tool.cpp.i
 
 src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
@@ -1339,12 +1266,7 @@ src/simulators/mill_tool.s: src/simulators/mill_tool.cpp.s
 
 # target to generate assembly for a file
 src/simulators/mill_tool.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/simulators/mill_tool.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/mill_tool.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/mill_tool.cpp.s
 .PHONY : src/simulators/mill_tool.cpp.s
 
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
@@ -1353,12 +1275,7 @@ src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
 
 # target to build an object file
 src/simulators/sim_mill.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/simulators/sim_mill.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/sim_mill.cpp.o
 .PHONY : src/simulators/sim_mill.cpp.o
 
 src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
@@ -1367,12 +1284,7 @@ src/simulators/sim_mill.i: src/simulators/sim_mill.cpp.i
 
 # target to preprocess a source file
 src/simulators/sim_mill.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/simulators/sim_mill.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/sim_mill.cpp.i
 .PHONY : src/simulators/sim_mill.cpp.i
 
 src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
@@ -1381,12 +1293,7 @@ src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
 
 # target to generate assembly for a file
 src/simulators/sim_mill.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/simulators/sim_mill.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/simulators/sim_mill.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
 src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
@@ -1472,48 +1379,6 @@ src/synthesis/axis_3.cpp.s:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/axis_3.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/axis_3.cpp.s
 .PHONY : src/synthesis/axis_3.cpp.s
-
-src/synthesis/cut.o: src/synthesis/cut.cpp.o
-
-.PHONY : src/synthesis/cut.o
-
-# target to build an object file
-src/synthesis/cut.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/cut.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.o
-.PHONY : src/synthesis/cut.cpp.o
-
-src/synthesis/cut.i: src/synthesis/cut.cpp.i
-
-.PHONY : src/synthesis/cut.i
-
-# target to preprocess a source file
-src/synthesis/cut.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/cut.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.i
-.PHONY : src/synthesis/cut.cpp.i
-
-src/synthesis/cut.s: src/synthesis/cut.cpp.s
-
-.PHONY : src/synthesis/cut.s
-
-# target to generate assembly for a file
-src/synthesis/cut.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/cut.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/cut.cpp.s
-.PHONY : src/synthesis/cut.cpp.s
 
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
 
@@ -1640,90 +1505,6 @@ src/synthesis/fixture_analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/fixture_analysis.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/fixture_analysis.cpp.s
 .PHONY : src/synthesis/fixture_analysis.cpp.s
-
-src/synthesis/linear_cut.o: src/synthesis/linear_cut.cpp.o
-
-.PHONY : src/synthesis/linear_cut.o
-
-# target to build an object file
-src/synthesis/linear_cut.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/linear_cut.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.o
-.PHONY : src/synthesis/linear_cut.cpp.o
-
-src/synthesis/linear_cut.i: src/synthesis/linear_cut.cpp.i
-
-.PHONY : src/synthesis/linear_cut.i
-
-# target to preprocess a source file
-src/synthesis/linear_cut.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/linear_cut.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.i
-.PHONY : src/synthesis/linear_cut.cpp.i
-
-src/synthesis/linear_cut.s: src/synthesis/linear_cut.cpp.s
-
-.PHONY : src/synthesis/linear_cut.s
-
-# target to generate assembly for a file
-src/synthesis/linear_cut.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/linear_cut.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/linear_cut.cpp.s
-.PHONY : src/synthesis/linear_cut.cpp.s
-
-src/synthesis/machine.o: src/synthesis/machine.cpp.o
-
-.PHONY : src/synthesis/machine.o
-
-# target to build an object file
-src/synthesis/machine.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/machine.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.o
-.PHONY : src/synthesis/machine.cpp.o
-
-src/synthesis/machine.i: src/synthesis/machine.cpp.i
-
-.PHONY : src/synthesis/machine.i
-
-# target to preprocess a source file
-src/synthesis/machine.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/machine.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.i
-.PHONY : src/synthesis/machine.cpp.i
-
-src/synthesis/machine.s: src/synthesis/machine.cpp.s
-
-.PHONY : src/synthesis/machine.s
-
-# target to generate assembly for a file
-src/synthesis/machine.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/synthesis/machine.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/machine.cpp.s
-.PHONY : src/synthesis/machine.cpp.s
 
 src/synthesis/mesh_to_gcode.o: src/synthesis/mesh_to_gcode.cpp.o
 
@@ -2145,48 +1926,6 @@ src/synthesis/workpiece_clipping.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/synthesis/workpiece_clipping.cpp.s
 .PHONY : src/synthesis/workpiece_clipping.cpp.s
 
-src/system/arena_allocator.o: src/system/arena_allocator.cpp.o
-
-.PHONY : src/system/arena_allocator.o
-
-# target to build an object file
-src/system/arena_allocator.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/system/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/system/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/system/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/system/arena_allocator.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.o
-.PHONY : src/system/arena_allocator.cpp.o
-
-src/system/arena_allocator.i: src/system/arena_allocator.cpp.i
-
-.PHONY : src/system/arena_allocator.i
-
-# target to preprocess a source file
-src/system/arena_allocator.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/system/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/system/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/system/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/system/arena_allocator.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.i
-.PHONY : src/system/arena_allocator.cpp.i
-
-src/system/arena_allocator.s: src/system/arena_allocator.cpp.s
-
-.PHONY : src/system/arena_allocator.s
-
-# target to generate assembly for a file
-src/system/arena_allocator.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/system/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/system/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/system/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/system/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/system/arena_allocator.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/system/arena_allocator.cpp.s
-.PHONY : src/system/arena_allocator.cpp.s
-
 src/system/file.o: src/system/file.cpp.o
 
 .PHONY : src/system/file.o
@@ -2361,12 +2100,7 @@ src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
 
 # target to build an object file
 src/transformers/feed_changer.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/transformers/feed_changer.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/feed_changer.cpp.o
 .PHONY : src/transformers/feed_changer.cpp.o
 
 src/transformers/feed_changer.i: src/transformers/feed_changer.cpp.i
@@ -2375,12 +2109,7 @@ src/transformers/feed_changer.i: src/transformers/feed_changer.cpp.i
 
 # target to preprocess a source file
 src/transformers/feed_changer.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/transformers/feed_changer.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/feed_changer.cpp.i
 .PHONY : src/transformers/feed_changer.cpp.i
 
 src/transformers/feed_changer.s: src/transformers/feed_changer.cpp.s
@@ -2389,12 +2118,7 @@ src/transformers/feed_changer.s: src/transformers/feed_changer.cpp.s
 
 # target to generate assembly for a file
 src/transformers/feed_changer.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/transformers/feed_changer.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/feed_changer.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/feed_changer.cpp.s
 .PHONY : src/transformers/feed_changer.cpp.s
 
 src/transformers/retarget.o: src/transformers/retarget.cpp.o
@@ -2403,12 +2127,7 @@ src/transformers/retarget.o: src/transformers/retarget.cpp.o
 
 # target to build an object file
 src/transformers/retarget.cpp.o:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/transformers/retarget.cpp.o
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/retarget.cpp.o
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/transformers/retarget.cpp.o
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/transformers/retarget.cpp.o
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/transformers/retarget.cpp.o
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/retarget.cpp.o
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/retarget.cpp.o
 .PHONY : src/transformers/retarget.cpp.o
 
 src/transformers/retarget.i: src/transformers/retarget.cpp.i
@@ -2417,12 +2136,7 @@ src/transformers/retarget.i: src/transformers/retarget.cpp.i
 
 # target to preprocess a source file
 src/transformers/retarget.cpp.i:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/transformers/retarget.cpp.i
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/retarget.cpp.i
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/transformers/retarget.cpp.i
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/transformers/retarget.cpp.i
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/transformers/retarget.cpp.i
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/retarget.cpp.i
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/retarget.cpp.i
 .PHONY : src/transformers/retarget.cpp.i
 
 src/transformers/retarget.s: src/transformers/retarget.cpp.s
@@ -2431,13 +2145,35 @@ src/transformers/retarget.s: src/transformers/retarget.cpp.s
 
 # target to generate assembly for a file
 src/transformers/retarget.cpp.s:
-	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/src/transformers/retarget.cpp.s
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/src/transformers/retarget.cpp.s
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/src/transformers/retarget.cpp.s
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/src/transformers/retarget.cpp.s
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/src/transformers/retarget.cpp.s
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/src/transformers/retarget.cpp.s
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/retarget.cpp.s
 .PHONY : src/transformers/retarget.cpp.s
+
+src/utils/arena_allocator.o: src/utils/arena_allocator.cpp.o
+
+.PHONY : src/utils/arena_allocator.o
+
+# target to build an object file
+src/utils/arena_allocator.cpp.o:
+	$(MAKE) -f CMakeFiles/utils.dir/build.make CMakeFiles/utils.dir/src/utils/arena_allocator.cpp.o
+.PHONY : src/utils/arena_allocator.cpp.o
+
+src/utils/arena_allocator.i: src/utils/arena_allocator.cpp.i
+
+.PHONY : src/utils/arena_allocator.i
+
+# target to preprocess a source file
+src/utils/arena_allocator.cpp.i:
+	$(MAKE) -f CMakeFiles/utils.dir/build.make CMakeFiles/utils.dir/src/utils/arena_allocator.cpp.i
+.PHONY : src/utils/arena_allocator.cpp.i
+
+src/utils/arena_allocator.s: src/utils/arena_allocator.cpp.s
+
+.PHONY : src/utils/arena_allocator.s
+
+# target to generate assembly for a file
+src/utils/arena_allocator.cpp.s:
+	$(MAKE) -f CMakeFiles/utils.dir/build.make CMakeFiles/utils.dir/src/utils/arena_allocator.cpp.s
+.PHONY : src/utils/arena_allocator.cpp.s
 
 test/analysis_tests.o: test/analysis_tests.cpp.o
 
@@ -3256,14 +2992,17 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... gprocess"
 	@echo "... rebuild_cache"
 	@echo "... AddCell"
 	@echo "... stl-parse"
+	@echo "... geometry"
 	@echo "... surface-test"
 	@echo "... json-plan"
 	@echo "... json-mesh"
 	@echo "... all-tests"
-	@echo "... geometry"
+	@echo "... gcode"
+	@echo "... utils"
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
 	@echo "... examples/AddCell.s"
@@ -3318,9 +3057,18 @@ help:
 	@echo "... src/dxflib/dl_writer_ascii.o"
 	@echo "... src/dxflib/dl_writer_ascii.i"
 	@echo "... src/dxflib/dl_writer_ascii.s"
+	@echo "... src/gcode/cut.o"
+	@echo "... src/gcode/cut.i"
+	@echo "... src/gcode/cut.s"
 	@echo "... src/gcode/lexer.o"
 	@echo "... src/gcode/lexer.i"
 	@echo "... src/gcode/lexer.s"
+	@echo "... src/gcode/linear_cut.o"
+	@echo "... src/gcode/linear_cut.i"
+	@echo "... src/gcode/linear_cut.s"
+	@echo "... src/gcode/machine.o"
+	@echo "... src/gcode/machine.i"
+	@echo "... src/gcode/machine.s"
 	@echo "... src/gcode/parse_stream.o"
 	@echo "... src/gcode/parse_stream.i"
 	@echo "... src/gcode/parse_stream.s"
@@ -3351,6 +3099,9 @@ help:
 	@echo "... src/geometry/spline_sampling.o"
 	@echo "... src/geometry/spline_sampling.i"
 	@echo "... src/geometry/spline_sampling.s"
+	@echo "... src/geometry/surface.o"
+	@echo "... src/geometry/surface.i"
+	@echo "... src/geometry/surface.s"
 	@echo "... src/geometry/triangle.o"
 	@echo "... src/geometry/triangle.i"
 	@echo "... src/geometry/triangle.s"
@@ -3372,9 +3123,6 @@ help:
 	@echo "... src/synthesis/axis_3.o"
 	@echo "... src/synthesis/axis_3.i"
 	@echo "... src/synthesis/axis_3.s"
-	@echo "... src/synthesis/cut.o"
-	@echo "... src/synthesis/cut.i"
-	@echo "... src/synthesis/cut.s"
 	@echo "... src/synthesis/cut_to_gcode.o"
 	@echo "... src/synthesis/cut_to_gcode.i"
 	@echo "... src/synthesis/cut_to_gcode.s"
@@ -3384,12 +3132,6 @@ help:
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
-	@echo "... src/synthesis/linear_cut.o"
-	@echo "... src/synthesis/linear_cut.i"
-	@echo "... src/synthesis/linear_cut.s"
-	@echo "... src/synthesis/machine.o"
-	@echo "... src/synthesis/machine.i"
-	@echo "... src/synthesis/machine.s"
 	@echo "... src/synthesis/mesh_to_gcode.o"
 	@echo "... src/synthesis/mesh_to_gcode.i"
 	@echo "... src/synthesis/mesh_to_gcode.s"
@@ -3420,9 +3162,6 @@ help:
 	@echo "... src/synthesis/workpiece_clipping.o"
 	@echo "... src/synthesis/workpiece_clipping.i"
 	@echo "... src/synthesis/workpiece_clipping.s"
-	@echo "... src/system/arena_allocator.o"
-	@echo "... src/system/arena_allocator.i"
-	@echo "... src/system/arena_allocator.s"
 	@echo "... src/system/file.o"
 	@echo "... src/system/file.i"
 	@echo "... src/system/file.s"
@@ -3441,6 +3180,9 @@ help:
 	@echo "... src/transformers/retarget.o"
 	@echo "... src/transformers/retarget.i"
 	@echo "... src/transformers/retarget.s"
+	@echo "... src/utils/arena_allocator.o"
+	@echo "... src/utils/arena_allocator.i"
+	@echo "... src/utils/arena_allocator.s"
 	@echo "... test/analysis_tests.o"
 	@echo "... test/analysis_tests.i"
 	@echo "... test/analysis_tests.s"

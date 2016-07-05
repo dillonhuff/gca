@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "geometry/polygon.h"
 #include "geometry/triangle.h"
-#include "system/algorithm.h"
-#include "system/arena_allocator.h"
+#include "utils/algorithm.h"
+#include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
 namespace gca {

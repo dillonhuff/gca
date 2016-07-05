@@ -1,9 +1,9 @@
 #include <cmath>
 
 #include "synthesis/cut_to_gcode.h"
-#include "synthesis/circular_arc.h"
+#include "gcode/circular_arc.h"
 #include "synthesis/output.h"
-#include "synthesis/safe_move.h"
+#include "gcode/safe_move.h"
 
 namespace gca {
 

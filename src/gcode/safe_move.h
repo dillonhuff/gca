@@ -1,7 +1,7 @@
 #ifndef GCA_SAFE_MOVE_H
 #define GCA_SAFE_MOVE_H
 
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

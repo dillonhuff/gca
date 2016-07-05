@@ -5,8 +5,8 @@
 
 #include "gcode/lexer.h"
 #include "geometry/line.h"
-#include "synthesis/linear_cut.h"
-#include "synthesis/machine.h"
+#include "gcode/linear_cut.h"
+#include "gcode/machine.h"
 
 using namespace std;
 

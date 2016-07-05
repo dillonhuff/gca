@@ -5,7 +5,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
 namespace gca {
@@ -124,21 +124,13 @@ namespace gca {
 
     auto outer_surfs = outer_surfaces(mesh);
     auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
-    classify_part_surfaces(outer_surfs, aligned_workpiece);
-    auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
 
     fixture_plan plan =
-      make_fixture_plan(mesh, outer_surfs, fixes, tools, workpiece_dims);
+      make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-    for (auto orient_surfaces_pair : plan.fixtures()) {
-      auto m = oriented_part_mesh(orient_surfaces_pair.first.orient,
-				  orient_surfaces_pair.second,
-				  orient_surfaces_pair.first.v);
-      double workpiece_height = aligned_workpiece.sides[2].len();
-      vector<pocket> pockets =
-	make_surface_pockets(m.second, m.first, workpiece_height);
-      double last_depth = max_distance_along(m.first.vertex_list(), point(0, 0, 1));
-      for (auto p : pockets) {
+    for (auto setup : plan.fixtures()) {
+      double last_depth = max_distance_along(setup.m->vertex_list(), point(0, 0, 1));
+      for (auto p : setup.pockets) {
 	REQUIRE(p.get_end_depth() <= last_depth);
 	last_depth = p.get_end_depth();
       }
@@ -278,22 +270,12 @@ namespace gca {
       fixtures fixes(test_vice, plates);
 
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
-      auto part_ss = outer_surfaces(mesh);
-      auto aligned_workpiece = align_workpiece(part_ss, workpiece_dims);
-      classify_part_surfaces(part_ss, aligned_workpiece);
-      vector<pair<triangular_mesh, surface_list>> meshes =
-	part_arrangements(mesh, part_ss, test_vice);
-      vector<gcode_program> programs;
-      cut_secured_meshes(meshes, programs, tools);
-
-      SECTION("One program per mesh") {
-	REQUIRE(meshes.size() == programs.size());
-      }
+      fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
       
       SECTION("Toolpaths don't gouge the mesh") {
-	for (unsigned i = 0; i < meshes.size(); i++) {
-	  auto program = programs[i];
-	  auto mesh = meshes[i].first;
+	for (unsigned i = 0; i < p.steps().size(); i++) {
+	  auto program = p.steps()[i].prog;
+	  auto mesh = p.steps()[i].part;
 	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
 	}
       }

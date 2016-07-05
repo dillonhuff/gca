@@ -1,5 +1,5 @@
 #include "synthesis/millability.h"
-#include "system/algorithm.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 

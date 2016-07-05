@@ -6,7 +6,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 #include "synthesis/tool.h"
 
 namespace gca {
@@ -85,6 +85,8 @@ namespace gca {
       return mesh->bounding_box();
     }
   };
+
+  pocket box_pocket(const box b);
 
   std::vector<polyline> deepen_polyline(const std::vector<double>& depths,
 					const polyline& p);

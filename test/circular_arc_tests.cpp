@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "synthesis/circular_arc.h"
+#include "gcode/circular_arc.h"
 
 namespace gca {
 

@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "synthesis/machine.h"
+#include "gcode/machine.h"
 
 namespace gca {
 

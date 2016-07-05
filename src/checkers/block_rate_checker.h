@@ -2,7 +2,7 @@
 #define GCA_BLOCK_RATE_CHECKER_H
 
 #include "gcode/lexer.h"
-#include "synthesis/cut.h"
+#include "gcode/cut.h"
 
 namespace gca {
 

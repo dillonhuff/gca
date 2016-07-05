@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "system/arena_allocator.h"
+#include "utils/arena_allocator.h"
 #include "geometry/point.h"
 
 using namespace std;

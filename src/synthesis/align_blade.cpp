@@ -3,8 +3,8 @@
 
 
 #include "synthesis/align_blade.h"
-#include "synthesis/linear_cut.h"
-#include "synthesis/safe_move.h"
+#include "gcode/linear_cut.h"
+#include "gcode/safe_move.h"
 
 namespace gca {
 
