@@ -470,7 +470,6 @@ namespace gca {
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
-				 //				 std::vector<surface>& part_ss,
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {

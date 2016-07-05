@@ -111,8 +111,6 @@ namespace gca {
 
     auto outer_surfs = outer_surfaces(mesh);
     auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
-    classify_part_surfaces(outer_surfs, aligned_workpiece);
-    auto surfs_to_cut = surfaces_to_cut(mesh, outer_surfs);
 
     fixture_plan plan =
       make_fixture_plan(mesh, fixes, tools, workpiece_dims);
