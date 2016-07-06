@@ -212,6 +212,14 @@ namespace gca {
   }
 
   std::vector<polyline>
+  contour_pocket::toolpath_lines(const tool& t,
+				 const double cut_depth) const {
+    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+    auto i = project(exterior_offset(interior, t.radius()), get_end_depth());
+    return {to_polyline(o), to_polyline(i)};
+  }
+  
+  std::vector<polyline>
   face_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     auto p = project(interior_offset(base, t.radius()), get_end_depth());

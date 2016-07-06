@@ -150,6 +150,13 @@ namespace gca {
     oriented_polygon exterior;
 
   public:
+    contour_pocket(const double p_start_depth,
+		   const double p_end_depth,
+		   const oriented_polygon& p_i,
+		   const oriented_polygon& p_e)
+      : start_depth(p_start_depth), end_depth(p_end_depth),
+	interior(p_i), exterior(p_e) {}
+    
     const vector<oriented_polygon>& get_holes() const
     { assert(false); }
 
@@ -160,8 +167,7 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
-    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
-    { assert(false); }
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
   };
   
   class face_pocket {

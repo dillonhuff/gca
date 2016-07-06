@@ -158,22 +158,40 @@ namespace gca {
     double x1 = v.x_max();
     double x2 = x1 - (aligned_x - clipped_x) / 2.0;
     double x3 = x2 - clipped_x;
-    double x4 = x3 - (aligned_x - clipped_x) / 2.0;
+    //    double x4 = x3 - (aligned_x - clipped_x) / 2.0;
 
     double y1 = v.y_max();
     double y2 = y1 - (aligned_y - clipped_y) / 2.0;
     double y3 = y2 - clipped_y;
-    double y4 = y3 - (aligned_y - clipped_y) / 2.0;
+    // double y4 = y3 - (aligned_y - clipped_y) / 2.0;
 
-    box b2 = box(x4, x1, y2, y1, z_min, z_max);
-    box b3 = box(x4, x1, y4, y3, z_min, z_max);
-    box b4 = box(x4, x3, y3, y2, z_min, z_max);
-    box b5 = box(x2, x1, y3, y2, z_min, z_max);
+    box b2 = box(x3, x2, y3, y2, z_min, z_max);
 
-    pockets.push_back(box_pocket(b2));
-    pockets.push_back(box_pocket(b3));
-    pockets.push_back(box_pocket(b4));
-    pockets.push_back(box_pocket(b5));
+    point p1(b2.x_min, b2.y_min, b2.z_min);
+    point p2(b2.x_min, b2.y_max, b2.z_min);
+    point p3(b2.x_max, b2.y_max, b2.z_min);
+    point p4(b2.x_max, b2.y_min, b2.z_min);
+    vector<point> verts{p1, p2, p3, p4};
+    oriented_polygon interior(point(0, 0, 1), verts);
+
+    point p5(b1.x_min, b1.y_min, b1.z_min);
+    point p6(b1.x_min, b1.y_max, b1.z_min);
+    point p7(b1.x_max, b1.y_max, b1.z_min);
+    point p8(b1.x_max, b1.y_min, b1.z_min);
+    vector<point> vs{p5, p6, p7, p8};
+    oriented_polygon exterior(point(0, 0, 1), vs);
+
+    pockets.push_back(contour_pocket(b2.z_max, b2.z_min, interior, exterior));
+
+    // box b2 = box(x4, x1, y2, y1, z_min, z_max);
+    // box b3 = box(x4, x1, y4, y3, z_min, z_max);
+    // box b4 = box(x4, x3, y3, y2, z_min, z_max);
+    // box b5 = box(x2, x1, y3, y2, z_min, z_max);
+
+    // pockets.push_back(box_pocket(b2));
+    // pockets.push_back(box_pocket(b3));
+    // pockets.push_back(box_pocket(b4));
+    // pockets.push_back(box_pocket(b5));
 
     return fixture_setup(m, v, pockets);
   }
