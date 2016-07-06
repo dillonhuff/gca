@@ -30,6 +30,8 @@ namespace gca {
 
     pocket& operator=(pocket&&) noexcept = default;
 
+    const vector<oriented_polygon>& get_holes() const
+    { return self_->get_holes(); }
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
     { return self_->toolpath_lines(t, cut_depth); }
     bool above_base(const point p) const
@@ -42,6 +44,7 @@ namespace gca {
   private:
     struct concept_t {
       virtual ~concept_t() = default;
+      virtual const vector<oriented_polygon>& get_holes() const = 0;
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
       virtual bool above_base(const point p) const = 0;
@@ -53,6 +56,8 @@ namespace gca {
     struct model : concept_t {
       model(T x) : data_(move(x)) {}
       virtual concept_t* copy_() const { return new model<T>(*this); }
+      const vector<oriented_polygon>& get_holes() const
+      { return data_.get_holes(); }
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
       { return data_.toolpath_lines(t, cut_depth); }
       bool above_base(const point p) const { return data_.above_base(p); }
