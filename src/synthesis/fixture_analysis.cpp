@@ -32,7 +32,7 @@ namespace gca {
     auto oriented_mesh = orient_mesh(mesh, orient);
     return shift_mesh(oriented_mesh, v);
   }
-  
+
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh) {
     // TODO: Actually compute workpiece normals
@@ -191,22 +191,10 @@ namespace gca {
     return mill_surfaces;
   }
 
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part,
-				       const std::vector<surface>& stable_surfaces) {
-    // vector<index_t> stable_surface_inds;
-    // for (auto s : stable_surfaces) {
-    //   if (s.is_SA()) {
-    // 	concat(stable_surface_inds, s.index_list());
-    //   }
-    // }
-    // sort(begin(stable_surface_inds), end(stable_surface_inds));
-
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part) {
     double normal_degrees_delta = 30.0;
     auto inds = part.face_indexes();
-    // delete_if(inds,
-    // 	      [&stable_surface_inds](const index_t i)
-    // 	      { return binary_search(begin(stable_surface_inds),
-    // 				     end(stable_surface_inds), i); });
+
     
     vector<vector<index_t>> delta_regions =
       normal_delta_regions(inds, part, normal_degrees_delta);
@@ -476,7 +464,7 @@ namespace gca {
     auto aligned_workpiece = align_workpiece(part_ss, w);
     classify_part_surfaces(part_ss, aligned_workpiece);
 
-    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh, part_ss);
+    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
     vector<fixture_setup> setups =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, surfs_to_cut, tools, f);
     concat(setups, orientations_to_cut(part_mesh, part_ss, surfs_to_cut, f));

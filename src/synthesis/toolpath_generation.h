@@ -14,7 +14,6 @@ namespace gca {
   vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
 				       const triangular_mesh& mesh);
 
-
   struct pocket {
   private:
     oriented_polygon boundary;

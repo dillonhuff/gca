@@ -118,6 +118,7 @@ namespace gca {
   fixture_setup
   clip_top_and_sides(const workpiece& aligned,
 		     const workpiece& clipped,
+		     std::vector<surface>& surfaces_to_cut,
 		     const vice& v,
 		     const double plate_height) {
     double aligned_x = aligned.sides[0].len();
@@ -143,36 +144,41 @@ namespace gca {
     triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     
-    // Top outer box
+    // Top facing operation
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
     		 v.y_max() - aligned.sides[1].len(), v.y_max(),
     		 z_min, z_max);
 
     vector<pocket> pockets;
     pockets.push_back(box_pocket(b1));
-    
-    z_max = z_min;
-    z_min = z_min - clipped_z_height;
 
-    double x1 = v.x_max();
-    double x2 = x1 - (aligned_x - clipped_x) / 2.0;
-    double x3 = x2 - clipped_x;
-    double x4 = x3 - (aligned_x - clipped_x) / 2.0;
+    // TODO: Introduce the adjusted contouring code here?
+    if (false) {
+      assert(false);
+    } else {
+      z_max = z_min;
+      z_min = z_min - clipped_z_height;
 
-    double y1 = v.y_max();
-    double y2 = y1 - (aligned_y - clipped_y) / 2.0;
-    double y3 = y2 - clipped_y;
-    double y4 = y3 - (aligned_y - clipped_y) / 2.0;
+      double x1 = v.x_max();
+      double x2 = x1 - (aligned_x - clipped_x) / 2.0;
+      double x3 = x2 - clipped_x;
+      double x4 = x3 - (aligned_x - clipped_x) / 2.0;
 
-    box b2 = box(x4, x1, y2, y1, z_min, z_max);
-    box b3 = box(x4, x1, y4, y3, z_min, z_max);
-    box b4 = box(x4, x3, y3, y2, z_min, z_max);
-    box b5 = box(x2, x1, y3, y2, z_min, z_max);
+      double y1 = v.y_max();
+      double y2 = y1 - (aligned_y - clipped_y) / 2.0;
+      double y3 = y2 - clipped_y;
+      double y4 = y3 - (aligned_y - clipped_y) / 2.0;
 
-    pockets.push_back(box_pocket(b2));
-    pockets.push_back(box_pocket(b3));
-    pockets.push_back(box_pocket(b4));
-    pockets.push_back(box_pocket(b5));
+      box b2 = box(x4, x1, y2, y1, z_min, z_max);
+      box b3 = box(x4, x1, y4, y3, z_min, z_max);
+      box b4 = box(x4, x3, y3, y2, z_min, z_max);
+      box b5 = box(x2, x1, y3, y2, z_min, z_max);
+
+      pockets.push_back(box_pocket(b2));
+      pockets.push_back(box_pocket(b3));
+      pockets.push_back(box_pocket(b4));
+      pockets.push_back(box_pocket(b5));
+    }
 
     return fixture_setup(m, v, pockets);
   }
@@ -203,14 +209,15 @@ namespace gca {
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     return fixture_setup(m, v, pockets);
   }
-  
+
   std::vector<fixture_setup>
   parallel_clipping_programs(const workpiece& aligned,
 			     const workpiece& clipped,
+			     std::vector<surface>& surfaces_to_cut,
 			     const vice& v,
 			     const double plate_height) {
     std::vector<fixture_setup> progs;
-    progs.push_back(clip_top_and_sides(aligned, clipped, v, plate_height));
+    progs.push_back(clip_top_and_sides(aligned, clipped, surfaces_to_cut, v, plate_height));
     progs.push_back(clip_base(aligned, clipped, v, plate_height));
     return progs;
   }
@@ -219,6 +226,7 @@ namespace gca {
   std::vector<fixture_setup>
   parallel_plate_clipping(const workpiece& aligned,
 			  const workpiece& clipped,
+			  std::vector<surface>& surfaces_to_cut,
 			  const fixtures& f) {
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped.sides[2].len();
@@ -234,6 +242,7 @@ namespace gca {
       if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
     	return parallel_clipping_programs(aligned,
     					  clipped,
+					  surfaces_to_cut,
     					  f.get_vice(),
     					  p);
       }
@@ -293,7 +302,7 @@ namespace gca {
     remove_clipped_surfaces(aligned_workpiece, part_mesh, surfaces_to_cut);
 
     if (can_clip_parallel(aligned_workpiece, clipped, f)) {
-      return parallel_plate_clipping(aligned_workpiece, clipped, f);
+      return parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
     } else {
       double eps = 0.05;
       vector<fixture_setup> clip_setups;
