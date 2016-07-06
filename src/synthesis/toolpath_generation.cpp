@@ -214,16 +214,21 @@ namespace gca {
     return ps;
   }
 
+  std::vector<polyline>
+  freeform_pocket::toolpath_lines(const tool& t,
+				  const double cut_depth) const {
+    vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
+    auto finish_surface = finish_base_lines(*this, t, cut_depth);
+    concat(pocket_path, finish_surface);
+    auto finish_edges = finish_pocket(*this, t, cut_depth);
+    concat(pocket_path, finish_edges);
+    return pocket_path;
+  }
+
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
-    assert(false);
-    // vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
-    // auto finish_surface = finish_base_lines(pocket, t, cut_depth);
-    // concat(pocket_path, finish_surface);
-    // auto finish_edges = finish_pocket(pocket, t, cut_depth);
-    // concat(pocket_path, finish_edges);
-    // return pocket_path;
+    return pocket.toolpath_lines(t, cut_depth);
   }
 
   // TODO: Move these to somewhere else, they really dont belong here

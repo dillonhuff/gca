@@ -30,6 +30,8 @@ namespace gca {
 
     pocket& operator=(pocket&&) noexcept = default;
 
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+    { return self_->toolpath_lines(t, cut_depth); }
     bool above_base(const point p) const
     { return self_->above_base(p); }
     double get_end_depth() const
@@ -43,6 +45,7 @@ namespace gca {
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
       virtual bool above_base(const point p) const = 0;
+      virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const = 0;
       virtual concept_t* copy_() const = 0;
     };
 
@@ -50,6 +53,8 @@ namespace gca {
     struct model : concept_t {
       model(T x) : data_(move(x)) {}
       virtual concept_t* copy_() const { return new model<T>(*this); }
+      virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+      { return data_.toolpath_lines(t, cut_depth); }
       bool above_base(const point p) const { return data_.above_base(p); }
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }
@@ -82,6 +87,8 @@ namespace gca {
       boundary = extract_boundary(bounds);
       holes = bounds;
     }
+
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
     const std::vector<index_t>& base_face_indexes() const
     { return base_inds; }
