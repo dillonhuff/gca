@@ -100,8 +100,6 @@ namespace gca {
       : m(p_m), v(p_v), pockets(p) {}
   };
 
-  typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
-
   class fixture_plan {
   protected:
     const triangular_mesh& part;

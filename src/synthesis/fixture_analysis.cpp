@@ -481,12 +481,6 @@ namespace gca {
       workpiece_clipping_programs(aligned_workpiece, part_mesh, surfs_to_cut, tools, f);
     concat(setups, orientations_to_cut(part_mesh, part_ss, surfs_to_cut, f));
 
-    // fixture_list orients =
-      
-    // for (auto orient : orients) {
-    //   setups.push_back(make_fixture_setup(orient.first, orient.second));
-    // }
-
     return fixture_plan(part_mesh, aligned_workpiece, setups);
   }
 
