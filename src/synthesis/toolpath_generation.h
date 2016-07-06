@@ -145,6 +145,7 @@ namespace gca {
   class contour_pocket {
   protected:
     double start_depth;
+    double end_depth;
     oriented_polygon interior;
     oriented_polygon exterior;
 
@@ -153,7 +154,7 @@ namespace gca {
     { assert(false); }
 
     double get_end_depth() const
-    { return interior.vertices().front().z; }
+    { return end_depth; }
     double get_start_depth() const
     { return start_depth; }
     bool above_base(const point p) const
@@ -166,6 +167,7 @@ namespace gca {
   class face_pocket {
   protected:
     double start_depth;
+    double end_depth;
     oriented_polygon base;
 
   public:
@@ -173,7 +175,7 @@ namespace gca {
     { assert(false); }
 
     double get_end_depth() const
-    { return base.vertices().front().z; }
+    { return end_depth; }
     double get_start_depth() const
     { return start_depth; }
     bool above_base(const point p) const
