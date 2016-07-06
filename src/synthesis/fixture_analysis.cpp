@@ -436,7 +436,16 @@ namespace gca {
     				 surfaces_to_cut);
   }
 
-  fixture_list
+  fixture_setup
+  make_fixture_setup(const fixture& f,
+		     surface_list& surfaces) {
+    triangular_mesh m = oriented_part_mesh(f.orient, f.v);
+    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
+    auto pockets = make_surface_pockets(*mesh, surfaces);
+    return fixture_setup(mesh, f.v, pockets);
+  }
+
+  std::vector<fixture_setup>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& stable_surfaces,
 		      const std::vector<surface>& surfs_to_cut,
@@ -447,25 +456,16 @@ namespace gca {
     surface_map os =
       pick_orientations(part_mesh, surfs_to_cut, all_orients);
 
-    fixture_list orients;
+    vector<fixture_setup> orients;
     for (auto p : os) {
       unsigned ori = p.first;
       surface_list surfaces;
       for (auto i : p.second) {
 	surfaces.push_back(surfs_to_cut[i].index_list());
       }
-      orients.push_back(mk_pair(all_orients[ori], surfaces));
+      orients.push_back(make_fixture_setup(all_orients[ori], surfaces));
     }
     return orients;
-  }
-
-  fixture_setup
-  make_fixture_setup(const fixture& f,
-		     surface_list& surfaces) {
-    triangular_mesh m = oriented_part_mesh(f.orient, f.v);
-    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
-    auto pockets = make_surface_pockets(*mesh, surfaces);
-    return fixture_setup(mesh, f.v, pockets);
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
@@ -479,12 +479,13 @@ namespace gca {
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh, part_ss);
     vector<fixture_setup> setups =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, surfs_to_cut, tools, f);
+    concat(setups, orientations_to_cut(part_mesh, part_ss, surfs_to_cut, f));
 
-    fixture_list orients =
-      orientations_to_cut(part_mesh, part_ss, surfs_to_cut, f);
-    for (auto orient : orients) {
-      setups.push_back(make_fixture_setup(orient.first, orient.second));
-    }
+    // fixture_list orients =
+      
+    // for (auto orient : orients) {
+    //   setups.push_back(make_fixture_setup(orient.first, orient.second));
+    // }
 
     return fixture_plan(part_mesh, aligned_workpiece, setups);
   }
