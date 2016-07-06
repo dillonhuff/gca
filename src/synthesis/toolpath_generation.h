@@ -142,6 +142,47 @@ namespace gca {
     }
   };
 
+  class contour_pocket {
+  protected:
+    double start_depth;
+    oriented_polygon interior;
+    oriented_polygon exterior;
+
+  public:
+    const vector<oriented_polygon>& get_holes() const
+    { assert(false); }
+
+    double get_end_depth() const
+    { return interior.vertices().front().z; }
+    double get_start_depth() const
+    { return start_depth; }
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }
+
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+    { assert(false); }
+  };
+  
+  class face_pocket {
+  protected:
+    double start_depth;
+    oriented_polygon base;
+
+  public:
+    const vector<oriented_polygon>& get_holes() const
+    { assert(false); }
+
+    double get_end_depth() const
+    { return base.vertices().front().z; }
+    double get_start_depth() const
+    { return start_depth; }
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }
+
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+    { assert(false); }
+  };
+
   pocket box_pocket(const box b);
 
   std::vector<polyline> deepen_polyline(const std::vector<double>& depths,
