@@ -171,6 +171,11 @@ namespace gca {
     oriented_polygon base;
 
   public:
+    face_pocket(const double p_start_depth,
+		const double p_end_depth,
+		const oriented_polygon& p_base)
+      : start_depth(p_start_depth), end_depth(p_end_depth), base(p_base) {}
+
     const vector<oriented_polygon>& get_holes() const
     { assert(false); }
 
@@ -181,8 +186,8 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
-    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
-    { assert(false); }
+    std::vector<polyline>
+    toolpath_lines(const tool& t, const double cut_depth) const;
   };
 
   pocket box_pocket(const box b);

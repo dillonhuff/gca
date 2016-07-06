@@ -152,33 +152,28 @@ namespace gca {
     vector<pocket> pockets;
     pockets.push_back(box_pocket(b1));
 
-    // TODO: Introduce the adjusted contouring code here?
-    if (false) {
-      assert(false);
-    } else {
-      z_max = z_min;
-      z_min = z_min - clipped_z_height;
+    z_max = z_min;
+    z_min = z_min - clipped_z_height;
 
-      double x1 = v.x_max();
-      double x2 = x1 - (aligned_x - clipped_x) / 2.0;
-      double x3 = x2 - clipped_x;
-      double x4 = x3 - (aligned_x - clipped_x) / 2.0;
+    double x1 = v.x_max();
+    double x2 = x1 - (aligned_x - clipped_x) / 2.0;
+    double x3 = x2 - clipped_x;
+    double x4 = x3 - (aligned_x - clipped_x) / 2.0;
 
-      double y1 = v.y_max();
-      double y2 = y1 - (aligned_y - clipped_y) / 2.0;
-      double y3 = y2 - clipped_y;
-      double y4 = y3 - (aligned_y - clipped_y) / 2.0;
+    double y1 = v.y_max();
+    double y2 = y1 - (aligned_y - clipped_y) / 2.0;
+    double y3 = y2 - clipped_y;
+    double y4 = y3 - (aligned_y - clipped_y) / 2.0;
 
-      box b2 = box(x4, x1, y2, y1, z_min, z_max);
-      box b3 = box(x4, x1, y4, y3, z_min, z_max);
-      box b4 = box(x4, x3, y3, y2, z_min, z_max);
-      box b5 = box(x2, x1, y3, y2, z_min, z_max);
+    box b2 = box(x4, x1, y2, y1, z_min, z_max);
+    box b3 = box(x4, x1, y4, y3, z_min, z_max);
+    box b4 = box(x4, x3, y3, y2, z_min, z_max);
+    box b5 = box(x2, x1, y3, y2, z_min, z_max);
 
-      pockets.push_back(box_pocket(b2));
-      pockets.push_back(box_pocket(b3));
-      pockets.push_back(box_pocket(b4));
-      pockets.push_back(box_pocket(b5));
-    }
+    pockets.push_back(box_pocket(b2));
+    pockets.push_back(box_pocket(b3));
+    pockets.push_back(box_pocket(b4));
+    pockets.push_back(box_pocket(b5));
 
     return fixture_setup(m, v, pockets);
   }
