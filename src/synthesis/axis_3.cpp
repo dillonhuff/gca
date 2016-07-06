@@ -85,7 +85,7 @@ namespace gca {
     // auto bounds = mesh_bounds(surface, mesh);
     // auto boundary = extract_boundary(bounds);
     // vector<oriented_polygon> holes = bounds;
-    return pocket(top_height, surface, &mesh); //boundary, holes, top_height, surface, &mesh);
+    return pocket(freeform_pocket(top_height, surface, &mesh)); //boundary, holes, top_height, surface, &mesh);
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
@@ -210,7 +210,7 @@ namespace gca {
 	assert(base_mesh == new_base_cpy);
 	*base_mesh = new_base;
 	vector<oriented_polygon> holes;
-	pockets.push_back(pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
+	pockets.push_back(freeform_pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
       }
     }
     cout << "# vertical pockets = " << pockets.size() << endl;
