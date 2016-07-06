@@ -182,5 +182,14 @@ namespace gca {
     }
     return lines;
   }
-  
+
+  oriented_polygon base(const box b) {
+    point p1(b.x_min, b.y_min, b.z_min);
+    point p2(b.x_min, b.y_max, b.z_min);
+    point p3(b.x_max, b.y_max, b.z_min);
+    point p4(b.x_max, b.y_min, b.z_min);
+    vector<point> verts{p1, p2, p3, p4};
+    oriented_polygon interior(point(0, 0, 1), verts);
+    return interior;
+  }
 }

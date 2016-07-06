@@ -62,6 +62,8 @@ namespace gca {
 
   vector<polyline> sample_lines_2d(const oriented_polygon& b, double x_inc, double y_inc, double z_level);
 
+  oriented_polygon base(const box b);
+
 }
 
 #endif
