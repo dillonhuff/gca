@@ -98,15 +98,32 @@ namespace gca {
 
   // TODO: Need to add normal vectors, how to match this with
   // the code in make_fixture_plan?
-  std::vector<surface>
-  outside_surfaces(std::vector<surface>& surfaces_to_cut) {
+  oriented_polygon
+  part_outline(std::vector<surface>& surfaces_to_cut) {
     point n(0, 0, 1);
-    vector<surface> surfs =
+
+    vector<surface> vertical_surfs =
       select(surfaces_to_cut,
-	     [n](const surface& s)
-	     { return s.orthogonal_to(n, 0.01); });
-    
-    return surfs;
+    	     [n](const surface& s)
+    	     { return s.orthogonal_to(n, 0.01); });
+
+    vector<vector<unsigned>> merge_groups =
+      connected_components_by(vertical_surfs, [](const surface& l, const surface& r)
+    			      { return surfaces_share_edge(l, r); });
+    cout << "# vertical components = " << merge_groups.size() << endl;
+
+    // TODO: Add tests of exterior / interior, etc
+    if (merge_groups.size() == 1) {
+      surface m = merge_surfaces(vertical_surfs);
+      vector<oriented_polygon> outlines =
+	mesh_bounds(m.index_list(), m.get_parent_mesh());
+      if (outlines.size() == 2) {
+	return outlines.front();
+      }
+    }
+
+    oriented_polygon empty(point(0, 0, 1), {});
+    return empty;
   }
 
   fixture_setup
@@ -141,28 +158,28 @@ namespace gca {
     vector<pocket> pockets;
     pockets.push_back(box_pocket(b1));
 
-    vector<surface> outside_surfs =
-      outside_surfaces(surfaces_to_cut);
-    
-    if (outside_surfs.size() > 0) {
-      assert(false);
+    oriented_polygon exterior = base(b1);
+
+    oriented_polygon outline =
+      part_outline(surfaces_to_cut);
+
+    z_max = z_min;
+    z_min = z_min - clipped_z_height;
+
+    double x1 = v.x_max();
+    double x2 = x1 - (aligned_x - clipped_x) / 2.0;
+    double x3 = x2 - clipped_x;
+
+    double y1 = v.y_max();
+    double y2 = y1 - (aligned_y - clipped_y) / 2.0;
+    double y3 = y2 - clipped_y;
+
+    box b2 = box(x3, x2, y3, y2, z_min, z_max);
+
+    if (outline.vertices().size() > 0) {
+      pockets.push_back(contour_pocket(b2.z_max, b2.z_min, outline, exterior));
     } else {
-      z_max = z_min;
-      z_min = z_min - clipped_z_height;
-
-      double x1 = v.x_max();
-      double x2 = x1 - (aligned_x - clipped_x) / 2.0;
-      double x3 = x2 - clipped_x;
-
-      double y1 = v.y_max();
-      double y2 = y1 - (aligned_y - clipped_y) / 2.0;
-      double y3 = y2 - clipped_y;
-
-      box b2 = box(x3, x2, y3, y2, z_min, z_max);
       oriented_polygon interior = base(b2);
-
-      oriented_polygon exterior = base(b1);
-
       pockets.push_back(contour_pocket(b2.z_max, b2.z_min, interior, exterior));
     }
 
@@ -290,18 +307,17 @@ namespace gca {
 			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
-    remove_clipped_surfaces(aligned_workpiece, part_mesh, surfaces_to_cut);
-
+    vector<fixture_setup> clip_setups;
     if (can_clip_parallel(aligned_workpiece, clipped, f)) {
-      return parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
+      clip_setups = parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
     } else {
       double eps = 0.05;
-      vector<fixture_setup> clip_setups;
       append_clip_setups("X", 0, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
       append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
       append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
-      return clip_setups;
     }
+    remove_clipped_surfaces(aligned_workpiece, part_mesh, surfaces_to_cut);
+    return clip_setups;
   }
 
 }

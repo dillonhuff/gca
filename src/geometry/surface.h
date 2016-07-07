@@ -70,6 +70,9 @@ namespace gca {
 			   const unsigned j,
 			   const std::vector<surface>& surfaces);
 
+  bool surfaces_share_edge(const surface& l,
+			   const surface& r);
+  
   void remove_SA_surfaces(const std::vector<surface>& surfaces,
   			  std::vector<index_t>& indices);
 
@@ -80,6 +83,8 @@ namespace gca {
   std::vector<surface> outer_surfaces(const triangular_mesh& part);
 
   typedef std::vector<std::vector<index_t>> surface_list;
+
+  surface merge_surfaces(const std::vector<surface>& surfaces);
 
 }
 

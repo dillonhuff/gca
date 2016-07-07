@@ -2,6 +2,13 @@
 
 namespace gca {
 
+  bool surfaces_share_edge(const surface& l,
+			   const surface& r) {
+    auto ind1 = l.index_list();
+    auto ind2 = r.index_list();
+    return share_edge(ind1, ind2, l.get_parent_mesh());
+  }
+  
   bool surfaces_share_edge(const unsigned i,
 			   const unsigned j,
 			   const std::vector<surface>& surfaces) {
@@ -62,6 +69,15 @@ namespace gca {
       }
     }
     return surfaces;
+  }
+
+  surface merge_surfaces(const std::vector<surface>& surfaces) {
+    assert(surfaces.size() > 0);
+    vector<index_t> inds;
+    for (auto s : surfaces) {
+      concat(inds, s.index_list());
+    }
+    return surface(&(surfaces.front().get_parent_mesh()), inds);
   }
 
 }
