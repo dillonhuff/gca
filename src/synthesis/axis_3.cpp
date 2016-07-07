@@ -8,15 +8,6 @@
 
 namespace gca {
 
-  std::vector<index_t> preprocess_faces(const triangular_mesh& mesh) {
-    std::vector<index_t> face_inds = millable_faces(point(0, 0, 1), mesh);
-    // TODO: Find a way to remove this ad-hoc tolerance
-    delete_if(face_inds,
-	      [&mesh](const index_t i)
-	      { return !is_upward_facing(mesh.face_triangle(i), 0.8); });
-    return face_inds;
-  }
-
   // TODO: Really should not be oriented polygons
   vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
 				       const triangular_mesh& mesh) {
@@ -57,35 +48,11 @@ namespace gca {
 
     return unordered_segments_to_polygons(normal, no_dups);
   }
-  
-  std::vector<oriented_polygon> preprocess_triangles(const triangular_mesh& mesh) {
-    auto face_inds = preprocess_faces(mesh);
-    auto polygons = mesh_bounds(face_inds, mesh);
-    return polygons;
-  }
-
-  std::vector<std::vector<triangle>>
-  merge_surfaces(std::vector<index_t>& face_inds,
-		 const triangular_mesh& mesh) {
-    vector<vector<index_t>> surfaces = connect_regions(face_inds, mesh);
-    vector<vector<triangle>> tris;
-    for (auto s : surfaces) {
-      vector<triangle> ts;
-      for (auto i : s) {
-    	ts.push_back(mesh.face_triangle(i));
-      }
-      tris.push_back(ts);
-    }
-    return tris;
-  }
 
   pocket pocket_for_surface(const std::vector<index_t>& surface,
 			    double top_height,
 			    const triangular_mesh& mesh) {
-    // auto bounds = mesh_bounds(surface, mesh);
-    // auto boundary = extract_boundary(bounds);
-    // vector<oriented_polygon> holes = bounds;
-    return pocket(top_height, surface, &mesh); //boundary, holes, top_height, surface, &mesh);
+    return pocket(top_height, surface, &mesh);
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
@@ -235,32 +202,6 @@ namespace gca {
 	 [](const pocket& l, const pocket& r)
 	 { return l.get_end_depth() > r.get_end_depth(); });
     return pockets;
-  }
-
-  std::vector<polyline>
-  mill_surfaces(const std::vector<std::vector<index_t>>& sfs,
-		const triangular_mesh& mesh,
-		const tool& t,
-		double cut_depth,
-		double workpiece_height) {
-    auto pockets = make_surface_pockets(sfs, mesh, workpiece_height);
-    return mill_pockets(pockets, t, cut_depth);
-  }
-
-  std::vector<polyline> mill_surface_lines(const triangular_mesh& mesh,
-					   const tool& t,
-					   double cut_depth,
-					   double workpiece_height) {
-    auto surfaces = make_surfaces(mesh);
-    return mill_surfaces(surfaces, mesh, t, cut_depth, workpiece_height);
-  }
-
-  vector<block> mill_surface(const triangular_mesh& mesh,
-			     const tool& t,
-			     double cut_depth,
-			     double workpiece_height) {
-    auto pocket_lines = mill_surface_lines(mesh, t, cut_depth, workpiece_height);
-    return emco_f1_code(pocket_lines, workpiece_height + 0.1);
   }
 
 }
