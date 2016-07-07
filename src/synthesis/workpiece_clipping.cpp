@@ -96,6 +96,12 @@ namespace gca {
     clip_progs.push_back(clip_x.second);
   }
 
+  std::vector<surface>
+  outside_surface_inds(std::vector<surface>& surfaces_to_cut) {
+    vector<surface> surfs;
+    return surfs;
+  }
+
   fixture_setup
   clip_top_and_sides(const workpiece& aligned,
 		     const workpiece& clipped,
@@ -120,11 +126,6 @@ namespace gca {
     double z_max = v.base_z() + plate_height + aligned_z_height;
     double z_min = z_max - alpha;
 
-    // TODO: Use actual workpiece mesh
-    box bx(0, 1, 0, 1, z_max - 3.0, z_max);
-    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
-    
     // Top facing operation
     box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
     		 v.y_max() - aligned.sides[1].len(), v.y_max(),
@@ -133,24 +134,36 @@ namespace gca {
     vector<pocket> pockets;
     pockets.push_back(box_pocket(b1));
 
-    z_max = z_min;
-    z_min = z_min - clipped_z_height;
+    vector<surface> outside_surfaces =
+      outside_surface_inds(surfaces_to_cut);
+    
+    if (outside_surfaces.size() > 0) {
+      assert(false);
+    } else {
+      z_max = z_min;
+      z_min = z_min - clipped_z_height;
 
-    double x1 = v.x_max();
-    double x2 = x1 - (aligned_x - clipped_x) / 2.0;
-    double x3 = x2 - clipped_x;
+      double x1 = v.x_max();
+      double x2 = x1 - (aligned_x - clipped_x) / 2.0;
+      double x3 = x2 - clipped_x;
 
-    double y1 = v.y_max();
-    double y2 = y1 - (aligned_y - clipped_y) / 2.0;
-    double y3 = y2 - clipped_y;
+      double y1 = v.y_max();
+      double y2 = y1 - (aligned_y - clipped_y) / 2.0;
+      double y3 = y2 - clipped_y;
 
-    box b2 = box(x3, x2, y3, y2, z_min, z_max);
-    oriented_polygon interior = base(b2);
+      box b2 = box(x3, x2, y3, y2, z_min, z_max);
+      oriented_polygon interior = base(b2);
 
-    oriented_polygon exterior = base(b1);
+      oriented_polygon exterior = base(b1);
 
-    pockets.push_back(contour_pocket(b2.z_max, b2.z_min, interior, exterior));
+      pockets.push_back(contour_pocket(b2.z_max, b2.z_min, interior, exterior));
+    }
 
+    // TODO: Use actual workpiece mesh
+    box bx(0, 1, 0, 1, z_max - 3.0, z_max);
+    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    
     return fixture_setup(m, v, pockets);
   }
 

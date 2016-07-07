@@ -82,10 +82,7 @@ namespace gca {
   pocket pocket_for_surface(const std::vector<index_t>& surface,
 			    double top_height,
 			    const triangular_mesh& mesh) {
-    // auto bounds = mesh_bounds(surface, mesh);
-    // auto boundary = extract_boundary(bounds);
-    // vector<oriented_polygon> holes = bounds;
-    return pocket(freeform_pocket(top_height, surface, &mesh)); //boundary, holes, top_height, surface, &mesh);
+    return pocket(freeform_pocket(top_height, surface, &mesh));
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
