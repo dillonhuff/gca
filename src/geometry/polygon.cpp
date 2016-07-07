@@ -182,5 +182,13 @@ namespace gca {
     }
     return lines;
   }
-  
+
+  double min_z(const oriented_polygon& p) {
+    auto min_z =
+      max_element(begin(p.vertices()), end(p.vertices()),
+		  [](const point l, const point r)
+		  { return l.z < r.z; });
+    return (*min_z).z;
+  }
+
 }

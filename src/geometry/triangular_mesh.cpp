@@ -333,5 +333,81 @@ namespace gca {
     }
     return false;
   }
+
+  // TODO: Really should not be oriented polygons
+  vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
+				       const triangular_mesh& mesh) {
+    vector<oriented_polygon> ps;
+    if (faces.size() == 0) {
+      return ps;
+    }
+    point normal = mesh.face_orientation(faces.front());
+    typedef pair<index_t, index_t> iline;
+    vector<iline> tri_lines;
+    for (auto i : faces) {
+      auto t = mesh.triangle_vertices(i);
+      tri_lines.push_back(iline(t.v[0], t.v[1]));
+      tri_lines.push_back(iline(t.v[1], t.v[2]));
+      tri_lines.push_back(iline(t.v[2], t.v[0]));
+    }
+
+    // TODO: Change to sort and count, maybe add to system/algorithm?
+    vector<iline> no_ds;
+    for (auto l : tri_lines) {
+      int count = 0;
+      for (auto r : tri_lines) {
+	if ((l.first == r.first && l.second == r.second) ||
+	    (l.first == r.second && l.second == r.first)) {
+	  count++;
+	}
+      }
+      assert(count > 0);
+      if (count == 1) {
+	no_ds.push_back(l);
+      }
+    }
+
+    vector<line> no_dups;
+    for (auto l : no_ds) {
+      no_dups.push_back(line(mesh.vertex(l.first), mesh.vertex(l.second)));
+    }
+
+    return unordered_segments_to_polygons(normal, no_dups);
+  }
+
+  bool all_orthogonal_to(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
+			 const point n,
+			 const double tolerance) {
+    for (auto i : triangles) {
+      auto t = mesh.face_triangle(i);
+      if (!within_eps(angle_between(t.normal, n), 90, tolerance)) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  bool all_normals_below(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
+			 const double v) {
+    for (auto i : triangles) {
+      auto t = mesh.face_triangle(i);
+      if (t.normal.normalize().z > v) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  void filter_vertical_surfaces(std::vector<std::vector<index_t>>& delta_regions,
+				const triangular_mesh& mesh) {
+    delete_if(delta_regions,
+    	      [&mesh](const vector<index_t>& surface)
+    	      { return all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
+    delete_if(delta_regions,
+    	      [&mesh](const vector<index_t>& surface)
+    	      { return all_normals_below(surface, mesh, -0.1); });
+  }
   
 }
