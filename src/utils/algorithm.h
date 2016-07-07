@@ -183,7 +183,7 @@ namespace gca {
     std::vector<T> selected;
     for (auto e : v) {
       if (f(e)) {
-	selected.push_back(f);
+	selected.push_back(e);
       }
     }
     return selected;

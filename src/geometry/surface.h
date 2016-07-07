@@ -60,6 +60,10 @@ namespace gca {
 
     inline const triangular_mesh& get_parent_mesh() const
     { return *parent_mesh; }
+
+    bool orthogonal_to(const point n, double tol) const {
+      return all_orthogonal_to(index_list(), get_parent_mesh(), n, tol);
+    }
   };
 
   bool surfaces_share_edge(const unsigned i,

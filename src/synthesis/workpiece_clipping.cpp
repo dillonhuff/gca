@@ -100,7 +100,12 @@ namespace gca {
   // the code in make_fixture_plan?
   std::vector<surface>
   outside_surfaces(std::vector<surface>& surfaces_to_cut) {
-    vector<surface> surfs;
+    point n(0, 0, 1);
+    vector<surface> surfs =
+      select(surfaces_to_cut,
+	     [n](const surface& s)
+	     { return s.orthogonal_to(n, 0.01); });
+    
     return surfs;
   }
 
