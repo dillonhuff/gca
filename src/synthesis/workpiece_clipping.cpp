@@ -96,8 +96,10 @@ namespace gca {
     clip_progs.push_back(clip_x.second);
   }
 
+  // TODO: Need to add normal vectors, how to match this with
+  // the code in make_fixture_plan?
   std::vector<surface>
-  outside_surface_inds(std::vector<surface>& surfaces_to_cut) {
+  outside_surfaces(std::vector<surface>& surfaces_to_cut) {
     vector<surface> surfs;
     return surfs;
   }
@@ -134,10 +136,10 @@ namespace gca {
     vector<pocket> pockets;
     pockets.push_back(box_pocket(b1));
 
-    vector<surface> outside_surfaces =
-      outside_surface_inds(surfaces_to_cut);
+    vector<surface> outside_surfs =
+      outside_surfaces(surfaces_to_cut);
     
-    if (outside_surfaces.size() > 0) {
+    if (outside_surfs.size() > 0) {
       assert(false);
     } else {
       z_max = z_min;
