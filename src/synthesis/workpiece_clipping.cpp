@@ -99,11 +99,11 @@ namespace gca {
   // TODO: Need to add normal vectors, how to match this with
   // the code in make_fixture_plan?
   oriented_polygon
-  part_outline(std::vector<surface>& surfaces_to_cut) {
+  part_outline(std::vector<surface>* surfaces_to_cut) {
     point n(0, 0, 1);
 
     vector<surface> vertical_surfs =
-      select(surfaces_to_cut,
+      select(*surfaces_to_cut,
     	     [n](const surface& s)
     	     { return s.orthogonal_to(n, 0.01); });
 
@@ -118,6 +118,11 @@ namespace gca {
       vector<oriented_polygon> outlines =
 	mesh_bounds(m.index_list(), m.get_parent_mesh());
       if (outlines.size() == 2) {
+	delete_if(*surfaces_to_cut, [&vertical_surfs](const surface& s)
+		  { return any_of(begin(vertical_surfs), end(vertical_surfs),
+				  [s](const surface& l)
+				  { return s.contained_by(l); }); });
+
 	return outlines.front();
       }
     }
@@ -161,7 +166,7 @@ namespace gca {
     oriented_polygon exterior = base(b1);
 
     oriented_polygon outline =
-      part_outline(surfaces_to_cut);
+      part_outline(&surfaces_to_cut);
 
     z_max = z_min;
     z_min = z_min - clipped_z_height;
