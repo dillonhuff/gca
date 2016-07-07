@@ -261,6 +261,21 @@ namespace gca {
 
   bool any_vertex_in(const triangle_t tri,
 		     const std::vector<index_t>& inds);
+
+  vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
+				       const triangular_mesh& mesh);
+
+  void filter_vertical_surfaces(std::vector<std::vector<index_t>>& delta_regions,
+				const triangular_mesh& mesh);
+
+  bool all_normals_below(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
+			 const double v);
+
+  bool all_orthogonal_to(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
+			 const point n,
+			 const double tolerance);
   
 }
 
