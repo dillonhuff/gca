@@ -283,12 +283,15 @@ namespace gca {
 
   // TODO: Clean up and add vice height test
   // TODO: Use tool lengths in can_clip_parallel test
-  std::vector<fixture_setup>
-  workpiece_clipping_programs(const workpiece aligned_workpiece,
+  std::pair<workpiece, std::vector<fixture_setup> >
+  workpiece_clipping_programs(const workpiece w, 
 			      const triangular_mesh& part_mesh,
 			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
+    auto stable_surfaces = outer_surfaces(part_mesh);
+    auto aligned_workpiece = align_workpiece(stable_surfaces, w);
+    classify_part_surfaces(stable_surfaces, aligned_workpiece);
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
     vector<fixture_setup> clip_setups =
@@ -299,10 +302,8 @@ namespace gca {
       append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
       append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
     }
-    auto stable_surfaces = outer_surfaces(part_mesh);
-    classify_part_surfaces(stable_surfaces, aligned_workpiece);
     remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
-    return clip_setups;
+    return std::make_pair(aligned_workpiece, clip_setups);
   }
 
 }

@@ -6,7 +6,7 @@
 
 namespace gca {
 
-  std::vector<fixture_setup>
+  std::pair<workpiece, std::vector<fixture_setup> >
   workpiece_clipping_programs(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh,
 			      std::vector<surface>& surfaces_to_cut,

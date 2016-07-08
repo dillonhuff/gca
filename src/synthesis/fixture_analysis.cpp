@@ -457,15 +457,17 @@ namespace gca {
 				 const vector<tool>& tools,
 				 const workpiece w) {
     auto stable_surfaces = outer_surfaces(part_mesh);
-    auto aligned_workpiece = align_workpiece(stable_surfaces, w);
-    classify_part_surfaces(stable_surfaces, aligned_workpiece);
-
-    vector<fixture> all_orients =
-      all_stable_fixtures(stable_surfaces, f);
 
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
-    vector<fixture_setup> setups =
-      workpiece_clipping_programs(aligned_workpiece, part_mesh, surfs_to_cut, tools, f);
+    pair<workpiece, vector<fixture_setup>> wp_setups =
+      workpiece_clipping_programs(w, part_mesh, surfs_to_cut, tools, f);
+
+    auto setups = wp_setups.second;
+    auto aligned_workpiece = wp_setups.first;
+
+    classify_part_surfaces(stable_surfaces, aligned_workpiece);
+    vector<fixture> all_orients =
+      all_stable_fixtures(stable_surfaces, f);
     concat(setups, orientations_to_cut(part_mesh, surfs_to_cut, all_orients));
 
     return fixture_plan(part_mesh, setups);
