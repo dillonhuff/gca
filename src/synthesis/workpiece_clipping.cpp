@@ -51,7 +51,6 @@ namespace gca {
     triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
     
-
     box b = box(0, workpiece_x,
 		0, workpiece_y,
 		z_max - eps, z_max);
@@ -110,7 +109,6 @@ namespace gca {
     vector<vector<unsigned>> merge_groups =
       connected_components_by(vertical_surfs, [](const surface& l, const surface& r)
     			      { return surfaces_share_edge(l, r); });
-    cout << "# vertical components = " << merge_groups.size() << endl;
 
     // TODO: Add tests of exterior / interior, etc
     if (merge_groups.size() == 1) {
@@ -134,7 +132,7 @@ namespace gca {
   fixture_setup
   clip_top_and_sides(const workpiece& aligned,
 		     const workpiece& clipped,
-		     std::vector<surface>& surfaces_to_cut,
+		     const oriented_polygon& outline,
 		     const vice& v,
 		     const double plate_height) {
     double aligned_x = aligned.sides[0].len();
@@ -145,8 +143,7 @@ namespace gca {
 
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped.sides[2].len();
-    
-    
+
     double adjusted_jaw_height = v.jaw_height() - plate_height;
     assert(adjusted_jaw_height > 0);
     double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
@@ -164,9 +161,6 @@ namespace gca {
     pockets.push_back(box_pocket(b1));
 
     oriented_polygon exterior = base(b1);
-
-    oriented_polygon outline =
-      part_outline(&surfaces_to_cut);
 
     z_max = z_min;
     z_min = z_min - clipped_z_height;
@@ -207,10 +201,16 @@ namespace gca {
     double adjusted_jaw_height = v.jaw_height() - plate_height;
     assert(adjusted_jaw_height > 0);
     double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+    assert(leftover > 0);
     double alpha = leftover / 2.0;
 
-    box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-    		v.y_max() - aligned.sides[1].len(), v.y_max(),
+    // box b = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
+    // 		v.y_max() - aligned.sides[1].len(), v.y_max(),
+    // 		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
+
+    // Align with vice
+    box b = box(0, aligned.sides[0].len(),
+    		0, aligned.sides[1].len(),
     		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
 
     pocket p = box_pocket(b);
@@ -229,12 +229,15 @@ namespace gca {
 			     std::vector<surface>& surfaces_to_cut,
 			     const vice& v,
 			     const double plate_height) {
+    oriented_polygon outline =
+      part_outline(&surfaces_to_cut);
+
     std::vector<fixture_setup> progs;
-    progs.push_back(clip_top_and_sides(aligned, clipped, surfaces_to_cut, v, plate_height));
+    progs.push_back(clip_top_and_sides(aligned, clipped, outline, v, plate_height));
     progs.push_back(clip_base(aligned, clipped, v, plate_height));
     return progs;
   }
-  
+
   // TODO: Reduce duplication between here and can_clip_parallel
   std::vector<fixture_setup>
   parallel_plate_clipping(const workpiece& aligned,
@@ -260,28 +263,8 @@ namespace gca {
     					  p);
       }
     }
-    assert(false);
-  }
-
-  bool can_clip_parallel(const workpiece& aligned,
-			 const workpiece& clipped,
-			 const fixtures& f) {
-    double aligned_z_height = aligned.sides[2].len();
-    double clipped_z_height = clipped.sides[2].len();
-
-    const vice& v = f.get_vice();
-    assert(!v.has_protective_base_plate());
-    
-    for (auto p : f.parallel_plates()) {
-      double adjusted_jaw_height = v.jaw_height() - p;
-      assert(adjusted_jaw_height > 0);
-      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
-      // TODO: Compute this magic number via friction analysis?
-      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
-	return true;
-      }
-    }
-    return false;
+    vector<fixture_setup> setups;
+    return setups;
   }
 
   void remove_clipped_surfaces(const workpiece& aligned_workpiece,
@@ -312,10 +295,9 @@ namespace gca {
 			      const fixtures& f) {
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
-    vector<fixture_setup> clip_setups;
-    if (can_clip_parallel(aligned_workpiece, clipped, f)) {
-      clip_setups = parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
-    } else {
+    vector<fixture_setup> clip_setups =
+      parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
+    if (clip_setups.size() == 0) {
       double eps = 0.05;
       append_clip_setups("X", 0, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
       append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);

@@ -469,7 +469,7 @@ namespace gca {
       workpiece_clipping_programs(aligned_workpiece, part_mesh, surfs_to_cut, tools, f);
     concat(setups, orientations_to_cut(part_mesh, stable_surfaces, surfs_to_cut, all_orients));
 
-    return fixture_plan(part_mesh, aligned_workpiece, setups);
+    return fixture_plan(part_mesh, setups);
   }
 
 }

@@ -103,19 +103,19 @@ namespace gca {
   class fixture_plan {
   protected:
     const triangular_mesh& part;
-    workpiece stock;
+    //    workpiece stock;
     std::vector<fixture_setup> setups;
     
   public:
     fixture_plan(const triangular_mesh& p_part,
-		 const workpiece& p_stock,
+		 //		 const workpiece& p_stock,
 		 const std::vector<fixture_setup>& p_fixture_pairs) :
-      part(p_part), stock(p_stock), setups(p_fixture_pairs) {
+      part(p_part), setups(p_fixture_pairs) { //stock(p_stock), setups(p_fixture_pairs) {
       std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
 
-    workpiece aligned_workpiece() const
-    { return stock; }
+    // workpiece aligned_workpiece() const
+    // { return stock; }
 
     const std::vector<fixture_setup>& fixtures() const
     { return setups; }
