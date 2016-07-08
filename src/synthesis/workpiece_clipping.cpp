@@ -267,12 +267,8 @@ namespace gca {
     return setups;
   }
 
-  void remove_clipped_surfaces(const workpiece& aligned_workpiece,
-			       const triangular_mesh& part_mesh,
+  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
 			       std::vector<surface>& surfaces_to_cut) {
-    auto stable_surfaces = outer_surfaces(part_mesh);
-    classify_part_surfaces(stable_surfaces, aligned_workpiece);
-
     vector<index_t> stable_surface_inds;
     for (auto s : stable_surfaces) {
       if (s.is_SA()) {
@@ -303,7 +299,9 @@ namespace gca {
       append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
       append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
     }
-    remove_clipped_surfaces(aligned_workpiece, part_mesh, surfaces_to_cut);
+    auto stable_surfaces = outer_surfaces(part_mesh);
+    classify_part_surfaces(stable_surfaces, aligned_workpiece);
+    remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
     return clip_setups;
   }
 

@@ -435,7 +435,6 @@ namespace gca {
 
   std::vector<fixture_setup>
   orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& stable_surfaces,
 		      const std::vector<surface>& surfs_to_cut,
 		      std::vector<fixture>& all_orients) {
     surface_map os =
@@ -467,7 +466,7 @@ namespace gca {
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
     vector<fixture_setup> setups =
       workpiece_clipping_programs(aligned_workpiece, part_mesh, surfs_to_cut, tools, f);
-    concat(setups, orientations_to_cut(part_mesh, stable_surfaces, surfs_to_cut, all_orients));
+    concat(setups, orientations_to_cut(part_mesh, surfs_to_cut, all_orients));
 
     return fixture_plan(part_mesh, setups);
   }
