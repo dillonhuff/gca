@@ -281,9 +281,25 @@ namespace gca {
 	      { return s.contained_by_sorted(stable_surface_inds); });
   }
 
+  box workpiece_box(const workpiece& w) {
+    double x_len = w.sides[0].len();
+    double y_len = w.sides[1].len();
+    double z_len = w.sides[2].len();
+    return box(0, x_len, 0, y_len, 0, z_len);
+  }
+
+  // TODO: Dont just make a box
+  triangular_mesh stock_mesh(const workpiece& w) {
+    box b = workpiece_box(w);
+    auto tris = box_triangles(b);
+    auto m = make_mesh(tris, 0.001);
+    assert(m.is_connected());
+    return m;
+  }
+
   // TODO: Clean up and add vice height test
   // TODO: Use tool lengths in can_clip_parallel test
-  std::pair<workpiece, std::vector<fixture_setup> >
+  std::pair<triangular_mesh, std::vector<fixture_setup> >
   workpiece_clipping_programs(const workpiece w, 
 			      const triangular_mesh& part_mesh,
 			      std::vector<surface>& surfaces_to_cut,
@@ -291,7 +307,7 @@ namespace gca {
 			      const fixtures& f) {
     auto stable_surfaces = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(stable_surfaces, w);
-    classify_part_surfaces(stable_surfaces, aligned_workpiece);
+    classify_part_surfaces(stable_surfaces, stock_mesh(aligned_workpiece));
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
     vector<fixture_setup> clip_setups =
@@ -303,7 +319,8 @@ namespace gca {
       append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
     }
     remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
-    return std::make_pair(aligned_workpiece, clip_setups);
+    triangular_mesh m = stock_mesh(aligned_workpiece);
+    return std::make_pair(m, clip_setups);
   }
 
 }

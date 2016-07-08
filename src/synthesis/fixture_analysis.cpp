@@ -34,15 +34,23 @@ namespace gca {
   }
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const workpiece workpiece_mesh) {
+			      const triangular_mesh& stock_mesh) {
     // TODO: Actually compute workpiece normals
+    auto stock_surfs = outer_surfaces(stock_mesh);
+    cout << "# triangles in stock = " << stock_mesh.face_indexes().size() << endl;
+    cout << "# stock surfaces = " << stock_surfs.size() << endl;
+    assert(stock_surfs.size() == 6);
     vector<point> normals;
-    normals.push_back(point(1, 0, 0));
-    normals.push_back(point(-1, 0, 0));
-    normals.push_back(point(0, 1, 0));
-    normals.push_back(point(0, -1, 0));
-    normals.push_back(point(0, 0, 1));
-    normals.push_back(point(0, 0, -1));
+    for (auto s : stock_surfs) {
+      index_t i = s.index_list().front();
+      normals.push_back(s.face_orientation(i));
+    }
+    // normals.push_back(point(1, 0, 0));
+    // normals.push_back(point(-1, 0, 0));
+    // normals.push_back(point(0, 1, 0));
+    // normals.push_back(point(0, -1, 0));
+    // normals.push_back(point(0, 0, 1));
+    // normals.push_back(point(0, 0, -1));
 
     for (auto& sf : part_surfaces) {
       for (auto n : normals) {
@@ -456,15 +464,14 @@ namespace gca {
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {
-    auto stable_surfaces = outer_surfaces(part_mesh);
-
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
-    pair<workpiece, vector<fixture_setup>> wp_setups =
+    pair<triangular_mesh, vector<fixture_setup>> wp_setups =
       workpiece_clipping_programs(w, part_mesh, surfs_to_cut, tools, f);
 
     auto setups = wp_setups.second;
     auto aligned_workpiece = wp_setups.first;
 
+    auto stable_surfaces = outer_surfaces(part_mesh);
     classify_part_surfaces(stable_surfaces, aligned_workpiece);
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);

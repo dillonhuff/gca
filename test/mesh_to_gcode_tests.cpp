@@ -5,6 +5,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
+#include "synthesis/workpiece_clipping.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -155,7 +156,7 @@ namespace gca {
       SECTION("All simple box surfaces are part of a SA faces") {
 	vector<index_t> fis = mesh.face_indexes();
 	workpiece workpiece_dims(1.5, 1.2, 1.5, ALUMINUM);
-	auto workpiece_mesh = align_workpiece(surfaces, workpiece_dims);
+	auto workpiece_mesh = stock_mesh(align_workpiece(surfaces, workpiece_dims));
 	classify_part_surfaces(surfaces, workpiece_mesh);
 	remove_SA_surfaces(surfaces, fis);
 	REQUIRE(fis.size() == 0);
