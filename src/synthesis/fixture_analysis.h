@@ -129,11 +129,6 @@ namespace gca {
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh);
 
-  fixture_list
-  orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& stable_surfaces,
-		      const fixtures& v);
-
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
 				       const std::vector<surface>& stable_surfaces);
 
