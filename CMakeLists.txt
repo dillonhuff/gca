@@ -91,7 +91,7 @@ SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
 add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})
 target_link_libraries(gprocess gcode geometry utils)
 
-SET(HEADERS 
+SET(GCA_HEADERS 
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
@@ -106,7 +106,7 @@ SET(HEADERS
 	    ./src/system/json.h
 	    ./src/system/parse_stl.h)
 
-SET(CPPS 
+SET(GCA_CPPS 
 	 ./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
@@ -129,7 +129,8 @@ SET(CPPS
 	 ./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
 
-SET(SRCS ${CPPS} ${HEADERS})
+add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
+target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/fixture_analysis_tests.cpp
@@ -162,17 +163,17 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp)
 
-add_executable(all-tests ${SRCS} ${TEST_FILES})
-target_link_libraries(all-tests geometry utils gcode gprocess)
+add_executable(all-tests ${TEST_FILES})
+target_link_libraries(all-tests geometry utils gcode gprocess gca)
 
 add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
-target_link_libraries(json-mesh geometry utils gcode gprocess)
+target_link_libraries(json-mesh geometry utils gcode gprocess gca)
 
 add_executable(json-plan examples/json_plan.cpp ${SRCS})
-target_link_libraries(json-plan geometry utils gcode gprocess)
+target_link_libraries(json-plan geometry utils gcode gprocess gca)
 
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
-target_link_libraries(stl-parse geometry utils gcode gprocess)
+target_link_libraries(stl-parse geometry utils gcode gprocess gca)
 
 ######### VTK Example ##########
 
@@ -183,10 +184,10 @@ find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
  
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
-target_link_libraries(AddCell geometry utils gcode gprocess)
+target_link_libraries(AddCell geometry utils gcode gprocess gca)
 
 add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp ${SRCS})
-target_link_libraries(surface-test geometry utils gcode gprocess)
+target_link_libraries(surface-test geometry utils gcode gprocess gca)
 
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})
