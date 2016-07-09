@@ -58,7 +58,6 @@ namespace gca {
     return within_eps(theta, 180, 0.1);
   }
 
-  
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
     auto const_orient_face_indices = const_orientation_regions(part);
     vector<surface> surfaces;

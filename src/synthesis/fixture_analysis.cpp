@@ -35,7 +35,6 @@ namespace gca {
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const triangular_mesh& stock_mesh) {
-    // TODO: Actually compute workpiece normals
     auto stock_surfs = outer_surfaces(stock_mesh);
     cout << "# triangles in stock = " << stock_mesh.face_indexes().size() << endl;
     cout << "# stock surfaces = " << stock_surfs.size() << endl;
@@ -45,12 +44,6 @@ namespace gca {
       index_t i = s.index_list().front();
       normals.push_back(s.face_orientation(i));
     }
-    // normals.push_back(point(1, 0, 0));
-    // normals.push_back(point(-1, 0, 0));
-    // normals.push_back(point(0, 1, 0));
-    // normals.push_back(point(0, -1, 0));
-    // normals.push_back(point(0, 0, 1));
-    // normals.push_back(point(0, 0, -1));
 
     for (auto& sf : part_surfaces) {
       for (auto n : normals) {
