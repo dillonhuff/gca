@@ -275,6 +275,7 @@ namespace gca {
 
       SECTION("Toolpaths don't gouge the mesh") {
 	for (unsigned i = 0; i < p.steps().size(); i++) {
+	  cout << "Toolpath # " << i << endl;
 	  auto program = p.steps()[i].prog;
 	  auto mesh = p.steps()[i].part;
 	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
