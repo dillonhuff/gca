@@ -30,16 +30,6 @@ namespace gca {
       }
     }
     remove_contained_surfaces(sa_surfs, surfaces_to_cut);
-    // vector<index_t> stable_surface_inds;
-    // for (auto s : stable_surfaces) {
-    //   if (s.is_SA()) {
-    // 	concat(stable_surface_inds, s.index_list());
-    //   }
-    // }
-    // sort(begin(stable_surface_inds), end(stable_surface_inds));
-    // delete_if(surfaces_to_cut,
-    // 	      [&stable_surface_inds](const surface& s)
-    // 	      { return s.contained_by_sorted(stable_surface_inds); });
   }
   
   workpiece clipped_workpiece(const workpiece aligned_workpiece,
@@ -150,12 +140,7 @@ namespace gca {
       vector<oriented_polygon> outlines =
 	mesh_bounds(m.index_list(), m.get_parent_mesh());
       if (outlines.size() == 2) {
-	// delete_if(*surfaces_to_cut, [&vertical_surfs](const surface& s)
-	// 	  { return any_of(begin(vertical_surfs), end(vertical_surfs),
-	// 			  [s](const surface& l)
-	// 			  { return s.contained_by(l); }); });
 	remove_contained_surfaces(vertical_surfs, *surfaces_to_cut);
-
 	return outlines.front();
       }
     }
@@ -318,6 +303,18 @@ namespace gca {
     return m;
   }
 
+  std::vector<fixture_setup>
+  axis_by_axis_clipping(const workpiece& aligned_workpiece,
+			const workpiece& clipped,
+			const fixtures& f) {
+    vector<fixture_setup> clip_setups;
+    double eps = 0.05;
+    append_clip_setups("X", 0, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+    append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+    append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+    return clip_setups;
+  }
+
   // TODO: Clean up and add vice height test
   // TODO: Use tool lengths in can_clip_parallel test
   std::pair<triangular_mesh, std::vector<fixture_setup> >
@@ -335,10 +332,7 @@ namespace gca {
     vector<fixture_setup> clip_setups =
       parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
     if (clip_setups.size() == 0) {
-      double eps = 0.05;
-      append_clip_setups("X", 0, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
-      append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
-      append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
+      clip_setups = axis_by_axis_clipping(aligned_workpiece, clipped, f);
     }
 
     classify_part_surfaces(stable_surfaces, wp_mesh);
