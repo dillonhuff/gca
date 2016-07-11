@@ -264,14 +264,13 @@ namespace gca {
 
   std::vector<fixture_setup>
   parallel_clipping_programs(const workpiece& aligned,
-			     const workpiece& clipped,
+			     const point clipped_dims,
 			     std::vector<surface>& surfaces_to_cut,
 			     const vice& v,
 			     const double plate_height) {
     oriented_polygon outline =
       part_outline(&surfaces_to_cut);
 
-    point clipped_dims = dims(clipped);
     std::vector<fixture_setup> progs;
     progs.push_back(clip_top_and_sides(aligned, clipped_dims, outline, v, plate_height));
     progs.push_back(clip_base(aligned, clipped_dims.z, v, plate_height));
@@ -280,11 +279,11 @@ namespace gca {
 
   std::vector<fixture_setup>
   parallel_plate_clipping(const workpiece& aligned,
-			  const workpiece& clipped,
+			  const point clipped_dims,
 			  std::vector<surface>& surfaces_to_cut,
 			  const fixtures& f) {
     double aligned_z_height = aligned.sides[2].len();
-    double clipped_z_height = clipped.sides[2].len();
+    double clipped_z_height = clipped_dims.z;
 
     const vice& v = f.get_vice();
     assert(!v.has_protective_base_plate());
@@ -296,7 +295,7 @@ namespace gca {
       // TODO: Compute this magic number via friction analysis?
       if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
     	return parallel_clipping_programs(aligned,
-    					  clipped,
+    					  clipped_dims,
 					  surfaces_to_cut,
     					  f.get_vice(),
     					  p);
@@ -319,15 +318,16 @@ namespace gca {
     triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
 
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
+    point clipped_dims = dims(clipped);
 
     vector<fixture_setup> clip_setups =
-      parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
+      parallel_plate_clipping(aligned_workpiece, clipped_dims, surfaces_to_cut, f);
 
     classify_part_surfaces(stable_surfaces, wp_mesh);
     remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
     return std::make_pair(wp_mesh, clip_setups);
   }
-  
+
   std::vector<fixture_setup>
   axis_by_axis_clipping(std::vector<surface>& stable_surfaces,
 			std::vector<surface>& surfaces_to_cut,

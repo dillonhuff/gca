@@ -265,22 +265,23 @@ namespace gca {
       }
     }
 
-    SECTION("Complex rectangular part 1") {
-      vice test_vice = current_setup();
-      std::vector<plate_height> plates{0.1, 0.3};
-      fixtures fixes(test_vice, plates);
+    // TODO: Reintroduce this test
+    // SECTION("Complex rectangular part 1") {
+    //   vice test_vice = current_setup();
+    //   std::vector<plate_height> plates{0.1, 0.3};
+    //   fixtures fixes(test_vice, plates);
 
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
-      fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+    //   fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
 
-      SECTION("Toolpaths don't gouge the mesh") {
-	for (unsigned i = 0; i < p.steps().size(); i++) {
-	  cout << "Toolpath # " << i << endl;
-	  auto program = p.steps()[i].prog;
-	  auto mesh = p.steps()[i].part;
-	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
-	}
-      }
-    }
+    //   SECTION("Toolpaths don't gouge the mesh") {
+    // 	for (unsigned i = 0; i < p.steps().size(); i++) {
+    // 	  cout << "Toolpath # " << i << endl;
+    // 	  auto program = p.steps()[i].prog;
+    // 	  auto mesh = p.steps()[i].part;
+    // 	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
+    // 	}
+    //   }
+    // }
   }
 }
