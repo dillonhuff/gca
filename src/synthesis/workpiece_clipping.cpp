@@ -277,6 +277,26 @@ namespace gca {
     return progs;
   }
 
+  std::vector<plate_height>
+  find_viable_parallel_plates(const double aligned_z_height,
+			      const double clipped_z_height,
+			      const fixtures& f) {
+    const vice& v = f.get_vice();
+    assert(!v.has_protective_base_plate());
+
+    vector<plate_height> plates;
+    for (auto p : f.parallel_plates()) {
+      double adjusted_jaw_height = v.jaw_height() - p;
+      assert(adjusted_jaw_height > 0);
+      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+      // TODO: Compute this magic number via friction analysis?
+      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
+	plates.push_back(p);
+      }
+    }
+    return plates;
+  }
+
   std::vector<fixture_setup>
   parallel_plate_clipping(const workpiece& aligned,
 			  const point clipped_dims,
@@ -284,23 +304,17 @@ namespace gca {
 			  const fixtures& f) {
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped_dims.z;
+    vector<plate_height> viable_plates =
+      find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
 
-    const vice& v = f.get_vice();
-    assert(!v.has_protective_base_plate());
-    
-    for (auto p : f.parallel_plates()) {
-      double adjusted_jaw_height = v.jaw_height() - p;
-      assert(adjusted_jaw_height > 0);
-      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
-      // TODO: Compute this magic number via friction analysis?
-      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
-    	return parallel_clipping_programs(aligned,
-    					  clipped_dims,
-					  surfaces_to_cut,
-    					  f.get_vice(),
-    					  p);
-      }
+    if (viable_plates.size() > 0) {
+      return parallel_clipping_programs(aligned,
+					clipped_dims,
+					surfaces_to_cut,
+					f.get_vice(),
+					viable_plates.front());
     }
+
     vector<fixture_setup> setups;
     return setups;
   }
