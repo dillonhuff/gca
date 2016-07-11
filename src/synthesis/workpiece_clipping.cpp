@@ -8,6 +8,40 @@
 
 namespace gca {
 
+  void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
+				 std::vector<surface>& surfaces_to_cut) {
+    vector<index_t> stable_surface_inds;
+    for (auto s : stable_surfaces) {
+      concat(stable_surface_inds, s.index_list());
+    }
+    sort(begin(stable_surface_inds), end(stable_surface_inds));
+
+    delete_if(surfaces_to_cut,
+	      [&stable_surface_inds](const surface& s)
+	      { return s.contained_by_sorted(stable_surface_inds); });
+  }
+
+  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
+			       std::vector<surface>& surfaces_to_cut) {
+    vector<surface> sa_surfs;
+    for (auto s : stable_surfaces) {
+      if (s.is_SA()) {
+	sa_surfs.push_back(s);
+      }
+    }
+    remove_contained_surfaces(sa_surfs, surfaces_to_cut);
+    // vector<index_t> stable_surface_inds;
+    // for (auto s : stable_surfaces) {
+    //   if (s.is_SA()) {
+    // 	concat(stable_surface_inds, s.index_list());
+    //   }
+    // }
+    // sort(begin(stable_surface_inds), end(stable_surface_inds));
+    // delete_if(surfaces_to_cut,
+    // 	      [&stable_surface_inds](const surface& s)
+    // 	      { return s.contained_by_sorted(stable_surface_inds); });
+  }
+  
   workpiece clipped_workpiece(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh) {
     point x_n = aligned_workpiece.sides[0].normalize();
@@ -116,10 +150,11 @@ namespace gca {
       vector<oriented_polygon> outlines =
 	mesh_bounds(m.index_list(), m.get_parent_mesh());
       if (outlines.size() == 2) {
-	delete_if(*surfaces_to_cut, [&vertical_surfs](const surface& s)
-		  { return any_of(begin(vertical_surfs), end(vertical_surfs),
-				  [s](const surface& l)
-				  { return s.contained_by(l); }); });
+	// delete_if(*surfaces_to_cut, [&vertical_surfs](const surface& s)
+	// 	  { return any_of(begin(vertical_surfs), end(vertical_surfs),
+	// 			  [s](const surface& l)
+	// 			  { return s.contained_by(l); }); });
+	remove_contained_surfaces(vertical_surfs, *surfaces_to_cut);
 
 	return outlines.front();
       }
@@ -267,20 +302,6 @@ namespace gca {
     return setups;
   }
 
-  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
-			       std::vector<surface>& surfaces_to_cut) {
-    vector<index_t> stable_surface_inds;
-    for (auto s : stable_surfaces) {
-      if (s.is_SA()) {
-    	concat(stable_surface_inds, s.index_list());
-      }
-    }
-    sort(begin(stable_surface_inds), end(stable_surface_inds));
-    delete_if(surfaces_to_cut,
-	      [&stable_surface_inds](const surface& s)
-	      { return s.contained_by_sorted(stable_surface_inds); });
-  }
-
   box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();
@@ -307,7 +328,8 @@ namespace gca {
 			      const fixtures& f) {
     auto stable_surfaces = outer_surfaces(part_mesh);
     auto aligned_workpiece = align_workpiece(stable_surfaces, w);
-    classify_part_surfaces(stable_surfaces, stock_mesh(aligned_workpiece));
+    triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
+
     workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
     vector<fixture_setup> clip_setups =
@@ -318,9 +340,10 @@ namespace gca {
       append_clip_setups("Y", 1, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
       append_clip_setups("Z", 2, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
     }
+
+    classify_part_surfaces(stable_surfaces, wp_mesh);
     remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
-    triangular_mesh m = stock_mesh(aligned_workpiece);
-    return std::make_pair(m, clip_setups);
+    return std::make_pair(wp_mesh, clip_setups);
   }
 
 }

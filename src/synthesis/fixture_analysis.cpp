@@ -461,11 +461,11 @@ namespace gca {
     pair<triangular_mesh, vector<fixture_setup>> wp_setups =
       workpiece_clipping_programs(w, part_mesh, surfs_to_cut, tools, f);
 
-    auto setups = wp_setups.second;
-    auto aligned_workpiece = wp_setups.first;
+    vector<fixture_setup> setups = wp_setups.second;
+    triangular_mesh& aligned_workpiece_mesh = wp_setups.first;
 
     auto stable_surfaces = outer_surfaces(part_mesh);
-    classify_part_surfaces(stable_surfaces, aligned_workpiece);
+    classify_part_surfaces(stable_surfaces, aligned_workpiece_mesh);
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
     concat(setups, orientations_to_cut(part_mesh, surfs_to_cut, all_orients));
