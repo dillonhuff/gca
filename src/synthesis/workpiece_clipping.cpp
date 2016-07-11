@@ -8,6 +8,22 @@
 
 namespace gca {
 
+  box workpiece_box(const workpiece& w) {
+    double x_len = w.sides[0].len();
+    double y_len = w.sides[1].len();
+    double z_len = w.sides[2].len();
+    return box(0, x_len, 0, y_len, 0, z_len);
+  }
+
+  // TODO: Dont just make a box
+  triangular_mesh stock_mesh(const workpiece& w) {
+    box b = workpiece_box(w);
+    auto tris = box_triangles(b);
+    auto m = make_mesh(tris, 0.001);
+    assert(m.is_connected());
+    return m;
+  }
+
   void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
 				 std::vector<surface>& surfaces_to_cut) {
     vector<index_t> stable_surface_inds;
@@ -151,18 +167,18 @@ namespace gca {
 
   fixture_setup
   clip_top_and_sides(const workpiece& aligned,
-		     const workpiece& clipped,
+		     const point clipped_dims,
 		     const oriented_polygon& outline,
 		     const vice& v,
 		     const double plate_height) {
     double aligned_x = aligned.sides[0].len();
-    double clipped_x = clipped.sides[0].len();
+    double clipped_x = clipped_dims.x;
 
     double aligned_y = aligned.sides[1].len();
-    double clipped_y = clipped.sides[1].len();
+    double clipped_y = clipped_dims.y;
 
     double aligned_z_height = aligned.sides[2].len();
-    double clipped_z_height = clipped.sides[2].len();
+    double clipped_z_height = clipped_dims.z;
 
     double adjusted_jaw_height = v.jaw_height() - plate_height;
     assert(adjusted_jaw_height > 0);
@@ -212,11 +228,10 @@ namespace gca {
 
   fixture_setup
   clip_base(const workpiece& aligned,
-	    const workpiece& clipped,
+	    const double clipped_z_height,
 	    const vice& v,
 	    const double plate_height) {
     double aligned_z_height = aligned.sides[2].len();
-    double clipped_z_height = clipped.sides[2].len();
 
     double adjusted_jaw_height = v.jaw_height() - plate_height;
     assert(adjusted_jaw_height > 0);
@@ -243,6 +258,10 @@ namespace gca {
     return fixture_setup(m, v, pockets);
   }
 
+  point dims(const workpiece& w) {
+    return point(w.sides[0].len(), w.sides[1].len(), w.sides[2].len());
+  }
+
   std::vector<fixture_setup>
   parallel_clipping_programs(const workpiece& aligned,
 			     const workpiece& clipped,
@@ -252,13 +271,13 @@ namespace gca {
     oriented_polygon outline =
       part_outline(&surfaces_to_cut);
 
+    point clipped_dims = dims(clipped);
     std::vector<fixture_setup> progs;
-    progs.push_back(clip_top_and_sides(aligned, clipped, outline, v, plate_height));
-    progs.push_back(clip_base(aligned, clipped, v, plate_height));
+    progs.push_back(clip_top_and_sides(aligned, clipped_dims, outline, v, plate_height));
+    progs.push_back(clip_base(aligned, clipped_dims.z, v, plate_height));
     return progs;
   }
 
-  // TODO: Reduce duplication between here and can_clip_parallel
   std::vector<fixture_setup>
   parallel_plate_clipping(const workpiece& aligned,
 			  const workpiece& clipped,
@@ -287,22 +306,28 @@ namespace gca {
     return setups;
   }
 
-  box workpiece_box(const workpiece& w) {
-    double x_len = w.sides[0].len();
-    double y_len = w.sides[1].len();
-    double z_len = w.sides[2].len();
-    return box(0, x_len, 0, y_len, 0, z_len);
-  }
+  // TODO: Clean up and add vice height test
+  // TODO: Use tool lengths in can_clip_parallel test
+  std::pair<triangular_mesh, std::vector<fixture_setup> >
+  try_parallel_plate_clipping(const workpiece w, 
+			      const triangular_mesh& part_mesh,
+			      std::vector<surface>& surfaces_to_cut,
+			      const std::vector<tool>& tools,
+			      const fixtures& f) {
+    auto stable_surfaces = outer_surfaces(part_mesh);
+    auto aligned_workpiece = align_workpiece(stable_surfaces, w);
+    triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
 
-  // TODO: Dont just make a box
-  triangular_mesh stock_mesh(const workpiece& w) {
-    box b = workpiece_box(w);
-    auto tris = box_triangles(b);
-    auto m = make_mesh(tris, 0.001);
-    assert(m.is_connected());
-    return m;
-  }
+    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
+    vector<fixture_setup> clip_setups =
+      parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
+
+    classify_part_surfaces(stable_surfaces, wp_mesh);
+    remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
+    return std::make_pair(wp_mesh, clip_setups);
+  }
+  
   std::vector<fixture_setup>
   axis_by_axis_clipping(std::vector<surface>& stable_surfaces,
 			std::vector<surface>& surfaces_to_cut,
@@ -340,29 +365,7 @@ namespace gca {
     remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
     return std::make_pair(wp_mesh, clip_setups);
   }
-
-  std::pair<triangular_mesh, std::vector<fixture_setup> >
-  try_parallel_plate_clipping(const workpiece w, 
-			      const triangular_mesh& part_mesh,
-			      std::vector<surface>& surfaces_to_cut,
-			      const std::vector<tool>& tools,
-			      const fixtures& f) {
-    auto stable_surfaces = outer_surfaces(part_mesh);
-    auto aligned_workpiece = align_workpiece(stable_surfaces, w);
-    triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
-
-    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
-
-    vector<fixture_setup> clip_setups =
-      parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
-
-    classify_part_surfaces(stable_surfaces, wp_mesh);
-    remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
-    return std::make_pair(wp_mesh, clip_setups);
-  }
   
-  // TODO: Clean up and add vice height test
-  // TODO: Use tool lengths in can_clip_parallel test
   std::pair<triangular_mesh, std::vector<fixture_setup> >
   workpiece_clipping_programs(const workpiece w, 
 			      const triangular_mesh& part_mesh,
@@ -376,22 +379,6 @@ namespace gca {
     } else {
       return contour_clip;
     }
-    // auto stable_surfaces = outer_surfaces(part_mesh);
-    // auto aligned_workpiece = align_workpiece(stable_surfaces, w);
-    // triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
-
-    // workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
-
-    // vector<fixture_setup> clip_setups =
-    //   parallel_plate_clipping(aligned_workpiece, clipped, surfaces_to_cut, f);
-
-    // if (clip_setups.size() == 0) {
-    //   clip_setups = axis_by_axis_clipping(stable_surfaces, surfaces_to_cut, aligned_workpiece, clipped, f);
-    // }
-
-    // classify_part_surfaces(stable_surfaces, wp_mesh);
-    // remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
-    // return std::make_pair(wp_mesh, clip_setups);
   }
 
 }
