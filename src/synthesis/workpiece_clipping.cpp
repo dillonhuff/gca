@@ -27,66 +27,16 @@ namespace gca {
     return m;
   }
 
-  std::vector<polyline> shift_lines_xy(const std::vector<polyline>& lines,
-				       const vice v) {
-    if (lines.size() == 0) {
-      return lines;
-    }
-    double x_f = v.x_max();
-    double y_f = v.fixed_clamp_y();
-    point shift(x_f - max_in_dir(lines, point(1, 0, 0)),
-		y_f - max_in_dir(lines, point(0, 1, 0)),
-		0);
-    return shift_lines(lines, shift);
-  }
-
-  boost::optional<surface>
-  part_outline_surface(std::vector<surface>* surfaces_to_cut,
-		       const point n) {
-    vector<surface> vertical_surfs =
-      select(*surfaces_to_cut,
-    	     [n](const surface& s)
-    	     { return s.orthogonal_to(n, 0.01); });
-
-    vector<vector<unsigned>> merge_groups =
-      connected_components_by(vertical_surfs, [](const surface& l, const surface& r)
-    			      { return surfaces_share_edge(l, r); });
-
-    if (merge_groups.size() == 1) {
-      return merge_surfaces(vertical_surfs);
-    }
-
-    return boost::none;
-  }
-
-  // TODO: Need to add normal vectors, how to match this with
-  // the code in make_fixture_plan?
-  boost::optional<oriented_polygon>
-  part_outline(std::vector<surface>* surfaces_to_cut) {
-    point n(0, 0, 1);
-
-    auto m = part_outline_surface(surfaces_to_cut, n);
-    if (m) {
-      vector<oriented_polygon> outlines =
-	mesh_bounds((*m).index_list(), (*m).get_parent_mesh());
-      if (outlines.size() == 2) {
-	vector<surface> vertical_surfs{*m};
-	remove_contained_surfaces(vertical_surfs, *surfaces_to_cut);
-	return outlines.front();
-      }
-    }
-
-    return boost::none;
-  }
-
   fixture_setup
-  clip_top_and_sides(const workpiece& aligned,
+  clip_top_and_sides(const triangular_mesh& aligned,
 		     const point clipped_dims,
 		     const oriented_polygon& outline,
 		     const vice& v,
 		     const double plate_height) {
+    double aligned_x_height = diameter(point(1, 0, 0), aligned);
+    double aligned_y_height = diameter(point(0, 1, 0), aligned);
+    double aligned_z_height = diameter(point(0, 0, 1), aligned);
 
-    double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped_dims.z;
 
     double adjusted_jaw_height = v.jaw_height() - plate_height;
@@ -98,8 +48,8 @@ namespace gca {
     double z_min = z_max - alpha;
 
     // Top facing operation
-    box b1 = box(v.x_max() - aligned.sides[0].len(), v.x_max(),
-    		 v.y_max() - aligned.sides[1].len(), v.y_max(),
+    box b1 = box(v.x_max() - aligned_x_height, v.x_max(),
+    		 v.y_max() - aligned_y_height, v.y_max(),
     		 z_min, z_max);
 
     vector<pocket> pockets;
@@ -112,21 +62,22 @@ namespace gca {
 
     pockets.push_back(contour_pocket(z_min, z_max, outline, exterior));
 
-
     // TODO: Use actual workpiece mesh
     box bx(0, 1, 0, 1, z_max - 3.0, z_max);
     triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
-    
+
     return fixture_setup(m, v, pockets);
   }
 
   fixture_setup
-  clip_base(const workpiece& aligned,
+  clip_base(const triangular_mesh& aligned,
 	    const double clipped_z_height,
 	    const vice& v,
 	    const double plate_height) {
-    double aligned_z_height = aligned.sides[2].len();
+    double aligned_x_height = diameter(point(1, 0, 0), aligned);
+    double aligned_y_height = diameter(point(0, 1, 0), aligned);
+    double aligned_z_height = diameter(point(0, 0, 1), aligned);
 
     double adjusted_jaw_height = v.jaw_height() - plate_height;
     assert(adjusted_jaw_height > 0);
@@ -135,8 +86,8 @@ namespace gca {
     double alpha = leftover / 2.0;
 
     // Align with vice
-    box b = box(0, aligned.sides[0].len(),
-    		0, aligned.sides[1].len(),
+    box b = box(0, aligned_x_height,
+    		0, aligned_y_height,
     		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
 
     pocket p = box_pocket(b);
@@ -154,7 +105,7 @@ namespace gca {
   }
 
   boost::optional<std::vector<fixture_setup>>
-  parallel_clipping_programs(const workpiece& aligned,
+  parallel_clipping_programs(const triangular_mesh& aligned,
 			     const point clipped_dims,
 			     std::vector<surface>& surfaces_to_cut,
 			     const vice& v,
@@ -204,7 +155,8 @@ namespace gca {
       find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
 
     if (viable_plates.size() > 0) {
-      return parallel_clipping_programs(aligned,
+      triangular_mesh aligned_mesh = stock_mesh(aligned);
+      return parallel_clipping_programs(aligned_mesh,
 					clipped_dims,
 					surfaces_to_cut,
 					f.get_vice(),
@@ -239,7 +191,7 @@ namespace gca {
       return boost::none;
     }
   }
-  
+
   std::pair<triangular_mesh, std::vector<fixture_setup> >
   workpiece_clipping_programs(const workpiece w, 
 			      const triangular_mesh& part_mesh,

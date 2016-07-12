@@ -1,6 +1,8 @@
 #ifndef GCA_SURFACE_H
 #define GCA_SURFACE_H
 
+#include <boost/optional.hpp>
+
 #include "geometry/triangular_mesh.h"
 
 namespace gca {
@@ -90,7 +92,16 @@ namespace gca {
 				 std::vector<surface>& surfaces_to_cut);
 
   void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
-			       std::vector<surface>& surfaces_to_cut);  
+			       std::vector<surface>& surfaces_to_cut);
+
+  boost::optional<oriented_polygon>
+  part_outline(std::vector<surface>* surfaces_to_cut);
+
+  boost::optional<surface>
+  part_outline_surface(std::vector<surface>* surfaces_to_cut,
+		       const point n);
+
+
 }
 
 #endif

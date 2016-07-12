@@ -409,5 +409,5 @@ namespace gca {
     	      [&mesh](const vector<index_t>& surface)
     	      { return all_normals_below(surface, mesh, -0.1); });
   }
-  
+
 }

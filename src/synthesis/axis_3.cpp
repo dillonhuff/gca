@@ -96,7 +96,6 @@ namespace gca {
 	pockets.push_back(freeform_pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
       }
     }
-    cout << "# vertical pockets = " << pockets.size() << endl;
     return pockets;
   }
 

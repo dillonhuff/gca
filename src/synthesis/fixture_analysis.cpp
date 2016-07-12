@@ -36,8 +36,6 @@ namespace gca {
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const triangular_mesh& stock_mesh) {
     auto stock_surfs = outer_surfaces(stock_mesh);
-    cout << "# triangles in stock = " << stock_mesh.face_indexes().size() << endl;
-    cout << "# stock surfaces = " << stock_surfs.size() << endl;
     assert(stock_surfs.size() == 6);
     vector<point> normals;
     for (auto s : stock_surfs) {

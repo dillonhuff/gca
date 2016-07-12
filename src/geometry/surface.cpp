@@ -102,5 +102,44 @@ namespace gca {
     }
     remove_contained_surfaces(sa_surfs, surfaces_to_cut);
   }
-    
+
+  boost::optional<surface>
+  part_outline_surface(std::vector<surface>* surfaces_to_cut,
+		       const point n) {
+    vector<surface> vertical_surfs =
+      select(*surfaces_to_cut,
+    	     [n](const surface& s)
+    	     { return s.orthogonal_to(n, 0.01); });
+
+    vector<vector<unsigned>> merge_groups =
+      connected_components_by(vertical_surfs, [](const surface& l, const surface& r)
+    			      { return surfaces_share_edge(l, r); });
+
+    if (merge_groups.size() == 1) {
+      return merge_surfaces(vertical_surfs);
+    }
+
+    return boost::none;
+  }
+
+  // TODO: Need to add normal vectors, how to match this with
+  // the code in make_fixture_plan?
+  boost::optional<oriented_polygon>
+  part_outline(std::vector<surface>* surfaces_to_cut) {
+    point n(0, 0, 1);
+
+    auto m = part_outline_surface(surfaces_to_cut, n);
+    if (m) {
+      vector<oriented_polygon> outlines =
+	mesh_bounds((*m).index_list(), (*m).get_parent_mesh());
+      if (outlines.size() == 2) {
+	vector<surface> vertical_surfs{*m};
+	remove_contained_surfaces(vertical_surfs, *surfaces_to_cut);
+	return outlines.front();
+      }
+    }
+
+    return boost::none;
+  }
+
 }
