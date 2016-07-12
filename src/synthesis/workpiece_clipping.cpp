@@ -57,8 +57,6 @@ namespace gca {
 		     const oriented_polygon& outline,
 		     const vice& v,
 		     const double plate_height) {
-    //    double aligned_x_height = diameter(point(1, 0, 0), aligned);
-    //    double aligned_y_height = diameter(point(0, 1, 0), aligned);
     double aligned_z_height = diameter(point(0, 0, 1), aligned);
 
     double clipped_z_height = clipped_dims.z;
@@ -81,25 +79,10 @@ namespace gca {
     assert(outlines.size() == 2);
     vector<pocket> pockets{face_pocket(z_max, z_min, outlines.front())};
     
-    
-    // // Top facing operation
-    // box b1 = box(v.x_max() - aligned_x_height, v.x_max(),
-    // 		 v.y_max() - aligned_y_height, v.y_max(),
-    // 		 z_min, z_max);
-
-    
-
-    // vector<pocket> pockets;
-    // pockets.push_back(box_pocket(b1));
-
-    //    oriented_polygon exterior = base(b1);
-
     z_max = z_min;
     z_min = z_min - clipped_z_height;
 
-    pockets.push_back(contour_pocket(z_min, z_max, outline, outlines.front()));
-
-    pockets.push_back(face_pocket(z_max, z_min, outlines.front()));
+    pockets.push_back(contour_pocket(z_max, z_min, outline, outlines.front()));
     
     // TODO: Use actual workpiece mesh
     box bx(0, 1, 0, 1, z_max - 3.0, z_max);
