@@ -116,9 +116,6 @@ namespace gca {
     { return setups; }
   };
   
-  // triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
-  // 				  const workpiece w);
-
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w);
 

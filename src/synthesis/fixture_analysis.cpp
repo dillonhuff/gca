@@ -52,11 +52,46 @@ namespace gca {
     }
   }
 
-  // TODO: Change to actually align instead of just making surfaces
-  // orthogonal to axes
+  // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
-    return stock_mesh(w);
+    assert(part_surfaces.size() > 0);
+    const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
+
+    // TODO: Pick aligning orthogonal normals
+    double part_x = diameter(point(1, 0, 0), part);
+    double part_y = diameter(point(0, 1, 0), part);
+    double part_z = diameter(point(0, 0, 1), part);
+
+    double bound_x = max_in_dir(part, point(1, 0, 0));
+    double bound_y = max_in_dir(part, point(0, 1, 0));
+    double bound_z = max_in_dir(part, point(0, 0, 1));
+    
+    double w_x = w.sides[0].len();
+    double w_y = w.sides[1].len();
+    double w_z = w.sides[2].len();
+
+    assert(w_x > part_x);
+    assert(w_y > part_y);
+    assert(w_z > part_z);
+
+    double x_margin = (w_x - part_x) / 2.0;
+    double y_margin = (w_y - part_y) / 2.0;
+    double z_margin = (w_z - part_z) / 2.0;
+
+    double x_bound = bound_x + x_margin;
+    double y_bound = bound_y + y_margin;
+    double z_bound = bound_z + z_margin;
+
+    auto mesh = stock_mesh(w);
+    point shift(x_bound - max_in_dir(mesh, point(1, 0, 0)),
+		y_bound - max_in_dir(mesh, point(0, 1, 0)),
+		z_bound - max_in_dir(mesh, point(0, 0, 1)));
+
+    auto m =
+      mesh.apply_to_vertices([shift](const point p)
+			     { return p + shift; });
+    return m;
   }
 
   // TODO: Include SB surfaces in this analysis

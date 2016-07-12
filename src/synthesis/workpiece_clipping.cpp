@@ -176,8 +176,7 @@ namespace gca {
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
-    //    auto aligned_workpiece = 
-    triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);// stock_mesh(aligned_workpiece);
+    triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
     workpiece clipped = clipped_workpiece(w, part_mesh);
     point clipped_dims = dims(clipped);
