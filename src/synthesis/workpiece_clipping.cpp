@@ -196,6 +196,8 @@ namespace gca {
 			  const point clipped_dims,
 			  std::vector<surface>& surfaces_to_cut,
 			  const fixtures& f) {
+    assert(surfaces_to_cut.size() > 0);
+    
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped_dims.z;
     vector<plate_height> viable_plates =
