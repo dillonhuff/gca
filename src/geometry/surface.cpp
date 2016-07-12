@@ -79,4 +79,28 @@ namespace gca {
     return surface(&(surfaces.front().get_parent_mesh()), inds);
   }
 
+  void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
+				 std::vector<surface>& surfaces_to_cut) {
+    vector<index_t> stable_surface_inds;
+    for (auto s : stable_surfaces) {
+      concat(stable_surface_inds, s.index_list());
+    }
+    sort(begin(stable_surface_inds), end(stable_surface_inds));
+
+    delete_if(surfaces_to_cut,
+	      [&stable_surface_inds](const surface& s)
+	      { return s.contained_by_sorted(stable_surface_inds); });
+  }
+
+  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
+			       std::vector<surface>& surfaces_to_cut) {
+    vector<surface> sa_surfs;
+    for (auto s : stable_surfaces) {
+      if (s.is_SA()) {
+	sa_surfs.push_back(s);
+      }
+    }
+    remove_contained_surfaces(sa_surfs, surfaces_to_cut);
+  }
+    
 }

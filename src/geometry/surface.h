@@ -86,6 +86,11 @@ namespace gca {
 
   surface merge_surfaces(const std::vector<surface>& surfaces);
 
+  void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
+				 std::vector<surface>& surfaces_to_cut);
+
+  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
+			       std::vector<surface>& surfaces_to_cut);  
 }
 
 #endif
