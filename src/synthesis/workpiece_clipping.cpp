@@ -84,11 +84,7 @@ namespace gca {
 
     pockets.push_back(contour_pocket(z_max, z_min, outline, outlines.front()));
     
-    // TODO: Use actual workpiece mesh
-    box bx(0, 1, 0, 1, z_max - 3.0, z_max);
-    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
-
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, v, pockets);
   }
 
@@ -118,10 +114,7 @@ namespace gca {
     assert(outlines.size() == 2);
     vector<pocket> pockets{face_pocket(z_max, z_min, outlines.front())};
 
-    // TODO: Use actual workpiece mesh
-    box bx(0, 1, 0, 1, 0, 1);
-    triangular_mesh mesh = make_mesh(box_triangles(bx), 0.001);
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(mesh);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, v, pockets);
   }
 
