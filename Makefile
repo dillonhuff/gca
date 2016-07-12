@@ -1387,6 +1387,33 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
+src/synthesis/face_clipping.o: src/synthesis/face_clipping.cpp.o
+
+.PHONY : src/synthesis/face_clipping.o
+
+# target to build an object file
+src/synthesis/face_clipping.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/face_clipping.cpp.o
+.PHONY : src/synthesis/face_clipping.cpp.o
+
+src/synthesis/face_clipping.i: src/synthesis/face_clipping.cpp.i
+
+.PHONY : src/synthesis/face_clipping.i
+
+# target to preprocess a source file
+src/synthesis/face_clipping.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/face_clipping.cpp.i
+.PHONY : src/synthesis/face_clipping.cpp.i
+
+src/synthesis/face_clipping.s: src/synthesis/face_clipping.cpp.s
+
+.PHONY : src/synthesis/face_clipping.s
+
+# target to generate assembly for a file
+src/synthesis/face_clipping.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/face_clipping.cpp.s
+.PHONY : src/synthesis/face_clipping.cpp.s
+
 src/synthesis/fixture_analysis.o: src/synthesis/fixture_analysis.cpp.o
 
 .PHONY : src/synthesis/fixture_analysis.o
@@ -2828,6 +2855,9 @@ help:
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"
+	@echo "... src/synthesis/face_clipping.o"
+	@echo "... src/synthesis/face_clipping.i"
+	@echo "... src/synthesis/face_clipping.s"
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
