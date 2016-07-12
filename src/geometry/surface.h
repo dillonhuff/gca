@@ -101,7 +101,11 @@ namespace gca {
   part_outline_surface(std::vector<surface>* surfaces_to_cut,
 		       const point n);
 
+  boost::optional<surface>
+  part_outline_surface(const triangular_mesh& m,
+		       const point n);
 
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part);
 }
 
 #endif

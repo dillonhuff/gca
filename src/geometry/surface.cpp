@@ -122,6 +122,13 @@ namespace gca {
     return boost::none;
   }
 
+  boost::optional<surface>
+  part_outline_surface(const triangular_mesh& m,
+		       const point n) {
+    vector<surface> surfs = surfaces_to_cut(m);
+    return part_outline_surface(&surfs, n);
+  }
+
   // TODO: Need to add normal vectors, how to match this with
   // the code in make_fixture_plan?
   boost::optional<oriented_polygon>
@@ -140,6 +147,20 @@ namespace gca {
     }
 
     return boost::none;
+  }
+
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part) {
+    double normal_degrees_delta = 30.0;
+    auto inds = part.face_indexes();
+
+    
+    vector<vector<index_t>> delta_regions =
+      normal_delta_regions(inds, part, normal_degrees_delta);
+    vector<surface> surfaces;
+    for (auto r : delta_regions) {
+      surfaces.push_back(surface(&part, r));
+    }
+    return surfaces;
   }
 
 }

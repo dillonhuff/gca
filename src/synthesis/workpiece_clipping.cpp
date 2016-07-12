@@ -99,8 +99,8 @@ namespace gca {
 	    const double clipped_z_height,
 	    const vice& v,
 	    const double plate_height) {
-    double aligned_x_height = diameter(point(1, 0, 0), aligned);
-    double aligned_y_height = diameter(point(0, 1, 0), aligned);
+    //    double aligned_x_height = diameter(point(1, 0, 0), aligned);
+    //    double aligned_y_height = diameter(point(0, 1, 0), aligned);
     double aligned_z_height = diameter(point(0, 0, 1), aligned);
 
     double adjusted_jaw_height = v.jaw_height() - plate_height;
@@ -112,13 +112,21 @@ namespace gca {
     double z_min = v.base_z() + plate_height + clipped_z_height;
     double z_max = v.base_z() + plate_height + clipped_z_height + alpha;
 
-    // Align with vice
-    box b = box(0, aligned_x_height,
-    		0, aligned_y_height,
-    		z_min, z_max);
+    // // Align with vice
+    // box b = box(0, aligned_x_height,
+    // 		0, aligned_y_height,
+    // 		z_min, z_max);
 
-    pocket p = box_pocket(b);
-    vector<pocket> pockets{p};
+    // pocket p = box_pocket(b);
+    auto bound = part_outline_surface(aligned, point(0, 0, 1));
+    if (bound) {
+    } else {
+      assert(false);
+    }
+    auto outlines =
+      mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+    assert(outlines.size() == 2);
+    vector<pocket> pockets{face_pocket(z_max, z_min, outlines.front())};
 
     // TODO: Use actual workpiece mesh
     box bx(0, 1, 0, 1, 0, 1);

@@ -128,8 +128,6 @@ namespace gca {
 		      const std::vector<surface>& surfs_to_cut,
 		      const fixtures& v);
 
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh);
-
   std::vector<stock_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v);

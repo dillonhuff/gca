@@ -225,20 +225,6 @@ namespace gca {
     return mill_surfaces;
   }
 
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part) {
-    double normal_degrees_delta = 30.0;
-    auto inds = part.face_indexes();
-
-    
-    vector<vector<index_t>> delta_regions =
-      normal_delta_regions(inds, part, normal_degrees_delta);
-    vector<surface> surfaces;
-    for (auto r : delta_regions) {
-      surfaces.push_back(surface(&part, r));
-    }
-    return surfaces;
-  }
-
   void
   select_orientations(orientation_map& orient_map,
 		      std::vector<unsigned>& surfaces_left,
