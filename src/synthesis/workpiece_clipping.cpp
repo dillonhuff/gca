@@ -85,11 +85,6 @@ namespace gca {
 		     const oriented_polygon& outline,
 		     const vice& v,
 		     const double plate_height) {
-    double aligned_x = aligned.sides[0].len();
-    double clipped_x = clipped_dims.x;
-
-    double aligned_y = aligned.sides[1].len();
-    double clipped_y = clipped_dims.y;
 
     double aligned_z_height = aligned.sides[2].len();
     double clipped_z_height = clipped_dims.z;
@@ -115,22 +110,8 @@ namespace gca {
     z_max = z_min;
     z_min = z_min - clipped_z_height;
 
-    double x1 = v.x_max();
-    double x2 = x1 - (aligned_x - clipped_x) / 2.0;
-    double x3 = x2 - clipped_x;
+    pockets.push_back(contour_pocket(z_min, z_max, outline, exterior));
 
-    double y1 = v.y_max();
-    double y2 = y1 - (aligned_y - clipped_y) / 2.0;
-    double y3 = y2 - clipped_y;
-
-    box b2 = box(x3, x2, y3, y2, z_min, z_max);
-
-    if (outline.vertices().size() > 0) {
-      pockets.push_back(contour_pocket(b2.z_max, b2.z_min, outline, exterior));
-    } else {
-      oriented_polygon interior = base(b2);
-      pockets.push_back(contour_pocket(b2.z_max, b2.z_min, interior, exterior));
-    }
 
     // TODO: Use actual workpiece mesh
     box bx(0, 1, 0, 1, z_max - 3.0, z_max);
@@ -248,9 +229,9 @@ namespace gca {
     boost::optional<vector<fixture_setup>> clip_setups =
       parallel_plate_clipping(aligned_workpiece, clipped_dims, surfaces_to_cut, f);
 
-    classify_part_surfaces(stable_surfaces, wp_mesh);
-    remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
     if (clip_setups) {
+      classify_part_surfaces(stable_surfaces, wp_mesh);
+      remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
       return std::make_pair(wp_mesh, *clip_setups);
     } else {
       return boost::none;
@@ -263,7 +244,8 @@ namespace gca {
 			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
-    auto contour_clip = try_parallel_plate_clipping(w, part_mesh, surfaces_to_cut, tools, f);
+    auto contour_clip =
+      try_parallel_plate_clipping(w, part_mesh, surfaces_to_cut, tools, f);
 
     if (contour_clip) {
       return *contour_clip;
