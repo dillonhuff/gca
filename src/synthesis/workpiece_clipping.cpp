@@ -11,6 +11,10 @@
 
 namespace gca {
 
+  point dims(const workpiece& w) {
+    return point(w.sides[0].len(), w.sides[1].len(), w.sides[2].len());
+  }
+
   box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();
@@ -27,6 +31,26 @@ namespace gca {
     return m;
   }
 
+  std::vector<plate_height>
+  find_viable_parallel_plates(const double aligned_z_height,
+			      const double clipped_z_height,
+			      const fixtures& f) {
+    const vice& v = f.get_vice();
+    assert(!v.has_protective_base_plate());
+
+    vector<plate_height> plates;
+    for (auto p : f.parallel_plates()) {
+      double adjusted_jaw_height = v.jaw_height() - p;
+      assert(adjusted_jaw_height > 0);
+      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
+      // TODO: Compute this magic number via friction analysis?
+      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
+	plates.push_back(p);
+      }
+    }
+    return plates;
+  }
+  
   fixture_setup
   clip_top_and_sides(const triangular_mesh& aligned,
 		     const point clipped_dims,
@@ -85,10 +109,13 @@ namespace gca {
     assert(leftover > 0);
     double alpha = leftover / 2.0;
 
+    double z_min = v.base_z() + plate_height + clipped_z_height;
+    double z_max = v.base_z() + plate_height + clipped_z_height + alpha;
+
     // Align with vice
     box b = box(0, aligned_x_height,
     		0, aligned_y_height,
-    		v.base_z() + plate_height + clipped_z_height, v.base_z() + plate_height + clipped_z_height + alpha);
+    		z_min, z_max);
 
     pocket p = box_pocket(b);
     vector<pocket> pockets{p};
@@ -100,11 +127,7 @@ namespace gca {
     return fixture_setup(m, v, pockets);
   }
 
-  point dims(const workpiece& w) {
-    return point(w.sides[0].len(), w.sides[1].len(), w.sides[2].len());
-  }
-
-  boost::optional<std::vector<fixture_setup>>
+  boost::optional<std::vector<fixture_setup> >
   parallel_clipping_programs(const triangular_mesh& aligned,
 			     const point clipped_dims,
 			     std::vector<surface>& surfaces_to_cut,
@@ -122,41 +145,20 @@ namespace gca {
     return boost::none;
   }
 
-  std::vector<plate_height>
-  find_viable_parallel_plates(const double aligned_z_height,
-			      const double clipped_z_height,
-			      const fixtures& f) {
-    const vice& v = f.get_vice();
-    assert(!v.has_protective_base_plate());
-
-    vector<plate_height> plates;
-    for (auto p : f.parallel_plates()) {
-      double adjusted_jaw_height = v.jaw_height() - p;
-      assert(adjusted_jaw_height > 0);
-      double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
-      // TODO: Compute this magic number via friction analysis?
-      if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
-	plates.push_back(p);
-      }
-    }
-    return plates;
-  }
-
   boost::optional<std::vector<fixture_setup> >
-  parallel_plate_clipping(const workpiece& aligned,
+  parallel_plate_clipping(const triangular_mesh& aligned,
 			  const point clipped_dims,
 			  std::vector<surface>& surfaces_to_cut,
 			  const fixtures& f) {
     assert(surfaces_to_cut.size() > 0);
     
-    double aligned_z_height = aligned.sides[2].len();
+    double aligned_z_height = diameter(point(0, 0, 1), aligned); //aligned.sides[2].len();
     double clipped_z_height = clipped_dims.z;
     vector<plate_height> viable_plates =
       find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
 
     if (viable_plates.size() > 0) {
-      triangular_mesh aligned_mesh = stock_mesh(aligned);
-      return parallel_clipping_programs(aligned_mesh,
+      return parallel_clipping_programs(aligned,
 					clipped_dims,
 					surfaces_to_cut,
 					f.get_vice(),
@@ -173,15 +175,15 @@ namespace gca {
 			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
-    auto stable_surfaces = outer_surfaces(part_mesh);
-    auto aligned_workpiece = align_workpiece(stable_surfaces, w);
-    triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
+    vector<surface> stable_surfaces = outer_surfaces(part_mesh);
+    //    auto aligned_workpiece = 
+    triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);// stock_mesh(aligned_workpiece);
 
-    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
+    workpiece clipped = clipped_workpiece(w, part_mesh);
     point clipped_dims = dims(clipped);
 
     boost::optional<vector<fixture_setup>> clip_setups =
-      parallel_plate_clipping(aligned_workpiece, clipped_dims, surfaces_to_cut, f);
+      parallel_plate_clipping(wp_mesh, clipped_dims, surfaces_to_cut, f);
 
     if (clip_setups) {
       classify_part_surfaces(stable_surfaces, wp_mesh);

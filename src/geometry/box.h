@@ -27,6 +27,12 @@ namespace gca {
       if (z_min > z_max)
 	{ cout << "Bad Z range: " << z_min << " > " << z_max << endl; assert(false); } 
     }
+
+    bool contains(const point p) {
+      return (x_min < p.x && p.x < x_max) &&
+		      (y_min < p.y && p.y < y_max) &&
+			       (z_min < p.z && p.z < z_max);
+    }
   };
 
   ostream& operator<<(ostream& out, const box& b);

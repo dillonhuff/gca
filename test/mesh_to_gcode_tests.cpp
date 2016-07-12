@@ -127,7 +127,7 @@ namespace gca {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
 
     auto outer_surfs = outer_surfaces(mesh);
-    auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
+    //auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
 
     fixture_plan plan =
       make_fixture_plan(mesh, fixes, tools, workpiece_dims);
@@ -159,7 +159,7 @@ namespace gca {
       SECTION("All simple box surfaces are part of a SA faces") {
 	vector<index_t> fis = mesh.face_indexes();
 	workpiece workpiece_dims(1.5, 1.2, 1.5, ALUMINUM);
-	auto workpiece_mesh = stock_mesh(align_workpiece(surfaces, workpiece_dims));
+	auto workpiece_mesh = align_workpiece(surfaces, workpiece_dims);
 	classify_part_surfaces(surfaces, workpiece_mesh);
 	remove_SA_surfaces(surfaces, fis);
 	REQUIRE(fis.size() == 0);

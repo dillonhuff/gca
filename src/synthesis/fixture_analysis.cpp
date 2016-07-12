@@ -54,9 +54,9 @@ namespace gca {
 
   // TODO: Change to actually align instead of just making surfaces
   // orthogonal to axes
-  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
-			    const workpiece w) {
-    return w;
+  triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
+				  const workpiece& w) {
+    return stock_mesh(w);
   }
 
   // TODO: Include SB surfaces in this analysis

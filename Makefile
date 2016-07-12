@@ -2710,6 +2710,33 @@ test/unfold_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.s
 .PHONY : test/unfold_tests.cpp.s
 
+test/workpiece_alignment_tests.o: test/workpiece_alignment_tests.cpp.o
+
+.PHONY : test/workpiece_alignment_tests.o
+
+# target to build an object file
+test/workpiece_alignment_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.o
+.PHONY : test/workpiece_alignment_tests.cpp.o
+
+test/workpiece_alignment_tests.i: test/workpiece_alignment_tests.cpp.i
+
+.PHONY : test/workpiece_alignment_tests.i
+
+# target to preprocess a source file
+test/workpiece_alignment_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.i
+.PHONY : test/workpiece_alignment_tests.cpp.i
+
+test/workpiece_alignment_tests.s: test/workpiece_alignment_tests.cpp.s
+
+.PHONY : test/workpiece_alignment_tests.s
+
+# target to generate assembly for a file
+test/workpiece_alignment_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.s
+.PHONY : test/workpiece_alignment_tests.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -3002,6 +3029,9 @@ help:
 	@echo "... test/unfold_tests.o"
 	@echo "... test/unfold_tests.i"
 	@echo "... test/unfold_tests.s"
+	@echo "... test/workpiece_alignment_tests.o"
+	@echo "... test/workpiece_alignment_tests.i"
+	@echo "... test/workpiece_alignment_tests.s"
 .PHONY : help
 
 
