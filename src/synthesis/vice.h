@@ -2,6 +2,7 @@
 #define GCA_VICE_H
 
 #include "geometry/box.h"
+#include "geometry/plane.h"
 #include "geometry/point.h"
 
 namespace gca {
@@ -78,6 +79,21 @@ namespace gca {
     inline point position() const { return pos; }
 
     inline double maximum_jaw_width() const { return max_jaw_width; }
+
+    inline plane base_plane() const {
+      return plane(point(0, 0, 1),
+		   point(x_max(), fixed_clamp_y(), base_z()));
+    }
+    
+    inline plane top_jaw_plane() const {
+      return plane(point(0, -1, 0),
+		   point(x_max(), fixed_clamp_y(), base_z()));
+    }
+    
+    inline plane right_bound_plane() const {
+      return plane(point(-1, 0, 0),
+		   point(x_max(), fixed_clamp_y(), base_z()));
+    }
 
   };
 

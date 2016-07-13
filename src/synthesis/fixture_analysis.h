@@ -1,6 +1,7 @@
 #ifndef GCA_FIXTURE_ANALYSIS_H
 #define GCA_FIXTURE_ANALYSIS_H
 
+#include "geometry/plane.h"
 #include "geometry/surface.h"
 #include "synthesis/tool.h"
 #include "synthesis/toolpath_generation.h"
@@ -24,6 +25,18 @@ namespace gca {
     inline const surface& get_right() const { return *right; }
     inline const surface& get_bottom() const { return *bottom; }
 
+    inline plane base_plane() const {
+      point n = bottom_normal();
+      point p = max_point_in_dir(get_mesh(), n);
+      return plane(n, p);
+    }
+    
+    inline plane left_plane() const {
+      point n = left_normal();
+      point p = max_point_in_dir(get_mesh(), n);
+      return plane(n, p);
+    }
+
     inline point bottom_plane_point() const {
       const triangular_mesh& m = bottom->get_parent_mesh();
       triangle_t t = m.triangle_vertices(bottom->front());
@@ -43,10 +56,8 @@ namespace gca {
     }
     
     inline point left_normal() const {
-      point bn = left->face_orientation(bottom->front());
-      point n = bn - 2*bn;
-      assert(within_eps(angle_between(n, bn), 180, 0.1));
-      return n;
+      point bn = left->face_orientation(left->front());
+      return bn;
     }
     
     inline const triangular_mesh& get_mesh() const

@@ -11,14 +11,14 @@ namespace gca {
   public:
     point start_offset;
     direction dir;
-    plane pl;
+    work_plane pl;
 
-  circular_helix_cut(point sp, point ep, point so, direction pdir, plane ppl) :
+  circular_helix_cut(point sp, point ep, point so, direction pdir, work_plane ppl) :
     cut(sp, ep), start_offset(so), dir(pdir), pl(ppl) {
     sanity_check();
   }
 
-  circular_helix_cut(point sp, point ep, point so, direction pdir, plane ppl, tool_name tn) : cut(sp, ep, tn), start_offset(so), dir(pdir), pl(ppl)  {
+  circular_helix_cut(point sp, point ep, point so, direction pdir, work_plane ppl, tool_name tn) : cut(sp, ep, tn), start_offset(so), dir(pdir), pl(ppl)  {
     sanity_check();
   }
 
@@ -43,12 +43,12 @@ namespace gca {
       }
     }
     
-    static circular_helix_cut* make(point sp, point ep, point offset, direction dir, plane pl) {
+    static circular_helix_cut* make(point sp, point ep, point offset, direction dir, work_plane pl) {
       circular_helix_cut* mem = allocate<circular_helix_cut>();
       return new (mem) circular_helix_cut(sp, ep, offset, dir, pl);
     }
 
-    static circular_helix_cut* make(point sp, point ep, point offset, direction dir, plane pl, tool_name tn) {
+    static circular_helix_cut* make(point sp, point ep, point offset, direction dir, work_plane pl, tool_name tn) {
       circular_helix_cut* mem = allocate<circular_helix_cut>();
       return new (mem) circular_helix_cut(sp, ep, offset, dir, pl, tn);
     }

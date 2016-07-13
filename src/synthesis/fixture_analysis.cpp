@@ -1,3 +1,5 @@
+#include <boost/numeric/ublas/io.hpp>
+
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
@@ -27,13 +29,86 @@ namespace gca {
     return m;
   }
 
-  typedef std::pair<ublas::matrix, ublas::vector> homogeneous_transform;
+  typedef std::pair<const ublas::matrix<double>, const ublas::vector<double>>
+    homogeneous_transform;
+
+  triangular_mesh apply(const homogeneous_transform& t, const triangular_mesh& m) {
+    triangular_mesh rotated =
+      m.apply([t](const point p)
+	      { return times_3(t.first, p); });
+    triangular_mesh shifted =
+      m.apply_to_vertices([t](const point p)
+			  { return p + from_vector(t.second); });
+    return shifted;
+  }
+
+  boost::optional<homogeneous_transform>
+  mate_planes(const plane a, const plane b, const plane c,
+	      const plane ap, const plane bp, const plane cp) {
+
+    const ublas::matrix<double> rotation =
+      plane_basis_rotation(-1*a.normal(), -1*b.normal(), -1*c.normal(),
+			   ap.normal(), bp.normal(), cp.normal());
+
+    if (!within_eps(determinant(rotation), 1.0, 0.001)) {
+      return boost::none;
+    }
+
+    cout << "Rotation matrix = " << endl;
+    cout << rotation << endl;
+
+    const ublas::vector<double> displacement =
+      plane_basis_displacement(rotation,
+			       ap.normal(), bp.normal(), cp.normal(),
+			       ap.pt(), bp.pt(), cp.pt(),
+			       a.pt(), b.pt(), c.pt());
+
+    std::pair<const ublas::matrix<double>,
+	      const ublas::vector<double> > p =
+      std::make_pair(rotation, displacement);
+    return p;
+  }
+
+  homogeneous_transform mating_transform(const stock_orientation& orient,
+					 const vice& v) {
+    plane vice_base = v.base_plane();
+    plane vice_top_jaw = v.top_jaw_plane();
+    plane vice_right_bound = v.right_bound_plane();
+    
+    plane mesh_base = orient.base_plane();
+    plane mesh_left = orient.left_plane();
+
+    point free_axis = cross(mesh_base.normal(), mesh_left.normal());
+    cout << "mesh base normal = " << mesh_base.normal() << endl;
+    cout << "mesh left normal = " << mesh_left.normal() << endl;
+    cout << "free axis = " << free_axis << endl;
+    const triangular_mesh& m = orient.get_mesh();
+    plane free_plane(free_axis, max_point_in_dir(m, free_axis));
+
+    boost::optional<homogeneous_transform> t =
+      mate_planes(mesh_base, mesh_left, free_plane,
+		  vice_base, vice_top_jaw, vice_right_bound);
+    if (t) {
+      return *t;
+    }
+    
+    free_axis = -1* free_axis;
+    free_plane = plane(free_axis, max_point_in_dir(m, free_axis));
+
+    boost::optional<homogeneous_transform> rev =
+      mate_planes(mesh_base, mesh_left, free_plane,
+		  vice_base, vice_top_jaw, vice_right_bound);
+
+    assert(rev);
+    return *rev;
+  }
 
   triangular_mesh
   oriented_part_mesh(const stock_orientation& orient,
 		     const vice v) {
     homogeneous_transform t = mating_transform(orient, v);
-    return apply(t, orient.get_mesh);
+    return apply(t, orient.get_mesh());
+
     // auto mesh = orient.get_mesh();
     // point bn = orient.bottom_normal();
     // point b_pt = max_point_in_dir(mesh, bn);

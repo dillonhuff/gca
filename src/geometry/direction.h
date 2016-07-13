@@ -7,7 +7,7 @@ namespace gca {
     CLOCKWISE = 0,
     COUNTERCLOCKWISE };
 
-  enum plane {
+  enum work_plane {
     XY,
     XZ,
     YZ
