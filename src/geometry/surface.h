@@ -53,6 +53,9 @@ namespace gca {
     inline point face_orientation(index_t ind) const
     { return parent_mesh->face_orientation(ind); }
 
+    inline triangle face_triangle(index_t ind) const
+    { return get_parent_mesh().face_triangle(ind); }
+    
     surface(const triangular_mesh* p_parent_mesh,
 	    const vector<index_t>& p_tri_indexes) :
       parent_mesh(p_parent_mesh), tri_indexes(p_tri_indexes), SA(false) {

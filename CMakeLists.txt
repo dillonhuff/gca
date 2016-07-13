@@ -169,16 +169,16 @@ SET(TEST_FILES test/system_algorithm_tests.cpp
 add_executable(all-tests ${TEST_FILES})
 target_link_libraries(all-tests geometry utils gcode gprocess gca)
 
-add_executable(json-mesh examples/json_mesh.cpp ${SRCS})
+add_executable(json-mesh examples/json_mesh.cpp)
 target_link_libraries(json-mesh geometry utils gcode gprocess gca)
 
-add_executable(json-plan examples/json_plan.cpp ${SRCS})
+add_executable(json-plan examples/json_plan.cpp)
 target_link_libraries(json-plan geometry utils gcode gprocess gca)
 
-add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
+add_executable(stl-parse examples/stl_parse.cpp)
 target_link_libraries(stl-parse geometry utils gcode gprocess gca)
 
-add_executable(ublas examples/ublas.cpp ${SRCS})
+add_executable(ublas examples/ublas.cpp)
 target_link_libraries(ublas geometry utils gcode gprocess gca)
 
 ######### VTK Example ##########
@@ -189,10 +189,10 @@ target_link_libraries(ublas geometry utils gcode gprocess gca)
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
  
-add_executable(AddCell MACOSX_BUNDLE examples/AddCell ${SRCS})
+add_executable(AddCell MACOSX_BUNDLE examples/AddCell)
 target_link_libraries(AddCell geometry utils gcode gprocess gca)
 
-add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp ${SRCS})
+add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp)
 target_link_libraries(surface-test geometry utils gcode gprocess gca)
 
 if(VTK_LIBRARIES)

@@ -20,8 +20,10 @@ namespace gca {
     point shift(x_f - max_in_dir(mesh, point(1, 0, 0)),
 		y_f - max_in_dir(mesh, point(0, 1, 0)),
 		z_f - min_in_dir(mesh, point(0, 0, 1)));
-    auto m = mesh.apply_to_vertices([shift](const point p)
-		      { return p + point(shift.x, shift.y, shift.z); });
+    auto m =
+      mesh.apply_to_vertices([shift](const point p)
+			     { return p + point(shift.x, shift.y, shift.z); });
+
     return m;
   }
 
