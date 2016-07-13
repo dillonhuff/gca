@@ -135,6 +135,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/matrix_tests.cpp
 	       test/workpiece_alignment_tests.cpp
 	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp

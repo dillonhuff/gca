@@ -2291,6 +2291,33 @@ test/machine_state_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.s
 .PHONY : test/machine_state_tests.cpp.s
 
+test/matrix_tests.o: test/matrix_tests.cpp.o
+
+.PHONY : test/matrix_tests.o
+
+# target to build an object file
+test/matrix_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.o
+.PHONY : test/matrix_tests.cpp.o
+
+test/matrix_tests.i: test/matrix_tests.cpp.i
+
+.PHONY : test/matrix_tests.i
+
+# target to preprocess a source file
+test/matrix_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.i
+.PHONY : test/matrix_tests.cpp.i
+
+test/matrix_tests.s: test/matrix_tests.cpp.s
+
+.PHONY : test/matrix_tests.s
+
+# target to generate assembly for a file
+test/matrix_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.s
+.PHONY : test/matrix_tests.cpp.s
+
 test/mesh_tests.o: test/mesh_tests.cpp.o
 
 .PHONY : test/mesh_tests.o
@@ -3022,6 +3049,9 @@ help:
 	@echo "... test/machine_state_tests.o"
 	@echo "... test/machine_state_tests.i"
 	@echo "... test/machine_state_tests.s"
+	@echo "... test/matrix_tests.o"
+	@echo "... test/matrix_tests.i"
+	@echo "... test/matrix_tests.s"
 	@echo "... test/mesh_tests.o"
 	@echo "... test/mesh_tests.i"
 	@echo "... test/mesh_tests.s"

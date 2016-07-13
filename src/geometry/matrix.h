@@ -2,8 +2,11 @@
 #define GCA_MATRIX_H
 
 #include <cstdlib>
+#include <boost/numeric/ublas/matrix.hpp>
 
 #include "geometry/point.h"
+
+namespace ublas = boost::numeric::ublas;
 
 namespace gca {
 
@@ -84,6 +87,22 @@ namespace gca {
   matrix<3, 3> rotate_onto(point a, point b);
 
   point operator*(const matrix<3, 3>& m, const point a);
+
+  point from_vector(ublas::vector<double> v);
+  ublas::vector<double> to_vector(const point p);
+
+
+  double determinant(ublas::matrix<double>& m);
+  double determinant(const ublas::matrix<double>& m);
+
+  ublas::matrix<double> inverse(ublas::matrix<double>& a);
+  ublas::matrix<double> inverse(const ublas::matrix<double>& a);
+
+  ublas::matrix<double>
+  plane_basis_rotation(const point at, const point bt, const point ct,
+		       const point apt, const point bpt, const point cpt);
+
+  point times_3(const ublas::matrix<double> m, const point p);
 
 }
 
