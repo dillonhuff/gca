@@ -27,16 +27,20 @@ namespace gca {
     return m;
   }
 
+  typedef std::pair<ublas::matrix, ublas::vector> homogeneous_transform;
+
   triangular_mesh
   oriented_part_mesh(const stock_orientation& orient,
 		     const vice v) {
-    auto mesh = orient.get_mesh();
-    point bn = orient.bottom_normal();
-    point b_pt = max_point_in_dir(mesh, bn);
-    //    point ln = orient.left_normal();
-    //    point rn = orient.right_normal();
-    auto oriented_mesh = orient_mesh(mesh, orient);
-    return shift_mesh(oriented_mesh, v);
+    homogeneous_transform t = mating_transform(orient, v);
+    return apply(t, orient.get_mesh);
+    // auto mesh = orient.get_mesh();
+    // point bn = orient.bottom_normal();
+    // point b_pt = max_point_in_dir(mesh, bn);
+    // //    point ln = orient.left_normal();
+    // //    point rn = orient.right_normal();
+    // auto oriented_mesh = orient_mesh(mesh, orient);
+    // return shift_mesh(oriented_mesh, v);
   }
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
