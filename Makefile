@@ -995,6 +995,33 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
+src/geometry/homogeneous_transformation.o: src/geometry/homogeneous_transformation.cpp.o
+
+.PHONY : src/geometry/homogeneous_transformation.o
+
+# target to build an object file
+src/geometry/homogeneous_transformation.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/homogeneous_transformation.cpp.o
+.PHONY : src/geometry/homogeneous_transformation.cpp.o
+
+src/geometry/homogeneous_transformation.i: src/geometry/homogeneous_transformation.cpp.i
+
+.PHONY : src/geometry/homogeneous_transformation.i
+
+# target to preprocess a source file
+src/geometry/homogeneous_transformation.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/homogeneous_transformation.cpp.i
+.PHONY : src/geometry/homogeneous_transformation.cpp.i
+
+src/geometry/homogeneous_transformation.s: src/geometry/homogeneous_transformation.cpp.s
+
+.PHONY : src/geometry/homogeneous_transformation.s
+
+# target to generate assembly for a file
+src/geometry/homogeneous_transformation.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/homogeneous_transformation.cpp.s
+.PHONY : src/geometry/homogeneous_transformation.cpp.s
+
 src/geometry/line.o: src/geometry/line.cpp.o
 
 .PHONY : src/geometry/line.o
@@ -2905,6 +2932,9 @@ help:
 	@echo "... src/geometry/box.o"
 	@echo "... src/geometry/box.i"
 	@echo "... src/geometry/box.s"
+	@echo "... src/geometry/homogeneous_transformation.o"
+	@echo "... src/geometry/homogeneous_transformation.i"
+	@echo "... src/geometry/homogeneous_transformation.s"
 	@echo "... src/geometry/line.o"
 	@echo "... src/geometry/line.i"
 	@echo "... src/geometry/line.s"

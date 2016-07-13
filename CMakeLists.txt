@@ -28,7 +28,8 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 	    ./src/geometry/spline_sampling.h
 	    ./src/geometry/matrix.h
 	    ./src/geometry/triangle.h
-	    ./src/geometry/triangular_mesh.h)
+	    ./src/geometry/triangular_mesh.h
+	    ./src/geometry/homogeneous_transformation.h)
 
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
@@ -41,7 +42,8 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/spline_sampling.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/geometry/triangular_mesh.cpp
-	 ./src/geometry/trimesh.cpp)
+	 ./src/geometry/trimesh.cpp
+	 ./src/geometry/homogeneous_transformation.cpp)
 
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
 target_link_libraries(geometry utils)
