@@ -37,8 +37,8 @@ namespace gca {
       m.apply([t](const point p)
 	      { return times_3(t.first, p); });
     triangular_mesh shifted =
-      m.apply_to_vertices([t](const point p)
-			  { return p + from_vector(t.second); });
+      rotated.apply_to_vertices([t](const point p)
+				{ return p + from_vector(t.second); });
     return shifted;
   }
 
@@ -47,8 +47,8 @@ namespace gca {
 	      const plane ap, const plane bp, const plane cp) {
 
     const ublas::matrix<double> rotation =
-      plane_basis_rotation(-1*a.normal(), -1*b.normal(), -1*c.normal(),
-			   ap.normal(), bp.normal(), cp.normal());
+      plane_basis_rotation(a.normal(), b.normal(), c.normal(),
+			   -1*ap.normal(), -1*bp.normal(), -1*cp.normal());
 
     if (!within_eps(determinant(rotation), 1.0, 0.001)) {
       return boost::none;
