@@ -124,45 +124,6 @@ AddCell/fast:
 .PHONY : AddCell/fast
 
 #=============================================================================
-# Target rules for targets named stl-parse
-
-# Build rule for target.
-stl-parse: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 stl-parse
-.PHONY : stl-parse
-
-# fast build rule for target.
-stl-parse/fast:
-	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
-.PHONY : stl-parse/fast
-
-#=============================================================================
-# Target rules for targets named geometry
-
-# Build rule for target.
-geometry: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 geometry
-.PHONY : geometry
-
-# fast build rule for target.
-geometry/fast:
-	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
-.PHONY : geometry/fast
-
-#=============================================================================
-# Target rules for targets named surface-test
-
-# Build rule for target.
-surface-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 surface-test
-.PHONY : surface-test
-
-# fast build rule for target.
-surface-test/fast:
-	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/build
-.PHONY : surface-test/fast
-
-#=============================================================================
 # Target rules for targets named json-plan
 
 # Build rule for target.
@@ -187,6 +148,19 @@ json-mesh: cmake_check_build_system
 json-mesh/fast:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/build
 .PHONY : json-mesh/fast
+
+#=============================================================================
+# Target rules for targets named ublas
+
+# Build rule for target.
+ublas: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ublas
+.PHONY : ublas
+
+# fast build rule for target.
+ublas/fast:
+	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/build
+.PHONY : ublas/fast
 
 #=============================================================================
 # Target rules for targets named all-tests
@@ -239,6 +213,45 @@ gcode: cmake_check_build_system
 gcode/fast:
 	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
 .PHONY : gcode/fast
+
+#=============================================================================
+# Target rules for targets named surface-test
+
+# Build rule for target.
+surface-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 surface-test
+.PHONY : surface-test
+
+# fast build rule for target.
+surface-test/fast:
+	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/build
+.PHONY : surface-test/fast
+
+#=============================================================================
+# Target rules for targets named geometry
+
+# Build rule for target.
+geometry: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry
+.PHONY : geometry
+
+# fast build rule for target.
+geometry/fast:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
+.PHONY : geometry/fast
+
+#=============================================================================
+# Target rules for targets named stl-parse
+
+# Build rule for target.
+stl-parse: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 stl-parse
+.PHONY : stl-parse
+
+# fast build rule for target.
+stl-parse/fast:
+	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
+.PHONY : stl-parse/fast
 
 #=============================================================================
 # Target rules for targets named utils
@@ -387,6 +400,33 @@ examples/surface_test.s: examples/surface_test.cpp.s
 examples/surface_test.cpp.s:
 	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/examples/surface_test.cpp.s
 .PHONY : examples/surface_test.cpp.s
+
+examples/ublas.o: examples/ublas.cpp.o
+
+.PHONY : examples/ublas.o
+
+# target to build an object file
+examples/ublas.cpp.o:
+	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/examples/ublas.cpp.o
+.PHONY : examples/ublas.cpp.o
+
+examples/ublas.i: examples/ublas.cpp.i
+
+.PHONY : examples/ublas.i
+
+# target to preprocess a source file
+examples/ublas.cpp.i:
+	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/examples/ublas.cpp.i
+.PHONY : examples/ublas.cpp.i
+
+examples/ublas.s: examples/ublas.cpp.s
+
+.PHONY : examples/ublas.s
+
+# target to generate assembly for a file
+examples/ublas.cpp.s:
+	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/examples/ublas.cpp.s
+.PHONY : examples/ublas.cpp.s
 
 src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
@@ -1386,6 +1426,33 @@ src/synthesis/dxf_reader.s: src/synthesis/dxf_reader.cpp.s
 src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
+
+src/synthesis/face_clipping.o: src/synthesis/face_clipping.cpp.o
+
+.PHONY : src/synthesis/face_clipping.o
+
+# target to build an object file
+src/synthesis/face_clipping.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/face_clipping.cpp.o
+.PHONY : src/synthesis/face_clipping.cpp.o
+
+src/synthesis/face_clipping.i: src/synthesis/face_clipping.cpp.i
+
+.PHONY : src/synthesis/face_clipping.i
+
+# target to preprocess a source file
+src/synthesis/face_clipping.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/face_clipping.cpp.i
+.PHONY : src/synthesis/face_clipping.cpp.i
+
+src/synthesis/face_clipping.s: src/synthesis/face_clipping.cpp.s
+
+.PHONY : src/synthesis/face_clipping.s
+
+# target to generate assembly for a file
+src/synthesis/face_clipping.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/face_clipping.cpp.s
+.PHONY : src/synthesis/face_clipping.cpp.s
 
 src/synthesis/fixture_analysis.o: src/synthesis/fixture_analysis.cpp.o
 
@@ -2683,6 +2750,33 @@ test/unfold_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.s
 .PHONY : test/unfold_tests.cpp.s
 
+test/workpiece_alignment_tests.o: test/workpiece_alignment_tests.cpp.o
+
+.PHONY : test/workpiece_alignment_tests.o
+
+# target to build an object file
+test/workpiece_alignment_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.o
+.PHONY : test/workpiece_alignment_tests.cpp.o
+
+test/workpiece_alignment_tests.i: test/workpiece_alignment_tests.cpp.i
+
+.PHONY : test/workpiece_alignment_tests.i
+
+# target to preprocess a source file
+test/workpiece_alignment_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.i
+.PHONY : test/workpiece_alignment_tests.cpp.i
+
+test/workpiece_alignment_tests.s: test/workpiece_alignment_tests.cpp.s
+
+.PHONY : test/workpiece_alignment_tests.s
+
+# target to generate assembly for a file
+test/workpiece_alignment_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.s
+.PHONY : test/workpiece_alignment_tests.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -2691,16 +2785,17 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... AddCell"
-	@echo "... stl-parse"
-	@echo "... geometry"
-	@echo "... surface-test"
 	@echo "... json-plan"
 	@echo "... json-mesh"
+	@echo "... ublas"
 	@echo "... all-tests"
 	@echo "... gca"
 	@echo "... rebuild_cache"
 	@echo "... gprocess"
 	@echo "... gcode"
+	@echo "... surface-test"
+	@echo "... geometry"
+	@echo "... stl-parse"
 	@echo "... utils"
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
@@ -2717,6 +2812,9 @@ help:
 	@echo "... examples/surface_test.o"
 	@echo "... examples/surface_test.i"
 	@echo "... examples/surface_test.s"
+	@echo "... examples/ublas.o"
+	@echo "... examples/ublas.i"
+	@echo "... examples/ublas.s"
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"
@@ -2828,6 +2926,9 @@ help:
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"
+	@echo "... src/synthesis/face_clipping.o"
+	@echo "... src/synthesis/face_clipping.i"
+	@echo "... src/synthesis/face_clipping.s"
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
@@ -2972,6 +3073,9 @@ help:
 	@echo "... test/unfold_tests.o"
 	@echo "... test/unfold_tests.i"
 	@echo "... test/unfold_tests.s"
+	@echo "... test/workpiece_alignment_tests.o"
+	@echo "... test/workpiece_alignment_tests.i"
+	@echo "... test/workpiece_alignment_tests.s"
 .PHONY : help
 
 

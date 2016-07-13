@@ -32,17 +32,16 @@ namespace gca {
     auto oriented_mesh = orient_mesh(mesh, orient);
     return shift_mesh(oriented_mesh, v);
   }
-  
+
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const workpiece workpiece_mesh) {
-    // TODO: Actually compute workpiece normals
+			      const triangular_mesh& stock_mesh) {
+    auto stock_surfs = outer_surfaces(stock_mesh);
+    assert(stock_surfs.size() == 6);
     vector<point> normals;
-    normals.push_back(point(1, 0, 0));
-    normals.push_back(point(-1, 0, 0));
-    normals.push_back(point(0, 1, 0));
-    normals.push_back(point(0, -1, 0));
-    normals.push_back(point(0, 0, 1));
-    normals.push_back(point(0, 0, -1));
+    for (auto s : stock_surfs) {
+      index_t i = s.index_list().front();
+      normals.push_back(s.face_orientation(i));
+    }
 
     for (auto& sf : part_surfaces) {
       for (auto n : normals) {
@@ -53,11 +52,46 @@ namespace gca {
     }
   }
 
-  // TODO: Change to actually align instead of just making surfaces
-  // orthogonal to axes
-  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
-			    const workpiece w) {
-    return w;
+  // TODO: Change to actually align instead of just using displacement
+  triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
+				  const workpiece& w) {
+    assert(part_surfaces.size() > 0);
+    const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
+
+    // TODO: Pick aligning orthogonal normals
+    double part_x = diameter(point(1, 0, 0), part);
+    double part_y = diameter(point(0, 1, 0), part);
+    double part_z = diameter(point(0, 0, 1), part);
+
+    double bound_x = max_in_dir(part, point(1, 0, 0));
+    double bound_y = max_in_dir(part, point(0, 1, 0));
+    double bound_z = max_in_dir(part, point(0, 0, 1));
+    
+    double w_x = w.sides[0].len();
+    double w_y = w.sides[1].len();
+    double w_z = w.sides[2].len();
+
+    assert(w_x > part_x);
+    assert(w_y > part_y);
+    assert(w_z > part_z);
+
+    double x_margin = (w_x - part_x) / 2.0;
+    double y_margin = (w_y - part_y) / 2.0;
+    double z_margin = (w_z - part_z) / 2.0;
+
+    double x_bound = bound_x + x_margin;
+    double y_bound = bound_y + y_margin;
+    double z_bound = bound_z + z_margin;
+
+    auto mesh = stock_mesh(w);
+    point shift(x_bound - max_in_dir(mesh, point(1, 0, 0)),
+		y_bound - max_in_dir(mesh, point(0, 1, 0)),
+		z_bound - max_in_dir(mesh, point(0, 0, 1)));
+
+    auto m =
+      mesh.apply_to_vertices([shift](const point p)
+			     { return p + shift; });
+    return m;
   }
 
   // TODO: Include SB surfaces in this analysis
@@ -189,33 +223,6 @@ namespace gca {
       }
     }
     return mill_surfaces;
-  }
-
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part,
-				       const std::vector<surface>& stable_surfaces) {
-    vector<index_t> stable_surface_inds;
-    for (auto s : stable_surfaces) {
-      if (s.is_SA()) {
-	concat(stable_surface_inds, s.index_list());
-      }
-    }
-    sort(begin(stable_surface_inds), end(stable_surface_inds));
-
-    double normal_degrees_delta = 30.0;
-    auto inds = part.face_indexes();
-    delete_if(inds,
-	      [&stable_surface_inds](const index_t i)
-	      { return binary_search(begin(stable_surface_inds),
-				     end(stable_surface_inds), i); });
-    
-    vector<vector<index_t>> delta_regions =
-      normal_delta_regions(inds, part, normal_degrees_delta);
-    vector<surface> surfaces;
-    for (auto r : delta_regions) {
-      surfaces.push_back(surface(&part, r));
-    }
-    return surfaces;
-    
   }
 
   void
@@ -437,7 +444,6 @@ namespace gca {
     				 surfaces_to_cut);
   }
 
-
   fixture_setup
   make_fixture_setup(const fixture& f,
 		     surface_list& surfaces) {
@@ -447,15 +453,21 @@ namespace gca {
     return fixture_setup(mesh, f.v, pockets);
   }
 
+//   std::vector<fixture_setup>
+//   orientations_to_cut(const triangular_mesh& part_mesh,
+// 		      const std::vector<surface>& stable_surfaces,
+// 		      const fixtures& f) {
+//     vector<fixture> all_orients =
+//       all_stable_fixtures(stable_surfaces, f);
+
+//     auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
+// =======
+// >>>>>>> contouring
+
   std::vector<fixture_setup>
   orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& stable_surfaces,
-		      const fixtures& f) {
-    vector<fixture> all_orients =
-      all_stable_fixtures(stable_surfaces, f);
-
-    auto surfs_to_cut = surfaces_to_cut(part_mesh, stable_surfaces);
-
+		      const std::vector<surface>& surfs_to_cut,
+		      std::vector<fixture>& all_orients) {
     surface_map os =
       pick_orientations(part_mesh, surfs_to_cut, all_orients);
 
@@ -475,14 +487,31 @@ namespace gca {
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const workpiece w) {
-    auto part_ss = outer_surfaces(part_mesh);
-    auto aligned_workpiece = align_workpiece(part_ss, w);
-    classify_part_surfaces(part_ss, aligned_workpiece);
-    vector<fixture_setup> setups =
-      workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, f);
-    auto orients = orientations_to_cut(part_mesh, part_ss, f);
-    concat(setups, orients);
-    return fixture_plan(part_mesh, aligned_workpiece, setups);
+// <<<<<<< HEAD
+//     auto part_ss = outer_surfaces(part_mesh);
+//     auto aligned_workpiece = align_workpiece(part_ss, w);
+//     classify_part_surfaces(part_ss, aligned_workpiece);
+//     vector<fixture_setup> setups =
+//       workpiece_clipping_programs(aligned_workpiece, part_mesh, tools, f);
+//     auto orients = orientations_to_cut(part_mesh, part_ss, f);
+//     concat(setups, orients);
+//     return fixture_plan(part_mesh, aligned_workpiece, setups);
+// =======
+    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
+    pair<triangular_mesh, vector<fixture_setup>> wp_setups =
+      workpiece_clipping_programs(w, part_mesh, surfs_to_cut, tools, f);
+
+    vector<fixture_setup> setups = wp_setups.second;
+    triangular_mesh& aligned_workpiece_mesh = wp_setups.first;
+
+    auto stable_surfaces = outer_surfaces(part_mesh);
+    classify_part_surfaces(stable_surfaces, aligned_workpiece_mesh);
+    vector<fixture> all_orients =
+      all_stable_fixtures(stable_surfaces, f);
+    concat(setups, orientations_to_cut(part_mesh, surfs_to_cut, all_orients));
+
+    return fixture_plan(part_mesh, setups);
+    //>>>>>>> contouring
   }
 
 }

@@ -194,6 +194,15 @@ namespace gca {
     return ((p.dot(dir))*dir).len();
   }
 
+  std::vector<triangle> square_triangles(const point n,
+					 const std::vector<point>& pts) {
+    assert(pts.size() == 4);
+    vector<triangle> tris;
+    tris.push_back(triangle(n, pts[0], pts[1], pts[2]));
+    tris.push_back(triangle(n, pts[2], pts[3], pts[0]));
+    return tris;
+  }
+
   std::vector<triangle> box_triangles(box b) {
     point n(1, 0, 0);
     point p0(b.x_min, b.y_min, b.z_min);
@@ -205,27 +214,22 @@ namespace gca {
     point p6(b.x_max, b.y_max, b.z_min);
     point p7(b.x_max, b.y_max, b.z_max);
 
-    //    assert(false);
+    vector<point> f0{p0, p1, p5, p4};
+    vector<point> f1{p2, p3, p1, p0};
+    vector<point> f2{p6, p7, p3, p2};
+    vector<point> f3{p4, p5, p7, p6};
+    vector<point> f4{p1, p3, p7, p5};
+    vector<point> f5{p2, p0, p4, p6};
 
     std::vector<triangle> tris;
-
-    tris.push_back(triangle(n, p0, p1, p2));
-    tris.push_back(triangle(n, p3, p1, p2));
-
-    tris.push_back(triangle(n, p0, p1, p5));
-    tris.push_back(triangle(n, p0, p5, p4));
-
-    tris.push_back(triangle(n, p4, p6, p7));
-    tris.push_back(triangle(n, p4, p5, p7));
-
-    tris.push_back(triangle(n, p2, p6, p3));
-    tris.push_back(triangle(n, p7, p6, p3));
-
-    tris.push_back(triangle(n, p1, p3, p7));
-    tris.push_back(triangle(n, p1, p5, p7));
-
-    tris.push_back(triangle(n, p0, p2, p6));
-    tris.push_back(triangle(n, p4, p0, p6));
+    concat(tris, square_triangles(point(0, -1, 0), f0));
+    concat(tris, square_triangles(point(-1, 0, 0), f1));
+    concat(tris, square_triangles(point(0, 1, 0), f2));
+    concat(tris, square_triangles(point(1, 0, 0), f3));
+    concat(tris, square_triangles(point(0, 0, 1), f4));
+    concat(tris, square_triangles(point(0, 0, -1), f5));
+    
+    assert(tris.size() == 12);
 
     return tris;
   }

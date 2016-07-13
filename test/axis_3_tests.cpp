@@ -39,11 +39,11 @@ namespace gca {
       }
 
       SECTION("First pocket has no holes") {
-	REQUIRE(pockets.front().get_holes().size() == 1);
+      	REQUIRE(pockets.front().get_holes().size() == 1);
       }
 
       SECTION("Last pocket has one hole") {
-	REQUIRE(pockets.back().get_holes().size() == 0);
+      	REQUIRE(pockets.back().get_holes().size() == 0);
       }
     }
 
@@ -76,8 +76,8 @@ namespace gca {
     	REQUIRE(pockets.size() == 1);
       }
 
-      SECTION("Roughing does not overlap the pocket base") {
-    	auto rough_lines = rough_pocket(pockets.front(), t, cut_depth);
+      SECTION("Pocketing does not overlap the pocket base") {
+    	auto rough_lines = pocket_2P5D_interior(pockets.front(), t, cut_depth);
     	auto rough_points = points(rough_lines);
     	bool all_above_pocket_surface =
     	  all_of(begin(rough_points), end(rough_points),

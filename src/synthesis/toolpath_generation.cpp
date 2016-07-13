@@ -14,13 +14,10 @@ namespace gca {
     point p2(b.x_min, b.y_max, b.z_min);
     point p3(b.x_max, b.y_max, b.z_min);
     point p4(b.x_max, b.y_min, b.z_min);
-    
-    vector<triangle> tris;
-    tris.push_back(triangle(point(0, 0, 1), p1, p2, p3));
-    tris.push_back(triangle(point(0, 0, 1), p3, p4, p1));
-    triangular_mesh m = make_mesh(tris, 0.001);
-    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
-    return pocket(b.z_max, mesh->face_indexes(), mesh);
+
+    vector<point> verts{p1, p2, p3, p4};
+    oriented_polygon base(point(0, 0, 1), verts);
+    return face_pocket(b.z_max, b.z_min, base);
   }
 
   vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p) {
@@ -95,7 +92,7 @@ namespace gca {
     return lines;
   }
 
-  vector<polyline> finish_pocket(const pocket& pocket,
+  vector<polyline> finish_pocket(const freeform_pocket& pocket,
 				 const tool& t,
 				 const double cut_depth) {
     auto holes = pocket.get_holes();
@@ -121,7 +118,7 @@ namespace gca {
     return lines;
   }
 
-  vector<polyline> roughing_lines(const pocket& p,
+  vector<polyline> roughing_lines(const freeform_pocket& p,
 				  const vector<triangle>& base,
 				  const vector<oriented_polygon>& holes,
   				  const oriented_polygon& boundary,
@@ -148,7 +145,7 @@ namespace gca {
     return lines;
   }
 
-  vector<polyline> finish_base_lines(const pocket& p,
+  vector<polyline> finish_base_lines(const freeform_pocket& p,
 				     const tool& t,
 				     const double cut_depth) {
     auto holes = p.get_holes();
@@ -168,7 +165,7 @@ namespace gca {
     return plines;
   }
 
-  vector<polyline> roughing_passes(const pocket& p,
+  vector<polyline> roughing_passes(const freeform_pocket& p,
 				   const vector<oriented_polygon>& holes,
 				   const oriented_polygon& boundary,
 				   const vector<double>& depths,
@@ -181,7 +178,7 @@ namespace gca {
     return lines;
   }
 
-  vector<polyline> rough_pocket(const pocket& pocket,
+  vector<polyline> rough_pocket(const freeform_pocket& pocket,
 				const tool& t,
 				double cut_depth) {
     auto holes = pocket.get_holes();
@@ -203,7 +200,7 @@ namespace gca {
     return pocket_path;
   }
 
-  vector<polyline> rough_pockets(const vector<pocket>& pockets,
+  vector<polyline> rough_pockets(const vector<freeform_pocket>& pockets,
 				 const tool& t,
 				 double cut_depth) {
     vector<polyline> ps;
@@ -214,16 +211,37 @@ namespace gca {
     return ps;
   }
 
+  std::vector<polyline>
+  contour_pocket::toolpath_lines(const tool& t,
+				 const double cut_depth) const {
+    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+    auto i = project(exterior_offset(interior, t.radius()), get_end_depth());
+    return {to_polyline(o), to_polyline(i)};
+  }
+  
+  std::vector<polyline>
+  face_pocket::toolpath_lines(const tool& t,
+			      const double cut_depth) const {
+    auto p = project(interior_offset(base, t.radius()), get_end_depth());
+    vector<polyline> ps{to_polyline(p)};
+    return ps;
+  }
+
+  std::vector<polyline>
+  freeform_pocket::toolpath_lines(const tool& t,
+				  const double cut_depth) const {
+    vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
+    auto finish_surface = finish_base_lines(*this, t, cut_depth);
+    concat(pocket_path, finish_surface);
+    auto finish_edges = finish_pocket(*this, t, cut_depth);
+    concat(pocket_path, finish_edges);
+    return pocket_path;
+  }
+
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
-    // TODO: Reintroduce roughing
-    vector<polyline> pocket_path = rough_pocket(pocket, t, cut_depth);
-    auto finish_surface = finish_base_lines(pocket, t, cut_depth);
-    concat(pocket_path, finish_surface);
-    auto finish_edges = finish_pocket(pocket, t, cut_depth);
-    concat(pocket_path, finish_edges);
-    return pocket_path;
+    return pocket.toolpath_lines(t, cut_depth);
   }
 
   // TODO: Move these to somewhere else, they really dont belong here
@@ -277,7 +295,7 @@ namespace gca {
     tris.push_back(triangle(point(0, 0, 1), p1, p2, p3));
     tris.push_back(triangle(point(0, 0, 1), p3, p4, p1));
     triangular_mesh m = make_mesh(tris, 0.001);
-    return pocket_2P5D_interior(pocket(b.z_max, m.face_indexes(), &m), t, cut_depth);
+    return pocket_2P5D_interior(freeform_pocket(b.z_max, m.face_indexes(), &m), t, cut_depth);
   }
 
   // TODO: Actually compensate for tool radius and shape

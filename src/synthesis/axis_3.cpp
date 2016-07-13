@@ -11,7 +11,7 @@ namespace gca {
   pocket pocket_for_surface(const std::vector<index_t>& surface,
 			    double top_height,
 			    const triangular_mesh& mesh) {
-    return pocket(top_height, surface, &mesh);
+    return pocket(freeform_pocket(top_height, surface, &mesh));
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
@@ -93,10 +93,9 @@ namespace gca {
 	assert(base_mesh == new_base_cpy);
 	*base_mesh = new_base;
 	vector<oriented_polygon> holes;
-	pockets.push_back(pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
+	pockets.push_back(freeform_pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
       }
     }
-    cout << "# vertical pockets = " << pockets.size() << endl;
     return pockets;
   }
 

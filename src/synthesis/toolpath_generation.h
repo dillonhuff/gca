@@ -1,6 +1,8 @@
 #ifndef GCA_TOOLPATH_GENERATION_H
 #define GCA_TOOLPATH_GENERATION_H
 
+#include <memory>
+
 #include "geometry/box.h"
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
@@ -14,8 +16,60 @@ namespace gca {
   vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
 				       const triangular_mesh& mesh);
 
+  class pocket {
+  public:
+    template<typename T>
+    pocket(T x) : self_(new model<T>(move(x))) {}
 
-  struct pocket {
+    pocket(const pocket& x) : self_(x.self_->copy_()) {}
+
+    pocket(pocket&&) noexcept = default;
+
+    pocket& operator=(const pocket& x)
+    { pocket tmp(x); *this = move(tmp); return *this; }
+
+    pocket& operator=(pocket&&) noexcept = default;
+
+    const vector<oriented_polygon>& get_holes() const
+    { return self_->get_holes(); }
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+    { return self_->toolpath_lines(t, cut_depth); }
+    bool above_base(const point p) const
+    { return self_->above_base(p); }
+    double get_end_depth() const
+    { return self_->get_end_depth(); }
+    double get_start_depth() const
+    { return self_->get_start_depth(); }
+
+  private:
+    struct concept_t {
+      virtual ~concept_t() = default;
+      virtual const vector<oriented_polygon>& get_holes() const = 0;
+      virtual double get_end_depth() const = 0;
+      virtual double get_start_depth() const = 0;
+      virtual bool above_base(const point p) const = 0;
+      virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const = 0;
+      virtual concept_t* copy_() const = 0;
+    };
+
+    template<typename T>
+    struct model : concept_t {
+      model(T x) : data_(move(x)) {}
+      virtual concept_t* copy_() const { return new model<T>(*this); }
+      const vector<oriented_polygon>& get_holes() const
+      { return data_.get_holes(); }
+      virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+      { return data_.toolpath_lines(t, cut_depth); }
+      bool above_base(const point p) const { return data_.above_base(p); }
+      double get_end_depth() const { return data_.get_end_depth(); }
+      double get_start_depth() const { return data_.get_start_depth(); }
+      T data_;
+    };
+  
+    unique_ptr<concept_t> self_;
+  };
+
+  struct freeform_pocket {
   private:
     oriented_polygon boundary;
     std::vector<oriented_polygon> holes;
@@ -25,7 +79,7 @@ namespace gca {
     const triangular_mesh* mesh;
 
   public:
-    pocket(double start_depthp,
+    freeform_pocket(double start_depthp,
 	   const std::vector<index_t>& basep,
 	   const triangular_mesh* p_mesh) :
       start_depth(start_depthp),
@@ -38,6 +92,8 @@ namespace gca {
       boundary = extract_boundary(bounds);
       holes = bounds;
     }
+
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
     const std::vector<index_t>& base_face_indexes() const
     { return base_inds; }
@@ -73,7 +129,7 @@ namespace gca {
       return base_tris;
     }
 
-    bool above_base(const point p) {
+    bool above_base(const point p) const {
       for (auto i : base_inds) {
 	auto t = mesh->face_triangle(i);
 	if (in_projection(t, p) && below(t, p)) { return false; }
@@ -84,6 +140,60 @@ namespace gca {
     box bounding_box() const {
       return mesh->bounding_box();
     }
+  };
+
+  class contour_pocket {
+  protected:
+    double start_depth;
+    double end_depth;
+    oriented_polygon interior;
+    oriented_polygon exterior;
+
+  public:
+    contour_pocket(const double p_start_depth,
+		   const double p_end_depth,
+		   const oriented_polygon& p_i,
+		   const oriented_polygon& p_e)
+      : start_depth(p_start_depth), end_depth(p_end_depth),
+	interior(p_i), exterior(p_e) {}
+    
+    const vector<oriented_polygon>& get_holes() const
+    { assert(false); }
+
+    double get_end_depth() const
+    { return end_depth; }
+    double get_start_depth() const
+    { return start_depth; }
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }
+
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
+  };
+  
+  class face_pocket {
+  protected:
+    double start_depth;
+    double end_depth;
+    oriented_polygon base;
+
+  public:
+    face_pocket(const double p_start_depth,
+		const double p_end_depth,
+		const oriented_polygon& p_base)
+      : start_depth(p_start_depth), end_depth(p_end_depth), base(p_base) {}
+
+    const vector<oriented_polygon>& get_holes() const
+    { assert(false); }
+
+    double get_end_depth() const
+    { return end_depth; }
+    double get_start_depth() const
+    { return start_depth; }
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }
+
+    std::vector<polyline>
+    toolpath_lines(const tool& t, const double cut_depth) const;
   };
 
   pocket box_pocket(const box b);
@@ -104,14 +214,6 @@ namespace gca {
 					 int num_repeats,
 					 offset_dir d,
 					 double inc);
-
-  std::vector<polyline> rough_pocket(const pocket& pocket,
-				     const tool& t,
-				     double cut_depth);
-
-  std::vector<polyline> rough_pockets(const std::vector<pocket>& pockets,
-				      const tool& t,
-				      double cut_depth);
 
   std::vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					     const tool& t,

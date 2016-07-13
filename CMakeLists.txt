@@ -93,6 +93,7 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS 
 	    ./src/synthesis/mesh_to_gcode.h
+	    ./src/synthesis/face_clipping.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
@@ -106,7 +107,8 @@ SET(GCA_HEADERS
 	    ./src/system/json.h
 	    ./src/system/parse_stl.h)
 
-SET(GCA_CPPS 
+SET(GCA_CPPS
+	./src/synthesis/face_clipping.cpp
 	 ./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
@@ -133,6 +135,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/workpiece_alignment_tests.cpp
 	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp
 	       test/polygon_tests.cpp
@@ -174,6 +177,9 @@ target_link_libraries(json-plan geometry utils gcode gprocess gca)
 
 add_executable(stl-parse examples/stl_parse.cpp ${SRCS})
 target_link_libraries(stl-parse geometry utils gcode gprocess gca)
+
+add_executable(ublas examples/ublas.cpp ${SRCS})
+target_link_libraries(ublas geometry utils gcode gprocess gca)
 
 ######### VTK Example ##########
 

@@ -276,7 +276,7 @@ namespace gca {
 			 const triangular_mesh& mesh,
 			 const point n,
 			 const double tolerance);
-  
+
 }
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef GCA_SURFACE_H
 #define GCA_SURFACE_H
 
+#include <boost/optional.hpp>
+
 #include "geometry/triangular_mesh.h"
 
 namespace gca {
@@ -60,12 +62,19 @@ namespace gca {
 
     inline const triangular_mesh& get_parent_mesh() const
     { return *parent_mesh; }
+
+    bool orthogonal_to(const point n, double tol) const {
+      return all_orthogonal_to(index_list(), get_parent_mesh(), n, tol);
+    }
   };
 
   bool surfaces_share_edge(const unsigned i,
 			   const unsigned j,
 			   const std::vector<surface>& surfaces);
 
+  bool surfaces_share_edge(const surface& l,
+			   const surface& r);
+  
   void remove_SA_surfaces(const std::vector<surface>& surfaces,
   			  std::vector<index_t>& indices);
 
@@ -77,6 +86,26 @@ namespace gca {
 
   typedef std::vector<std::vector<index_t>> surface_list;
 
+  surface merge_surfaces(const std::vector<surface>& surfaces);
+
+  void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
+				 std::vector<surface>& surfaces_to_cut);
+
+  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
+			       std::vector<surface>& surfaces_to_cut);
+
+  boost::optional<oriented_polygon>
+  part_outline(std::vector<surface>* surfaces_to_cut);
+
+  boost::optional<surface>
+  part_outline_surface(std::vector<surface>* surfaces_to_cut,
+		       const point n);
+
+  boost::optional<surface>
+  part_outline_surface(const triangular_mesh& m,
+		       const point n);
+
+  std::vector<surface> surfaces_to_cut(const triangular_mesh& part);
 }
 
 #endif

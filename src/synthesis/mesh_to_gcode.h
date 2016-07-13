@@ -50,9 +50,6 @@ namespace gca {
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const workpiece workpiece_mesh);
 
-  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
-			    const workpiece w);
-
 }
 
 #endif

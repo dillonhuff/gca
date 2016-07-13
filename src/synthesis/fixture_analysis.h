@@ -100,37 +100,35 @@ namespace gca {
       : m(p_m), v(p_v), pockets(p) {}
   };
 
-  typedef std::vector<std::pair<fixture, surface_list>> fixture_list;
-
   class fixture_plan {
   protected:
     const triangular_mesh& part;
-    workpiece stock;
     std::vector<fixture_setup> setups;
     
   public:
     fixture_plan(const triangular_mesh& p_part,
-		 const workpiece& p_stock,
 		 const std::vector<fixture_setup>& p_fixture_pairs) :
-      part(p_part), stock(p_stock), setups(p_fixture_pairs) {
+      part(p_part), setups(p_fixture_pairs) {
       std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
-
-    workpiece aligned_workpiece() const
-    { return stock; }
 
     const std::vector<fixture_setup>& fixtures() const
     { return setups; }
   };
   
-  workpiece align_workpiece(const std::vector<surface>& part_surfaces,
-			    const workpiece w);
+  triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
+				  const workpiece& w);
+
 
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const workpiece workpiece_mesh);
+			      const triangular_mesh& m);
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
 				       const std::vector<surface>& stable_surfaces);
+  std::vector<fixture_setup>
+  orientations_to_cut(const triangular_mesh& part_mesh,
+		      const std::vector<surface>& surfs_to_cut,
+		      const fixtures& v);
 
   std::vector<stock_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
