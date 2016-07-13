@@ -50,9 +50,6 @@ plane_basis_rotation(const triangle at, const triangle apt,
   a(0, 2) = ct.normal.x;
   a(1, 2) = ct.normal.y;
   a(2, 2) = ct.normal.z;
-
-  std::cout << "Matrix a = " << std::endl;
-  std::cout << a << std::endl;
   
   boost::numeric::ublas::matrix<double> b(3, 3);
   b(0, 0) = apt.normal.x;
@@ -70,6 +67,56 @@ plane_basis_rotation(const triangle at, const triangle apt,
   auto a_inv = inverse(a);
   return prod(b, a_inv);
 }
+
+boost::numeric::ublas::vector<double>
+to_vector(const point p) {
+  boost::numeric::ublas::vector<double> v(3);
+  v(0) = p.x;
+  v(1) = p.y;
+  v(2) = p.z;
+  return v;
+}
+
+boost::numeric::ublas::vector<double>
+plane_basis_displacement(const boost::numeric::ublas::matrix<double>& r,
+			 const point u1, const point u2, const point u3,
+			 const point q1, const point q2, const point q3,
+			 const point p1, const point p2, const point p3) {
+  boost::numeric::ublas::vector<double> uv1 = to_vector(u1);
+  boost::numeric::ublas::vector<double> uv2 = to_vector(u2);
+  boost::numeric::ublas::vector<double> uv3 = to_vector(u3);
+
+  boost::numeric::ublas::vector<double> qv1 = to_vector(q1);
+  boost::numeric::ublas::vector<double> qv2 = to_vector(q2);
+  boost::numeric::ublas::vector<double> qv3 = to_vector(q3);
+
+  boost::numeric::ublas::vector<double> pv1 = to_vector(p1);
+  boost::numeric::ublas::vector<double> pv2 = to_vector(p2);
+  boost::numeric::ublas::vector<double> pv3 = to_vector(p3);
+
+  boost::numeric::ublas::vector<double> s(3);
+  s(0) = inner_prod(qv1, uv1) - inner_prod(prod(r, pv1), uv1);
+  s(1) = inner_prod(qv2, uv2) - inner_prod(prod(r, pv2), uv2);
+  s(2) = inner_prod(qv3, uv3) - inner_prod(prod(r, pv3), uv3);
+
+  boost::numeric::ublas::matrix<double> u(3, 3);
+  u(0, 0) = uv1(0);
+  u(0, 1) = uv1(1);
+  u(0, 2) = uv1(2);
+
+  u(1, 0) = uv2(0);
+  u(1, 1) = uv2(1);
+  u(1, 2) = uv2(2);
+
+  u(2, 0) = uv3(0);
+  u(2, 1) = uv3(1);
+  u(2, 2) = uv3(2);
+
+  auto u_inv = inverse(u);
+
+  return prod(u_inv, s);
+}
+
 
 int main() {
   triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1x1x1.stl", 0.001);
@@ -89,9 +136,9 @@ int main() {
 
   auto shifted_surfs = outer_surfaces(shifted);
 
-  surface ap = find_surface_by_normal(m_surfs, point(0, -1, 0));
-  surface bp = find_surface_by_normal(m_surfs, point(1, 0, 0));
-  surface cp = find_surface_by_normal(m_surfs, point(0, 0, 1));
+  surface ap = find_surface_by_normal(shifted_surfs, point(0, -1, 0));
+  surface bp = find_surface_by_normal(shifted_surfs, point(1, 0, 0));
+  surface cp = find_surface_by_normal(shifted_surfs, point(0, 0, 1));
 
   triangle apt = ap.face_triangle(ap.index_list().front());
   triangle bpt = bp.face_triangle(bp.index_list().front());
@@ -100,7 +147,26 @@ int main() {
   boost::numeric::ublas::matrix<double> r = plane_basis_rotation(at, apt,
 								 bt, bpt,
 								 ct, cpt);
+
+  std::cout << "Matrix r = " << std::endl;
+  std::cout << r << std::endl;
+
+  boost::numeric::ublas::vector<double> d =
+    plane_basis_displacement(r,
+			     apt.normal, bpt.normal, cpt.normal,
+			     apt.v1, bpt.v1, cpt.v1,
+			     at.v1, bt.v1, ct.v1);
+
   
+  std::cout << "Displacement d = " << std::endl;
+  std::cout << d << std::endl;
+
+  cout << "pt at.v1 = " << endl;
+  auto pt = to_vector(at.v1);
+  cout << pt << endl;
+
+  cout << "Result" << endl;
+  cout << prod(r, pt) + d << endl;
   // int n = 3;
   // const matrix<double> a = 3 * identity_matrix<double>(n);
 
