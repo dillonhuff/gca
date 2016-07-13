@@ -224,6 +224,9 @@ namespace gca {
   double min_in_dir(const triangular_mesh& mesh, const point dir);
   double max_in_dir(const triangular_mesh& mesh, const point dir);
 
+  point min_point_in_dir(const triangular_mesh& mesh, const point dir);
+  point max_point_in_dir(const triangular_mesh& mesh, const point dir);
+  
   std::vector<index_t> select_visible_triangles(const triangular_mesh& mesh);
 
   std::vector<vector<index_t>>

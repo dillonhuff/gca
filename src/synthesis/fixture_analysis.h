@@ -37,6 +37,11 @@ namespace gca {
       return n;
     }
 
+    inline point bottom_normal() const {
+      point bn = bottom->face_orientation(bottom->front());
+      return bn;
+    }
+    
     inline point left_normal() const {
       point bn = left->face_orientation(bottom->front());
       point n = bn - 2*bn;
