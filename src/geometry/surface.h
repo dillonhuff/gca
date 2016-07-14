@@ -78,8 +78,8 @@ namespace gca {
   bool surfaces_share_edge(const surface& l,
 			   const surface& r);
   
-  void remove_SA_surfaces(const std::vector<surface>& surfaces,
-  			  std::vector<index_t>& indices);
+  // void remove_SA_surfaces(const std::vector<surface>& surfaces,
+  // 			  std::vector<index_t>& indices);
 
   std::vector<index_t> surface_vertexes(const surface& s);
 
@@ -94,8 +94,8 @@ namespace gca {
   void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
 				 std::vector<surface>& surfaces_to_cut);
 
-  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
-			       std::vector<surface>& surfaces_to_cut);
+  // void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
+  // 			       std::vector<surface>& surfaces_to_cut);
 
   boost::optional<oriented_polygon>
   part_outline(std::vector<surface>* surfaces_to_cut);

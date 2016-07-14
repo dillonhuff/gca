@@ -98,8 +98,6 @@ namespace gca {
 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
       remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
     
-    // classify_part_surfaces(stable_surfaces, wp_mesh);
-    // remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
     return std::make_pair(wp_mesh, clip_setups);
   }
 

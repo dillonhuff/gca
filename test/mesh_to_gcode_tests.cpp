@@ -160,9 +160,11 @@ namespace gca {
 	vector<index_t> fis = mesh.face_indexes();
 	workpiece workpiece_dims(1.5, 1.2, 1.5, ALUMINUM);
 	auto workpiece_mesh = align_workpiece(surfaces, workpiece_dims);
-	classify_part_surfaces(surfaces, workpiece_mesh);
-	remove_SA_surfaces(surfaces, fis);
-	REQUIRE(fis.size() == 0);
+	auto clipped_surfs =
+	  stable_surfaces_after_clipping(mesh, workpiece_mesh);
+	remove_contained_surfaces(clipped_surfs, surfaces);
+	
+	REQUIRE(surfaces.size() == 0);
       }
     }
 
