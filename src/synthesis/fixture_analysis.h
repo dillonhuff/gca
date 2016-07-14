@@ -77,7 +77,6 @@ namespace gca {
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w);
 
-
   void classify_part_surfaces(std::vector<surface>& part_surfaces,
 			      const triangular_mesh& m);
 
@@ -87,10 +86,6 @@ namespace gca {
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& surfs_to_cut,
 		      const fixtures& v);
-
-  std::vector<clamp_orientation>
-  all_stable_orientations(const std::vector<surface>& surfaces,
-			  const vice& v);
 
   std::vector<fixture>
   all_stable_fixtures(const std::vector<surface>& surfaces,

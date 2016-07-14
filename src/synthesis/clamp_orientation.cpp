@@ -24,7 +24,7 @@ namespace gca {
       return *t;
     }
     
-    free_axis = -1* free_axis;
+    free_axis = -1*free_axis;
     free_plane = plane(free_axis, max_point_in_dir(m, free_axis));
 
     boost::optional<homogeneous_transform> rev =
@@ -42,33 +42,43 @@ namespace gca {
     return apply(t, orient.get_mesh());
   }
 
-  // TODO: Include SB surfaces in this analysis
   std::vector<clamp_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v) {
+    std::vector<const surface*> surfs;
+    for (unsigned i = 0; i < surfaces.size(); i++) {
+      const surface* s = &(surfaces[i]);
+      surfs.push_back(s);
+    }
+    return all_stable_orientations(surfs, v);
+  }  
+
+  std::vector<clamp_orientation>
+  all_clamp_orientations(const std::vector<const surface*>& surfaces,
+			 const vice& v) {
     vector<clamp_orientation> orients;
     for (unsigned j = 0; j < surfaces.size(); j++) {
-      const surface* next_left = &(surfaces[j]);
-      if (next_left->is_SA()) {
-	for (unsigned k = 0; k < surfaces.size(); k++) {
-	  const surface* next_right = &(surfaces[k]);
-	  if (next_right->is_SA() &&
-	      parallel_flat_surfaces(next_right, next_left)) {
-	    for (unsigned l = 0; l < surfaces.size(); l++) {
-	      const surface* next_bottom = &(surfaces[l]);
-	      if (next_bottom->is_SA() &&
-		  orthogonal_flat_surfaces(next_bottom, next_left) &&
-		  orthogonal_flat_surfaces(next_bottom, next_right)) {
-		orients.push_back(clamp_orientation(next_left,
-						    next_right,
-						    next_bottom));
-	      }
-	    }
-	  }
-	}
+      const surface* next_left = surfaces[j];
+      for (unsigned k = 0; k < surfaces.size(); k++) {
+	const surface* next_right = surfaces[k];
+	if (parallel_flat_surfaces(next_right, next_left)) {
+	  for (unsigned l = 0; l < surfaces.size(); l++) {
+	    const surface* next_bottom = surfaces[l];
+	    if (orthogonal_flat_surfaces(next_bottom, next_left) &&
+		orthogonal_flat_surfaces(next_bottom, next_right)) {
+	      orients.push_back(clamp_orientation(next_left,
+						  next_right,
+						  next_bottom));
+    	    }
+    	  }
+    	}
       }
     }
+    return orients;
+  }
 
+  void filter_stub_orientations(std::vector<clamp_orientation>& orients,
+				const vice& v) {
     delete_if(orients,
     	      [v](const clamp_orientation& orient)
     	      {
@@ -79,8 +89,11 @@ namespace gca {
     		  > v.maximum_jaw_width();
     	      });
 
-    // TODO: Consider left and right normals as well, this filtering
-    // criterion is too aggressive when all 
+  }
+
+  // TODO: Consider left and right normals as well, this filtering
+  // criterion is too aggressive
+  void unique_by_top_normal(std::vector<clamp_orientation>& orients) {
     sort(begin(orients), end(orients),
     	 [](const clamp_orientation l, const clamp_orientation r)
     	 { return l.top_normal().x < r.top_normal().x; });
@@ -91,14 +104,26 @@ namespace gca {
     	 [](const clamp_orientation l, const clamp_orientation r)
     	 { return l.top_normal().z < r.top_normal().z; });
     auto it = unique(begin(orients), end(orients),
-		     [](const clamp_orientation& l, const clamp_orientation& r) {
-		       return within_eps(l.top_normal(), r.top_normal(), 0.0001);
-		     });
+    		     [](const clamp_orientation& l, const clamp_orientation& r) {
+    		       return within_eps(l.top_normal(), r.top_normal(), 0.0001);
+    		     });
     orients.resize(std::distance(begin(orients), it));
-    assert(orients.size() > 0);
-    return orients;
   }
 
+  std::vector<clamp_orientation>
+  all_stable_orientations(const std::vector<const surface*>& surfaces,
+			  const vice& v) {
+    vector<clamp_orientation> orients =
+      all_clamp_orientations(surfaces, v);
+
+    filter_stub_orientations(orients, v);
+
+    unique_by_top_normal(orients);
+
+    assert(orients.size() > 0);
+    
+    return orients;
+  }
 
   bool point_above_vice(const index_t i,
 			const clamp_orientation& orient,

@@ -77,6 +77,10 @@ namespace gca {
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v);
 
+  std::vector<clamp_orientation>
+  all_stable_orientations(const std::vector<const surface*>& surfaces,
+			  const vice& v);
+
   std::vector<unsigned>
   surfaces_millable_from(const clamp_orientation& orient,
 			 const std::vector<surface>& surfaces_left,
