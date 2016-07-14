@@ -93,7 +93,8 @@ SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
 add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})
 target_link_libraries(gprocess gcode geometry utils)
 
-SET(GCA_HEADERS 
+SET(GCA_HEADERS
+	./src/synthesis/clamp_orientation.h
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/face_clipping.h
 	    ./src/synthesis/output.h
@@ -110,8 +111,9 @@ SET(GCA_HEADERS
 	    ./src/system/parse_stl.h)
 
 SET(GCA_CPPS
+	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/face_clipping.cpp
-	 ./src/synthesis/mesh_to_gcode.cpp
+	./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/synthesis/dxf_reader.cpp

@@ -1400,6 +1400,33 @@ src/synthesis/axis_3.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/axis_3.cpp.s
 .PHONY : src/synthesis/axis_3.cpp.s
 
+src/synthesis/clamp_orientation.o: src/synthesis/clamp_orientation.cpp.o
+
+.PHONY : src/synthesis/clamp_orientation.o
+
+# target to build an object file
+src/synthesis/clamp_orientation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/clamp_orientation.cpp.o
+.PHONY : src/synthesis/clamp_orientation.cpp.o
+
+src/synthesis/clamp_orientation.i: src/synthesis/clamp_orientation.cpp.i
+
+.PHONY : src/synthesis/clamp_orientation.i
+
+# target to preprocess a source file
+src/synthesis/clamp_orientation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/clamp_orientation.cpp.i
+.PHONY : src/synthesis/clamp_orientation.cpp.i
+
+src/synthesis/clamp_orientation.s: src/synthesis/clamp_orientation.cpp.s
+
+.PHONY : src/synthesis/clamp_orientation.s
+
+# target to generate assembly for a file
+src/synthesis/clamp_orientation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/clamp_orientation.cpp.s
+.PHONY : src/synthesis/clamp_orientation.cpp.s
+
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
 
 .PHONY : src/synthesis/cut_to_gcode.o
@@ -2977,6 +3004,9 @@ help:
 	@echo "... src/synthesis/axis_3.o"
 	@echo "... src/synthesis/axis_3.i"
 	@echo "... src/synthesis/axis_3.s"
+	@echo "... src/synthesis/clamp_orientation.o"
+	@echo "... src/synthesis/clamp_orientation.i"
+	@echo "... src/synthesis/clamp_orientation.s"
 	@echo "... src/synthesis/cut_to_gcode.o"
 	@echo "... src/synthesis/cut_to_gcode.i"
 	@echo "... src/synthesis/cut_to_gcode.s"
