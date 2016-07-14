@@ -67,6 +67,9 @@ namespace gca {
 
   double min_z(const oriented_polygon& p);
 
+  double area(const oriented_polygon& p);
+  double signed_area(const oriented_polygon& p);
+
 }
 
 #endif

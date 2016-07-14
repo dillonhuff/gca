@@ -83,7 +83,7 @@ namespace gca {
 
     vector<pocket> pockets{face_pocket(stock_top, part_top, stock_outline)};
 
-    pockets.push_back(contour_pocket(part_top, part_bottom, stock_outline, part_outline));
+    pockets.push_back(contour_pocket(part_top, part_bottom, part_outline, stock_outline));
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, v, pockets);

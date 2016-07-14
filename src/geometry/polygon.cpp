@@ -201,4 +201,12 @@ namespace gca {
     return (*min_z).z;
   }
 
+  double area(const oriented_polygon& p) {
+    return area(to_polyline(p));
+  }
+  
+  double signed_area(const oriented_polygon& p) {
+    return signed_area(to_polyline(p));
+  }
+
 }
