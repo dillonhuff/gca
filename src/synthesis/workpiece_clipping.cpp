@@ -90,19 +90,12 @@ namespace gca {
 
   fixture_setup
   clip_base(const triangular_mesh& aligned,
-	    const double clipped_z_height,
-	    const vice& v,
-	    const double plate_height) {
-    double aligned_z_height = diameter(point(0, 0, 1), aligned);
+	    const triangular_mesh& part,
+	    const vice& v) {
+    double work_height = max_in_dir(aligned, point(0, 0, 1));
+    double part_height = max_in_dir(part, point(0, 0, 1));
 
-    double adjusted_jaw_height = v.jaw_height() - plate_height;
-    assert(adjusted_jaw_height > 0);
-    double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
-    assert(leftover > 0);
-    double alpha = leftover / 2.0;
-
-    double z_min = v.base_z() + plate_height + clipped_z_height;
-    double z_max = v.base_z() + plate_height + clipped_z_height + alpha;
+    assert(work_height > part_height);
 
     auto bound = part_outline_surface(aligned, point(0, 0, 1));
     if (bound) {
@@ -112,7 +105,7 @@ namespace gca {
     auto outlines =
       mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
     assert(outlines.size() == 2);
-    vector<pocket> pockets{face_pocket(z_max, z_min, outlines.front())};
+    vector<pocket> pockets{face_pocket(work_height, part_height, outlines.front())};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, v, pockets);
@@ -138,25 +131,27 @@ namespace gca {
     if (outline) {
       vice parallel(v, plate_height);
       const triangular_mesh& m = surfaces_to_cut.front().get_parent_mesh();
-      cout << m.face_indexes().size() << endl;
       vector<surface> surfs = outer_surfaces(m);
-
-      cout << "# of surfaces = " << surfs.size() << endl;
 
       std::vector<fixture_setup> progs;
       progs.push_back(clip_top_and_sides(aligned, clipped_dims, *outline, v, plate_height));
 
       vector<clamp_orientation> orients =
-      	all_stable_orientations(surfs, v);
-
-      cout << "# of orientations = " << orients.size() << endl;
+      	all_viable_clamp_orientations(surfs, parallel);
 
       // TODO: Eventually auto select the direction instead of
       // hard coding (0, 0, 1)
-      auto top_orient = find_orientation_by_normal(orients, point(0, 0, 1));
+      vector<clamp_orientation> top_orients =
+	select(orients, [](const clamp_orientation& s)
+	       { return within_eps(s.top_normal(), point(0, 0, 1), 0.0001); });
+      assert(orients.size() > 0);
+      sort(begin(top_orients), end(top_orients),
+	   [](const clamp_orientation& l, const clamp_orientation& r)
+	   { return l.surface_area() > r.surface_area(); });
+      auto top_orient = top_orients.front();
       auto t = mating_transform(top_orient, v);
 
-      progs.push_back(clip_base(apply(t, aligned), clipped_dims.z, v, plate_height));
+      progs.push_back(clip_base(apply(t, aligned), apply(t, m), v)); //clipped_dims.z, v, plate_height));
       return progs;
     }
     return boost::none;

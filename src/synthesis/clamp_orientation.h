@@ -19,6 +19,10 @@ namespace gca {
     inline const surface& get_right() const { return *right; }
     inline const surface& get_bottom() const { return *bottom; }
 
+    inline double surface_area() const {
+      return left->surface_area() + right->surface_area() + bottom->surface_area();
+    }
+
     inline plane base_plane() const {
       point n = bottom_normal();
       point p = max_point_in_dir(get_mesh(), n);
@@ -73,6 +77,17 @@ namespace gca {
   oriented_part_mesh(const clamp_orientation& orient,
 		     const vice v);
 
+  std::vector<clamp_orientation>
+  all_clamp_orientations(const std::vector<const surface*>& surfaces,
+			 const vice& v);
+  
+  void filter_stub_orientations(std::vector<clamp_orientation>& orients,
+				const vice& v);
+  
+  std::vector<clamp_orientation>
+  all_viable_clamp_orientations(const std::vector<surface>& surfaces,
+				const vice& v);
+  
   std::vector<clamp_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v);
