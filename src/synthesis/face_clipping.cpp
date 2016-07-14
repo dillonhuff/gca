@@ -72,8 +72,8 @@ namespace gca {
 			const fixtures& f) {
     triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
 
-    classify_part_surfaces(stable_surfaces, wp_mesh);
-    remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
+    // classify_part_surfaces(stable_surfaces, wp_mesh);
+    // remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
 
     vector<fixture_setup> clip_setups;
     double eps = 0.05;

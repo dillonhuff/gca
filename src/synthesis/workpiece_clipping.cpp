@@ -176,7 +176,6 @@ namespace gca {
       parallel_plate_clipping(wp_mesh, clipped_dims, surfaces_to_cut, f);
 
     if (clip_setups) {
-      //      classify_part_surfaces(stable_surfaces, wp_mesh);
       auto clipped_surfs =
 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
       remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
