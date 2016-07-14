@@ -72,9 +72,6 @@ namespace gca {
 			const fixtures& f) {
     triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
 
-    // classify_part_surfaces(stable_surfaces, wp_mesh);
-    // remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
-
     vector<fixture_setup> clip_setups;
     double eps = 0.05;
     append_clip_setups("X", 0, aligned_workpiece, clipped, eps, f.get_vice(), clip_setups);
@@ -97,8 +94,12 @@ namespace gca {
 
     auto clip_setups = axis_by_axis_clipping(stable_surfaces, surfaces_to_cut, aligned_workpiece, clipped, f);
 
-    classify_part_surfaces(stable_surfaces, wp_mesh);
-    remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
+      auto clipped_surfs =
+	stable_surfaces_after_clipping(part_mesh, wp_mesh);
+      remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
+    
+    // classify_part_surfaces(stable_surfaces, wp_mesh);
+    // remove_clipped_surfaces(stable_surfaces, surfaces_to_cut);
     return std::make_pair(wp_mesh, clip_setups);
   }
 
