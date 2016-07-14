@@ -105,10 +105,10 @@ namespace gca {
     	 { return l.top_normal().x < r.top_normal().x; });
     sort(begin(orients), end(orients),
     	 [](const clamp_orientation& l, const clamp_orientation& r)
-    	 { return l.top_normal().y <= r.top_normal().y; });
+    	 { return l.top_normal().y < r.top_normal().y; });
     sort(begin(orients), end(orients),
     	 [](const clamp_orientation& l, const clamp_orientation& r)
-    	 { return l.top_normal().z <= r.top_normal().z; });
+    	 { return l.top_normal().z < r.top_normal().z; });
     cout << "About to unique" << endl;
     auto it = unique(begin(orients), end(orients),
     		     [](const clamp_orientation& l, const clamp_orientation& r) {

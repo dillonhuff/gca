@@ -143,6 +143,9 @@ namespace gca {
 
       cout << "# of surfaces = " << surfs.size() << endl;
 
+      std::vector<fixture_setup> progs;
+      progs.push_back(clip_top_and_sides(aligned, clipped_dims, *outline, v, plate_height));
+
       vector<clamp_orientation> orients =
       	all_stable_orientations(surfs, v);
 
@@ -150,12 +153,10 @@ namespace gca {
 
       // TODO: Eventually auto select the direction instead of
       // hard coding (0, 0, 1)
-      // auto top_orient = find_orientation_by_normal(orients, point(0, 0, 1));
-      // auto t = mating_transform(top_orient, v);
+      auto top_orient = find_orientation_by_normal(orients, point(0, 0, 1));
+      auto t = mating_transform(top_orient, v);
 
-      std::vector<fixture_setup> progs;
-      progs.push_back(clip_top_and_sides(aligned, clipped_dims, *outline, v, plate_height));
-      progs.push_back(clip_base(aligned, clipped_dims.z, v, plate_height));
+      progs.push_back(clip_base(apply(t, aligned), clipped_dims.z, v, plate_height));
       return progs;
     }
     return boost::none;
