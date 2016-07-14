@@ -1,6 +1,7 @@
 #ifndef GCA_CLAMP_ORIENTATION_H
 #define GCA_CLAMP_ORIENTATION_H
 
+#include "geometry/homogeneous_transformation.h"
 #include "geometry/surface.h"
 #include "synthesis/vice.h"
 
@@ -71,7 +72,16 @@ namespace gca {
   triangular_mesh
   oriented_part_mesh(const clamp_orientation& orient,
 		     const vice v);
-  
+
+  std::vector<clamp_orientation>
+  all_stable_orientations(const std::vector<surface>& surfaces,
+			  const vice& v);
+
+  std::vector<unsigned>
+  surfaces_millable_from(const clamp_orientation& orient,
+			 const std::vector<surface>& surfaces_left,
+			 const vice& v);
+
 }
 
 #endif
