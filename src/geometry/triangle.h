@@ -7,7 +7,6 @@
 #include "geometry/box.h"
 #include "geometry/point.h"
 #include "geometry/polygon.h"
-#include "geometry/matrix.h"
 
 using namespace std;
 
@@ -56,11 +55,7 @@ namespace gca {
   
   ostream& operator<<(ostream& out, const triangle& t);
 
-  //  void select_visible_triangles(std::vector<triangle>& triangles);
-
   bool intersects_triangles(line l, const std::vector<triangle>& triangles);
-
-  triangle apply(const matrix<3, 3> m, const triangle& t);
 
   double distance_along(point normal, const triangle t);
 

@@ -181,13 +181,6 @@ namespace gca {
     return false;
   }
 
-  triangle apply(const matrix<3, 3> m, const triangle& t) {
-    return triangle(m*t.normal,
-		    m*t.v1,
-		    m*t.v2,
-		    m*t.v3);
-  }
-
   double distance_along(point normal, const triangle t) {
     point p = t.v1;
     point dir = normal.normalize();
