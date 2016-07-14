@@ -86,7 +86,7 @@ namespace gca {
 
       tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
       vector<tool> tools{t1};
-      workpiece workpiece_dims(4.0, 3.0, 4.0, ACETAL);
+      workpiece workpiece_dims(4.0, 1.9, 4.0, ACETAL);
 
       // Probably shouldnt be able to cut this out with contouring due
       // to tool height issues

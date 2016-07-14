@@ -16,7 +16,7 @@ namespace gca {
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece workpiece_dims(4.0, 3.0, 4.0, ACETAL);
+    workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 

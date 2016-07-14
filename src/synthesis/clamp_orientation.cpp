@@ -59,6 +59,8 @@ namespace gca {
     vector<clamp_orientation> orients =
       all_clamp_orientations(surfaces, v);
 
+    assert(orients.size() > 0);
+
     filter_stub_orientations(orients, v);
 
     assert(orients.size() > 0);
