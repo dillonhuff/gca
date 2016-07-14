@@ -7,7 +7,26 @@ namespace gca {
   std::vector<surface>
   stable_surfaces_after_clipping(const triangular_mesh& part_mesh,
 				 const triangular_mesh& aligned_workpiece_mesh) {
-    auto surfs = outer_surfaces(part_mesh);
+    auto s = outer_surfaces(part_mesh);
+
+    vector<surface> surfs;
+
+    auto stock_surfs = outer_surfaces(aligned_workpiece_mesh);
+    assert(stock_surfs.size() == 6);
+    vector<point> normals;
+    for (auto s : stock_surfs) {
+      index_t i = s.index_list().front();
+      normals.push_back(s.face_orientation(i));
+    }
+
+    for (auto& sf : s) {
+      for (auto n : normals) {
+	if (within_eps(angle_between(n, sf.face_orientation(sf.front())), 0, 0.001)) {
+	  surfs.push_back(sf);
+	}
+      }
+    }
+    
     return surfs;
   }
 
@@ -357,6 +376,7 @@ namespace gca {
 
     auto stable_surfaces =
       stable_surfaces_after_clipping(part_mesh, aligned_workpiece_mesh);
+
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
     concat(setups, orientations_to_cut(part_mesh, surfs_to_cut, all_orients));

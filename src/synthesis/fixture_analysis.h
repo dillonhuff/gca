@@ -108,6 +108,11 @@ namespace gca {
 
   std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
 					   std::vector<std::vector<index_t>>& surfaces);
+
+  std::vector<surface>
+  stable_surfaces_after_clipping(const triangular_mesh& part_mesh,
+				 const triangular_mesh& aligned_workpiece_mesh);
+
 }
 
 #endif

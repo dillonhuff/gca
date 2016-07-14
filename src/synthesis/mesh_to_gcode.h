@@ -47,9 +47,6 @@ namespace gca {
 					 const vector<tool>& tools,
 					 const workpiece w_dims);
   
-  void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const workpiece workpiece_mesh);
-
 }
 
 #endif
