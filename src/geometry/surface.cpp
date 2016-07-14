@@ -17,21 +17,6 @@ namespace gca {
     return share_edge(ind1, ind2, surfaces[i].get_parent_mesh());
   }
 
-  bool any_SA_surface_contains(index_t i,
-  			       const std::vector<surface>& surfaces) {
-    for (auto surface : surfaces) {
-      if (surface.is_SA() && surface.contains(i)) { return true; }
-    }
-    return false;
-  }
-
-  void remove_SA_surfaces(const std::vector<surface>& surfaces,
-  			  std::vector<index_t>& indices) {
-    delete_if(indices,
-  	      [&surfaces](index_t i)
-  	      { return any_SA_surface_contains(i, surfaces); });
-  }
-
   std::vector<index_t> surface_vertexes(const surface& s) {
     vector<index_t> inds;
     for (auto i : s.index_list()) {
@@ -92,16 +77,16 @@ namespace gca {
 	      { return s.contained_by_sorted(stable_surface_inds); });
   }
 
-  void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
-			       std::vector<surface>& surfaces_to_cut) {
-    vector<surface> sa_surfs;
-    for (auto s : stable_surfaces) {
-      if (s.is_SA()) {
-	sa_surfs.push_back(s);
-      }
-    }
-    remove_contained_surfaces(sa_surfs, surfaces_to_cut);
-  }
+  // void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
+  // 			       std::vector<surface>& surfaces_to_cut) {
+  //   vector<surface> sa_surfs;
+  //   for (auto s : stable_surfaces) {
+  //     if (s.is_SA()) {
+  // 	sa_surfs.push_back(s);
+  //     }
+  //   }
+  //   remove_contained_surfaces(sa_surfs, surfaces_to_cut);
+  // }
 
   boost::optional<surface>
   part_outline_surface(std::vector<surface>* surfaces_to_cut,

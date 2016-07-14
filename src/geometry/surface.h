@@ -11,7 +11,6 @@ namespace gca {
   protected:
     const triangular_mesh* parent_mesh;
     vector<index_t> tri_indexes;
-    bool SA;
 
   public:
     inline bool contains(index_t ind) {
@@ -35,9 +34,6 @@ namespace gca {
       return contained_by_sorted(other.tri_indexes);
     }
     
-    inline bool is_SA() const { return SA; }
-    inline void set_SA() { SA = true; }
-
     inline index_t front() const {
       return tri_indexes.front();
     }
@@ -58,7 +54,7 @@ namespace gca {
     
     surface(const triangular_mesh* p_parent_mesh,
 	    const vector<index_t>& p_tri_indexes) :
-      parent_mesh(p_parent_mesh), tri_indexes(p_tri_indexes), SA(false) {
+      parent_mesh(p_parent_mesh), tri_indexes(p_tri_indexes) {
       assert(tri_indexes.size() > 0);
       std::sort(begin(tri_indexes), end(tri_indexes));
     }
@@ -78,9 +74,6 @@ namespace gca {
   bool surfaces_share_edge(const surface& l,
 			   const surface& r);
   
-  // void remove_SA_surfaces(const std::vector<surface>& surfaces,
-  // 			  std::vector<index_t>& indices);
-
   std::vector<index_t> surface_vertexes(const surface& s);
 
   bool orthogonal_flat_surfaces(const surface* l, const surface* r);
@@ -93,9 +86,6 @@ namespace gca {
 
   void remove_contained_surfaces(const std::vector<surface>& stable_surfaces,
 				 std::vector<surface>& surfaces_to_cut);
-
-  // void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
-  // 			       std::vector<surface>& surfaces_to_cut);
 
   boost::optional<oriented_polygon>
   part_outline(std::vector<surface>* surfaces_to_cut);

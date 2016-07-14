@@ -30,25 +30,6 @@ namespace gca {
     return surfs;
   }
 
-  void classify_part_surfaces(std::vector<surface>& part_surfaces,
-			      const triangular_mesh& stock_mesh) {
-    auto stock_surfs = outer_surfaces(stock_mesh);
-    assert(stock_surfs.size() == 6);
-    vector<point> normals;
-    for (auto s : stock_surfs) {
-      index_t i = s.index_list().front();
-      normals.push_back(s.face_orientation(i));
-    }
-
-    for (auto& sf : part_surfaces) {
-      for (auto n : normals) {
-	if (within_eps(angle_between(n, sf.face_orientation(sf.front())), 0, 0.001)) {
-	  sf.set_SA();
-	}
-      }
-    }
-  }
-
   // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
