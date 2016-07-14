@@ -181,10 +181,6 @@ namespace gca {
     return normal_delta_regions(inds, part, 0.0001);
   }
 
-  // triangular_mesh operator*(const matrix<3, 3>& m, const triangular_mesh& mesh) {
-  //   return mesh.apply([m](const point p) { return m*p; });
-  // }
-
   double diameter(const point normal, const triangular_mesh& m) {
     return diameter(normal, m.vertex_list());
   }
