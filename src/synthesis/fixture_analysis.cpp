@@ -5,7 +5,7 @@
 
 namespace gca {
 
-  homogeneous_transform mating_transform(const stock_orientation& orient,
+  homogeneous_transform mating_transform(const clamp_orientation& orient,
 					 const vice& v) {
     plane vice_base = v.base_plane();
     plane vice_top_jaw = v.top_jaw_plane();
@@ -40,7 +40,7 @@ namespace gca {
   }
 
   triangular_mesh
-  oriented_part_mesh(const stock_orientation& orient,
+  oriented_part_mesh(const clamp_orientation& orient,
 		     const vice v) {
     homogeneous_transform t = mating_transform(orient, v);
     return apply(t, orient.get_mesh());
@@ -108,10 +108,10 @@ namespace gca {
   }
 
   // TODO: Include SB surfaces in this analysis
-  std::vector<stock_orientation>
+  std::vector<clamp_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v) {
-    vector<stock_orientation> orients;
+    vector<clamp_orientation> orients;
     for (unsigned j = 0; j < surfaces.size(); j++) {
       const surface* next_left = &(surfaces[j]);
       if (next_left->is_SA()) {
@@ -124,7 +124,7 @@ namespace gca {
 	      if (next_bottom->is_SA() &&
 		  orthogonal_flat_surfaces(next_bottom, next_left) &&
 		  orthogonal_flat_surfaces(next_bottom, next_right)) {
-		orients.push_back(stock_orientation(next_left,
+		orients.push_back(clamp_orientation(next_left,
 						    next_right,
 						    next_bottom));
 	      }
@@ -135,7 +135,7 @@ namespace gca {
     }
 
     delete_if(orients,
-    	      [v](const stock_orientation& orient)
+    	      [v](const clamp_orientation& orient)
     	      {
     		auto part = orient.get_left().get_parent_mesh();
     		auto left_pt = part.face_triangle(orient.get_left().front()).v1;
@@ -147,16 +147,16 @@ namespace gca {
     // TODO: Consider left and right normals as well, this filtering
     // criterion is too aggressive when all 
     sort(begin(orients), end(orients),
-    	 [](const stock_orientation l, const stock_orientation r)
+    	 [](const clamp_orientation l, const clamp_orientation r)
     	 { return l.top_normal().x < r.top_normal().x; });
     sort(begin(orients), end(orients),
-    	 [](const stock_orientation l, const stock_orientation r)
+    	 [](const clamp_orientation l, const clamp_orientation r)
     	 { return l.top_normal().y < r.top_normal().z; });
     sort(begin(orients), end(orients),
-    	 [](const stock_orientation l, const stock_orientation r)
+    	 [](const clamp_orientation l, const clamp_orientation r)
     	 { return l.top_normal().z < r.top_normal().z; });
     auto it = unique(begin(orients), end(orients),
-		     [](const stock_orientation& l, const stock_orientation& r) {
+		     [](const clamp_orientation& l, const clamp_orientation& r) {
 		       return within_eps(l.top_normal(), r.top_normal(), 0.0001);
 		     });
     orients.resize(std::distance(begin(orients), it));
@@ -190,7 +190,7 @@ namespace gca {
   }
 
   bool point_above_vice(const index_t i,
-			const stock_orientation& orient,
+			const clamp_orientation& orient,
 			const vice& v) {
     const triangular_mesh& part = orient.get_mesh();
     point p = part.vertex(i);
@@ -200,7 +200,7 @@ namespace gca {
       signed_distance_along(vice_jaw_top, vice_dir);
   }
 
-  std::vector<index_t> vertexes_touching_fixture(const stock_orientation& orient,
+  std::vector<index_t> vertexes_touching_fixture(const clamp_orientation& orient,
 						 const vice& v) {
     vector<index_t> vert_inds;
     concat(vert_inds, surface_vertexes(orient.get_left()));
@@ -216,7 +216,7 @@ namespace gca {
   }
 
   std::vector<unsigned>
-  surfaces_millable_from(const stock_orientation& orient,
+  surfaces_millable_from(const clamp_orientation& orient,
 			 const std::vector<surface>& surfaces_left,
 			 const vice& v) {
     const triangular_mesh& part = orient.get_mesh();
@@ -344,7 +344,7 @@ namespace gca {
   }
 
   void print_orient_map(const orientation_map& possible_orientations,
-			const std::vector<stock_orientation>& all_orients) {
+			const std::vector<clamp_orientation>& all_orients) {
     cout << "ORIENTATION MAP: " << endl;
     for (auto m : possible_orientations) {
       cout << "Surface " << m.first << " can be cut from orientations" << endl;

@@ -13,7 +13,7 @@ namespace gca {
   typedef std::map<unsigned, std::vector<unsigned>> orientation_map;
   typedef std::map<unsigned, std::vector<unsigned>> surface_map;
 
-  class stock_orientation {
+  class clamp_orientation {
   protected:
     const surface* left;
     const surface* right;
@@ -63,19 +63,19 @@ namespace gca {
     inline const triangular_mesh& get_mesh() const
     { return left->get_parent_mesh(); }
 
-    stock_orientation(const surface* p_left,
+    clamp_orientation(const surface* p_left,
 		      const surface* p_right,
 		      const surface* p_bottom) :
       left(p_left), right(p_right), bottom(p_bottom) {}
 
-    stock_orientation() :
+    clamp_orientation() :
       left(nullptr), right(nullptr), bottom(nullptr) {}
   };
 
   struct fixture {
-    stock_orientation orient;
+    clamp_orientation orient;
     vice v;
-    fixture(const stock_orientation& p_orient,
+    fixture(const clamp_orientation& p_orient,
 	    const vice& p_v)
       : orient(p_orient), v(p_v) {}
   };
@@ -146,7 +146,7 @@ namespace gca {
 		      const std::vector<surface>& surfs_to_cut,
 		      const fixtures& v);
 
-  std::vector<stock_orientation>
+  std::vector<clamp_orientation>
   all_stable_orientations(const std::vector<surface>& surfaces,
 			  const vice& v);
 
@@ -166,7 +166,7 @@ namespace gca {
 				 const workpiece w);
 
   triangular_mesh
-  oriented_part_mesh(const stock_orientation& orient,
+  oriented_part_mesh(const clamp_orientation& orient,
 		     const vice v);
 
   std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
