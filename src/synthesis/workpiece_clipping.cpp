@@ -118,6 +118,14 @@ namespace gca {
     return fixture_setup(m, v, pockets);
   }
 
+  clamp_orientation
+  find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
+			     const point n) {
+    return *(find_if(begin(orients), end(orients),
+		     [n](const clamp_orientation& s)
+		     { return within_eps(s.top_normal(), n, 0.0001); }));
+  }
+  
   boost::optional<std::vector<fixture_setup> >
   parallel_clipping_programs(const triangular_mesh& aligned,
 			     const point clipped_dims,
@@ -128,6 +136,23 @@ namespace gca {
       part_outline(&surfaces_to_cut);
 
     if (outline) {
+      vice parallel(v, plate_height);
+      const triangular_mesh& m = surfaces_to_cut.front().get_parent_mesh();
+      cout << m.face_indexes().size() << endl;
+      vector<surface> surfs = outer_surfaces(m);
+
+      cout << "# of surfaces = " << surfs.size() << endl;
+
+      vector<clamp_orientation> orients =
+      	all_stable_orientations(surfs, v);
+
+      cout << "# of orientations = " << orients.size() << endl;
+
+      // TODO: Eventually auto select the direction instead of
+      // hard coding (0, 0, 1)
+      // auto top_orient = find_orientation_by_normal(orients, point(0, 0, 1));
+      // auto t = mating_transform(top_orient, v);
+
       std::vector<fixture_setup> progs;
       progs.push_back(clip_top_and_sides(aligned, clipped_dims, *outline, v, plate_height));
       progs.push_back(clip_base(aligned, clipped_dims.z, v, plate_height));
@@ -143,7 +168,7 @@ namespace gca {
 			  const fixtures& f) {
     assert(surfaces_to_cut.size() > 0);
     
-    double aligned_z_height = diameter(point(0, 0, 1), aligned); //aligned.sides[2].len();
+    double aligned_z_height = diameter(point(0, 0, 1), aligned);
     double clipped_z_height = clipped_dims.z;
     vector<plate_height> viable_plates =
       find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);

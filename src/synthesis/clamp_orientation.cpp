@@ -50,6 +50,7 @@ namespace gca {
       const surface* s = &(surfaces[i]);
       surfs.push_back(s);
     }
+    cout << "Calling routing on pointers" << endl;
     return all_stable_orientations(surfs, v);
   }  
 
@@ -94,19 +95,26 @@ namespace gca {
   // TODO: Consider left and right normals as well, this filtering
   // criterion is too aggressive
   void unique_by_top_normal(std::vector<clamp_orientation>& orients) {
+    for (auto ori : orients) {
+      cout << ori.top_normal() << endl;
+    }
+
+    cout << "sorting uniques by normal, # orients = " << orients.size() << endl;
     sort(begin(orients), end(orients),
-    	 [](const clamp_orientation l, const clamp_orientation r)
+    	 [](const clamp_orientation& l, const clamp_orientation& r)
     	 { return l.top_normal().x < r.top_normal().x; });
     sort(begin(orients), end(orients),
-    	 [](const clamp_orientation l, const clamp_orientation r)
-    	 { return l.top_normal().y < r.top_normal().z; });
+    	 [](const clamp_orientation& l, const clamp_orientation& r)
+    	 { return l.top_normal().y <= r.top_normal().y; });
     sort(begin(orients), end(orients),
-    	 [](const clamp_orientation l, const clamp_orientation r)
-    	 { return l.top_normal().z < r.top_normal().z; });
+    	 [](const clamp_orientation& l, const clamp_orientation& r)
+    	 { return l.top_normal().z <= r.top_normal().z; });
+    cout << "About to unique" << endl;
     auto it = unique(begin(orients), end(orients),
     		     [](const clamp_orientation& l, const clamp_orientation& r) {
     		       return within_eps(l.top_normal(), r.top_normal(), 0.0001);
     		     });
+    cout << "Resizing" << endl;
     orients.resize(std::distance(begin(orients), it));
   }
 
@@ -116,9 +124,15 @@ namespace gca {
     vector<clamp_orientation> orients =
       all_clamp_orientations(surfaces, v);
 
+    cout << "# initial orients = " << orients.size() << endl;
+
     filter_stub_orientations(orients, v);
 
+    cout << "# orients after stubbing = " << orients.size() << endl;
+
     unique_by_top_normal(orients);
+
+    cout << "# orients unique normals = " << orients.size() << endl;
 
     assert(orients.size() > 0);
     

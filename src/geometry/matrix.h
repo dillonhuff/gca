@@ -13,7 +13,6 @@ namespace gca {
   point from_vector(ublas::vector<double> v);
   ublas::vector<double> to_vector(const point p);
 
-
   double determinant(ublas::matrix<double>& m);
   double determinant(const ublas::matrix<double>& m);
 
@@ -25,7 +24,7 @@ namespace gca {
 		       const point apt, const point bpt, const point cpt);
 
   boost::numeric::ublas::vector<double>
-  plane_basis_displacement(const boost::numeric::ublas::matrix<double>& r,
+  plane_basis_displacement(const ublas::matrix<double>& r,
 			   const point u1, const point u2, const point u3,
 			   const point q1, const point q2, const point q3,
 			   const point p1, const point p2, const point p3);
