@@ -112,5 +112,22 @@ namespace gca {
     assert(lines.size() > 0);
     return max_distance_along(points(lines), dir);
   }
-  
+
+  polyline project_line(const polyline& l, const double d) {
+    vector<point> pts;
+    for (auto p : l) {
+      pts.push_back(point(p.x, p.y, d));
+    }
+    return pts;
+  }
+
+  std::vector<polyline> project_lines(const std::vector<polyline>& lines,
+				      const double d) {
+    vector<polyline> ls;
+    for (auto line : lines) {
+      ls.push_back(project_line(line, d));
+    }
+    return ls;
+  }
+
 }

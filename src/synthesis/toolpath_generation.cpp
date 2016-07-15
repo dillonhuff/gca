@@ -212,12 +212,12 @@ namespace gca {
   }
 
   std::vector<polyline>
-  contour_pocket::toolpath_lines(const tool& t,
-				 const double cut_depth) const {
-    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+  contour_level(const oriented_polygon& o,
+		const oriented_polygon& inter,
+		const tool& t,
+		const double level) {
     vector<polyline> polys;
     double r = t.radius();
-    auto inter = project(interior, get_end_depth());
     auto i = exterior_offset(inter, r);
     while (contains(o, i)) {
       polys.push_back(to_polyline(i));
@@ -228,11 +228,27 @@ namespace gca {
   }
 
   std::vector<polyline>
-  face_pocket::toolpath_lines(const tool& t,
-			      const double cut_depth) const {
+  contour_pocket::toolpath_lines(const tool& t,
+				 const double cut_depth) const {
+    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+    auto inter = project(interior, get_end_depth());
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    vector<polyline> level_template =
+      contour_level(o, interior, t, get_end_depth());
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(level_template, depth));
+    }
+    return lines;
+  }
+
+  std::vector<polyline>
+  face_level(const oriented_polygon& inter,
+	     const tool& t,
+	     const double cut_depth) {
     vector<polyline> polys;
     double r = t.radius();
-    auto inter = project(base, get_end_depth());
     auto last_polygon = inter;
     auto i = interior_offset(inter, r);
     while (contains(last_polygon, i)) {
@@ -242,6 +258,24 @@ namespace gca {
       i = interior_offset(inter, r);
     }
     return polys;
+  }
+
+  // TODO: Use tile vertical?
+  std::vector<polyline>
+  face_pocket::toolpath_lines(const tool& t,
+			      const double cut_depth) const {
+    auto inter = project(base, get_end_depth());
+    vector<polyline> face_template =
+      face_level(inter, t, cut_depth);
+
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
   }
 
   std::vector<polyline>
