@@ -224,6 +224,7 @@ namespace gca {
       r += t.radius();
       i = exterior_offset(inter, r);
     }
+    reverse(begin(polys), end(polys));
     return polys;
   }
 
