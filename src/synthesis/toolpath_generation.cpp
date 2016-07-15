@@ -218,9 +218,8 @@ namespace gca {
     vector<polyline> polys;
     double r = t.radius();
     auto inter = project(interior, get_end_depth());
-    auto last_polygon = interior;
-    auto i = exterior_offset(last_polygon, r);
-    while (contains(last_polygon, i)) {
+    auto i = exterior_offset(inter, r);
+    while (contains(o, i)) {
       polys.push_back(to_polyline(i));
       r += t.radius();
       i = exterior_offset(inter, r);
