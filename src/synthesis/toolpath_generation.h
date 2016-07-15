@@ -30,6 +30,8 @@ namespace gca {
 
     pocket& operator=(pocket&&) noexcept = default;
 
+    tool select_tool(const std::vector<tool>& tools) const
+    { return self_->select_tool(tools); }
     const vector<oriented_polygon>& get_holes() const
     { return self_->get_holes(); }
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
@@ -44,6 +46,7 @@ namespace gca {
   private:
     struct concept_t {
       virtual ~concept_t() = default;
+      virtual tool select_tool(const std::vector<tool>& tools) const = 0;
       virtual const vector<oriented_polygon>& get_holes() const = 0;
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
@@ -55,6 +58,8 @@ namespace gca {
     template<typename T>
     struct model : concept_t {
       model(T x) : data_(move(x)) {}
+      tool select_tool(const std::vector<tool>& tools) const
+      { return data_.select_tool(tools); }
       virtual concept_t* copy_() const { return new model<T>(*this); }
       const vector<oriented_polygon>& get_holes() const
       { return data_.get_holes(); }
@@ -93,6 +98,7 @@ namespace gca {
       holes = bounds;
     }
 
+    tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
     const std::vector<index_t>& base_face_indexes() const
@@ -167,6 +173,7 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
+    tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
   };
   
@@ -191,6 +198,8 @@ namespace gca {
     { return start_depth; }
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
+
+    tool select_tool(const std::vector<tool>& tools) const;
 
     std::vector<polyline>
     toolpath_lines(const tool& t, const double cut_depth) const;
@@ -222,10 +231,6 @@ namespace gca {
   std::vector<cut*> polyline_cuts(const polyline& p);
 
   polyline compress_lines(const polyline& p, double tolerance);
-
-  std::vector<polyline> rough_box(const box b,
-				  const tool& t,
-				  double cut_depth);
 
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,
 				    const tool& tool);

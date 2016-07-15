@@ -233,6 +233,14 @@ namespace gca {
     return polys;
   }
 
+  tool
+  contour_pocket::select_tool(const std::vector<tool>& tools) const {
+    tool t = *(min_element(begin(tools), end(tools),
+  			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
+    return t;
+  }
+
   std::vector<polyline>
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
@@ -284,6 +292,22 @@ namespace gca {
     return lines;
   }
 
+  tool
+  face_pocket::select_tool(const std::vector<tool>& tools) const {
+    tool t = *(min_element(begin(tools), end(tools),
+  			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
+    return t;
+  }
+
+  tool
+  freeform_pocket::select_tool(const std::vector<tool>& tools) const {
+    tool t = *(min_element(begin(tools), end(tools),
+  			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
+    return t;
+  }
+  
   std::vector<polyline>
   freeform_pocket::toolpath_lines(const tool& t,
 				  const double cut_depth) const {
@@ -295,6 +319,7 @@ namespace gca {
     return pocket_path;
   }
 
+  // TODO: Terrible name, is this wrapper even relevant anymore?
   vector<polyline> pocket_2P5D_interior(const pocket& pocket,
 					const tool& t,
 					double cut_depth) {
@@ -338,21 +363,6 @@ namespace gca {
       pts.push_back(slope_group.back().end);
     }
     return polyline(pts);
-  }
-
-  std::vector<polyline> rough_box(const box b,
-				  const tool& t,
-				  double cut_depth) {
-    point p1(b.x_min, b.y_min, b.z_min);
-    point p2(b.x_min, b.y_max, b.z_min);
-    point p3(b.x_max, b.y_max, b.z_min);
-    point p4(b.x_max, b.y_min, b.z_min);
-    
-    vector<triangle> tris;
-    tris.push_back(triangle(point(0, 0, 1), p1, p2, p3));
-    tris.push_back(triangle(point(0, 0, 1), p3, p4, p1));
-    triangular_mesh m = make_mesh(tris, 0.001);
-    return pocket_2P5D_interior(freeform_pocket(b.z_max, m.face_indexes(), &m), t, cut_depth);
   }
 
   // TODO: Actually compensate for tool radius and shape
