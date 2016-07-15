@@ -217,11 +217,13 @@ namespace gca {
     auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
     vector<polyline> polys;
     double r = t.radius();
-    auto i = project(exterior_offset(interior, r), get_end_depth());
-    while (contains(o, i)) {
+    auto inter = project(interior, get_end_depth());
+    auto last_polygon = interior;
+    auto i = exterior_offset(last_polygon, r);
+    while (contains(last_polygon, i)) {
       polys.push_back(to_polyline(i));
       r += t.radius();
-      i = project(exterior_offset(interior, r), get_end_depth());
+      i = exterior_offset(inter, r);
     }
     return polys;
   }
@@ -231,13 +233,14 @@ namespace gca {
 			      const double cut_depth) const {
     vector<polyline> polys;
     double r = t.radius();
-    auto i = project(interior_offset(base, r), get_end_depth());
-    int j = 0;
-    while (area(i) > t.radius()*t.radius()*M_PI && j < 15) {
-      j++;
+    auto inter = project(base, get_end_depth());
+    auto last_polygon = inter;
+    auto i = interior_offset(inter, r);
+    while (contains(last_polygon, i)) {
       polys.push_back(to_polyline(i));
+      last_polygon = i;
       r += t.radius();
-      i = project(interior_offset(base, r), get_end_depth());
+      i = interior_offset(inter, r);
     }
     return polys;
   }
