@@ -212,19 +212,24 @@ namespace gca {
   }
 
   std::vector<polyline>
-  contour_level(const oriented_polygon& o,
+  contour_level(const oriented_polygon& outer,
 		const oriented_polygon& inter,
 		const tool& t,
 		const double level) {
-    vector<polyline> polys;
     double r = t.radius();
+    
+    vector<polyline> polys;
+    
     auto i = exterior_offset(inter, r);
-    while (contains(o, i)) {
+    //    while (contains(outer, i)) {
+    while (!contains(i, outer)) {
       polys.push_back(to_polyline(i));
       r += t.radius();
       i = exterior_offset(inter, r);
+      // TODO: Come up with more precise end test
     }
     reverse(begin(polys), end(polys));
+
     return polys;
   }
 
