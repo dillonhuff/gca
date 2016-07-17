@@ -5,7 +5,7 @@
 
 namespace gca {
 
-  TEST_CASE("Clipped pill") {
+  TEST_CASE("Parallel plates") {
     arena_allocator a;
     set_system_allocator(&a);
 
@@ -14,15 +14,25 @@ namespace gca {
     std::vector<plate_height> parallel_plates{0.5};
     fixtures fixes(test_vice, base_plates, parallel_plates);
 
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
+    SECTION("Clipped pill") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
-    fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-    REQUIRE(p.fixtures().size() == 2);
+      REQUIRE(p.fixtures().size() == 2);
+    }
+
+    // SECTION("Round with thru holes") {
+    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
+
+    //   fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+
+    //   REQUIRE(p.fixtures().size() == 2);
+    // }
   }
 
   TEST_CASE("Tapered top and several slanted verticals") {

@@ -143,7 +143,6 @@ namespace gca {
   
   boost::optional<std::vector<fixture_setup> >
   parallel_clipping_programs(const triangular_mesh& aligned,
-			     const point clipped_dims,
 			     std::vector<surface>& surfaces_to_cut,
 			     const vice& v,
 			     const double plate_height) {
@@ -186,7 +185,6 @@ namespace gca {
 
     if (viable_plates.size() > 0) {
       return parallel_clipping_programs(aligned,
-					clipped_dims,
 					surfaces_to_cut,
 					f.get_vice(),
 					viable_plates.front());
