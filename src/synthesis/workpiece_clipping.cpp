@@ -145,9 +145,7 @@ namespace gca {
     boost::optional<oriented_polygon> outline =
       part_outline(&surfaces_to_cut);
 
-    cout << "Computed outline" << endl;
     if (outline) {
-      cout << "FOUND OUTLINE!" << endl;
       vice parallel(v, plate_height);
       const triangular_mesh& m = surfaces_to_cut.front().get_parent_mesh();
 
