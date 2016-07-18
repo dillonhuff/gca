@@ -32,7 +32,7 @@ namespace gca {
 			      const double clipped_z_height,
 			      const fixtures& f) {
     const vice& v = f.get_vice();
-    assert(!v.has_protective_base_plate());
+    assert(!v.has_parallel_plate());
 
     vector<plate_height> plates;
     for (auto p : f.parallel_plates()) {

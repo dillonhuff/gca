@@ -84,7 +84,7 @@ namespace gca {
 
       // No use of base plates
       for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.v.has_protective_base_plate()));
+	REQUIRE(!(fixture.v.has_parallel_plate()));
       }
     }
   }
@@ -113,7 +113,7 @@ namespace gca {
 
       // No use of base plates
       for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.v.has_protective_base_plate()));
+	REQUIRE(!(fixture.v.has_parallel_plate()));
       }
     }
   }
@@ -143,7 +143,7 @@ namespace gca {
 
       // No use of base plates
       for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.v.has_protective_base_plate()));
+	REQUIRE(!(fixture.v.has_parallel_plate()));
       }
     }
   }
@@ -167,7 +167,7 @@ namespace gca {
 
       // No use of base plates
       for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.v.has_protective_base_plate()));
+	REQUIRE(!(fixture.v.has_parallel_plate()));
       }
     }
   }
