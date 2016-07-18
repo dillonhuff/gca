@@ -10,8 +10,8 @@ namespace gca {
 
   workpiece clipped_workpiece(const workpiece aligned_workpiece,
 			      const triangular_mesh& part_mesh);
-  
-  std::pair<triangular_mesh, std::vector<fixture_setup> >
+
+  clipping_plan
   axis_by_axis_clipping(const workpiece w, 
 			const triangular_mesh& part_mesh,
 			std::vector<surface>& surfaces_to_cut,

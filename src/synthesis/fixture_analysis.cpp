@@ -349,11 +349,12 @@ namespace gca {
 				 const vector<tool>& tools,
 				 const workpiece w) {
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
-    pair<triangular_mesh, vector<fixture_setup>> wp_setups =
+    //    pair<triangular_mesh, vector<fixture_setup>> wp_setups =
+    clipping_plan wp_setups =
       workpiece_clipping_programs(w, part_mesh, surfs_to_cut, tools, f);
 
-    vector<fixture_setup> setups = wp_setups.second;
-    triangular_mesh& aligned_workpiece_mesh = wp_setups.first;
+    vector<fixture_setup> setups = wp_setups.fixtures;
+    triangular_mesh& aligned_workpiece_mesh = wp_setups.mesh;
 
     auto stable_surfaces =
       stable_surfaces_after_clipping(part_mesh, aligned_workpiece_mesh);

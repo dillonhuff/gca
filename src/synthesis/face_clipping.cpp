@@ -80,7 +80,8 @@ namespace gca {
     return clip_setups;
   }
 
-  std::pair<triangular_mesh, std::vector<fixture_setup> >
+  //  std::pair<triangular_mesh, std::vector<fixture_setup> >
+  clipping_plan
   axis_by_axis_clipping(const workpiece w, 
 			const triangular_mesh& part_mesh,
 			std::vector<surface>& surfaces_to_cut,
@@ -98,7 +99,7 @@ namespace gca {
 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
       remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
     
-    return std::make_pair(wp_mesh, clip_setups);
+    return clipping_plan(wp_mesh, clip_setups);
   }
 
   workpiece clipped_workpiece(const workpiece aligned_workpiece,

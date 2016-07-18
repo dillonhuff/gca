@@ -67,6 +67,16 @@ namespace gca {
     const std::vector<fixture_setup>& fixtures() const
     { return setups; }
   };
+
+  class clipping_plan {
+  public:
+    triangular_mesh mesh;
+    std::vector<fixture_setup> fixtures;
+
+    clipping_plan(const triangular_mesh& p_mesh,
+		  const std::vector<fixture_setup>& p_fixtures)
+      : mesh(p_mesh), fixtures(p_fixtures) {}
+  };
   
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w);

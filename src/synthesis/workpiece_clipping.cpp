@@ -189,7 +189,8 @@ namespace gca {
 
   // TODO: Clean up and add vice height test
   // TODO: Use tool lengths in can_clip_parallel test
-  boost::optional<std::pair<triangular_mesh, std::vector<fixture_setup> > >
+  //boost::optional<std::pair<triangular_mesh, std::vector<fixture_setup> > >
+  boost::optional<clipping_plan>
   try_parallel_plate_clipping(const workpiece w, 
 			      const triangular_mesh& part_mesh,
 			      std::vector<surface>& surfaces_to_cut,
@@ -208,13 +209,14 @@ namespace gca {
       auto clipped_surfs =
 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
       remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
-      return std::make_pair(wp_mesh, *clip_setups);
+      return clipping_plan(wp_mesh, *clip_setups);
     } else {
       return boost::none;
     }
   }
 
-  std::pair<triangular_mesh, std::vector<fixture_setup> >
+  //  std::pair<triangular_mesh, std::vector<fixture_setup> >
+  clipping_plan
   workpiece_clipping_programs(const workpiece w, 
 			      const triangular_mesh& part_mesh,
 			      std::vector<surface>& surfaces_to_cut,
