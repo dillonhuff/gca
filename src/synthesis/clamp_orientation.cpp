@@ -57,7 +57,7 @@ namespace gca {
   all_viable_clamp_orientations(const std::vector<const surface*>& surfaces,
 				const vice& v) {
     vector<clamp_orientation> orients =
-      all_clamp_orientations(surfaces, v);
+      all_clamp_orientations(surfaces);
 
     assert(orients.size() > 0);
 
@@ -80,8 +80,7 @@ namespace gca {
   }  
   
   std::vector<clamp_orientation>
-  all_clamp_orientations(const std::vector<const surface*>& surfaces,
-			 const vice& v) {
+  all_clamp_orientations(const std::vector<const surface*>& surfaces) {
     vector<clamp_orientation> orients;
     for (unsigned j = 0; j < surfaces.size(); j++) {
       const surface* next_left = surfaces[j];
@@ -142,7 +141,7 @@ namespace gca {
   all_stable_orientations(const std::vector<const surface*>& surfaces,
 			  const vice& v) {
     vector<clamp_orientation> orients =
-      all_clamp_orientations(surfaces, v);
+      all_clamp_orientations(surfaces);
 
     filter_stub_orientations(orients, v);
 
