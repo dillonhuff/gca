@@ -120,18 +120,11 @@ namespace gca {
     if (merge_groups.size() == 1) {
       return merge_surfaces(vertical_surfs);
     } else {
-      cout << "# of groups = " << merge_groups.size() << endl;
-      for (auto g : merge_groups) {
-	cout << "Group" << endl;
-	for (auto i : g) {
-	  cout << "\t" << i << endl;
-	}
-      }
       vector<surface> merged = merge_surface_groups(vertical_surfs, merge_groups);
       vector<surface> outer_surfs =
 	partial_order_maxima(merged, [](const surface& l, const surface& r)
 			     { return vertical_contained_by(l, r); });
-      cout << "# outer vertical surfaces = " << outer_surfs.size() << endl;
+
       if (outer_surfs.size() == 1) {
 	return outer_surfs.front();
       } else {
