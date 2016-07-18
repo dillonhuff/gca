@@ -79,9 +79,9 @@ namespace gca {
     auto orients = all_stable_orientations(surfaces, v);
     vector<fixture> fixtures;
 
-    if (f.base_plates().size() > 0) {
+    if (f.parallel_plates().size() > 0) {
       plate_height slot_height =
-	*(min_element(begin(f.base_plates()), end(f.base_plates()),
+	*(min_element(begin(f.parallel_plates()), end(f.parallel_plates()),
 		      [](const plate_height l, const plate_height r)
 	{ return l < r; }));
       vice vice_with_lower_slot(v, slot_height);

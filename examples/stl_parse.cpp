@@ -23,9 +23,8 @@ int main(int argc, char* argv[]) {
   auto mesh = make_mesh(box_triangles, 0.001);
 
   vice v = current_setup();
-  std::vector<plate_height> plates; //{0.1, 0.3};
   std::vector<plate_height> parallel_plates{0.5};
-  fixtures fixes(v, plates, parallel_plates);
+  fixtures fixes(v, parallel_plates);
 
   //  tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);

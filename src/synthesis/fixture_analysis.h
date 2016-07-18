@@ -25,7 +25,6 @@ namespace gca {
   class fixtures {
   protected:
     vice v;
-    std::vector<plate_height> plates;
     std::vector<plate_height> par_plates;
     
   public:
@@ -33,16 +32,11 @@ namespace gca {
     fixtures(const vice& p_v)
       : v(p_v) {}
     
-    fixtures(const vice& p_v, const std::vector<plate_height>& p_plates)
-      : v(p_v), plates(p_plates) {}
-
     fixtures(const vice& p_v,
-	     const std::vector<plate_height>& p_plates,
 	     const std::vector<plate_height>& p_par_plates)
-      : v(p_v), plates(p_plates), par_plates(p_par_plates) {}
+      : v(p_v), par_plates(p_par_plates) {}
     
     inline const vice& get_vice() const { return v; }
-    inline const std::vector<plate_height>& base_plates() const { return plates; }
     inline const std::vector<plate_height>& parallel_plates() const
     { return par_plates; }
   };
