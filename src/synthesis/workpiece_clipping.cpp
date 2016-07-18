@@ -145,7 +145,9 @@ namespace gca {
     boost::optional<oriented_polygon> outline =
       part_outline(&surfaces_to_cut);
 
+    cout << "Computed outline" << endl;
     if (outline) {
+      cout << "FOUND OUTLINE!" << endl;
       vice parallel(v, plate_height);
       const triangular_mesh& m = surfaces_to_cut.front().get_parent_mesh();
 
@@ -177,6 +179,8 @@ namespace gca {
     double aligned_z_height = diameter(point(0, 0, 1), aligned);
     vector<plate_height> viable_plates =
       find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
+
+    cout << "# of viable parallel plates = " << viable_plates.size() << endl;
 
     if (viable_plates.size() > 0) {
       return parallel_clipping_programs(aligned,
@@ -215,9 +219,8 @@ namespace gca {
     }
   }
 
-  //  std::pair<triangular_mesh, std::vector<fixture_setup> >
   clipping_plan
-  workpiece_clipping_programs(const workpiece w, 
+  workpiece_clipping_programs(const workpiece w,
 			      const triangular_mesh& part_mesh,
 			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,

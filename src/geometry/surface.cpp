@@ -77,16 +77,32 @@ namespace gca {
 	      { return s.contained_by_sorted(stable_surface_inds); });
   }
 
-  // void remove_clipped_surfaces(const std::vector<surface>& stable_surfaces,
-  // 			       std::vector<surface>& surfaces_to_cut) {
-  //   vector<surface> sa_surfs;
-  //   for (auto s : stable_surfaces) {
-  //     if (s.is_SA()) {
-  // 	sa_surfs.push_back(s);
-  //     }
-  //   }
-  //   remove_contained_surfaces(sa_surfs, surfaces_to_cut);
-  // }
+  std::vector<surface>
+  merge_surface_groups(const std::vector<surface>& surfs,
+		       const std::vector<std::vector<unsigned> >& groups) {
+    std::vector<surface> sfs;
+    for (auto group : groups) {
+      vector<surface> sg = select_indexes(surfs, group);
+      assert(sg.size() == group.size());
+      sfs.push_back(merge_surfaces(sg));
+    }
+    return sfs;
+  }
+
+  bool vertical_contained_by(const surface& maybe_contained,
+			     const surface& maybe_container) {
+    vector<oriented_polygon> maybe_contained_outlines =
+      mesh_bounds(maybe_contained.index_list(), maybe_contained.get_parent_mesh());
+    assert(maybe_contained_outlines.size() == 2);
+    auto contained_outline = maybe_contained_outlines.front();
+    
+    vector<oriented_polygon> maybe_container_outlines =
+      mesh_bounds(maybe_container.index_list(), maybe_container.get_parent_mesh());
+    assert(maybe_container_outlines.size() == 2);
+    auto container_outline = maybe_container_outlines.front();
+
+    return contains(container_outline, contained_outline);
+  }
 
   boost::optional<surface>
   part_outline_surface(std::vector<surface>* surfaces_to_cut,
@@ -102,6 +118,24 @@ namespace gca {
 
     if (merge_groups.size() == 1) {
       return merge_surfaces(vertical_surfs);
+    } else {
+      cout << "# of groups = " << merge_groups.size() << endl;
+      for (auto g : merge_groups) {
+	cout << "Group" << endl;
+	for (auto i : g) {
+	  cout << "\t" << i << endl;
+	}
+      }
+      vector<surface> merged = merge_surface_groups(vertical_surfs, merge_groups);
+      vector<surface> outer_surfs =
+	partial_order_maxima(merged, [](const surface& l, const surface& r)
+			     { return vertical_contained_by(l, r); });
+      cout << "# outer vertical surfaces = " << outer_surfs.size() << endl;
+      if (outer_surfs.size() == 1) {
+	return outer_surfs.front();
+      } else {
+	return boost::none;
+      }
     }
 
     return boost::none;

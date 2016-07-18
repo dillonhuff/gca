@@ -10,7 +10,7 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
-    std::vector<plate_height> parallel_plates{0.5};
+    std::vector<plate_height> parallel_plates{0.5, 0.7};
     fixtures fixes(test_vice, parallel_plates);
 
     tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
@@ -25,13 +25,15 @@ namespace gca {
       REQUIRE(p.fixtures().size() == 2);
     }
 
-    // SECTION("Round with thru holes") {
-    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
+    SECTION("Round with thru holes") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
 
-    //   fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      cout << "Making round w/ thru holes plan" << endl;
 
-    //   REQUIRE(p.fixtures().size() == 2);
-    // }
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+
+      REQUIRE(p.fixtures().size() == 2);
+    }
   }
 
   TEST_CASE("Tapered top and several slanted verticals") {

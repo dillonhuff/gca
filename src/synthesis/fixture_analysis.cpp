@@ -179,7 +179,6 @@ namespace gca {
     surface_map orients;
 
     while (surfaces_left.size() > 0) {
-
       unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
 						      orientations_left,
 						      surfaces_left);

@@ -264,6 +264,20 @@ namespace gca {
     }
     return cp_elems;
   }
+
+  template<typename I>
+  std::vector<I>
+  select_indexes(const std::vector<I>& elems,
+		 std::vector<unsigned>& inds) {
+    std::sort(begin(inds), end(inds));
+    std::vector<I> cp_elems;
+    for (unsigned i = 0; i < elems.size(); i++) {
+      if (std::binary_search(begin(inds), end(inds), i)) {
+    	cp_elems.push_back(elems[i]);
+      }
+    }
+    return cp_elems;
+  }
   
   template<typename I>
   std::vector<I> intersection(const std::vector<I>& l,
@@ -306,6 +320,28 @@ namespace gca {
       m[a] = elems;
     }
   }
+
+  // TODO: Make this more efficient
+  template<typename T, typename F>
+  std::vector<T>
+  partial_order_maxima(const std::vector<T>& elems, F f) {
+    std::vector<T> maxima;
+    for (unsigned i = 0; i < elems.size(); i++) {
+      auto e = elems[i];
+      bool gt_all = true;
+      for (unsigned j = 0; j < elems.size(); j++) {
+	auto a = elems[j];
+	if (i != j && !f(a, e)) {
+	  gt_all = false;
+	}
+      }
+      if (gt_all) {
+	maxima.push_back(e);
+      }
+    }
+    return maxima;
+  }
+
 
 }
 
