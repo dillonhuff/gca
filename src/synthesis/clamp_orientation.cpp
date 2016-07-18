@@ -67,7 +67,7 @@ namespace gca {
     
     return orients;
   }
-  
+
   std::vector<clamp_orientation>
   all_viable_clamp_orientations(const std::vector<surface>& surfaces,
 				const vice& v) {

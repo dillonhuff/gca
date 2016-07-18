@@ -11,10 +11,6 @@
 
 namespace gca {
 
-  point dims(const workpiece& w) {
-    return point(w.sides[0].len(), w.sides[1].len(), w.sides[2].len());
-  }
-
   box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();
@@ -173,13 +169,12 @@ namespace gca {
 
   boost::optional<std::vector<fixture_setup> >
   parallel_plate_clipping(const triangular_mesh& aligned,
-			  const point clipped_dims,
+			  const double clipped_z_height,
 			  std::vector<surface>& surfaces_to_cut,
 			  const fixtures& f) {
     assert(surfaces_to_cut.size() > 0);
     
     double aligned_z_height = diameter(point(0, 0, 1), aligned);
-    double clipped_z_height = clipped_dims.z;
     vector<plate_height> viable_plates =
       find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
 
@@ -204,10 +199,10 @@ namespace gca {
     triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
     workpiece clipped = clipped_workpiece(w, part_mesh);
-    point clipped_dims = dims(clipped);
+    double clipped_z_height = clipped.sides[2].len();
 
     boost::optional<vector<fixture_setup>> clip_setups =
-      parallel_plate_clipping(wp_mesh, clipped_dims, surfaces_to_cut, f);
+      parallel_plate_clipping(wp_mesh, clipped_z_height, surfaces_to_cut, f);
 
     if (clip_setups) {
       auto clipped_surfs =
