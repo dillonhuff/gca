@@ -32,7 +32,7 @@ namespace gca {
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-      REQUIRE(p.fixtures().size() == 2);
+      REQUIRE(p.fixtures().size() == 3);
     }
   }
 
@@ -189,8 +189,7 @@ namespace gca {
 
     fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-    // TODO: Eventually with optimizations this will be 6
-    REQUIRE(p.fixtures().size() == 7);
+    REQUIRE(p.fixtures().size() == 3);
   }
 
 }
