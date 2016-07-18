@@ -189,7 +189,6 @@ namespace gca {
 
   // TODO: Clean up and add vice height test
   // TODO: Use tool lengths in can_clip_parallel test
-  //boost::optional<std::pair<triangular_mesh, std::vector<fixture_setup> > >
   boost::optional<clipping_plan>
   try_parallel_plate_clipping(const workpiece w, 
 			      const triangular_mesh& part_mesh,

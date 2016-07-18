@@ -355,10 +355,6 @@ namespace gca {
 
     vector<fixture_setup> setups = wp_setups.fixtures;
     const vector<surface>& stable_surfaces = wp_setups.stable_surfaces();
-    // triangular_mesh& aligned_workpiece_mesh = wp_setups.mesh;
-
-    // auto stable_surfaces =
-    //   stable_surfaces_after_clipping(part_mesh, aligned_workpiece_mesh);
 
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);

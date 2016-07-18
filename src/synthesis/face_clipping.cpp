@@ -93,7 +93,6 @@ namespace gca {
     return clip_setups;
   }
 
-  //  std::pair<triangular_mesh, std::vector<fixture_setup> >
   clipping_plan
   axis_by_axis_clipping(const workpiece w, 
 			const triangular_mesh& part_mesh,
