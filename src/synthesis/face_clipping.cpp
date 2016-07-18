@@ -2,6 +2,19 @@
 
 namespace gca {
 
+  workpiece clipped_workpiece(const workpiece aligned_workpiece,
+			      const triangular_mesh& part_mesh) {
+    point x_n = aligned_workpiece.sides[0].normalize();
+    point y_n = aligned_workpiece.sides[1].normalize();
+    point z_n = aligned_workpiece.sides[2].normalize();
+    
+    point x_d = diameter(aligned_workpiece.sides[0], part_mesh) * x_n;
+    point y_d = diameter(aligned_workpiece.sides[1], part_mesh) * y_n;
+    point z_d = diameter(aligned_workpiece.sides[2], part_mesh) * z_n;
+
+    return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
+  }
+  
   // TODO: Correctly place boxes in space relative to the vices
   std::pair<fixture_setup, fixture_setup>
   clip_axis(double workpiece_x,
@@ -95,24 +108,11 @@ namespace gca {
 
     auto clip_setups = axis_by_axis_clipping(stable_surfaces, surfaces_to_cut, aligned_workpiece, clipped, f);
 
-      auto clipped_surfs =
-	stable_surfaces_after_clipping(part_mesh, wp_mesh);
-      remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
+    auto clipped_surfs =
+      stable_surfaces_after_clipping(part_mesh, wp_mesh);
+    remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
     
-    return clipping_plan(wp_mesh, clip_setups);
-  }
-
-  workpiece clipped_workpiece(const workpiece aligned_workpiece,
-			      const triangular_mesh& part_mesh) {
-    point x_n = aligned_workpiece.sides[0].normalize();
-    point y_n = aligned_workpiece.sides[1].normalize();
-    point z_n = aligned_workpiece.sides[2].normalize();
-    
-    point x_d = diameter(aligned_workpiece.sides[0], part_mesh) * x_n;
-    point y_d = diameter(aligned_workpiece.sides[1], part_mesh) * y_n;
-    point z_d = diameter(aligned_workpiece.sides[2], part_mesh) * z_n;
-
-    return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
+    return clipping_plan(clipped_surfs, clip_setups);
   }
 
 }

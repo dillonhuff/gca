@@ -209,7 +209,8 @@ namespace gca {
       auto clipped_surfs =
 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
       remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
-      return clipping_plan(wp_mesh, *clip_setups);
+
+      return clipping_plan(clipped_surfs, *clip_setups);
     } else {
       return boost::none;
     }
