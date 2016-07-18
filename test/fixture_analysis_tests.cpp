@@ -180,7 +180,7 @@ namespace gca {
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
     std::vector<plate_height> plates{0.1, 0.3};
     fixtures fixes(test_vice, plates);
-    workpiece workpiece_dims(3.81, 3.2, 3.98, ALUMINUM);
+    workpiece workpiece_dims(2.0, 2.0, 3.98, ALUMINUM);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1, t2};

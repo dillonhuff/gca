@@ -89,16 +89,17 @@ namespace gca {
     return sfs;
   }
 
+  // TODO: Eventually identify vertical holes and compensate for them
   bool vertical_contained_by(const surface& maybe_contained,
 			     const surface& maybe_container) {
     vector<oriented_polygon> maybe_contained_outlines =
       mesh_bounds(maybe_contained.index_list(), maybe_contained.get_parent_mesh());
-    assert(maybe_contained_outlines.size() == 2);
+    if (maybe_contained_outlines.size() !=  2) { return false; }
     auto contained_outline = maybe_contained_outlines.front();
     
     vector<oriented_polygon> maybe_container_outlines =
       mesh_bounds(maybe_container.index_list(), maybe_container.get_parent_mesh());
-    assert(maybe_container_outlines.size() == 2);
+    if (maybe_container_outlines.size() != 2) { return false; }
     auto container_outline = maybe_container_outlines.front();
 
     return contains(container_outline, contained_outline);
