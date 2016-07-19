@@ -1,6 +1,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
+//#include "utils/partition.h"
 
 namespace gca {
 
@@ -169,30 +170,94 @@ namespace gca {
     return p;
   }
 
+  // unsigned num_viable_surfaces(const partition& p,
+  // 			       const orientation_map& possible_orientations) {
+  //   auto num_surfs_visible = 0;
+  //   for (auto surf_ind : p.remaining_indexes()) {
+  //     auto surf_orient_pair = *(possible_orientations.find(surf_ind));
+  //     if (elem(orient, surf_orient_pair.second)) {
+  // 	num_surfs_visible++;
+  //     }
+  //   }
+  // }
+
+  // partition<surface, fixture>
+  // greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
+  // 			   const std::vector<fixture>& all_orients,
+  // 			   orientation_map& possible_orientations,
+  // 			   const triangular_mesh& part) {
+  //   partition<surface, fixture> surface_part(surfaces_to_cut, all_orients);
+  //   while (!surface_part.is_complete()) {
+  //     //      auto bucket_id =
+  //     //	surface_part.highest_capacity_empty_bucket(num_viable_surfaces);
+      
+  //     // cout << "Trying orientation " << orient_ind << " with top normal ";
+  //     // cout << all_orients[orient_ind].orient.top_normal() << endl;
+  //     // remove(orient_ind, orientations_left);
+  //     // vector<unsigned> surfaces_cut =
+  //     // 	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
+  //     // cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
+  //     // for (auto s : surfaces_cut) {
+  //     // 	cout << "\t" << s << endl;
+  //     // }
+  //     // if (surfaces_cut.size() > 0) {
+  //     // 	orients[orient_ind] = surfaces_cut;
+  //     // }
+  //     // subtract(surfaces_left, surfaces_cut);
+  //   }
+  //   return surface_part;
+
+  //   // vector<unsigned> surfaces_left = inds(surfaces_to_cut);
+  //   // vector<unsigned> orientations_left = inds(all_orients);
+  //   // surface_map orients;
+
+  //   // while (surfaces_left.size() > 0) {
+  //   //   unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
+  //   // 						      orientations_left,
+  //   // 						      surfaces_left);
+  //   //   cout << "Trying orientation " << orient_ind << " with top normal ";
+  //   //   cout << all_orients[orient_ind].orient.top_normal() << endl;
+  //   //   remove(orient_ind, orientations_left);
+  //   //   vector<unsigned> surfaces_cut =
+  //   // 	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
+  //   //   cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
+  //   //   for (auto s : surfaces_cut) {
+  //   // 	cout << "\t" << s << endl;
+  //   //   }
+  //   //   if (surfaces_cut.size() > 0) {
+  //   // 	orients[orient_ind] = surfaces_cut;
+  //   //   }
+  //   //   subtract(surfaces_left, surfaces_cut);
+  //   // }
+
+  //   // assert(surfaces_left.size() == 0);
+  //   // return orients;
+  // }
+  
   surface_map
   greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
-			   const std::vector<fixture>& all_orients,
-			   orientation_map& possible_orientations,
-			   const triangular_mesh& part) {
+  			   const std::vector<fixture>& all_orients,
+  			   orientation_map& possible_orientations,
+  			   const triangular_mesh& part) {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
     surface_map orients;
 
     while (surfaces_left.size() > 0) {
       unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
-						      orientations_left,
-						      surfaces_left);
+  						      orientations_left,
+  						      surfaces_left);
       cout << "Trying orientation " << orient_ind << " with top normal ";
       cout << all_orients[orient_ind].orient.top_normal() << endl;
       remove(orient_ind, orientations_left);
       vector<unsigned> surfaces_cut =
-	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
+  	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
       cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
       for (auto s : surfaces_cut) {
-	cout << "\t" << s << endl;
+  	cout << "\t" << s << endl;
       }
       if (surfaces_cut.size() > 0) {
-	orients[orient_ind] = surfaces_cut;
+  	orients[orient_ind] = surfaces_cut;
       }
       subtract(surfaces_left, surfaces_cut);
     }
@@ -305,10 +370,11 @@ namespace gca {
       greedy_possible_orientations(surfaces_to_cut, all_orients);
     assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
 
-    auto greedy_orients = greedy_pick_orientations(surfaces_to_cut,
-						   all_orients,
-						   possible_orientations,
-						   part_mesh);
+    auto greedy_orients =
+      greedy_pick_orientations(surfaces_to_cut,
+			       all_orients,
+			       possible_orientations,
+			       part_mesh);
 
     return simplify_orientations(greedy_orients,
     				 possible_orientations,
