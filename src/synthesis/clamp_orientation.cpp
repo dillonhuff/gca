@@ -15,7 +15,6 @@ namespace gca {
 
     point free_axis = cross(mesh_base.normal(), mesh_left.normal());
 
-    //    const triangular_mesh& m = orient.get_mesh();
     plane free_plane(free_axis, max_point_in_dir(m, free_axis));
 
     boost::optional<homogeneous_transform> t =
@@ -109,7 +108,6 @@ namespace gca {
     delete_if(orients,
     	      [v](const clamp_orientation& orient)
     	      {
-    		auto part = orient.get_left().get_parent_mesh();
     		auto left_pt = orient.left_plane_point();
     		auto right_pt = orient.right_plane_point();
     		return abs(signed_distance_along(left_pt - right_pt, orient.left_normal()))
