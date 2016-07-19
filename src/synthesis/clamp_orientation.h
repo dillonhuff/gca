@@ -9,17 +9,10 @@ namespace gca {
 
   class clamp_orientation {
   protected:
-    // const surface* left;
-    // const surface* right;
-    // const surface* bottom;
-
     plane left_pl;
     plane right_pl;
     plane bottom_pl;
 
-    // inline const triangular_mesh& get_mesh() const
-    // { return left->get_parent_mesh(); }
-    
   public:
 
     double contact_area(const triangular_mesh& m) const;
@@ -67,7 +60,6 @@ namespace gca {
     clamp_orientation(const surface* p_left,
     		      const surface* p_right,
     		      const surface* p_bottom) :
-      //      left(p_left), right(p_right), bottom(p_bottom),
       left_pl(point(0, 0, 1), point(0, 0, 0)),
       right_pl(point(0, 0, 1), point(0, 0, 0)),
       bottom_pl(point(0, 0, 1), point(0, 0, 0)) {
@@ -88,10 +80,9 @@ namespace gca {
     }
 
     clamp_orientation() :
-      //      left(nullptr), right(nullptr), bottom(nullptr),
-      left_pl(point(0, 0, 0), point(0, 0, 0)),
-      right_pl(point(0, 0, 0), point(0, 0, 0)),
-      bottom_pl(point(0, 0, 0), point(0, 0, 0)) {}
+      left_pl(point(0, 0, 1), point(0, 0, 0)),
+      right_pl(point(0, 0, 1), point(0, 0, 0)),
+      bottom_pl(point(0, 0, 1), point(0, 0, 0)) {}
       
   };
 
