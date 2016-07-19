@@ -260,10 +260,11 @@ namespace gca {
   }
   
   surface_map
-  greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
-  			   const std::vector<fixture>& all_orients,
-  			   const relation<surface, fixture>& possible_orientations) {
+  greedy_pick_orientations(const relation<surface, fixture>& possible_orientations) {
 
+    auto surfaces_to_cut = possible_orientations.left_elems();
+    auto all_orients = possible_orientations.right_elems();
+    
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
     surface_map orients;
@@ -300,9 +301,7 @@ namespace gca {
     assert(surfaces_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
     auto greedy_orients =
-      greedy_pick_orientations(surfaces_to_cut,
-			       all_orients,
-			       possible_orientations);
+      greedy_pick_orientations(possible_orientations);
 
     return simplify_orientations(greedy_orients,
     				 possible_orientations.left_to_right(),

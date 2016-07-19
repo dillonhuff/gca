@@ -57,6 +57,9 @@ namespace gca {
 
     const std::map<r_index, std::vector<l_index> >
     right_to_left() const { return r_to_l; }
+
+    const std::vector<L>& left_elems() const { return left; }
+    const std::vector<R>& right_elems() const { return right; }
     
   };
 }
