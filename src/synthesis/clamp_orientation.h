@@ -93,11 +93,13 @@ namespace gca {
       left(nullptr), right(nullptr), bottom(nullptr) {}
   };
 
-  homogeneous_transform mating_transform(const clamp_orientation& orient,
+  homogeneous_transform mating_transform(const triangular_mesh& m,
+					 const clamp_orientation& orient,
 					 const vice& v);
 
   triangular_mesh
-  oriented_part_mesh(const clamp_orientation& orient,
+  oriented_part_mesh(const triangular_mesh& m,
+		     const clamp_orientation& orient,
 		     const vice v);
 
   std::vector<clamp_orientation>

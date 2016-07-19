@@ -3,7 +3,8 @@
 
 namespace gca {
 
-  homogeneous_transform mating_transform(const clamp_orientation& orient,
+  homogeneous_transform mating_transform(const triangular_mesh& m,
+					 const clamp_orientation& orient,
 					 const vice& v) {
     plane vice_base = v.base_plane();
     plane vice_top_jaw = v.top_jaw_plane();
@@ -14,7 +15,7 @@ namespace gca {
 
     point free_axis = cross(mesh_base.normal(), mesh_left.normal());
 
-    const triangular_mesh& m = orient.get_mesh();
+    //    const triangular_mesh& m = orient.get_mesh();
     plane free_plane(free_axis, max_point_in_dir(m, free_axis));
 
     boost::optional<homogeneous_transform> t =
@@ -36,10 +37,11 @@ namespace gca {
   }
 
   triangular_mesh
-  oriented_part_mesh(const clamp_orientation& orient,
+  oriented_part_mesh(const triangular_mesh& m,
+		     const clamp_orientation& orient,
 		     const vice v) {
-    homogeneous_transform t = mating_transform(orient, v);
-    return apply(t, orient.get_mesh());
+    homogeneous_transform t = mating_transform(m, orient, v);
+    return apply(t, m);
   }
 
   std::vector<clamp_orientation>
@@ -152,11 +154,9 @@ namespace gca {
     return orients;
   }
 
-  bool point_above_vice(const index_t i,
+  bool point_above_vice(const point p,
 			const clamp_orientation& orient,
 			const vice& v) {
-    const triangular_mesh& part = orient.get_mesh();
-    point p = part.vertex(i);
     point vice_dir = orient.top_normal();
     point vice_jaw_top = orient.bottom_plane_point() + (v.jaw_height() * vice_dir);
     return signed_distance_along(p, vice_dir) >
@@ -186,16 +186,14 @@ namespace gca {
     vector<index_t> vert_inds;
     concat(vert_inds, vertices_along(part, orient.left_plane()));
     concat(vert_inds, vertices_along(part, orient.right_plane()));
-    // concat(vert_inds, surface_vertexes(orient.get_left()));
-    // concat(vert_inds, surface_vertexes(orient.get_right()));
+
     if (!v.has_parallel_plate()) {
-      //concat(vert_inds, surface_vertexes(orient.get_bottom()));
       concat(vert_inds, vertices_along(part, orient.base_plane()));
     }
     sort(begin(vert_inds), end(vert_inds));
     delete_if(vert_inds,
-	      [v, orient](const index_t i)
-	      { return point_above_vice(i, orient, v); });
+	      [v, orient, part](const index_t i)
+	      { return point_above_vice(part.vertex(i), orient, v); });
     return vert_inds;
   }
 
@@ -203,7 +201,9 @@ namespace gca {
   surfaces_millable_from(const clamp_orientation& orient,
 			 const std::vector<surface>& surfaces_left,
 			 const vice& v) {
-    const triangular_mesh& part = orient.get_mesh();
+    assert(surfaces_left.size() > 0);
+    const triangular_mesh& part = surfaces_left.front().get_parent_mesh();
+
     std::vector<index_t> millable =
       millable_faces(orient.top_normal(), part);
     vector<index_t> verts_touching_fixture =

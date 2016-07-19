@@ -157,7 +157,7 @@ namespace gca {
 
       vector<surface> stock_surfs = outer_surfaces(aligned);
       auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
-      auto s_t = mating_transform(stock_top_orient, parallel);
+      auto s_t = mating_transform(aligned, stock_top_orient, parallel);
       
       std::vector<fixture_setup> progs;
       progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), parallel));
@@ -165,7 +165,7 @@ namespace gca {
       vector<surface> surfs = outer_surfaces(m);
       
       auto top_orient = largest_upward_orientation(surfs, parallel);
-      auto t = mating_transform(top_orient, parallel);
+      auto t = mating_transform(m, top_orient, parallel);
 
       progs.push_back(clip_base(apply(t, aligned), apply(t, m), parallel));
       return progs;

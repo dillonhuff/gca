@@ -316,9 +316,10 @@ namespace gca {
   }
 
   fixture_setup
-  make_fixture_setup(const fixture& f,
+  make_fixture_setup(const triangular_mesh& part_mesh,
+		     const fixture& f,
 		     surface_list& surfaces) {
-    triangular_mesh m = oriented_part_mesh(f.orient, f.v);
+    triangular_mesh m = oriented_part_mesh(part_mesh, f.orient, f.v);
     triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
     auto pockets = make_surface_pockets(*mesh, surfaces);
     return fixture_setup(mesh, f.v, pockets);
@@ -338,7 +339,7 @@ namespace gca {
       for (auto i : p.second) {
       	surfaces.push_back(surfs_to_cut[i].index_list());
       }
-      orients.push_back(make_fixture_setup(all_orients[ori], surfaces));
+      orients.push_back(make_fixture_setup(part_mesh, all_orients[ori], surfaces));
     }
     return orients;
   }
