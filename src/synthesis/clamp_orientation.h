@@ -28,16 +28,34 @@ namespace gca {
       point p = max_point_in_dir(get_mesh(), n);
       return plane(n, p);
     }
-    
+
     inline plane left_plane() const {
       point n = left_normal();
       point p = max_point_in_dir(get_mesh(), n);
       return plane(n, p);
     }
 
+    inline plane right_plane() const {
+      point n = right_normal();
+      point p = max_point_in_dir(get_mesh(), n);
+      return plane(n, p);
+    }
+    
     inline point bottom_plane_point() const {
       const triangular_mesh& m = bottom->get_parent_mesh();
       triangle_t t = m.triangle_vertices(bottom->front());
+      return m.vertex(t.v[0]);
+    }
+
+    inline point left_plane_point() const {
+      const triangular_mesh& m = left->get_parent_mesh();
+      triangle_t t = m.triangle_vertices(left->front());
+      return m.vertex(t.v[0]);
+    }
+
+    inline point right_plane_point() const {
+      const triangular_mesh& m = right->get_parent_mesh();
+      triangle_t t = m.triangle_vertices(right->front());
       return m.vertex(t.v[0]);
     }
     
@@ -55,6 +73,11 @@ namespace gca {
     
     inline point left_normal() const {
       point bn = left->face_orientation(left->front());
+      return bn;
+    }
+
+    inline point right_normal() const {
+      point bn = right->face_orientation(right->front());
       return bn;
     }
     

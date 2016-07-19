@@ -108,8 +108,8 @@ namespace gca {
     	      [v](const clamp_orientation& orient)
     	      {
     		auto part = orient.get_left().get_parent_mesh();
-    		auto left_pt = part.face_triangle(orient.get_left().front()).v1;
-    		auto right_pt = part.face_triangle(orient.get_right().front()).v1;
+    		auto left_pt = orient.left_plane_point();
+    		auto right_pt = orient.right_plane_point();
     		return abs(signed_distance_along(left_pt - right_pt, orient.left_normal()))
     		  > v.maximum_jaw_width();
     	      });
@@ -163,13 +163,34 @@ namespace gca {
       signed_distance_along(vice_jaw_top, vice_dir);
   }
 
-  std::vector<index_t> vertexes_touching_fixture(const clamp_orientation& orient,
+  std::vector<index_t> vertices_along(const triangular_mesh& part,
+				      const plane p) {
+    vector<index_t> inds_along;
+    for (auto i : part.face_indexes()) {
+      triangle t = part.face_triangle(i);
+      if (within_eps(t.normal, p.normal(), 0.001)) {
+	if (within_eps(p.normal().dot(p.pt() - t.v1), 0, 0.001)) {
+	  triangle_t ti = part.triangle_vertices(i);
+	  inds_along.push_back(ti.v[0]);
+	  inds_along.push_back(ti.v[1]);
+	  inds_along.push_back(ti.v[2]);
+	}
+      }
+    }
+    return inds_along;
+  }
+
+  std::vector<index_t> vertexes_touching_fixture(const triangular_mesh& part,
+						 const clamp_orientation& orient,
 						 const vice& v) {
     vector<index_t> vert_inds;
-    concat(vert_inds, surface_vertexes(orient.get_left()));
-    concat(vert_inds, surface_vertexes(orient.get_right()));
+    concat(vert_inds, vertices_along(part, orient.left_plane()));
+    concat(vert_inds, vertices_along(part, orient.right_plane()));
+    // concat(vert_inds, surface_vertexes(orient.get_left()));
+    // concat(vert_inds, surface_vertexes(orient.get_right()));
     if (!v.has_parallel_plate()) {
-      concat(vert_inds, surface_vertexes(orient.get_bottom()));
+      //concat(vert_inds, surface_vertexes(orient.get_bottom()));
+      concat(vert_inds, vertices_along(part, orient.base_plane()));
     }
     sort(begin(vert_inds), end(vert_inds));
     delete_if(vert_inds,
@@ -186,7 +207,7 @@ namespace gca {
     std::vector<index_t> millable =
       millable_faces(orient.top_normal(), part);
     vector<index_t> verts_touching_fixture =
-      vertexes_touching_fixture(orient, v);
+      vertexes_touching_fixture(part, orient, v);
     delete_if(millable,
 	      [&verts_touching_fixture, part](const index_t face_ind)
 	      { return any_vertex_in(part.triangle_vertices(face_ind),

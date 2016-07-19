@@ -111,9 +111,11 @@ namespace gca {
   clamp_orientation
   find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
 			     const point n) {
-    return *(find_if(begin(orients), end(orients),
-		     [n](const clamp_orientation& s)
-		     { return within_eps(s.top_normal(), n, 0.0001); }));
+    auto r  = find_if(begin(orients), end(orients),
+		      [n](const clamp_orientation& s)
+		      { return within_eps(s.top_normal(), n, 0.0001); });
+    assert(r != end(orients));
+    return *r;
   }
 
   clamp_orientation
@@ -121,6 +123,8 @@ namespace gca {
 			     const vice& parallel) {
     vector<clamp_orientation> orients =
       all_viable_clamp_orientations(surfs, parallel);
+
+    cout << "# of orientations = " << orients.size() << endl;
 
     // TODO: Eventually auto select the direction instead of
     // hard coding (0, 0, 1)
@@ -133,6 +137,8 @@ namespace gca {
     sort(begin(top_orients), end(top_orients),
 	 [](const clamp_orientation& l, const clamp_orientation& r)
 	 { return l.surface_area() > r.surface_area(); });
+
+    assert(top_orients.size() > 0);
       
     return top_orients.front();
   }
