@@ -38,9 +38,25 @@ namespace gca {
 
     inline unsigned right_size() const { return right.size(); }
 
+    std::vector<l_index>
+    lefts_connected_to(const r_index r) const {
+      auto l = r_to_l.find(r);
+      assert(l != end(r_to_l));
+      return l->second;
+    }
+
+    std::vector<r_index>
+    rights_connected_to(const l_index l) const {
+      auto r = l_to_r.find(l);
+      assert(r != end(l_to_r));
+      return r->second;
+    }
+    
     const std::map<l_index, std::vector<r_index> >
     left_to_right() const { return l_to_r; }
-    //    std::map<r_index, std::vector<l_index> > r_to_l;
+
+    const std::map<r_index, std::vector<l_index> >
+    right_to_left() const { return r_to_l; }
     
   };
 }

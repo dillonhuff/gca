@@ -211,7 +211,6 @@ namespace gca {
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
 	orient_map.insert(surface_ind, next_orient);
-	//map_insert(orient_map, surface_ind, next_orient);
       }
     }
   }
@@ -219,7 +218,6 @@ namespace gca {
   relation<surface, fixture>
   greedy_possible_orientations(const std::vector<surface>& surfaces,
 			       std::vector<fixture>& all_orients) {
-    //    orientation_map orient_map;
     relation<surface, fixture> rel(surfaces, all_orients);
     vector<unsigned> surfaces_left = inds(surfaces);
     select_orientations(rel, surfaces_left, surfaces, all_orients);
@@ -231,39 +229,44 @@ namespace gca {
   std::vector<unsigned>
   select_surfaces(unsigned orient_ind,
 		  std::vector<unsigned>& surfaces_left,
-		  const std::vector<surface>& surfaces_to_cut,
-		  const orientation_map& possible_orientations,
-		  const triangular_mesh& part) {
+		  //		  const std::vector<surface>& surfaces_to_cut,
+		  const relation<surface, fixture>& possible_orientations) {
+		  //		  const triangular_mesh& part) {
     vector<unsigned> initial_surfaces;
     for (auto i : surfaces_left) {
-      vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-      if (elem(orient_ind, viable_orients)) {
+      if (elem(orient_ind, possible_orientations.rights_connected_to(i))) {
 	initial_surfaces.push_back(i);
       }
+      // vector<unsigned> viable_orients = possible_orientations.find(i)->second;
+      // if (elem(orient_ind, viable_orients)) {
+      // 	initial_surfaces.push_back(i);
+      // }
     }
     return initial_surfaces;
   }
 
   unsigned
-  orient_with_most_surfaces(const orientation_map& possible_orientations,
+  orient_with_most_surfaces(const relation<surface, fixture>& possible_orientations,
 			    const std::vector<unsigned>& orients_left,
 			    const std::vector<unsigned>& surfaces_left) {
     unsigned max_surfs = 0;
     bool selected_some = false;
     unsigned p = 0;
     for (auto orient : orients_left) {
-      auto num_surfs_visible = 0;
-      for (auto surf_ind : surfaces_left) {
-	auto surf_orient_pair = *(possible_orientations.find(surf_ind));
-	if (elem(orient, surf_orient_pair.second)) {
-	  num_surfs_visible++;
-	}
-      }
+      vector<unsigned> s_inds = possible_orientations.lefts_connected_to(orient);
+      s_inds = intersection(s_inds, surfaces_left);
+      auto num_surfs_visible = s_inds.size();
+      // for (auto surf_ind : surfaces_left) {
+      // 	auto surf_orient_pair = *(possible_orientations.find(surf_ind));
+      // 	if (elem(orient, surf_orient_pair.second)) {
+      // 	  num_surfs_visible++;
+      // 	}
+      // }
 
       if (num_surfs_visible > max_surfs) {
-	p = orient;
-	max_surfs = num_surfs_visible;
-	selected_some = true;
+    	p = orient;
+    	max_surfs = num_surfs_visible;
+    	selected_some = true;
       }
     }
     assert(selected_some);
@@ -273,7 +276,7 @@ namespace gca {
   surface_map
   greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
   			   const std::vector<fixture>& all_orients,
-  			   const orientation_map& possible_orientations,
+  			   const relation<surface, fixture>& possible_orientations,
   			   const triangular_mesh& part) {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
@@ -287,7 +290,7 @@ namespace gca {
       cout << all_orients[orient_ind].orient.top_normal() << endl;
       remove(orient_ind, orientations_left);
       vector<unsigned> surfaces_cut =
-  	select_surfaces(orient_ind, surfaces_left, surfaces_to_cut, possible_orientations, part);
+  	select_surfaces(orient_ind, surfaces_left, possible_orientations); //, part);
       cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
       for (auto s : surfaces_cut) {
   	cout << "\t" << s << endl;
@@ -313,7 +316,7 @@ namespace gca {
     auto greedy_orients =
       greedy_pick_orientations(surfaces_to_cut,
 			       all_orients,
-			       possible_orientations.left_to_right(),
+			       possible_orientations,
 			       part_mesh);
 
     return simplify_orientations(greedy_orients,
