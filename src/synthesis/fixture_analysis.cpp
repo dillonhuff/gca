@@ -197,7 +197,7 @@ namespace gca {
   }
 
   void
-  select_orientations(orientation_map& orient_map,
+  select_orientations(relation<surface, fixture>& orient_map,
 		      std::vector<unsigned>& surfaces_left,
 		      const std::vector<surface>& surfaces,
 		      std::vector<fixture>& all_orients) {
@@ -210,19 +210,21 @@ namespace gca {
 						 all_orients[next_orient].v);
       subtract(surfaces_left, surfaces_cut);
       for (auto surface_ind : surfaces_cut) {
-	map_insert(orient_map, surface_ind, next_orient);
+	orient_map.insert(surface_ind, next_orient);
+	//map_insert(orient_map, surface_ind, next_orient);
       }
     }
   }
 
-  orientation_map
+  relation<surface, fixture>
   greedy_possible_orientations(const std::vector<surface>& surfaces,
 			       std::vector<fixture>& all_orients) {
-    orientation_map orient_map;
+    //    orientation_map orient_map;
+    relation<surface, fixture> rel(surfaces, all_orients);
     vector<unsigned> surfaces_left = inds(surfaces);
-    select_orientations(orient_map, surfaces_left, surfaces, all_orients);
+    select_orientations(rel, surfaces_left, surfaces, all_orients);
     assert(surfaces_left.size() == 0);
-    return orient_map;
+    return rel;
   }
 
   // TODO: Is there a way to do this without const?
@@ -267,11 +269,11 @@ namespace gca {
     assert(selected_some);
     return p;
   }
-
   
+  surface_map
   greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
   			   const std::vector<fixture>& all_orients,
-  			   orientation_map& possible_orientations,
+  			   const orientation_map& possible_orientations,
   			   const triangular_mesh& part) {
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
@@ -306,16 +308,16 @@ namespace gca {
 		    std::vector<fixture>& all_orients) {
     relation<surface, fixture> possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients);
-    assert(surfaces_to_cut.size() == 0 || possible_orientations.size() > 0);
+    assert(surfaces_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
     auto greedy_orients =
       greedy_pick_orientations(surfaces_to_cut,
 			       all_orients,
-			       possible_orientations,
+			       possible_orientations.left_to_right(),
 			       part_mesh);
 
     return simplify_orientations(greedy_orients,
-    				 possible_orientations,
+    				 possible_orientations.left_to_right(),
     				 surfaces_to_cut);
   }
 
