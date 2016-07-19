@@ -2,7 +2,6 @@
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
 #include "utils/relation.h"
-//#include "utils/partition.h"
 
 namespace gca {
 
@@ -225,22 +224,15 @@ namespace gca {
     return rel;
   }
 
-  // TODO: Is there a way to do this without const?
   std::vector<unsigned>
   select_surfaces(unsigned orient_ind,
 		  std::vector<unsigned>& surfaces_left,
-		  //		  const std::vector<surface>& surfaces_to_cut,
 		  const relation<surface, fixture>& possible_orientations) {
-		  //		  const triangular_mesh& part) {
     vector<unsigned> initial_surfaces;
     for (auto i : surfaces_left) {
       if (elem(orient_ind, possible_orientations.rights_connected_to(i))) {
 	initial_surfaces.push_back(i);
       }
-      // vector<unsigned> viable_orients = possible_orientations.find(i)->second;
-      // if (elem(orient_ind, viable_orients)) {
-      // 	initial_surfaces.push_back(i);
-      // }
     }
     return initial_surfaces;
   }
@@ -256,12 +248,6 @@ namespace gca {
       vector<unsigned> s_inds = possible_orientations.lefts_connected_to(orient);
       s_inds = intersection(s_inds, surfaces_left);
       auto num_surfs_visible = s_inds.size();
-      // for (auto surf_ind : surfaces_left) {
-      // 	auto surf_orient_pair = *(possible_orientations.find(surf_ind));
-      // 	if (elem(orient, surf_orient_pair.second)) {
-      // 	  num_surfs_visible++;
-      // 	}
-      // }
 
       if (num_surfs_visible > max_surfs) {
     	p = orient;
@@ -276,8 +262,8 @@ namespace gca {
   surface_map
   greedy_pick_orientations(const std::vector<surface>& surfaces_to_cut,
   			   const std::vector<fixture>& all_orients,
-  			   const relation<surface, fixture>& possible_orientations,
-  			   const triangular_mesh& part) {
+  			   const relation<surface, fixture>& possible_orientations) {
+
     vector<unsigned> surfaces_left = inds(surfaces_to_cut);
     vector<unsigned> orientations_left = inds(all_orients);
     surface_map orients;
@@ -290,7 +276,7 @@ namespace gca {
       cout << all_orients[orient_ind].orient.top_normal() << endl;
       remove(orient_ind, orientations_left);
       vector<unsigned> surfaces_cut =
-  	select_surfaces(orient_ind, surfaces_left, possible_orientations); //, part);
+  	select_surfaces(orient_ind, surfaces_left, possible_orientations);
       cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
       for (auto s : surfaces_cut) {
   	cout << "\t" << s << endl;
@@ -316,8 +302,7 @@ namespace gca {
     auto greedy_orients =
       greedy_pick_orientations(surfaces_to_cut,
 			       all_orients,
-			       possible_orientations,
-			       part_mesh);
+			       possible_orientations);
 
     return simplify_orientations(greedy_orients,
     				 possible_orientations.left_to_right(),
