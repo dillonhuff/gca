@@ -9,22 +9,20 @@ namespace gca {
 
   class clamp_orientation {
   protected:
-    const surface* left;
-    const surface* right;
-    const surface* bottom;
+    // const surface* left;
+    // const surface* right;
+    // const surface* bottom;
 
     plane left_pl;
     plane right_pl;
     plane bottom_pl;
 
-    inline const triangular_mesh& get_mesh() const
-    { return left->get_parent_mesh(); }
+    // inline const triangular_mesh& get_mesh() const
+    // { return left->get_parent_mesh(); }
     
   public:
 
-    inline double surface_area() const {
-      return left->surface_area() + right->surface_area() + bottom->surface_area();
-    }
+    double contact_area(const triangular_mesh& m) const;
 
     inline plane base_plane() const {
       return bottom_pl;
@@ -69,26 +67,28 @@ namespace gca {
     clamp_orientation(const surface* p_left,
     		      const surface* p_right,
     		      const surface* p_bottom) :
-      left(p_left), right(p_right), bottom(p_bottom),
+      //      left(p_left), right(p_right), bottom(p_bottom),
       left_pl(point(0, 0, 1), point(0, 0, 0)),
       right_pl(point(0, 0, 1), point(0, 0, 0)),
       bottom_pl(point(0, 0, 1), point(0, 0, 0)) {
 
-      point n = bottom->face_orientation(bottom->front());
-      point p = max_point_in_dir(get_mesh(), n);
+      auto mesh = p_left->get_parent_mesh();
+
+      point n = p_bottom->face_orientation(p_bottom->front());
+      point p = max_point_in_dir(mesh, n);
       bottom_pl = plane(n, p);
 
-      n = left->face_orientation(left->front());
-      p = max_point_in_dir(get_mesh(), n);
+      n = p_left->face_orientation(p_left->front());
+      p = max_point_in_dir(mesh, n);
       left_pl = plane(n, p);
 
-      n = right->face_orientation(right->front());
-      p = max_point_in_dir(get_mesh(), n);
+      n = p_right->face_orientation(p_right->front());
+      p = max_point_in_dir(mesh, n);
       right_pl = plane(n, p);
     }
 
     clamp_orientation() :
-      left(nullptr), right(nullptr), bottom(nullptr),
+      //      left(nullptr), right(nullptr), bottom(nullptr),
       left_pl(point(0, 0, 0), point(0, 0, 0)),
       right_pl(point(0, 0, 0), point(0, 0, 0)),
       bottom_pl(point(0, 0, 0), point(0, 0, 0)) {}

@@ -3,6 +3,27 @@
 
 namespace gca {
 
+  surface
+  contact_surface(const plane p, const triangular_mesh& part) {
+    vector<index_t> inds_along;
+    for (auto i : part.face_indexes()) {
+      triangle t = part.face_triangle(i);
+      if (within_eps(t.normal, p.normal(), 0.001)) {
+	if (within_eps(p.normal().dot(p.pt() - t.v1), 0, 0.001)) {
+	  inds_along.push_back(i);
+	}
+      }
+    }
+    return surface(&part, inds_along);
+  }
+
+  double clamp_orientation::contact_area(const triangular_mesh& m) const {
+    surface l = contact_surface(left_plane(), m);
+    surface r = contact_surface(left_plane(), m);
+    surface b = contact_surface(right_plane(), m);
+    return l.surface_area() + r.surface_area() + b.surface_area();
+  }
+
   homogeneous_transform mating_transform(const triangular_mesh& m,
 					 const clamp_orientation& orient,
 					 const vice& v) {

@@ -134,9 +134,10 @@ namespace gca {
 
     assert(orients.size() > 0);
 
+    const triangular_mesh& m = surfs.front().get_parent_mesh();
     sort(begin(top_orients), end(top_orients),
-	 [](const clamp_orientation& l, const clamp_orientation& r)
-	 { return l.surface_area() > r.surface_area(); });
+	 [m](const clamp_orientation& l, const clamp_orientation& r)
+	 { return l.contact_area(m) > r.contact_area(m); });
 
     assert(top_orients.size() > 0);
       
