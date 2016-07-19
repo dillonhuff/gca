@@ -5,6 +5,103 @@
 
 namespace gca {
 
+
+  void print_orient_map(const orientation_map& possible_orientations,
+			const std::vector<clamp_orientation>& all_orients) {
+    cout << "ORIENTATION MAP: " << endl;
+    for (auto m : possible_orientations) {
+      cout << "Surface " << m.first << " can be cut from orientations" << endl;
+      for (auto orient_ind : m.second) {
+    	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
+      }
+    }
+  }
+
+  bool
+  transferable(const std::vector<unsigned>& cc,
+	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
+	       const orientation_map& possible_orients,
+	       const std::vector<surface>& surfaces_to_cut) {
+    bool connected_to_any = false;
+    for (auto i : cc) {
+      for (auto j : orient_surface_inds.second) {
+	if (surfaces_share_edge(i, j, surfaces_to_cut)) {
+	  connected_to_any = true;
+	}
+      }
+    }
+    if (!connected_to_any) { return false; }
+    bool can_cut_from_i = true;
+    for (auto i : cc) {
+      auto it = possible_orients.find(i);
+      if (it != end(possible_orients)) {
+	if (!elem(orient_surface_inds.first, it->second)) {
+	  can_cut_from_i = false;
+	  break;
+	}
+      } else {
+	assert(false);
+      }
+    }
+    return can_cut_from_i;
+  }
+  
+  void
+  insert_component(const unsigned orient_ind,
+		   const vector<unsigned>& cc,
+		   surface_map& simplified,
+		   const surface_map& surface_allocations,
+		   const orientation_map& possible_orients,
+		   const std::vector<surface>& surfaces_to_cut) {
+    bool found_better_orient = false;
+    for (auto q : surface_allocations) {
+      if (q.first != orient_ind && transferable(cc, q, possible_orients, surfaces_to_cut)) {
+	found_better_orient = true;
+	for (auto i : cc) {
+	  map_insert(simplified, q.first, i);
+	}
+      }
+    }
+    if (!found_better_orient) {
+      for (auto i : cc) {
+      	map_insert(simplified, orient_ind, i);
+      }
+    }
+  }
+  
+  surface_map
+  simplify_orientations(const surface_map& surface_allocations,
+			const orientation_map& possible_orients,
+			const std::vector<surface>& surfaces_to_cut) {
+    surface_map simplified;
+    for (auto p : surface_allocations) {
+      auto orient_ind = p.first;
+      auto ccs =
+      	connected_components_by(p.second,
+      				[surfaces_to_cut](const unsigned i, const unsigned j)
+      				{
+      				  return surfaces_share_edge(i, j, surfaces_to_cut);
+      				});
+      auto elems = p.second;
+      for (auto cc_inds : ccs) {
+	vector<unsigned> cc(cc_inds.size());
+	std::transform(begin(cc_inds), end(cc_inds), begin(cc),
+		       [elems](const unsigned i)
+		       { return elems[i]; });
+
+      	insert_component(orient_ind,
+      			 cc,
+      			 simplified,
+      			 surface_allocations,
+      			 possible_orients,
+      			 surfaces_to_cut);
+      }
+
+    }
+    assert(simplified.size() <= surface_allocations.size());
+    return simplified;
+  }
+
   std::vector<surface>
   stable_surfaces_after_clipping(const triangular_mesh& part_mesh,
 				 const triangular_mesh& aligned_workpiece_mesh) {
@@ -265,103 +362,6 @@ namespace gca {
     assert(surfaces_left.size() == 0);
     return orients;
   }
-
-  void print_orient_map(const orientation_map& possible_orientations,
-			const std::vector<clamp_orientation>& all_orients) {
-    cout << "ORIENTATION MAP: " << endl;
-    for (auto m : possible_orientations) {
-      cout << "Surface " << m.first << " can be cut from orientations" << endl;
-      for (auto orient_ind : m.second) {
-    	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
-      }
-    }
-  }
-
-  bool
-  transferable(const std::vector<unsigned>& cc,
-	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
-	       const orientation_map& possible_orients,
-	       const std::vector<surface>& surfaces_to_cut) {
-    bool connected_to_any = false;
-    for (auto i : cc) {
-      for (auto j : orient_surface_inds.second) {
-	if (surfaces_share_edge(i, j, surfaces_to_cut)) {
-	  connected_to_any = true;
-	}
-      }
-    }
-    if (!connected_to_any) { return false; }
-    bool can_cut_from_i = true;
-    for (auto i : cc) {
-      auto it = possible_orients.find(i);
-      if (it != end(possible_orients)) {
-	if (!elem(orient_surface_inds.first, it->second)) {
-	  can_cut_from_i = false;
-	  break;
-	}
-      } else {
-	assert(false);
-      }
-    }
-    return can_cut_from_i;
-  }
-  
-  void
-  insert_component(const unsigned orient_ind,
-		   const vector<unsigned>& cc,
-		   surface_map& simplified,
-		   const surface_map& surface_allocations,
-		   const orientation_map& possible_orients,
-		   const std::vector<surface>& surfaces_to_cut) {
-    bool found_better_orient = false;
-    for (auto q : surface_allocations) {
-      if (q.first != orient_ind && transferable(cc, q, possible_orients, surfaces_to_cut)) {
-	found_better_orient = true;
-	for (auto i : cc) {
-	  map_insert(simplified, q.first, i);
-	}
-      }
-    }
-    if (!found_better_orient) {
-      for (auto i : cc) {
-      	map_insert(simplified, orient_ind, i);
-      }
-    }
-  }
-  
-  surface_map
-  simplify_orientations(const surface_map& surface_allocations,
-			const orientation_map& possible_orients,
-			const std::vector<surface>& surfaces_to_cut) {
-    surface_map simplified;
-    for (auto p : surface_allocations) {
-      auto orient_ind = p.first;
-      auto ccs =
-      	connected_components_by(p.second,
-      				[surfaces_to_cut](const unsigned i, const unsigned j)
-      				{
-      				  return surfaces_share_edge(i, j, surfaces_to_cut);
-      				});
-      auto elems = p.second;
-      for (auto cc_inds : ccs) {
-	vector<unsigned> cc(cc_inds.size());
-	std::transform(begin(cc_inds), end(cc_inds), begin(cc),
-		       [elems](const unsigned i)
-		       { return elems[i]; });
-
-      	insert_component(orient_ind,
-      			 cc,
-      			 simplified,
-      			 surface_allocations,
-      			 possible_orients,
-      			 surfaces_to_cut);
-      }
-
-    }
-    assert(simplified.size() <= surface_allocations.size());
-    return simplified;
-  }
-
   surface_map
   pick_orientations(const triangular_mesh& part_mesh,
 		    const std::vector<surface>& surfaces_to_cut,
