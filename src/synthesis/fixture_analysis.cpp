@@ -293,11 +293,11 @@ namespace gca {
   }
 
   surface_map
-  pick_orientations(const triangular_mesh& part_mesh,
-		    const std::vector<surface>& surfaces_to_cut,
+  pick_orientations(const std::vector<surface>& surfaces_to_cut,
 		    std::vector<fixture>& all_orients) {
     relation<surface, fixture> possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients);
+
     assert(surfaces_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
     auto greedy_orients =
@@ -323,7 +323,7 @@ namespace gca {
 		      const std::vector<surface>& surfs_to_cut,
 		      std::vector<fixture>& all_orients) {
     surface_map os =
-      pick_orientations(part_mesh, surfs_to_cut, all_orients);
+      pick_orientations(surfs_to_cut, all_orients);
 
     vector<fixture_setup> orients;
     for (auto p : os) {
