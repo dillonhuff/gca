@@ -20,8 +20,8 @@ namespace gca {
   bool
   transferable(const std::vector<unsigned>& cc,
 	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
-	       const relation<surface, fixture>& possible_orients,
-	       const std::vector<surface>& surfaces_to_cut) {
+	       const relation<surface, fixture>& possible_orients) {
+    const std::vector<surface>& surfaces_to_cut = possible_orients.left_elems();
     bool connected_to_any = false;
     for (auto i : cc) {
       for (auto j : orient_surface_inds.second) {
@@ -34,20 +34,10 @@ namespace gca {
     bool can_cut_from_i = true;
     for (auto i : cc) {
       auto orients = possible_orients.rights_connected_to(i);
-      if (!elem(orient_surface_inds.first, orients)) {//it->second)) {
+      if (!elem(orient_surface_inds.first, orients)) {
 	can_cut_from_i = false;
 	break;
       }
-
-      // auto it = possible_orients.find(i);
-      // if (it != end(possible_orients)) {
-      // 	if (!elem(orient_surface_inds.first, it->second)) {
-      // 	  can_cut_from_i = false;
-      // 	  break;
-      // 	}
-      // } else {
-      // 	assert(false);
-      // }
     }
     return can_cut_from_i;
   }
@@ -57,11 +47,10 @@ namespace gca {
 		   const vector<unsigned>& cc,
 		   surface_map& simplified,
 		   const surface_map& surface_allocations,
-		   const relation<surface, fixture>& possible_orients,
-		   const std::vector<surface>& surfaces_to_cut) {
+		   const relation<surface, fixture>& possible_orients) {
     bool found_better_orient = false;
     for (auto q : surface_allocations) {
-      if (q.first != orient_ind && transferable(cc, q, possible_orients, surfaces_to_cut)) {
+      if (q.first != orient_ind && transferable(cc, q, possible_orients)) {
 	found_better_orient = true;
 	for (auto i : cc) {
 	  map_insert(simplified, q.first, i);
@@ -99,8 +88,7 @@ namespace gca {
       			 cc,
       			 simplified,
       			 surface_allocations,
-      			 possible_orients,
-      			 surfaces_to_cut);
+      			 possible_orients);
       }
 
     }
