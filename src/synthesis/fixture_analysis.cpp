@@ -5,18 +5,6 @@
 
 namespace gca {
 
-
-  void print_orient_map(const orientation_map& possible_orientations,
-			const std::vector<clamp_orientation>& all_orients) {
-    cout << "ORIENTATION MAP: " << endl;
-    for (auto m : possible_orientations) {
-      cout << "Surface " << m.first << " can be cut from orientations" << endl;
-      for (auto orient_ind : m.second) {
-    	cout << orient_ind << " with top normal " << all_orients[orient_ind].top_normal() << endl;
-      }
-    }
-  }
-
   bool
   transferable(const std::vector<unsigned>& cc,
 	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
@@ -66,8 +54,8 @@ namespace gca {
   
   surface_map
   simplify_orientations(const surface_map& surface_allocations,
-			const relation<surface, fixture>& possible_orients,
-			const std::vector<surface>& surfaces_to_cut) {
+			const relation<surface, fixture>& possible_orients) {
+    const std::vector<surface>& surfaces_to_cut = possible_orients.left_elems();
     surface_map simplified;
     for (auto p : surface_allocations) {
       auto orient_ind = p.first;
@@ -298,8 +286,7 @@ namespace gca {
       greedy_pick_orientations(possible_orientations);
 
     return simplify_orientations(greedy_orients,
-    				 possible_orientations,
-    				 surfaces_to_cut);
+    				 possible_orientations);
   }
 
   fixture_setup
