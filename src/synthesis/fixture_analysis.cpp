@@ -20,7 +20,7 @@ namespace gca {
   bool
   transferable(const std::vector<unsigned>& cc,
 	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
-	       const orientation_map& possible_orients,
+	       const relation<surface, fixture>& possible_orients,
 	       const std::vector<surface>& surfaces_to_cut) {
     bool connected_to_any = false;
     for (auto i : cc) {
@@ -33,15 +33,21 @@ namespace gca {
     if (!connected_to_any) { return false; }
     bool can_cut_from_i = true;
     for (auto i : cc) {
-      auto it = possible_orients.find(i);
-      if (it != end(possible_orients)) {
-	if (!elem(orient_surface_inds.first, it->second)) {
-	  can_cut_from_i = false;
-	  break;
-	}
-      } else {
-	assert(false);
+      auto orients = possible_orients.rights_connected_to(i);
+      if (!elem(orient_surface_inds.first, orients)) {//it->second)) {
+	can_cut_from_i = false;
+	break;
       }
+
+      // auto it = possible_orients.find(i);
+      // if (it != end(possible_orients)) {
+      // 	if (!elem(orient_surface_inds.first, it->second)) {
+      // 	  can_cut_from_i = false;
+      // 	  break;
+      // 	}
+      // } else {
+      // 	assert(false);
+      // }
     }
     return can_cut_from_i;
   }
@@ -51,7 +57,7 @@ namespace gca {
 		   const vector<unsigned>& cc,
 		   surface_map& simplified,
 		   const surface_map& surface_allocations,
-		   const orientation_map& possible_orients,
+		   const relation<surface, fixture>& possible_orients,
 		   const std::vector<surface>& surfaces_to_cut) {
     bool found_better_orient = false;
     for (auto q : surface_allocations) {
@@ -71,7 +77,7 @@ namespace gca {
   
   surface_map
   simplify_orientations(const surface_map& surface_allocations,
-			const orientation_map& possible_orients,
+			const relation<surface, fixture>& possible_orients,
 			const std::vector<surface>& surfaces_to_cut) {
     surface_map simplified;
     for (auto p : surface_allocations) {
@@ -304,7 +310,7 @@ namespace gca {
       greedy_pick_orientations(possible_orientations);
 
     return simplify_orientations(greedy_orients,
-    				 possible_orientations.left_to_right(),
+    				 possible_orientations,
     				 surfaces_to_cut);
   }
 
