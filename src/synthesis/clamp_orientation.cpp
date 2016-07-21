@@ -251,4 +251,37 @@ namespace gca {
     return *r;
   }
 
+  clamp_orientation
+  next_orthogonal_to_all(const std::vector<clamp_orientation>& to_check,
+			 const std::vector<clamp_orientation>& to_return_from) {
+    assert(to_return_from.size() > 0);
+      
+    if (to_check.size() == 0) { return to_return_from.front(); }
+
+    auto orthogonal_to = [](const point l, const point r)
+      { return within_eps(l.dot(r), 0, 0.001); };
+
+    for (unsigned i = 0; i < to_return_from.size(); i++) {
+      point q = to_return_from[i].top_normal();
+      if (all_of(begin(to_check), end(to_check),
+		 [q, orthogonal_to](const clamp_orientation& r) { return orthogonal_to(q, r.top_normal()); })) {
+	return to_return_from[i];
+      }
+    }
+
+    assert(false);
+  }
+
+  std::vector<clamp_orientation>
+  three_orthogonal_orients(const std::vector<clamp_orientation>& orients) {
+    assert(orients.size() >= 3);
+    vector<clamp_orientation> ortho_orients;
+    ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
+    ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
+    ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
+    
+    assert(ortho_orients.size() == 3);
+    return ortho_orients;
+  }
+  
 }

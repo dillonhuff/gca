@@ -122,6 +122,13 @@ namespace gca {
   find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
 			     const point n);
 
+  std::vector<clamp_orientation>
+  three_orthogonal_orients(const std::vector<clamp_orientation>& orients);
+
+  clamp_orientation
+  next_orthogonal_to_all(const std::vector<clamp_orientation>& to_check,
+			 const std::vector<clamp_orientation>& to_return_from);
+ 
 }
 
 #endif
