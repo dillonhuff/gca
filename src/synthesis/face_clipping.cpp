@@ -91,18 +91,28 @@ namespace gca {
     return clip_setups;
   }
 
+  std::vector<fixture_setup>
+  axis_clipping(const triangular_mesh& aligned_workpiece,
+		const triangular_mesh& part_mesh,
+		const fixtures& f) {
+    auto surfs = outer_surfaces(aligned_workpiece);
+    assert(surfs.size() == 6);
+    vector<fixture_setup> cut_setups;
+    return cut_setups;
+  }
+
   clipping_plan
   axis_by_axis_clipping(const workpiece w, 
 			const triangular_mesh& part_mesh,
 			std::vector<surface>& surfaces_to_cut,
 			const std::vector<tool>& tools,
 			const fixtures& f) {
-    auto aligned_workpiece = w;
-    triangular_mesh wp_mesh = stock_mesh(aligned_workpiece);
+    //    auto aligned_workpiece = w;
+    triangular_mesh wp_mesh = align_workpiece(surfaces_to_cut, w);
 
-    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
+    //    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
-    auto clip_setups = axis_by_axis_clipping(surfaces_to_cut, aligned_workpiece, clipped, f);
+    auto clip_setups = axis_clipping(wp_mesh, part_mesh, f);
 
     auto clipped_surfs =
       stable_surfaces_after_clipping(part_mesh, wp_mesh);
