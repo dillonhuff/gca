@@ -91,6 +91,59 @@ namespace gca {
     return clip_setups;
   }
 
+  clamp_orientation
+  next_orthogonal_to_all(const std::vector<clamp_orientation>& to_check,
+			 const std::vector<clamp_orientation>& to_return_from) {
+    assert(to_return_from.size() > 0);
+      
+    if (to_check.size() == 0) { return to_return_from.front(); }
+
+    auto orthogonal_to = [](const point l, const point r)
+      { return within_eps(l.dot(r), 0, 0.001); };
+
+    for (unsigned i = 0; i < to_return_from.size(); i++) {
+      point q = to_return_from[i].top_normal();
+      if (all_of(begin(to_check), end(to_check),
+		 [q, orthogonal_to](const clamp_orientation& r) { return orthogonal_to(q, r.top_normal()); })) {
+	return to_return_from[i];
+      }
+    }
+
+    assert(false);
+  }
+  std::vector<clamp_orientation>
+  three_orthogonal_orients(const std::vector<clamp_orientation>& orients) {
+    assert(orients.size() >= 3);
+    vector<clamp_orientation> ortho_orients;
+    ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
+    cout << "Got one" << endl;
+    ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
+    cout << "Got two" << endl;
+    ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
+    cout << "Got three" << endl;
+    
+    assert(ortho_orients.size() == 3);
+    return ortho_orients;
+  }
+
+  std::pair<fixture_setup, fixture_setup>
+  axis_clip(const clamp_orientation& orient,
+	    const std::vector<clamp_orientation>& clamp_orients,
+	    const triangular_mesh& aligned_workpiece,
+	    const triangular_mesh& part_mesh,
+	    const vice& v) {
+    auto pos_t = mating_transform(aligned_workpiece, orient, v);
+    auto f1 = clip_base(apply(pos_t, aligned_workpiece), apply(pos_t, part_mesh), v);
+    
+    point neg_orient_dir = -1*orient.top_normal();
+    clamp_orientation neg_orient =
+      find_orientation_by_normal(clamp_orients, neg_orient_dir);
+    auto neg_t = mating_transform(aligned_workpiece, neg_orient, v);
+    auto f2 = clip_base(apply(neg_t, aligned_workpiece), apply(neg_t, part_mesh), v);
+
+    return make_pair(f1, f2);
+  }
+
   std::vector<fixture_setup>
   axis_clipping(const triangular_mesh& aligned_workpiece,
 		const triangular_mesh& part_mesh,
@@ -99,7 +152,16 @@ namespace gca {
     assert(surfs.size() == 6);
     vector<clamp_orientation> clamp_orients =
       all_stable_orientations(surfs, f.get_vice());
+    cout << "# of orientations = " << clamp_orients.size() << endl;
+    assert(clamp_orients.size() >= 6);
+    vector<clamp_orientation> axis_orients =
+      three_orthogonal_orients(clamp_orients);
     vector<fixture_setup> cut_setups;
+    for (auto orient : axis_orients) {
+      auto setup_pair = axis_clip(orient, clamp_orients, aligned_workpiece, part_mesh, f.get_vice());
+      cut_setups.push_back(setup_pair.first);
+      cut_setups.push_back(setup_pair.second);
+    }
     return cut_setups;
   }
 

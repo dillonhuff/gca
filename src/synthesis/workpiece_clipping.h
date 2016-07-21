@@ -17,6 +17,11 @@ namespace gca {
 			      const fixtures& fixes);
 
 
+  fixture_setup
+  clip_base(const triangular_mesh& aligned,
+	    const triangular_mesh& part,
+	    const vice& v);
+  
 }
 
 #endif

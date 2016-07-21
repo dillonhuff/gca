@@ -40,7 +40,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = emco_vice(point(1.2, -4.4, 3.3));
+    vice test_vice = large_jaw_vice(4.0, point(1.2, -4.4, 3.3));
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
@@ -64,7 +64,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    vice test_vice = large_jaw_vice(3.5, point(-0.8, -4.4, -3.3));
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
@@ -93,11 +93,11 @@ namespace gca {
   TEST_CASE("Shape with outermost surfaces that are not part of any stable orientation") {
     arena_allocator a;
     set_system_allocator(&a);
-    vice test_vice = emco_vice(point(1.8, 4.2, 3.3));
+    vice test_vice = large_jaw_vice(4.0, point(1.8, 4.2, 3.3));
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece workpiece_dims(2.0, 2.0, 2.0, ACETAL);
+    workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/LittleHouse.stl", 0.001);
 
@@ -122,7 +122,7 @@ namespace gca {
   TEST_CASE("Tapered extrude top") {
     arena_allocator a;
     set_system_allocator(&a);
-    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
@@ -152,7 +152,7 @@ namespace gca {
   TEST_CASE("Complex rectangular part") {
     arena_allocator a;
     set_system_allocator(&a);
-    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);

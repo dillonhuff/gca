@@ -118,6 +118,10 @@ namespace gca {
 			 const std::vector<surface>& surfaces_left,
 			 const vice& v);
 
+  clamp_orientation
+  find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
+			     const point n);
+
 }
 
 #endif

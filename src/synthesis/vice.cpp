@@ -3,7 +3,11 @@
 namespace gca {
 
   vice emco_vice(const point loc) {
-    return vice(loc, 2.5, 5.5, 1.1, 1.87, 1.3, 2.0);
+    return large_jaw_vice(2.0, loc);
+  }
+
+  vice large_jaw_vice(const double jaw_width, const point loc) {
+    return vice(loc, 2.5, 5.5, 1.1, 1.87, 1.3, jaw_width);
   }
 
   vice current_setup() {

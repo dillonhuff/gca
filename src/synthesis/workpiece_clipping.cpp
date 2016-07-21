@@ -109,16 +109,6 @@ namespace gca {
   }
 
   clamp_orientation
-  find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
-			     const point n) {
-    auto r  = find_if(begin(orients), end(orients),
-		      [n](const clamp_orientation& s)
-		      { return within_eps(s.top_normal(), n, 0.0001); });
-    assert(r != end(orients));
-    return *r;
-  }
-
-  clamp_orientation
   largest_upward_orientation(const std::vector<surface>& surfs,
 			     const vice& parallel) {
     vector<clamp_orientation> orients =
