@@ -85,7 +85,7 @@ namespace gca {
 
       tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
       vector<tool> tools{t1};
-      workpiece workpiece_dims(4.0, 1.9, 4.0, ACETAL);
+      workpiece workpiece_dims(2.7, 1.9, 4.0, ACETAL);
 
       // Probably shouldnt be able to cut this out with contouring due
       // to tool height issues
@@ -119,7 +119,7 @@ namespace gca {
 
     vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
     fixtures fixes(test_vice);
-    workpiece workpiece_dims(3.81, 3.2, 3.98, BRASS);
+    workpiece workpiece_dims(2.0, 1.6, 3.98, BRASS);
     tool t1(0.25, 3.0, 4, CARBIDE, FLAT_NOSE);
     vector<tool> tools{t1};
 

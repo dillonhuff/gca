@@ -44,7 +44,7 @@ namespace gca {
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece workpiece_dims(4.0, 4.0, 3.98, ALUMINUM);
+    workpiece workpiece_dims(2.5, 2.0, 3.98, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
 
@@ -59,7 +59,7 @@ namespace gca {
       REQUIRE(p.fixtures().size() == 9);
     }
   }
-  
+
   TEST_CASE("Tapered extrude top and side") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -68,7 +68,7 @@ namespace gca {
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece workpiece_dims(3.5, 2.5, 2.3, BRASS);
+    workpiece workpiece_dims(2.5, 1.8, 2.3, BRASS);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
 
@@ -85,7 +85,7 @@ namespace gca {
 
       // No use of base plates
       for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.v.has_parallel_plate()));
+  	REQUIRE(!(fixture.v.has_parallel_plate()));
       }
     }
   }
@@ -118,7 +118,7 @@ namespace gca {
       }
     }
   }
-  
+
   TEST_CASE("Tapered extrude top") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -127,7 +127,7 @@ namespace gca {
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(3.5, 2.5, 2.3, ACETAL);
+    workpiece workpiece_dims(2.5, 1.9, 2.3, ACETAL);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudeTop.stl", 0.001);
 
@@ -144,7 +144,7 @@ namespace gca {
 
       // No use of base plates
       for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.v.has_parallel_plate()));
+  	REQUIRE(!(fixture.v.has_parallel_plate()));
       }
     }
   }
@@ -157,7 +157,7 @@ namespace gca {
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(3.5, 2.5, 2.3, ALUMINUM);
+    workpiece workpiece_dims(2.5, 1.9, 2.3, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
     

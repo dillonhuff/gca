@@ -97,6 +97,8 @@ namespace gca {
 		const fixtures& f) {
     auto surfs = outer_surfaces(aligned_workpiece);
     assert(surfs.size() == 6);
+    vector<clamp_orientation> clamp_orients =
+      all_stable_orientations(surfs, f.get_vice());
     vector<fixture_setup> cut_setups;
     return cut_setups;
   }
@@ -107,10 +109,7 @@ namespace gca {
 			std::vector<surface>& surfaces_to_cut,
 			const std::vector<tool>& tools,
 			const fixtures& f) {
-    //    auto aligned_workpiece = w;
     triangular_mesh wp_mesh = align_workpiece(surfaces_to_cut, w);
-
-    //    workpiece clipped = clipped_workpiece(aligned_workpiece, part_mesh);
 
     auto clip_setups = axis_clipping(wp_mesh, part_mesh, f);
 
