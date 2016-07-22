@@ -39,7 +39,7 @@ namespace gca {
 		   const triangular_mesh& part,
 		   const point n) {
     point p = max_point_in_dir(part, n);
-    return plane(n, p);
+    return plane(-1*n, p);
   }
 
   std::vector<fixture_setup>
@@ -79,8 +79,8 @@ namespace gca {
       auto t = mating_transform(current_stock, orient, v);
       cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part_mesh), v));
       
-      //plane clip_plane = face_plane(current_stock, part_mesh, n);
-      //current_stock = clip_mesh(current_stock, clip_plane);
+      plane clip_plane = face_plane(current_stock, part_mesh, n);
+      current_stock = clip_mesh(current_stock, clip_plane);
     }
 
     assert(cut_setups.size() == 6);

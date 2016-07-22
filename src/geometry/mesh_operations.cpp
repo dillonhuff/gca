@@ -366,20 +366,33 @@ namespace gca {
 
     auto pdata = polydata_for_trimesh(intermediate_mesh);
 
-    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
-      vtkSmartPointer<vtkPolyDataNormals>::New();
-
-    normalGenerator->SetInputData(pdata);
-    normalGenerator->ComputeCellNormalsOn();
-    normalGenerator->Update();
-
-    pdata = normalGenerator->GetOutput();
- 
-    cout << "--------------- Final mesh -------------" << endl;
+    cout << "--------------- pdata mesh -------------" << endl;
     debug_print_summary(pdata);
     debug_print_is_closed(pdata);
     cout << "---------------------------------------------" << endl;
 
+    auto act_fp = polydata_actor(pdata);
+    vector<vtkSmartPointer<vtkActor>> actors{act_fp};
+    visualize_actors(actors);
+    
+    assert(is_closed(pdata));
+    
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
+      vtkSmartPointer<vtkPolyDataNormals>::New();
+
+    normalGenerator->SetInputData(pdata);
+    normalGenerator->SetSplitting(0);
+    normalGenerator->ComputeCellNormalsOn();
+    normalGenerator->Update();
+
+    pdata = normalGenerator->GetOutput();
+
+    cout << "--------------- Final mesh -------------" << endl;
+    debug_print_summary(pdata);
+    debug_print_is_closed(pdata);
+    cout << "---------------------------------------------" << endl;
+    
+    assert(is_closed(pdata));
     assert(has_cell_normals(pdata));
 
     triangular_mesh final_mesh = trimesh_from_polydata(pdata);
