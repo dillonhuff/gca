@@ -10,9 +10,6 @@ namespace gca {
 
   void select_visible_triangles(vector<triangle>& triangles);
   
-  std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
-				  const double safe_height);
-
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height);
 

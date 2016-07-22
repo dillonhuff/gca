@@ -241,7 +241,8 @@ namespace gca {
 				      const tool& tool);
 
   std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
-				  const double safe_height);
+				  const double safe_height,
+				  const material& stock_material);
 
   std::vector<point> drop_points_onto_max(const std::vector<point>& pts_z,
 					  const std::vector<index_t>& faces,

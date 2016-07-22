@@ -24,7 +24,8 @@ namespace gca {
   }
 
   gcode_program cut_secured_mesh(vector<pocket>& pockets,
-  				 const std::vector<tool>& tools) {
+  				 const std::vector<tool>& tools,
+				 const material& stock_material) {
     assert(tools.size() > 0);
 
     double h = (*(max_element(begin(pockets), end(pockets),
@@ -39,7 +40,7 @@ namespace gca {
     vector<polyline> lines = mill_pockets(pockets, t, cut_depth);
 
     double safe_z = h + t.length() + 0.1;
-    return gcode_program("Surface cut", emco_f1_code(lines, safe_z));
+    return gcode_program("Surface cut", emco_f1_code(lines, safe_z, stock_material));
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
@@ -62,7 +63,8 @@ namespace gca {
 
     vector<fabrication_setup> setups;
     for (auto setup : plan.fixtures()) {
-      gcode_program gprog = cut_secured_mesh(setup.pockets, tools);
+      gcode_program gprog =
+	cut_secured_mesh(setup.pockets, tools, w.stock_material);
       setups.push_back(fabrication_setup(*(setup.m), setup.v, gprog));
     }
 

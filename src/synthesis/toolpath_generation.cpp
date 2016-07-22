@@ -455,7 +455,8 @@ namespace gca {
   }
 
   std::vector<block> emco_f1_code(const std::vector<polyline>& pocket_lines,
-				  const double safe_height) {
+				  const double safe_height,
+				  const material& stock_material) {
     assert(pocket_lines.size() > 0);
     for (auto pl : pocket_lines) {
       assert(pl.num_points() > 0);
