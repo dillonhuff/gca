@@ -68,14 +68,19 @@ namespace gca {
     vector<fixture_setup> cut_setups;    
     for (auto n : norms) {
       auto sfs = outer_surfaces(current_stock);
+      cout << "--- Normal = " << n << endl;
       cout << "# of surfaces = " << sfs.size() << endl;
+
       assert(sfs.size() == 6);
+
       auto orients = all_stable_orientations(sfs, v);
       clamp_orientation orient = find_orientation_by_normal(orients, n);
+
       auto t = mating_transform(current_stock, orient, v);
-      plane clip_plane = face_plane(current_stock, part_mesh, n);
       cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part_mesh), v));
-      current_stock = clip_mesh(current_stock, clip_plane);
+      
+      //plane clip_plane = face_plane(current_stock, part_mesh, n);
+      //current_stock = clip_mesh(current_stock, clip_plane);
     }
 
     assert(cut_setups.size() == 6);

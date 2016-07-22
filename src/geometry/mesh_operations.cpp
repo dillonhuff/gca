@@ -322,15 +322,7 @@ namespace gca {
     
     vtkPolyData* m_data = clipper->GetOutput();
 
-    // auto poly_actor = polydata_actor(m_data);
-
-    // vector<vtkSmartPointer<vtkActor>> actors{poly_actor};
-    // visualize_actors(actors);
-    
     vector<triangle> main_tris = polydata_to_triangle_list(m_data);
-
-    //    cout << "After clipping" << endl;
-    //    debug_print_polydata(m_data);
 
     // Now extract clipped edges
     vtkSmartPointer<vtkFeatureEdges> boundaryEdges =
@@ -352,14 +344,6 @@ namespace gca {
     boundaryPoly->SetPoints(boundaryStrips->GetOutput()->GetPoints());
     boundaryPoly->SetPolys(boundaryStrips->GetOutput()->GetLines());
 
-    // vtkSmartPointer<vtkCutter> cutter =
-    //   vtkCutter::New();
-    // cutter->GenerateTrianglesOn();
-    // cutter->SetCutFunction(clipPlane);
-    // cutter->SetInputData(input_mesh_data);
-    // cutter->Update();
-    
-
     // Triangulate the polygons
     vtkSmartPointer<vtkTriangleFilter> triangleFilter =
       vtkSmartPointer<vtkTriangleFilter>::New();
@@ -368,13 +352,6 @@ namespace gca {
 
     vtkPolyData* patch_data = triangleFilter->GetOutput();
 
-    // auto poly_actor = polydata_actor(patch_data);
-    // auto m_actor = polydata_actor(m_data);
-
-    // vector<vtkSmartPointer<vtkActor>> actors{poly_actor, m_actor};
-    // visualize_actors(actors);
-    
-    
     cout << "--------------- Patch triangles -------------" << endl;
     debug_print_summary(patch_data);
     debug_print_is_closed(patch_data);
@@ -412,10 +389,10 @@ namespace gca {
     cout << "# outer surfaces = " << sfs.size() << endl;
     assert(sfs.size() == 6);
     
-    auto fp = polydata_for_trimesh(final_mesh);
-    auto act_fp = polydata_actor(fp);
-    vector<vtkSmartPointer<vtkActor>> actors{act_fp};
-    visualize_actors(actors);
+    // auto fp = polydata_for_trimesh(final_mesh);
+    // auto act_fp = polydata_actor(fp);
+    // vector<vtkSmartPointer<vtkActor>> actors{act_fp};
+    // visualize_actors(actors);
     
     assert(final_mesh.is_connected());
     return final_mesh;

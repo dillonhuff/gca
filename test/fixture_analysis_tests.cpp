@@ -44,7 +44,7 @@ namespace gca {
     fixtures fixes(test_vice);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
-    workpiece workpiece_dims(2.5, 2.0, 3.98, ALUMINUM);
+    workpiece workpiece_dims(3.5, 3.0, 3.98, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
 
