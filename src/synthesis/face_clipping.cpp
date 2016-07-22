@@ -68,6 +68,8 @@ namespace gca {
     vector<fixture_setup> cut_setups;    
     for (auto n : norms) {
       auto sfs = outer_surfaces(current_stock);
+      cout << "# of surfaces = " << sfs.size() << endl;
+      assert(sfs.size() == 6);
       auto orients = all_stable_orientations(sfs, v);
       clamp_orientation orient = find_orientation_by_normal(orients, n);
       auto t = mating_transform(current_stock, orient, v);
