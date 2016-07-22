@@ -1,3 +1,4 @@
+#include "geometry/mesh_operations.h"
 #include "synthesis/face_clipping.h"
 
 namespace gca {
@@ -39,12 +40,6 @@ namespace gca {
 		   const point n) {
     point p = max_point_in_dir(part, n);
     return plane(n, p);
-  }
-
-  triangular_mesh
-  clip_mesh(const triangular_mesh& m,
-	    const plane pl) {
-    return m;
   }
 
   std::vector<fixture_setup>

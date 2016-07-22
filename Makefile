@@ -1076,6 +1076,33 @@ src/geometry/matrix.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/matrix.cpp.s
 .PHONY : src/geometry/matrix.cpp.s
 
+src/geometry/mesh_operations.o: src/geometry/mesh_operations.cpp.o
+
+.PHONY : src/geometry/mesh_operations.o
+
+# target to build an object file
+src/geometry/mesh_operations.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/mesh_operations.cpp.o
+.PHONY : src/geometry/mesh_operations.cpp.o
+
+src/geometry/mesh_operations.i: src/geometry/mesh_operations.cpp.i
+
+.PHONY : src/geometry/mesh_operations.i
+
+# target to preprocess a source file
+src/geometry/mesh_operations.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/mesh_operations.cpp.i
+.PHONY : src/geometry/mesh_operations.cpp.i
+
+src/geometry/mesh_operations.s: src/geometry/mesh_operations.cpp.s
+
+.PHONY : src/geometry/mesh_operations.s
+
+# target to generate assembly for a file
+src/geometry/mesh_operations.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/mesh_operations.cpp.s
+.PHONY : src/geometry/mesh_operations.cpp.s
+
 src/geometry/point.o: src/geometry/point.cpp.o
 
 .PHONY : src/geometry/point.o
@@ -2968,6 +2995,9 @@ help:
 	@echo "... src/geometry/matrix.o"
 	@echo "... src/geometry/matrix.i"
 	@echo "... src/geometry/matrix.s"
+	@echo "... src/geometry/mesh_operations.o"
+	@echo "... src/geometry/mesh_operations.i"
+	@echo "... src/geometry/mesh_operations.s"
 	@echo "... src/geometry/point.o"
 	@echo "... src/geometry/point.i"
 	@echo "... src/geometry/point.s"
