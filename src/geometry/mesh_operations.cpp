@@ -11,10 +11,25 @@
 
 namespace gca {
 
+  // TODO: Actually compute normals
+  triangle vtkCell_to_triangle(vtkCell* cell) {
+    assert(cell->GetCellType() == 5);
+    assert(cell->GetNumberOfPoints() == 3);
+    auto pts = cell->GetPoints();
+    double* v1 = pts->GetPoint(0);
+    double* v2 = pts->GetPoint(0);
+    double* v3 = pts->GetPoint(0);
+    point normal(0, 0, 1);
+    return triangle(normal,
+		    point(v1[0], v1[1], v1[2]),
+		    point(v2[0], v2[1], v2[2]),
+		    point(v3[0], v3[1], v3[2]));
+  }
+
   void debug_print_polydata(vtkPolyData* polydata) {
     cout << "# of points in polydata = " << polydata->GetNumberOfPoints() << endl;
-    //    auto polys = polydata->GetPolys();
     cout << "# of polys in polydata = " << polydata->GetNumberOfPolys() << endl;
+
     for (vtkIdType i = 0; i < polydata->GetNumberOfPolys(); i++) {
       vtkCell* c = polydata->GetCell(i);
       cout << "Cell type = " << c->GetCellType() << endl;
@@ -32,8 +47,16 @@ namespace gca {
     vtkPolyData* polydata = triangleFilter->GetOutput();
 
     debug_print_polydata(polydata);
+
+    vector<triangle> tris;
+    for (vtkIdType i = 0; i < polydata->GetNumberOfPolys(); i++) {
+      vtkCell* c = polydata->GetCell(i);
+      tris.push_back(vtkCell_to_triangle(c));
+    }
     
-    assert(false);
+    triangular_mesh m = make_mesh(tris, 0.001);
+    assert(m.is_connected());
+    return m;
   }
 
   vtkSmartPointer<vtkPolyData>
