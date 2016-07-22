@@ -1,3 +1,4 @@
+#include <vtkDecimatePro.h>
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
@@ -179,6 +180,43 @@ namespace gca {
     cout << "Has normals ? " << (has_normals == 1 ? "True" : "False") << endl;
   }
 
+  void debug_print_edge_summary(vtkPolyData* pdata) {
+    vtkSmartPointer<vtkFeatureEdges> boundEdges = 
+      vtkSmartPointer<vtkFeatureEdges>::New();
+    boundEdges->FeatureEdgesOff();
+    boundEdges->BoundaryEdgesOn();
+    boundEdges->NonManifoldEdgesOff();
+    boundEdges->SetInputData(pdata);
+    boundEdges->Update();
+ 
+    int number_of_boundary_edges =
+      boundEdges->GetOutput()->GetNumberOfCells();
+
+    vtkSmartPointer<vtkFeatureEdges> nonManifoldEdges = 
+      vtkSmartPointer<vtkFeatureEdges>::New();
+    nonManifoldEdges->FeatureEdgesOff();
+    nonManifoldEdges->BoundaryEdgesOff();
+    nonManifoldEdges->ManifoldEdgesOff();
+    nonManifoldEdges->NonManifoldEdgesOn();
+    nonManifoldEdges->SetInputData(pdata);
+    nonManifoldEdges->Update();
+
+    int number_of_non_manifold_edges =
+      nonManifoldEdges->GetOutput()->GetNumberOfCells();
+
+    cout << "# of boundary edges = " << number_of_boundary_edges << endl;
+    cout << "# of non manifold edges = " << number_of_non_manifold_edges << endl;
+
+    vtkIndent* indent = vtkIndent::New();
+    if (number_of_non_manifold_edges > 0) {
+      for (int i = 0; i < nonManifoldEdges->GetOutput()->GetNumberOfCells(); i++) {
+	vtkCell* c = nonManifoldEdges->GetOutput()->GetCell(i);
+	assert(c->GetCellType() == VTK_LINE);
+	c->PrintSelf(cout, *indent);
+      }
+    }
+  }
+
   void debug_print_is_closed(vtkPolyData* polydata) {
     if(is_closed(polydata)) {
       std::cout << "Surface is closed" << std::endl;
@@ -313,6 +351,18 @@ namespace gca {
     vtkSmartPointer<vtkPolyData> input_mesh_data =
       polydata_for_trimesh(m);
 
+    
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
+      vtkSmartPointer<vtkPolyDataNormals>::New();
+
+    normalGenerator->SetInputData(input_mesh_data);
+    normalGenerator->SetSplitting(0);
+    normalGenerator->ComputePointNormalsOn();
+    normalGenerator->ComputeCellNormalsOn();
+    normalGenerator->Update();
+
+    input_mesh_data = normalGenerator->GetOutput();
+    
     // Clip the source with the plane
     vtkSmartPointer<vtkClipPolyData> clipper = 
       vtkSmartPointer<vtkClipPolyData>::New();
@@ -355,6 +405,7 @@ namespace gca {
     cout << "--------------- Patch triangles -------------" << endl;
     debug_print_summary(patch_data);
     debug_print_is_closed(patch_data);
+    debug_print_edge_summary(patch_data);
     cout << "---------------------------------------------" << endl;
 
     vector<triangle> patch_tris = polydata_to_triangle_list(patch_data);
@@ -369,28 +420,58 @@ namespace gca {
     cout << "--------------- pdata mesh -------------" << endl;
     debug_print_summary(pdata);
     debug_print_is_closed(pdata);
+    debug_print_edge_summary(pdata);
     cout << "---------------------------------------------" << endl;
 
-    auto act_fp = polydata_actor(pdata);
-    vector<vtkSmartPointer<vtkActor>> actors{act_fp};
-    visualize_actors(actors);
-    
-    assert(is_closed(pdata));
-    
-    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
+    // auto act_fp = polydata_actor(pdata);
+    // vector<vtkSmartPointer<vtkActor>> actors{act_fp};
+    // visualize_actors(actors);
+
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator2 =
       vtkSmartPointer<vtkPolyDataNormals>::New();
 
-    normalGenerator->SetInputData(pdata);
-    normalGenerator->SetSplitting(0);
-    normalGenerator->ComputeCellNormalsOn();
-    normalGenerator->Update();
+    normalGenerator2->SetInputData(pdata);
+    normalGenerator2->SetSplitting(0);
+    normalGenerator2->ComputePointNormalsOn();
+    normalGenerator2->ComputeCellNormalsOn();
+    normalGenerator2->Update();
 
-    pdata = normalGenerator->GetOutput();
+    pdata = normalGenerator2->GetOutput();
+    
+    //    assert(is_closed(pdata));
 
+    vtkSmartPointer<vtkDecimatePro> decimate =
+      vtkSmartPointer<vtkDecimatePro>::New();
+    decimate->SetInputData(pdata);
+    double target = 1.0 - (static_cast<double>(pdata->GetNumberOfPolys()) - 12.0) / 12.0;
+    cout << "--- Target reduction = " << target << endl;
+    decimate->SetTargetReduction(target);
+    decimate->Update();
+
+    pdata = decimate->GetOutput();
+
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator3 =
+      vtkSmartPointer<vtkPolyDataNormals>::New();
+
+    normalGenerator3->SetInputData(pdata);
+    normalGenerator3->SetSplitting(0);
+    normalGenerator3->ComputePointNormalsOn();
+    normalGenerator3->ComputeCellNormalsOn();
+    normalGenerator3->Update();
+
+    pdata = normalGenerator3->GetOutput();
+    
     cout << "--------------- Final mesh -------------" << endl;
     debug_print_summary(pdata);
     debug_print_is_closed(pdata);
+    debug_print_edge_summary(pdata);
     cout << "---------------------------------------------" << endl;
+
+    
+
+    // act_fp = polydata_actor(pdata);
+    // actors = {act_fp};
+    // visualize_actors(actors);
     
     assert(is_closed(pdata));
     assert(has_cell_normals(pdata));
