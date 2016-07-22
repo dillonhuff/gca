@@ -1,3 +1,7 @@
+#include <vtkCellData.h>
+#include <vtkDoubleArray.h>
+#include <vtkFloatArray.h>
+#include <vtkPoints.h>
 #include <vtkStripper.h>
 #include <vtkCutter.h>
 #include <vtkFeatureEdges.h>
@@ -11,6 +15,7 @@
 #include <vtkCellArray.h>
 #include <vtkTriangle.h>
 #include <vtkTriangleFilter.h>
+#include <vtkPolyDataNormals.h>
 
 #include <vtkAxesActor.h>
 #include <vtkPolyDataMapper.h>
@@ -23,6 +28,99 @@
 #include "geometry/surface.h"
 
 namespace gca {
+
+  bool has_cell_normals(vtkPolyData* polydata)
+  {
+    std::cout << "Looking for cell normals..." << std::endl;
+ 
+    // Count points
+    vtkIdType numCells = polydata->GetNumberOfCells();
+    std::cout << "There are " << numCells << " cells." << std::endl;
+ 
+    // Count triangles
+    vtkIdType numPolys = polydata->GetNumberOfPolys();
+    std::cout << "There are " << numPolys << " polys." << std::endl;
+ 
+    ////////////////////////////////////////////////////////////////
+    // Double normals in an array
+    vtkDoubleArray* normalDataDouble =
+      vtkDoubleArray::SafeDownCast(polydata->GetCellData()->GetArray("Normals"));
+ 
+    if(normalDataDouble)
+      {
+	int nc = normalDataDouble->GetNumberOfTuples();
+	std::cout << "There are " << nc
+		  << " components in normalDataDouble" << std::endl;
+	return true;
+      }
+ 
+    ////////////////////////////////////////////////////////////////
+    // Double normals in an array
+    vtkFloatArray* normalDataFloat =
+      vtkFloatArray::SafeDownCast(polydata->GetCellData()->GetArray("Normals"));
+ 
+    if(normalDataFloat)
+      {
+	int nc = normalDataFloat->GetNumberOfTuples();
+	std::cout << "There are " << nc
+		  << " components in normalDataFloat" << std::endl;
+	return true;
+      }
+ 
+    ////////////////////////////////////////////////////////////////
+    // Point normals
+    vtkDoubleArray* normalsDouble =
+      vtkDoubleArray::SafeDownCast(polydata->GetCellData()->GetNormals());
+ 
+    if(normalsDouble)
+      {
+	std::cout << "There are " << normalsDouble->GetNumberOfComponents()
+		  << " components in normalsDouble" << std::endl;
+	return true;
+      }
+ 
+    ////////////////////////////////////////////////////////////////
+    // Point normals
+    vtkFloatArray* normalsFloat =
+      vtkFloatArray::SafeDownCast(polydata->GetCellData()->GetNormals());
+ 
+    if(normalsFloat)
+      {
+	std::cout << "There are " << normalsFloat->GetNumberOfComponents()
+		  << " components in normalsFloat" << std::endl;
+	return true;
+      }
+ 
+    /////////////////////////////////////////////////////////////////////
+    // Generic type point normals
+    vtkDataArray* normalsGeneric = polydata->GetCellData()->GetNormals(); //works
+    if(normalsGeneric)
+      {
+	std::cout << "There are " << normalsGeneric->GetNumberOfTuples()
+		  << " normals in normalsGeneric" << std::endl;
+ 
+	double testDouble[3];
+	normalsGeneric->GetTuple(0, testDouble);
+ 
+	std::cout << "Double: " << testDouble[0] << " "
+		  << testDouble[1] << " " << testDouble[2] << std::endl;
+ 
+	// Can't do this:
+	/*
+	  float testFloat[3];
+	  normalsGeneric->GetTuple(0, testFloat);
+ 
+	  std::cout << "Float: " << testFloat[0] << " "
+	  << testFloat[1] << " " << testFloat[2] << std::endl;
+	*/
+	return true;
+      }
+ 
+ 
+    // If the function has not yet quit, there were none of these types of normals
+    std::cout << "Normals not found!" << std::endl;
+    return false;
+  }  
 
   vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData) {
     vtkSmartPointer<vtkPolyDataMapper> mapper =
@@ -58,11 +156,8 @@ namespace gca {
     renderWindow->Render();
     renderWindowInteractor->Start();
   }
-  
-  void debug_print_polydata(vtkPolyData* polydata) {
-    cout << "# of points in polydata = " << polydata->GetNumberOfPoints() << endl;
-    cout << "# of polys in polydata = " << polydata->GetNumberOfPolys() << endl;
 
+  bool is_closed(vtkPolyData* polydata) {
     vtkSmartPointer<vtkFeatureEdges> featureEdges = 
       vtkSmartPointer<vtkFeatureEdges>::New();
     featureEdges->FeatureEdgesOff();
@@ -71,16 +166,31 @@ namespace gca {
     featureEdges->SetInputData(polydata);
     featureEdges->Update();
  
-    int numberOfOpenEdges = featureEdges->GetOutput()->GetNumberOfCells();
- 
-    if(numberOfOpenEdges > 0)
-      {
-	std::cout << "Surface is not closed" << std::endl;
-      }
-    else
-      {
-	std::cout << "Surface is closed" << std::endl;
-      }    
+    int number_of_open_edges =
+      featureEdges->GetOutput()->GetNumberOfCells();
+
+    return number_of_open_edges == 0;
+  }
+
+  void debug_print_summary(vtkPolyData* polydata) {
+    cout << "# of points in polydata = " << polydata->GetNumberOfPoints() << endl;
+    cout << "# of polys in polydata = " << polydata->GetNumberOfPolys() << endl;
+    bool has_normals = has_cell_normals(polydata);
+    cout << "Has normals ? " << (has_normals == 1 ? "True" : "False") << endl;
+  }
+
+  void debug_print_is_closed(vtkPolyData* polydata) {
+    if(is_closed(polydata)) {
+      std::cout << "Surface is closed" << std::endl;
+    } else {
+      std::cout << "Surface is not closed" << std::endl;
+    }
+  }
+  
+  void debug_print_polydata(vtkPolyData* polydata) {
+    debug_print_summary(polydata);
+    debug_print_is_closed(polydata);
+
     vtkIndent* indent = vtkIndent::New();
     for (vtkIdType i = 0; i < polydata->GetNumberOfPolys(); i++) {
       vtkCell* c = polydata->GetCell(i);
@@ -113,7 +223,7 @@ namespace gca {
 
     point q1 = v1 - v3;
     point q2 = v2 - v3;
-    point norm = cross(q1, q2).normalize();
+    point norm = cross(q2, q1).normalize();
     //    cout << "Normal = " << norm << endl;
     return triangle(norm, v1, v2, v3);
   }
@@ -180,6 +290,11 @@ namespace gca {
 
     return polyData;
   }
+
+  void
+  compute_cell_normals(vtkPolyData* pdata) {
+    assert(false);
+  }
   
   triangular_mesh
   clip_mesh(const triangular_mesh& m,
@@ -214,8 +329,8 @@ namespace gca {
     
     vector<triangle> main_tris = polydata_to_triangle_list(m_data);
 
-    cout << "After clipping" << endl;
-    debug_print_polydata(m_data);
+    //    cout << "After clipping" << endl;
+    //    debug_print_polydata(m_data);
 
     // Now extract clipped edges
     vtkSmartPointer<vtkFeatureEdges> boundaryEdges =
@@ -261,16 +376,36 @@ namespace gca {
     
     
     cout << "--------------- Patch triangles -------------" << endl;
-    debug_print_polydata(patch_data);
+    debug_print_summary(patch_data);
+    debug_print_is_closed(patch_data);
+    cout << "---------------------------------------------" << endl;
 
-    
     vector<triangle> patch_tris = polydata_to_triangle_list(patch_data);
     concat(main_tris, patch_tris);
 
     cout << "# triangles in main tris = " << main_tris.size() << endl;
 
-    triangular_mesh final_mesh = make_mesh(main_tris, 0.01);
+    triangular_mesh intermediate_mesh = make_mesh(main_tris, 0.01);
 
+    auto pdata = polydata_for_trimesh(intermediate_mesh);
+
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
+      vtkSmartPointer<vtkPolyDataNormals>::New();
+
+    normalGenerator->SetInputData(pdata);
+    normalGenerator->ComputeCellNormalsOn();
+    normalGenerator->Update();
+
+    pdata = normalGenerator->GetOutput();
+ 
+    cout << "--------------- Final mesh -------------" << endl;
+    debug_print_summary(pdata);
+    debug_print_is_closed(pdata);
+    cout << "---------------------------------------------" << endl;
+
+    assert(has_cell_normals(pdata));
+
+    triangular_mesh final_mesh = trimesh_from_polydata(pdata);
     auto rs = const_orientation_regions(final_mesh);
     assert(rs.size() == 6);
     auto sfs = outer_surfaces(final_mesh);
