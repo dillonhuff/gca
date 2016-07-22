@@ -33,25 +33,72 @@ namespace gca {
     return make_pair(f1, f2);
   }
 
+  // TODO: Remove stock param
+  plane face_plane(const triangular_mesh& stock,
+		   const triangular_mesh& part,
+		   const point n) {
+    point p = max_point_in_dir(part, n);
+    return plane(n, p);
+  }
+
+  triangular_mesh
+  clip_mesh(const triangular_mesh& m,
+	    const plane pl) {
+    return m;
+  }
+
   std::vector<fixture_setup>
   axis_clipping(const triangular_mesh& aligned_workpiece,
 		const triangular_mesh& part_mesh,
 		const fixtures& f) {
-    auto surfs = outer_surfaces(aligned_workpiece);
+    vector<surface> surfs = outer_surfaces(aligned_workpiece);
+
     assert(surfs.size() == 6);
-    vector<clamp_orientation> clamp_orients =
-      all_stable_orientations(surfs, f.get_vice());
-    cout << "# of orientations = " << clamp_orients.size() << endl;
-    assert(clamp_orients.size() >= 6);
-    vector<clamp_orientation> axis_orients =
-      three_orthogonal_orients(clamp_orients);
-    vector<fixture_setup> cut_setups;
-    for (auto orient : axis_orients) {
-      auto setup_pair = axis_clip(orient, clamp_orients, aligned_workpiece, part_mesh, f.get_vice());
-      cut_setups.push_back(setup_pair.first);
-      cut_setups.push_back(setup_pair.second);
+
+    vector<surface> ax_surfaces =
+      take_basis(surfs,
+		 [](const surface& l, const surface& r)
+		 { return within_eps(l.face_orientation(l.front()).dot(r.face_orientation(r.front())), 0, 0.001); },
+		 3);
+
+    vector<point> norms;
+    for (auto ax : ax_surfaces) {
+      point n = ax.face_orientation(ax.front());
+      norms.push_back(n);
+      norms.push_back(-1*n);
     }
+
+    vice v = f.get_vice();
+    triangular_mesh current_stock = aligned_workpiece;
+    vector<fixture_setup> cut_setups;    
+    for (auto n : norms) {
+      auto sfs = outer_surfaces(current_stock);
+      auto orients = all_stable_orientations(sfs, v);
+      clamp_orientation orient = find_orientation_by_normal(orients, n);
+      auto t = mating_transform(current_stock, orient, v);
+      plane clip_plane = face_plane(current_stock, part_mesh, n);
+      cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part_mesh), v));
+      current_stock = clip_mesh(current_stock, clip_plane);
+    }
+
+    assert(cut_setups.size() == 6);
+
     return cut_setups;
+    // vector<clamp_orientation> clamp_orients =
+    //   all_stable_orientations(surfs, f.get_vice());
+
+    // assert(clamp_orients.size() >= 6);
+
+    // vector<clamp_orientation> ax_orients =
+    //   three_orthogonal_orients(clamp_orients);
+
+
+    // for (auto orient : axis_orients) {
+    //   auto setup_pair = axis_clip(orient, clamp_orients, aligned_workpiece, part_mesh, f.get_vice());
+    //   cut_setups.push_back(setup_pair.first);
+    //   cut_setups.push_back(setup_pair.second);
+    // }
+    // return cut_setups;
   }
 
   clipping_plan
