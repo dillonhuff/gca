@@ -10,6 +10,9 @@ ENDIF()
 
 project(gca)
 
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+ 
 SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
@@ -193,9 +196,6 @@ target_link_libraries(ublas geometry utils gcode gprocess gca)
 # Make command:
 # /opt/local/bin/cmake -DVTK_DIR:PATH=/Users/dillon/Downloads/VTK-build/ .
 
-find_package(VTK REQUIRED)
-include(${VTK_USE_FILE})
- 
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell)
 target_link_libraries(AddCell geometry utils gcode gprocess gca)
 
@@ -205,7 +205,9 @@ target_link_libraries(surface-test geometry utils gcode gprocess gca)
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})
   target_link_libraries(surface-test ${VTK_LIBRARIES})
+  target_link_libraries(geometry ${VTK_LIBRARIES})
 else()
   target_link_libraries(AddCell vtkHybrid vtkWidgets)
   target_link_libraries(surface-test vtkHybrid vtkWidgets)
+  target_link_libraries(geometry vtkHybrid vtkWidgets)
 endif()
