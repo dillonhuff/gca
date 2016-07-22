@@ -274,7 +274,7 @@ namespace gca {
     auto rs = const_orientation_regions(final_mesh);
     assert(rs.size() == 6);
     auto sfs = outer_surfaces(final_mesh);
-    cout << "# constant orientation regions = " << sfs.size() << endl;
+    cout << "# outer surfaces = " << sfs.size() << endl;
     assert(sfs.size() == 6);
     
     auto fp = polydata_for_trimesh(final_mesh);

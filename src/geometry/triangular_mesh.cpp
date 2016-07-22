@@ -124,17 +124,25 @@ namespace gca {
     bool all_neg = true;
     bool all_pos = true;
     double d = -(v1.dot(n));
-    for (auto p : part.vertex_list()) {
-      double sgn = n.dot(p) + d; // - v1);
-      // TODO: Eliminate ad hoc tolerance
-      if (sgn > 0.0001) {
-    	all_neg = false;
+
+    vector<index_t> s_inds = s;
+    sort(begin(s_inds), end(s_inds));
+
+    //    for (auto p : part.vertex_list()) {
+    for (auto i : inds(part.vertex_list())) {
+      if (!binary_search(begin(s_inds), end(s_inds), i)) {
+	point p = part.vertex(i);
+	double sgn = n.dot(p) + d; // - v1);
+	// TODO: Eliminate ad hoc tolerance
+	if (sgn > 0.0001) {
+	  all_neg = false;
+	}
+	// TODO: Eliminate ad hoc tolerance
+	if (sgn < 0.00001) {
+	  all_pos = false;
+	}
+	if (!all_neg && !all_pos) { return false; }
       }
-      // TODO: Eliminate ad hoc tolerance
-      if (sgn < 0.00001) {
-	all_pos = false;
-      }
-      if (!all_neg && !all_pos) { return false; }
     }
     return true;
   }
