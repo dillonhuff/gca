@@ -1,6 +1,7 @@
 #ifndef GCA_SYSTEM_ALGORITHM_H
 #define GCA_SYSTEM_ALGORITHM_H
 
+#include <cassert>
 #include <map>
 #include <numeric>
 #include <utility>
@@ -342,6 +343,40 @@ namespace gca {
     return maxima;
   }
 
+  template<typename Elem, typename Orthogonal>
+  Elem
+  next_orthogonal_to_all(const std::vector<Elem>& to_check,
+			 const std::vector<Elem>& to_return_from,
+			 Orthogonal orthogonal) {
+    assert(to_return_from.size() > 0);
+      
+    if (to_check.size() == 0) { return to_return_from.front(); }
+
+    for (unsigned i = 0; i < to_return_from.size(); i++) {
+      Elem q = to_return_from[i];
+      if (all_of(begin(to_check), end(to_check),
+		 [q, orthogonal](const Elem& r)
+		 { return orthogonal(q, r); })) {
+	return to_return_from[i];
+      }
+    }
+
+    assert(false);
+  }
+  
+  // TODO: Move to utils/algorithm
+  template<typename Elem, typename Orthogonal>
+  std::vector<Elem>
+  take_basis(const std::vector<Elem>& elems,
+	     Orthogonal orthogonal,
+	     const unsigned num_elems) {
+    assert(elems.size() > num_elems);
+    std::vector<Elem> basis;
+    for (unsigned i = 0; i < num_elems; i++) {
+      basis.push_back(next_orthogonal_to_all(basis, elems, orthogonal));
+    }
+    return basis;
+  }
 
 }
 

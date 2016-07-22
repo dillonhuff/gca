@@ -328,24 +328,6 @@ namespace gca {
 
   // TODO: Move these to somewhere else, they really dont belong here
   
-  // TODO: Make the spindle_speed and feedrate parameters explicit
-  cut* mk_cut(const point l, const point r) {
-    auto c = linear_cut::make(l, r);
-    c->set_spindle_speed(lit::make(3000));
-    c->set_feedrate(lit::make(8.0));
-    return c;
-  }
-
-  vector<cut*> polyline_cuts(const polyline& p) {
-    auto ls = p.lines();
-    assert(ls.size() > 0);
-    vector<cut*> c;
-    for (auto l : ls) {
-      c.push_back(mk_cut(l.start, l.end));
-    }
-    return c;
-  }
-
   bool same_slope(const line l, const line r, double t) {
     return within_eps(angle_between(l.end - l.start, r.end - r.start), 0, t);
   }
@@ -437,11 +419,36 @@ namespace gca {
     return reflected;
   }
 
+  // TODO: Make the spindle_speed and feedrate parameters explicit
+  cut* mk_cut(const point l,
+	      const point r,
+	      const double spindle_speed,
+	      const double feedrate) {
+    auto c = linear_cut::make(l, r);
+    c->set_spindle_speed(lit::make(spindle_speed));
+    c->set_feedrate(lit::make(feedrate));
+    return c;
+  }
+
+  vector<cut*> polyline_cuts(const polyline& p,
+			     const double spindle_speed,
+			     const double feedrate) {
+    auto ls = p.lines();
+    assert(ls.size() > 0);
+    vector<cut*> c;
+    for (auto l : ls) {
+      c.push_back(mk_cut(l.start, l.end, spindle_speed, feedrate));
+    }
+    return c;
+  }
+
   vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
-			       const cut_params params) {
+			       const cut_params params,
+			       const double spindle_speed,
+			       const double feedrate) {
     vector<cut*> cuts;
     for (auto p : pocket_lines) {
-      auto cs = polyline_cuts(p);
+      auto cs = polyline_cuts(p, spindle_speed, feedrate);
       cuts.insert(cuts.end(), cs.begin(), cs.end());
     }
     return cuts_to_gcode(cuts, params);
@@ -457,7 +464,7 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = safe_height;
-    return polylines_cuts(reflected_lines, params);
+    return polylines_cuts(reflected_lines, params, 3000, 8.0);
   }
 
 }

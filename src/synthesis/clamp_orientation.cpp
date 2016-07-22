@@ -251,62 +251,6 @@ namespace gca {
     return *r;
   }
 
-  template<typename Elem, typename Orthogonal>
-  Elem
-  next_orthogonal_to_all(const std::vector<Elem>& to_check,
-			 const std::vector<Elem>& to_return_from,
-			 Orthogonal orthogonal) {
-    assert(to_return_from.size() > 0);
-      
-    if (to_check.size() == 0) { return to_return_from.front(); }
-
-    for (unsigned i = 0; i < to_return_from.size(); i++) {
-      Elem q = to_return_from[i];
-      if (all_of(begin(to_check), end(to_check),
-		 [q, orthogonal](const Elem& r)
-		 { return orthogonal(q, r); })) {
-	return to_return_from[i];
-      }
-    }
-
-    assert(false);
-  }
-  
-  // TODO: Move to utils/algorithm
-  template<typename Elem, typename Orthogonal>
-  std::vector<Elem>
-  take_basis(const std::vector<Elem>& elems,
-	     Orthogonal orthogonal,
-	     const unsigned num_elems) {
-    assert(elems.size() > num_elems);
-    std::vector<Elem> basis;
-    for (unsigned i = 0; i < num_elems; i++) {
-      basis.push_back(next_orthogonal_to_all(basis, elems, orthogonal));
-    }
-    return basis;
-  }
-
-  // clamp_orientation
-  // next_orthogonal_to_all(const std::vector<clamp_orientation>& to_check,
-  // 			 const std::vector<clamp_orientation>& to_return_from) {
-  //   assert(to_return_from.size() > 0);
-      
-  //   if (to_check.size() == 0) { return to_return_from.front(); }
-
-  //   auto orthogonal_to = [](const point l, const point r)
-  //     { return within_eps(l.dot(r), 0, 0.001); };
-
-  //   for (unsigned i = 0; i < to_return_from.size(); i++) {
-  //     point q = to_return_from[i].top_normal();
-  //     if (all_of(begin(to_check), end(to_check),
-  // 		 [q, orthogonal_to](const clamp_orientation& r) { return orthogonal_to(q, r.top_normal()); })) {
-  // 	return to_return_from[i];
-  //     }
-  //   }
-
-  //   assert(false);
-  // }
-
   std::vector<clamp_orientation>
   three_orthogonal_orients(const std::vector<clamp_orientation>& orients) {
     auto orthogonal_to = [](const clamp_orientation& l,
@@ -314,14 +258,6 @@ namespace gca {
       { return within_eps(l.top_normal().dot(r.top_normal()), 0, 0.001); };
     
     return take_basis(orients, orthogonal_to, 3);
-    // assert(orients.size() >= 3);
-    // vector<clamp_orientation> ortho_orients;
-    // ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
-    // ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
-    // ortho_orients.push_back(next_orthogonal_to_all(ortho_orients, orients));
-    
-    // assert(ortho_orients.size() == 3);
-    // return ortho_orients;
   }
   
 }
