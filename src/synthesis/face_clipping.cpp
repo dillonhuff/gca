@@ -16,27 +16,8 @@ namespace gca {
     return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
   }
 
-  // std::pair<fixture_setup, fixture_setup>
-  // axis_clip(const clamp_orientation& orient,
-  // 	    const std::vector<clamp_orientation>& clamp_orients,
-  // 	    const triangular_mesh& aligned_workpiece,
-  // 	    const triangular_mesh& part_mesh,
-  // 	    const vice& v) {
-  //   auto pos_t = mating_transform(aligned_workpiece, orient, v);
-  //   auto f1 = clip_base(apply(pos_t, aligned_workpiece), apply(pos_t, part_mesh), v);
-    
-  //   point neg_orient_dir = -1*orient.top_normal();
-  //   clamp_orientation neg_orient =
-  //     find_orientation_by_normal(clamp_orients, neg_orient_dir);
-  //   auto neg_t = mating_transform(aligned_workpiece, neg_orient, v);
-  //   auto f2 = clip_base(apply(neg_t, aligned_workpiece), apply(neg_t, part_mesh), v);
-
-  //   return make_pair(f1, f2);
-  // }
-
   // TODO: Remove stock param
-  plane face_plane(const triangular_mesh& stock,
-		   const triangular_mesh& part,
+  plane face_plane(const triangular_mesh& part,
 		   const point n) {
     point p = max_point_in_dir(part, n);
     return plane(-1*n, p);
@@ -77,7 +58,7 @@ namespace gca {
       auto t = mating_transform(current_stock, orient, v);
       cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part_mesh), v));
       
-      plane clip_plane = face_plane(current_stock, part_mesh, n);
+      plane clip_plane = face_plane(part_mesh, n);
       current_stock = clip_mesh(current_stock, clip_plane);
     }
 

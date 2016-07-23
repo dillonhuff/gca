@@ -1319,6 +1319,33 @@ src/geometry/trimesh.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/trimesh.cpp.s
 .PHONY : src/geometry/trimesh.cpp.s
 
+src/geometry/vtk_debug.o: src/geometry/vtk_debug.cpp.o
+
+.PHONY : src/geometry/vtk_debug.o
+
+# target to build an object file
+src/geometry/vtk_debug.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/vtk_debug.cpp.o
+.PHONY : src/geometry/vtk_debug.cpp.o
+
+src/geometry/vtk_debug.i: src/geometry/vtk_debug.cpp.i
+
+.PHONY : src/geometry/vtk_debug.i
+
+# target to preprocess a source file
+src/geometry/vtk_debug.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/vtk_debug.cpp.i
+.PHONY : src/geometry/vtk_debug.cpp.i
+
+src/geometry/vtk_debug.s: src/geometry/vtk_debug.cpp.s
+
+.PHONY : src/geometry/vtk_debug.s
+
+# target to generate assembly for a file
+src/geometry/vtk_debug.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/vtk_debug.cpp.s
+.PHONY : src/geometry/vtk_debug.cpp.s
+
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 .PHONY : src/simulators/mill_tool.o
@@ -3022,6 +3049,9 @@ help:
 	@echo "... src/geometry/trimesh.o"
 	@echo "... src/geometry/trimesh.i"
 	@echo "... src/geometry/trimesh.s"
+	@echo "... src/geometry/vtk_debug.o"
+	@echo "... src/geometry/vtk_debug.i"
+	@echo "... src/geometry/vtk_debug.s"
 	@echo "... src/simulators/mill_tool.o"
 	@echo "... src/simulators/mill_tool.i"
 	@echo "... src/simulators/mill_tool.s"

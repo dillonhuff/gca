@@ -33,7 +33,8 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 	    ./src/geometry/triangle.h
 	    ./src/geometry/triangular_mesh.h
 	    ./src/geometry/homogeneous_transformation.h
-	    ./src/geometry/mesh_operations.h)
+	    ./src/geometry/mesh_operations.h
+	    ./src/geometry/vtk_debug.h)
 
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
@@ -48,7 +49,8 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/triangular_mesh.cpp
 	 ./src/geometry/trimesh.cpp
 	 ./src/geometry/homogeneous_transformation.cpp
-	 ./src/geometry/mesh_operations.cpp)
+	 ./src/geometry/mesh_operations.cpp
+	 ./src/geometry/vtk_debug.cpp)
 
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
 target_link_libraries(geometry utils)
