@@ -92,8 +92,8 @@ namespace gca {
     double work_height = max_in_dir(aligned, point(0, 0, 1));
     double part_height = max_in_dir(part, point(0, 0, 1));
 
-    cout << "work height = " << work_height << endl;
-    cout << "part height = " << part_height << endl;
+    // cout << "work height = " << work_height << endl;
+    // cout << "part height = " << part_height << endl;
     assert(work_height > part_height);
 
     auto bound = part_outline_surface(aligned, point(0, 0, 1));

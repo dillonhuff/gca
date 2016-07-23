@@ -32,15 +32,15 @@ namespace gca {
 
   bool has_cell_normals(vtkPolyData* polydata)
   {
-    std::cout << "Looking for cell normals..." << std::endl;
+    // std::cout << "Looking for cell normals..." << std::endl;
  
     // Count points
-    vtkIdType numCells = polydata->GetNumberOfCells();
-    std::cout << "There are " << numCells << " cells." << std::endl;
+    //vtkIdType numCells = polydata->GetNumberOfCells();
+    //std::cout << "There are " << numCells << " cells." << std::endl;
  
     // Count triangles
-    vtkIdType numPolys = polydata->GetNumberOfPolys();
-    std::cout << "There are " << numPolys << " polys." << std::endl;
+    //vtkIdType numPolys = polydata->GetNumberOfPolys();
+    //std::cout << "There are " << numPolys << " polys." << std::endl;
  
     ////////////////////////////////////////////////////////////////
     // Double normals in an array
@@ -49,9 +49,9 @@ namespace gca {
  
     if(normalDataDouble)
       {
-	int nc = normalDataDouble->GetNumberOfTuples();
-	std::cout << "There are " << nc
-		  << " components in normalDataDouble" << std::endl;
+	//int nc = normalDataDouble->GetNumberOfTuples();
+	// std::cout << "There are " << nc
+	// 	  << " components in normalDataDouble" << std::endl;
 	return true;
       }
  
@@ -62,9 +62,9 @@ namespace gca {
  
     if(normalDataFloat)
       {
-	int nc = normalDataFloat->GetNumberOfTuples();
-	std::cout << "There are " << nc
-		  << " components in normalDataFloat" << std::endl;
+	//int nc = normalDataFloat->GetNumberOfTuples();
+	// std::cout << "There are " << nc
+	// 	  << " components in normalDataFloat" << std::endl;
 	return true;
       }
  
@@ -75,8 +75,8 @@ namespace gca {
  
     if(normalsDouble)
       {
-	std::cout << "There are " << normalsDouble->GetNumberOfComponents()
-		  << " components in normalsDouble" << std::endl;
+	// std::cout << "There are " << normalsDouble->GetNumberOfComponents()
+	// 	  << " components in normalsDouble" << std::endl;
 	return true;
       }
  
@@ -87,8 +87,8 @@ namespace gca {
  
     if(normalsFloat)
       {
-	std::cout << "There are " << normalsFloat->GetNumberOfComponents()
-		  << " components in normalsFloat" << std::endl;
+	// std::cout << "There are " << normalsFloat->GetNumberOfComponents()
+	// 	  << " components in normalsFloat" << std::endl;
 	return true;
       }
  
@@ -329,17 +329,12 @@ namespace gca {
     return polyData;
   }
 
-  void
-  compute_cell_normals(vtkPolyData* pdata) {
-    assert(false);
-  }
-  
   triangular_mesh
   clip_mesh(const triangular_mesh& m,
 	    const plane pl) {
 
-    cout << "######## Plane normal = " << pl.normal() << endl;
-    cout << "######## Plane point = " << pl.pt() << endl;
+    // cout << "######## Plane normal = " << pl.normal() << endl;
+    // cout << "######## Plane point = " << pl.pt() << endl;
 
     vtkSmartPointer<vtkPlane> clipPlane = 
       vtkSmartPointer<vtkPlane>::New();
@@ -350,7 +345,6 @@ namespace gca {
 
     vtkSmartPointer<vtkPolyData> input_mesh_data =
       polydata_for_trimesh(m);
-
     
     vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
       vtkSmartPointer<vtkPolyDataNormals>::New();
@@ -402,26 +396,26 @@ namespace gca {
 
     vtkPolyData* patch_data = triangleFilter->GetOutput();
 
-    cout << "--------------- Patch triangles -------------" << endl;
-    debug_print_summary(patch_data);
-    debug_print_is_closed(patch_data);
-    debug_print_edge_summary(patch_data);
-    cout << "---------------------------------------------" << endl;
+    // cout << "--------------- Patch triangles -------------" << endl;
+    // debug_print_summary(patch_data);
+    // debug_print_is_closed(patch_data);
+    // debug_print_edge_summary(patch_data);
+    // cout << "---------------------------------------------" << endl;
 
     vector<triangle> patch_tris = polydata_to_triangle_list(patch_data);
     concat(main_tris, patch_tris);
 
-    cout << "# triangles in main tris = " << main_tris.size() << endl;
+    //    cout << "# triangles in main tris = " << main_tris.size() << endl;
 
     triangular_mesh intermediate_mesh = make_mesh(main_tris, 0.01);
 
     auto pdata = polydata_for_trimesh(intermediate_mesh);
 
-    cout << "--------------- pdata mesh -------------" << endl;
-    debug_print_summary(pdata);
-    debug_print_is_closed(pdata);
-    debug_print_edge_summary(pdata);
-    cout << "---------------------------------------------" << endl;
+    // cout << "--------------- pdata mesh -------------" << endl;
+    // debug_print_summary(pdata);
+    // debug_print_is_closed(pdata);
+    // debug_print_edge_summary(pdata);
+    // cout << "---------------------------------------------" << endl;
 
     // auto act_fp = polydata_actor(pdata);
     // vector<vtkSmartPointer<vtkActor>> actors{act_fp};
@@ -444,7 +438,7 @@ namespace gca {
       vtkSmartPointer<vtkDecimatePro>::New();
     decimate->SetInputData(pdata);
     double target = 1.0 - (static_cast<double>(pdata->GetNumberOfPolys()) - 12.0) / 12.0;
-    cout << "--- Target reduction = " << target << endl;
+    //cout << "--- Target reduction = " << target << endl;
     decimate->SetTargetReduction(target);
     decimate->Update();
 
@@ -461,11 +455,11 @@ namespace gca {
 
     pdata = normalGenerator3->GetOutput();
     
-    cout << "--------------- Final mesh -------------" << endl;
-    debug_print_summary(pdata);
-    debug_print_is_closed(pdata);
-    debug_print_edge_summary(pdata);
-    cout << "---------------------------------------------" << endl;
+    // cout << "--------------- Final mesh -------------" << endl;
+    // debug_print_summary(pdata);
+    // debug_print_is_closed(pdata);
+    // debug_print_edge_summary(pdata);
+    // cout << "---------------------------------------------" << endl;
 
     
 
@@ -477,11 +471,11 @@ namespace gca {
     assert(has_cell_normals(pdata));
 
     triangular_mesh final_mesh = trimesh_from_polydata(pdata);
-    auto rs = const_orientation_regions(final_mesh);
-    assert(rs.size() == 6);
-    auto sfs = outer_surfaces(final_mesh);
-    cout << "# outer surfaces = " << sfs.size() << endl;
-    assert(sfs.size() == 6);
+    // auto rs = const_orientation_regions(final_mesh);
+    // assert(rs.size() == 6);
+    // auto sfs = outer_surfaces(final_mesh);
+    // cout << "# outer surfaces = " << sfs.size() << endl;
+    // assert(sfs.size() == 6);
     
     // auto fp = polydata_for_trimesh(final_mesh);
     // auto act_fp = polydata_actor(fp);

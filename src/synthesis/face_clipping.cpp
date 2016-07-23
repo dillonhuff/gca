@@ -16,23 +16,23 @@ namespace gca {
     return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
   }
 
-  std::pair<fixture_setup, fixture_setup>
-  axis_clip(const clamp_orientation& orient,
-	    const std::vector<clamp_orientation>& clamp_orients,
-	    const triangular_mesh& aligned_workpiece,
-	    const triangular_mesh& part_mesh,
-	    const vice& v) {
-    auto pos_t = mating_transform(aligned_workpiece, orient, v);
-    auto f1 = clip_base(apply(pos_t, aligned_workpiece), apply(pos_t, part_mesh), v);
+  // std::pair<fixture_setup, fixture_setup>
+  // axis_clip(const clamp_orientation& orient,
+  // 	    const std::vector<clamp_orientation>& clamp_orients,
+  // 	    const triangular_mesh& aligned_workpiece,
+  // 	    const triangular_mesh& part_mesh,
+  // 	    const vice& v) {
+  //   auto pos_t = mating_transform(aligned_workpiece, orient, v);
+  //   auto f1 = clip_base(apply(pos_t, aligned_workpiece), apply(pos_t, part_mesh), v);
     
-    point neg_orient_dir = -1*orient.top_normal();
-    clamp_orientation neg_orient =
-      find_orientation_by_normal(clamp_orients, neg_orient_dir);
-    auto neg_t = mating_transform(aligned_workpiece, neg_orient, v);
-    auto f2 = clip_base(apply(neg_t, aligned_workpiece), apply(neg_t, part_mesh), v);
+  //   point neg_orient_dir = -1*orient.top_normal();
+  //   clamp_orientation neg_orient =
+  //     find_orientation_by_normal(clamp_orients, neg_orient_dir);
+  //   auto neg_t = mating_transform(aligned_workpiece, neg_orient, v);
+  //   auto f2 = clip_base(apply(neg_t, aligned_workpiece), apply(neg_t, part_mesh), v);
 
-    return make_pair(f1, f2);
-  }
+  //   return make_pair(f1, f2);
+  // }
 
   // TODO: Remove stock param
   plane face_plane(const triangular_mesh& stock,
@@ -68,8 +68,6 @@ namespace gca {
     vector<fixture_setup> cut_setups;    
     for (auto n : norms) {
       auto sfs = outer_surfaces(current_stock);
-      cout << "--- Normal = " << n << endl;
-      cout << "# of surfaces = " << sfs.size() << endl;
 
       assert(sfs.size() == 6);
 
@@ -86,21 +84,6 @@ namespace gca {
     assert(cut_setups.size() == 6);
 
     return cut_setups;
-    // vector<clamp_orientation> clamp_orients =
-    //   all_stable_orientations(surfs, f.get_vice());
-
-    // assert(clamp_orients.size() >= 6);
-
-    // vector<clamp_orientation> ax_orients =
-    //   three_orthogonal_orients(clamp_orients);
-
-
-    // for (auto orient : axis_orients) {
-    //   auto setup_pair = axis_clip(orient, clamp_orients, aligned_workpiece, part_mesh, f.get_vice());
-    //   cut_setups.push_back(setup_pair.first);
-    //   cut_setups.push_back(setup_pair.second);
-    // }
-    // return cut_setups;
   }
 
   clipping_plan
