@@ -244,26 +244,20 @@ namespace gca {
   surface_map
   greedy_pick_orientations(const relation<surface, fixture>& possible_orientations) {
 
-    auto surfaces_to_cut = possible_orientations.left_elems();
-    auto all_orients = possible_orientations.right_elems();
-    
-    vector<unsigned> surfaces_left = inds(surfaces_to_cut);
-    vector<unsigned> orientations_left = inds(all_orients);
+    vector<unsigned> surfaces_left = possible_orientations.left_inds();
+    vector<unsigned> orientations_left = possible_orientations.right_inds();
     surface_map orients;
 
     while (surfaces_left.size() > 0) {
       unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
   						      orientations_left,
   						      surfaces_left);
-      cout << "Trying orientation " << orient_ind << " with top normal ";
-      cout << all_orients[orient_ind].orient.top_normal() << endl;
+
       remove(orient_ind, orientations_left);
+
       vector<unsigned> surfaces_cut =
   	select_surfaces(orient_ind, surfaces_left, possible_orientations);
-      cout << "Selected " << surfaces_cut.size() << " surfaces" << endl;
-      for (auto s : surfaces_cut) {
-  	cout << "\t" << s << endl;
-      }
+
       if (surfaces_cut.size() > 0) {
   	orients[orient_ind] = surfaces_cut;
       }

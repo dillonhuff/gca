@@ -18,55 +18,12 @@
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
 
-#include <vtkAxesActor.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkRenderWindowInteractor.h>
-#include <vtkActor.h>
-#include <vtkRenderWindow.h>
-#include <vtkRenderer.h>
-
 #include "geometry/mesh_operations.h"
 #include "geometry/surface.h"
 #include "geometry/vtk_debug.h"
 
 namespace gca {
 
-  vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData) {
-    vtkSmartPointer<vtkPolyDataMapper> mapper =
-      vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapper->SetInputData(polyData);
- 
-    vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
-    actor->SetMapper(mapper);
-
-    return actor;
-  }
-
-  void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& actors) {
-    vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
-    // Create axes
-    vtkSmartPointer<vtkAxesActor> axes =
-      vtkSmartPointer<vtkAxesActor>::New();
-
-    renderer->AddActor(axes);
-    for (auto actor : actors) {
-      renderer->AddActor(actor);
-    }
-    renderer->SetBackground(.1, .2, .3);
-
-    vtkSmartPointer<vtkRenderWindow> renderWindow =
-      vtkSmartPointer<vtkRenderWindow>::New();
-    renderWindow->AddRenderer(renderer);
-
-    vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
-      vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    renderWindowInteractor->SetRenderWindow(renderWindow);
-
-    renderWindow->Render();
-    renderWindowInteractor->Start();
-  }
-
-  // TODO: Actually compute normals
   triangle vtkCell_to_triangle(vtkCell* c) {
     assert(c->GetCellType() == VTK_TRIANGLE);
     assert(c->GetNumberOfPoints() == 3);
@@ -235,7 +192,7 @@ namespace gca {
     normalGenerator2->Update();
 
     pdata = normalGenerator2->GetOutput();
-    
+
     assert(is_closed(pdata));
 
     double target =
@@ -243,7 +200,6 @@ namespace gca {
     vtkSmartPointer<vtkDecimatePro> decimate =
       vtkSmartPointer<vtkDecimatePro>::New();
     decimate->SetInputData(pdata);
-    
     decimate->SetTargetReduction(target);
     decimate->Update();
 
@@ -259,13 +215,14 @@ namespace gca {
     normalGenerator3->Update();
 
     pdata = normalGenerator3->GetOutput();
-    
+
     assert(is_closed(pdata));
     assert(has_cell_normals(pdata));
 
     triangular_mesh final_mesh = trimesh_from_polydata(pdata);
-    
+
     assert(final_mesh.is_connected());
+
     return final_mesh;
   }
 

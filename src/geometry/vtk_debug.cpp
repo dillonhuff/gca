@@ -1,21 +1,14 @@
-#include <vtkDecimatePro.h>
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
 #include <vtkPoints.h>
-#include <vtkStripper.h>
-#include <vtkCutter.h>
 #include <vtkFeatureEdges.h>
 #include <vtkProperty.h>
-#include <vtkFeatureEdges.h>
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkClipPolyData.h>
-#include <vtkPlane.h>
 #include <vtkProperty.h>
 #include <vtkCellArray.h>
-#include <vtkTriangle.h>
-#include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
 
 #include <vtkAxesActor.h>
@@ -29,7 +22,45 @@
 
 namespace gca {
 
-  bool is_closed(vtkPolyData* polydata) {
+  vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData)
+  {
+    vtkSmartPointer<vtkPolyDataMapper> mapper =
+      vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInputData(polyData);
+ 
+    vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+
+    return actor;
+  }
+
+  void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& actors)
+  {
+    vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
+    // Create axes
+    vtkSmartPointer<vtkAxesActor> axes =
+      vtkSmartPointer<vtkAxesActor>::New();
+
+    renderer->AddActor(axes);
+    for (auto actor : actors) {
+      renderer->AddActor(actor);
+    }
+    renderer->SetBackground(.1, .2, .3);
+
+    vtkSmartPointer<vtkRenderWindow> renderWindow =
+      vtkSmartPointer<vtkRenderWindow>::New();
+    renderWindow->AddRenderer(renderer);
+
+    vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
+      vtkSmartPointer<vtkRenderWindowInteractor>::New();
+    renderWindowInteractor->SetRenderWindow(renderWindow);
+
+    renderWindow->Render();
+    renderWindowInteractor->Start();
+  }
+
+  bool is_closed(vtkPolyData* polydata)
+  {
     vtkSmartPointer<vtkFeatureEdges> featureEdges = 
       vtkSmartPointer<vtkFeatureEdges>::New();
     featureEdges->FeatureEdgesOff();
@@ -120,20 +151,9 @@ namespace gca {
 	std::cout << "Double: " << testDouble[0] << " "
 		  << testDouble[1] << " " << testDouble[2] << std::endl;
  
-	// Can't do this:
-	/*
-	  float testFloat[3];
-	  normalsGeneric->GetTuple(0, testFloat);
- 
-	  std::cout << "Float: " << testFloat[0] << " "
-	  << testFloat[1] << " " << testFloat[2] << std::endl;
-	*/
 	return true;
       }
  
- 
-    // If the function has not yet quit, there were none of these types of normals
-    std::cout << "Normals not found!" << std::endl;
     return false;
   }  
   
