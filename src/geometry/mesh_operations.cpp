@@ -83,14 +83,9 @@ namespace gca {
     point v2(p1[0], p1[1], p1[2]);
     point v3(p2[0], p2[1], p2[2]);
 
-    // cout << "v1 = " << v1 << endl;
-    // cout << "v2 = " << v2 << endl;
-    // cout << "v3 = " << v3 << endl;
-
     point q1 = v1 - v3;
     point q2 = v2 - v3;
     point norm = cross(q2, q1).normalize();
-    //    cout << "Normal = " << norm << endl;
     return triangle(norm, v1, v2, v3);
   }
 
@@ -116,7 +111,7 @@ namespace gca {
 
     auto tris = polydata_to_triangle_list(in_polydata);
     triangular_mesh m = make_mesh(tris, 0.001);
-    //assert(m.is_connected());
+    assert(m.is_connected());
     return m;
   }
 
@@ -157,12 +152,11 @@ namespace gca {
     return polyData;
   }
 
+  // TOOD: Simplify this atrocity of a function
   triangular_mesh
   clip_mesh(const triangular_mesh& m,
-	    const plane pl) {
-
-    // cout << "######## Plane normal = " << pl.normal() << endl;
-    // cout << "######## Plane point = " << pl.pt() << endl;
+	    const plane pl)
+  {
 
     vtkSmartPointer<vtkPlane> clipPlane = 
       vtkSmartPointer<vtkPlane>::New();
@@ -224,30 +218,12 @@ namespace gca {
 
     vtkPolyData* patch_data = triangleFilter->GetOutput();
 
-    // cout << "--------------- Patch triangles -------------" << endl;
-    // debug_print_summary(patch_data);
-    // debug_print_is_closed(patch_data);
-    // debug_print_edge_summary(patch_data);
-    // cout << "---------------------------------------------" << endl;
-
     vector<triangle> patch_tris = polydata_to_triangle_list(patch_data);
     concat(main_tris, patch_tris);
-
-    //    cout << "# triangles in main tris = " << main_tris.size() << endl;
 
     triangular_mesh intermediate_mesh = make_mesh(main_tris, 0.01);
 
     auto pdata = polydata_for_trimesh(intermediate_mesh);
-
-    // cout << "--------------- pdata mesh -------------" << endl;
-    // debug_print_summary(pdata);
-    // debug_print_is_closed(pdata);
-    // debug_print_edge_summary(pdata);
-    // cout << "---------------------------------------------" << endl;
-
-    // auto act_fp = polydata_actor(pdata);
-    // vector<vtkSmartPointer<vtkActor>> actors{act_fp};
-    // visualize_actors(actors);
 
     vtkSmartPointer<vtkPolyDataNormals> normalGenerator2 =
       vtkSmartPointer<vtkPolyDataNormals>::New();
@@ -260,13 +236,14 @@ namespace gca {
 
     pdata = normalGenerator2->GetOutput();
     
-    //    assert(is_closed(pdata));
+    assert(is_closed(pdata));
 
+    double target =
+      1.0 - (static_cast<double>(pdata->GetNumberOfPolys()) - 12.0) / 12.0;
     vtkSmartPointer<vtkDecimatePro> decimate =
       vtkSmartPointer<vtkDecimatePro>::New();
     decimate->SetInputData(pdata);
-    double target = 1.0 - (static_cast<double>(pdata->GetNumberOfPolys()) - 12.0) / 12.0;
-    //cout << "--- Target reduction = " << target << endl;
+    
     decimate->SetTargetReduction(target);
     decimate->Update();
 
@@ -283,30 +260,10 @@ namespace gca {
 
     pdata = normalGenerator3->GetOutput();
     
-    cout << "--------------- Final mesh -------------" << endl;
-    debug_print_summary(pdata);
-    debug_print_is_closed(pdata);
-    debug_print_edge_summary(pdata);
-    cout << "---------------------------------------------" << endl;
-
-    // act_fp = polydata_actor(pdata);
-    // actors = {act_fp};
-    // visualize_actors(actors);
-    
     assert(is_closed(pdata));
     assert(has_cell_normals(pdata));
 
     triangular_mesh final_mesh = trimesh_from_polydata(pdata);
-    // auto rs = const_orientation_regions(final_mesh);
-    // assert(rs.size() == 6);
-    // auto sfs = outer_surfaces(final_mesh);
-    // cout << "# outer surfaces = " << sfs.size() << endl;
-    // assert(sfs.size() == 6);
-    
-    // auto fp = polydata_for_trimesh(final_mesh);
-    // auto act_fp = polydata_actor(fp);
-    // vector<vtkSmartPointer<vtkActor>> actors{act_fp};
-    // visualize_actors(actors);
     
     assert(final_mesh.is_connected());
     return final_mesh;
