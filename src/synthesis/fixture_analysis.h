@@ -43,13 +43,13 @@ namespace gca {
 
   struct fixture_setup {
     const triangular_mesh* m;
-    vice v;
+    fixture fix;
     std::vector<pocket> pockets;
 
     fixture_setup(const triangular_mesh* p_m,
-		  const vice& p_v,
+		  const fixture& f,
 		  const std::vector<pocket>& p)
-      : m(p_m), v(p_v), pockets(p) {}
+      : m(p_m), fix(f), pockets(p) {}
   };
 
   class fixture_plan {

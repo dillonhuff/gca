@@ -50,7 +50,7 @@ namespace gca {
   fixture_setup
   clip_top_and_sides(const triangular_mesh& aligned,
 		     const triangular_mesh& part,
-		     const vice& v) {
+		     const fixture& f) {
     double stock_top = max_in_dir(aligned, point(0, 0, 1));
     double part_top = max_in_dir(part, point(0, 0, 1));
     double part_bottom = min_in_dir(part, point(0, 0, 1));
@@ -82,13 +82,13 @@ namespace gca {
     pockets.push_back(contour_pocket(part_top, part_bottom, part_outline, stock_outline));
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, v, pockets);
+    return fixture_setup(m, f, pockets);
   }
 
   fixture_setup
   clip_base(const triangular_mesh& aligned,
 	    const triangular_mesh& part,
-	    const vice& v) {
+	    const fixture& f) {
     double work_height = max_in_dir(aligned, point(0, 0, 1));
     double part_height = max_in_dir(part, point(0, 0, 1));
 
@@ -105,7 +105,7 @@ namespace gca {
     vector<pocket> pockets{face_pocket(work_height, part_height, outlines.front())};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, v, pockets);
+    return fixture_setup(m, f, pockets);
   }
 
   clamp_orientation
@@ -151,14 +151,14 @@ namespace gca {
       auto s_t = mating_transform(aligned, stock_top_orient, parallel);
       
       std::vector<fixture_setup> progs;
-      progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), parallel));
+      progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), fixture(stock_top_orient, parallel)));
 
       vector<surface> surfs = outer_surfaces(m);
       
       auto top_orient = largest_upward_orientation(surfs, parallel);
       auto t = mating_transform(m, top_orient, parallel);
 
-      progs.push_back(clip_base(apply(t, aligned), apply(t, m), parallel));
+      progs.push_back(clip_base(apply(t, aligned), apply(t, m), fixture(top_orient, parallel)));
       return progs;
     }
     return boost::none;

@@ -56,7 +56,7 @@ namespace gca {
       clamp_orientation orient = find_orientation_by_normal(orients, n);
 
       auto t = mating_transform(current_stock, orient, v);
-      cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part_mesh), v));
+      cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part_mesh), fixture(orient, v)));
       
       plane clip_plane = face_plane(part_mesh, n);
       current_stock = clip_mesh(current_stock, clip_plane);
