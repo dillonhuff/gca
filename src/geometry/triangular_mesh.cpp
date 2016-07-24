@@ -423,4 +423,8 @@ namespace gca {
     	      { return all_normals_below(surface, mesh, -0.1); });
   }
 
+  bool operator==(const edge x, const edge y) {
+    return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
+  }
+
 }

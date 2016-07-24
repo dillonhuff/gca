@@ -17,9 +17,7 @@ namespace gca {
     edge(const index_t p_l, const index_t p_r) : l(p_l), r(p_r) {}
   };
 
-  bool operator==(const edge x, const edge y) {
-    return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
-  }
+  bool operator==(const edge x, const edge y);
   
   class triangular_mesh {
   private:

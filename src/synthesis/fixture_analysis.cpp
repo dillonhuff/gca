@@ -247,21 +247,21 @@ namespace gca {
   typedef std::vector<unsigned> surface_group;
 
   bool
-  share_edge(const std::vector<edge>& edges,
+  share_edge(const std::vector<gca::edge>& edges,
 	     const surface& l,
 	     const surface& r) {
-    vector<edge> l_es = edges;
+    vector<gca::edge> l_es = edges;
     delete_if(l_es,
-	      [l](const edge e) { return !(l.contains(e.l) && l.contains(e.r)); });
+	      [l](const gca::edge e) { return !(l.contains(e.l) && l.contains(e.r)); });
 
-    vector<edge> r_es = edges;
+    vector<gca::edge> r_es = edges;
     delete_if(r_es,
-	      [r](const edge e) { return !(r.contains(e.l) && r.contains(e.r)); });
+	      [r](const gca::edge e) { return !(r.contains(e.l) && r.contains(e.r)); });
 
     return intersection(l_es, r_es).size() > 0;
   }
 
-  double dihedral_angle(const edge e, const triangular_mesh& m) {
+  double dihedral_angle(const gca::edge e, const triangular_mesh& m) {
     auto tl = m.vertex_face_neighbors(e.l);
     auto tr = m.vertex_face_neighbors(e.r);
     auto tris = intersection(tl, tr);
@@ -271,9 +271,9 @@ namespace gca {
     return angle_between(n1, n2);
   }
   
-  std::vector<edge>
+  std::vector<gca::edge>
   convex_edges(const triangular_mesh& m) {
-    vector<edge> c_edges;
+    vector<gca::edge> c_edges;
     for (auto e : m.edges()) {
       if (dihedral_angle(e, m) < 180) {
 	c_edges.push_back(e);
@@ -286,7 +286,7 @@ namespace gca {
   convex_surface_groups(const std::vector<surface*>& surfaces) {
     if (surfaces.size() == 0) { return {}; }
 
-    vector<edge> conv_edges = convex_edges(surfaces.front()->get_parent_mesh());
+    vector<gca::edge> conv_edges = convex_edges(surfaces.front()->get_parent_mesh());
     cout << "# of convex edges = " << conv_edges.size() << endl;
     auto ccs =
       connected_components_by(surfaces,
@@ -344,28 +344,28 @@ namespace gca {
 	assert(false);
       }
     }
-    vector<unsigned> surfaces_left = possible_orientations.left_inds();
-    vector<unsigned> orientations_left = possible_orientations.right_inds();
-    while (surfaces_left.size() > 0) {
-      unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
-    						      orientations_left,
-    						      surfaces_left);
+    // vector<unsigned> surfaces_left = possible_orientations.left_inds();
+    // vector<unsigned> orientations_left = possible_orientations.right_inds();
+    // while (surfaces_left.size() > 0) {
+    //   unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
+    // 						      orientations_left,
+    // 						      surfaces_left);
 
-      remove(orient_ind, orientations_left);
+    //   remove(orient_ind, orientations_left);
 
-      vector<unsigned> surfaces_cut =
-    	select_surfaces(orient_ind, surfaces_left, possible_orientations);
+    //   vector<unsigned> surfaces_cut =
+    // 	select_surfaces(orient_ind, surfaces_left, possible_orientations);
 
-      if (surfaces_cut.size() > 0) {
-	for (auto s : surfaces_cut) {
-	  orients.assign_item_to_bucket(s, orient_ind);
-	}
-	//    	orients[orient_ind] = surfaces_cut;
-      }
-      subtract(surfaces_left, surfaces_cut);
-    }
+    //   if (surfaces_cut.size() > 0) {
+    // 	for (auto s : surfaces_cut) {
+    // 	  orients.assign_item_to_bucket(s, orient_ind);
+    // 	}
+    // 	//    	orients[orient_ind] = surfaces_cut;
+    //   }
+    //   subtract(surfaces_left, surfaces_cut);
+    // }
 
-    assert(surfaces_left.size() == 0);
+    //    assert(surfaces_left.size() == 0);
     return orients;
   }
 
