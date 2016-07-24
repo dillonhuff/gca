@@ -6,87 +6,6 @@
 
 namespace gca {
 
-  // bool
-  // transferable(const std::vector<unsigned>& cc,
-  // 	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
-  // 	       const relation<surface*, fixture*>& possible_orients) {
-  //   const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
-  //   bool connected_to_any = false;
-  //   for (auto i : cc) {
-  //     for (auto j : orient_surface_inds.second) {
-  // 	if (surfaces_share_edge(i, j, surfaces_to_cut)) {
-  // 	  connected_to_any = true;
-  // 	}
-  //     }
-  //   }
-  //   if (!connected_to_any) { return false; }
-  //   bool can_cut_from_i = true;
-  //   for (auto i : cc) {
-  //     auto orients = possible_orients.rights_connected_to(i);
-  //     if (!elem(orient_surface_inds.first, orients)) {
-  // 	can_cut_from_i = false;
-  // 	break;
-  //     }
-  //   }
-  //   return can_cut_from_i;
-  // }
-  
-  // void
-  // insert_component(const unsigned orient_ind,
-  // 		   const vector<unsigned>& cc,
-  // 		   surface_map& simplified,
-  // 		   const surface_map& surface_allocations,
-  // 		   const relation<surface*, fixture*>& possible_orients) {
-  //   bool found_better_orient = false;
-  //   for (auto q : surface_allocations) {
-  //     if (q.first != orient_ind && transferable(cc, q, possible_orients)) {
-  // 	found_better_orient = true;
-  // 	for (auto i : cc) {
-  // 	  map_insert(simplified, q.first, i);
-  // 	}
-  //     }
-  //   }
-  //   if (!found_better_orient) {
-  //     for (auto i : cc) {
-  //     	map_insert(simplified, orient_ind, i);
-  //     }
-  //   }
-  // }
-
-  // partition<surface*, fixture*>
-  // simplify_orientations(const partition<surface*, fixture*>& surface_allocations,
-  // 			const relation<surface*, fixture*>& possible_orients) {
-  //   const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
-
-  //   partition<surface*, fixture*> simplified(possible_orients.left_elems(),
-  // 					     possible_orients.right_elems());
-  //   for (auto orient_ind : surface_allocations.bucket_inds()) {
-  //     //      auto orient_ind = p.first;
-  //     auto ccs =
-  //     	connected_components_by(surfaces_,
-  //     				[surfaces_to_cut](const unsigned i, const unsigned j)
-  //     				{
-  //     				  return surfaces_share_edge(i, j, surfaces_to_cut);
-  //     				});
-  //     auto elems = p.second;
-  //     for (auto cc_inds : ccs) {
-  //   	vector<unsigned> cc(cc_inds.size());
-  //   	std::transform(begin(cc_inds), end(cc_inds), begin(cc),
-  //   		       [elems](const unsigned i)
-  //   		       { return elems[i]; });
-
-  //     	insert_component(orient_ind,
-  //     			 cc,
-  //     			 simplified,
-  //     			 surface_allocations,
-  //     			 possible_orients);
-  //     }
-
-  //   }
-  //   assert(simplified.size() <= surface_allocations.size());
-  //   return simplified;
-  // }
-
   std::vector<surface>
   stable_surfaces_after_clipping(const triangular_mesh& part_mesh,
 				 const triangular_mesh& aligned_workpiece_mesh) {
@@ -340,32 +259,11 @@ namespace gca {
 	  orients.assign_item_to_bucket(s, *b);
 	}
       } else {
-	cout << "No legal bucket for surface group" << endl;
+	cout << "No legal fixture for surface group" << endl;
 	assert(false);
       }
     }
-    // vector<unsigned> surfaces_left = possible_orientations.left_inds();
-    // vector<unsigned> orientations_left = possible_orientations.right_inds();
-    // while (surfaces_left.size() > 0) {
-    //   unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
-    // 						      orientations_left,
-    // 						      surfaces_left);
 
-    //   remove(orient_ind, orientations_left);
-
-    //   vector<unsigned> surfaces_cut =
-    // 	select_surfaces(orient_ind, surfaces_left, possible_orientations);
-
-    //   if (surfaces_cut.size() > 0) {
-    // 	for (auto s : surfaces_cut) {
-    // 	  orients.assign_item_to_bucket(s, orient_ind);
-    // 	}
-    // 	//    	orients[orient_ind] = surfaces_cut;
-    //   }
-    //   subtract(surfaces_left, surfaces_cut);
-    // }
-
-    //    assert(surfaces_left.size() == 0);
     return orients;
   }
 
