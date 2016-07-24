@@ -165,6 +165,7 @@ namespace gca {
     std::vector<index_t> boundary_vertices() const;
     
     std::vector< std::pair<index_t, index_t> > boundary_edges() const;
+    index_t num_halfedges() const { return m_halfedges.size(); }
     
   private:
     std::vector< halfedge_t > m_halfedges;

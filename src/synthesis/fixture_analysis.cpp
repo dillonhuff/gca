@@ -244,13 +244,108 @@ namespace gca {
     return p;
   }
 
+  typedef std::vector<unsigned> surface_group;
+
+  bool
+  share_edge(const std::vector<edge>& edges,
+	     const surface& l,
+	     const surface& r) {
+    vector<edge> l_es = edges;
+    delete_if(l_es,
+	      [l](const edge e) { return !(l.contains(e.l) && l.contains(e.r)); });
+
+    vector<edge> r_es = edges;
+    delete_if(r_es,
+	      [r](const edge e) { return !(r.contains(e.l) && r.contains(e.r)); });
+
+    return intersection(l_es, r_es).size() > 0;
+  }
+
+  double dihedral_angle(const edge e, const triangular_mesh& m) {
+    auto tl = m.vertex_face_neighbors(e.l);
+    auto tr = m.vertex_face_neighbors(e.r);
+    auto tris = intersection(tl, tr);
+    assert(tris.size() == 2);
+    point n1 = m.face_orientation(tris[0]);
+    point n2 = m.face_orientation(tris[1]);
+    return angle_between(n1, n2);
+  }
+  
+  std::vector<edge>
+  convex_edges(const triangular_mesh& m) {
+    vector<edge> c_edges;
+    for (auto e : m.edges()) {
+      if (dihedral_angle(e, m) < 180) {
+	c_edges.push_back(e);
+      }
+    }
+    return c_edges;
+  }
+
+  std::vector<surface_group>
+  convex_surface_groups(const std::vector<surface*>& surfaces) {
+    if (surfaces.size() == 0) { return {}; }
+
+    vector<edge> conv_edges = convex_edges(surfaces.front()->get_parent_mesh());
+    cout << "# of convex edges = " << conv_edges.size() << endl;
+    auto ccs =
+      connected_components_by(surfaces,
+			      [&conv_edges](const surface* l, const surface* r)
+			      { return share_edge(conv_edges, *l, *r); });
+    return ccs;
+  }
+
+  // NOTE: Assumes indexing of relation and partition are the same
+  boost::optional<unsigned>
+  min_cost_bucket(const surface_group& surfaces,
+		  const relation<surface*, fixture*>& possible_orientations,
+		  const partition<surface*, fixture*>& orients) {
+    double min_cost = 10.0;
+    bool found_bucket = false;
+    unsigned i = 0;
+    for (auto bucket_ind : orients.bucket_inds()) {
+      double current_cost =
+	orients.items_in_bucket_inds(bucket_ind).size() > 0 ? 0.0 : 1.0;
+      bool can_contain_all =
+	intersection(possible_orientations.lefts_connected_to(bucket_ind),
+		     surfaces).size() == surfaces.size();
+      if (can_contain_all && current_cost < min_cost) {
+	found_bucket = true;
+	min_cost = current_cost;
+	i = bucket_ind;
+      }
+    }
+    if (found_bucket) {
+      return i;
+    }
+    return boost::none;
+  }
+
   partition<surface*, fixture*>
   greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations) {
-    vector<unsigned> surfaces_left = possible_orientations.left_inds();
-    vector<unsigned> orientations_left = possible_orientations.right_inds();
+    std::vector<surface_group> surface_groups =
+      convex_surface_groups(possible_orientations.left_elems());
+
+    cout << "# surface groups = " << surface_groups.size() << endl;
+
     partition<surface*, fixture*> orients(possible_orientations.left_elems(),
 					  possible_orientations.right_elems());
 
+    for (auto surface_group : surface_groups) {
+      boost::optional<unsigned> b = min_cost_bucket(surface_group,
+						    possible_orientations,
+						    orients);
+      if (b) {
+	for (auto s : surface_group) {
+	  orients.assign_item_to_bucket(s, *b);
+	}
+      } else {
+	cout << "No legal bucket for surface group" << endl;
+	assert(false);
+      }
+    }
+    vector<unsigned> surfaces_left = possible_orientations.left_inds();
+    vector<unsigned> orientations_left = possible_orientations.right_inds();
     while (surfaces_left.size() > 0) {
       unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
     						      orientations_left,

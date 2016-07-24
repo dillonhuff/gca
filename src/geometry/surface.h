@@ -13,7 +13,7 @@ namespace gca {
     vector<index_t> tri_indexes;
 
   public:
-    inline bool contains(index_t ind) {
+    inline bool contains(index_t ind) const {
       return std::binary_search(begin(tri_indexes), end(tri_indexes), ind);
     }
 

@@ -10,6 +10,17 @@
 
 namespace gca {
 
+  struct edge {
+    index_t l;
+    index_t r;
+
+    edge(const index_t p_l, const index_t p_r) : l(p_l), r(p_r) {}
+  };
+
+  bool operator==(const edge x, const edge y) {
+    return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
+  }
+  
   class triangular_mesh {
   private:
     std::vector<point> vertices;
@@ -28,6 +39,15 @@ namespace gca {
       tri_vertices(triangles_p),
       face_orientations(face_orientations_p),
       mesh(mesh_p) {}
+
+    std::vector<edge> edges() const {
+      std::vector<edge> edges;
+      for (index_t i = 0; i < mesh.num_halfedges(); i++) {
+	auto p = mesh.he_index2directed_edge(i);
+	edges.push_back(edge(p.first, p.second));
+      }
+      return edges;
+    }
 
     inline std::vector<index_t> face_indexes() const {
       std::vector<index_t> indices(tri_vertices.size());
