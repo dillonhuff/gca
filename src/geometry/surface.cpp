@@ -17,6 +17,14 @@ namespace gca {
     return share_edge(ind1, ind2, surfaces[i].get_parent_mesh());
   }
 
+  bool surfaces_share_edge(const unsigned i,
+			   const unsigned j,
+			   const std::vector<surface*>& surfaces) {
+    auto ind1 = surfaces[i]->index_list();
+    auto ind2 = surfaces[j]->index_list();
+    return share_edge(ind1, ind2, surfaces[i]->get_parent_mesh());
+  }
+  
   std::vector<index_t> surface_vertexes(const surface& s) {
     vector<index_t> inds;
     for (auto i : s.index_list()) {

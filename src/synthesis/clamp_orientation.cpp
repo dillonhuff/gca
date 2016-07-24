@@ -218,10 +218,10 @@ namespace gca {
 
   std::vector<unsigned>
   surfaces_millable_from(const clamp_orientation& orient,
-			 const std::vector<surface>& surfaces_left,
+			 const std::vector<surface*>& surfaces_left,
 			 const vice& v) {
     assert(surfaces_left.size() > 0);
-    const triangular_mesh& part = surfaces_left.front().get_parent_mesh();
+    const triangular_mesh& part = surfaces_left.front()->get_parent_mesh();
 
     std::vector<index_t> millable =
       millable_faces(orient.top_normal(), part);
@@ -234,7 +234,7 @@ namespace gca {
     sort(begin(millable), end(millable));
     vector<unsigned> mill_surfaces;
     for (unsigned i = 0; i < surfaces_left.size(); i++) {
-      if (surfaces_left[i].contained_by_sorted(millable)) {
+      if (surfaces_left[i]->contained_by_sorted(millable)) {
 	mill_surfaces.push_back(i);
       }
     }

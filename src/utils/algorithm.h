@@ -378,6 +378,15 @@ namespace gca {
     return basis;
   }
 
+  template<typename T>
+  std::vector<T*> ptrs(std::vector<T>& elems) {
+    std::vector<T*> pointers;
+    for (T& e : elems) {
+      pointers.push_back(&e);
+    }
+    return pointers;
+  }
+
 }
 
 #endif

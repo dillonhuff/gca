@@ -71,8 +71,13 @@ namespace gca {
 			   const unsigned j,
 			   const std::vector<surface>& surfaces);
 
+  bool surfaces_share_edge(const unsigned i,
+			   const unsigned j,
+			   const std::vector<surface*>& surfaces);
+  
   bool surfaces_share_edge(const surface& l,
 			   const surface& r);
+
   
   std::vector<index_t> surface_vertexes(const surface& s);
 

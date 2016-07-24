@@ -8,8 +8,8 @@ namespace gca {
   bool
   transferable(const std::vector<unsigned>& cc,
 	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
-	       const relation<surface, fixture>& possible_orients) {
-    const std::vector<surface>& surfaces_to_cut = possible_orients.left_elems();
+	       const relation<surface*, fixture>& possible_orients) {
+    const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
     bool connected_to_any = false;
     for (auto i : cc) {
       for (auto j : orient_surface_inds.second) {
@@ -35,7 +35,7 @@ namespace gca {
 		   const vector<unsigned>& cc,
 		   surface_map& simplified,
 		   const surface_map& surface_allocations,
-		   const relation<surface, fixture>& possible_orients) {
+		   const relation<surface*, fixture>& possible_orients) {
     bool found_better_orient = false;
     for (auto q : surface_allocations) {
       if (q.first != orient_ind && transferable(cc, q, possible_orients)) {
@@ -54,8 +54,8 @@ namespace gca {
   
   surface_map
   simplify_orientations(const surface_map& surface_allocations,
-			const relation<surface, fixture>& possible_orients) {
-    const std::vector<surface>& surfaces_to_cut = possible_orients.left_elems();
+			const relation<surface*, fixture>& possible_orients) {
+    const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
     surface_map simplified;
     for (auto p : surface_allocations) {
       auto orient_ind = p.first;
@@ -178,9 +178,9 @@ namespace gca {
   }
 
   void
-  select_orientations(relation<surface, fixture>& orient_map,
+  select_orientations(relation<surface*, fixture>& orient_map,
 		      std::vector<unsigned>& surfaces_left,
-		      const std::vector<surface>& surfaces,
+		      const std::vector<surface*>& surfaces,
 		      std::vector<fixture>& all_orients) {
     vector<unsigned> orients_left = inds(all_orients);
     while (surfaces_left.size() > 0 && orients_left.size() > 0) {
@@ -196,10 +196,10 @@ namespace gca {
     }
   }
 
-  relation<surface, fixture>
-  greedy_possible_orientations(const std::vector<surface>& surfaces,
+  relation<surface*, fixture>
+  greedy_possible_orientations(const std::vector<surface*>& surfaces,
 			       std::vector<fixture>& all_orients) {
-    relation<surface, fixture> rel(surfaces, all_orients);
+    relation<surface*, fixture> rel(surfaces, all_orients);
     vector<unsigned> surfaces_left = inds(surfaces);
     select_orientations(rel, surfaces_left, surfaces, all_orients);
     assert(surfaces_left.size() == 0);
@@ -209,7 +209,7 @@ namespace gca {
   std::vector<unsigned>
   select_surfaces(unsigned orient_ind,
 		  std::vector<unsigned>& surfaces_left,
-		  const relation<surface, fixture>& possible_orientations) {
+		  const relation<surface*, fixture>& possible_orientations) {
     vector<unsigned> initial_surfaces;
     for (auto i : surfaces_left) {
       if (elem(orient_ind, possible_orientations.rights_connected_to(i))) {
@@ -220,7 +220,7 @@ namespace gca {
   }
 
   unsigned
-  orient_with_most_surfaces(const relation<surface, fixture>& possible_orientations,
+  orient_with_most_surfaces(const relation<surface*, fixture>& possible_orientations,
 			    const std::vector<unsigned>& orients_left,
 			    const std::vector<unsigned>& surfaces_left) {
     unsigned max_surfs = 0;
@@ -242,7 +242,7 @@ namespace gca {
   }
   
   surface_map
-  greedy_pick_orientations(const relation<surface, fixture>& possible_orientations) {
+  greedy_pick_orientations(const relation<surface*, fixture>& possible_orientations) {
 
     vector<unsigned> surfaces_left = possible_orientations.left_inds();
     vector<unsigned> orientations_left = possible_orientations.right_inds();
@@ -269,9 +269,9 @@ namespace gca {
   }
 
   surface_map
-  pick_orientations(const std::vector<surface>& surfaces_to_cut,
+  pick_orientations(const std::vector<surface*>& surfaces_to_cut,
 		    std::vector<fixture>& all_orients) {
-    relation<surface, fixture> possible_orientations =
+    relation<surface*, fixture> possible_orientations =
       greedy_possible_orientations(surfaces_to_cut, all_orients);
 
     assert(surfaces_to_cut.size() == 0 || possible_orientations.right_size() > 0);
@@ -295,7 +295,7 @@ namespace gca {
 
   std::vector<fixture_setup>
   orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface>& surfs_to_cut,
+		      const std::vector<surface*>& surfs_to_cut,
 		      std::vector<fixture>& all_orients) {
     surface_map os =
       pick_orientations(surfs_to_cut, all_orients);
@@ -305,7 +305,7 @@ namespace gca {
       unsigned ori = p.first;
       surface_list surfaces;
       for (auto i : p.second) {
-      	surfaces.push_back(surfs_to_cut[i].index_list());
+      	surfaces.push_back(surfs_to_cut[i]->index_list());
       }
       orients.push_back(make_fixture_setup(part_mesh, all_orients[ori], surfaces));
     }
@@ -326,7 +326,9 @@ namespace gca {
 
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
-    concat(setups, orientations_to_cut(part_mesh, surfs_to_cut, all_orients));
+
+    auto surf_ptrs = ptrs(surfs_to_cut);
+    concat(setups, orientations_to_cut(part_mesh, surf_ptrs, all_orients));
 
     return fixture_plan(part_mesh, setups);
   }

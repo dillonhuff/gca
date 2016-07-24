@@ -115,7 +115,7 @@ namespace gca {
 
   std::vector<unsigned>
   surfaces_millable_from(const clamp_orientation& orient,
-			 const std::vector<surface>& surfaces_left,
+			 const std::vector<surface*>& surfaces_left,
 			 const vice& v);
 
   clamp_orientation
