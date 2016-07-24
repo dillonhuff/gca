@@ -1,88 +1,91 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
+#include "utils/partition.h"
 #include "utils/relation.h"
 
 namespace gca {
 
-  bool
-  transferable(const std::vector<unsigned>& cc,
-	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
-	       const relation<surface*, fixture*>& possible_orients) {
-    const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
-    bool connected_to_any = false;
-    for (auto i : cc) {
-      for (auto j : orient_surface_inds.second) {
-	if (surfaces_share_edge(i, j, surfaces_to_cut)) {
-	  connected_to_any = true;
-	}
-      }
-    }
-    if (!connected_to_any) { return false; }
-    bool can_cut_from_i = true;
-    for (auto i : cc) {
-      auto orients = possible_orients.rights_connected_to(i);
-      if (!elem(orient_surface_inds.first, orients)) {
-	can_cut_from_i = false;
-	break;
-      }
-    }
-    return can_cut_from_i;
-  }
+  // bool
+  // transferable(const std::vector<unsigned>& cc,
+  // 	       const std::pair<unsigned, std::vector<unsigned>>& orient_surface_inds,
+  // 	       const relation<surface*, fixture*>& possible_orients) {
+  //   const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
+  //   bool connected_to_any = false;
+  //   for (auto i : cc) {
+  //     for (auto j : orient_surface_inds.second) {
+  // 	if (surfaces_share_edge(i, j, surfaces_to_cut)) {
+  // 	  connected_to_any = true;
+  // 	}
+  //     }
+  //   }
+  //   if (!connected_to_any) { return false; }
+  //   bool can_cut_from_i = true;
+  //   for (auto i : cc) {
+  //     auto orients = possible_orients.rights_connected_to(i);
+  //     if (!elem(orient_surface_inds.first, orients)) {
+  // 	can_cut_from_i = false;
+  // 	break;
+  //     }
+  //   }
+  //   return can_cut_from_i;
+  // }
   
-  void
-  insert_component(const unsigned orient_ind,
-		   const vector<unsigned>& cc,
-		   surface_map& simplified,
-		   const surface_map& surface_allocations,
-		   const relation<surface*, fixture*>& possible_orients) {
-    bool found_better_orient = false;
-    for (auto q : surface_allocations) {
-      if (q.first != orient_ind && transferable(cc, q, possible_orients)) {
-	found_better_orient = true;
-	for (auto i : cc) {
-	  map_insert(simplified, q.first, i);
-	}
-      }
-    }
-    if (!found_better_orient) {
-      for (auto i : cc) {
-      	map_insert(simplified, orient_ind, i);
-      }
-    }
-  }
-  
-  surface_map
-  simplify_orientations(const surface_map& surface_allocations,
-			const relation<surface*, fixture*>& possible_orients) {
-    const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
-    surface_map simplified;
-    for (auto p : surface_allocations) {
-      auto orient_ind = p.first;
-      auto ccs =
-      	connected_components_by(p.second,
-      				[surfaces_to_cut](const unsigned i, const unsigned j)
-      				{
-      				  return surfaces_share_edge(i, j, surfaces_to_cut);
-      				});
-      auto elems = p.second;
-      for (auto cc_inds : ccs) {
-	vector<unsigned> cc(cc_inds.size());
-	std::transform(begin(cc_inds), end(cc_inds), begin(cc),
-		       [elems](const unsigned i)
-		       { return elems[i]; });
+  // void
+  // insert_component(const unsigned orient_ind,
+  // 		   const vector<unsigned>& cc,
+  // 		   surface_map& simplified,
+  // 		   const surface_map& surface_allocations,
+  // 		   const relation<surface*, fixture*>& possible_orients) {
+  //   bool found_better_orient = false;
+  //   for (auto q : surface_allocations) {
+  //     if (q.first != orient_ind && transferable(cc, q, possible_orients)) {
+  // 	found_better_orient = true;
+  // 	for (auto i : cc) {
+  // 	  map_insert(simplified, q.first, i);
+  // 	}
+  //     }
+  //   }
+  //   if (!found_better_orient) {
+  //     for (auto i : cc) {
+  //     	map_insert(simplified, orient_ind, i);
+  //     }
+  //   }
+  // }
 
-      	insert_component(orient_ind,
-      			 cc,
-      			 simplified,
-      			 surface_allocations,
-      			 possible_orients);
-      }
+  // partition<surface*, fixture*>
+  // simplify_orientations(const partition<surface*, fixture*>& surface_allocations,
+  // 			const relation<surface*, fixture*>& possible_orients) {
+  //   const std::vector<surface*>& surfaces_to_cut = possible_orients.left_elems();
 
-    }
-    assert(simplified.size() <= surface_allocations.size());
-    return simplified;
-  }
+  //   partition<surface*, fixture*> simplified(possible_orients.left_elems(),
+  // 					     possible_orients.right_elems());
+  //   for (auto orient_ind : surface_allocations.bucket_inds()) {
+  //     //      auto orient_ind = p.first;
+  //     auto ccs =
+  //     	connected_components_by(surfaces_,
+  //     				[surfaces_to_cut](const unsigned i, const unsigned j)
+  //     				{
+  //     				  return surfaces_share_edge(i, j, surfaces_to_cut);
+  //     				});
+  //     auto elems = p.second;
+  //     for (auto cc_inds : ccs) {
+  //   	vector<unsigned> cc(cc_inds.size());
+  //   	std::transform(begin(cc_inds), end(cc_inds), begin(cc),
+  //   		       [elems](const unsigned i)
+  //   		       { return elems[i]; });
+
+  //     	insert_component(orient_ind,
+  //     			 cc,
+  //     			 simplified,
+  //     			 surface_allocations,
+  //     			 possible_orients);
+  //     }
+
+  //   }
+  //   assert(simplified.size() <= surface_allocations.size());
+  //   return simplified;
+  // }
 
   std::vector<surface>
   stable_surfaces_after_clipping(const triangular_mesh& part_mesh,
@@ -178,7 +181,7 @@ namespace gca {
   }
 
   void
-  select_orientations(relation<surface*, fixture*>& orient_map,
+  select_fixtures(relation<surface*, fixture*>& orient_map,
 		      std::vector<unsigned>& surfaces_left,
 		      const std::vector<surface*>& surfaces,
 		      std::vector<fixture*>& all_orients) {
@@ -197,11 +200,11 @@ namespace gca {
   }
 
   relation<surface*, fixture*>
-  greedy_possible_orientations(const std::vector<surface*>& surfaces,
+  greedy_possible_fixtures(const std::vector<surface*>& surfaces,
 			       std::vector<fixture*>& all_orients) {
     relation<surface*, fixture*> rel(surfaces, all_orients);
     vector<unsigned> surfaces_left = inds(surfaces);
-    select_orientations(rel, surfaces_left, surfaces, all_orients);
+    select_fixtures(rel, surfaces_left, surfaces, all_orients);
     assert(surfaces_left.size() == 0);
     return rel;
   }
@@ -240,26 +243,29 @@ namespace gca {
     assert(selected_some);
     return p;
   }
-  
-  surface_map
-  greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations) {
 
+  partition<surface*, fixture*>
+  greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations) {
     vector<unsigned> surfaces_left = possible_orientations.left_inds();
     vector<unsigned> orientations_left = possible_orientations.right_inds();
-    surface_map orients;
+    partition<surface*, fixture*> orients(possible_orientations.left_elems(),
+					  possible_orientations.right_elems());
 
     while (surfaces_left.size() > 0) {
       unsigned orient_ind = orient_with_most_surfaces(possible_orientations,
-  						      orientations_left,
-  						      surfaces_left);
+    						      orientations_left,
+    						      surfaces_left);
 
       remove(orient_ind, orientations_left);
 
       vector<unsigned> surfaces_cut =
-  	select_surfaces(orient_ind, surfaces_left, possible_orientations);
+    	select_surfaces(orient_ind, surfaces_left, possible_orientations);
 
       if (surfaces_cut.size() > 0) {
-  	orients[orient_ind] = surfaces_cut;
+	for (auto s : surfaces_cut) {
+	  orients.assign_item_to_bucket(s, orient_ind);
+	}
+	//    	orients[orient_ind] = surfaces_cut;
       }
       subtract(surfaces_left, surfaces_cut);
     }
@@ -268,47 +274,48 @@ namespace gca {
     return orients;
   }
 
-  surface_map
+  //  surface_map
+  partition<surface*, fixture*>
   pick_orientations(const std::vector<surface*>& surfaces_to_cut,
 		    std::vector<fixture*>& all_orients) {
     relation<surface*, fixture*> possible_orientations =
-      greedy_possible_orientations(surfaces_to_cut, all_orients);
+      greedy_possible_fixtures(surfaces_to_cut, all_orients);
 
     assert(surfaces_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
     auto greedy_orients =
       greedy_pick_orientations(possible_orientations);
 
-    return simplify_orientations(greedy_orients,
-    				 possible_orientations);
+    return greedy_orients;
   }
 
   fixture_setup
   make_fixture_setup(const triangular_mesh& part_mesh,
-		     const fixture* f,
+		     const fixture& f,
 		     surface_list& surfaces) {
-    triangular_mesh m = oriented_part_mesh(part_mesh, f->orient, f->v);
+    triangular_mesh m = oriented_part_mesh(part_mesh, f.orient, f.v);
     triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
     auto pockets = make_surface_pockets(*mesh, surfaces);
-    return fixture_setup(mesh, *f, pockets);
+    return fixture_setup(mesh, f, pockets);
   }
 
   std::vector<fixture_setup>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface*>& surfs_to_cut,
 		      std::vector<fixture*>& all_orients) {
-    surface_map os =
+    partition<surface*, fixture*> surface_partition =
       pick_orientations(surfs_to_cut, all_orients);
 
     vector<fixture_setup> orients;
-    for (auto p : os) {
-      unsigned ori = p.first;
+    for (auto j : surface_partition.non_empty_bucket_inds()) {
+      fixture* fix = surface_partition.bucket(j);
       surface_list surfaces;
-      for (auto i : p.second) {
-      	surfaces.push_back(surfs_to_cut[i]->index_list());
+      for (auto i : surface_partition.items_in_bucket_inds(j)) {
+	surfaces.push_back(surface_partition.item(i)->index_list());
       }
-      orients.push_back(make_fixture_setup(part_mesh, all_orients[ori], surfaces));
+      orients.push_back(make_fixture_setup(part_mesh, *fix, surfaces));
     }
+
     return orients;
   }
 

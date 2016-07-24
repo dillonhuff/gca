@@ -11,7 +11,6 @@
 
 namespace gca {
 
-  typedef std::map<unsigned, std::vector<unsigned>> orientation_map;
   typedef std::map<unsigned, std::vector<unsigned>> surface_map;
 
   struct fixture {

@@ -61,6 +61,9 @@ namespace gca {
     const std::vector<L>& left_elems() const { return left; }
     const std::vector<R>& right_elems() const { return right; }
 
+    L left_elem(const unsigned i) const { return left[i]; }
+    R right_elem(const unsigned i) const { return right[i]; }
+    
     std::vector<unsigned> left_inds() const { return inds(left_elems()); }
     std::vector<unsigned> right_inds() const { return inds(right_elems()); }
   };
