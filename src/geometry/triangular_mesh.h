@@ -296,6 +296,11 @@ namespace gca {
 			 const point n,
 			 const double tolerance);
 
+  std::vector<gca::edge>
+  convex_edges(const triangular_mesh& m);
+
+  double dihedral_angle(const gca::edge e, const triangular_mesh& m);
+  
 }
 
 #endif

@@ -99,11 +99,22 @@ namespace gca {
   part_outline_surface(std::vector<surface>* surfaces_to_cut,
 		       const point n);
 
+  typedef std::vector<unsigned> surface_group;
+
   boost::optional<surface>
   part_outline_surface(const triangular_mesh& m,
 		       const point n);
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part);
+
+  bool
+  share_edge(const std::vector<gca::edge>& edges,
+	     const surface& l,
+	     const surface& r);
+
+  std::vector<surface_group>
+  convex_surface_groups(const std::vector<surface*>& surfaces);
+
 }
 
 #endif

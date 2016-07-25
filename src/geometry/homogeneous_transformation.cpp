@@ -26,9 +26,6 @@ namespace gca {
       return boost::none;
     }
 
-    cout << "Rotation matrix = " << endl;
-    cout << rotation << endl;
-
     const ublas::vector<double> displacement =
       plane_basis_displacement(rotation,
 			       ap.normal(), bp.normal(), cp.normal(),

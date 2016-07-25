@@ -184,4 +184,32 @@ namespace gca {
     return surfaces;
   }
 
+  bool
+  share_edge(const std::vector<gca::edge>& edges,
+	     const surface& l,
+	     const surface& r) {
+    vector<gca::edge> l_es = edges;
+    delete_if(l_es,
+	      [l](const gca::edge e) { return !(l.contains(e.l) && l.contains(e.r)); });
+
+    vector<gca::edge> r_es = edges;
+    delete_if(r_es,
+	      [r](const gca::edge e) { return !(r.contains(e.l) && r.contains(e.r)); });
+
+    return intersection(l_es, r_es).size() > 0;
+  }
+
+  std::vector<surface_group>
+  convex_surface_groups(const std::vector<surface*>& surfaces) {
+    if (surfaces.size() == 0) { return {}; }
+
+    vector<gca::edge> conv_edges = convex_edges(surfaces.front()->get_parent_mesh());
+    cout << "# of convex edges = " << conv_edges.size() << endl;
+    auto ccs =
+      connected_components_by(surfaces,
+			      [&conv_edges](const surface* l, const surface* r)
+			      { return share_edge(conv_edges, *l, *r); });
+    return ccs;
+  }
+
 }

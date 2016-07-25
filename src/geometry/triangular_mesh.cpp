@@ -427,4 +427,25 @@ namespace gca {
     return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
   }
 
+  double dihedral_angle(const gca::edge e, const triangular_mesh& m) {
+    auto tl = m.vertex_face_neighbors(e.l);
+    auto tr = m.vertex_face_neighbors(e.r);
+    auto tris = intersection(tl, tr);
+    assert(tris.size() == 2);
+    point n1 = m.face_orientation(tris[0]);
+    point n2 = m.face_orientation(tris[1]);
+    return angle_between(n1, n2);
+  }
+  
+  std::vector<gca::edge>
+  convex_edges(const triangular_mesh& m) {
+    vector<gca::edge> c_edges;
+    for (auto e : m.edges()) {
+      if (dihedral_angle(e, m) < 180) {
+	c_edges.push_back(e);
+      }
+    }
+    return c_edges;
+  }
+
 }

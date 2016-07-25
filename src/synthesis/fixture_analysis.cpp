@@ -120,7 +120,7 @@ namespace gca {
 
   relation<surface*, fixture*>
   greedy_possible_fixtures(const std::vector<surface*>& surfaces,
-			       std::vector<fixture*>& all_orients) {
+			   std::vector<fixture*>& all_orients) {
     relation<surface*, fixture*> rel(surfaces, all_orients);
     vector<unsigned> surfaces_left = inds(surfaces);
     select_fixtures(rel, surfaces_left, surfaces, all_orients);
@@ -163,57 +163,6 @@ namespace gca {
     return p;
   }
 
-  typedef std::vector<unsigned> surface_group;
-
-  bool
-  share_edge(const std::vector<gca::edge>& edges,
-	     const surface& l,
-	     const surface& r) {
-    vector<gca::edge> l_es = edges;
-    delete_if(l_es,
-	      [l](const gca::edge e) { return !(l.contains(e.l) && l.contains(e.r)); });
-
-    vector<gca::edge> r_es = edges;
-    delete_if(r_es,
-	      [r](const gca::edge e) { return !(r.contains(e.l) && r.contains(e.r)); });
-
-    return intersection(l_es, r_es).size() > 0;
-  }
-
-  double dihedral_angle(const gca::edge e, const triangular_mesh& m) {
-    auto tl = m.vertex_face_neighbors(e.l);
-    auto tr = m.vertex_face_neighbors(e.r);
-    auto tris = intersection(tl, tr);
-    assert(tris.size() == 2);
-    point n1 = m.face_orientation(tris[0]);
-    point n2 = m.face_orientation(tris[1]);
-    return angle_between(n1, n2);
-  }
-  
-  std::vector<gca::edge>
-  convex_edges(const triangular_mesh& m) {
-    vector<gca::edge> c_edges;
-    for (auto e : m.edges()) {
-      if (dihedral_angle(e, m) < 180) {
-	c_edges.push_back(e);
-      }
-    }
-    return c_edges;
-  }
-
-  std::vector<surface_group>
-  convex_surface_groups(const std::vector<surface*>& surfaces) {
-    if (surfaces.size() == 0) { return {}; }
-
-    vector<gca::edge> conv_edges = convex_edges(surfaces.front()->get_parent_mesh());
-    cout << "# of convex edges = " << conv_edges.size() << endl;
-    auto ccs =
-      connected_components_by(surfaces,
-			      [&conv_edges](const surface* l, const surface* r)
-			      { return share_edge(conv_edges, *l, *r); });
-    return ccs;
-  }
-
   // NOTE: Assumes indexing of relation and partition are the same
   boost::optional<unsigned>
   min_cost_bucket(const surface_group& surfaces,
@@ -244,8 +193,6 @@ namespace gca {
   greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations) {
     std::vector<surface_group> surface_groups =
       convex_surface_groups(possible_orientations.left_elems());
-
-    cout << "# surface groups = " << surface_groups.size() << endl;
 
     partition<surface*, fixture*> orients(possible_orientations.left_elems(),
 					  possible_orientations.right_elems());
