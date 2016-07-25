@@ -1,6 +1,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
+#include "utils/constrained_partition.h"
 #include "utils/partition.h"
 #include "utils/relation.h"
 
@@ -86,16 +87,16 @@ namespace gca {
   }
 
   std::vector<fixture_setup>
-  partition_fixture_setups(const partition<surface*, fixture*>& surface_partition) {
+  partition_fixture_setups(const constrained_partition<surface*, fixture*>& surface_part) {
     const triangular_mesh& part_mesh =
-      surface_partition.items().front()->get_parent_mesh();
+      surface_part.items().front()->get_parent_mesh();
     
     vector<fixture_setup> orients;
-    for (auto j : surface_partition.non_empty_bucket_inds()) {
-      fixture* fix = surface_partition.bucket(j);
+    for (auto j : surface_part.non_empty_bucket_inds()) {
+      fixture* fix = surface_part.bucket(j);
       surface_list surfaces;
-      for (auto i : surface_partition.items_in_bucket_inds(j)) {
-	surfaces.push_back(surface_partition.item(i)->index_list());
+      for (auto i : surface_part.items_in_bucket_inds(j)) {
+	surfaces.push_back(surface_part.item(i)->index_list());
       }
       orients.push_back(make_fixture_setup(part_mesh, *fix, surfaces));
     }
@@ -157,43 +158,43 @@ namespace gca {
     return rel;
   }
 
-  unsigned
-  orient_with_most_surfaces(const relation<surface*, fixture*>& possible_orientations,
-			    const std::vector<unsigned>& orients_left,
-			    const std::vector<unsigned>& surfaces_left) {
-    unsigned max_surfs = 0;
-    bool selected_some = false;
-    unsigned p = 0;
-    for (auto orient : orients_left) {
-      vector<unsigned> s_inds = possible_orientations.lefts_connected_to(orient);
-      s_inds = intersection(s_inds, surfaces_left);
-      auto num_surfs_visible = s_inds.size();
+  // unsigned
+  // orient_with_most_surfaces(const relation<surface*, fixture*>& possible_orientations,
+  // 			    const std::vector<unsigned>& orients_left,
+  // 			    const std::vector<unsigned>& surfaces_left) {
+  //   unsigned max_surfs = 0;
+  //   bool selected_some = false;
+  //   unsigned p = 0;
+  //   for (auto orient : orients_left) {
+  //     vector<unsigned> s_inds = possible_orientations.lefts_connected_to(orient);
+  //     s_inds = intersection(s_inds, surfaces_left);
+  //     auto num_surfs_visible = s_inds.size();
 
-      if (num_surfs_visible > max_surfs) {
-    	p = orient;
-    	max_surfs = num_surfs_visible;
-    	selected_some = true;
-      }
-    }
-    assert(selected_some);
-    return p;
-  }
+  //     if (num_surfs_visible > max_surfs) {
+  //   	p = orient;
+  //   	max_surfs = num_surfs_visible;
+  //   	selected_some = true;
+  //     }
+  //   }
+  //   assert(selected_some);
+  //   return p;
+  // }
 
   // NOTE: Assumes indexing of relation and partition are the same
   boost::optional<unsigned>
   min_cost_bucket(const surface_group& surfaces,
-		  const relation<surface*, fixture*>& possible_orientations,
-		  const partition<surface*, fixture*>& orients) {
+		  const constrained_partition<surface*, fixture*>& orients) {
     double min_cost = 10.0;
     bool found_bucket = false;
     unsigned i = 0;
     for (auto bucket_ind : orients.bucket_inds()) {
       double current_cost =
 	orients.items_in_bucket_inds(bucket_ind).size() > 0 ? 0.0 : 1.0;
-      bool can_contain_all =
-	intersection(possible_orientations.lefts_connected_to(bucket_ind),
-		     surfaces).size() == surfaces.size();
-      if (can_contain_all && current_cost < min_cost) {
+      // bool can_contain_all =
+      // 	intersection(possible_orientations.lefts_connected_to(bucket_ind),
+      // 		     surfaces).size() == surfaces.size();
+      if (orients.bucket_can_contain_all(bucket_ind, surfaces) &&
+	  current_cost < min_cost) {
 	found_bucket = true;
 	min_cost = current_cost;
 	i = bucket_ind;
@@ -205,17 +206,20 @@ namespace gca {
     return boost::none;
   }
 
-  //  partition<surface*, fixture*>
+  // void
+  // greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations,
+  // 			   partition<surface*, fixture*>& orients) {
+
   void
-  greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations,
-			   partition<surface*, fixture*>& orients) {
+  greedy_pick_orientations(constrained_partition<surface*, fixture*>& orients) {
+
     std::vector<surface_group> surface_groups =
-      convex_surface_groups(possible_orientations.left_elems());
+      convex_surface_groups(orients.items());
 
     for (auto surface_group : surface_groups) {
-      boost::optional<unsigned> b = min_cost_bucket(surface_group,
-						    possible_orientations,
-						    orients);
+      boost::optional<unsigned> b =
+	min_cost_bucket(surface_group, orients);
+
       if (b) {
 	for (auto s : surface_group) {
 	  orients.assign_item_to_bucket(s, *b);
@@ -237,14 +241,14 @@ namespace gca {
 
     assert(surfs_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
-    
-    partition<surface*, fixture*> surface_partition(possible_orientations.left_elems(),
-						    possible_orientations.right_elems());
+    constrained_partition<surface*, fixture*> surface_part(possible_orientations);
 
-    greedy_pick_orientations(possible_orientations, surface_partition);
+    //possible_orientations.left_elems(),
+    // possible_orientations.right_elems());
 
-    return partition_fixture_setups(surface_partition);
+    greedy_pick_orientations(surface_part); //possible_orientations, surface_part);
 
+    return partition_fixture_setups(surface_part);
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
@@ -266,7 +270,7 @@ namespace gca {
     auto surf_ptrs = ptrs(surfs_to_cut);
     vector<fixture_setup> rest =
       orientations_to_cut(surf_ptrs, orient_ptrs);
-    
+
     concat(setups, rest);
 
     return fixture_plan(part_mesh, setups);
