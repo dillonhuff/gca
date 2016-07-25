@@ -74,6 +74,35 @@ namespace gca {
     return m;
   }
 
+
+  fixture_setup
+  make_fixture_setup(const triangular_mesh& part_mesh,
+		     const fixture& f,
+		     surface_list& surfaces) {
+    triangular_mesh m = oriented_part_mesh(part_mesh, f.orient, f.v);
+    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
+    auto pockets = make_surface_pockets(*mesh, surfaces);
+    return fixture_setup(mesh, f, pockets);
+  }
+
+  std::vector<fixture_setup>
+  partition_fixture_setups(const partition<surface*, fixture*>& surface_partition) {
+    const triangular_mesh& part_mesh =
+      surface_partition.items().front()->get_parent_mesh();
+    
+    vector<fixture_setup> orients;
+    for (auto j : surface_partition.non_empty_bucket_inds()) {
+      fixture* fix = surface_partition.bucket(j);
+      surface_list surfaces;
+      for (auto i : surface_partition.items_in_bucket_inds(j)) {
+	surfaces.push_back(surface_partition.item(i)->index_list());
+      }
+      orients.push_back(make_fixture_setup(part_mesh, *fix, surfaces));
+    }
+
+    return orients;
+  }
+
   std::vector<fixture>
   all_stable_fixtures(const std::vector<surface>& surfaces,
 		      const fixtures& f) {
@@ -126,19 +155,6 @@ namespace gca {
     select_fixtures(rel, surfaces_left, surfaces, all_orients);
     assert(surfaces_left.size() == 0);
     return rel;
-  }
-
-  std::vector<unsigned>
-  select_surfaces(unsigned orient_ind,
-		  std::vector<unsigned>& surfaces_left,
-		  const relation<surface*, fixture*>& possible_orientations) {
-    vector<unsigned> initial_surfaces;
-    for (auto i : surfaces_left) {
-      if (elem(orient_ind, possible_orientations.rights_connected_to(i))) {
-	initial_surfaces.push_back(i);
-      }
-    }
-    return initial_surfaces;
   }
 
   unsigned
@@ -214,49 +230,21 @@ namespace gca {
     return orients;
   }
 
-  //  surface_map
-  partition<surface*, fixture*>
-  pick_orientations(const std::vector<surface*>& surfaces_to_cut,
-		    std::vector<fixture*>& all_orients) {
+  std::vector<fixture_setup>
+  orientations_to_cut(const std::vector<surface*>& surfs_to_cut,
+		      std::vector<fixture*>& all_orients) {
+    if (surfs_to_cut.size() == 0) { return {}; }
+
     relation<surface*, fixture*> possible_orientations =
-      greedy_possible_fixtures(surfaces_to_cut, all_orients);
+      greedy_possible_fixtures(surfs_to_cut, all_orients);
 
-    assert(surfaces_to_cut.size() == 0 || possible_orientations.right_size() > 0);
+    assert(surfs_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
-    auto greedy_orients =
+    auto surface_partition =
       greedy_pick_orientations(possible_orientations);
 
-    return greedy_orients;
-  }
+    return partition_fixture_setups(surface_partition);
 
-  fixture_setup
-  make_fixture_setup(const triangular_mesh& part_mesh,
-		     const fixture& f,
-		     surface_list& surfaces) {
-    triangular_mesh m = oriented_part_mesh(part_mesh, f.orient, f.v);
-    triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
-    auto pockets = make_surface_pockets(*mesh, surfaces);
-    return fixture_setup(mesh, f, pockets);
-  }
-
-  std::vector<fixture_setup>
-  orientations_to_cut(const triangular_mesh& part_mesh,
-		      const std::vector<surface*>& surfs_to_cut,
-		      std::vector<fixture*>& all_orients) {
-    partition<surface*, fixture*> surface_partition =
-      pick_orientations(surfs_to_cut, all_orients);
-
-    vector<fixture_setup> orients;
-    for (auto j : surface_partition.non_empty_bucket_inds()) {
-      fixture* fix = surface_partition.bucket(j);
-      surface_list surfaces;
-      for (auto i : surface_partition.items_in_bucket_inds(j)) {
-	surfaces.push_back(surface_partition.item(i)->index_list());
-      }
-      orients.push_back(make_fixture_setup(part_mesh, *fix, surfaces));
-    }
-
-    return orients;
   }
 
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
@@ -276,7 +264,10 @@ namespace gca {
 
     auto orient_ptrs = ptrs(all_orients);
     auto surf_ptrs = ptrs(surfs_to_cut);
-    concat(setups, orientations_to_cut(part_mesh, surf_ptrs, orient_ptrs));
+    vector<fixture_setup> rest =
+      orientations_to_cut(surf_ptrs, orient_ptrs);
+    
+    concat(setups, rest);
 
     return fixture_plan(part_mesh, setups);
   }
