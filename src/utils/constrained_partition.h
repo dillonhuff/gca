@@ -24,6 +24,9 @@ namespace gca {
     std::vector<unsigned> bucket_inds() const { return part.bucket_inds(); }
     std::vector<unsigned> item_inds() const { return part.item_inds(); }
 
+    // const std::vector<unsigned>& bucket_inds() const { return part.bucket_inds(); }
+    // const std::vector<unsigned>& item_inds() const { return part.item_inds(); }
+    
     std::vector<unsigned> items_in_bucket_inds(const unsigned i) const {
       return part.items_in_bucket_inds(i);
     }
@@ -49,8 +52,27 @@ namespace gca {
     
     void assign_item_to_bucket(const unsigned i_ind,
     			       const unsigned b_ind) {
-      //rel.insert(i_ind, b_ind);
       part.assign_item_to_bucket(i_ind, b_ind);
+    }
+
+    const std::vector<unsigned> allowed_bucket_inds(const unsigned i_ind) const {
+      if (!(i_ind < constraint.left_elems().size())) {
+	cout << "i_ind = " << i_ind << endl;
+	cout << "# items = " << constraint.left_elems().size() << endl;
+	assert(false);
+      }
+      return constraint.rights_connected_to(i_ind);
+    }
+
+    bool item_is_assignable(const unsigned i_ind) const {
+      return allowed_bucket_inds(i_ind).size() > 0;
+    }
+
+    bool all_items_are_assignable() const {
+      std::vector<unsigned> i_inds = item_inds();
+      return all_of(begin(i_inds), end(i_inds),
+		    [this](const unsigned i_ind)
+		    { return this->item_is_assignable(i_ind); });
     }
 
   };

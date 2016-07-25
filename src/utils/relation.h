@@ -47,6 +47,7 @@ namespace gca {
 
     std::vector<r_index>
     rights_connected_to(const l_index l) const {
+      assert(l < left_elems().size());
       auto r = l_to_r.find(l);
       assert(r != end(l_to_r));
       return r->second;
