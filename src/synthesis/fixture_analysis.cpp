@@ -205,13 +205,12 @@ namespace gca {
     return boost::none;
   }
 
-  partition<surface*, fixture*>
-  greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations) {
+  //  partition<surface*, fixture*>
+  void
+  greedy_pick_orientations(const relation<surface*, fixture*>& possible_orientations,
+			   partition<surface*, fixture*>& orients) {
     std::vector<surface_group> surface_groups =
       convex_surface_groups(possible_orientations.left_elems());
-
-    partition<surface*, fixture*> orients(possible_orientations.left_elems(),
-					  possible_orientations.right_elems());
 
     for (auto surface_group : surface_groups) {
       boost::optional<unsigned> b = min_cost_bucket(surface_group,
@@ -226,8 +225,6 @@ namespace gca {
 	assert(false);
       }
     }
-
-    return orients;
   }
 
   std::vector<fixture_setup>
@@ -240,8 +237,11 @@ namespace gca {
 
     assert(surfs_to_cut.size() == 0 || possible_orientations.right_size() > 0);
 
-    auto surface_partition =
-      greedy_pick_orientations(possible_orientations);
+    
+    partition<surface*, fixture*> surface_partition(possible_orientations.left_elems(),
+						    possible_orientations.right_elems());
+
+    greedy_pick_orientations(possible_orientations, surface_partition);
 
     return partition_fixture_setups(surface_partition);
 
