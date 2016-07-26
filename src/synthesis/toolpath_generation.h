@@ -14,15 +14,17 @@
 namespace gca {
 
   struct toolpath {
+    double safe_z_before_tlc;
     double spindle_speed;
     double feedrate;
 
     tool t;
     std::vector<polyline> lines;
 
-    toolpath(const tool& p_t,
+    toolpath(const double p_safe_z,
+	     const tool& p_t,
 	     const std::vector<polyline>& p_lines)
-      : t(p_t), lines(p_lines) {}
+      : safe_z_before_tlc(p_safe_z), t(p_t), lines(p_lines) {}
   };
 
   // TODO: Move to triangular mesh?
@@ -249,8 +251,7 @@ namespace gca {
 				      const triangular_mesh& mesh,
 				      const tool& tool);
 
-  std::vector<block> emco_f1_code(const toolpath& pocket_lines,
-				  const double safe_height);
+  std::vector<block> emco_f1_code(const toolpath& pocket_lines);
 
   std::vector<point> drop_points_onto_max(const std::vector<point>& pts_z,
 					  const std::vector<index_t>& faces,

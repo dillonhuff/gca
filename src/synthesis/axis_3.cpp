@@ -27,6 +27,12 @@ namespace gca {
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
 				const std::vector<tool>& tools,
 				const material& stock_material) {
+    double h = (*(max_element(begin(pockets), end(pockets),
+			      [](const pocket& l, const pocket& r)
+      { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
+
+    double safe_z = h + 0.1;
+    
     double cut_depth;
     if (stock_material == ACETAL) {
       cut_depth = 0.2;
@@ -37,7 +43,7 @@ namespace gca {
     for (auto pocket : pockets) {
       tool t = pocket.select_tool(tools);
       auto pocket_paths = pocket.toolpath_lines(t, cut_depth);
-      lines.push_back(toolpath(t, pocket_paths));
+      lines.push_back(toolpath(safe_z, t, pocket_paths));
     }
     return lines;
   }

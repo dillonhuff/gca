@@ -447,8 +447,7 @@ namespace gca {
     return cuts_to_gcode(cuts, params);
   }
 
-  std::vector<block> emco_f1_code(const toolpath& tp,
-				  const double safe_height) {
+  std::vector<block> emco_f1_code(const toolpath& tp) {
     for (auto l : tp.lines) {
       assert(l.num_points() > 0);
     }
@@ -459,7 +458,7 @@ namespace gca {
 
     cut_params params;
     params.target_machine = EMCO_F1;
-    params.safe_height = safe_height;
+    params.safe_height = tp.safe_z_before_tlc + tp.t.length();
     return polylines_cuts(reflected_lines, params, 3000, 8.0);
   }
 

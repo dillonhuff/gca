@@ -40,19 +40,10 @@ namespace gca {
 				 const material& stock_material) {
     assert(tools.size() > 0);
 
-    double h = (*(max_element(begin(pockets), end(pockets),
-			      [](const pocket& l, const pocket& r)
-      { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
-
-    //    double cut_depth = 0.2; //cut_depth);
-
-    double safe_z = h + 0.1;
     vector<toolpath> toolpaths =
       mill_pockets(pockets, tools, stock_material);
 
-    auto emco_code = [safe_z](const toolpath& tp)
-      { return emco_f1_code(tp, safe_z); };
-    return build_gcode_program("Surface cut", toolpaths, emco_code);
+    return build_gcode_program("Surface cut", toolpaths, emco_f1_code);
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
