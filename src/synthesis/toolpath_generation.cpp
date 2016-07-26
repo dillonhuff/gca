@@ -448,8 +448,7 @@ namespace gca {
   }
 
   std::vector<block> emco_f1_code(const toolpath& tp,
-				  const double safe_height,
-				  const material& stock_material) {
+				  const double safe_height) {
     for (auto l : tp.lines) {
       assert(l.num_points() > 0);
     }

@@ -14,6 +14,9 @@
 namespace gca {
 
   struct toolpath {
+    double spindle_speed;
+    double feedrate;
+
     tool t;
     std::vector<polyline> lines;
 
@@ -234,10 +237,6 @@ namespace gca {
 					 offset_dir d,
 					 double inc);
 
-  // std::vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-  // 					     const tool& t,
-  // 					     double cut_depth);
-
   std::vector<cut*> polyline_cuts(const polyline& p);
 
   polyline compress_lines(const polyline& p, double tolerance);
@@ -251,8 +250,7 @@ namespace gca {
 				      const tool& tool);
 
   std::vector<block> emco_f1_code(const toolpath& pocket_lines,
-				  const double safe_height,
-				  const material& stock_material);
+				  const double safe_height);
 
   std::vector<point> drop_points_onto_max(const std::vector<point>& pts_z,
 					  const std::vector<index_t>& faces,

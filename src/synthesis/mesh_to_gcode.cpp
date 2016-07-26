@@ -44,12 +44,14 @@ namespace gca {
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
 
-    double cut_depth = 0.2;
-    double safe_z = h + 0.1;
-    vector<toolpath> toolpaths = mill_pockets(pockets, tools, cut_depth);
+    //    double cut_depth = 0.2; //cut_depth);
 
-    auto emco_code = [safe_z, stock_material](const toolpath& t)
-      { return emco_f1_code(t, safe_z, stock_material); };
+    double safe_z = h + 0.1;
+    vector<toolpath> toolpaths =
+      mill_pockets(pockets, tools, stock_material);
+
+    auto emco_code = [safe_z](const toolpath& tp)
+      { return emco_f1_code(tp, safe_z); };
     return build_gcode_program("Surface cut", toolpaths, emco_code);
   }
 
