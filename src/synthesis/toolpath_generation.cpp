@@ -454,21 +454,17 @@ namespace gca {
     return cuts_to_gcode(cuts, params);
   }
 
-  std::vector<block> emco_f1_code(const std::vector<toolpath>& pocket_lines,
+  std::vector<block> emco_f1_code(const toolpath& tp,
 				  const double safe_height,
 				  const material& stock_material) {
-    assert(pocket_lines.size() > 0);
-    for (auto tp : pocket_lines) {
-      for (auto l : tp.lines) {
-	assert(l.num_points() > 0);
-      }
+    for (auto l : tp.lines) {
+      assert(l.num_points() > 0);
     }
-    vector<polyline> reflected_lines;
-    for (auto tp : pocket_lines) {
-      point shift_vector = point(0, 0, tp.t.length());
-      auto adjusted_lines = shift_lines(reflect_y(tp.lines), shift_vector);
-      concat(reflected_lines, adjusted_lines);
-    }
+
+    point shift_vector = point(0, 0, tp.t.length());
+    vector<polyline> reflected_lines =
+      shift_lines(reflect_y(tp.lines), shift_vector);
+
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = safe_height;

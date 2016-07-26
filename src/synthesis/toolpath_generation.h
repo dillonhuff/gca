@@ -250,7 +250,7 @@ namespace gca {
 				      const triangular_mesh& mesh,
 				      const tool& tool);
 
-  std::vector<block> emco_f1_code(const std::vector<toolpath>& pocket_lines,
+  std::vector<block> emco_f1_code(const toolpath& pocket_lines,
 				  const double safe_height,
 				  const material& stock_material);
 

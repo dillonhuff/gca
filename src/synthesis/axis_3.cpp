@@ -25,10 +25,11 @@ namespace gca {
   }
 
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
-				const tool& t,
+				const std::vector<tool>& tools,
 				double cut_depth) {
     vector<toolpath> lines;
     for (auto pocket : pockets) {
+      tool t = pocket.select_tool(tools);
       auto pocket_paths = pocket_2P5D_interior(pocket, t, cut_depth);
       lines.push_back(toolpath(t, pocket_paths));
     }

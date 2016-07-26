@@ -22,7 +22,7 @@ namespace gca {
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
 
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
-				const tool& t,
+				const std::vector<tool>& t,
 				double cut_depth);
 
 }

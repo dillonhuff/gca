@@ -23,6 +23,18 @@ namespace gca {
     return pockets;
   }
 
+  template<typename F>
+  gcode_program
+  build_gcode_program(std::string program_name,
+		      const std::vector<toolpath>& toolpaths,
+		      F f) {
+    vector<block> blocks;
+    for (auto t : toolpaths) {
+      concat(blocks, f(t));
+    }
+    return gcode_program(program_name, blocks);
+  }
+
   gcode_program cut_secured_mesh(vector<pocket>& pockets,
   				 const std::vector<tool>& tools,
 				 const material& stock_material) {
@@ -32,15 +44,13 @@ namespace gca {
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
 
-    tool t = *(min_element(begin(tools), end(tools),
-  			   [](const tool& l, const tool& r)
-      { return l.diameter() < r.diameter(); }));
-
     double cut_depth = 0.2;
     double safe_z = h + 0.1;
-    vector<toolpath> toolpaths = mill_pockets(pockets, t, cut_depth);
-    return gcode_program("Surface cut", emco_f1_code(toolpaths, safe_z, stock_material));
-  }
+    vector<toolpath> toolpaths = mill_pockets(pockets, tools, cut_depth);
+    auto emco_code = [safe_z, stock_material](const toolpath& t)
+      { return emco_f1_code(t, safe_z, stock_material); };
+  return build_gcode_program("Surface cut", toolpaths, emco_code);
+}
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const fixtures& f,
