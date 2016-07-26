@@ -234,9 +234,10 @@ namespace gca {
     return polys;
   }
 
+  // TODO: Check legality of tool size
   tool
   contour_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(min_element(begin(tools), end(tools),
+    tool t = *(max_element(begin(tools), end(tools),
   			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
     return t;
@@ -295,7 +296,7 @@ namespace gca {
 
   tool
   face_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(min_element(begin(tools), end(tools),
+    tool t = *(max_element(begin(tools), end(tools),
   			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
     return t;
