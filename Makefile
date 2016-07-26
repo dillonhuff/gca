@@ -1589,6 +1589,33 @@ src/synthesis/fixture_analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/fixture_analysis.cpp.s
 .PHONY : src/synthesis/fixture_analysis.cpp.s
 
+src/synthesis/gcode_generation.o: src/synthesis/gcode_generation.cpp.o
+
+.PHONY : src/synthesis/gcode_generation.o
+
+# target to build an object file
+src/synthesis/gcode_generation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.o
+.PHONY : src/synthesis/gcode_generation.cpp.o
+
+src/synthesis/gcode_generation.i: src/synthesis/gcode_generation.cpp.i
+
+.PHONY : src/synthesis/gcode_generation.i
+
+# target to preprocess a source file
+src/synthesis/gcode_generation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.i
+.PHONY : src/synthesis/gcode_generation.cpp.i
+
+src/synthesis/gcode_generation.s: src/synthesis/gcode_generation.cpp.s
+
+.PHONY : src/synthesis/gcode_generation.s
+
+# target to generate assembly for a file
+src/synthesis/gcode_generation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.s
+.PHONY : src/synthesis/gcode_generation.cpp.s
+
 src/synthesis/mesh_to_gcode.o: src/synthesis/mesh_to_gcode.cpp.o
 
 .PHONY : src/synthesis/mesh_to_gcode.o
@@ -1750,33 +1777,6 @@ src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
 src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
-
-src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
-
-.PHONY : src/synthesis/toolpath.o
-
-# target to build an object file
-src/synthesis/toolpath.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.o
-.PHONY : src/synthesis/toolpath.cpp.o
-
-src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
-
-.PHONY : src/synthesis/toolpath.i
-
-# target to preprocess a source file
-src/synthesis/toolpath.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.i
-.PHONY : src/synthesis/toolpath.cpp.i
-
-src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
-
-.PHONY : src/synthesis/toolpath.s
-
-# target to generate assembly for a file
-src/synthesis/toolpath.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.s
-.PHONY : src/synthesis/toolpath.cpp.s
 
 src/synthesis/toolpath_generation.o: src/synthesis/toolpath_generation.cpp.o
 
@@ -3079,6 +3079,9 @@ help:
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
+	@echo "... src/synthesis/gcode_generation.o"
+	@echo "... src/synthesis/gcode_generation.i"
+	@echo "... src/synthesis/gcode_generation.s"
 	@echo "... src/synthesis/mesh_to_gcode.o"
 	@echo "... src/synthesis/mesh_to_gcode.i"
 	@echo "... src/synthesis/mesh_to_gcode.s"
@@ -3097,9 +3100,6 @@ help:
 	@echo "... src/synthesis/shapes_to_toolpaths.o"
 	@echo "... src/synthesis/shapes_to_toolpaths.i"
 	@echo "... src/synthesis/shapes_to_toolpaths.s"
-	@echo "... src/synthesis/toolpath.o"
-	@echo "... src/synthesis/toolpath.i"
-	@echo "... src/synthesis/toolpath.s"
 	@echo "... src/synthesis/toolpath_generation.o"
 	@echo "... src/synthesis/toolpath_generation.i"
 	@echo "... src/synthesis/toolpath_generation.s"

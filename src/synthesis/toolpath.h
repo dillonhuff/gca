@@ -3,26 +3,31 @@
 
 #include <vector>
 
-#include "analysis/machine_state.h"
-#include "geometry/parametric_curve.h"
-#include "gcode/cut.h"
-
-using namespace std;
+#include "geometry/polyline.h"
+#include "synthesis/tool.h"
 
 namespace gca {
-  
-  typedef vector<cut*> cut_group;
 
-  // struct toolpath {
-  //   machine_settings s;
-  //   parametric_curve c;
-  //   toolpath(machine_settings sp, parametric_curve cp) : s(sp), c(cp) {}
+  struct toolpath {
+    double safe_z_before_tlc;
+    double spindle_speed;
+    double feedrate;
 
-  //   inline point start() const { return c.value(0.0); }
-  //   inline point end() const { return c.value(1.0); }
-  // };
+    tool t;
+    std::vector<polyline> lines;
 
-  //vector<toolpath> cuts_to_toolpaths(const vector<cut*> cuts);
+    toolpath(const double p_safe_z,
+	     const double p_spindle,
+	     const double p_feed,
+	     const tool& p_t,
+	     const std::vector<polyline>& p_lines)
+      : safe_z_before_tlc(p_safe_z),
+	spindle_speed(p_spindle),
+	feedrate(p_feed),
+	t(p_t),
+	lines(p_lines) {}
+  };
+
 }
 
 #endif

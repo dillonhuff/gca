@@ -1,6 +1,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
+#include "utils/arena_allocator.h"
 #include "utils/constrained_partition.h"
 #include "utils/partition.h"
 #include "utils/relation.h"

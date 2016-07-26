@@ -8,30 +8,9 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
-#include "gcode/cut.h"
-#include "synthesis/tool.h"
+#include "synthesis/toolpath.h"
 
 namespace gca {
-
-  struct toolpath {
-    double safe_z_before_tlc;
-    double spindle_speed;
-    double feedrate;
-
-    tool t;
-    std::vector<polyline> lines;
-
-    toolpath(const double p_safe_z,
-	     const double p_spindle,
-	     const double p_feed,
-	     const tool& p_t,
-	     const std::vector<polyline>& p_lines)
-      : safe_z_before_tlc(p_safe_z),
-	spindle_speed(p_spindle),
-	feedrate(p_feed),
-	t(p_t),
-	lines(p_lines) {}
-  };
 
   // TODO: Move to triangular mesh?
   vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
@@ -245,8 +224,6 @@ namespace gca {
 					 offset_dir d,
 					 double inc);
 
-  std::vector<cut*> polyline_cuts(const polyline& p);
-
   polyline compress_lines(const polyline& p, double tolerance);
 
   std::vector<polyline> drop_sample(const triangular_mesh& mesh,
@@ -256,8 +233,6 @@ namespace gca {
 				      const std::vector<index_t>& faces,
 				      const triangular_mesh& mesh,
 				      const tool& tool);
-
-  std::vector<block> emco_f1_code(const toolpath& pocket_lines);
 
   std::vector<point> drop_points_onto_max(const std::vector<point>& pts_z,
 					  const std::vector<index_t>& faces,

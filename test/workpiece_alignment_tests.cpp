@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "synthesis/fixture_analysis.h"
 #include "system/parse_stl.h"
+#include "utils/arena_allocator.h"
 
 namespace gca {
 
