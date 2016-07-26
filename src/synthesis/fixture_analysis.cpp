@@ -230,7 +230,8 @@ namespace gca {
       workpiece_clipping_programs(w, part_mesh, surfs_to_cut, tools, f);
 
     vector<fixture_setup> setups = wp_setups.fixtures;
-    const vector<surface>& stable_surfaces = wp_setups.stable_surfaces();
+    const vector<surface>& stable_surfaces =
+      wp_setups.stable_surfaces();
 
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);

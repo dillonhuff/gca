@@ -8,6 +8,7 @@
 
 namespace gca {
 
+  // TODO: Is this needed?
   void select_visible_triangles(vector<triangle>& triangles);
   
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
@@ -20,7 +21,7 @@ namespace gca {
   
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
 
-  vector<polyline> mill_pockets(vector<pocket>& pockets,
+  vector<toolpath> mill_pockets(vector<pocket>& pockets,
 				const tool& t,
 				double cut_depth);
 
