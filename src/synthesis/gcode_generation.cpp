@@ -1,4 +1,5 @@
 #include "gcode/linear_cut.h"
+#include "synthesis/cut_to_gcode.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
@@ -47,7 +48,29 @@ namespace gca {
       auto cs = polyline_cuts(p, spindle_speed, feedrate);
       cuts.insert(cuts.end(), cs.begin(), cs.end());
     }
-    return cuts_to_gcode(cuts, params);
+
+    vector<cut*> all_cuts = insert_transitions(cuts, params);
+    assert(cuts_are_adjacent(all_cuts));
+    set_feedrates(all_cuts, params);
+    return gcode_blocks_for_cuts(all_cuts, params);
+    
+    //return gcode_blocks_for_cuts(cuts, params); //cuts_to_gcode(cuts, params);
+  }
+
+  std::vector<block>
+  tool_comment_prefix(const tool& t) {
+    vector<block> blks;
+    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.diameter()))});
+    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.length()))});
+    return blks;
+  }
+  
+  std::vector<block>
+  comment_prefix(const toolpath& tp, const cut_params& params) {
+    vector<block> blks;
+    blks.push_back({token("TOOLPATH")});
+    concat(blks, tool_comment_prefix(tp.t));
+    return blks;
   }
 
   std::vector<block> emco_f1_code(const toolpath& tp) {
@@ -63,7 +86,7 @@ namespace gca {
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
 
-    vector<block> blks{{token("Beginning of toolpath")}};
+    vector<block> blks = comment_prefix(tp, params);
     concat(blks, polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate));
     return blks;
   }

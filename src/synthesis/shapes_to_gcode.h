@@ -8,6 +8,14 @@
 
 namespace gca {
 
+  vector<cut*> insert_transitions(const vector<cut*>& cuts,
+				  const cut_params& params);
+
+  void set_feedrates(vector<cut*>& cuts,
+		     const cut_params& params);
+
+  bool cuts_are_adjacent(const vector<cut*>& cuts);
+  
   vector<block> shape_layout_to_gcode(const shape_layout& shapes_to_cut,
 				      const cut_params& params);
 

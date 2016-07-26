@@ -157,7 +157,8 @@ namespace gca {
     set_feedrates(shifted_cuts, params);
     return gcode_blocks_for_cuts(shifted_cuts, params);
   }
-  
+
+  // TODO: Should not need the shift in the new code generation scheme
   vector<block> cuts_to_gcode(const vector<cut*>& cuts,
 			      const cut_params& params) {
     vector<cut*> all_cuts = insert_transitions(cuts, params);

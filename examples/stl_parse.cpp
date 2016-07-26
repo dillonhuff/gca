@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
   std::vector<plate_height> parallel_plates{0.5};
   fixtures fixes(v, parallel_plates);
 
-  //  tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
+  tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   vector<tool> tools{t2}; //, t2};
   workpiece workpiece_dims(2.0, 1.54, 2.5, ALUMINUM);
