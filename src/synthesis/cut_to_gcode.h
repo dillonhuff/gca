@@ -12,6 +12,10 @@ namespace gca {
 
   void append_cut_block(const cut* ci, vector<block>& blocks);
 
+  void append_cuts_gcode_blocks(const vector<cut*>& cuts,
+				vector<block>& blocks,
+				const cut_params& params);
+
 }
 
 #endif

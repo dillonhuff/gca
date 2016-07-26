@@ -39,10 +39,25 @@ namespace gca {
     return c;
   }
 
-  vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
-			       const cut_params params,
-			       const double spindle_speed,
-			       const double feedrate) {
+  void append_toolpath_header_blocks(vector<block>& bs, const machine_name m) {
+    block b;
+    b.push_back(token('G', 90));
+    bs.push_back(b);
+  }
+  
+  std::vector<block>
+  gcode_blocks_for_toolpath_cuts(const std::vector<cut*>& cuts,
+				 const cut_params& params) {
+    vector<block> bs;
+    append_toolpath_header_blocks(bs, params.target_machine);
+    append_cuts_gcode_blocks(cuts, bs, params);
+    return bs;
+  }
+
+  std::vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
+				    const cut_params params,
+				    const double spindle_speed,
+				    const double feedrate) {
     vector<cut*> cuts;
     for (auto p : pocket_lines) {
       auto cs = polyline_cuts(p, spindle_speed, feedrate);
@@ -52,9 +67,7 @@ namespace gca {
     vector<cut*> all_cuts = insert_transitions(cuts, params);
     assert(cuts_are_adjacent(all_cuts));
     set_feedrates(all_cuts, params);
-    return gcode_blocks_for_cuts(all_cuts, params);
-    
-    //return gcode_blocks_for_cuts(cuts, params); //cuts_to_gcode(cuts, params);
+    return gcode_blocks_for_toolpath_cuts(all_cuts, params);
   }
 
   std::vector<block>
