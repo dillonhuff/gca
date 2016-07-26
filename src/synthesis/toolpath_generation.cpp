@@ -465,7 +465,9 @@ namespace gca {
     }
     vector<polyline> reflected_lines;
     for (auto tp : pocket_lines) {
-      concat(reflected_lines, reflect_y(tp.lines));
+      point shift_vector = point(0, 0, tp.t.length());
+      auto adjusted_lines = shift_lines(reflect_y(tp.lines), shift_vector);
+      concat(reflected_lines, adjusted_lines);
     }
     cut_params params;
     params.target_machine = EMCO_F1;

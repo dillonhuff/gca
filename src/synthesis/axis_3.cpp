@@ -30,12 +30,9 @@ namespace gca {
     vector<toolpath> lines;
     for (auto pocket : pockets) {
       auto pocket_paths = pocket_2P5D_interior(pocket, t, cut_depth);
-      auto tlc_paths = shift_lines(pocket_paths, point(0, 0, t.length()));
-      lines.push_back(toolpath(t, tlc_paths));
-      //concat(lines, tlc_paths);
-      //      lines.insert(end(lines), begin(pocket_paths), end(pocket_paths));
+      lines.push_back(toolpath(t, pocket_paths));
     }
-    return lines; //toolpath(t, 
+    return lines;
   }
 
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh) {

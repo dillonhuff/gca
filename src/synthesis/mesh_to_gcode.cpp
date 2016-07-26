@@ -37,9 +37,8 @@ namespace gca {
       { return l.diameter() < r.diameter(); }));
 
     double cut_depth = 0.2;
-    double safe_z_pre_tlc = h + 0.1;
+    double safe_z = h + 0.1;
     vector<toolpath> toolpaths = mill_pockets(pockets, t, cut_depth);
-    double safe_z = safe_z_pre_tlc + t.length();
     return gcode_program("Surface cut", emco_f1_code(toolpaths, safe_z, stock_material));
   }
 
