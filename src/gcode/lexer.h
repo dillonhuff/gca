@@ -53,7 +53,7 @@ namespace gca {
     
     void print(ostream& stream) const {
       if (ttp == COMMENT) {
-	stream << text;
+	stream << "(" << text << ")";
       } else {
 	stream << c << *v;
       }

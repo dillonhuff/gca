@@ -1,7 +1,8 @@
+#include "gcode/linear_cut.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
-#include "gcode/linear_cut.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 
@@ -61,7 +62,10 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
-    return polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate);
+
+    vector<block> blks{{token("Beginning of toolpath")}};
+    concat(blks, polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate));
+    return blks;
   }
 
 }

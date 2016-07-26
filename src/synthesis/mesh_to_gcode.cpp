@@ -24,18 +24,6 @@ namespace gca {
     return pockets;
   }
 
-  template<typename F>
-  gcode_program
-  build_gcode_program(std::string program_name,
-		      const std::vector<toolpath>& toolpaths,
-		      F f) {
-    vector<block> blocks;
-    for (auto t : toolpaths) {
-      concat(blocks, f(t));
-    }
-    return gcode_program(program_name, blocks);
-  }
-
   gcode_program cut_secured_mesh(vector<pocket>& pockets,
   				 const std::vector<tool>& tools,
 				 const material& stock_material) {
