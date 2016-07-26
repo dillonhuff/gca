@@ -30,7 +30,7 @@ namespace gca {
     vector<toolpath> lines;
     for (auto pocket : pockets) {
       tool t = pocket.select_tool(tools);
-      auto pocket_paths = pocket_2P5D_interior(pocket, t, cut_depth);
+      auto pocket_paths = pocket.toolpath_lines(t, cut_depth);
       lines.push_back(toolpath(t, pocket_paths));
     }
     return lines;

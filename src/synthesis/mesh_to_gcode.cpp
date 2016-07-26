@@ -47,10 +47,11 @@ namespace gca {
     double cut_depth = 0.2;
     double safe_z = h + 0.1;
     vector<toolpath> toolpaths = mill_pockets(pockets, tools, cut_depth);
+
     auto emco_code = [safe_z, stock_material](const toolpath& t)
       { return emco_f1_code(t, safe_z, stock_material); };
-  return build_gcode_program("Surface cut", toolpaths, emco_code);
-}
+    return build_gcode_program("Surface cut", toolpaths, emco_code);
+  }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const fixtures& f,

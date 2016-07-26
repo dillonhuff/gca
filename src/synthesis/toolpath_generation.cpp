@@ -319,13 +319,6 @@ namespace gca {
     return pocket_path;
   }
 
-  // TODO: Terrible name, is this wrapper even relevant anymore?
-  vector<polyline> pocket_2P5D_interior(const pocket& pocket,
-					const tool& t,
-					double cut_depth) {
-    return pocket.toolpath_lines(t, cut_depth);
-  }
-
   // TODO: Move these to somewhere else, they really dont belong here
   
   bool same_slope(const line l, const line r, double t) {

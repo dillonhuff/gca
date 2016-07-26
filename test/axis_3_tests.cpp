@@ -77,7 +77,7 @@ namespace gca {
       }
 
       SECTION("Pocketing does not overlap the pocket base") {
-    	auto rough_lines = pocket_2P5D_interior(pockets.front(), t, cut_depth);
+    	auto rough_lines = pockets.front().toolpath_lines(t, cut_depth);
     	auto rough_points = points(rough_lines);
     	bool all_above_pocket_surface =
     	  all_of(begin(rough_points), end(rough_points),
