@@ -459,7 +459,7 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
-    return polylines_cuts(reflected_lines, params, 3000, 8.0);
+    return polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate);
   }
 
 }
