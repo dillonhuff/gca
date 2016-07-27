@@ -86,6 +86,26 @@ namespace gca {
   }
 
   fixture_setup
+  clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
+			       const triangular_mesh& part_mesh,
+			       const fixture& f) {
+    auto s_t = mating_transform(wp_mesh, f.orient, f.v);
+    auto aligned = apply(s_t, wp_mesh);
+    auto part = apply(s_t, part_mesh);
+    return clip_top_and_sides(aligned, part, f);
+  }
+
+  fixture_setup
+  clip_base_transform(const triangular_mesh& wp_mesh,
+		      const triangular_mesh& part_mesh,
+		      const fixture& f) {
+    auto s_t = mating_transform(part_mesh, f.orient, f.v);
+    auto aligned = apply(s_t, wp_mesh);
+    auto part = apply(s_t, part_mesh);
+    return clip_base(aligned, part, f);
+  }
+
+  fixture_setup
   clip_base(const triangular_mesh& aligned,
 	    const triangular_mesh& part,
 	    const fixture& f) {
@@ -111,14 +131,15 @@ namespace gca {
   clamp_orientation
   largest_upward_orientation(const std::vector<surface>& surfs,
 			     const vice& parallel) {
+    // TODO: Eventually auto select the direction instead of
+    // hard coding (0, 0, 1)
     point n(0, 0, 1);
+
     vector<clamp_orientation> orients =
       all_viable_clamp_orientations(surfs, parallel);
 
     cout << "# of orientations = " << orients.size() << endl;
 
-    // TODO: Eventually auto select the direction instead of
-    // hard coding (0, 0, 1)
     vector<clamp_orientation> top_orients =
       select(orients, [n](const clamp_orientation& s)
 	     { return within_eps(s.top_normal(), n, 0.0001); });
@@ -135,48 +156,47 @@ namespace gca {
     return top_orients.front();
   }
 
-  //  boost::optional<std::vector<fixture_setup> >
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,
 			  const fixtures& f) {
-    double aligned_z_height = diameter(point(0, 0, 1), aligned);
-    double clipped_z_height = diameter(point(0, 0, 1), part_mesh);
-    vector<plate_height> viable_plates =
-      find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
+    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
 
-    cout << "# of viable parallel plates = " << viable_plates.size() << endl;
+    assert(surfs_to_cut.size() > 0);
 
-    if (viable_plates.size() > 0) {
-      vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
+    boost::optional<oriented_polygon> outline =
+      part_outline(&surfs_to_cut);
 
-      assert(surfs_to_cut.size() > 0);
+    if (outline) {
+      double aligned_z_height = diameter(point(0, 0, 1), aligned);
+      double clipped_z_height = diameter(point(0, 0, 1), part_mesh);
+      vector<plate_height> viable_plates =
+	find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
+
+      cout << "# of viable parallel plates = " << viable_plates.size() << endl;
 
       boost::optional<std::vector<fixture_setup> > clip_setups = boost::none;
 
-      boost::optional<oriented_polygon> outline =
-	part_outline(&surfs_to_cut);
-      if (outline) {
+      if (viable_plates.size() > 0) {
 	vice parallel(f.get_vice(), viable_plates.front());
 
 	vector<surface> surfs = outer_surfaces(part_mesh);
 	vector<surface> stock_surfs = outer_surfaces(aligned);
 
 	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
+	cout << "Got stock top orientation" << endl;
 	auto top_orient = largest_upward_orientation(surfs, parallel);
-      
-	auto s_t = mating_transform(aligned, stock_top_orient, parallel);
-	auto t = mating_transform(part_mesh, top_orient, parallel);
 
 	fixture top_fix = fixture(stock_top_orient, parallel);
 	fixture base_fix = fixture(top_orient, parallel);
 
 	std::vector<fixture_setup> progs;
-	progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, part_mesh), top_fix));
-	progs.push_back(clip_base(apply(t, aligned), apply(t, part_mesh), base_fix));
+	progs.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_fix));
+	progs.push_back(clip_base_transform(aligned, part_mesh, base_fix));
+
 	clip_setups = progs;
       }
-      
+
       if (clip_setups) {
       	auto clipped_surfs =
       	  stable_surfaces_after_clipping(part_mesh, aligned);
