@@ -144,21 +144,23 @@ namespace gca {
 
     if (outline) {
       vice parallel(v, plate_height);
+
       const triangular_mesh& m = surfaces_to_cut.front().get_parent_mesh();
-
-      vector<surface> stock_surfs = outer_surfaces(aligned);
-      auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
-      auto s_t = mating_transform(aligned, stock_top_orient, parallel);
-
-      std::vector<fixture_setup> progs;
-      progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), fixture(stock_top_orient, parallel)));
-
       vector<surface> surfs = outer_surfaces(m);
-      
+      vector<surface> stock_surfs = outer_surfaces(aligned);
+
+      auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
       auto top_orient = largest_upward_orientation(surfs, parallel);
+      
+      auto s_t = mating_transform(aligned, stock_top_orient, parallel);
       auto t = mating_transform(m, top_orient, parallel);
 
-      progs.push_back(clip_base(apply(t, aligned), apply(t, m), fixture(top_orient, parallel)));
+      fixture top_fix = fixture(stock_top_orient, parallel);
+      fixture base_fix = fixture(top_orient, parallel);
+
+      std::vector<fixture_setup> progs;
+      progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), top_fix));
+      progs.push_back(clip_base(apply(t, aligned), apply(t, m), base_fix));
       return progs;
     }
     return boost::none;
