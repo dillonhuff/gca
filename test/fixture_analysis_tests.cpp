@@ -38,9 +38,9 @@ namespace gca {
     SECTION("Cylinder") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ShortCylinder.stl", 0.001);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      //fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-      REQUIRE(p.fixtures().size() == 2);
+      //REQUIRE(p.fixtures().size() == 2);
     }
 
   }
