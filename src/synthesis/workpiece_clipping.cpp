@@ -191,7 +191,6 @@ namespace gca {
   boost::optional<clipping_plan>
   try_parallel_plate_clipping(const workpiece w, 
 			      const triangular_mesh& part_mesh,
-			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
@@ -200,15 +199,16 @@ namespace gca {
     workpiece clipped = clipped_workpiece(w, part_mesh);
     double clipped_z_height = clipped.sides[2].len();
 
+    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
     boost::optional<vector<fixture_setup>> clip_setups =
-      parallel_plate_clipping(wp_mesh, clipped_z_height, surfaces_to_cut, f);
+      parallel_plate_clipping(wp_mesh, clipped_z_height, surfs_to_cut, f);
 
     if (clip_setups) {
       auto clipped_surfs =
 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
-      remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
+      remove_contained_surfaces(clipped_surfs, surfs_to_cut);
 
-      return clipping_plan(clipped_surfs, *clip_setups);
+      return clipping_plan(clipped_surfs, surfs_to_cut, *clip_setups);
     } else {
       return boost::none;
     }
@@ -217,16 +217,17 @@ namespace gca {
   clipping_plan
   workpiece_clipping_programs(const workpiece w,
 			      const triangular_mesh& part_mesh,
-			      std::vector<surface>& surfaces_to_cut,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
+    
+
     auto contour_clip =
-      try_parallel_plate_clipping(w, part_mesh, surfaces_to_cut, tools, f);
+      try_parallel_plate_clipping(w, part_mesh, tools, f);
 
     if (contour_clip) {
       return *contour_clip;
     } else {
-      return axis_by_axis_clipping(w, part_mesh, surfaces_to_cut, tools, f);
+      return axis_by_axis_clipping(w, part_mesh, tools, f);
     }
   }
 

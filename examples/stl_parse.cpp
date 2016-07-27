@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
   tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   vector<tool> tools{t1, t2};
-  workpiece workpiece_dims(2.0, 1.54, 2.5, ALUMINUM);
+  workpiece workpiece_dims(3.0, 3.0, 3.0, ALUMINUM);
   auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
 
   cout << "All programs" << endl;

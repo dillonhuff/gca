@@ -70,18 +70,18 @@ namespace gca {
   clipping_plan
   axis_by_axis_clipping(const workpiece w, 
 			const triangular_mesh& part_mesh,
-			std::vector<surface>& surfaces_to_cut,
 			const std::vector<tool>& tools,
 			const fixtures& f) {
-    triangular_mesh wp_mesh = align_workpiece(surfaces_to_cut, w);
+    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
+    triangular_mesh wp_mesh = align_workpiece(surfs_to_cut, w);
 
     auto clip_setups = axis_clipping(wp_mesh, part_mesh, f);
 
     auto clipped_surfs =
       stable_surfaces_after_clipping(part_mesh, wp_mesh);
-    remove_contained_surfaces(clipped_surfs, surfaces_to_cut);
+    remove_contained_surfaces(clipped_surfs, surfs_to_cut);
 
-    return clipping_plan(clipped_surfs, clip_setups);
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
   }
 
 }

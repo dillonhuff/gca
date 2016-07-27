@@ -67,19 +67,6 @@ namespace gca {
     { return setups; }
   };
 
-  class clipping_plan {
-  public:
-    std::vector<surface> stable_surfs;
-    std::vector<fixture_setup> fixtures;
-
-    clipping_plan(const std::vector<surface>& p_stable_surfs,
-		  const std::vector<fixture_setup>& p_fixtures)
-      : stable_surfs(p_stable_surfs), fixtures(p_fixtures) {}
-
-    inline const std::vector<surface>& stable_surfaces() const
-    { return stable_surfs; }
-  };
-  
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w);
 
