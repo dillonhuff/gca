@@ -182,6 +182,15 @@ namespace gca {
   }
 
 
+  boost::optional<fixture>
+  custom_jaw_cutout_fixture(const surface& outline_of_contour,
+			    const surface& top_of_contour,
+			    const vice& v,
+			    const point n) {
+    //boost::optional<oriented_polygon> ;
+    assert(false);
+  }
+  
   // TODO: Add code to generate jaws for base fixture
   boost::optional<fixture>
   find_base_contour_fixture(const surface& outline_of_contour,
@@ -193,8 +202,17 @@ namespace gca {
     const_orient_surfs.push_back(top_of_contour);
     std::vector<clamp_orientation> orients =
       all_stable_orientations(const_orient_surfs, v);
-    auto cl = find_orientation_by_normal(orients, n);
-    return fixture(cl, v);
+    if (orients.size() > 0) {
+      // TODO: Return optional orient and filter orients by
+      // surface area of sides
+      auto cl = find_orientation_by_normal(orients, n);
+      return fixture(cl, v);
+    }
+
+    return custom_jaw_cutout_fixture(outline_of_contour,
+				     top_of_contour,
+				     v,
+				     n);
   }
 
   boost::optional<surface>
@@ -227,7 +245,6 @@ namespace gca {
       
       remove_contained_surfaces({*outline}, surfs_to_cut);
 
-      // TOOD: Remove outline as a parameter?
       boost::optional<fixture> top_fix =
       	find_top_contour_fixture(aligned, part_mesh, f, n);
 

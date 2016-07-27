@@ -168,8 +168,6 @@ namespace gca {
 
     unique_by_top_normal(orients);
 
-    assert(orients.size() > 0);
-    
     return orients;
   }
 
