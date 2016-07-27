@@ -233,8 +233,6 @@ namespace gca {
       wp_setups.stable_surfaces();
     auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
 
-
-
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
 

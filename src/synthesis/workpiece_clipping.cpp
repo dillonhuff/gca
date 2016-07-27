@@ -174,38 +174,49 @@ namespace gca {
 			  const triangular_mesh& part_mesh,
 			  const fixtures& f) {
     double aligned_z_height = diameter(point(0, 0, 1), aligned);
-
-    //    workpiece clipped = clipped_workpiece(w, part_mesh);
-    double clipped_z_height = diameter(point(0, 0, 1), part_mesh); //clipped.sides[2].len();
-
+    double clipped_z_height = diameter(point(0, 0, 1), part_mesh);
     vector<plate_height> viable_plates =
       find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
 
-    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
-
-    // boost::optional<vector<fixture_setup>> clip_setups =
-    //   parallel_plate_clipping(wp_mesh, clipped_z_height, surfs_to_cut, f);
-
-    // if (clip_setups) {
-    //   auto clipped_surfs =
-    // 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
-    //   remove_contained_surfaces(clipped_surfs, surfs_to_cut);
-
-    //   return clipping_plan(clipped_surfs, surfs_to_cut, *clip_setups);
-    
     cout << "# of viable parallel plates = " << viable_plates.size() << endl;
 
     if (viable_plates.size() > 0) {
-      auto clip_setups = parallel_clipping_programs(aligned,
-						    surfs_to_cut,
-						    f.get_vice(),
-						    viable_plates.front());
-      if (clip_setups) {
-	auto clipped_surfs =
-	  stable_surfaces_after_clipping(part_mesh, aligned);
-	remove_contained_surfaces(clipped_surfs, surfs_to_cut);
+      vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
 
-	return clipping_plan(clipped_surfs, surfs_to_cut, *clip_setups);
+      assert(surfs_to_cut.size() > 0);
+
+      boost::optional<std::vector<fixture_setup> > clip_setups = boost::none;
+
+      boost::optional<oriented_polygon> outline =
+	part_outline(&surfs_to_cut);
+      if (outline) {
+	vice parallel(f.get_vice(), viable_plates.front());
+
+	const triangular_mesh& m = surfs_to_cut.front().get_parent_mesh();
+	vector<surface> surfs = outer_surfaces(m);
+	vector<surface> stock_surfs = outer_surfaces(aligned);
+
+	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
+	auto top_orient = largest_upward_orientation(surfs, parallel);
+      
+	auto s_t = mating_transform(aligned, stock_top_orient, parallel);
+	auto t = mating_transform(m, top_orient, parallel);
+
+	fixture top_fix = fixture(stock_top_orient, parallel);
+	fixture base_fix = fixture(top_orient, parallel);
+
+	std::vector<fixture_setup> progs;
+	progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), top_fix));
+	progs.push_back(clip_base(apply(t, aligned), apply(t, m), base_fix));
+	clip_setups = progs;
+      }
+      
+      if (clip_setups) {
+      	auto clipped_surfs =
+      	  stable_surfaces_after_clipping(part_mesh, aligned);
+      	remove_contained_surfaces(clipped_surfs, surfs_to_cut);
+
+      	return clipping_plan(clipped_surfs, surfs_to_cut, *clip_setups);
       }      
     }
     return boost::none;
@@ -222,23 +233,6 @@ namespace gca {
     triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
     return parallel_plate_clipping(wp_mesh, part_mesh, f);
-
-    // workpiece clipped = clipped_workpiece(w, part_mesh);
-    // double clipped_z_height = clipped.sides[2].len();
-
-    // vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
-    // boost::optional<vector<fixture_setup>> clip_setups =
-    //   parallel_plate_clipping(wp_mesh, clipped_z_height, surfs_to_cut, f);
-
-    // if (clip_setups) {
-    //   auto clipped_surfs =
-    // 	stable_surfaces_after_clipping(part_mesh, wp_mesh);
-    //   remove_contained_surfaces(clipped_surfs, surfs_to_cut);
-
-    //   return clipping_plan(clipped_surfs, surfs_to_cut, *clip_setups);
-    // } else {
-    //   return boost::none;
-    // }
   }
 
   clipping_plan
