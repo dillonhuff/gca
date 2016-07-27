@@ -111,6 +111,7 @@ namespace gca {
   clamp_orientation
   largest_upward_orientation(const std::vector<surface>& surfs,
 			     const vice& parallel) {
+    point n(0, 0, 1);
     vector<clamp_orientation> orients =
       all_viable_clamp_orientations(surfs, parallel);
 
@@ -119,8 +120,8 @@ namespace gca {
     // TODO: Eventually auto select the direction instead of
     // hard coding (0, 0, 1)
     vector<clamp_orientation> top_orients =
-      select(orients, [](const clamp_orientation& s)
-	     { return within_eps(s.top_normal(), point(0, 0, 1), 0.0001); });
+      select(orients, [n](const clamp_orientation& s)
+	     { return within_eps(s.top_normal(), n, 0.0001); });
 
     assert(orients.size() > 0);
 
@@ -132,40 +133,6 @@ namespace gca {
     assert(top_orients.size() > 0);
       
     return top_orients.front();
-  }
-  
-  boost::optional<std::vector<fixture_setup> >
-  parallel_clipping_programs(const triangular_mesh& aligned,
-			     std::vector<surface>& surfaces_to_cut,
-			     const vice& v,
-			     const double plate_height) {
-    assert(surfaces_to_cut.size() > 0);
-
-    boost::optional<oriented_polygon> outline =
-      part_outline(&surfaces_to_cut);
-
-    if (outline) {
-      vice parallel(v, plate_height);
-
-      const triangular_mesh& m = surfaces_to_cut.front().get_parent_mesh();
-      vector<surface> surfs = outer_surfaces(m);
-      vector<surface> stock_surfs = outer_surfaces(aligned);
-
-      auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
-      auto top_orient = largest_upward_orientation(surfs, parallel);
-      
-      auto s_t = mating_transform(aligned, stock_top_orient, parallel);
-      auto t = mating_transform(m, top_orient, parallel);
-
-      fixture top_fix = fixture(stock_top_orient, parallel);
-      fixture base_fix = fixture(top_orient, parallel);
-
-      std::vector<fixture_setup> progs;
-      progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), top_fix));
-      progs.push_back(clip_base(apply(t, aligned), apply(t, m), base_fix));
-      return progs;
-    }
-    return boost::none;
   }
 
   //  boost::optional<std::vector<fixture_setup> >
@@ -192,22 +159,21 @@ namespace gca {
       if (outline) {
 	vice parallel(f.get_vice(), viable_plates.front());
 
-	const triangular_mesh& m = surfs_to_cut.front().get_parent_mesh();
-	vector<surface> surfs = outer_surfaces(m);
+	vector<surface> surfs = outer_surfaces(part_mesh);
 	vector<surface> stock_surfs = outer_surfaces(aligned);
 
 	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
 	auto top_orient = largest_upward_orientation(surfs, parallel);
       
 	auto s_t = mating_transform(aligned, stock_top_orient, parallel);
-	auto t = mating_transform(m, top_orient, parallel);
+	auto t = mating_transform(part_mesh, top_orient, parallel);
 
 	fixture top_fix = fixture(stock_top_orient, parallel);
 	fixture base_fix = fixture(top_orient, parallel);
 
 	std::vector<fixture_setup> progs;
-	progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, m), top_fix));
-	progs.push_back(clip_base(apply(t, aligned), apply(t, m), base_fix));
+	progs.push_back(clip_top_and_sides(apply(s_t, aligned), apply(s_t, part_mesh), top_fix));
+	progs.push_back(clip_base(apply(t, aligned), apply(t, part_mesh), base_fix));
 	clip_setups = progs;
       }
       
