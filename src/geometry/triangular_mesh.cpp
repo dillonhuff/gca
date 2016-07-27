@@ -401,6 +401,19 @@ namespace gca {
     return true;
   }
 
+  bool all_parallel_to(const vector<index_t>& triangles,
+			 const triangular_mesh& mesh,
+			 const point n,
+			 const double tolerance) {
+    for (auto i : triangles) {
+      auto t = mesh.face_triangle(i);
+      if (!within_eps(angle_between(t.normal, n), 0.0, tolerance)) {
+	return false;
+      }
+    }
+    return true;
+  }
+  
   bool all_normals_below(const vector<index_t>& triangles,
 			 const triangular_mesh& mesh,
 			 const double v) {

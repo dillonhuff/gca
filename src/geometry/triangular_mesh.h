@@ -296,6 +296,11 @@ namespace gca {
 			 const point n,
 			 const double tolerance);
 
+  bool all_parallel_to(const vector<index_t>& triangles,
+		       const triangular_mesh& mesh,
+		       const point n,
+		       const double tolerance);
+  
   std::vector<gca::edge>
   convex_edges(const triangular_mesh& m);
 

@@ -156,55 +156,102 @@ namespace gca {
     return top_orients.front();
   }
 
+  boost::optional<fixture>
+  find_top_contour_fixture(const triangular_mesh& aligned,
+			   const triangular_mesh& part_mesh,
+			   const fixtures& f,
+			   const point n) {
+      double aligned_z_height = diameter(n, aligned);
+      double clipped_z_height = diameter(n, part_mesh);
+      vector<plate_height> viable_plates =
+      	find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
+
+      cout << "# of viable parallel plates = " << viable_plates.size() << endl;
+
+      if (viable_plates.size() > 0) {
+      	vice parallel(f.get_vice(), viable_plates.front());
+
+      	vector<surface> surfs = outer_surfaces(part_mesh);
+      	vector<surface> stock_surfs = outer_surfaces(aligned);
+
+      	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
+	return fixture(stock_top_orient, parallel);
+      } else {
+	return boost::none;
+      }
+  }
+
+
+  // TODO: Add code to generate jaws for base fixture
+  boost::optional<fixture>
+  find_base_contour_fixture(const surface& outline_of_contour,
+			    const surface& top_of_contour,
+			    const vice& v,
+			    const point n) {
+    std::vector<surface> const_orient_surfs =
+      constant_orientation_subsurfaces(outline_of_contour);
+    const_orient_surfs.push_back(top_of_contour);
+    std::vector<clamp_orientation> orients =
+      all_stable_orientations(const_orient_surfs, v);
+    auto cl = find_orientation_by_normal(orients, n);
+    return fixture(cl, v);
+  }
+
+  boost::optional<surface>
+  mesh_top_surface(const triangular_mesh& m, const point n) {
+    auto surfs = outer_surfaces(m);
+    delete_if(surfs,
+	      [n](const surface& s) { return !s.parallel_to(n, 0.001); });
+    if (surfs.size() > 0) {
+      return merge_surfaces(surfs);
+    } else {
+      return boost::none;
+    }
+  }
+  
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,
 			  const fixtures& f) {
+    point n(0, 0, 1);
+    
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
 
     assert(surfs_to_cut.size() > 0);
 
-    boost::optional<oriented_polygon> outline =
-      part_outline(&surfs_to_cut);
+    boost::optional<surface> outline = part_outline_surface(&surfs_to_cut, n);
+    boost::optional<surface> top = mesh_top_surface(part_mesh, n);
 
-    if (outline) {
-      double aligned_z_height = diameter(point(0, 0, 1), aligned);
-      double clipped_z_height = diameter(point(0, 0, 1), part_mesh);
-      vector<plate_height> viable_plates =
-	find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
+    if (outline && top) {
+      cout << "Has outline and flat top in " << n << endl;
+      
+      remove_contained_surfaces({*outline}, surfs_to_cut);
 
-      cout << "# of viable parallel plates = " << viable_plates.size() << endl;
+      // TOOD: Remove outline as a parameter?
+      boost::optional<fixture> top_fix =
+      	find_top_contour_fixture(aligned, part_mesh, f, n);
 
-      boost::optional<std::vector<fixture_setup> > clip_setups = boost::none;
+      if (top_fix) {
+	cout << "Has top fix in " << n << endl;
 
-      if (viable_plates.size() > 0) {
-	vice parallel(f.get_vice(), viable_plates.front());
+	boost::optional<fixture> base_fix =
+	  find_base_contour_fixture(*outline, *top, (*top_fix).v, -1*n);
 
-	vector<surface> surfs = outer_surfaces(part_mesh);
-	vector<surface> stock_surfs = outer_surfaces(aligned);
+	if (base_fix) {
+	  std::vector<fixture_setup> clip_setups;
+	  clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, *top_fix));
+	  clip_setups.push_back(clip_base_transform(aligned, part_mesh, *base_fix));
 
-	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
-	cout << "Got stock top orientation" << endl;
-	auto top_orient = largest_upward_orientation(surfs, parallel);
+	  auto clipped_surfs =
+	    stable_surfaces_after_clipping(part_mesh, aligned);
+	  remove_contained_surfaces(clipped_surfs, surfs_to_cut);
 
-	fixture top_fix = fixture(stock_top_orient, parallel);
-	fixture base_fix = fixture(top_orient, parallel);
+	  return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+	}
 
-	std::vector<fixture_setup> progs;
-	progs.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_fix));
-	progs.push_back(clip_base_transform(aligned, part_mesh, base_fix));
-
-	clip_setups = progs;
       }
-
-      if (clip_setups) {
-      	auto clipped_surfs =
-      	  stable_surfaces_after_clipping(part_mesh, aligned);
-      	remove_contained_surfaces(clipped_surfs, surfs_to_cut);
-
-      	return clipping_plan(clipped_surfs, surfs_to_cut, *clip_setups);
-      }      
     }
+
     return boost::none;
   }
 

@@ -212,4 +212,16 @@ namespace gca {
     return ccs;
   }
 
+  std::vector<surface>
+  constant_orientation_subsurfaces(const surface& surf) {
+    vector<index_t> inds = surf.index_list();
+    std::vector<std::vector<index_t> > regions =
+      normal_delta_regions(inds, surf.get_parent_mesh(), 0.001);
+    std::vector<surface> surfs;
+    for (auto r : regions) {
+      surfs.push_back(surface(&surf.get_parent_mesh(), r));
+    }
+    return surfs;
+  }
+
 }

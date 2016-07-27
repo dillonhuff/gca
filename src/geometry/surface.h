@@ -65,6 +65,11 @@ namespace gca {
     bool orthogonal_to(const point n, double tol) const {
       return all_orthogonal_to(index_list(), get_parent_mesh(), n, tol);
     }
+
+    bool parallel_to(const point n, double tol) const {
+      return all_parallel_to(index_list(), get_parent_mesh(), n, tol);
+    }
+
   };
 
   bool surfaces_share_edge(const unsigned i,
@@ -115,6 +120,9 @@ namespace gca {
   std::vector<surface_group>
   convex_surface_groups(const std::vector<surface*>& surfaces);
 
+  std::vector<surface>
+  constant_orientation_subsurfaces(const surface& surface);
+  
 }
 
 #endif
