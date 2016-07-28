@@ -39,10 +39,10 @@ namespace gca {
       }
     }
 
-    SECTION("Box with hole has 2 clippings and one pocketing") {
+    SECTION("Box with hole has 2 clippings") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithTopHole.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 3);
+      REQUIRE(result_programs.size() == 2);
     }
 
     SECTION("Box with two holes has 6 clippings and two pocketings") {
@@ -55,14 +55,14 @@ namespace gca {
       workpiece workpiece_dims(1.5, 1.2, 2.0, ALUMINUM);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 3);
+      REQUIRE(result_programs.size() == 2);
     }
 
     SECTION("Box with thru hole") {
       workpiece workpiece_dims(1.51, 1.51, 2.0, ACETAL);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 3);
+      REQUIRE(result_programs.size() == 2);
     }
     
     // TODO: Reintroduce this test

@@ -32,7 +32,7 @@ namespace gca {
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-      REQUIRE(p.fixtures().size() == 3);
+      REQUIRE(p.fixtures().size() == 2);
     }
 
     SECTION("Cylinder") {
@@ -198,7 +198,7 @@ namespace gca {
 
     fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-    REQUIRE(p.fixtures().size() == 3);
+    REQUIRE(p.fixtures().size() == 2);
   }
 
 }
