@@ -334,6 +334,24 @@ namespace gca {
     boost::optional<surface> top = mesh_top_surface(part_mesh, n);
     boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
 
+    if (!bottom) {
+      cout << "No bottom" << endl;
+    } else {
+      cout << "Has bottom" << endl;
+    }
+
+    if (!top) {
+      cout << "No top" << endl;
+    } else {
+      cout << "Has top" << endl;
+    }
+    
+    if (!outline) {
+      cout << "No outline" << endl;
+    } else {
+      cout << "Has outline" << endl;
+    }
+
     if (outline && top && bottom) {
       // TODO: Refine this analysis to include surface grouping
       remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
@@ -351,6 +369,7 @@ namespace gca {
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,
 			  const fixtures& f) {
+    cout << "Trying parallel plate clipping" << endl;
     point n(0, 0, 1);
 
     boost::optional<contour_surface_decomposition> surfs =
@@ -401,6 +420,7 @@ namespace gca {
       parallel_plate_clipping(wp_mesh, part_mesh, f);
 
     if (contour_clip) {
+      cout << "Contouring" << endl;
       return *contour_clip;
     } else {
       return axis_by_axis_clipping(w, part_mesh, tools, f);
