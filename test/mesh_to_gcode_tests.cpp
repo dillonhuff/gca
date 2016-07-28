@@ -192,16 +192,17 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_vice = large_jaw_vice(4.0, point(1.2, -4.4, 3.3));
-    fixtures fixes(test_vice);
+    std::vector<plate_height> parallel_plates{0.1, 0.3};
+    fixtures fixes(test_vice, parallel_plates);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1};
     workpiece workpiece_dims(3.5, 3.0, 3.98, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
-    //    auto gprogs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+       auto gprogs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
 
-    //    REQUIRE(gprogs.size() == 3);
+       REQUIRE(gprogs.size() == 3);
   }
 
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {
