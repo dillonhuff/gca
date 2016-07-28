@@ -3,6 +3,7 @@
 #include "gcode/gcode_program.h"
 #include "gcode/lexer.h"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/contour_planning.h"
 #include "synthesis/face_clipping.h"
 #include "synthesis/millability.h"
 #include "synthesis/tool.h"
@@ -111,13 +112,13 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
     fixture_setup setup = clip_top_and_sides(aligned, part, f);
-    std::vector<pocket>& setup_pockets = setup.pockets;
+    //std::vector<pocket>& setup_pockets = setup.pockets;
 
-    unsigned old_size = setup.pockets.size();
-    concat(setup_pockets, make_pockets(part, surfaces));
-    unsigned new_size = setup.pockets.size();
+    //unsigned old_size = setup.pockets.size();
+    //concat(setup_pockets, make_pockets(part, surfaces));
+    //unsigned new_size = setup.pockets.size();
     
-    assert((surfaces.size() == 0) || (new_size > old_size));
+    //assert((surfaces.size() == 0) || (new_size > old_size));
 
     return setup;
   }
@@ -281,118 +282,6 @@ namespace gca {
 				     n);
   }
 
-  boost::optional<surface>
-  mesh_top_surface(const triangular_mesh& m, const point n) {
-    auto surfs = outer_surfaces(m);
-    delete_if(surfs,
-	      [n](const surface& s) { return !s.parallel_to(n, 0.001); });
-    if (surfs.size() > 0) {
-      return merge_surfaces(surfs);
-    } else {
-      return boost::none;
-    }
-  }
-
-  struct contour_surface_decomposition {
-    point n;
-    surface outline;
-    surface top;
-    surface bottom;
-    std::vector<surface> visible_from_n;
-    std::vector<surface> visible_from_minus_n;
-    std::vector<surface> rest;
-  };
-
-  std::vector<surface>
-  surfaces_visible_from(const std::vector<surface>& surfaces_left,
-			const point n) {
-    if (surfaces_left.size() == 0) { return {}; }
-
-    const triangular_mesh& part = surfaces_left.front().get_parent_mesh();
-
-    std::vector<index_t> millable =
-      millable_faces(n, part);
-    sort(begin(millable), end(millable));
-
-    vector<surface> mill_surfaces;
-    for (unsigned i = 0; i < surfaces_left.size(); i++) {
-      if (surfaces_left[i].contained_by_sorted(millable)) {
-	mill_surfaces.push_back(surfaces_left[i]);
-      }
-    }
-    return mill_surfaces;
-  }
-
-  boost::optional<contour_surface_decomposition>
-  contour_surface_decomposition_in_dir(const triangular_mesh& part_mesh,
-				       const point n) {
-    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
-
-    assert(surfs_to_cut.size() > 0);
-
-    boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
-    
-    if (bottom) {
-      cout << "Has bottom" << endl;
-      boost::optional<surface> top = mesh_top_surface(part_mesh, n);
-
-      if (top) {
-	cout << "Has top" << endl;
-	std::vector<surface> vertical_surfs =
-	  connected_vertical_surfaces(part_mesh, n);
-	boost::optional<surface> outline =
-	  part_outline_surface(&vertical_surfs, n);
-
-	if (outline) {
-	  cout << "Has outline" << endl;
-
-	  // TODO: Refine this analysis to include surface grouping
-	  remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
-	  vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
-	  remove_contained_surfaces(from_n, surfs_to_cut);
-	  vector<surface> from_minus_n = surfaces_visible_from(surfs_to_cut, -1*n);
-	  remove_contained_surfaces(from_minus_n, surfs_to_cut);
-
-	  return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
-	  
-	} else {
-	  cout << "No outline" << endl;
-	}
-
-
-      } else {
-	cout << "No top" << endl;
-      }
-    } else {
-      cout << "No bottom" << endl;
-    }
-
-    return boost::none;
-  }
-
-  // TODO: Actually implement with surface sorting
-  std::vector<point>
-  possible_contour_normals(const triangular_mesh& part_mesh) {
-    return {{0, 0, 1}, {0, 1, 0}};
-  }
-
-  boost::optional<contour_surface_decomposition>
-  compute_contour_surfaces(const triangular_mesh& part_mesh) {
-
-    vector<point> candidate_contour_normals =
-      possible_contour_normals(part_mesh);
-
-    point n(0, 0, 1);
-    
-    for (auto n : candidate_contour_normals) {
-      boost::optional<contour_surface_decomposition> surfs =
-	contour_surface_decomposition_in_dir(part_mesh, n);
-      if (surfs) { return surfs; }
-    }
-
-    return boost::none;
-  }
-  
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,

@@ -270,4 +270,16 @@ namespace gca {
   }
 
 
+  boost::optional<surface>
+  mesh_top_surface(const triangular_mesh& m, const point n) {
+    auto surfs = outer_surfaces(m);
+    delete_if(surfs,
+	      [n](const surface& s) { return !s.parallel_to(n, 0.001); });
+    if (surfs.size() > 0) {
+      return merge_surfaces(surfs);
+    } else {
+      return boost::none;
+    }
+  }
+
 }

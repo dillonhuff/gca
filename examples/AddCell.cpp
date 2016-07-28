@@ -1,4 +1,5 @@
 #include <vtkAxesActor.h>
+#include <vtkCellData.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkCylinderSource.h>
 #include <vtkActor.h>
@@ -109,18 +110,13 @@ void color_polydata_by_millability(vtkSmartPointer<vtkPolyData> polyData,
   std::cout << "There are " << polyData->GetNumberOfPoints()
             << " points." << std::endl;
 
-  vector<index_t> millable = millable_faces(point(0, 0, 1), mesh);
-  for(index_t i = 0; i < polyData->GetNumberOfPoints(); i++) {
-    double p[3];
-    polyData->GetPoint(i, p);
-    gca::point pt(p[0], p[1], p[2]);
+  vector<index_t> millable = millable_faces(point(0, -1, 0), mesh);
+  for(index_t i = 0; i < polyData->GetNumberOfCells(); i++) {
     unsigned char color[3];
-    color[0] = 0;
-    for (auto m : millable) {
-      auto t = mesh.triangle_vertices(m);
-      if (t.v[0] == i || t.v[1] == i || t.v[2] == i) {
-	color[0] = 200;
-      }
+    if (elem(i, millable)) {
+      color[0] = 200;
+    } else {
+      color[0] = 0;
     }
     color[1] = 0;
     color[2] = 0;
@@ -128,7 +124,7 @@ void color_polydata_by_millability(vtkSmartPointer<vtkPolyData> polyData,
     colors->InsertNextTupleValue(color);
   }
  
-  polyData->GetPointData()->SetScalars(colors);  
+  polyData->GetCellData()->SetScalars(colors);
 }
 
 vtkSmartPointer<vtkPolyData>

@@ -1481,6 +1481,33 @@ src/synthesis/clamp_orientation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/clamp_orientation.cpp.s
 .PHONY : src/synthesis/clamp_orientation.cpp.s
 
+src/synthesis/contour_planning.o: src/synthesis/contour_planning.cpp.o
+
+.PHONY : src/synthesis/contour_planning.o
+
+# target to build an object file
+src/synthesis/contour_planning.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/contour_planning.cpp.o
+.PHONY : src/synthesis/contour_planning.cpp.o
+
+src/synthesis/contour_planning.i: src/synthesis/contour_planning.cpp.i
+
+.PHONY : src/synthesis/contour_planning.i
+
+# target to preprocess a source file
+src/synthesis/contour_planning.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/contour_planning.cpp.i
+.PHONY : src/synthesis/contour_planning.cpp.i
+
+src/synthesis/contour_planning.s: src/synthesis/contour_planning.cpp.s
+
+.PHONY : src/synthesis/contour_planning.s
+
+# target to generate assembly for a file
+src/synthesis/contour_planning.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/contour_planning.cpp.s
+.PHONY : src/synthesis/contour_planning.cpp.s
+
 src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
 
 .PHONY : src/synthesis/cut_to_gcode.o
@@ -2182,6 +2209,33 @@ test/circular_arc_tests.s: test/circular_arc_tests.cpp.s
 test/circular_arc_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.s
 .PHONY : test/circular_arc_tests.cpp.s
+
+test/contour_planning_tests.o: test/contour_planning_tests.cpp.o
+
+.PHONY : test/contour_planning_tests.o
+
+# target to build an object file
+test/contour_planning_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/contour_planning_tests.cpp.o
+.PHONY : test/contour_planning_tests.cpp.o
+
+test/contour_planning_tests.i: test/contour_planning_tests.cpp.i
+
+.PHONY : test/contour_planning_tests.i
+
+# target to preprocess a source file
+test/contour_planning_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/contour_planning_tests.cpp.i
+.PHONY : test/contour_planning_tests.cpp.i
+
+test/contour_planning_tests.s: test/contour_planning_tests.cpp.s
+
+.PHONY : test/contour_planning_tests.s
+
+# target to generate assembly for a file
+test/contour_planning_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/contour_planning_tests.cpp.s
+.PHONY : test/contour_planning_tests.cpp.s
 
 test/cut_scheduling_tests.o: test/cut_scheduling_tests.cpp.o
 
@@ -3094,6 +3148,9 @@ help:
 	@echo "... src/synthesis/clamp_orientation.o"
 	@echo "... src/synthesis/clamp_orientation.i"
 	@echo "... src/synthesis/clamp_orientation.s"
+	@echo "... src/synthesis/contour_planning.o"
+	@echo "... src/synthesis/contour_planning.i"
+	@echo "... src/synthesis/contour_planning.s"
 	@echo "... src/synthesis/cut_to_gcode.o"
 	@echo "... src/synthesis/cut_to_gcode.i"
 	@echo "... src/synthesis/cut_to_gcode.s"
@@ -3172,6 +3229,9 @@ help:
 	@echo "... test/circular_arc_tests.o"
 	@echo "... test/circular_arc_tests.i"
 	@echo "... test/circular_arc_tests.s"
+	@echo "... test/contour_planning_tests.o"
+	@echo "... test/contour_planning_tests.i"
+	@echo "... test/contour_planning_tests.s"
 	@echo "... test/cut_scheduling_tests.o"
 	@echo "... test/cut_scheduling_tests.i"
 	@echo "... test/cut_scheduling_tests.s"

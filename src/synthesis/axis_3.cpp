@@ -27,6 +27,7 @@ namespace gca {
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
 				const std::vector<tool>& tools,
 				const material& stock_material) {
+    assert(pockets.size() > 0);
     double h = (*(max_element(begin(pockets), end(pockets),
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();

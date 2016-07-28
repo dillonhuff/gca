@@ -104,6 +104,7 @@ SET(GCA_HEADERS
 	./src/synthesis/clamp_orientation.h
 	./src/synthesis/gcode_generation.h
 	    ./src/synthesis/mesh_to_gcode.h
+	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
@@ -129,6 +130,7 @@ SET(GCA_CPPS
 	 ./src/synthesis/shapes_to_gcode.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/cut_to_gcode.cpp
+	 ./src/synthesis/contour_planning.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/toolpath_generation.cpp
@@ -147,6 +149,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/system_algorithm_tests.cpp
+	       test/contour_planning_tests.cpp
 	       test/surface_tests.cpp
 	       test/matrix_tests.cpp
 	       test/workpiece_alignment_tests.cpp

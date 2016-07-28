@@ -51,7 +51,7 @@ namespace gca {
 
   bool lies_along(const point normal,
 		  const triangle& t) {
-    return within_eps(angle_between(t.normal, normal), 90, 0.5);
+    return within_eps(angle_between(t.normal, normal), 90, 2.0);
   }
 
   bool parallel_to(const point normal,
@@ -248,6 +248,26 @@ namespace gca {
     sort(begin(inds), end(inds));
     inds.erase(unique(begin(inds), end(inds)), end(inds));
     return inds;
+  }
+
+  std::vector<surface>
+  surfaces_visible_from(const std::vector<surface>& surfaces_left,
+			const point n) {
+    if (surfaces_left.size() == 0) { return {}; }
+
+    const triangular_mesh& part = surfaces_left.front().get_parent_mesh();
+
+    std::vector<index_t> millable =
+      millable_faces(n, part);
+    sort(begin(millable), end(millable));
+
+    vector<surface> mill_surfaces;
+    for (unsigned i = 0; i < surfaces_left.size(); i++) {
+      if (surfaces_left[i].contained_by_sorted(millable)) {
+	mill_surfaces.push_back(surfaces_left[i]);
+      }
+    }
+    return mill_surfaces;
   }
 
 }
