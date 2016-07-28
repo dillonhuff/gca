@@ -213,6 +213,7 @@ namespace gca {
     
     clamp_orientation cutout_orient(left_plane, right_plane, base_plane);
 
+    // TODO: Actually construct vice with more sane dimensions
     vice custom_jaw_vice = v;
     
     return fixture(cutout_orient, custom_jaw_vice);
@@ -253,24 +254,49 @@ namespace gca {
       return boost::none;
     }
   }
-  
-  boost::optional<clipping_plan>
-  parallel_plate_clipping(const triangular_mesh& aligned,
-			  const triangular_mesh& part_mesh,
-			  const fixtures& f) {
-    point n(0, 0, 1);
-    
+
+  struct contour_surface_decomposition {
+    point n;
+    surface outline;
+    surface top;
+    surface bottom;
+    std::vector<surface> visible_from_n;
+    std::vector<surface> visible_from_minus_n;
+    std::vector<surface> rest;
+  };
+
+  boost::optional<contour_surface_decomposition>
+  compute_contour_surfaces(const triangular_mesh& part_mesh,
+			   const point n) {
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
 
     assert(surfs_to_cut.size() > 0);
 
     boost::optional<surface> outline = part_outline_surface(&surfs_to_cut, n);
     boost::optional<surface> top = mesh_top_surface(part_mesh, n);
+    boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
 
-    if (outline && top) {
-      cout << "Has outline and flat top in " << n << endl;
+    if (outline && top && bottom) {
+      remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
+      return contour_surface_decomposition{n, *outline, *top, *bottom, {}, {}, surfs_to_cut};
+    }
+    return boost::none;
+  }
+  
+  boost::optional<clipping_plan>
+  parallel_plate_clipping(const triangular_mesh& aligned,
+			  const triangular_mesh& part_mesh,
+			  const fixtures& f) {
+    point n(0, 0, 1);
+
+    boost::optional<contour_surface_decomposition> surfs =
+      compute_contour_surfaces(part_mesh, n);
+    
+    if (surfs) {
+      const surface& outline = surfs->outline;
+      const surface& top = surfs->top;
       
-      remove_contained_surfaces({*outline}, surfs_to_cut);
+      cout << "Has outline and flat top in " << n << endl;
 
       boost::optional<fixture> top_fix =
       	find_top_contour_fixture(aligned, part_mesh, f, n);
@@ -279,7 +305,7 @@ namespace gca {
 	cout << "Has top fix in " << n << endl;
 
 	boost::optional<fixture> base_fix =
-	  find_base_contour_fixture(*outline, *top, (*top_fix).v, -1*n);
+	  find_base_contour_fixture(outline, top, (*top_fix).v, -1*n);
 
 	if (base_fix) {
 	  std::vector<fixture_setup> clip_setups;
@@ -288,7 +314,7 @@ namespace gca {
 
 	  auto clipped_surfs =
 	    stable_surfaces_after_clipping(part_mesh, aligned);
-	  remove_contained_surfaces(clipped_surfs, surfs_to_cut);
+	  auto surfs_to_cut = surfs->rest;
 
 	  return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
 	}
@@ -299,28 +325,16 @@ namespace gca {
     return boost::none;
   }
 
-  // TODO: Clean up and add vice height test
-  // TODO: Use tool lengths in can_clip_parallel test
-  boost::optional<clipping_plan>
-  try_parallel_plate_clipping(const workpiece w, 
+  clipping_plan
+  workpiece_clipping_programs(const workpiece w,
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
     triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
-    return parallel_plate_clipping(wp_mesh, part_mesh, f);
-  }
-
-  clipping_plan
-  workpiece_clipping_programs(const workpiece w,
-			      const triangular_mesh& part_mesh,
-			      const std::vector<tool>& tools,
-			      const fixtures& f) {
-    
-
     auto contour_clip =
-      try_parallel_plate_clipping(w, part_mesh, tools, f);
+      parallel_plate_clipping(wp_mesh, part_mesh, f);
 
     if (contour_clip) {
       return *contour_clip;
