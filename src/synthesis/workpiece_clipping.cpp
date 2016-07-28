@@ -181,14 +181,41 @@ namespace gca {
       }
   }
 
+  point pick_jaw_cutout_axis(const surface& outline) {
+    return outline.face_orientation(outline.front());
+  }
 
+
+  // TODO: Produce longer clamps
   boost::optional<fixture>
   custom_jaw_cutout_fixture(const surface& outline_of_contour,
 			    const surface& top_of_contour,
 			    const vice& v,
 			    const point n) {
-    //boost::optional<oriented_polygon> ;
-    assert(false);
+    point axis = pick_jaw_cutout_axis(outline_of_contour);
+    assert(within_eps(axis.dot(n), 0, 0.0001));
+    point neg_axis = -1*axis;
+    double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
+
+    cout << "neg axis = " << neg_axis << endl;
+    cout << "part diameter along axis = " << part_diam << endl;
+
+    // TODO: Sub select max point from only the given surface indexes
+    point base_normal = top_of_contour.face_orientation(top_of_contour.front());
+    point base_pt = max_point_in_dir(top_of_contour.get_parent_mesh(), base_normal);
+    plane base_plane(base_normal, base_pt);
+
+    point left_pt = max_point_in_dir(outline_of_contour.get_parent_mesh(), axis);
+    plane left_plane(axis, left_pt);
+
+    point right_pt = max_point_in_dir(outline_of_contour.get_parent_mesh(), neg_axis);
+    plane right_plane(neg_axis, right_pt);
+    
+    clamp_orientation cutout_orient(left_plane, right_plane, base_plane);
+
+    vice custom_jaw_vice = v;
+    
+    return fixture(cutout_orient, custom_jaw_vice);
   }
   
   // TODO: Add code to generate jaws for base fixture

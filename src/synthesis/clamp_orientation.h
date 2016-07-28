@@ -57,6 +57,11 @@ namespace gca {
       return right_pl.normal();
     }
 
+    clamp_orientation(const plane l,
+		      const plane r,
+		      const plane b)
+      : left_pl(l), right_pl(r), bottom_pl(b) {}
+
     clamp_orientation(const surface* p_left,
     		      const surface* p_right,
     		      const surface* p_bottom) :
