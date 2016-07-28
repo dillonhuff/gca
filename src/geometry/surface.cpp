@@ -100,21 +100,22 @@ namespace gca {
   // TODO: Eventually identify vertical holes and compensate for them
   bool vertical_contained_by(const surface& maybe_contained,
 			     const surface& maybe_container) {
-    vector<oriented_polygon> maybe_contained_outlines =
-      mesh_bounds(maybe_contained.index_list(), maybe_contained.get_parent_mesh());
-    if (maybe_contained_outlines.size() !=  2) {
-      cout << "More than 2 outlines" << endl;
-      return false;
-    }
-    auto contained_outline = maybe_contained_outlines.front();
+    // vector<oriented_polygon> maybe_contained_outlines =
+    //   mesh_bounds(maybe_contained.index_list(), maybe_contained.get_parent_mesh());
+    // if (maybe_contained_outlines.size() !=  2) {
+    //   cout << "More than 2 outlines" << endl;
+    //   return false;
+    // }
+    auto contained_outline =
+      max_area_outline(maybe_contained.index_list(), maybe_contained.get_parent_mesh()); //maybe_contained_outlines.front();
     
-    vector<oriented_polygon> maybe_container_outlines =
-      mesh_bounds(maybe_container.index_list(), maybe_container.get_parent_mesh());
-    if (maybe_container_outlines.size() != 2) {
-      cout << "More than 2 outlines" << endl;
-      return false;
-    }
-    auto container_outline = maybe_container_outlines.front();
+    // vector<oriented_polygon> maybe_container_outlines =
+    //   mesh_bounds(maybe_container.index_list(), maybe_container.get_parent_mesh());
+    // if (maybe_container_outlines.size() != 2) {
+    //   cout << "More than 2 outlines" << endl;
+    //   return false;
+    // }
+    auto container_outline = max_area_outline(maybe_container.index_list(), maybe_container.get_parent_mesh()); //maybe_container_outlines.front();
 
     return contains(container_outline, contained_outline);
   }
@@ -246,14 +247,21 @@ namespace gca {
     }
     return sfs;
   }
-  
+
   std::vector<surface>
-  connected_vertical_surfaces(const triangular_mesh& m, const point n) {
-    vector<index_t> inds = m.face_indexes();
+  connected_vertical_surfaces(std::vector<index_t>& inds,
+			      const triangular_mesh& m,
+			      const point n) {
     delete_if(inds, [m, n](const index_t i)
 	      { return !within_eps(angle_between(n, m.face_orientation(i)), 90, 0.01); });
     vector<vector<index_t>> regions = connect_regions(inds, m);
     return inds_to_surfaces(regions, m);
+  }
+  
+  std::vector<surface>
+  connected_vertical_surfaces(const triangular_mesh& m, const point n) {
+    vector<index_t> inds = m.face_indexes();
+    return connected_vertical_surfaces(inds, m, n);
   }
 
 

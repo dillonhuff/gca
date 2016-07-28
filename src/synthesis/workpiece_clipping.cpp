@@ -338,7 +338,10 @@ namespace gca {
 
       if (top) {
 	cout << "Has top" << endl;
-	boost::optional<surface> outline = part_outline_surface(&surfs_to_cut, n);
+	std::vector<surface> vertical_surfs =
+	  connected_vertical_surfaces(part_mesh, n);
+	boost::optional<surface> outline =
+	  part_outline_surface(&vertical_surfs, n);
 
 	if (outline) {
 	  cout << "Has outline" << endl;

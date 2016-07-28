@@ -45,10 +45,10 @@ namespace gca {
       REQUIRE(result_programs.size() == 2);
     }
 
-    SECTION("Box with two holes has 6 clippings and two pocketings") {
+    SECTION("Box with two holes has a contour and 1 pocketing") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 8);
+      REQUIRE(result_programs.size() == 3);
     }
 
     SECTION("Box with protrusion") {
