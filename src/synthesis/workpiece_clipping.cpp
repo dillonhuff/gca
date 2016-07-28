@@ -75,8 +75,12 @@ namespace gca {
     }
     auto part_outlines =
       mesh_bounds((*part_bound).index_list(), (*part_bound).get_parent_mesh());
-    assert(part_outlines.size() == 2);
-    oriented_polygon part_outline = part_outlines.front();
+
+    oriented_polygon part_outline =
+      *(max_element(begin(part_outlines), end(part_outlines),
+		    [](const oriented_polygon& l,
+		       const oriented_polygon& r)
+      { return area(l) < area(r); }));
 
     vector<pocket> pockets{face_pocket(stock_top, part_top, stock_outline)};
 
