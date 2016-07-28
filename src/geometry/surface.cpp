@@ -160,8 +160,13 @@ namespace gca {
   boost::optional<surface>
   part_outline_surface(const triangular_mesh& m,
 		       const point n) {
-    vector<surface> surfs = surfaces_to_cut(m);
-    return part_outline_surface(&surfs, n);
+    std::vector<surface> vertical_surfs =
+      connected_vertical_surfaces(m, n);
+    boost::optional<surface> outline =
+      part_outline_surface(&vertical_surfs, n);
+    return outline;
+    // vector<surface> surfs = surfaces_to_cut(m);
+    // return part_outline_surface(&surfs, n);
   }
 
   // TODO: Need to add normal vectors, how to match this with
