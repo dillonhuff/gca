@@ -88,6 +88,7 @@ namespace gca {
   fixture_setup
   clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
 			       const triangular_mesh& part_mesh,
+			       const std::vector<surface>& surfaces,
 			       const fixture& f) {
     auto s_t = mating_transform(wp_mesh, f.orient, f.v);
     auto aligned = apply(s_t, wp_mesh);
@@ -98,6 +99,7 @@ namespace gca {
   fixture_setup
   clip_base_transform(const triangular_mesh& wp_mesh,
 		      const triangular_mesh& part_mesh,
+		      const std::vector<surface>& surfaces,
 		      const fixture& f) {
     auto s_t = mating_transform(part_mesh, f.orient, f.v);
     auto aligned = apply(s_t, wp_mesh);
@@ -309,8 +311,8 @@ namespace gca {
 
 	if (base_fix) {
 	  std::vector<fixture_setup> clip_setups;
-	  clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, *top_fix));
-	  clip_setups.push_back(clip_base_transform(aligned, part_mesh, *base_fix));
+	  clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs->visible_from_n, *top_fix));
+	  clip_setups.push_back(clip_base_transform(aligned, part_mesh, surfs->visible_from_minus_n, *base_fix));
 
 	  auto clipped_surfs =
 	    stable_surfaces_after_clipping(part_mesh, aligned);
