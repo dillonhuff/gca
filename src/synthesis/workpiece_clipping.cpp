@@ -4,6 +4,7 @@
 #include "gcode/lexer.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/face_clipping.h"
+#include "synthesis/millability.h"
 #include "synthesis/tool.h"
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
@@ -85,6 +86,18 @@ namespace gca {
     return fixture_setup(m, f, pockets);
   }
 
+  // TODO: Unify this with the pocket making code in fixture analysis
+  std::vector<pocket>
+  make_pockets(const triangular_mesh& part,
+	       const std::vector<surface>& surfaces) {
+    std::vector<std::vector<index_t>> inds;
+    for (auto s : surfaces) {
+      inds.push_back(s.index_list());
+    }
+    auto mesh_cpy = new (allocate<triangular_mesh>()) triangular_mesh(part);
+    return make_surface_pockets(*mesh_cpy, inds);
+  }
+
   fixture_setup
   clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
 			       const triangular_mesh& part_mesh,
@@ -93,7 +106,16 @@ namespace gca {
     auto s_t = mating_transform(wp_mesh, f.orient, f.v);
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
-    return clip_top_and_sides(aligned, part, f);
+    fixture_setup setup = clip_top_and_sides(aligned, part, f);
+    std::vector<pocket>& setup_pockets = setup.pockets;
+
+    unsigned old_size = setup.pockets.size();
+    concat(setup_pockets, make_pockets(part, surfaces));
+    unsigned new_size = setup.pockets.size();
+    
+    assert((surfaces.size() == 0) || (new_size > old_size));
+
+    return setup;
   }
 
   fixture_setup
@@ -104,7 +126,17 @@ namespace gca {
     auto s_t = mating_transform(part_mesh, f.orient, f.v);
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
-    return clip_base(aligned, part, f);
+
+    fixture_setup setup = clip_base(aligned, part, f);
+    std::vector<pocket>& setup_pockets = setup.pockets;
+
+    unsigned old_size = setup.pockets.size();
+    concat(setup_pockets, make_pockets(part, surfaces));
+    unsigned new_size = setup.pockets.size();
+    
+    assert((surfaces.size() == 0) || (new_size > old_size));
+
+    return setup;
   }
 
   fixture_setup
@@ -267,6 +299,26 @@ namespace gca {
     std::vector<surface> rest;
   };
 
+  std::vector<surface>
+  surfaces_visible_from(const std::vector<surface>& surfaces_left,
+			const point n) {
+    if (surfaces_left.size() == 0) { return {}; }
+
+    const triangular_mesh& part = surfaces_left.front().get_parent_mesh();
+
+    std::vector<index_t> millable =
+      millable_faces(n, part);
+    sort(begin(millable), end(millable));
+
+    vector<surface> mill_surfaces;
+    for (unsigned i = 0; i < surfaces_left.size(); i++) {
+      if (surfaces_left[i].contained_by_sorted(millable)) {
+	mill_surfaces.push_back(surfaces_left[i]);
+      }
+    }
+    return mill_surfaces;
+  }
+  
   boost::optional<contour_surface_decomposition>
   compute_contour_surfaces(const triangular_mesh& part_mesh,
 			   const point n) {
@@ -279,8 +331,14 @@ namespace gca {
     boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
 
     if (outline && top && bottom) {
+      // TODO: Refine this analysis to include surface grouping
       remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
-      return contour_surface_decomposition{n, *outline, *top, *bottom, {}, {}, surfs_to_cut};
+      vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
+      remove_contained_surfaces(from_n, surfs_to_cut);
+      vector<surface> from_minus_n = surfaces_visible_from(surfs_to_cut, -1*n);
+      remove_contained_surfaces(from_minus_n, surfs_to_cut);
+
+      return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
     }
     return boost::none;
   }

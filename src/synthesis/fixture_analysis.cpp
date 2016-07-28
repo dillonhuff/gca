@@ -209,8 +209,6 @@ namespace gca {
 		      std::vector<fixture*>& all_orients) {
     if (surfs_to_cut.size() == 0) { return {}; }
 
-    // relation<surface*, fixture*> possible_orientations =
-    //   greedy_possible_fixtures(surfs_to_cut, all_orients);
     constrained_partition<surface*, fixture*> surface_part =
       greedy_possible_fixtures(surfs_to_cut, all_orients);
 
