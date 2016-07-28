@@ -322,10 +322,10 @@ namespace gca {
     }
     return mill_surfaces;
   }
-  
+
   boost::optional<contour_surface_decomposition>
-  compute_contour_surfaces(const triangular_mesh& part_mesh,
-			   const point n) {
+  contour_surface_decomposition_in_dir(const triangular_mesh& part_mesh,
+				       const point n) {
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
 
     assert(surfs_to_cut.size() > 0);
@@ -364,18 +364,41 @@ namespace gca {
     }
     return boost::none;
   }
+
+  // TODO: Actually implement with surface sorting
+  std::vector<point>
+  possible_contour_normals(const triangular_mesh& part_mesh) {
+    return {{0, 0, 1}, {0, 1, 0}};
+  }
+
+  boost::optional<contour_surface_decomposition>
+  compute_contour_surfaces(const triangular_mesh& part_mesh) {
+
+    vector<point> candidate_contour_normals =
+      possible_contour_normals(part_mesh);
+
+    point n(0, 0, 1);
+    
+    for (auto n : candidate_contour_normals) {
+      boost::optional<contour_surface_decomposition> surfs =
+	contour_surface_decomposition_in_dir(part_mesh, n);
+      if (surfs) { return surfs; }
+    }
+
+    return boost::none;
+  }
   
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,
 			  const fixtures& f) {
     cout << "Trying parallel plate clipping" << endl;
-    point n(0, 0, 1);
 
     boost::optional<contour_surface_decomposition> surfs =
-      compute_contour_surfaces(part_mesh, n);
-    
+      compute_contour_surfaces(part_mesh);
+
     if (surfs) {
+      point n = surfs->n;
       const surface& outline = surfs->outline;
       const surface& top = surfs->top;
       
