@@ -2723,6 +2723,33 @@ test/spline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.s
 .PHONY : test/spline_tests.cpp.s
 
+test/surface_tests.o: test/surface_tests.cpp.o
+
+.PHONY : test/surface_tests.o
+
+# target to build an object file
+test/surface_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.o
+.PHONY : test/surface_tests.cpp.o
+
+test/surface_tests.i: test/surface_tests.cpp.i
+
+.PHONY : test/surface_tests.i
+
+# target to preprocess a source file
+test/surface_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.i
+.PHONY : test/surface_tests.cpp.i
+
+test/surface_tests.s: test/surface_tests.cpp.s
+
+.PHONY : test/surface_tests.s
+
+# target to generate assembly for a file
+test/surface_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.s
+.PHONY : test/surface_tests.cpp.s
+
 test/system_algorithm_tests.o: test/system_algorithm_tests.cpp.o
 
 .PHONY : test/system_algorithm_tests.o
@@ -3205,6 +3232,9 @@ help:
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"
+	@echo "... test/surface_tests.o"
+	@echo "... test/surface_tests.i"
+	@echo "... test/surface_tests.s"
 	@echo "... test/system_algorithm_tests.o"
 	@echo "... test/system_algorithm_tests.i"
 	@echo "... test/system_algorithm_tests.s"

@@ -199,9 +199,9 @@ namespace gca {
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
-    auto gprogs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+    //    auto gprogs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
 
-    REQUIRE(gprogs.size() == 3);
+    //    REQUIRE(gprogs.size() == 3);
   }
 
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {

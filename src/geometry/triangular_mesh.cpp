@@ -461,4 +461,19 @@ namespace gca {
     return c_edges;
   }
 
+  oriented_polygon max_area_outline(const std::vector<index_t>& inds,
+				    const triangular_mesh& m) {
+    auto part_outlines = mesh_bounds(inds, m);
+
+    assert(part_outlines.size() > 0);
+
+    oriented_polygon part_outline =
+      *(max_element(begin(part_outlines), end(part_outlines),
+		    [](const oriented_polygon& l,
+		       const oriented_polygon& r)
+      { return area(l) < area(r); }));
+
+    return part_outline;
+  }
+
 }

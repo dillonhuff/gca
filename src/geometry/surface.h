@@ -122,6 +122,9 @@ namespace gca {
 
   std::vector<surface>
   constant_orientation_subsurfaces(const surface& surface);
+
+  std::vector<surface>
+  connected_vertical_surfaces(const triangular_mesh& m, const point n);
   
 }
 

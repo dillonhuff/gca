@@ -330,38 +330,40 @@ namespace gca {
 
     assert(surfs_to_cut.size() > 0);
 
-    boost::optional<surface> outline = part_outline_surface(&surfs_to_cut, n);
-    boost::optional<surface> top = mesh_top_surface(part_mesh, n);
     boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
-
-    if (!bottom) {
-      cout << "No bottom" << endl;
-    } else {
-      cout << "Has bottom" << endl;
-    }
-
-    if (!top) {
-      cout << "No top" << endl;
-    } else {
-      cout << "Has top" << endl;
-    }
     
-    if (!outline) {
-      cout << "No outline" << endl;
+    if (bottom) {
+      cout << "Has bottom" << endl;
+      boost::optional<surface> top = mesh_top_surface(part_mesh, n);
+
+      if (top) {
+	cout << "Has top" << endl;
+	boost::optional<surface> outline = part_outline_surface(&surfs_to_cut, n);
+
+	if (outline) {
+	  cout << "Has outline" << endl;
+
+	  // TODO: Refine this analysis to include surface grouping
+	  remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
+	  vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
+	  remove_contained_surfaces(from_n, surfs_to_cut);
+	  vector<surface> from_minus_n = surfaces_visible_from(surfs_to_cut, -1*n);
+	  remove_contained_surfaces(from_minus_n, surfs_to_cut);
+
+	  return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
+	  
+	} else {
+	  cout << "No outline" << endl;
+	}
+
+
+      } else {
+	cout << "No top" << endl;
+      }
     } else {
-      cout << "Has outline" << endl;
+      cout << "No bottom" << endl;
     }
 
-    if (outline && top && bottom) {
-      // TODO: Refine this analysis to include surface grouping
-      remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
-      vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
-      remove_contained_surfaces(from_n, surfs_to_cut);
-      vector<surface> from_minus_n = surfaces_visible_from(surfs_to_cut, -1*n);
-      remove_contained_surfaces(from_minus_n, surfs_to_cut);
-
-      return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
-    }
     return boost::none;
   }
 

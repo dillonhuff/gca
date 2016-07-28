@@ -305,6 +305,9 @@ namespace gca {
   convex_edges(const triangular_mesh& m);
 
   double dihedral_angle(const gca::edge e, const triangular_mesh& m);
+
+  oriented_polygon max_area_outline(const std::vector<index_t>& inds,
+				    const triangular_mesh& m);
   
 }
 

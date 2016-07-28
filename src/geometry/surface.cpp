@@ -102,12 +102,18 @@ namespace gca {
 			     const surface& maybe_container) {
     vector<oriented_polygon> maybe_contained_outlines =
       mesh_bounds(maybe_contained.index_list(), maybe_contained.get_parent_mesh());
-    if (maybe_contained_outlines.size() !=  2) { return false; }
+    if (maybe_contained_outlines.size() !=  2) {
+      cout << "More than 2 outlines" << endl;
+      return false;
+    }
     auto contained_outline = maybe_contained_outlines.front();
     
     vector<oriented_polygon> maybe_container_outlines =
       mesh_bounds(maybe_container.index_list(), maybe_container.get_parent_mesh());
-    if (maybe_container_outlines.size() != 2) { return false; }
+    if (maybe_container_outlines.size() != 2) {
+      cout << "More than 2 outlines" << endl;
+      return false;
+    }
     auto container_outline = maybe_container_outlines.front();
 
     return contains(container_outline, contained_outline);
@@ -116,10 +122,13 @@ namespace gca {
   boost::optional<surface>
   part_outline_surface(std::vector<surface>* surfaces_to_cut,
 		       const point n) {
+    cout << "Computing part outline surface" << endl;
     vector<surface> vertical_surfs =
       select(*surfaces_to_cut,
     	     [n](const surface& s)
     	     { return s.orthogonal_to(n, 0.01); });
+
+    cout << "# of vertical surfaces in " << n << " = " << vertical_surfs.size() << endl;
 
     vector<vector<unsigned>> merge_groups =
       connected_components_by(vertical_surfs, [](const surface& l, const surface& r)
@@ -128,10 +137,14 @@ namespace gca {
     if (merge_groups.size() == 1) {
       return merge_surfaces(vertical_surfs);
     } else {
+      cout << "More than 1 vertical component" << endl;
       vector<surface> merged = merge_surface_groups(vertical_surfs, merge_groups);
       vector<surface> outer_surfs =
 	partial_order_maxima(merged, [](const surface& l, const surface& r)
 			     { return vertical_contained_by(l, r); });
+
+      cout << "# of merged surfaces = " << merged.size() << endl;
+      cout << "# of outer surfaces = " << outer_surfs.size() << endl;
 
       if (outer_surfs.size() == 1) {
 	return outer_surfs.front();
@@ -223,5 +236,25 @@ namespace gca {
     }
     return surfs;
   }
+
+  std::vector<surface>
+  inds_to_surfaces(const std::vector<std::vector<index_t>> regions,
+		   const triangular_mesh& m) {
+    vector<surface> sfs;
+    for (auto r : regions) {
+      sfs.push_back(surface(&m, r));
+    }
+    return sfs;
+  }
+  
+  std::vector<surface>
+  connected_vertical_surfaces(const triangular_mesh& m, const point n) {
+    vector<index_t> inds = m.face_indexes();
+    delete_if(inds, [m, n](const index_t i)
+	      { return !within_eps(angle_between(n, m.face_orientation(i)), 90, 0.01); });
+    vector<vector<index_t>> regions = connect_regions(inds, m);
+    return inds_to_surfaces(regions, m);
+  }
+
 
 }
