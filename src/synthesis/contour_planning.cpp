@@ -1,34 +1,53 @@
 #include "synthesis/contour_planning.h"
 #include "synthesis/millability.h"
 
+#include "geometry/vtk_debug.h"
+
 namespace gca {
+
+  boost::optional<surface>
+  contour_outline(std::vector<index_t> inds,
+		  const triangular_mesh& part_mesh,
+		  const point n) {
+    std::vector<surface> vertical_surfs =
+      connected_vertical_surfaces(part_mesh, n);
+	
+    return part_outline_surface(&vertical_surfs, n);
+  }
+
 
   boost::optional<contour_surface_decomposition>
   contour_surface_decomposition_in_dir(const triangular_mesh& part_mesh,
 				       const point n) {
-    vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
 
-    assert(surfs_to_cut.size() > 0);
-
+    std::vector<index_t> inds = part_mesh.face_indexes();
     boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
+    
     
     if (bottom) {
       cout << "Has bottom" << endl;
+      subtract(inds, bottom->index_list());
       boost::optional<surface> top = mesh_top_surface(part_mesh, n);
 
       if (top) {
 	cout << "Has top" << endl;
-	std::vector<surface> vertical_surfs =
-	  connected_vertical_surfaces(part_mesh, n);
-	boost::optional<surface> outline =
-	  part_outline_surface(&vertical_surfs, n);
 
+	subtract(inds, top->index_list());
+	
+	boost::optional<surface> outline =
+	  contour_outline(inds, part_mesh, n);
 	if (outline) {
 	  cout << "Has outline" << endl;
+
+	  // vtk_debug_highlight_inds(outline->index_list(),
+	  // 			   outline->get_parent_mesh());
 
 	  // TODO: Refine this analysis to include surface grouping
 	  // TODO: Remove massive overkill surface culling
 	  vector<surface> sfs = {*outline, *top, *bottom};
+
+	  vector<surface> surfs_to_cut = surfaces_to_cut(inds, part_mesh);
+	  assert(surfs_to_cut.size() > 0);
 	  remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
 	  vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
 	  concat(sfs, from_n);
@@ -66,8 +85,6 @@ namespace gca {
     vector<point> candidate_contour_normals =
       possible_contour_normals(part_mesh);
 
-    point n(0, 0, 1);
-    
     for (auto n : candidate_contour_normals) {
       boost::optional<contour_surface_decomposition> surfs =
 	contour_surface_decomposition_in_dir(part_mesh, n);

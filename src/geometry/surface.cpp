@@ -190,10 +190,16 @@ namespace gca {
   }
 
   std::vector<surface> surfaces_to_cut(const triangular_mesh& part) {
-    double normal_degrees_delta = 30.0;
     auto inds = part.face_indexes();
 
-    
+    return surfaces_to_cut(inds, part);
+  }
+  
+  std::vector<surface> surfaces_to_cut(const std::vector<index_t>& indexes,
+				       const triangular_mesh& part) {
+    vector<index_t> inds = indexes;
+    double normal_degrees_delta = 30.0;
+
     vector<vector<index_t>> delta_regions =
       normal_delta_regions(inds, part, normal_degrees_delta);
     vector<surface> surfaces;

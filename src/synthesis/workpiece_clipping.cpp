@@ -1,5 +1,7 @@
 #include <boost/optional.hpp>
 
+#include "geometry/vtk_debug.h"
+
 #include "gcode/gcode_program.h"
 #include "gcode/lexer.h"
 #include "geometry/triangular_mesh.h"
@@ -231,6 +233,8 @@ namespace gca {
 			    const surface& top_of_contour,
 			    const vice& v,
 			    const point n) {
+    // vtk_debug_highlight_inds(outline_of_contour.index_list(),
+    // 			     outline_of_contour.get_parent_mesh());
     point axis = pick_jaw_cutout_axis(outline_of_contour);
     assert(within_eps(axis.dot(n), 0, 0.0001));
     point neg_axis = -1*axis;

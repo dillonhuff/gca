@@ -20,9 +20,9 @@ namespace gca {
     
     assert(base_inds.size() > 0);
     auto bounds = mesh_bounds(base_inds, base_mesh());
-    if (bounds.size() > 1) {
-      vtk_debug_highlight_inds(basep, *p_mesh);
-    }
+    // if (bounds.size() > 1) {
+    //   vtk_debug_highlight_inds(basep, *p_mesh);
+    // }
     assert(bounds.size() > 0);
     boundary = extract_boundary(bounds);
     holes = bounds;

@@ -5,21 +5,27 @@
 
 namespace gca {
 
-  TEST_CASE("Arm joint can be cut in one contour along (0, 1, 0)") {
+  TEST_CASE("Contouring") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+    SECTION("Tapered extruded top and side cannot be contoured") {
+      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
 
-    auto decomp = contour_surface_decomposition_in_dir(m, point(0, 1, 0));
+      auto decomp = compute_contour_surfaces(m);
 
-    REQUIRE(decomp);
-    for (auto s : decomp->rest) {
-      cout << "Surface size = " << s.index_list().size() << endl;
-      for (auto i : s.index_list()) {
-	cout << "--- Orientation " << i << " = " << s.face_orientation(i) << endl;
-      }
+      REQUIRE(!decomp);
     }
-    REQUIRE(decomp->rest.size() == 0);
+
+    SECTION("Arm joint") {
+      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+
+      auto decomp = compute_contour_surfaces(m);
+
+      REQUIRE(decomp);
+      REQUIRE(within_eps(decomp->n, point(0, 1, 0), 0.001));
+      REQUIRE(decomp->rest.size() == 0);
+    }
+
   }
 }

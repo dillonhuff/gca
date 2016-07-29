@@ -128,6 +128,9 @@ namespace gca {
 
   boost::optional<surface>
   mesh_top_surface(const triangular_mesh& m, const point n);
+
+  std::vector<surface> surfaces_to_cut(const std::vector<index_t>& indexes,
+				       const triangular_mesh& part);
   
 }
 
