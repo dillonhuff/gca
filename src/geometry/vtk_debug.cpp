@@ -14,14 +14,37 @@
 #include <vtkAxesActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkRenderWindowInteractor.h>
-#include <vtkActor.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 
 #include "geometry/vtk_debug.h"
+#include "geometry/vtk_utils.h"
 
 namespace gca {
 
+  void highlight_cells(vtkSmartPointer<vtkPolyData> polyData,
+		       const std::vector<index_t>& inds) {
+    vtkSmartPointer<vtkUnsignedCharArray> colors = 
+      vtkSmartPointer<vtkUnsignedCharArray>::New();
+    colors->SetNumberOfComponents(3);
+    colors->SetName("Colors");
+ 
+    for(index_t i = 0; i < polyData->GetNumberOfCells(); i++) {
+      unsigned char color[3];
+      if (elem(i, inds)) {
+	color[0] = 200;
+      } else {
+	color[0] = 0;
+      }
+      color[1] = 0;
+      color[2] = 0;
+
+      colors->InsertNextTupleValue(color);
+    }
+ 
+    polyData->GetCellData()->SetScalars(colors);
+  }
+  
   vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData)
   {
     vtkSmartPointer<vtkPolyDataMapper> mapper =
@@ -58,6 +81,21 @@ namespace gca {
     renderWindow->Render();
     renderWindowInteractor->Start();
   }
+
+  vtkSmartPointer<vtkActor>
+  highlighted_surface_actor(const std::vector<index_t>& inds,
+			    const triangular_mesh& mesh) {
+    auto poly_data = polydata_for_trimesh(mesh);
+    highlight_cells(poly_data, inds);
+    return polydata_actor(poly_data);
+  }
+
+  void vtk_debug_highlight_inds(const std::vector<index_t>& inds,
+				const triangular_mesh& mesh) {
+    auto surface_act = highlighted_surface_actor(inds, mesh);
+    visualize_actors({surface_act});
+  }
+
 
   bool is_closed(vtkPolyData* polydata)
   {

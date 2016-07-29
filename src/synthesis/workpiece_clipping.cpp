@@ -112,13 +112,13 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
     fixture_setup setup = clip_top_and_sides(aligned, part, f);
-    //std::vector<pocket>& setup_pockets = setup.pockets;
+    std::vector<pocket>& setup_pockets = setup.pockets;
 
-    //unsigned old_size = setup.pockets.size();
-    //concat(setup_pockets, make_pockets(part, surfaces));
-    //unsigned new_size = setup.pockets.size();
+    unsigned old_size = setup.pockets.size();
+    concat(setup_pockets, make_pockets(part, surfaces));
+    unsigned new_size = setup.pockets.size();
     
-    //assert((surfaces.size() == 0) || (new_size > old_size));
+    assert((surfaces.size() == 0) || (new_size > old_size));
 
     return setup;
   }

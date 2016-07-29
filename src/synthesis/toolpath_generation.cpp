@@ -2,6 +2,7 @@
 
 #include "gcode/cut.h"
 #include "gcode/linear_cut.h"
+#include "geometry/vtk_debug.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
@@ -9,6 +10,25 @@
 #include "utils/algorithm.h"
 
 namespace gca {
+
+  freeform_pocket::freeform_pocket(double start_depthp,
+				   const std::vector<index_t>& basep,
+				   const triangular_mesh* p_mesh) :
+    start_depth(start_depthp),
+    base_inds(basep),
+    mesh(p_mesh) {
+    
+    assert(base_inds.size() > 0);
+    auto bounds = mesh_bounds(base_inds, base_mesh());
+    if (bounds.size() > 1) {
+      vtk_debug_highlight_inds(basep, *p_mesh);
+    }
+    assert(bounds.size() > 0);
+    boundary = extract_boundary(bounds);
+    holes = bounds;
+  }
+
+
 
   pocket box_pocket(const box b) {
     point p1(b.x_min, b.y_min, b.z_min);
