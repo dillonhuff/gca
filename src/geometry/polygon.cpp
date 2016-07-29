@@ -84,24 +84,20 @@ namespace gca {
     return false;
   }
 
+  oriented_polygon offset_polygon(const oriented_polygon& p,
+				  const offset_dir dir,
+				  const double inc) {
+    assert(false);
+  }
+
   oriented_polygon exterior_offset(const oriented_polygon& p,
 				   double inc) {
-    auto vs = p.vertices();
-    vs.push_back(p.vertices().front());
-    polyline pl(vs);
-    auto off_l = offset(pl, exterior_direction(pl), inc);
-    vector<point> pts(begin(off_l), end(off_l));
-    return oriented_polygon(p.normal, pts);
+    assert(false);
   }
 
   oriented_polygon interior_offset(const oriented_polygon& p,
 				   double inc) {
-    auto vs = p.vertices();
-    vs.push_back(p.vertices().front());
-    polyline pl(vs);
-    auto off_l = offset(pl, interior_direction(pl), inc);
-    vector<point> pts(begin(off_l), end(off_l));
-    return oriented_polygon(p.normal, pts);
+    assert(false);
   }
 
   oriented_polygon project(const oriented_polygon& p, double z) {

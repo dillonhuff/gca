@@ -246,17 +246,18 @@ namespace gca {
   std::vector<polyline>
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
-    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
-    auto inter = project(interior, get_end_depth());
-    vector<double> depths =
-      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
-    vector<polyline> level_template =
-      contour_level(o, interior, t, get_end_depth());
-    vector<polyline> lines;
-    for (auto depth : depths) {
-      concat(lines, project_lines(level_template, depth));
-    }
-    return lines;
+    //auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+    // auto inter = project(interior, get_end_depth());
+    // vector<double> depths =
+    //   cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    // vector<polyline> level_template =
+    //   contour_level(o, interior, t, get_end_depth());
+    // vector<polyline> lines;
+    // for (auto depth : depths) {
+    //   concat(lines, project_lines(level_template, depth));
+    // }
+    // return lines;
+    return {to_polyline(interior)};
   }
 
   std::vector<polyline>
@@ -281,17 +282,18 @@ namespace gca {
   face_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     auto inter = project(base, get_end_depth());
-    vector<polyline> face_template =
-      face_level(inter, t, cut_depth);
+    return {to_polyline(inter)};
+    // vector<polyline> face_template =
+    //   face_level(inter, t, cut_depth);
 
-    vector<double> depths =
-      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    // vector<double> depths =
+    //   cut_depths(get_start_depth(), get_end_depth(), cut_depth);
 
-    vector<polyline> lines;
-    for (auto depth : depths) {
-      concat(lines, project_lines(face_template, depth));
-    }
-    return lines;
+    // vector<polyline> lines;
+    // for (auto depth : depths) {
+    //   concat(lines, project_lines(face_template, depth));
+    // }
+    // return lines;
   }
 
   tool
@@ -313,12 +315,13 @@ namespace gca {
   std::vector<polyline>
   freeform_pocket::toolpath_lines(const tool& t,
 				  const double cut_depth) const {
-    vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
-    auto finish_surface = finish_base_lines(*this, t, cut_depth);
-    concat(pocket_path, finish_surface);
-    auto finish_edges = finish_pocket(*this, t, cut_depth);
-    concat(pocket_path, finish_edges);
-    return pocket_path;
+    // vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
+    // auto finish_surface = finish_base_lines(*this, t, cut_depth);
+    // concat(pocket_path, finish_surface);
+    // auto finish_edges = finish_pocket(*this, t, cut_depth);
+    // concat(pocket_path, finish_edges);
+    // return pocket_path;
+    return {to_polyline(boundary)};
   }
 
   // TODO: Move these to somewhere else, they really dont belong here
