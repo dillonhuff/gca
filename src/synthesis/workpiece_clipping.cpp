@@ -176,17 +176,8 @@ namespace gca {
   largest_upward_orientation(const std::vector<surface>& surfs,
 			     const vice& parallel,
 			     const point n) {
-    // TODO: Eventually auto select the direction instead of
-    // hard coding (0, 0, 1)
-    //point n(0, 0, 1);
-
     vector<clamp_orientation> orients =
       all_viable_clamp_orientations(surfs, parallel);
-
-    cout << "# of orientations = " << orients.size() << endl;
-    for (auto orient : orients) {
-      cout << orient.top_normal() << endl;
-    }
 
     vector<clamp_orientation> top_orients =
       select(orients, [n](const clamp_orientation& s)
@@ -219,7 +210,7 @@ namespace gca {
       if (viable_plates.size() > 0) {
       	vice parallel(f.get_vice(), viable_plates.front());
 
-      	vector<surface> surfs = outer_surfaces(part_mesh);
+	//      	vector<surface> surfs = outer_surfaces(part_mesh);
       	vector<surface> stock_surfs = outer_surfaces(aligned);
 
 	cout << "n = " << n << endl;

@@ -116,7 +116,7 @@ namespace gca {
 
   oriented_polygon extract_boundary(vector<oriented_polygon>& polygons) {
     assert(polygons.size() > 0);
-    cout << "# of polygons in outline = " << polygons.size() << endl;
+
     for (unsigned i = 0; i < polygons.size(); i++) {
       auto possible_bound = polygons[i];
       bool contains_all = true;
@@ -134,6 +134,7 @@ namespace gca {
 	return possible_bound;
       }
     }
+
     assert(false);
   }
 

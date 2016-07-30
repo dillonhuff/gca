@@ -25,8 +25,6 @@ namespace gca {
     auto regions =
       connect_regions(outer_vertical_faces, part_mesh);
 
-    cout << "# of regions = " << regions.size() << endl;
-    
     if (regions.size() == 1) {
       return surface(&part_mesh, regions.front());
     }
