@@ -210,7 +210,6 @@ namespace gca {
       if (viable_plates.size() > 0) {
       	vice parallel(f.get_vice(), viable_plates.front());
 
-	//      	vector<surface> surfs = outer_surfaces(part_mesh);
       	vector<surface> stock_surfs = outer_surfaces(aligned);
 
 	cout << "n = " << n << endl;
@@ -292,6 +291,23 @@ namespace gca {
 				     n);
   }
 
+  clipping_plan
+  base_fix_clip_plan(const triangular_mesh& aligned,
+		     const triangular_mesh& part_mesh,
+		     const contour_surface_decomposition& surfs,
+		     const fixture& top_fix,
+		     const fixture& base_fix) {
+    std::vector<fixture_setup> clip_setups;
+    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, surfs.visible_from_minus_n, base_fix));
+
+    auto clipped_surfs =
+      stable_surfaces_after_clipping(part_mesh, aligned);
+    auto surfs_to_cut = surfs.rest;
+
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+  }
+  
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,
@@ -318,15 +334,7 @@ namespace gca {
 	  find_base_contour_fixture(outline, top, (*top_fix).v, -1*n);
 
 	if (base_fix) {
-	  std::vector<fixture_setup> clip_setups;
-	  clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs->visible_from_n, *top_fix));
-	  clip_setups.push_back(clip_base_transform(aligned, part_mesh, surfs->visible_from_minus_n, *base_fix));
-
-	  auto clipped_surfs =
-	    stable_surfaces_after_clipping(part_mesh, aligned);
-	  auto surfs_to_cut = surfs->rest;
-
-	  return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *base_fix);
 	}
 
       }
