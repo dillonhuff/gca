@@ -60,7 +60,7 @@ namespace gca {
       setups.push_back(fabrication_setup(*(setup.m), setup.fix.v, gprog));
     }
 
-    return fabrication_plan(setups);
+    return fabrication_plan(setups, plan.custom_fixtures());
   }
 
 }

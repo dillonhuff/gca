@@ -2,6 +2,7 @@
 #define GCA_CLIPPING_PLAN_H
 
 #include "synthesis/clamp_orientation.h"
+#include "synthesis/fabrication_plan.h"
 #include "synthesis/toolpath_generation.h"
 
 namespace gca {
@@ -49,6 +50,7 @@ namespace gca {
     std::vector<surface> stable_surfs;
     std::vector<surface> surfs_to_cut;
     std::vector<fixture_setup> fixtures;
+    std::vector<fabrication_plan*> custom_fixes;
 
     clipping_plan(const std::vector<surface>& p_stable_surfs,
 		  const std::vector<surface>& p_surfs_to_cut,
@@ -57,12 +59,24 @@ namespace gca {
 	surfs_to_cut(p_surfs_to_cut),
 	fixtures(p_fixtures) {}
 
+    clipping_plan(const std::vector<surface>& p_stable_surfs,
+		  const std::vector<surface>& p_surfs_to_cut,
+		  const std::vector<fixture_setup>& p_fixtures,
+		  const std::vector<fabrication_plan*>& p_custom_fixes)
+      : stable_surfs(p_stable_surfs),
+	surfs_to_cut(p_surfs_to_cut),
+	fixtures(p_fixtures),
+	custom_fixes(p_custom_fixes) {}
+    
     inline const std::vector<surface>& stable_surfaces() const
     { return stable_surfs; }
 
     inline const std::vector<surface>& surfaces_left_to_cut() const
     { return surfs_to_cut; }
 
+    const std::vector<fabrication_plan*>& custom_fixtures() const
+    { return custom_fixes; }
+    
   };
 
 }

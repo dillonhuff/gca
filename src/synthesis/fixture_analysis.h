@@ -19,6 +19,7 @@ namespace gca {
   protected:
     const triangular_mesh& part;
     std::vector<fixture_setup> setups;
+    std::vector<fabrication_plan*> custom_fixes;
     
   public:
     fixture_plan(const triangular_mesh& p_part,
@@ -27,8 +28,20 @@ namespace gca {
       std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
 
+    fixture_plan(const triangular_mesh& p_part,
+		 const std::vector<fixture_setup>& p_fixture_pairs,
+		 const std::vector<fabrication_plan*>& p_custom_fixes) :
+      part(p_part), setups(p_fixture_pairs),
+      custom_fixes(p_custom_fixes) {
+      std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
+    }
+    
     const std::vector<fixture_setup>& fixtures() const
     { return setups; }
+
+    const std::vector<fabrication_plan*>& custom_fixtures() const
+    { return custom_fixes; }
+    
   };
 
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,

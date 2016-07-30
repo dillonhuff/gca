@@ -241,7 +241,7 @@ namespace gca {
 
     concat(setups, rest);
 
-    return fixture_plan(part_mesh, setups);
+    return fixture_plan(part_mesh, setups, wp_setups.custom_fixtures());
   }
 
 }

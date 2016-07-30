@@ -18,7 +18,7 @@ namespace gca {
     point axis = pick_jaw_cutout_axis(outline_of_contour);
     cout << "axis = " << axis << endl;
     cout << "n = " << n << endl;
-    cout << "axis.dot(n)" << axis.dot(n) << endl;
+    cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
@@ -46,7 +46,7 @@ namespace gca {
     fixture f(cutout_orient, custom_jaw_vice);
     return make_pair(f, f);
   }
-  
+
   clipping_plan
   custom_jaw_clip_plan(const triangular_mesh& aligned,
 		       const triangular_mesh& part_mesh,
@@ -64,7 +64,7 @@ namespace gca {
       stable_surfaces_after_clipping(part_mesh, aligned);
     auto surfs_to_cut = surfs.rest;
 
-    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {nullptr, nullptr});
   }
 
   boost::optional<clipping_plan>
