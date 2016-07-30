@@ -327,6 +327,25 @@ namespace gca {
 
     return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
   }
+
+  boost::optional<clipping_plan>
+  custom_jaw_plan(const triangular_mesh& aligned,
+		  const triangular_mesh& part_mesh,
+		  const contour_surface_decomposition& surfs,
+		  const fixture& top_fix,
+		  const point n) {
+    boost::optional<std::pair<fixture, fixture>> custom =
+      custom_jaw_cutout_fixture(surfs.outline, surfs.top, top_fix.v, -1*n);
+    if (custom) {
+      return custom_jaw_clip_plan(aligned,
+				  part_mesh,
+				  surfs,
+				  top_fix,
+				  (*custom).first,
+				  (*custom).second);
+    }
+    return boost::none;
+  }
   
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
@@ -356,14 +375,7 @@ namespace gca {
 	if (base_fix) {
 	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *base_fix);
 	} else {
-	  boost::optional<std::pair<fixture, fixture>> custom =
-	    custom_jaw_cutout_fixture(outline, top, (*top_fix).v, -1*n);
-	  return custom_jaw_clip_plan(aligned,
-				      part_mesh,
-				      *surfs,
-				      *top_fix,
-				      (*custom).first,
-				      (*custom).second);
+	  return custom_jaw_plan(aligned, part_mesh, *surfs, *top_fix, -1*n);
 	}
       }
     }
