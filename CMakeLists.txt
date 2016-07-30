@@ -104,6 +104,8 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
 	./src/synthesis/clamp_orientation.h
+	./src/synthesis/jaw_cutout.h
+	./src/synthesis/clipping_plan.h
 	./src/synthesis/gcode_generation.h
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
@@ -123,6 +125,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/synthesis/clamp_orientation.cpp
+	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp

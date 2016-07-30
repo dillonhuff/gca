@@ -1670,6 +1670,33 @@ src/synthesis/gcode_generation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.s
 .PHONY : src/synthesis/gcode_generation.cpp.s
 
+src/synthesis/jaw_cutout.o: src/synthesis/jaw_cutout.cpp.o
+
+.PHONY : src/synthesis/jaw_cutout.o
+
+# target to build an object file
+src/synthesis/jaw_cutout.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/jaw_cutout.cpp.o
+.PHONY : src/synthesis/jaw_cutout.cpp.o
+
+src/synthesis/jaw_cutout.i: src/synthesis/jaw_cutout.cpp.i
+
+.PHONY : src/synthesis/jaw_cutout.i
+
+# target to preprocess a source file
+src/synthesis/jaw_cutout.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/jaw_cutout.cpp.i
+.PHONY : src/synthesis/jaw_cutout.cpp.i
+
+src/synthesis/jaw_cutout.s: src/synthesis/jaw_cutout.cpp.s
+
+.PHONY : src/synthesis/jaw_cutout.s
+
+# target to generate assembly for a file
+src/synthesis/jaw_cutout.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/jaw_cutout.cpp.s
+.PHONY : src/synthesis/jaw_cutout.cpp.s
+
 src/synthesis/mesh_to_gcode.o: src/synthesis/mesh_to_gcode.cpp.o
 
 .PHONY : src/synthesis/mesh_to_gcode.o
@@ -3196,6 +3223,9 @@ help:
 	@echo "... src/synthesis/gcode_generation.o"
 	@echo "... src/synthesis/gcode_generation.i"
 	@echo "... src/synthesis/gcode_generation.s"
+	@echo "... src/synthesis/jaw_cutout.o"
+	@echo "... src/synthesis/jaw_cutout.i"
+	@echo "... src/synthesis/jaw_cutout.s"
 	@echo "... src/synthesis/mesh_to_gcode.o"
 	@echo "... src/synthesis/mesh_to_gcode.i"
 	@echo "... src/synthesis/mesh_to_gcode.s"

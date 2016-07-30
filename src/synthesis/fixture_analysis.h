@@ -4,6 +4,7 @@
 #include "geometry/plane.h"
 #include "geometry/surface.h"
 #include "synthesis/clamp_orientation.h"
+#include "synthesis/clipping_plan.h"
 #include "synthesis/tool.h"
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
@@ -11,45 +12,8 @@
 
 namespace gca {
 
+  // TODO: Is this needed anymore?
   typedef std::map<unsigned, std::vector<unsigned>> surface_map;
-
-  struct fixture {
-    clamp_orientation orient;
-    vice v;
-    fixture(const clamp_orientation& p_orient,
-	    const vice& p_v)
-      : orient(p_orient), v(p_v) {}
-  };
-
-  class fixtures {
-  protected:
-    vice v;
-    std::vector<plate_height> par_plates;
-    
-  public:
-
-    fixtures(const vice& p_v)
-      : v(p_v) {}
-    
-    fixtures(const vice& p_v,
-	     const std::vector<plate_height>& p_par_plates)
-      : v(p_v), par_plates(p_par_plates) {}
-    
-    inline const vice& get_vice() const { return v; }
-    inline const std::vector<plate_height>& parallel_plates() const
-    { return par_plates; }
-  };
-
-  struct fixture_setup {
-    const triangular_mesh* m;
-    fixture fix;
-    std::vector<pocket> pockets;
-
-    fixture_setup(const triangular_mesh* p_m,
-		  const fixture& f,
-		  const std::vector<pocket>& p)
-      : m(p_m), fix(f), pockets(p) {}
-  };
 
   class fixture_plan {
   protected:
