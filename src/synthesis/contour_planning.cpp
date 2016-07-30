@@ -9,12 +9,25 @@ namespace gca {
   contour_outline(std::vector<index_t> inds,
 		  const triangular_mesh& part_mesh,
 		  const point n) {
-    std::vector<surface> vertical_surfs =
-      connected_vertical_surfaces(part_mesh, n);
-	
-    return part_outline_surface(&vertical_surfs, n);
-  }
+    vector<index_t> side_faces =
+      side_millable_faces(n, part_mesh.face_indexes(), part_mesh);
 
+    vector<index_t> candidate_faces =
+      intersection(side_faces, inds);
+    std::vector<surface> vertical_surfs =
+      connected_vertical_surfaces(candidate_faces, part_mesh, n);
+
+    cout << "# of vertical surfaces in " << n << " = " << vertical_surfs.size() << endl;    
+    //    vtk_debug_highlight_inds(vertical_surfs);
+    
+    auto outline = part_outline_surface(&vertical_surfs, n);
+
+    // if (outline) {
+    //   vtk_debug_highlight_inds(outline->index_list(), outline->get_parent_mesh());
+    // }
+
+    return outline;
+  }
 
   boost::optional<contour_surface_decomposition>
   contour_surface_decomposition_in_dir(const triangular_mesh& part_mesh,
@@ -22,7 +35,6 @@ namespace gca {
 
     std::vector<index_t> inds = part_mesh.face_indexes();
     boost::optional<surface> bottom = mesh_top_surface(part_mesh, -1*n);
-    
     
     if (bottom) {
       cout << "Has bottom" << endl;
@@ -38,6 +50,7 @@ namespace gca {
 	  contour_outline(inds, part_mesh, n);
 	if (outline) {
 	  cout << "Has outline" << endl;
+	  subtract(inds, outline->index_list());
 
 	  // vtk_debug_highlight_inds(outline->index_list(),
 	  // 			   outline->get_parent_mesh());
@@ -47,14 +60,14 @@ namespace gca {
 	  vector<surface> sfs = {*outline, *top, *bottom};
 
 	  vector<surface> surfs_to_cut = surfaces_to_cut(inds, part_mesh);
-	  assert(surfs_to_cut.size() > 0);
-	  remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
+	  //assert(surfs_to_cut.size() > 0);
+	  //	  remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
 	  vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
-	  concat(sfs, from_n);
-	  remove_contained_surfaces(sfs, surfs_to_cut);
+	  //concat(sfs, from_n);
+	  //remove_contained_surfaces(sfs, surfs_to_cut);
 	  vector<surface> from_minus_n = surfaces_visible_from(surfs_to_cut, -1*n);
-	  concat(sfs, from_minus_n);
-	  remove_contained_surfaces(sfs, surfs_to_cut);
+	  //concat(sfs, from_minus_n);
+	  //remove_contained_surfaces(sfs, surfs_to_cut);
 
 	  return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
 	  

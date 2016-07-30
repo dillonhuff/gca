@@ -5,7 +5,7 @@
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 
-#include "geometry/triangular_mesh.h"
+#include "geometry/surface.h"
 
 namespace gca {
 
@@ -19,9 +19,12 @@ namespace gca {
 
   vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData);
   void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& actors);
-  
+
   void vtk_debug_highlight_inds(const std::vector<index_t>& inds,
 				const triangular_mesh& mesh);
+  void vtk_debug_highlight_inds(const surface& surf);
+  void vtk_debug_highlight_inds(const std::vector<surface>& surfs);
+
 }
 
 #endif

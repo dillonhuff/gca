@@ -126,6 +126,12 @@ namespace gca {
   std::vector<surface>
   connected_vertical_surfaces(const triangular_mesh& m, const point n);
 
+  std::vector<surface>
+  connected_vertical_surfaces(std::vector<index_t>& inds,
+			      const triangular_mesh& m,
+			      const point n);
+
+
   boost::optional<surface>
   mesh_top_surface(const triangular_mesh& m, const point n);
 

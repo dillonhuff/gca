@@ -98,6 +98,8 @@ namespace gca {
   }
 
   // TODO: Eventually identify vertical holes and compensate for them
+  // TODO: Should this compensate for the fact that direction is not
+  //
   bool vertical_contained_by(const surface& maybe_contained,
 			     const surface& maybe_container) {
     // vector<oriented_polygon> maybe_contained_outlines =
@@ -264,7 +266,7 @@ namespace gca {
 			      const triangular_mesh& m,
 			      const point n) {
     delete_if(inds, [m, n](const index_t i)
-	      { return !within_eps(angle_between(n, m.face_orientation(i)), 90, 0.01); });
+	      { return !within_eps(angle_between(n, m.face_orientation(i)), 90, 2.0); });
     vector<vector<index_t>> regions = connect_regions(inds, m);
     return inds_to_surfaces(regions, m);
   }
