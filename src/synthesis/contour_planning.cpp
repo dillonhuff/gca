@@ -20,7 +20,7 @@ namespace gca {
     vector<index_t> outer_vertical_faces =
       intersection(outer_faces, millable_faces);
 
-    vtk_debug_highlight_inds(outer_vertical_faces, part_mesh);
+    //vtk_debug_highlight_inds(outer_vertical_faces, part_mesh);
 
     auto regions =
       connect_regions(outer_vertical_faces, part_mesh);
@@ -79,19 +79,19 @@ namespace gca {
 	  // vtk_debug_highlight_inds(outline->index_list(),
 	  // 			   outline->get_parent_mesh());
 
-	  // TODO: Refine this analysis to include surface grouping
-	  // TODO: Remove massive overkill surface culling
-	  vector<surface> sfs = {*outline, *top, *bottom};
-
 	  vector<surface> surfs_to_cut = surfaces_to_cut(inds, part_mesh);
-	  //assert(surfs_to_cut.size() > 0);
-	  //	  remove_contained_surfaces({*outline, *top, *bottom}, surfs_to_cut);
+	  
 	  vector<surface> from_n = surfaces_visible_from(surfs_to_cut, n);
-	  //concat(sfs, from_n);
-	  //remove_contained_surfaces(sfs, surfs_to_cut);
+	  if (from_n.size() > 0) {
+	    subtract(inds, merge_surfaces(from_n).index_list());
+	  }
+
 	  vector<surface> from_minus_n = surfaces_visible_from(surfs_to_cut, -1*n);
-	  //concat(sfs, from_minus_n);
-	  //remove_contained_surfaces(sfs, surfs_to_cut);
+	  if (from_minus_n.size() > 0) {
+	    subtract(inds, merge_surfaces(from_minus_n).index_list());
+	  }
+
+	  surfs_to_cut = surfaces_to_cut(inds, part_mesh);
 
 	  return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
 	  
