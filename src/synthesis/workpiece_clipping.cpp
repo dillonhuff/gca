@@ -285,10 +285,8 @@ namespace gca {
 
     cout << "Needs custom jaw cutout fixture" << endl;
 
-    return custom_jaw_cutout_fixture(outline_of_contour,
-				     top_of_contour,
-				     v,
-				     n);
+    return boost::none;
+
   }
 
   clipping_plan
@@ -335,8 +333,11 @@ namespace gca {
 
 	if (base_fix) {
 	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *base_fix);
+	} else {
+	  boost::optional<fixture> custom =
+	    custom_jaw_cutout_fixture(outline, top, (*top_fix).v, -1*n);
+	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *custom);
 	}
-
       }
     }
 
