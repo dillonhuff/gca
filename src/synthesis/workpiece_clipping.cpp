@@ -156,7 +156,7 @@ namespace gca {
 
     assert(work_height > part_height);
 
-    auto bound = contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1)); //part_outline_surface(aligned, point(0, 0, 1));
+    auto bound = contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1));
     if (bound) {
     } else {
       assert(false);
@@ -172,21 +172,25 @@ namespace gca {
 
   clamp_orientation
   largest_upward_orientation(const std::vector<surface>& surfs,
-			     const vice& parallel) {
+			     const vice& parallel,
+			     const point n) {
     // TODO: Eventually auto select the direction instead of
     // hard coding (0, 0, 1)
-    point n(0, 0, 1);
+    //point n(0, 0, 1);
 
     vector<clamp_orientation> orients =
       all_viable_clamp_orientations(surfs, parallel);
 
     cout << "# of orientations = " << orients.size() << endl;
+    for (auto orient : orients) {
+      cout << orient.top_normal() << endl;
+    }
 
     vector<clamp_orientation> top_orients =
       select(orients, [n](const clamp_orientation& s)
 	     { return within_eps(s.top_normal(), n, 0.0001); });
 
-    assert(orients.size() > 0);
+    assert(top_orients.size() > 0);
 
     const triangular_mesh& m = surfs.front().get_parent_mesh();
     sort(begin(top_orients), end(top_orients),
@@ -216,7 +220,8 @@ namespace gca {
       	vector<surface> surfs = outer_surfaces(part_mesh);
       	vector<surface> stock_surfs = outer_surfaces(aligned);
 
-      	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel);
+	cout << "n = " << n << endl;
+      	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel, n);
 	return fixture(stock_top_orient, parallel);
       } else {
 	return boost::none;
@@ -273,12 +278,14 @@ namespace gca {
 			    const point n) {
     std::vector<surface> const_orient_surfs =
       constant_orientation_subsurfaces(outline_of_contour);
+    double total_area = merge_surfaces(const_orient_surfs).surface_area();
+    delete_if(const_orient_surfs,
+    	      [total_area](const surface& s)
+    	      { return s.surface_area() < (total_area / 20.0); });
     const_orient_surfs.push_back(top_of_contour);
     std::vector<clamp_orientation> orients =
       all_stable_orientations(const_orient_surfs, v);
     if (orients.size() > 0) {
-      // TODO: Return optional orient and filter orients by
-      // surface area of sides
       cout << "NO CUSTOM JAW CUTOUT" << endl;
       auto cl = find_orientation_by_normal(orients, n);
       return fixture(cl, v);

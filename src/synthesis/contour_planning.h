@@ -18,10 +18,10 @@ namespace gca {
   };
 
   boost::optional<surface>
-  contour_outline(std::vector<index_t> inds,
+  contour_outline(const std::vector<index_t>& inds,
 		  const triangular_mesh& part_mesh,
 		  const point n);
-  
+
   std::vector<point>
   possible_contour_normals(const triangular_mesh& part_mesh);
 

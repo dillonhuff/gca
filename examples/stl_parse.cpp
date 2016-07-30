@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   auto box_triangles = parse_stl(argv[1]).triangles;
   auto mesh = make_mesh(box_triangles, 0.001);
 
-  vice v = current_setup();
+  vice v = large_jaw_vice(4.0, point(-2, 0, 3)); //current_setup();
   std::vector<plate_height> parallel_plates{0.5};
   fixtures fixes(v, parallel_plates);
 

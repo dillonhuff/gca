@@ -125,8 +125,9 @@ namespace gca {
 		       double workpiece_height) {
     // TODO: Optimize this away
     std::vector<std::vector<index_t>> surfaces = sfs;
-    vector<pocket> pockets =
-      closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
+    // TODO: Reintroduce vertical surface pocketing
+    vector<pocket> pockets; // =
+    //   closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
     filter_vertical_surfaces(surfaces, mesh);
     if (surfaces.size() > 0) {
       surfaces = merge_connected_surfaces(surfaces, mesh);
