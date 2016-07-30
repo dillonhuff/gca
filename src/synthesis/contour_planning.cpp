@@ -21,7 +21,16 @@ namespace gca {
       intersection(outer_faces, millable_faces);
 
     vtk_debug_highlight_inds(outer_vertical_faces, part_mesh);
+
+    auto regions =
+      connect_regions(outer_vertical_faces, part_mesh);
+
+    cout << "# of regions = " << regions.size() << endl;
     
+    if (regions.size() == 1) {
+      return surface(&part_mesh, regions.front());
+    }
+
     return boost::none;
     // vector<index_t> side_faces =
     //   side_millable_faces(n, part_mesh.face_indexes(), part_mesh);
