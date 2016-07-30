@@ -61,7 +61,8 @@ namespace gca {
 
     assert(stock_top > part_top);
 
-    auto stock_bound = part_outline_surface(aligned, point(0, 0, 1));
+    auto stock_bound =
+      contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1)); //part_outline_surface(aligned, point(0, 0, 1));
     if (stock_bound) {
     } else {
       assert(false);
@@ -71,7 +72,7 @@ namespace gca {
     assert(stock_outlines.size() == 2);
     oriented_polygon stock_outline = stock_outlines.front();
 
-    auto part_bound = part_outline_surface(part, point(0, 0, 1));
+    auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1)); //part_outline_surface(part, point(0, 0, 1));
     if (part_bound) {
     } else {
       assert(false);
@@ -155,7 +156,7 @@ namespace gca {
 
     assert(work_height > part_height);
 
-    auto bound = part_outline_surface(aligned, point(0, 0, 1));
+    auto bound = contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1)); //part_outline_surface(aligned, point(0, 0, 1));
     if (bound) {
     } else {
       assert(false);
@@ -233,10 +234,12 @@ namespace gca {
 			    const surface& top_of_contour,
 			    const vice& v,
 			    const point n) {
-    // vtk_debug_highlight_inds(outline_of_contour.index_list(),
-    // 			     outline_of_contour.get_parent_mesh());
+    //vtk_debug_highlight_inds(outline_of_contour);
     point axis = pick_jaw_cutout_axis(outline_of_contour);
-    assert(within_eps(axis.dot(n), 0, 0.0001));
+    cout << "axis = " << axis << endl;
+    cout << "n = " << n << endl;
+    cout << "axis.dot(n)" << axis.dot(n) << endl;
+    assert(within_eps(axis.dot(n), 0, 0.01));
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
 
@@ -276,9 +279,12 @@ namespace gca {
     if (orients.size() > 0) {
       // TODO: Return optional orient and filter orients by
       // surface area of sides
+      cout << "NO CUSTOM JAW CUTOUT" << endl;
       auto cl = find_orientation_by_normal(orients, n);
       return fixture(cl, v);
     }
+
+    cout << "Needs custom jaw cutout fixture" << endl;
 
     return custom_jaw_cutout_fixture(outline_of_contour,
 				     top_of_contour,
