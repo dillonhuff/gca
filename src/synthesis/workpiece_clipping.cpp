@@ -226,7 +226,7 @@ namespace gca {
 
 
   // TODO: Produce longer clamps
-  boost::optional<fixture>
+  boost::optional<std::pair<fixture, fixture>>
   custom_jaw_cutout_fixture(const surface& outline_of_contour,
 			    const surface& top_of_contour,
 			    const vice& v,
@@ -258,8 +258,10 @@ namespace gca {
 
     // TODO: Actually construct vice with more sane dimensions
     vice custom_jaw_vice = v;
-    
-    return fixture(cutout_orient, custom_jaw_vice);
+
+    // TODO: Actually produce the other fixture
+    fixture f(cutout_orient, custom_jaw_vice);
+    return make_pair(f, f);
   }
   
   // TODO: Add code to generate jaws for base fixture
@@ -305,6 +307,26 @@ namespace gca {
 
     return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
   }
+
+  clipping_plan
+  custom_jaw_clip_plan(const triangular_mesh& aligned,
+		       const triangular_mesh& part_mesh,
+		       const contour_surface_decomposition& surfs,
+		       const fixture& top_fix,
+		       const fixture& base_fix,
+		       const fixture& clean_fix) {
+    // TODO: Figure out what function the second operation ought to be
+    std::vector<fixture_setup> clip_setups;
+    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, surfs.visible_from_minus_n, base_fix));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, {}, clean_fix));
+
+    auto clipped_surfs =
+      stable_surfaces_after_clipping(part_mesh, aligned);
+    auto surfs_to_cut = surfs.rest;
+
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+  }
   
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
@@ -334,9 +356,14 @@ namespace gca {
 	if (base_fix) {
 	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *base_fix);
 	} else {
-	  boost::optional<fixture> custom =
+	  boost::optional<std::pair<fixture, fixture>> custom =
 	    custom_jaw_cutout_fixture(outline, top, (*top_fix).v, -1*n);
-	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *custom);
+	  return custom_jaw_clip_plan(aligned,
+				      part_mesh,
+				      *surfs,
+				      *top_fix,
+				      (*custom).first,
+				      (*custom).second);
 	}
       }
     }
