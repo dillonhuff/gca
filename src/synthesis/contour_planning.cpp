@@ -9,24 +9,39 @@ namespace gca {
   contour_outline(std::vector<index_t> inds,
 		  const triangular_mesh& part_mesh,
 		  const point n) {
-    vector<index_t> side_faces =
-      side_millable_faces(n, part_mesh.face_indexes(), part_mesh);
+    vector<index_t> millable_faces =
+      select(inds,
+      	     [part_mesh, n](const index_t i)
+      	     { return within_eps(angle_between(part_mesh.face_orientation(i), n), 90, 2.0); });
 
-    vector<index_t> candidate_faces =
-      intersection(side_faces, inds);
-    std::vector<surface> vertical_surfs =
-      connected_vertical_surfaces(candidate_faces, part_mesh, n);
+    vector<index_t> outer_faces =
+      merge_surfaces(outer_surfaces(part_mesh)).index_list();
 
-    cout << "# of vertical surfaces in " << n << " = " << vertical_surfs.size() << endl;    
+    vector<index_t> outer_vertical_faces =
+      intersection(outer_faces, millable_faces);
+
+    vtk_debug_highlight_inds(outer_vertical_faces, part_mesh);
+    
+    return boost::none;
+    // vector<index_t> side_faces =
+    //   side_millable_faces(n, part_mesh.face_indexes(), part_mesh);
+
+    // vector<index_t> candidate_faces =
+    //   intersection(side_faces, inds);
+    // std::vector<surface> vertical_surfs =
+    //   connected_vertical_surfaces(candidate_faces, part_mesh, n);
+
+    // cout << "# of vertical surfaces in " << n << " = " << vertical_surfs.size() << en
+    //      dl;    
     //    vtk_debug_highlight_inds(vertical_surfs);
     
-    auto outline = part_outline_surface(&vertical_surfs, n);
+      // auto outline = part_outline_surface(&vertical_surfs, n);
 
     // if (outline) {
     //   vtk_debug_highlight_inds(outline->index_list(), outline->get_parent_mesh());
     // }
 
-    return outline;
+    //    return outline;
   }
 
   boost::optional<contour_surface_decomposition>
