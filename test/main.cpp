@@ -11,6 +11,8 @@ int main( int argc, char* const argv[] ) {
 
   int result = Catch::Session().run( argc, argv );
 
+  double elapsed_time = timer.getElapsedSeconds();
+
   std::cout << "runtime: " << timer.getElapsedSeconds() <<  " seconds " << std::endl;
 
   return result;
