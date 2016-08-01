@@ -59,6 +59,10 @@ namespace gca {
       max_jaw_width(v.max_jaw_width),
       parallel_plate_height(p_parallel_plate_height) {}
 
+    inline vice without_extras() const {
+      return vice(*this, 0);
+    }
+
     inline bool has_parallel_plate() const
     { return parallel_plate_height != 0.0; }
     

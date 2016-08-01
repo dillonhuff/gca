@@ -1,3 +1,4 @@
+#include <vtkBooleanOperationPolyDataFilter.h>
 #include <vtkDecimatePro.h>
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
@@ -24,15 +25,6 @@
 #include "geometry/vtk_utils.h"
 
 namespace gca {
-
-  triangular_mesh
-  trimesh_from_polydata(vtkPolyData* in_polydata) {
-
-    auto tris = polydata_to_triangle_list(in_polydata);
-    triangular_mesh m = make_mesh(tris, 0.001);
-    assert(m.is_connected());
-    return m;
-  }
 
   // TOOD: Simplify this atrocity of a function
   triangular_mesh
@@ -149,6 +141,29 @@ namespace gca {
     assert(final_mesh.is_connected());
 
     return final_mesh;
+  }
+
+  triangular_mesh
+  boolean_difference(const triangular_mesh& a, const triangular_mesh& b) {
+    auto a_poly = polydata_for_trimesh(a);
+    auto b_poly = polydata_for_trimesh(b);
+
+    vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
+      vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
+    booleanOperation->SetOperationToDifference();
+    booleanOperation->SetInputData( 0, a_poly );
+    booleanOperation->SetInputData( 1, b_poly );
+    booleanOperation->Update();
+
+    vtkPolyData* res_poly = booleanOperation->GetOutput();
+    auto rp = vtkSmartPointer<vtkPolyData>::New();
+    rp->DeepCopy(res_poly);
+    auto actor = polydata_actor(rp);
+    visualize_actors({actor});
+    
+
+    triangular_mesh result = trimesh_from_polydata(res_poly);
+    return result;
   }
 
 }

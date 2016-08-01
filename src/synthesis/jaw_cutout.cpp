@@ -1,4 +1,5 @@
 #include "geometry/vtk_debug.h"
+#include "geometry/mesh_operations.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/jaw_cutout.h"
 
@@ -63,14 +64,15 @@ namespace gca {
 	      const vice& v,
 	      const point axis,
 	      const point n) {
-    auto part_mesh = surfs.top.get_parent_mesh();
+    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     point center = max_point_in_dir(part_mesh, axis);
     point left = cross(axis, n);
     // TODO: Insert actual dimesions
     point x_h = (v.x_len() / 2.0)*left.normalize();
-    point y_h = ((v.maximum_jaw_width() / 4.0) / 2.0)*axis.normalize();
+    point y_h = ((v.maximum_jaw_width() / 10.0) / 2.0)*axis.normalize();
     point z_h = (v.jaw_height() / 2.0)*n.normalize();
-    return block_mesh(center, x_h, y_h, z_h);
+    triangular_mesh m = block_mesh(center, x_h, y_h, z_h);
+    return boolean_difference(m, part_mesh);
   }
 
   // TODO: Produce longer clamps
@@ -87,10 +89,10 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     triangular_mesh a_cutout = cutout_mesh(surfs, v, axis, n);
     triangular_mesh an_cutout = cutout_mesh(surfs, v, -1*axis, n);
-    vtk_debug_meshes({&part_mesh, &a_cutout, &an_cutout});
+    vtk_debug_meshes({&a_cutout, &an_cutout});
     assert(false);
 
     // pair<triangular_mesh, triangular_mesh> jaws =
@@ -150,7 +152,7 @@ namespace gca {
 		  const fixture& top_fix,
 		  const point n) {
     boost::optional<custom_jaw_cutout> custom =
-      custom_jaw_cutout_fixture(surfs, top_fix.v, -1*n);
+      custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n);
     if (custom) {
       std::vector<fixture_setup> clip_setups;
       clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));

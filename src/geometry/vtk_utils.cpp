@@ -84,4 +84,13 @@ namespace gca {
     return polyData;
   }
 
+  triangular_mesh
+  trimesh_from_polydata(vtkPolyData* in_polydata) {
+
+    auto tris = polydata_to_triangle_list(in_polydata);
+    triangular_mesh m = make_mesh(tris, 0.001);
+    assert(m.is_connected());
+    return m;
+  }
+  
 }
