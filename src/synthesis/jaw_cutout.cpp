@@ -68,8 +68,8 @@ namespace gca {
     point left = cross(axis, n);
     // TODO: Insert actual dimesions
     point x_h = (v.x_len() / 2.0)*left.normalize();
-    point y_h = (v.y_len() / 2.0)*n.normalize();
-    point z_h = (v.jaw_height() / 2.0)*axis.normalize();
+    point y_h = ((v.maximum_jaw_width() / 4.0) / 2.0)*axis.normalize();
+    point z_h = (v.jaw_height() / 2.0)*n.normalize();
     return block_mesh(center, x_h, y_h, z_h);
   }
 
@@ -89,7 +89,8 @@ namespace gca {
 
     const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     triangular_mesh a_cutout = cutout_mesh(surfs, v, axis, n);
-    vtk_debug_meshes({&part_mesh, &a_cutout});
+    triangular_mesh an_cutout = cutout_mesh(surfs, v, -1*axis, n);
+    vtk_debug_meshes({&part_mesh, &a_cutout, &an_cutout});
     assert(false);
 
     // pair<triangular_mesh, triangular_mesh> jaws =
