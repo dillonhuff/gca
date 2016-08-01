@@ -69,6 +69,9 @@ namespace gca {
     inline double x_max() const { return pos.x + x_length; }
     inline double y_max() const { return pos.y + y_length; }
 
+    inline double x_len() const { return x_max() - x_min(); }
+    inline double y_len() const { return y_max() - y_min(); }
+    
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
     inline double clamp_y_length() const { return clamp_width; }
     inline double jaw_height() const

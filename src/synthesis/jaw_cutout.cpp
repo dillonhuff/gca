@@ -1,3 +1,4 @@
+#include "geometry/vtk_debug.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/jaw_cutout.h"
 
@@ -11,23 +12,88 @@ namespace gca {
     fabrication_plan* right_jaw;
   };
 
+  typedef point block_dims;
+
+  struct jaw_dims {
+    block_dims blk_dims;
+    double h;
+    double clip_x;
+  };
+
+  jaw_dims
+  make_jaw_dims(const contour_surface_decomposition& surfs,
+		const vice& v,
+		const point axis,
+		const point n) {
+    block_dims blk(v.x_len(), v.y_len(), v.jaw_height());
+
+    double part_height = diameter(n, surfs.top.get_parent_mesh());
+    double h = (blk.z - part_height)*0.25;
+
+    double part_width = diameter(axis, surfs.top.get_parent_mesh());
+    double clip_x = part_width / 4.0;
+
+    return jaw_dims{blk, h, clip_x};
+  }
+
+  
   point pick_jaw_cutout_axis(const surface& outline) {
     return outline.face_orientation(outline.front());
   }
 
+  triangular_mesh
+  block_mesh(const point center,
+	     const point a1,
+	     const point a2,
+	     const point a3) {
+    point p0 = center + 1*a1 + 1*a2 + 1*a3;
+    point p1 = center + 1*a1 + 1*a2 + -1*a3;
+    point p2 = center + 1*a1 + -1*a2 + 1*a3;
+    point p3 = center + 1*a1 + -1*a2 + -1*a3;
+    point p4 = center + -1*a1 + 1*a2 + 1*a3;
+    point p5 = center + -1*a1 + 1*a2 + -1*a3;
+    point p6 = center + -1*a1 + -1*a2 + 1*a3;
+    point p7 = center + -1*a1 + -1*a2 + -1*a3;
+    std::vector<point> pts{p0, p1, p2, p3, p4, p5, p6, p7};
+    return make_mesh(triangulate_box_pts(pts), 0.001);
+  }
+
+  triangular_mesh
+  cutout_mesh(const contour_surface_decomposition& surfs,
+	      const vice& v,
+	      const point axis,
+	      const point n) {
+    auto part_mesh = surfs.top.get_parent_mesh();
+    point center = max_point_in_dir(part_mesh, axis);
+    point left = cross(axis, n);
+    // TODO: Insert actual dimesions
+    point x_h = (v.x_len() / 2.0)*left.normalize();
+    point y_h = (v.y_len() / 2.0)*n.normalize();
+    point z_h = (v.jaw_height() / 2.0)*axis.normalize();
+    return block_mesh(center, x_h, y_h, z_h);
+  }
 
   // TODO: Produce longer clamps
   boost::optional<custom_jaw_cutout>
-  custom_jaw_cutout_fixture(const surface& outline_of_contour,
-			    const surface& top_of_contour,
+  custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
 			    const vice& v,
 			    const point n) {
     //vtk_debug_highlight_inds(outline_of_contour);
+    auto outline_of_contour = surfs.outline;
+    auto top_of_contour = surfs.top;
     point axis = pick_jaw_cutout_axis(outline_of_contour);
     cout << "axis = " << axis << endl;
     cout << "n = " << n << endl;
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
+
+    triangular_mesh a_cutout = cutout_mesh(surfs, v, axis, n);
+    vtk_debug_mesh(a_cutout);
+    assert(false);
+
+    // pair<triangular_mesh, triangular_mesh> jaws =
+    //   custom_jaw_meshes(, axis, v, n);
+
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
 
@@ -82,7 +148,7 @@ namespace gca {
 		  const fixture& top_fix,
 		  const point n) {
     boost::optional<custom_jaw_cutout> custom =
-      custom_jaw_cutout_fixture(surfs.outline, surfs.top, top_fix.v, -1*n);
+      custom_jaw_cutout_fixture(surfs, top_fix.v, -1*n);
     if (custom) {
       std::vector<fixture_setup> clip_setups;
       clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));

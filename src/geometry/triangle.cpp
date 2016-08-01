@@ -196,24 +196,18 @@ namespace gca {
     return tris;
   }
 
-  std::vector<triangle> box_triangles(box b) {
-    point n(1, 0, 0);
-    point p0(b.x_min, b.y_min, b.z_min);
-    point p1(b.x_min, b.y_min, b.z_max);
-    point p2(b.x_min, b.y_max, b.z_min);
-    point p3(b.x_min, b.y_max, b.z_max);
-    point p4(b.x_max, b.y_min, b.z_min);
-    point p5(b.x_max, b.y_min, b.z_max);
-    point p6(b.x_max, b.y_max, b.z_min);
-    point p7(b.x_max, b.y_max, b.z_max);
+  std::vector<triangle>
+  triangulate_box_pts(const std::vector<point>& p) {
+    assert(p.size() == 8);
 
-    vector<point> f0{p0, p1, p5, p4};
-    vector<point> f1{p2, p3, p1, p0};
-    vector<point> f2{p6, p7, p3, p2};
-    vector<point> f3{p4, p5, p7, p6};
-    vector<point> f4{p1, p3, p7, p5};
-    vector<point> f5{p2, p0, p4, p6};
+    vector<point> f0{p[0], p[1], p[5], p[4]};
+    vector<point> f1{p[2], p[3], p[1], p[0]};
+    vector<point> f2{p[6], p[7], p[3], p[2]};
+    vector<point> f3{p[4], p[5], p[7], p[6]};
+    vector<point> f4{p[1], p[3], p[7], p[5]};
+    vector<point> f5{p[2], p[0], p[4], p[6]};
 
+    
     std::vector<triangle> tris;
     concat(tris, square_triangles(point(0, -1, 0), f0));
     concat(tris, square_triangles(point(-1, 0, 0), f1));
@@ -227,7 +221,19 @@ namespace gca {
     return tris;
   }
 
+  std::vector<triangle> box_triangles(box b) {
+    point n(1, 0, 0);
+    point p0(b.x_min, b.y_min, b.z_min);
+    point p1(b.x_min, b.y_min, b.z_max);
+    point p2(b.x_min, b.y_max, b.z_min);
+    point p3(b.x_min, b.y_max, b.z_max);
+    point p4(b.x_max, b.y_min, b.z_min);
+    point p5(b.x_max, b.y_min, b.z_max);
+    point p6(b.x_max, b.y_max, b.z_min);
+    point p7(b.x_max, b.y_max, b.z_max);
 
+    return triangulate_box_pts({p0, p1, p2, p3, p4, p5, p6, p7});
+  }
 
   unsigned find_ear_index(const std::vector<point>& pts) {
     assert(pts.size() > 2);

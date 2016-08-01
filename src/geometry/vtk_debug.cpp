@@ -96,6 +96,10 @@ namespace gca {
     visualize_actors({surface_act});
   }
 
+  void vtk_debug_mesh(const triangular_mesh& mesh) {
+    vtk_debug_highlight_inds(mesh.face_indexes(), mesh);
+  }
+
   void vtk_debug_highlight_inds(const surface& surf) {
     vtk_debug_highlight_inds(surf.index_list(), surf.get_parent_mesh());
   }

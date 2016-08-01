@@ -59,6 +59,9 @@ namespace gca {
 
   double distance_along(point normal, const triangle t);
 
+  std::vector<triangle>
+  triangulate_box_pts(const std::vector<point>& p);
+
   std::vector<triangle> box_triangles(box b);
 
 

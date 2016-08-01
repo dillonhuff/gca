@@ -22,6 +22,7 @@ namespace gca {
 
   void vtk_debug_highlight_inds(const std::vector<index_t>& inds,
 				const triangular_mesh& mesh);
+  void vtk_debug_mesh(const triangular_mesh& mesh);
   void vtk_debug_highlight_inds(const surface& surf);
   void vtk_debug_highlight_inds(const std::vector<surface>& surfs);
 
