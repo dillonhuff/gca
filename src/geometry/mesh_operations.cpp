@@ -156,6 +156,9 @@ namespace gca {
     booleanOperation->Update();
 
     vtkPolyData* res_poly = booleanOperation->GetOutput();
+    debug_print_summary(res_poly);
+    debug_print_is_closed(res_poly);
+    debug_print_edge_summary(res_poly);
     auto rp = vtkSmartPointer<vtkPolyData>::New();
     rp->DeepCopy(res_poly);
     auto actor = polydata_actor(rp);
