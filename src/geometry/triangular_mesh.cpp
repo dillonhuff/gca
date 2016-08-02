@@ -12,7 +12,7 @@ namespace gca {
   }
 
   std::vector<index_t>
-  edge_triangle_inds(const gca::edge e,
+  edge_face_neighbors(const gca::edge e,
 		     const triangular_mesh& m) {
     auto tl = m.vertex_face_neighbors(e.l);
     auto tr = m.vertex_face_neighbors(e.r);
@@ -22,7 +22,7 @@ namespace gca {
   std::vector<gca::edge> non_manifold_edges(const triangular_mesh& m) {
     vector<gca::edge> nm_edges;
     for (auto e : m.edges()) {
-      if (edge_triangle_inds(e, m).size() != 2) {
+      if (edge_face_neighbors(e, m).size() != 2) {
 	nm_edges.push_back(e);
       }
     }
@@ -66,6 +66,24 @@ namespace gca {
     }
     assert(false);
   }
+
+  void
+  check_winding_order(const std::vector<triangle_t>& triangles) {
+    for (unsigned i = 0; i < triangles.size(); i++) {
+      for (unsigned j = 0; j < triangles.size(); j++) {
+	if (i != j) {
+	  auto ti = triangles[i];
+	  auto tj = triangles[j];
+	  for (unsigned k = 0; k < 3; k++) {
+	    unsigned kp1 = (k + 1) % 3;
+	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
+	      cout << "Winding order error!" << endl;
+	    }
+	  }
+	}
+      }
+    }
+  }
   
   void
   fill_vertex_triangles(const std::vector<triangle>& triangles,
@@ -82,6 +100,7 @@ namespace gca {
       tr.v[2] = v3i;
       vertex_triangles.push_back(tr);
     }
+    check_winding_order(vertex_triangles);
   }
 
   bool triangular_mesh::is_constant_orientation_vertex(const point p,

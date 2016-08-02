@@ -20,7 +20,17 @@ namespace gca {
     debug_print_is_closed(pd);
     debug_print_edge_summary(pd);
 
-    REQUIRE(non_manifold_edges(m).size() == 0);
+    vector<gca::edge> nm_edges = non_manifold_edges(m);
+    cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+    cout << "# of faces = " << m.face_indexes().size() << endl;
+    cout << "# of edges = " << m.edges().size() << endl;
+    cout << "Non manifold edges = " << endl;
+    for (auto e : nm_edges) {
+      cout << " of adjacent triangles: " << edge_face_neighbors(e, m).size() << endl;
+    }
+
+    REQUIRE(nm_edges.size() == 0);
+
     REQUIRE(m.winding_order_is_consistent());
 
     vtk_debug_mesh(m);

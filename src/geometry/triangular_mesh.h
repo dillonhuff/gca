@@ -260,6 +260,10 @@ namespace gca {
     return surface_face_inds;
   }
 
+  std::vector<index_t>
+  edge_face_neighbors(const gca::edge e,
+		      const triangular_mesh& m);
+  
   std::vector<gca::edge>
   non_manifold_edges(const triangular_mesh& m);
 
