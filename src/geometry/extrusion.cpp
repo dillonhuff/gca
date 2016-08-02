@@ -69,7 +69,12 @@ namespace gca {
     assert(poly_layers.size() == 1);
     std::vector<oriented_polygon> polys;
     polys.push_back(convert_index_poly(pts, poly_layers[0], 0, extrude_dir));
-    polys.push_back(convert_index_poly(pts, poly_layers[0], layer_depths[0], extrude_dir));
+    oriented_polygon back =
+      convert_index_poly(pts, poly_layers[0], layer_depths[0], extrude_dir);
+    vector<point> verts = back.vertices();
+    reverse(begin(verts), end(verts));
+    oriented_polygon back_rev(-1*extrude_dir, verts);
+    polys.push_back(back_rev);
     concat(polys, side_polys(pts, poly_layers[0], 0, layer_depths[0], extrude_dir));
     return mesh_for_polys(polys);
   }

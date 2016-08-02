@@ -67,8 +67,38 @@ namespace gca {
     assert(false);
   }
 
+  bool
+  correct_next_winding_error(std::vector<triangle_t>& triangles) {
+    assert(false);
+    // for (unsigned i = 0; i < triangles.size(); i++) {
+    //   for (unsigned j = 0; j < triangles.size(); j++) {
+    // 	if (i != j) {
+    // 	  auto ti = triangles[i];
+    // 	  auto tj = triangles[j];
+    // 	  for (unsigned k = 0; k < 3; k++) {
+    // 	    unsigned kp1 = (k + 1) % 3;
+    // 	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
+    // 	      found_error = true;
+		
+    // 	    }
+    // 	  }
+    // 	}
+    //   }
+    // }
+  }
+
   void
-  check_winding_order(const std::vector<triangle_t>& triangles) {
+  correct_winding_order_errors(std::vector<triangle_t>& triangles) {
+    // bool found_err = false;
+    // do {
+    //   found_error = correct_next_winding_error(triangles);
+    // } while(found_error);
+    assert(false);
+  }
+  
+  int
+  num_winding_order_errors(const std::vector<triangle_t>& triangles) {
+    int num_errs = 0;
     for (unsigned i = 0; i < triangles.size(); i++) {
       for (unsigned j = 0; j < triangles.size(); j++) {
 	if (i != j) {
@@ -78,11 +108,13 @@ namespace gca {
 	    unsigned kp1 = (k + 1) % 3;
 	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
 	      cout << "Winding order error!" << endl;
+	      num_errs++;
 	    }
 	  }
 	}
       }
     }
+    return num_errs;
   }
   
   void
@@ -100,7 +132,10 @@ namespace gca {
       tr.v[2] = v3i;
       vertex_triangles.push_back(tr);
     }
-    check_winding_order(vertex_triangles);
+    //    fix_winding_errors(vertex_triangles);
+    int wind_errs = num_winding_order_errors(vertex_triangles);
+    cout << "Num winding errors = " << wind_errs << endl;
+    assert(wind_errs == 0);
   }
 
   bool triangular_mesh::is_constant_orientation_vertex(const point p,
