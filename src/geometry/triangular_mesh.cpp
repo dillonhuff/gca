@@ -193,8 +193,8 @@ namespace gca {
     auto vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
     int wind_errs = num_winding_order_errors(vertex_triangles);
-    cout << "Num winding errors = " << wind_errs << endl;
     if (wind_errs > 0) {
+      cout << "Num winding errors = " << wind_errs << endl;
       auto fixed_triangles = fix_winding_order_errors(vertex_triangles);
       int new_wind_errs = num_winding_order_errors(fixed_triangles);
       cout << "Num winding errors after fixing = " << new_wind_errs << endl;

@@ -73,9 +73,8 @@ namespace gca {
 
       REQUIRE(m.winding_order_is_consistent());
 
-      vtk_debug_mesh(m);
+      //      vtk_debug_mesh(m);
 
-      REQUIRE(m.face_indexes().size() == 12);
       REQUIRE(m.is_connected());
     }
 

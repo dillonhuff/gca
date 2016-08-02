@@ -1,4 +1,4 @@
-#include "geometry/vtk_debug.h"
+//#include "geometry/vtk_debug.h"
 #include "geometry/extrusion.h"
 
 namespace gca {
@@ -23,7 +23,7 @@ namespace gca {
       concat(tris, vtk_triangulate_poly(p));
     }
 
-    vtk_debug_triangles(tris);
+    //vtk_debug_triangles(tris);
     return make_mesh(tris, 0.01);
   }
 

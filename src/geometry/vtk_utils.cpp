@@ -131,7 +131,6 @@ namespace gca {
 
   std::vector<triangle>
   vtk_triangulate_poly(const oriented_polygon& p) {
-    cout << "Trying to triangulate polygon" << endl;
     vtkSmartPointer<vtkPoints> points =
       vtkSmartPointer<vtkPoints>::New();
 
@@ -139,11 +138,9 @@ namespace gca {
       points->InsertNextPoint(vert.x, vert.y, vert.z);
     }
 
-    cout << "Added all " << p.vertices().size() << " vertices to point" << endl;
 
     vtkSmartPointer<vtkPolygon> pl = vtkSmartPointer<vtkPolygon>::New();
     pl->GetPointIds()->SetNumberOfIds(p.vertices().size());
-    cout << "Set # of ids" << endl;
     for (int i = 0; i < p.vertices().size(); i++) {
       if (!(pl->GetPointIds())) {
 	cout << "No point ids in pl!" << endl;
@@ -152,8 +149,6 @@ namespace gca {
       pl->GetPointIds()->SetId(i, i);
     }
 
-    cout << "Create pl" << endl;
-    
     vtkSmartPointer<vtkCellArray> polys =
       vtkSmartPointer<vtkCellArray>::New();
     polys->InsertNextCell(pl);
