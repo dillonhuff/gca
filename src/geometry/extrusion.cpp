@@ -155,7 +155,7 @@ namespace gca {
       // Back
       if (i + 1 == layer_depths.size()) {
 	oriented_polygon back =
-	  convert_index_poly(pts, poly_layers[i], layer_depths[i], extrude_dir);
+	  convert_index_poly(pts, poly_layers[i], last_depth_offset + layer_depths[i], extrude_dir);
 	vector<point> verts = back.vertices();
 	reverse(begin(verts), end(verts));
 	oriented_polygon back_rev(-1*extrude_dir, verts);
