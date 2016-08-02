@@ -17,6 +17,10 @@ namespace gca {
   triangular_mesh
   trimesh_for_polydata(vtkPolyData* in_polydata);
 
+
+  std::vector<triangle>
+  vtk_triangulate_poly(const oriented_polygon& p);
+  
 }
 
 #endif

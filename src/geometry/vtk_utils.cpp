@@ -3,6 +3,7 @@
 #include <vtkTriangle.h>
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
+#include <vtkPolygon.h>
 
 #include "geometry/vtk_utils.h"
 
@@ -52,6 +53,7 @@ namespace gca {
     vtkSmartPointer<vtkPoints> points =
       vtkSmartPointer<vtkPoints>::New();
 
+    // TODO: Does i++ matter here?
     for (auto i : mesh.vertex_indexes()) {
       point p = mesh.vertex(i);
       points->InsertNextPoint(p.x, p.y, p.z);
@@ -91,6 +93,48 @@ namespace gca {
     triangular_mesh m = make_mesh(tris, 0.001);
     assert(m.is_connected());
     return m;
+  }
+
+
+  std::vector<triangle>
+  vtk_triangulate_poly(const oriented_polygon& p) {
+    cout << "Trying to triangulate polygon" << endl;
+    vtkSmartPointer<vtkPoints> points =
+      vtkSmartPointer<vtkPoints>::New();
+
+    for (auto vert : p.vertices()) {
+      points->InsertNextPoint(vert.x, vert.y, vert.z);
+    }
+
+    cout << "Added all " << p.vertices().size() << " vertices to point" << endl;
+
+    vtkSmartPointer<vtkPolygon> pl = vtkSmartPointer<vtkPolygon>::New();
+    pl->GetPointIds()->SetNumberOfIds(p.vertices().size());
+    cout << "Set # of ids" << endl;
+    for (int i = 0; i < p.vertices().size(); i++) {
+      if (!(pl->GetPointIds())) {
+	cout << "No point ids in pl!" << endl;
+	assert(false);
+      }
+      pl->GetPointIds()->SetId(i, i);
+    }
+
+    cout << "Create pl" << endl;
+    
+    vtkSmartPointer<vtkCellArray> polys =
+      vtkSmartPointer<vtkCellArray>::New();
+    polys->InsertNextCell(pl);
+    
+    // Create a polydata object
+    vtkSmartPointer<vtkPolyData> polyData =
+      vtkSmartPointer<vtkPolyData>::New();
+ 
+    // Add the geometry and topology to the polydata
+    polyData->SetPoints(points);
+    polyData->SetPolys(polys);
+
+    return polydata_to_triangle_list(polyData);
+
   }
   
 }

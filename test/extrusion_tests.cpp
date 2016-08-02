@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "geometry/extrusion.h"
+#include "geometry/vtk_debug.h"
 #include "system/parse_stl.h"
 #include "utils/arena_allocator.h"
 
@@ -14,6 +15,10 @@ namespace gca {
     std::vector<index_poly> polys{{0, 1, 2, 3}};
     std::vector<double> depths{3.4};
     triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+
+    vtk_debug_mesh(m);
+    
     REQUIRE(m.is_connected());
+
   }
 }

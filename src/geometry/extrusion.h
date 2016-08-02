@@ -1,7 +1,7 @@
 #ifndef GCA_EXTRUSION_H
 #define GCA_EXTRUSION_H
 
-#include "geometry/mesh_operations.h"
+#include "geometry/vtk_utils.h"
 
 namespace gca {
 

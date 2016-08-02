@@ -11,7 +11,6 @@ namespace gca {
 
   triangular_mesh
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b);
-  
 }
 
 #endif
