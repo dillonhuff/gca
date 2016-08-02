@@ -146,7 +146,9 @@ namespace gca {
       auto front_polys =
 	unordered_segments_to_index_polygons(front_edges);
 
-      polys.push_back(convert_index_poly(pts, poly_layers[i], last_depth_offset, extrude_dir));
+      for (auto p : front_polys) {
+	polys.push_back(convert_index_poly(pts, p, last_depth_offset, extrude_dir));
+      }
 
 
       // Sides
