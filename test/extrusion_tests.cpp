@@ -16,7 +16,7 @@ namespace gca {
     std::vector<double> depths{3.4};
     triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
 
-    vtk_debug_mesh(m);
+    //    vtk_debug_mesh(m);
     
     REQUIRE(m.is_connected());
 
