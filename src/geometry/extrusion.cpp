@@ -7,6 +7,8 @@ namespace gca {
 		 const std::vector<index_poly>& poly_layers,
 		 const std::vector<double>& layer_depths,
 		 const point extrude_dir) {
+    assert(poly_layers.size() == 1);
+    oriented_polygon polys;
     
   }
 
