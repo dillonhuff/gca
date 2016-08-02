@@ -66,6 +66,8 @@ namespace gca {
       return edges;
     }
 
+    bool winding_order_is_consistent() const;
+
     inline std::vector<index_t> face_indexes() const {
       std::vector<index_t> indices(tri_vertices.size());
       std::iota(begin(indices), end(indices), 0);
@@ -92,6 +94,10 @@ namespace gca {
       std::iota(begin(indices), end(indices), 0);
       return indices;
     }
+
+    std::vector<index_t>
+    edge_triangle_inds(const gca::edge e,
+		       const triangular_mesh& m);
     
     inline triangle_t triangle_vertices(const index_t vi) const {
       if (!(vi < tri_vertices.size())) {
@@ -253,6 +259,10 @@ namespace gca {
     }
     return surface_face_inds;
   }
+
+  std::vector<gca::edge>
+  non_manifold_edges(const triangular_mesh& m);
+
   
   double diameter(const point normal, const triangular_mesh& m);
 

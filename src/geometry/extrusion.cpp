@@ -36,7 +36,9 @@ namespace gca {
     point top_right = pts[e.r] + i0;
     point bottom_left = pts[e.l] + i1;
     point bottom_right = pts[e.r] + i1;
-    std::vector<point> poly_points{top_left, top_right, bottom_right, bottom_left};
+    //std::vector<point> poly_points{top_left, top_right, bottom_right, bottom_left};
+    //std::vector<point> poly_points{top_left, top_right, top_right, bottom_left};
+    std::vector<point> poly_points{bottom_left, bottom_right, top_right, top_left};
     // TODO: Proper normal computation
     return oriented_polygon(dir, poly_points);
   }

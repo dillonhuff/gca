@@ -3,6 +3,53 @@
 
 namespace gca {
 
+  index_t
+  vertex_index_of(const index_t ind, const triangle_t t1) {
+    for (index_t i = 0; i < 3; i++) {
+      if (t1.v[i] == ind) { return i; }
+    }
+    assert(false);
+  }
+
+  std::vector<index_t>
+  edge_triangle_inds(const gca::edge e,
+		     const triangular_mesh& m) {
+    auto tl = m.vertex_face_neighbors(e.l);
+    auto tr = m.vertex_face_neighbors(e.r);
+    return intersection(tl, tr);
+  }
+
+  std::vector<gca::edge> non_manifold_edges(const triangular_mesh& m) {
+    vector<gca::edge> nm_edges;
+    for (auto e : m.edges()) {
+      if (edge_triangle_inds(e, m).size() != 2) {
+	nm_edges.push_back(e);
+      }
+    }
+    return nm_edges;
+  }
+  
+  bool triangular_mesh::winding_order_is_consistent() const {
+    for (auto e : edges()) {
+      auto tl = vertex_face_neighbors(e.l);
+      auto tr = vertex_face_neighbors(e.r);
+      auto tris = intersection(tl, tr);
+      assert(tris.size() == 2);
+      triangle_t t1 = triangle_vertices(tris[0]);
+      triangle_t t2 = triangle_vertices(tris[1]);
+      index_t t1l = vertex_index_of(e.l, t1);
+      index_t t1r = vertex_index_of(e.r, t1);
+
+      index_t t2l = vertex_index_of(e.l, t2);
+      index_t t2r = vertex_index_of(e.r, t2);
+
+      if (t1l == t2l && t1r == t2r) {
+	return false;
+      }
+    }
+    return true;
+  }
+
   index_t find_index(point p, std::vector<point>& vertices, double tolerance) {
     for (unsigned i = 0; i < vertices.size(); i++) {
       if (within_eps(p, vertices[i], tolerance)) { return i; }

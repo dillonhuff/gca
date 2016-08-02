@@ -15,9 +15,17 @@ namespace gca {
     std::vector<index_poly> polys{{0, 1, 2, 3}};
     std::vector<double> depths{3.4};
     triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+    auto pd = polydata_for_trimesh(m);
+    debug_print_summary(pd);
+    debug_print_is_closed(pd);
+    debug_print_edge_summary(pd);
 
-    //    vtk_debug_mesh(m);
-    
+    REQUIRE(non_manifold_edges(m).size() == 0);
+    REQUIRE(m.winding_order_is_consistent());
+
+    vtk_debug_mesh(m);
+
+    REQUIRE(m.face_indexes().size() == 12);
     REQUIRE(m.is_connected());
 
   }

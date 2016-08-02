@@ -16,4 +16,13 @@ namespace gca {
       REQUIRE(res_triangles.size() == triangles.size());
     }
   }
+
+  TEST_CASE("Winding order consistency test") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    auto triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/SlicedCone.stl").triangles;
+    triangular_mesh m = make_mesh(triangles, 0.001);
+    REQUIRE(m.winding_order_is_consistent());
+  }
 }
