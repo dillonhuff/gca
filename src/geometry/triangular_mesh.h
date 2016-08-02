@@ -1,6 +1,7 @@
 #ifndef GCA_TRIANGULAR_MESH_H
 #define GCA_TRIANGULAR_MESH_H
 
+#include <unordered_set>
 #include <numeric>
 
 #include "geometry/box.h"
@@ -19,7 +20,19 @@ namespace gca {
 
   bool operator==(const edge x, const edge y);
   bool share_endpoint(const edge x, const edge y);
-  
+}
+
+namespace std {
+  template <>
+  struct hash<gca::edge> {
+    size_t operator()(gca::edge const& x) const noexcept {
+      return 13 + std::hash<gca::index_t>()(x.l) + 13*std::hash<gca::index_t>()(x.r);
+    }
+  };  
+}
+
+namespace gca {
+
   class triangular_mesh {
   private:
     std::vector<point> vertices;
@@ -41,11 +54,13 @@ namespace gca {
 
     std::vector<edge> edges() const {
       std::vector<edge> edges;
+      unordered_set<edge> edge_set;
       for (index_t i = 0; i < mesh.num_halfedges(); i++) {
 	auto p = mesh.he_index2directed_edge(i);
-	if (!elem(edge(p.first, p.second), edges) &&
-	    !elem(edge(p.second, p.first), edges)) {
+	if (!elem(edge(p.first, p.second), edge_set) &&
+	    !elem(edge(p.second, p.first), edge_set)) {
 	  edges.push_back(edge(p.first, p.second));
+	  edge_set.insert(edge(p.first, p.second));
 	}
       }
       return edges;

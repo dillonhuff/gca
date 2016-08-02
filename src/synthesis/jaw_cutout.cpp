@@ -13,31 +13,6 @@ namespace gca {
     fabrication_plan* right_jaw;
   };
 
-  typedef point block_dims;
-
-  struct jaw_dims {
-    block_dims blk_dims;
-    double h;
-    double clip_x;
-  };
-
-  jaw_dims
-  make_jaw_dims(const contour_surface_decomposition& surfs,
-		const vice& v,
-		const point axis,
-		const point n) {
-    block_dims blk(v.x_len(), v.y_len(), v.jaw_height());
-
-    double part_height = diameter(n, surfs.top.get_parent_mesh());
-    double h = (blk.z - part_height)*0.25;
-
-    double part_width = diameter(axis, surfs.top.get_parent_mesh());
-    double clip_x = part_width / 4.0;
-
-    return jaw_dims{blk, h, clip_x};
-  }
-
-  
   point pick_jaw_cutout_axis(const surface& outline) {
     return outline.face_orientation(outline.front());
   }
@@ -95,9 +70,6 @@ namespace gca {
     // triangular_mesh an_cutout = cutout_mesh(surfs, v, -1*axis, n);
     // vtk_debug_meshes({&a_cutout, &an_cutout, &part_mesh});
     // assert(false);
-
-    // pair<triangular_mesh, triangular_mesh> jaws =
-    //   custom_jaw_meshes(, axis, v, n);
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
@@ -165,12 +137,6 @@ namespace gca {
       auto surfs_to_cut = surfs.rest;
 
       return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {nullptr, nullptr});
-      // return custom_jaw_clip_plan(aligned,
-      // 				  part_mesh,
-      // 				  surfs,
-      // 				  top_fix,
-      // 				  (*custom).first,
-      // 				  (*custom).second);
     }
     return boost::none;
   }

@@ -4,6 +4,7 @@
 #include <cassert>
 #include <map>
 #include <numeric>
+#include <unordered_set>
 #include <utility>
 
 namespace gca {
@@ -39,6 +40,12 @@ namespace gca {
     return std::find(begin(t), end(t), e) != end(t);
   }
 
+  template<typename T>
+  bool elem(T e, const std::unordered_set<T>& t) {
+    //    return std::find(begin(t), end(t), e) != end(t);
+    return t.find(e) != end(t);
+  }
+  
   template<typename InputIt, typename OutputIt, typename F>
   OutputIt apply_between(InputIt s, InputIt e, OutputIt r, F f) {
     while (s != (e - 1)) {
