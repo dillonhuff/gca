@@ -17,6 +17,7 @@ namespace gca {
 
   triangular_mesh
   mesh_for_polys(const std::vector<oriented_polygon>& polys) {
+    cout << "# of polygons = " << polys.size() << endl;
     std::vector<triangle> tris;
     for (auto p : polys) {
       concat(tris, vtk_triangulate_poly(p));
@@ -83,6 +84,7 @@ namespace gca {
     return ac;
   }
 
+  // Templatize and merge with collect polygon in triangle.cpp?
   index_poly collect_polygon(vector<gca::edge>& lines) {
     assert(lines.size() > 0);
     vector<index_t> points;
@@ -148,7 +150,7 @@ namespace gca {
 
 
       // Sides
-      concat(polys, side_polys(pts, poly_layers[i], last_depth_offset, layer_depths[i], extrude_dir));
+      concat(polys, side_polys(pts, poly_layers[i], last_depth_offset, last_depth_offset + layer_depths[i], extrude_dir));
 
       // Back
       if (i + 1 == layer_depths.size()) {

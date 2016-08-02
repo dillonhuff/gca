@@ -92,11 +92,20 @@ namespace gca {
 	  corrected.v[k] = ti.v[kp1];
 	  corrected.v[kp1] = ti.v[k];
 	  corrected.v[kp2] = ti.v[kp2];
+	  cout << "--- Original triangle = " << ti << endl;
+	  cout << "--- Corrected triangle = " << corrected << endl;
+	  cout << "--- Conflicting triangle = " << tj << endl;
 	  return corrected;
 	}
       }
     }
+    cout << "triangle has correct orientation" << endl;
     return ti;
+  }
+
+  std::ostream& operator<<(std::ostream& out, const triangle_t t) {
+    out << "< " << t.v[0] << ", " << t.v[1] << ", " << t.v[2] << " >";
+    return out;
   }
 
   int
@@ -111,6 +120,8 @@ namespace gca {
 	    unsigned kp1 = (k + 1) % 3;
 	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
 	      cout << "Winding order error: i = " << i << ", j = " << j << endl;
+	      cout << "--- " << ti << endl;
+	      cout << "--- " << tj << endl;
 	      num_errs++;
 	    }
 	  }
@@ -124,7 +135,8 @@ namespace gca {
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
     vector<triangle_t> tris;
     vector<unsigned> remaining_inds = inds(triangles);
-
+    cout << "Initial # of triangles = " << triangles.size() << endl;
+    
     while (remaining_inds.size() > 0) {
       cout << "# remaining inds = " << remaining_inds.size() << endl;
       for (auto ind : remaining_inds) {
@@ -143,6 +155,11 @@ namespace gca {
 	  break;
 	}
       }
+
+      auto ccs =
+	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
+				{ return share_edge(l, r); });
+      assert(ccs.size() == 1);
       assert(num_winding_order_errors(tris) == 0);
     }
 
