@@ -95,6 +95,69 @@ namespace gca {
     return {{0, 0, 1}, {0, 1, 0}};
   }
 
+  std::vector<gca::edge>
+  boundary_edges(const surface& s) {
+    std::vector<gca::edge> bound_edges;
+    for (auto e : s.get_parent_mesh().edges()) {
+      auto l_face_neighbors = s.get_parent_mesh().vertex_face_neighbors(e.l);
+      auto r_face_neighbors = s.get_parent_mesh().vertex_face_neighbors(e.r);
+      auto face_neighbors = intersection(l_face_neighbors, r_face_neighbors);
+      bool contains_some_neighbors = false;
+      bool contains_all_neighbors = true;
+      for (auto facet : face_neighbors) {
+	if (s.contains(facet)) {
+	  contains_some_neighbors = true;
+	} else {
+	  contains_all_neighbors = false;
+	}
+      }
+      if (contains_some_neighbors && !contains_all_neighbors) {
+	bound_edges.push_back(e);
+      }
+    }
+    return bound_edges;
+  }
+
+  std::vector<std::vector<gca::edge>>
+  connected_boundary_edge_sets(const surface& s) {
+    std::vector<gca::edge> bound_edges = boundary_edges(s);
+    auto edge_group_inds =
+      connected_components_by(bound_edges,
+			      [](const gca::edge x, const gca::edge y)
+			      { return share_endpoint(x, y); });
+    std::vector<std::vector<gca::edge>> edge_groups;
+    for (auto inds : edge_group_inds) {
+      vector<gca::edge> es;
+      for (auto i : inds) {
+	es.push_back(bound_edges[i]);
+      }
+      edge_groups.push_back(es);
+    }
+    return edge_groups;
+  }
+
+  // TODO: Optimize this hideously slow comparison
+  bool outline_shares_edges(const contour_surface_decomposition& surfs) {
+    const surface& outline = surfs.outline;
+    const surface& bottom = surfs.bottom;
+    auto outline_sets = connected_boundary_edge_sets(outline);
+    cout << "# of outline edge sets = " << outline_sets.size() << endl;
+    assert(outline_sets.size() > 0);
+
+    auto bottom_sets = connected_boundary_edge_sets(bottom);
+    cout << "# of bottom edge sets = " << bottom_sets.size() << endl;
+    assert(bottom_sets.size() > 0);
+
+    for (auto s : outline_sets) {
+      for (auto e : bottom_sets) {
+	if (intersection(s, e).size() == e.size() && (s.size() == e.size())) {
+	  return true;
+	}
+      }
+    }
+    return false;
+  }
+
   boost::optional<contour_surface_decomposition>
   compute_contour_surfaces(const triangular_mesh& part_mesh) {
 
@@ -102,9 +165,19 @@ namespace gca {
       possible_contour_normals(part_mesh);
 
     for (auto n : candidate_contour_normals) {
+      cout << "Checking for contour in " << n << endl;
       boost::optional<contour_surface_decomposition> surfs =
 	contour_surface_decomposition_in_dir(part_mesh, n);
-      if (surfs) { return surfs; }
+      if (surfs) {
+	if (outline_shares_edges(*surfs)) {
+	  return surfs;
+	} else {
+	  contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->visible_from_minus_n, surfs->visible_from_minus_n, surfs->rest};
+	  if (outline_shares_edges(decomposition)) {
+	    return decomposition;
+	  }
+	}
+      }
     }
 
     return boost::none;

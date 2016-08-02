@@ -440,6 +440,10 @@ namespace gca {
     return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
   }
 
+  bool share_endpoint(const edge x, const edge y) {
+    return x.l == y.l || x.l == y.r || x.r == y.r || x.r == y.l;
+  }
+
   double dihedral_angle(const gca::edge e, const triangular_mesh& m) {
     auto tl = m.vertex_face_neighbors(e.l);
     auto tr = m.vertex_face_neighbors(e.r);

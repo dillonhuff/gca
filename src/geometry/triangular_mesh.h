@@ -18,6 +18,7 @@ namespace gca {
   };
 
   bool operator==(const edge x, const edge y);
+  bool share_endpoint(const edge x, const edge y);
   
   class triangular_mesh {
   private:
@@ -42,7 +43,10 @@ namespace gca {
       std::vector<edge> edges;
       for (index_t i = 0; i < mesh.num_halfedges(); i++) {
 	auto p = mesh.he_index2directed_edge(i);
-	edges.push_back(edge(p.first, p.second));
+	if (!elem(edge(p.first, p.second), edges) &&
+	    !elem(edge(p.second, p.first), edges)) {
+	  edges.push_back(edge(p.first, p.second));
+	}
       }
       return edges;
     }

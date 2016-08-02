@@ -23,7 +23,7 @@ namespace gca {
       auto decomp = compute_contour_surfaces(m);
 
       REQUIRE(decomp);
-      REQUIRE(within_eps(decomp->n, point(0, 1, 0), 0.001));
+      REQUIRE(within_eps(decomp->n, point(0, -1, 0), 0.001));
       REQUIRE(decomp->rest.size() == 0);
     }
 
