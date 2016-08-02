@@ -96,7 +96,9 @@ namespace gca {
     vector<triangle> patch_tris = polydata_to_triangle_list(patch_data);
     concat(main_tris, patch_tris);
 
-    triangular_mesh intermediate_mesh = make_mesh(main_tris, 0.01);
+    cout << "Making intermediate mesh" << endl;
+    triangular_mesh intermediate_mesh = make_mesh_no_winding_check(main_tris, 0.01);
+    cout << "Done with intermediate mesh" << endl;
 
     auto pdata = polydata_for_trimesh(intermediate_mesh);
 

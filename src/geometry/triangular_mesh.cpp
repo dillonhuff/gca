@@ -68,46 +68,49 @@ namespace gca {
   }
 
   bool
-  correct_next_winding_error(std::vector<triangle_t>& triangles) {
-    assert(false);
-    // for (unsigned i = 0; i < triangles.size(); i++) {
-    //   for (unsigned j = 0; j < triangles.size(); j++) {
-    // 	if (i != j) {
-    // 	  auto ti = triangles[i];
-    // 	  auto tj = triangles[j];
-    // 	  for (unsigned k = 0; k < 3; k++) {
-    // 	    unsigned kp1 = (k + 1) % 3;
-    // 	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-    // 	      found_error = true;
-		
-    // 	    }
-    // 	  }
-    // 	}
-    //   }
-    // }
+  share_edge(const triangle_t tl,
+	     const triangle_t tr) {
+    int num_eq = 0;
+    for (unsigned i = 0; i < 3; i++) {
+      for (unsigned j = 0; j < 3; j++) {
+	num_eq += (tl.v[i] == tr.v[j]) ? 1 : 0;
+      }
+    }
+    return num_eq > 1;
   }
 
-  void
-  correct_winding_order_errors(std::vector<triangle_t>& triangles) {
-    // bool found_err = false;
-    // do {
-    //   found_error = correct_next_winding_error(triangles);
-    // } while(found_error);
-    assert(false);
+  triangle_t
+  correct_orientation(const triangle_t to_correct,
+		      const std::vector<triangle_t>& others) {
+    auto ti = to_correct;
+    for (auto tj : others) {
+      for (unsigned k = 0; k < 3; k++) {
+	unsigned kp1 = (k + 1) % 3;
+	unsigned kp2 = (k + 2) % 3;
+	if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
+	  triangle_t corrected;
+	  corrected.v[k] = ti.v[kp1];
+	  corrected.v[kp1] = ti.v[k];
+	  corrected.v[kp2] = ti.v[kp2];
+	  return corrected;
+	}
+      }
+    }
+    return ti;
   }
-  
+
   int
   num_winding_order_errors(const std::vector<triangle_t>& triangles) {
     int num_errs = 0;
     for (unsigned i = 0; i < triangles.size(); i++) {
-      for (unsigned j = 0; j < triangles.size(); j++) {
+      for (unsigned j = i; j < triangles.size(); j++) {
 	if (i != j) {
 	  auto ti = triangles[i];
 	  auto tj = triangles[j];
 	  for (unsigned k = 0; k < 3; k++) {
 	    unsigned kp1 = (k + 1) % 3;
 	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-	      cout << "Winding order error!" << endl;
+	      cout << "Winding order error: i = " << i << ", j = " << j << endl;
 	      num_errs++;
 	    }
 	  }
@@ -116,12 +119,44 @@ namespace gca {
     }
     return num_errs;
   }
+
+  std::vector<triangle_t>
+  fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
+    cout << "Fixing widing order" << endl;
+    vector<triangle_t> tris;
+    vector<unsigned> remaining_inds = inds(triangles);
+
+    while (remaining_inds.size() > 0) {
+      cout << "# remaining inds = " << remaining_inds.size() << endl;
+      for (auto ind : remaining_inds) {
+	triangle_t next_t = triangles[ind];
+	vector<triangle_t> sub_tris =
+	  select(tris, [next_t](const triangle_t t)
+		 { return share_edge(next_t, t); });
+	if (sub_tris.size() > 0) {
+	  triangle_t corrected = correct_orientation(next_t, sub_tris);
+	  tris.push_back(corrected);
+	  remove(ind, remaining_inds);
+	  break;
+	} if (tris.size() == 0) {
+	  tris.push_back(next_t);
+	  remove(ind, remaining_inds);
+	  break;
+	}
+      }
+      assert(num_winding_order_errors(tris) == 0);
+    }
+
+    assert(num_winding_order_errors(tris) == 0);
+    assert(tris.size() == triangles.size());
+    return tris;
+  }
   
-  void
-  fill_vertex_triangles(const std::vector<triangle>& triangles,
-			std::vector<triangle_t>& vertex_triangles,
-			std::vector<point>& vertices,
-			double tolerance) {
+  std::vector<triangle_t>
+  fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
+					 std::vector<point>& vertices,
+					 double tolerance) {
+    std::vector<triangle_t> vertex_triangles;
     for (auto t : triangles) {
       auto v1i = find_index(t.v1, vertices, tolerance);
       auto v2i = find_index(t.v2, vertices, tolerance);
@@ -132,10 +167,25 @@ namespace gca {
       tr.v[2] = v3i;
       vertex_triangles.push_back(tr);
     }
-    //    fix_winding_errors(vertex_triangles);
+    return vertex_triangles;
+  }
+
+  std::vector<triangle_t>
+  fill_vertex_triangles(const std::vector<triangle>& triangles,
+			std::vector<point>& vertices,
+			double tolerance) {
+    auto vertex_triangles =
+      fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
     int wind_errs = num_winding_order_errors(vertex_triangles);
     cout << "Num winding errors = " << wind_errs << endl;
-    assert(wind_errs == 0);
+    if (wind_errs > 0) {
+      auto fixed_triangles = fix_winding_order_errors(vertex_triangles);
+      int new_wind_errs = num_winding_order_errors(fixed_triangles);
+      cout << "Num winding errors after fixing = " << new_wind_errs << endl;
+      assert(new_wind_errs == 0);
+      return fixed_triangles;
+    }
+    return vertex_triangles;
   }
 
   bool triangular_mesh::is_constant_orientation_vertex(const point p,
@@ -156,11 +206,32 @@ namespace gca {
     return true;
   }
 
+  triangular_mesh make_mesh_no_winding_check(const std::vector<triangle>& triangles,
+					     double tolerance) {
+    std::vector<point> vertices;
+    std::vector<triangle_t> vertex_triangles =
+      fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+    std::vector<point> face_orientations(triangles.size());
+    transform(begin(triangles), end(triangles), begin(face_orientations),
+	      [](const triangle t) { return t.normal; });
+    std::vector<edge_t> edges;
+    unordered_edges_from_triangles(vertex_triangles.size(),
+				   &vertex_triangles[0],
+				   edges);
+    trimesh_t mesh;
+    mesh.build(vertices.size(),
+	       triangles.size(),
+	       &vertex_triangles[0],
+	       edges.size(),
+	       &edges[0]);
+    return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
+  }
+  
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance) {
     std::vector<point> vertices;
-    std::vector<triangle_t> vertex_triangles;
-    fill_vertex_triangles(triangles, vertex_triangles, vertices, tolerance);
+    std::vector<triangle_t> vertex_triangles =
+      fill_vertex_triangles(triangles, vertices, tolerance);
     std::vector<point> face_orientations(triangles.size());
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });

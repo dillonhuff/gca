@@ -188,6 +188,9 @@ namespace gca {
 		 triangular_mesh* dest,
 		 double tolerance);
 
+  triangular_mesh make_mesh_no_winding_check(const std::vector<triangle>& triangles,
+					     double tolerance);
+  
   
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance);

@@ -21,7 +21,7 @@ namespace gca {
     
   struct triangle_t {
     index_t v[3];
-        
+
     index_t& i() { return v[0]; }
     const index_t& i() const { return v[0]; }
         
