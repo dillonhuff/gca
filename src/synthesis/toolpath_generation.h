@@ -12,10 +12,6 @@
 
 namespace gca {
 
-  // TODO: Move to triangular mesh?
-  vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
-				       const triangular_mesh& mesh);
-
   class pocket {
   public:
     template<typename T>

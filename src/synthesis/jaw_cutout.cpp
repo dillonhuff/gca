@@ -89,11 +89,11 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    triangular_mesh a_cutout = cutout_mesh(surfs, v, axis, n);
-    triangular_mesh an_cutout = cutout_mesh(surfs, v, -1*axis, n);
-    vtk_debug_meshes({&a_cutout, &an_cutout});
-    assert(false);
+    //    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    // triangular_mesh a_cutout = cutout_mesh(surfs, v, axis, n);
+    // triangular_mesh an_cutout = cutout_mesh(surfs, v, -1*axis, n);
+    // vtk_debug_meshes({&a_cutout, &an_cutout});
+    // assert(false);
 
     // pair<triangular_mesh, triangular_mesh> jaws =
     //   custom_jaw_meshes(, axis, v, n);

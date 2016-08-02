@@ -1,3 +1,4 @@
+#include <vtkImplicitDataSet.h>
 #include <vtkBooleanOperationPolyDataFilter.h>
 #include <vtkDecimatePro.h>
 #include <vtkCellData.h>
@@ -136,7 +137,7 @@ namespace gca {
     assert(is_closed(pdata));
     assert(has_cell_normals(pdata));
 
-    triangular_mesh final_mesh = trimesh_from_polydata(pdata);
+    triangular_mesh final_mesh = trimesh_for_polydata(pdata);
 
     assert(final_mesh.is_connected());
 
@@ -146,27 +147,74 @@ namespace gca {
   triangular_mesh
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b) {
     auto a_poly = polydata_for_trimesh(a);
+
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
+      vtkSmartPointer<vtkPolyDataNormals>::New();
+    normalGenerator->SetInputData(a_poly);
+    normalGenerator->SetSplitting(0);
+    normalGenerator->ComputePointNormalsOn();
+    normalGenerator->ComputeCellNormalsOn();
+    normalGenerator->Update();
+
+    a_poly = normalGenerator->GetOutput();
+
+
     auto b_poly = polydata_for_trimesh(b);
+    vtkSmartPointer<vtkPolyDataNormals> normalGenerator2 =
+      vtkSmartPointer<vtkPolyDataNormals>::New();
+    normalGenerator2->SetInputData(b_poly);
+    normalGenerator2->SetSplitting(0);
+    normalGenerator2->ComputePointNormalsOn();
+    normalGenerator2->ComputeCellNormalsOn();
+    normalGenerator2->Update();
 
-    vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
-      vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
-    booleanOperation->SetOperationToDifference();
-    booleanOperation->SetInputData( 0, a_poly );
-    booleanOperation->SetInputData( 1, b_poly );
-    booleanOperation->Update();
+    b_poly = normalGenerator2->GetOutput();
 
-    vtkPolyData* res_poly = booleanOperation->GetOutput();
+    auto data = vtkImplicitDataSet::New();
+    data->SetDataSet(b_poly);
+    
+    // Clip the source with the plane
+    vtkSmartPointer<vtkClipPolyData> clipper = 
+      vtkSmartPointer<vtkClipPolyData>::New();
+    clipper->SetInputData(a_poly);
+    clipper->SetClipFunction(data);
+    clipper->Update();
+
+    vtkPolyData* res_poly = clipper->GetOutput();
+
     debug_print_summary(res_poly);
     debug_print_is_closed(res_poly);
     debug_print_edge_summary(res_poly);
+    
     auto rp = vtkSmartPointer<vtkPolyData>::New();
     rp->DeepCopy(res_poly);
     auto actor = polydata_actor(rp);
     visualize_actors({actor});
+
+    assert(false);
+
+    // triangular_mesh result = trimesh_for_polydata(a_poly);
+    // return result;
+
+    // vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
+    //   vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
+    // booleanOperation->SetOperationToDifference();
+    // booleanOperation->SetInputData( 0, a_poly );
+    // booleanOperation->SetInputData( 1, b_poly );
+    // booleanOperation->Update();
+
+    // vtkPolyData* res_poly = booleanOperation->GetOutput();
+    // debug_print_summary(res_poly);
+    // debug_print_is_closed(res_poly);
+    // debug_print_edge_summary(res_poly);
+    // auto rp = vtkSmartPointer<vtkPolyData>::New();
+    // rp->DeepCopy(res_poly);
+    // auto actor = polydata_actor(rp);
+    // visualize_actors({actor});
     
 
-    triangular_mesh result = trimesh_from_polydata(res_poly);
-    return result;
+    // triangular_mesh result = trimesh_for_polydata(res_poly);
+    // return result;
   }
 
 }

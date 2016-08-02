@@ -277,7 +277,7 @@ namespace gca {
     //   concat(lines, project_lines(level_template, depth));
     // }
     // return lines;
-    return {to_polyline(interior)};
+    return { to_polyline(project(interior, get_end_depth())) };
   }
 
   std::vector<polyline>
@@ -302,7 +302,7 @@ namespace gca {
   face_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     auto inter = project(base, get_end_depth());
-    return {to_polyline(inter)};
+    return { to_polyline(project(inter, get_end_depth())) };
     // vector<polyline> face_template =
     //   face_level(inter, t, cut_depth);
 
@@ -341,7 +341,7 @@ namespace gca {
     // auto finish_edges = finish_pocket(*this, t, cut_depth);
     // concat(pocket_path, finish_edges);
     // return pocket_path;
-    return {to_polyline(boundary)};
+    return {to_polyline(project(boundary, get_start_depth()))};
   }
 
   // TODO: Move these to somewhere else, they really dont belong here

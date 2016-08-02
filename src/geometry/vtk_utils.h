@@ -15,7 +15,7 @@ namespace gca {
   polydata_for_trimesh(const triangular_mesh& mesh);
 
   triangular_mesh
-  trimesh_from_polydata(vtkPolyData* in_polydata);
+  trimesh_for_polydata(vtkPolyData* in_polydata);
 
 }
 
