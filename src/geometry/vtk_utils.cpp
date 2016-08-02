@@ -49,6 +49,39 @@ namespace gca {
   }
 
   vtkSmartPointer<vtkPolyData>
+  polydata_for_triangles(const std::vector<triangle>& tris) {
+    vtkSmartPointer<vtkPoints> points =
+      vtkSmartPointer<vtkPoints>::New();
+    vtkSmartPointer<vtkCellArray> triangles =
+      vtkSmartPointer<vtkCellArray>::New();
+
+    for (auto t : tris) {
+      vtkIdType i1 = points->InsertNextPoint(t.v1.x, t.v1.y, t.v1.z);
+      vtkIdType i2 = points->InsertNextPoint(t.v2.x, t.v2.y, t.v2.z);
+      vtkIdType i3 = points->InsertNextPoint(t.v3.x, t.v3.y, t.v3.z);
+
+      vtkSmartPointer<vtkTriangle> triangle =
+	vtkSmartPointer<vtkTriangle>::New();
+
+      triangle->GetPointIds()->SetId(0, i1);
+      triangle->GetPointIds()->SetId(1, i2);
+      triangle->GetPointIds()->SetId(2, i3);
+
+      triangles->InsertNextCell(triangle);    
+    }
+
+    // Create a polydata object
+    vtkSmartPointer<vtkPolyData> polyData =
+      vtkSmartPointer<vtkPolyData>::New();
+ 
+    // Add the geometry and topology to the polydata
+    polyData->SetPoints(points);
+    polyData->SetPolys(triangles);
+
+    return polyData;
+  }
+  
+  vtkSmartPointer<vtkPolyData>
   polydata_for_trimesh(const triangular_mesh& mesh) {
     vtkSmartPointer<vtkPoints> points =
       vtkSmartPointer<vtkPoints>::New();

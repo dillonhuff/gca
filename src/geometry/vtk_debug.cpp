@@ -96,6 +96,12 @@ namespace gca {
     visualize_actors({surface_act});
   }
 
+  void vtk_debug_triangles(const std::vector<triangle>& tris) {
+    auto pd = polydata_for_triangles(tris);
+    vtkSmartPointer<vtkActor> act = polydata_actor(pd);
+    visualize_actors({act});
+  }
+  
   void vtk_debug_mesh(const triangular_mesh& mesh) {
     vtk_debug_highlight_inds(mesh.face_indexes(), mesh);
   }

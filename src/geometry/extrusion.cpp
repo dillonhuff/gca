@@ -1,3 +1,4 @@
+#include "geometry/vtk_debug.h"
 #include "geometry/extrusion.h"
 
 namespace gca {
@@ -20,6 +21,8 @@ namespace gca {
     for (auto p : polys) {
       concat(tris, vtk_triangulate_poly(p));
     }
+
+    vtk_debug_triangles(tris);
     return make_mesh(tris, 0.01);
   }
 
@@ -36,8 +39,6 @@ namespace gca {
     point top_right = pts[e.r] + i0;
     point bottom_left = pts[e.l] + i1;
     point bottom_right = pts[e.r] + i1;
-    //std::vector<point> poly_points{top_left, top_right, bottom_right, bottom_left};
-    //std::vector<point> poly_points{top_left, top_right, top_right, bottom_left};
     std::vector<point> poly_points{bottom_left, bottom_right, top_right, top_left};
     // TODO: Proper normal computation
     return oriented_polygon(dir, poly_points);
@@ -52,7 +53,7 @@ namespace gca {
     std::vector<gca::edge> edges;
     for (index_t i = 0; i < p.size(); i++) {
       index_t j = (i + 1) % p.size();
-      edges.push_back(edge(i, j));
+      edges.push_back(edge(p[i], p[j]));
     }
     std::vector<oriented_polygon> side_rects;
     for (auto ed : edges) {
@@ -66,16 +67,32 @@ namespace gca {
 		 const std::vector<index_poly>& poly_layers,
 		 const std::vector<double>& layer_depths,
 		 const point extrude_dir) {
-    assert(poly_layers.size() == 1);
+    assert(pts.size() > 0);
+    assert(layer_depths.size() == poly_layers.size());
     std::vector<oriented_polygon> polys;
-    polys.push_back(convert_index_poly(pts, poly_layers[0], 0, extrude_dir));
-    oriented_polygon back =
-      convert_index_poly(pts, poly_layers[0], layer_depths[0], extrude_dir);
-    vector<point> verts = back.vertices();
-    reverse(begin(verts), end(verts));
-    oriented_polygon back_rev(-1*extrude_dir, verts);
-    polys.push_back(back_rev);
-    concat(polys, side_polys(pts, poly_layers[0], 0, layer_depths[0], extrude_dir));
+
+    double last_depth_offset = 0.0;
+    for (unsigned i = 0; i < layer_depths.size(); i++) {
+      // Front polys
+      if (i == 0) {
+	polys.push_back(convert_index_poly(pts, poly_layers[i], last_depth_offset, extrude_dir));
+      }
+
+      // Sides
+      concat(polys, side_polys(pts, poly_layers[i], last_depth_offset, layer_depths[i], extrude_dir));
+
+      // Back
+      if (i + 1 == layer_depths.size()) {
+	oriented_polygon back =
+	  convert_index_poly(pts, poly_layers[i], layer_depths[i], extrude_dir);
+	vector<point> verts = back.vertices();
+	reverse(begin(verts), end(verts));
+	oriented_polygon back_rev(-1*extrude_dir, verts);
+	polys.push_back(back_rev);
+      }
+
+      last_depth_offset += layer_depths[i];
+    }
     return mesh_for_polys(polys);
   }
 

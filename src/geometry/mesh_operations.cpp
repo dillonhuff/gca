@@ -172,51 +172,51 @@ namespace gca {
 
     b_poly = normalGenerator2->GetOutput();
 
-    auto data = vtkImplicitDataSet::New();
-    data->SetDataSet(b_poly);
+    // auto data = vtkImplicitDataSet::New();
+    // data->SetDataSet(b_poly);
     
-    // Clip the source with the plane
-    vtkSmartPointer<vtkClipPolyData> clipper = 
-      vtkSmartPointer<vtkClipPolyData>::New();
-    clipper->SetInputData(a_poly);
-    clipper->SetClipFunction(data);
-    clipper->Update();
+    // // Clip the source with the plane
+    // vtkSmartPointer<vtkClipPolyData> clipper = 
+    //   vtkSmartPointer<vtkClipPolyData>::New();
+    // clipper->SetInputData(a_poly);
+    // clipper->SetClipFunction(data);
+    // clipper->Update();
 
-    vtkPolyData* res_poly = clipper->GetOutput();
+    // vtkPolyData* res_poly = clipper->GetOutput();
 
-    debug_print_summary(res_poly);
-    debug_print_is_closed(res_poly);
-    debug_print_edge_summary(res_poly);
-    
-    auto rp = vtkSmartPointer<vtkPolyData>::New();
-    rp->DeepCopy(res_poly);
-    auto actor = polydata_actor(rp);
-    visualize_actors({actor});
-
-    assert(false);
-
-    // triangular_mesh result = trimesh_for_polydata(a_poly);
-    // return result;
-
-    // vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
-    //   vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
-    // booleanOperation->SetOperationToDifference();
-    // booleanOperation->SetInputData( 0, a_poly );
-    // booleanOperation->SetInputData( 1, b_poly );
-    // booleanOperation->Update();
-
-    // vtkPolyData* res_poly = booleanOperation->GetOutput();
     // debug_print_summary(res_poly);
     // debug_print_is_closed(res_poly);
     // debug_print_edge_summary(res_poly);
+    
     // auto rp = vtkSmartPointer<vtkPolyData>::New();
     // rp->DeepCopy(res_poly);
     // auto actor = polydata_actor(rp);
     // visualize_actors({actor});
+
+    // assert(false);
+
+    // triangular_mesh result = trimesh_for_polydata(a_poly);
+    // return result;
+
+    vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
+      vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
+    booleanOperation->SetOperationToDifference();
+    booleanOperation->SetInputData( 0, a_poly );
+    booleanOperation->SetInputData( 1, b_poly );
+    booleanOperation->Update();
+
+    vtkPolyData* res_poly = booleanOperation->GetOutput();
+    debug_print_summary(res_poly);
+    debug_print_is_closed(res_poly);
+    debug_print_edge_summary(res_poly);
+    auto rp = vtkSmartPointer<vtkPolyData>::New();
+    rp->DeepCopy(res_poly);
+    auto actor = polydata_actor(rp);
+    visualize_actors({actor});
     
 
-    // triangular_mesh result = trimesh_for_polydata(res_poly);
-    // return result;
+    triangular_mesh result = trimesh_for_polydata(res_poly);
+    return result;
   }
 
 }

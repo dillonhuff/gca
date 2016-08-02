@@ -122,7 +122,6 @@ namespace gca {
 
   std::vector<triangle_t>
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
-    cout << "Fixing widing order" << endl;
     vector<triangle_t> tris;
     vector<unsigned> remaining_inds = inds(triangles);
 

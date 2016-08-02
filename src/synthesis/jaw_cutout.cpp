@@ -47,8 +47,8 @@ namespace gca {
     point y_h = ((v.maximum_jaw_width() / 10.0) / 2.0)*axis.normalize();
     point z_h = (v.jaw_height() / 2.0)*n.normalize();
     triangular_mesh m = block_mesh(center, x_h, y_h, z_h);
-    return m;
-    //    return boolean_difference(m, part_mesh);
+    //return m;
+    return boolean_difference(m, part_mesh);
   }
 
   // TODO: Produce longer clamps
