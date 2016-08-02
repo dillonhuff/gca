@@ -30,6 +30,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 		     ./src/geometry/surface.h
 		     ./src/geometry/point.h
 	    ./src/geometry/b_spline.h
+	    ./src/geometry/extrusion.h
 	    ./src/geometry/spline_sampling.h
 	    ./src/geometry/matrix.h
 	    ./src/geometry/triangle.h
@@ -43,6 +44,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
+	 ./src/geometry/extrusion.cpp
 	 ./src/geometry/line.cpp
 	 ./src/geometry/matrix.cpp
 	 ./src/geometry/polygon.cpp
@@ -156,6 +158,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/main.cpp
+	       test/extrusion_tests.cpp
 	test/system_algorithm_tests.cpp
 	test/contour_planning_tests.cpp
 	test/surface_tests.cpp

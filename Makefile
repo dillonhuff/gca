@@ -995,6 +995,33 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
+src/geometry/extrusion.o: src/geometry/extrusion.cpp.o
+
+.PHONY : src/geometry/extrusion.o
+
+# target to build an object file
+src/geometry/extrusion.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extrusion.cpp.o
+.PHONY : src/geometry/extrusion.cpp.o
+
+src/geometry/extrusion.i: src/geometry/extrusion.cpp.i
+
+.PHONY : src/geometry/extrusion.i
+
+# target to preprocess a source file
+src/geometry/extrusion.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extrusion.cpp.i
+.PHONY : src/geometry/extrusion.cpp.i
+
+src/geometry/extrusion.s: src/geometry/extrusion.cpp.s
+
+.PHONY : src/geometry/extrusion.s
+
+# target to generate assembly for a file
+src/geometry/extrusion.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extrusion.cpp.s
+.PHONY : src/geometry/extrusion.cpp.s
+
 src/geometry/homogeneous_transformation.o: src/geometry/homogeneous_transformation.cpp.o
 
 .PHONY : src/geometry/homogeneous_transformation.o
@@ -2372,6 +2399,33 @@ test/dxf_to_gcode_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.s
 .PHONY : test/dxf_to_gcode_tests.cpp.s
 
+test/extrusion_tests.o: test/extrusion_tests.cpp.o
+
+.PHONY : test/extrusion_tests.o
+
+# target to build an object file
+test/extrusion_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.o
+.PHONY : test/extrusion_tests.cpp.o
+
+test/extrusion_tests.i: test/extrusion_tests.cpp.i
+
+.PHONY : test/extrusion_tests.i
+
+# target to preprocess a source file
+test/extrusion_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.i
+.PHONY : test/extrusion_tests.cpp.i
+
+test/extrusion_tests.s: test/extrusion_tests.cpp.s
+
+.PHONY : test/extrusion_tests.s
+
+# target to generate assembly for a file
+test/extrusion_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.s
+.PHONY : test/extrusion_tests.cpp.s
+
 test/fixture_analysis_tests.o: test/fixture_analysis_tests.cpp.o
 
 .PHONY : test/fixture_analysis_tests.o
@@ -3175,6 +3229,9 @@ help:
 	@echo "... src/geometry/box.o"
 	@echo "... src/geometry/box.i"
 	@echo "... src/geometry/box.s"
+	@echo "... src/geometry/extrusion.o"
+	@echo "... src/geometry/extrusion.i"
+	@echo "... src/geometry/extrusion.s"
 	@echo "... src/geometry/homogeneous_transformation.o"
 	@echo "... src/geometry/homogeneous_transformation.i"
 	@echo "... src/geometry/homogeneous_transformation.s"
@@ -3328,6 +3385,9 @@ help:
 	@echo "... test/dxf_to_gcode_tests.o"
 	@echo "... test/dxf_to_gcode_tests.i"
 	@echo "... test/dxf_to_gcode_tests.s"
+	@echo "... test/extrusion_tests.o"
+	@echo "... test/extrusion_tests.i"
+	@echo "... test/extrusion_tests.s"
 	@echo "... test/fixture_analysis_tests.o"
 	@echo "... test/fixture_analysis_tests.i"
 	@echo "... test/fixture_analysis_tests.s"
