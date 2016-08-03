@@ -16,12 +16,13 @@ namespace gca {
   point pick_jaw_cutout_axis(const contour_surface_decomposition& surfs) {
     vector<surface> viable_regions =
       regions_connected_to_both(surfs.outline, surfs.top, surfs.bottom);
-
+    cout << "# of viable regions = " << viable_regions.size() << endl;
+    vtk_debug_highlight_inds(viable_regions);
     // TODO: Later sort multiple regions
     assert(viable_regions.size() == 1);
 
     surface r = viable_regions.front();
-    vtk_debug_highlight_inds(r);
+    //vtk_debug_highlight_inds(r);
 
     std::vector<gca::edge> edges = shared_edges(r, surfs.bottom);
 
@@ -29,7 +30,7 @@ namespace gca {
     cout << "# of shared edges = " << edges.size() << endl;
     for (unsigned i = 0; i < edges.size(); i++) {
       cout << "i = " << i << endl;
-      auto num_n = edge_face_neighbors(edges[i], r);
+      auto num_n = r.edge_face_neighbors(edges[i]);
       cout << "edge = " << edges[i] << endl;
       cout << "# of face neighbors in r = " << num_n.size() << endl;
       assert(num_n.size() > 0);
@@ -42,7 +43,7 @@ namespace gca {
     assert(0 <= middle_ind && middle_ind < edges.size());
 
     gca::edge e = edges[middle_ind];
-    auto tris = edge_face_neighbors(e, r); //.get_parent_mesh());
+    auto tris = r.edge_face_neighbors(e); //.get_parent_mesh());
     if (!(tris.size() == 1)) {
       cout << "# of tris = " << tris.size() << endl;
       assert(false);

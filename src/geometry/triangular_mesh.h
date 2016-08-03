@@ -120,6 +120,10 @@ namespace gca {
       return total;
     }
 
+    std::vector<index_t>
+    edge_face_neighbors(const gca::edge e) const;
+  
+    
     inline bool is_connected() const {
       return mesh.boundary_vertices().size() == 0;
     }
@@ -265,10 +269,6 @@ namespace gca {
 
   std::ostream& operator<<(std::ostream& out, const edge e);
 
-  std::vector<index_t>
-  edge_face_neighbors(const gca::edge e,
-		      const triangular_mesh& m);
-  
   std::vector<gca::edge>
   non_manifold_edges(const triangular_mesh& m);
 

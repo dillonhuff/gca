@@ -290,18 +290,6 @@ namespace gca {
     }
   }
 
-  std::vector<index_t>
-  edge_face_neighbors(const gca::edge e, const surface& s) {
-    auto m_neighbs = edge_face_neighbors(e, s.get_parent_mesh());
-    vector<index_t> neighbs;
-    for (auto i : m_neighbs) {
-      if (s.contains(i)) {
-	neighbs.push_back(i);
-      }
-    }
-    return neighbs;
-  }
-
   std::vector<gca::edge>
   shared_edges(const surface& r, const surface& l) {
     return intersection(r.edges(), l.edges());

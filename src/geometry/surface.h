@@ -24,11 +24,23 @@ namespace gca {
       }
       return false;
     }
+
+    std::vector<index_t>
+    edge_face_neighbors(const gca::edge e) const {
+      auto m_neighbs = get_parent_mesh().edge_face_neighbors(e);
+      vector<index_t> neighbs;
+      for (auto i : m_neighbs) {
+	if (contains(i)) {
+	  neighbs.push_back(i);
+	}
+      }
+      return neighbs;
+    }
     
     std::vector<gca::edge> edges() const {
       std::vector<gca::edge> edgs;
       for (auto e : get_parent_mesh().edges()) {
-	if (contains_vertex(e.l) && contains_vertex(e.r)) {
+	if (this->edge_face_neighbors(e).size() > 0) {
 	  edgs.push_back(e);
 	}
       }
@@ -159,9 +171,6 @@ namespace gca {
   std::vector<surface>
   merge_surface_groups(const std::vector<surface>& surfs,
 		       const std::vector<std::vector<unsigned> >& groups);
-
-  std::vector<index_t>
-  edge_face_neighbors(const gca::edge e, const surface& s);
 
   std::vector<gca::edge>
   shared_edges(const surface& r, const surface& l);

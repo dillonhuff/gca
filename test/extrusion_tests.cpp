@@ -27,7 +27,7 @@ namespace gca {
       cout << "# of edges = " << m.edges().size() << endl;
       cout << "Non manifold edges = " << endl;
       for (auto e : nm_edges) {
-	cout << " of adjacent triangles: " << edge_face_neighbors(e, m).size() << endl;
+	cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
       }
 
       REQUIRE(nm_edges.size() == 0);
@@ -66,7 +66,7 @@ namespace gca {
       cout << "# of edges = " << m.edges().size() << endl;
       cout << "Non manifold edges = " << endl;
       for (auto e : nm_edges) {
-	cout << " of adjacent triangles: " << edge_face_neighbors(e, m).size() << endl;
+	cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
       }
 
       REQUIRE(nm_edges.size() == 0);

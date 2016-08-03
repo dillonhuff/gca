@@ -36,7 +36,7 @@ namespace gca {
 
 	REQUIRE(rs.front().edges().size() > 0);
 	for (auto e : rs.front().edges()) {
-	  REQUIRE(edge_face_neighbors(e, rs.front()).size() > 0);
+	  REQUIRE(rs.front().edge_face_neighbors(e).size() > 0);
 	}
 
 	REQUIRE(shared_edges(rs.front(), decomp->bottom).size() > 0);

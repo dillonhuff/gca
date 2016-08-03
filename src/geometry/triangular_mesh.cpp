@@ -17,17 +17,16 @@ namespace gca {
   }
 
   std::vector<index_t>
-  edge_face_neighbors(const gca::edge e,
-		     const triangular_mesh& m) {
-    auto tl = m.vertex_face_neighbors(e.l);
-    auto tr = m.vertex_face_neighbors(e.r);
+  triangular_mesh::edge_face_neighbors(const gca::edge e) const {
+    auto tl = vertex_face_neighbors(e.l);
+    auto tr = vertex_face_neighbors(e.r);
     return intersection(tl, tr);
   }
 
   std::vector<gca::edge> non_manifold_edges(const triangular_mesh& m) {
     vector<gca::edge> nm_edges;
     for (auto e : m.edges()) {
-      if (edge_face_neighbors(e, m).size() != 2) {
+      if (m.edge_face_neighbors(e).size() != 2) {
 	nm_edges.push_back(e);
       }
     }
