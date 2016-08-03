@@ -315,6 +315,12 @@ namespace gca {
     return intersection_impl<const A&, const B&>::apply(l, r);
   }  
 
+  template<typename A, typename B>
+  typename intersection_impl<const A, const B>::result_type
+  intersection(const A l, const B r) {
+    return intersection_impl<const A, const B>::apply(l, r);
+  }  
+  
   template<typename I>
   std::vector<I> concat_all(const std::vector<std::vector<I>>& vs) {
     std::vector<I> all_vs;

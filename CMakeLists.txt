@@ -159,6 +159,7 @@ target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/main.cpp
 	       test/extrusion_tests.cpp
+	       test/plane_tests.cpp
 	test/system_algorithm_tests.cpp
 	test/contour_planning_tests.cpp
 	test/surface_tests.cpp

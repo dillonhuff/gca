@@ -2723,6 +2723,33 @@ test/millability_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.s
 .PHONY : test/millability_tests.cpp.s
 
+test/plane_tests.o: test/plane_tests.cpp.o
+
+.PHONY : test/plane_tests.o
+
+# target to build an object file
+test/plane_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.o
+.PHONY : test/plane_tests.cpp.o
+
+test/plane_tests.i: test/plane_tests.cpp.i
+
+.PHONY : test/plane_tests.i
+
+# target to preprocess a source file
+test/plane_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.i
+.PHONY : test/plane_tests.cpp.i
+
+test/plane_tests.s: test/plane_tests.cpp.s
+
+.PHONY : test/plane_tests.s
+
+# target to generate assembly for a file
+test/plane_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.s
+.PHONY : test/plane_tests.cpp.s
+
 test/point_tests.o: test/point_tests.cpp.o
 
 .PHONY : test/point_tests.o
@@ -3421,6 +3448,9 @@ help:
 	@echo "... test/millability_tests.o"
 	@echo "... test/millability_tests.i"
 	@echo "... test/millability_tests.s"
+	@echo "... test/plane_tests.o"
+	@echo "... test/plane_tests.i"
+	@echo "... test/plane_tests.s"
 	@echo "... test/point_tests.o"
 	@echo "... test/point_tests.i"
 	@echo "... test/point_tests.s"
