@@ -182,5 +182,21 @@ namespace gca {
 
     return boost::none;
   }
-  
+
+  std::vector<surface>
+  regions_connected_to_both(const surface& to_check,
+			    const surface& top,
+			    const surface& bottom) {
+    vector<surface> subsurfs =
+      constant_orientation_subsurfaces(to_check);
+    delete_if(subsurfs,
+	      [top, bottom](const surface& s)
+	      { return !(surfaces_share_edge(s, top) && surfaces_share_edge(s, bottom)); });
+    auto merged =
+      connected_components_by(subsurfs,
+			      [](const surface& x, const surface& y)
+			      { return surfaces_share_edge(x, y); });
+    return merge_surface_groups(subsurfs, merged);
+  }
+
 }

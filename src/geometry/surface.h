@@ -137,7 +137,11 @@ namespace gca {
 
   std::vector<surface> surfaces_to_cut(const std::vector<index_t>& indexes,
 				       const triangular_mesh& part);
-  
+
+  std::vector<surface>
+  merge_surface_groups(const std::vector<surface>& surfs,
+		       const std::vector<std::vector<unsigned> >& groups);
+
 }
 
 #endif

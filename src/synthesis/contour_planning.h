@@ -32,7 +32,11 @@ namespace gca {
   contour_surface_decomposition_in_dir(const triangular_mesh& part_mesh,
 				       const point n);
 
-  
+
+  std::vector<surface>
+  regions_connected_to_both(const surface& to_check,
+			    const surface& top,
+			    const surface& bottom);
 }
 
 #endif

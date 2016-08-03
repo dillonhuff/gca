@@ -236,6 +236,22 @@ namespace gca {
     return components;
   }
 
+  template<typename I, typename P>
+  std::vector<std::vector<I>>
+  connected_components_by_elems(const std::vector<I>& elems, P p) {
+    auto ccs = connected_components_by(elems, p);
+    std::vector<std::vector<I>> res;
+    for (auto cc : ccs) {
+      std::vector<I> cc_elems;
+      for (auto i : cc) {
+	cc_elems.push_back(elems[i]);
+      }
+      res.push_back(cc_elems);
+    }
+    return res;
+  }
+
+
   // TODO: system/algorithm ?
   template<typename I, typename F>
   std::vector<I>

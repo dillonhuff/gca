@@ -25,7 +25,14 @@ namespace gca {
       REQUIRE(decomp);
       REQUIRE(within_eps(decomp->n, point(0, -1, 0), 0.001));
       REQUIRE(decomp->rest.size() == 0);
-    }
 
+      SECTION("Outline 1 region connected to top and bottom") {
+	vector<surface> rs =
+	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
+
+	REQUIRE(rs.size() == 1);
+	REQUIRE(rs.front().surface_area() < decomp->outline.surface_area());
+      }
+    }
   }
 }
