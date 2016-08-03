@@ -29,6 +29,7 @@ add_library(utils ${UTILS_CPPS} ${UTILS_HEADERS})
 SET(GEOMETRY_HEADERS ./src/geometry/line.h
 		     ./src/geometry/surface.h
 		     ./src/geometry/point.h
+		     ./src/geometry/plane.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/extrusion.h
 	    ./src/geometry/spline_sampling.h
@@ -45,6 +46,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/extrusion.cpp
+	 ./src/geometry/plane.cpp
 	 ./src/geometry/line.cpp
 	 ./src/geometry/matrix.cpp
 	 ./src/geometry/polygon.cpp

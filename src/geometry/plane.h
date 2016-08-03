@@ -22,7 +22,7 @@ namespace gca {
   };
 
   boost::optional<point>
-  plane_intersection(const plane p, const point l);
+  plane_intersection(const plane p, const line l);
 
   template<>
   class intersection_impl<const plane, const line> {
