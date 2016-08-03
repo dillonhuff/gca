@@ -53,7 +53,7 @@ namespace gca {
       REQUIRE(within_eps(decomp->n, point(0, 0, 1), 0.001));
       REQUIRE(decomp->rest.size() == 0);
 
-      vtk_debug_highlight_inds(decomp->bottom);
+      //vtk_debug_highlight_inds(decomp->bottom);
 
       SECTION("Outline 1 region connected to top and bottom") {
 	vector<surface> rs =

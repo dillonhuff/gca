@@ -17,7 +17,7 @@ namespace gca {
     vector<surface> viable_regions =
       regions_connected_to_both(surfs.outline, surfs.top, surfs.bottom);
     cout << "# of viable regions = " << viable_regions.size() << endl;
-    vtk_debug_highlight_inds(viable_regions);
+    //vtk_debug_highlight_inds(viable_regions);
     // TODO: Later sort multiple regions
     assert(viable_regions.size() == 1);
 
