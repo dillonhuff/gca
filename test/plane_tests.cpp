@@ -7,7 +7,7 @@ namespace gca {
     plane p(point(0, 0, 1), point(0, 0, 0));
 
     SECTION("Line that does not intersect") {
-      line l(point(10, 0, 0), point(11, 0, 0));
+      line l(point(10, 0, 6), point(11, 0, 7));
       REQUIRE(!intersection(p, l));
     }
 
