@@ -295,31 +295,25 @@ namespace gca {
   class intersection_impl<const std::vector<I>&, const std::vector<I>&> {
   public:
     typedef std::vector<I> result_type;
+
+    static
+    result_type apply(const std::vector<I>& l, const std::vector<I>& r) {
+      result_type inter;
+      for (auto i : l) {
+	if (elem(i, r)) {
+	  inter.push_back(i);
+	}
+      }
+      return inter;
+    }
+
   };
 
   template<typename A, typename B>
   typename intersection_impl<const A&, const B&>::result_type
   intersection(const A& l, const B& r) {
-    typename intersection_impl<const A&, const B&>::result_type inter;
-    for (auto i : l) {
-      if (elem(i, r)) {
-	inter.push_back(i);
-      }
-    }
-    return inter;
-  }
-  
-  // template<typename A, typename B>
-  // typename intersection_impl<A, B>::result_type intersection(A l, B r) {
-  //   //    return intersection_impl<A, B>::apply(a, b);
-  //   typename intersection_impl<A, B>::result_type inter;
-  //   for (auto i : l) {
-  //     if (elem(i, r)) {
-  // 	inter.push_back(i);
-  //     }
-  //   }
-  //   return inter;
-  // }
+    return intersection_impl<const A&, const B&>::apply(l, r);
+  }  
 
   template<typename I>
   std::vector<I> concat_all(const std::vector<std::vector<I>>& vs) {
