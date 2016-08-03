@@ -13,8 +13,41 @@ namespace gca {
     fabrication_plan* right_jaw;
   };
 
-  point pick_jaw_cutout_axis(const surface& outline) {
-    return outline.face_orientation(outline.front());
+  point pick_jaw_cutout_axis(const contour_surface_decomposition& surfs) {
+    vector<surface> viable_regions =
+      regions_connected_to_both(surfs.outline, surfs.top, surfs.bottom);
+
+    // TODO: Later sort multiple regions
+    assert(viable_regions.size() == 1);
+
+    surface r = viable_regions.front();
+    vtk_debug_highlight_inds(r);
+
+    std::vector<gca::edge> edges = shared_edges(r, surfs.bottom);
+
+    assert(edges.size() > 0);
+    cout << "# of shared edges = " << edges.size() << endl;
+    for (unsigned i = 0; i < edges.size(); i++) {
+      cout << "i = " << i << endl;
+      auto num_n = edge_face_neighbors(edges[i], r);
+      cout << "edge = " << edges[i] << endl;
+      cout << "# of face neighbors in r = " << num_n.size() << endl;
+      assert(num_n.size() > 0);
+    }
+
+    // TODO: Check edge lengths
+    auto middle_ind = static_cast<unsigned>(ceil((edges.size() + 1) / 2.0) - 1);
+
+    cout << "middle ind = " << middle_ind << endl;
+    assert(0 <= middle_ind && middle_ind < edges.size());
+
+    gca::edge e = edges[middle_ind];
+    auto tris = edge_face_neighbors(e, r); //.get_parent_mesh());
+    if (!(tris.size() == 1)) {
+      cout << "# of tris = " << tris.size() << endl;
+      assert(false);
+    }
+    return r.face_orientation(tris[0]);
   }
 
   triangular_mesh
@@ -59,7 +92,7 @@ namespace gca {
     //vtk_debug_highlight_inds(outline_of_contour);
     auto outline_of_contour = surfs.outline;
     auto top_of_contour = surfs.top;
-    point axis = pick_jaw_cutout_axis(outline_of_contour);
+    point axis = pick_jaw_cutout_axis(surfs);
     cout << "axis = " << axis << endl;
     cout << "n = " << n << endl;
     cout << "axis.dot(n) = " << axis.dot(n) << endl;

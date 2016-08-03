@@ -31,7 +31,15 @@ namespace gca {
 	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
 
 	REQUIRE(rs.size() == 1);
+
 	REQUIRE(rs.front().surface_area() < decomp->outline.surface_area());
+
+	REQUIRE(rs.front().edges().size() > 0);
+	for (auto e : rs.front().edges()) {
+	  REQUIRE(edge_face_neighbors(e, rs.front()).size() > 0);
+	}
+
+	REQUIRE(shared_edges(rs.front(), decomp->bottom).size() > 0);
       }
     }
   }

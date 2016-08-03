@@ -263,6 +263,8 @@ namespace gca {
     return surface_face_inds;
   }
 
+  std::ostream& operator<<(std::ostream& out, const edge e);
+
   std::vector<index_t>
   edge_face_neighbors(const gca::edge e,
 		      const triangular_mesh& m);
@@ -346,6 +348,7 @@ namespace gca {
 				    const triangular_mesh& m);
 
   std::ostream& operator<<(std::ostream& out, const triangle_t t);
+
 }
 
 #endif

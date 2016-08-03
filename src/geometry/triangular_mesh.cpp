@@ -3,6 +3,11 @@
 
 namespace gca {
 
+  std::ostream& operator<<(std::ostream& out, const edge e) {
+    out << "< " << e.l << ", " << e.r << " >";
+    return out;
+  }
+
   index_t
   vertex_index_of(const index_t ind, const triangle_t t1) {
     for (index_t i = 0; i < 3; i++) {

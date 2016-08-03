@@ -17,6 +17,24 @@ namespace gca {
       return std::binary_search(begin(tri_indexes), end(tri_indexes), ind);
     }
 
+    inline bool contains_vertex(index_t ind) const {
+      auto neighbor_faces = get_parent_mesh().vertex_face_neighbors(ind);
+      for (auto i : neighbor_faces) {
+	if (contains(i)) { return true; }
+      }
+      return false;
+    }
+    
+    std::vector<gca::edge> edges() const {
+      std::vector<gca::edge> edgs;
+      for (auto e : get_parent_mesh().edges()) {
+	if (contains_vertex(e.l) && contains_vertex(e.r)) {
+	  edgs.push_back(e);
+	}
+      }
+      return edgs;
+    }
+
     std::vector<index_t> index_list() const {
       return tri_indexes;
     }
@@ -141,6 +159,12 @@ namespace gca {
   std::vector<surface>
   merge_surface_groups(const std::vector<surface>& surfs,
 		       const std::vector<std::vector<unsigned> >& groups);
+
+  std::vector<index_t>
+  edge_face_neighbors(const gca::edge e, const surface& s);
+
+  std::vector<gca::edge>
+  shared_edges(const surface& r, const surface& l);
 
 }
 
