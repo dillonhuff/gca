@@ -286,7 +286,10 @@ namespace gca {
     }
     return cp_elems;
   }
-  
+
+  template<typename A, typename B>
+  intersection_impl;
+
   template<typename I>
   std::vector<I> intersection(const std::vector<I>& l,
 			      const std::vector<I>& r) {
@@ -297,6 +300,11 @@ namespace gca {
       }
     }
     return inter;
+  }
+
+  template<typename A, typename B>
+  intersection_impl<A, B>::result_type intersection(A a, B b) {
+    intersection_impl<A, B>::apply(a, b);
   }
 
   template<typename I>

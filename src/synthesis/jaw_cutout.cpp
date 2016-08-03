@@ -47,8 +47,8 @@ namespace gca {
     point y_h = ((v.maximum_jaw_width() / 10.0) / 2.0)*axis.normalize();
     point z_h = (v.jaw_height() / 2.0)*n.normalize();
     triangular_mesh m = block_mesh(center, x_h, y_h, z_h);
-    //return m;
-    return boolean_difference(m, part_mesh);
+    return m;
+    //return boolean_difference(m, part_mesh);
   }
 
   // TODO: Produce longer clamps
@@ -65,11 +65,12 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    // const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    // triangular_mesh a_cutout = cutout_mesh(surfs, v, axis, n);
-    // triangular_mesh an_cutout = cutout_mesh(surfs, v, -1*axis, n);
-    // vtk_debug_meshes({&a_cutout, &an_cutout, &part_mesh});
-    // assert(false);
+    //    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    // triangular_mesh* a_cutout =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
+    // triangular_mesh* an_cutout =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
+    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());

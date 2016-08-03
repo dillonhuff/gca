@@ -205,6 +205,10 @@ namespace gca {
     
     REQUIRE(plan.steps().size() == 3);
     REQUIRE(plan.custom_fixtures().size() == 2);
+    // TODO: Introduce when I am ready to add full planning
+    // for (auto f : plan.custom_fixtures()) {
+    //   REQUIRE(f != nullptr);
+    // }
   }
 
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {

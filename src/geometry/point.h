@@ -78,8 +78,7 @@ namespace gca {
 
   double diameter(const point normal,
 		  const std::vector<point>& pts);
-  
-  
+
 }
 
 #endif
