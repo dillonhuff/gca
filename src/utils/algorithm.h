@@ -287,29 +287,20 @@ namespace gca {
     return cp_elems;
   }
 
+
   template<typename A, typename B>
   class intersection_impl;
 
   template<typename I>
   class intersection_impl<const std::vector<I>&, const std::vector<I>&> {
+  public:
     typedef std::vector<I> result_type;
-    
-    std::vector<I> apply(const std::vector<I>& l,
-			 const std::vector<I>& r) {
-      std::vector<I> inter;
-      for (auto i : l) {
-	if (elem(i, r)) {
-	  inter.push_back(i);
-	}
-      }
-      return inter;
-    }
   };
 
-  template<typename I>
-  std::vector<I> intersection(const std::vector<I>& l,
-			      const std::vector<I>& r) {
-    std::vector<I> inter;
+  template<typename A, typename B>
+  typename intersection_impl<const A&, const B&>::result_type
+  intersection(const A& l, const B& r) {
+    typename intersection_impl<const A&, const B&>::result_type inter;
     for (auto i : l) {
       if (elem(i, r)) {
 	inter.push_back(i);
