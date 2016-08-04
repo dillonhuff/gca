@@ -58,26 +58,15 @@ namespace gca {
     return make_mesh(triangulate_box_pts(pts), 0.001);
   }
 
-  // TODO: Use unordered_segments_to_index_polygons instead
-  // std::vector<line>
-  // to_lines(const std::vector<gca::edge>& edges,
-  // 	   const triangular_mesh& t) {
-  //   vector<line> lines;
-  //   for (auto e : edges) {
-  //     lines.push_back();
-  //   }
-  //   return lines;
-  // }
-
-  std::vector<std::vector<line>>
-  clip_with_halfspace(const std::vector<line>& outline,
-		      const plane clip_plane) {
-    vector<line> ls = outline;
-    delete_if(ls, [clip_plane](const line l)
-	      { return signed_distance(clip_plane, l.start) < 0 && signed_distance(clip_plane, l.end); });
+  // std::vector<std::vector<line>>
+  // clip_with_halfspace(const std::vector<line>& outline,
+  // 		      const plane clip_plane) {
+  //   vector<line> ls = outline;
+  //   delete_if(ls, [clip_plane](const line l)
+  // 	      { return signed_distance(clip_plane, l.start) < 0 && signed_distance(clip_plane, l.end); });
     
-    return {};
-  }
+  //   return {};
+  // }
 
   // TODO: Actually clip instead of just filtering
   index_poly
@@ -157,12 +146,12 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    triangular_mesh* a_cutout =
-      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
-    triangular_mesh* an_cutout =
-      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
-    vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
+    // const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    // triangular_mesh* a_cutout =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
+    // triangular_mesh* an_cutout =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
+    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
