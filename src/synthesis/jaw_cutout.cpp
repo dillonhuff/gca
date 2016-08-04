@@ -1,3 +1,4 @@
+#include "geometry/extrusion.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/mesh_operations.h"
 #include "synthesis/workpiece_clipping.h"
@@ -16,34 +17,23 @@ namespace gca {
   point pick_jaw_cutout_axis(const contour_surface_decomposition& surfs) {
     vector<surface> viable_regions =
       regions_connected_to_both(surfs.outline, surfs.top, surfs.bottom);
-    cout << "# of viable regions = " << viable_regions.size() << endl;
-    //vtk_debug_highlight_inds(viable_regions);
+
     // TODO: Later sort multiple regions
     assert(viable_regions.size() == 1);
 
     surface r = viable_regions.front();
-    //vtk_debug_highlight_inds(r);
 
     std::vector<gca::edge> edges = shared_edges(r, surfs.bottom);
 
     assert(edges.size() > 0);
-    cout << "# of shared edges = " << edges.size() << endl;
-    for (unsigned i = 0; i < edges.size(); i++) {
-      cout << "i = " << i << endl;
-      auto num_n = r.edge_face_neighbors(edges[i]);
-      cout << "edge = " << edges[i] << endl;
-      cout << "# of face neighbors in r = " << num_n.size() << endl;
-      assert(num_n.size() > 0);
-    }
 
     // TODO: Check edge lengths
     auto middle_ind = static_cast<unsigned>(ceil((edges.size() + 1) / 2.0) - 1);
 
-    cout << "middle ind = " << middle_ind << endl;
     assert(0 <= middle_ind && middle_ind < edges.size());
 
     gca::edge e = edges[middle_ind];
-    auto tris = r.edge_face_neighbors(e); //.get_parent_mesh());
+    auto tris = r.edge_face_neighbors(e);
     if (!(tris.size() == 1)) {
       cout << "# of tris = " << tris.size() << endl;
       assert(false);
@@ -68,20 +58,79 @@ namespace gca {
     return make_mesh(triangulate_box_pts(pts), 0.001);
   }
 
+  // TODO: Use unordered_segments_to_index_polygons instead
+  // std::vector<line>
+  // to_lines(const std::vector<gca::edge>& edges,
+  // 	   const triangular_mesh& t) {
+  //   vector<line> lines;
+  //   for (auto e : edges) {
+  //     lines.push_back();
+  //   }
+  //   return lines;
+  // }
+
+  std::vector<std::vector<line>>
+  clip_with_halfspace(const std::vector<line>& outline,
+		      const plane clip_plane) {
+    vector<line> ls = outline;
+    delete_if(ls, [clip_plane](const line l)
+	      { return signed_distance(clip_plane, l.start) < 0 && signed_distance(clip_plane, l.end); });
+    
+    return {};
+  }
+
+  // TODO: Actually clip instead of just filtering
+  index_poly
+  clip_with_halfspace(const triangular_mesh& part_mesh,
+		      const index_poly& p,
+		      const plane clip_plane) {
+    index_poly q = p;
+    delete_if(q, [part_mesh, clip_plane](const index_t ind)
+	      { return signed_distance(clip_plane, part_mesh.vertex(ind)) < 0; });
+    return q;
+  }
+
   triangular_mesh
   cutout_mesh(const contour_surface_decomposition& surfs,
 	      const vice& v,
 	      const point axis,
 	      const point n) {
-    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    point center = max_point_in_dir(part_mesh, axis);
-    point left = cross(axis, n);
-    // TODO: Insert actual dimesions
-    point x_h = (v.x_len() / 2.0)*left.normalize();
-    point y_h = ((v.maximum_jaw_width() / 10.0) / 2.0)*axis.normalize();
-    point z_h = (v.jaw_height() / 2.0)*n.normalize();
-    triangular_mesh m = block_mesh(center, x_h, y_h, z_h);
+    vector<gca::edge> base_edges = shared_edges(surfs.outline, surfs.bottom);
+    vector<index_poly> base_polys =
+      unordered_segments_to_index_polygons(base_edges);
+
+    assert(base_polys.size() == 1);
+
+    index_poly p = base_polys.front();
+    const triangular_mesh& part_mesh = surfs.outline.get_parent_mesh();
+    //auto outline = to_lines(base_edges, part_mesh);
+
+    double part_diameter = diameter(axis, part_mesh);
+    point axis_pt = max_point_in_dir(part_mesh, axis);
+    double d = part_diameter / 5.0;
+    point axis_dir = axis.normalize();
+    point clip_pt = axis_pt - d*axis_dir;
+    plane clip_plane(axis_dir, clip_pt);
+    index_poly jaw_outline = clip_with_halfspace(part_mesh, p, clip_plane);
+
+    //double z_h = (v.jaw_height() / 2.0);
+    
+    triangular_mesh m =
+      extrude_layers(part_mesh.vertex_list(),
+		     {jaw_outline},
+		     {20},
+		     n);
+    vtk_debug_mesh(m);
+
     return m;
+    //assert(jaw_outline.size() == 1);
+    //    assert(false);
+    // point left = cross(axis, n);
+    // TODO: Insert actual dimesions
+    // point x_h = (v.x_len() / 2.0)*left.normalize();
+    // point z_h = (v.jaw_height() / 2.0)*n.normalize();
+    // triangular_mesh m = block_mesh(center, x_h, y_h, z_h);
+    // return m;
     //return boolean_difference(m, part_mesh);
   }
 
@@ -100,11 +149,11 @@ namespace gca {
     assert(within_eps(axis.dot(n), 0, 0.01));
 
     //    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    // triangular_mesh* a_cutout =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
-    // triangular_mesh* an_cutout =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
-    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
+    triangular_mesh* a_cutout =
+      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
+    triangular_mesh* an_cutout =
+      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
+    vtk_debug_meshes({a_cutout, an_cutout}); //, &part_mesh});
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());

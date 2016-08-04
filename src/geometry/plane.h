@@ -24,6 +24,8 @@ namespace gca {
   boost::optional<point>
   plane_intersection(const plane p, const line l);
 
+  double signed_distance(const plane p, const point v);
+  
   template<>
   class intersection_impl<const plane, const line> {
   public:
