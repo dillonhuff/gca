@@ -9,6 +9,31 @@
 
 namespace gca {
 
+  class fixtures {
+  protected:
+    vice v;
+    std::vector<plate_height> par_plates;
+    
+  public:
+
+    fixtures(const vice& p_v)
+      : v(p_v) {}
+    
+    fixtures(const vice& p_v,
+	     const std::vector<plate_height>& p_par_plates)
+      : v(p_v), par_plates(p_par_plates) {}
+    
+    inline const vice& get_vice() const { return v; }
+    inline const std::vector<plate_height>& parallel_plates() const
+    { return par_plates; }
+  };
+
+  struct fabrication_inputs {
+    fixtures f;
+    vector<tool> tools;
+    workpiece w;
+  };
+
   struct fabrication_setup {
     triangular_mesh part;
     vice v;

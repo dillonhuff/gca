@@ -20,6 +20,10 @@ namespace gca {
 					 const fixtures& v,
 					 const vector<tool>& tools,
 					 const workpiece w_dims);
+
+  fabrication_plan make_fabrication_plan(const triangular_mesh& m,
+					 const fabrication_inputs& inputs);
+
   
 }
 

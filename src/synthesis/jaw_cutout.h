@@ -11,7 +11,8 @@ namespace gca {
 		  const triangular_mesh& part_mesh,
 		  const contour_surface_decomposition& surfs,
 		  const fixture& top_fix,
-		  const point n);
+		  const point n,
+		  const fabrication_inputs& fab_inputs);
 
 }
 

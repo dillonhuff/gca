@@ -267,7 +267,8 @@ namespace gca {
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& aligned,
 			  const triangular_mesh& part_mesh,
-			  const fixtures& f) {
+			  const fixtures& f,
+			  const fabrication_inputs& fab_inputs) {
     cout << "Trying parallel plate clipping" << endl;
 
     boost::optional<contour_surface_decomposition> surfs =
@@ -292,7 +293,7 @@ namespace gca {
 	if (base_fix) {
 	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *base_fix);
 	} else {
-	  return custom_jaw_plan(aligned, part_mesh, *surfs, *top_fix, -1*n);
+	  return custom_jaw_plan(aligned, part_mesh, *surfs, *top_fix, -1*n, fab_inputs);
 	}
       }
     }
@@ -309,7 +310,7 @@ namespace gca {
     triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
     auto contour_clip =
-      parallel_plate_clipping(wp_mesh, part_mesh, f);
+      parallel_plate_clipping(wp_mesh, part_mesh, f, fabrication_inputs{f, tools, w});
 
     if (contour_clip) {
       cout << "Contouring" << endl;

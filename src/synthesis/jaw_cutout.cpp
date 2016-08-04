@@ -1,6 +1,7 @@
 #include "geometry/extrusion.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/mesh_operations.h"
+#include "synthesis/mesh_to_gcode.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/jaw_cutout.h"
 
@@ -172,7 +173,8 @@ namespace gca {
   boost::optional<custom_jaw_cutout>
   custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
 			    const vice& v,
-			    const point n) {
+			    const point n,
+			    const fabrication_inputs& fab_inputs) {
     //vtk_debug_highlight_inds(outline_of_contour);
     auto outline_of_contour = surfs.outline;
     auto top_of_contour = surfs.top;
@@ -182,12 +184,12 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
-    vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
+    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
@@ -213,7 +215,15 @@ namespace gca {
 
     // TODO: Actually produce the other fixture
     fixture f(cutout_orient, custom_jaw_vice);
-    return custom_jaw_cutout{f, f, nullptr, nullptr}; //make_pair(f, f);
+
+    fabrication_plan ap = make_fabrication_plan(*a_cutout, fab_inputs);
+    fabrication_plan anp = make_fabrication_plan(*an_cutout, fab_inputs);
+    fabrication_plan* a_plan =
+      new (allocate<fabrication_plan>()) fabrication_plan(ap);
+    fabrication_plan* an_plan =
+      new (allocate<fabrication_plan>()) fabrication_plan(anp);
+
+    return custom_jaw_cutout{f, f, a_plan, an_plan};
   }
 
   clipping_plan
@@ -241,9 +251,10 @@ namespace gca {
 		  const triangular_mesh& part_mesh,
 		  const contour_surface_decomposition& surfs,
 		  const fixture& top_fix,
-		  const point n) {
+		  const point n,
+		  const fabrication_inputs& fab_inputs) {
     boost::optional<custom_jaw_cutout> custom =
-      custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n);
+      custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n, fab_inputs);
     if (custom) {
       std::vector<fixture_setup> clip_setups;
       clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));

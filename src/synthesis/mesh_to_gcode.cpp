@@ -48,6 +48,14 @@ namespace gca {
   }
 
   fabrication_plan make_fabrication_plan(const triangular_mesh& part_mesh,
+					 const fabrication_inputs& inputs) {
+    return make_fabrication_plan(part_mesh,
+				 inputs.f,
+				 inputs.tools,
+				 inputs.w);
+  }
+  
+  fabrication_plan make_fabrication_plan(const triangular_mesh& part_mesh,
 					 const fixtures& f,
 					 const vector<tool>& tools,
 					 const workpiece w) {
