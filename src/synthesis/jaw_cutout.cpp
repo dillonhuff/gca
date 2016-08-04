@@ -132,7 +132,10 @@ namespace gca {
     for (index_t i = 0; i < curve_pts.size(); i++) {
       ip.push_back(i);
     }
-    return extrusion{curve_pts, {ip}, {z_h}, n};
+    index_t rect_start = curve_pts.size() - 4;
+    index_poly base_rectangle{rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
+    
+    return extrusion{curve_pts, {ip, base_rectangle}, {z_h, z_h}, -1*n};
   }
 
   triangular_mesh
