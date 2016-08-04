@@ -167,6 +167,14 @@ namespace gca {
     if (res) { return *res; }
     res = merge_center(r, l);
     if (res) { return *res; }
+    index_poly lc = l;
+    reverse(begin(lc), end(lc));
+    res = merge_center(lc, r);
+    if (res) { return *res; }
+    index_poly rc = r;
+    reverse(begin(rc), end(rc));
+    res = merge_center(l, rc);
+    if (res) { return *res; }
     return boost::none;
   }
 
