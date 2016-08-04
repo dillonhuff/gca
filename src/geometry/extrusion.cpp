@@ -1,5 +1,8 @@
 //#include "geometry/vtk_debug.h"
+#include <boost/optional.hpp>
+
 #include "geometry/extrusion.h"
+#include "utils/relation.h"
 
 namespace gca {
 
@@ -94,20 +97,20 @@ namespace gca {
     lines.erase(lines.begin());
     unsigned i = 0;
     while (lines.size() > 0 && i < lines.size()) {
-      if (lines[i].l == points.back()) { //within_eps(lines[i].start, points.back())) {
-    	if (lines[i].r == points.front()) {//within_eps(lines[i].end, points.front())) {
+      if (lines[i].l == points.back()) {
+    	if (lines[i].r == points.front()) {
     	  lines.erase(lines.begin() + i);	  
     	  return points;
     	}
-    	points.push_back(lines[i].r); //lines[i].end);
+    	points.push_back(lines[i].r);
     	lines.erase(lines.begin() + i);
     	i = 0;
-      } else if (lines[i].r == points.back()) {//within_eps(lines[i].end, points.back())) {
-    	if (lines[i].l == points.front()) {//within_eps(lines[i].start, points.front())) {
+      } else if (lines[i].r == points.back()) {
+    	if (lines[i].l == points.front()) {
     	  lines.erase(lines.begin() + i);
     	  return points;
     	}
-    	points.push_back(lines[i].l); //lines[i].start);
+    	points.push_back(lines[i].l);
     	lines.erase(lines.begin() + i);
     	i = 0;
       } else {
@@ -126,6 +129,78 @@ namespace gca {
       ps.push_back(vertices);
     }
     return ps;
+  }
+
+  relation<index_poly, index_t>
+  build_endpoint_relation(const std::vector<index_poly>& plines,
+			  const std::vector<index_t>& endpoints) {
+    relation<index_poly, index_t> rel(plines, endpoints);
+    for (auto i : rel.left_inds()) {
+      const index_poly& p = rel.left_elem(i);
+      for (auto j : rel.right_inds()) {
+	index_t pt = rel.right_elem(j);
+	if (p.front() == pt) {
+	  rel.insert(i, j);
+	}
+	if (p.back() == pt) {
+	  rel.insert(i, j);
+	}
+      }
+    }
+    return rel;
+  }
+
+  boost::optional<index_poly>
+  merge_center(const index_poly& l, const index_poly& r) {
+    if (l.back() == r.front()) {
+      index_poly rest(begin(r) + 1, end(r));
+      index_poly lc = l;
+      concat(lc, rest);
+      return lc;
+    }
+    return boost::none;
+  }
+  
+  boost::optional<index_poly>
+  merge_adjacent(const index_poly& l, const index_poly& r) {
+    auto res = merge_center(l, r);
+    if (res) { return *res; }
+    res = merge_center(r, l);
+    if (res) { return *res; }
+    return boost::none;
+  }
+
+  bool
+  try_to_merge_lines(std::vector<index_poly>& plines) {
+    for (unsigned i = 0; i < plines.size(); i++) {
+      index_poly* pi = &(plines[i]);
+      for (unsigned j = 0; j < plines.size(); j++) {
+	index_poly* pj = &(plines[j]);
+	if (i != j) {
+	  boost::optional<index_poly> res = merge_adjacent(*pi, *pj);
+	  if (res) {
+	    *pi = *res;
+	    plines.erase(begin(plines) + j);
+	    return true;
+	  }
+	}
+      }
+    }
+    return false;
+  }
+  
+  std::vector<index_poly>
+  unordered_segments_to_index_polylines(std::vector<gca::edge>& lines) {
+    assert(lines.size() > 0);
+    vector<index_poly> plines;
+    for (auto e : lines) {
+      plines.push_back({e.l, e.r});
+    }
+    bool merged_one = true;
+    while (merged_one) {
+      merged_one = try_to_merge_lines(plines);
+    }
+    return plines;
   }
   
   triangular_mesh

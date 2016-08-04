@@ -9,6 +9,9 @@ namespace gca {
 
   std::vector<index_poly>
   unordered_segments_to_index_polygons(std::vector<gca::edge>& lines);
+
+  std::vector<index_poly>
+  unordered_segments_to_index_polylines(std::vector<gca::edge>& lines);
   
   triangular_mesh
   extrude_layers(const std::vector<point>& pts,

@@ -42,7 +42,6 @@ namespace gca {
 
   template<typename T>
   bool elem(T e, const std::unordered_set<T>& t) {
-    //    return std::find(begin(t), end(t), e) != end(t);
     return t.find(e) != end(t);
   }
   
