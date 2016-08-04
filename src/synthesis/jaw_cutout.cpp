@@ -111,23 +111,42 @@ namespace gca {
     point cutout_max = max_along(endpts, prof);
     index_t max_ind = find_index(curve_pts, [cutout_max](const point x)
 				 { return within_eps(x, cutout_max); });
-    point cutout_min = min_along(endpts, prof);
-    index_t min_ind = find_index(curve_pts, [cutout_min](const point x)
-				 { return within_eps(x, cutout_min); });
 
-    assert(!within_eps(cutout_max, cutout_min, 0.01));
+    assert(max_ind == curve_pts.size() - 1 ||
+	   max_ind == 0);
+    
+    point cutout_min = min_along(endpts, prof);
 
     // Rectangle outline points
     point r1 = cutout_max + x_inc*prof;
     point r2 = cutout_max + x_inc*prof + y_inc*a;
     point r3 = cutout_min - x_inc*prof + y_inc*a;
     point r4 = cutout_min - x_inc*prof;
-    concat(curve_pts, {r1, r2, r3, r4});
+    vector<point> rect_pts{r1, r2, r3, r4};
+    if (max_ind == 0) {
+      reverse(begin(curve_pts), end(curve_pts));
+    }
+    concat(curve_pts, rect_pts);
 
+    // Sanity checks to ensure reordering worked
+    index_t min_ind = find_index(curve_pts, [cutout_min](const point x)
+    				 { return within_eps(x, cutout_min); });
+    assert(min_ind == 0);
+
+    max_ind = find_index(curve_pts, [cutout_max](const point x)
+				 { return within_eps(x, cutout_max); });
+
+    assert(max_ind == curve_pts.size() - 5);
+    
+    assert(!within_eps(cutout_max, cutout_min, 0.01));
+    // Done with checks
+
+    
     index_poly ip;
     for (index_t i = 0; i < curve_pts.size(); i++) {
       ip.push_back(i);
     }
+
     index_t rect_start = curve_pts.size() - 4;
     index_poly base_rectangle{min_ind, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
     
@@ -179,14 +198,14 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
     assert(a_cutout->is_connected());
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
     assert(an_cutout->is_connected());
-    vtk_debug_meshes({a_cutout, an_cutout}); //, &part_mesh});
+    vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());

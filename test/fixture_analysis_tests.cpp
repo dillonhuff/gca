@@ -44,17 +44,17 @@ namespace gca {
     }
 
     // TODO: Reintroduce this test
-    // SECTION("Clipped Cylinder") {
-    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedCylinder.stl", 0.001);
+    SECTION("Clipped Cylinder") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedCylinder.stl", 0.001);
 
-    //   vice test_vice = large_jaw_vice(4.5, point(-0.8, -4.4, -3.3));
-    //   std::vector<plate_height> parallel_plates{0.5, 0.7};
-    //   fixtures fixes(test_vice, parallel_plates);
+      vice test_vice = large_jaw_vice(4.5, point(-0.8, -4.4, -3.3));
+      std::vector<plate_height> parallel_plates{0.5, 0.7};
+      fixtures fixes(test_vice, parallel_plates);
 
-    //   fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-    //   REQUIRE(p.fixtures().size() == 3);
-    // }
+      REQUIRE(p.fixtures().size() == 3);
+    }
     
   }
 
