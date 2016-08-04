@@ -7,6 +7,13 @@ namespace gca {
 
   typedef std::vector<index_t> index_poly;
 
+  struct extrusion {
+    std::vector<point> pts;
+    std::vector<index_poly> poly_layers;
+    std::vector<double> layer_depths;
+    point extrude_dir;
+  };
+
   std::vector<index_poly>
   unordered_segments_to_index_polygons(std::vector<gca::edge>& lines);
 
@@ -18,6 +25,10 @@ namespace gca {
 		 const std::vector<index_poly>& poly_layers,
 		 const std::vector<double>& layer_depths,
 		 const point extrude_dir);
+
+  triangular_mesh
+  extrude(const extrusion& ext);
+
 }
 
 #endif

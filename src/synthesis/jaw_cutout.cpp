@@ -69,15 +69,15 @@ namespace gca {
   // }
 
   // TODO: Actually clip instead of just filtering
-  index_poly
-  clip_with_halfspace(const triangular_mesh& part_mesh,
-		      const index_poly& p,
-		      const plane clip_plane) {
-    index_poly q = p;
-    delete_if(q, [part_mesh, clip_plane](const index_t ind)
-	      { return signed_distance(clip_plane, part_mesh.vertex(ind)) < 0; });
-    return q;
-  }
+  // index_poly
+  // clip_with_halfspace(const triangular_mesh& part_mesh,
+  // 		      const index_poly& p,
+  // 		      const plane clip_plane) {
+  //   index_poly q = p;
+  //   delete_if(q, [part_mesh, clip_plane](const index_t ind)
+  // 	      { return signed_distance(clip_plane, part_mesh.vertex(ind)) < 0; });
+  //   return q;
+  // }
 
   std::vector<index_poly>
   clip_with_halfspace(const triangular_mesh& part_mesh,
@@ -88,21 +88,61 @@ namespace gca {
 	      { return signed_distance(clip_plane, part_mesh.vertex(e.l)) < 0 || signed_distance(clip_plane, part_mesh.vertex(e.r)) < 0; });
     return unordered_segments_to_index_polylines(q);
   }
-  
+
+  // TODO: Clarify open vs. closed
+  polyline
+  to_polyline(const index_poly& poly,
+	      const std::vector<point>& pts) {
+    vector<point> res;
+    for (auto i : poly) {
+      res.push_back(pts[i]);
+    }
+    return res;
+  }
+
+  extrusion
+  complete_jaw_outline(const index_poly& pts,
+		       const contour_surface_decomposition& surfs,
+		       const vice& v,
+		       const point axis) {
+    point n = surfs.n;
+    point a = axis.normalize();
+    point prof = cross(n, axis).normalize();
+    double x_inc = v.x_len() / 4.0;
+    double z_h = v.jaw_height();
+    polyline p = to_polyline(pts, surfs.top.get_parent_mesh().vertex_list());
+    vector<point> curve_pts(begin(p), end(p));
+    vector<point> endpts{curve_pts.front(), curve_pts.back()};
+
+    double y_inc = diameter(a, curve_pts)*2.0;
+
+    point cutout_max = max_along(endpts, prof);
+    point cutout_min = min_along(endpts, prof);
+
+    assert(!within_eps(cutout_max, cutout_min, 0.01));
+
+    // Rectangle outline points
+    point r1 = cutout_max + x_inc*prof;
+    point r2 = cutout_max + x_inc*prof + y_inc*a;
+    point r3 = cutout_min - x_inc*prof + y_inc*a;
+    point r4 = cutout_min - x_inc*prof;
+    concat(curve_pts, {r1, r2, r3, r4});
+
+    index_poly ip;
+    for (index_t i = 0; i < curve_pts.size(); i++) {
+      ip.push_back(i);
+    }
+    return extrusion{curve_pts, {ip}, {z_h}, n};
+  }
+
   triangular_mesh
   cutout_mesh(const contour_surface_decomposition& surfs,
 	      const vice& v,
 	      const point axis,
 	      const point n) {
     vector<gca::edge> base_edges = shared_edges(surfs.outline, surfs.bottom);
-    // vector<index_poly> base_polys =
-    //   unordered_segments_to_index_polygons(base_edges);
 
-    //assert(base_polys.size() == 1);
-
-    //index_poly p = base_polys.front();
     const triangular_mesh& part_mesh = surfs.outline.get_parent_mesh();
-    //auto outline = to_lines(base_edges, part_mesh);
 
     double part_diameter = diameter(axis, part_mesh);
     point axis_pt = max_point_in_dir(part_mesh, axis);
@@ -112,22 +152,15 @@ namespace gca {
     plane clip_plane(axis_dir, clip_pt);
     vector<index_poly> jaw_outline =
       clip_with_halfspace(part_mesh, base_edges, clip_plane);
-    cout << "# of outlines = " << jaw_outline.size() << endl;
-    for (auto out : jaw_outline) {
-      cout << "Outline" << endl;
-      for (auto i : out) {
-	cout << "--- " << i << endl;
-      }
-    }
+
     assert(jaw_outline.size() == 1);
-    
-    double z_h = v.jaw_height();
-    
-    triangular_mesh m =
-      extrude_layers(part_mesh.vertex_list(),
-		     {jaw_outline.front()},
-		     {z_h},
-		     n);
+
+    extrusion custom_jaw = complete_jaw_outline(jaw_outline.front(),
+						surfs,
+						v,
+						axis);
+
+    triangular_mesh m = extrude(custom_jaw);
 
     return m;
   }
@@ -146,12 +179,12 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    // const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    // triangular_mesh* a_cutout =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
-    // triangular_mesh* an_cutout =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
-    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
+    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    triangular_mesh* a_cutout =
+      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
+    triangular_mesh* an_cutout =
+      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
+    vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());

@@ -253,4 +253,10 @@ namespace gca {
     return mesh_for_polys(polys);
   }
 
+  triangular_mesh
+  extrude(const extrusion& ext) {
+    return extrude_layers(ext.pts, ext.poly_layers, ext.layer_depths, ext.extrude_dir);
+  }
+
+
 }
