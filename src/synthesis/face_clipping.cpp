@@ -1,3 +1,4 @@
+#include "geometry/vtk_debug.h"
 #include "geometry/mesh_operations.h"
 #include "synthesis/face_clipping.h"
 

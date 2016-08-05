@@ -24,8 +24,14 @@ namespace gca {
     }
 
     for (auto& sf : s) {
+      point sf_normal = sf.face_orientation(sf.front());
+      cout << "### " << sf_normal << endl;
+      cout << "Normals ? " << endl;
       for (auto n : normals) {
-	if (within_eps(angle_between(n, sf.face_orientation(sf.front())), 0, 0.001)) {
+	cout << "--- " << n << endl;
+	double theta = angle_between(n, sf_normal);
+	cout << "$$$ theta = " << theta << endl;
+	if (within_eps(theta, 0, 1.0)) {
 	  surfs.push_back(sf);
 	}
       }

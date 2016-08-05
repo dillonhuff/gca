@@ -37,7 +37,6 @@ namespace gca {
     REQUIRE(axis_surfs.size() == 8);
     REQUIRE(neg_axis_surfs.size() == 8);
 
-    //    fixtures f(test_vice, {}); //parallel_plates);
     clipping_plan p =
       workpiece_clipping_programs(workpiece_dims, *axis_jaw, tools, fixes);
 
@@ -47,7 +46,7 @@ namespace gca {
     
     vtk_debug_highlight_inds(p.surfaces_left_to_cut());
 
+    REQUIRE(p.stable_surfaces().size() == 6);
     REQUIRE(p.surfaces_left_to_cut().size() == 2);
-
   }
 }
