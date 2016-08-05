@@ -197,14 +197,14 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
     assert(a_cutout->is_connected());
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
     assert(an_cutout->is_connected());
-    vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
+    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
     return soft_jaws{axis, a_cutout, an_cutout};
   }

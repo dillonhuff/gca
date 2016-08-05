@@ -2507,6 +2507,33 @@ test/gcode_to_cuts_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.s
 .PHONY : test/gcode_to_cuts_tests.cpp.s
 
+test/jaw_cutout_tests.o: test/jaw_cutout_tests.cpp.o
+
+.PHONY : test/jaw_cutout_tests.o
+
+# target to build an object file
+test/jaw_cutout_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/jaw_cutout_tests.cpp.o
+.PHONY : test/jaw_cutout_tests.cpp.o
+
+test/jaw_cutout_tests.i: test/jaw_cutout_tests.cpp.i
+
+.PHONY : test/jaw_cutout_tests.i
+
+# target to preprocess a source file
+test/jaw_cutout_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/jaw_cutout_tests.cpp.i
+.PHONY : test/jaw_cutout_tests.cpp.i
+
+test/jaw_cutout_tests.s: test/jaw_cutout_tests.cpp.s
+
+.PHONY : test/jaw_cutout_tests.s
+
+# target to generate assembly for a file
+test/jaw_cutout_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/jaw_cutout_tests.cpp.s
+.PHONY : test/jaw_cutout_tests.cpp.s
+
 test/lexer_tests.o: test/lexer_tests.cpp.o
 
 .PHONY : test/lexer_tests.o
@@ -3451,6 +3478,9 @@ help:
 	@echo "... test/gcode_to_cuts_tests.o"
 	@echo "... test/gcode_to_cuts_tests.i"
 	@echo "... test/gcode_to_cuts_tests.s"
+	@echo "... test/jaw_cutout_tests.o"
+	@echo "... test/jaw_cutout_tests.i"
+	@echo "... test/jaw_cutout_tests.s"
 	@echo "... test/lexer_tests.o"
 	@echo "... test/lexer_tests.i"
 	@echo "... test/lexer_tests.s"
