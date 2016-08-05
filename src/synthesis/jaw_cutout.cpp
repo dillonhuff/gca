@@ -80,6 +80,7 @@ namespace gca {
     return res;
   }
 
+  // TODO: Move to utils/algorithm
   template<typename T, typename F>
   index_t
   find_index(const std::vector<T>& elems, F f) {
@@ -91,6 +92,8 @@ namespace gca {
     }
     assert(false);
   }
+
+  
 
   extrusion
   complete_jaw_outline(const index_poly& pts,
@@ -183,13 +186,9 @@ namespace gca {
     return m;
   }
 
-  // TODO: Produce longer clamps
-  boost::optional<custom_jaw_cutout>
-  custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
-			    const vice& v,
-			    const point n,
-			    const fabrication_inputs& fab_inputs) {
-    //vtk_debug_highlight_inds(outline_of_contour);
+  soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
+			   const vice& v,
+			   const point n) {
     auto outline_of_contour = surfs.outline;
     auto top_of_contour = surfs.top;
     point axis = pick_jaw_cutout_axis(surfs);
@@ -207,12 +206,35 @@ namespace gca {
     assert(an_cutout->is_connected());
     vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
 
+    return soft_jaws{axis, a_cutout, an_cutout};
+  }
+
+  // TODO: Produce longer clamps
+  boost::optional<custom_jaw_cutout>
+  custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
+			    const vice& v,
+			    const point n,
+			    const fabrication_inputs& fab_inputs) {
+    soft_jaws jaw_plan =
+      make_soft_jaws(surfs, v, n);
+
+    surface outline_of_contour = surfs.outline;
+    surface top_of_contour = surfs.top;
+    point axis = jaw_plan.axis;
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
 
     cout << "neg axis = " << neg_axis << endl;
     cout << "part diameter along axis = " << part_diam << endl;
 
+    fabrication_plan ap = make_fabrication_plan(*(jaw_plan.a_jaw), fab_inputs);
+    fabrication_plan anp = make_fabrication_plan(*(jaw_plan.an_jaw), fab_inputs);
+    fabrication_plan* a_plan =
+      new (allocate<fabrication_plan>()) fabrication_plan(ap);
+    fabrication_plan* an_plan =
+      new (allocate<fabrication_plan>()) fabrication_plan(anp);
+
+    
     // TODO: Sub select max point from only the given surface indexes
     point base_normal = top_of_contour.face_orientation(top_of_contour.front());
     point base_pt = max_point_in_dir(top_of_contour.get_parent_mesh(), base_normal);
@@ -231,13 +253,6 @@ namespace gca {
 
     // TODO: Actually produce the other fixture
     fixture f(cutout_orient, custom_jaw_vice);
-
-    fabrication_plan ap = make_fabrication_plan(*a_cutout, fab_inputs);
-    fabrication_plan anp = make_fabrication_plan(*an_cutout, fab_inputs);
-    fabrication_plan* a_plan =
-      new (allocate<fabrication_plan>()) fabrication_plan(ap);
-    fabrication_plan* an_plan =
-      new (allocate<fabrication_plan>()) fabrication_plan(anp);
 
     return custom_jaw_cutout{f, f, a_plan, an_plan};
   }
