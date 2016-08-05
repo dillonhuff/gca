@@ -295,4 +295,9 @@ namespace gca {
     return intersection(r.edges(), l.edges());
   }
 
+
+  point normal(const surface& s) {
+    return s.face_orientation(s.front());
+  }
+  
 }

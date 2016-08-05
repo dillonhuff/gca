@@ -36,10 +36,6 @@ namespace gca {
     return surfs;
   }
 
-  point normal(const surface& s) {
-    return s.face_orientation(s.front());
-  }
-
   std::vector<plane> max_area_basis(const std::vector<surface>& surfaces) {
     assert(surfaces.size() > 0);
     

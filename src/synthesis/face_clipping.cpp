@@ -35,9 +35,9 @@ namespace gca {
     vector<surface> ax_surfaces =
       take_basis(surfs,
 		 [](const surface& l, const surface& r)
-		 { return within_eps(l.face_orientation(l.front()).dot(r.face_orientation(r.front())), 0, 0.001); },
+		 { return within_eps(angle_between(normal(l), normal(r)), 90, 2.0); },
 		 3);
-
+    
     vector<point> norms;
     for (auto ax : ax_surfaces) {
       point n = ax.face_orientation(ax.front());

@@ -56,7 +56,6 @@ namespace gca {
 
       REQUIRE(p.fixtures().size() == 3);
     }
-    
   }
 
   TEST_CASE("Tapered top and several slanted verticals") {

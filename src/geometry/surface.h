@@ -175,6 +175,7 @@ namespace gca {
   std::vector<gca::edge>
   shared_edges(const surface& r, const surface& l);
 
+  point normal(const surface& s);
 }
 
 #endif
