@@ -36,46 +36,120 @@ namespace gca {
     return surfs;
   }
 
+  point normal(const surface& s) {
+    return s.face_orientation(s.front());
+  }
+
+  std::vector<plane> max_area_basis(const std::vector<surface>& surfaces) {
+    vector<surface> sorted_part_surfaces = surfaces;
+    sort(begin(sorted_part_surfaces), end(sorted_part_surfaces),
+	 [](const surface& l, const surface& r)
+	 { return l.surface_area() < r.surface_area(); });
+    
+    vector<surface> basis =
+      take_basis(sorted_part_surfaces,
+		 [](const surface& l, const surface& r)
+		 { return within_eps(angle_between(normal(l), normal(r)), 90, 2.0); },
+		 3);
+
+    vector<plane> planes;
+    for (auto s : basis) {
+      planes.push_back(plane(normal(s), s.face_triangle(s.front()).v1));
+    }
+    return planes;
+  }
+
+  bool right_handed(const std::vector<plane>& planes) {
+    assert(planes.size() == 3);
+
+    cout << "v0 = " << planes[0].normal() << endl;
+    cout << "v1 = " << planes[1].normal() << endl;
+    cout << "v2 = " << planes[2].normal() << endl;
+
+    double d = cross(planes[0].normal(), planes[1].normal()).dot(planes[2].normal());
+    cout << "(v0 x v1) . v2 = " << d << endl;
+    double e = cross(planes[1].normal(), planes[0].normal()).dot(planes[2].normal());
+    cout << "(v1 x v0) . v2 = " << e << endl;
+    return d > 0.1;
+  }
+
+  std::vector<plane> set_right_handed(const std::vector<plane>& basis) {
+    if (right_handed(basis)) { return basis; }
+    vector<plane> rh_basis = basis;
+    plane tmp = rh_basis[0];
+    rh_basis[0] = rh_basis[1];
+    rh_basis[1] = tmp;
+    assert(right_handed(rh_basis));
+    return rh_basis;
+  }
+
   // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
     assert(part_surfaces.size() > 0);
+    
     const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
 
-    // TODO: Pick aligning orthogonal normals
-    double part_x = diameter(point(1, 0, 0), part);
-    double part_y = diameter(point(0, 1, 0), part);
-    double part_z = diameter(point(0, 0, 1), part);
-
-    double bound_x = max_in_dir(part, point(1, 0, 0));
-    double bound_y = max_in_dir(part, point(0, 1, 0));
-    double bound_z = max_in_dir(part, point(0, 0, 1));
-
-    double w_x = w.sides[0].len();
-    double w_y = w.sides[1].len();
-    double w_z = w.sides[2].len();
-
-    assert(w_x > part_x);
-    assert(w_y > part_y);
-    assert(w_z > part_z);
-
-    double x_margin = (w_x - part_x) / 2.0;
-    double y_margin = (w_y - part_y) / 2.0;
-    double z_margin = (w_z - part_z) / 2.0;
-
-    double x_bound = bound_x + x_margin;
-    double y_bound = bound_y + y_margin;
-    double z_bound = bound_z + z_margin;
+    vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
 
     auto mesh = stock_mesh(w);
-    point shift(x_bound - max_in_dir(mesh, point(1, 0, 0)),
-		y_bound - max_in_dir(mesh, point(0, 1, 0)),
-		z_bound - max_in_dir(mesh, point(0, 0, 1)));
+    vector<surface> sfs = outer_surfaces(mesh);
+    vector<plane> basis = set_right_handed(max_area_basis(sfs));
 
-    auto m =
-      mesh.apply_to_vertices([shift](const point p)
-			     { return p + shift; });
-    return m;
+    assert(basis.size() == 3 && basis.size() == part_planes.size());
+    assert(right_handed(basis));
+    assert(right_handed(part_planes));
+    
+    vector<plane> offset_basis;
+    for (unsigned i = 0; i < basis.size(); i++) {
+      double stock_diam = diameter(basis[i].normal(), mesh);
+      double part_diam = diameter(part_planes[i].normal(), part);
+      assert(stock_diam > part_diam);
+      double margin = (stock_diam - part_diam) / 2.0;
+      offset_basis.push_back(basis[i].flip().slide(margin));
+    }
+
+    auto t = mate_planes(offset_basis[0], offset_basis[1], offset_basis[2],
+			 part_planes[0], part_planes[1], part_planes[2]);
+
+    assert(t);
+
+    return apply(*t, mesh);
+
+    // // TODO: Pick aligning orthogonal normals
+    // double part_x = diameter(point(1, 0, 0), part);
+    // double part_y = diameter(point(0, 1, 0), part);
+    // double part_z = diameter(point(0, 0, 1), part);
+
+    // double bound_x = max_in_dir(part, point(1, 0, 0));
+    // double bound_y = max_in_dir(part, point(0, 1, 0));
+    // double bound_z = max_in_dir(part, point(0, 0, 1));
+
+    // double w_x = w.sides[0].len();
+    // double w_y = w.sides[1].len();
+    // double w_z = w.sides[2].len();
+
+    // assert(w_x > part_x);
+    // assert(w_y > part_y);
+    // assert(w_z > part_z);
+
+    // double x_margin = (w_x - part_x) / 2.0;
+    // double y_margin = (w_y - part_y) / 2.0;
+    // double z_margin = (w_z - part_z) / 2.0;
+
+    // double x_bound = bound_x + x_margin;
+    // double y_bound = bound_y + y_margin;
+    // double z_bound = bound_z + z_margin;
+
+    // auto mesh = stock_mesh(w);
+    // point shift(x_bound - max_in_dir(mesh, point(1, 0, 0)),
+    // 		y_bound - max_in_dir(mesh, point(0, 1, 0)),
+    // 		z_bound - max_in_dir(mesh, point(0, 0, 1)));
+
+    // auto m =
+    //   mesh.apply_to_vertices([shift](const point p)
+    // 			     { return p + shift; });
+    // return m;
   }
 
 

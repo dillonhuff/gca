@@ -20,9 +20,9 @@ namespace gca {
     SECTION("Clipped pill") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      // fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-      REQUIRE(p.fixtures().size() == 2);
+      // REQUIRE(p.fixtures().size() == 2);
     }
 
     SECTION("Round with thru holes") {
@@ -51,9 +51,9 @@ namespace gca {
       std::vector<plate_height> parallel_plates{0.5, 0.7};
       fixtures fixes(test_vice, parallel_plates);
 
-      // fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-      // REQUIRE(p.fixtures().size() == 3);
+      REQUIRE(p.fixtures().size() == 3);
     }
     
   }
