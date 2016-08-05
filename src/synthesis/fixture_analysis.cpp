@@ -41,21 +41,30 @@ namespace gca {
   }
 
   std::vector<plane> max_area_basis(const std::vector<surface>& surfaces) {
+    assert(surfaces.size() > 0);
+    
     vector<surface> sorted_part_surfaces = surfaces;
     sort(begin(sorted_part_surfaces), end(sorted_part_surfaces),
 	 [](const surface& l, const surface& r)
-	 { return l.surface_area() < r.surface_area(); });
+	 { return l.surface_area() > r.surface_area(); });
     
     vector<surface> basis =
       take_basis(sorted_part_surfaces,
 		 [](const surface& l, const surface& r)
 		 { return within_eps(angle_between(normal(l), normal(r)), 90, 2.0); },
-		 3);
+		 2);
 
     vector<plane> planes;
     for (auto s : basis) {
       planes.push_back(plane(normal(s), s.face_triangle(s.front()).v1));
     }
+
+    point third_vec = cross(planes[0].normal(), planes[1].normal());
+    const triangular_mesh& m = surfaces.front().get_parent_mesh();
+    point third_pt = max_point_in_dir(m, third_vec);
+
+    planes.push_back(plane(third_vec, third_pt));
+    
     return planes;
   }
 

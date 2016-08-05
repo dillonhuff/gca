@@ -9,7 +9,8 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    // Change back to emco_vice
+    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
     std::vector<plate_height> parallel_plates{0.5, 0.7};
     fixtures fixes(test_vice, parallel_plates);
 
@@ -20,9 +21,9 @@ namespace gca {
     SECTION("Clipped pill") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
-      // fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
 
-      // REQUIRE(p.fixtures().size() == 2);
+      REQUIRE(p.fixtures().size() == 2);
     }
 
     SECTION("Round with thru holes") {

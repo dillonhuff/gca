@@ -37,16 +37,16 @@ namespace gca {
     REQUIRE(axis_surfs.size() == 8);
     REQUIRE(neg_axis_surfs.size() == 8);
 
-    clipping_plan p =
-      workpiece_clipping_programs(workpiece_dims, *axis_jaw, tools, fixes);
+    // clipping_plan p =
+    //   workpiece_clipping_programs(workpiece_dims, *axis_jaw, tools, fixes);
 
-    for (auto s : p.surfaces_left_to_cut()) {
-      cout << "--- normal = " << s.face_orientation(s.front()) << endl;
-    }
+    // for (auto s : p.surfaces_left_to_cut()) {
+    //   cout << "--- normal = " << s.face_orientation(s.front()) << endl;
+    // }
 
     auto outer_axis_surfs = outer_surfaces(*axis_jaw);
 
-    vtk_debug_highlight_inds(outer_axis_surfs);
+    //vtk_debug_highlight_inds(outer_axis_surfs);
 
     REQUIRE(outer_axis_surfs.size() == 6);
     

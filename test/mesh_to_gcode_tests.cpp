@@ -15,14 +15,15 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+    // TODO: Make emco_vice again
+    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
     std::vector<plate_height> parallel_plates{0.1, 0.3};
     fixtures fixes(test_vice, parallel_plates);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
     vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(1.5, 1.2, 1.5, ACETAL);
+    workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL); //1.5, 1.2, 1.5, ACETAL);
 
     SECTION("Simple box") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
@@ -52,7 +53,8 @@ namespace gca {
     }
 
     SECTION("Box with protrusion") {
-      workpiece workpiece_dims(1.5, 1.2, 2.0, ALUMINUM);
+      // TODO: Restore old dims
+      workpiece workpiece_dims(3.0, 3.0, 3.0, ALUMINUM); //1.5, 1.2, 2.0, ALUMINUM);
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithProtrusion.stl", 0.001);
       auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
       REQUIRE(result_programs.size() == 2);
@@ -79,13 +81,14 @@ namespace gca {
       arena_allocator a;
       set_system_allocator(&a);
 
-      vice test_vice = emco_vice(point(-0.8, -4.4, -3.3));
+      // Restore emco_vice
+      vice test_vice = large_jaw_vice(6, point(-0.8, -4.4, -3.3));
       std::vector<plate_height> parallel_plates{0.5};
       fixtures fixes(test_vice, parallel_plates);
 
       tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
       vector<tool> tools{t1};
-      workpiece workpiece_dims(2.7, 1.9, 4.0, ACETAL);
+      workpiece workpiece_dims(3.0, 5.0, 3.0, ACETAL); //2.7, 1.9, 4.0, ACETAL);
 
       // Probably shouldnt be able to cut this out with contouring due
       // to tool height issues
