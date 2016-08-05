@@ -129,7 +129,6 @@ namespace gca {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
 
     auto outer_surfs = outer_surfaces(mesh);
-    //auto aligned_workpiece = align_workpiece(outer_surfs, workpiece_dims);
 
     fixture_plan plan =
       make_fixture_plan(mesh, fixes, tools, workpiece_dims);
@@ -190,7 +189,6 @@ namespace gca {
     }
   }
 
-  // TODO: Reintroduce this test
   TEST_CASE("Pendulum Arm Joint Top") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -208,10 +206,9 @@ namespace gca {
     
     REQUIRE(plan.steps().size() == 3);
     REQUIRE(plan.custom_fixtures().size() == 2);
-    // TODO: Introduce when I am ready to add full planning
-    // for (auto f : plan.custom_fixtures()) {
-    //   REQUIRE(f != nullptr);
-    // }
+    for (auto f : plan.custom_fixtures()) {
+      REQUIRE(f != nullptr);
+    }
   }
 
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {

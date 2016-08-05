@@ -296,7 +296,7 @@ namespace gca {
 	stable_surfaces_after_clipping(part_mesh, aligned);
       auto surfs_to_cut = surfs.rest;
 
-      return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {nullptr, nullptr});
+      return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom->left_jaw, custom->right_jaw});
     }
     return boost::none;
   }
