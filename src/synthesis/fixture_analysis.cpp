@@ -234,6 +234,8 @@ namespace gca {
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
 
+    assert(all_orients.size() > 0 || surfs_to_cut.size() == 0);
+
     auto orient_ptrs = ptrs(all_orients);
     auto surf_ptrs = ptrs(surfs_to_cut);
     vector<fixture_setup> rest =
