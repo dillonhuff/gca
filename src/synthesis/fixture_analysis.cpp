@@ -25,12 +25,8 @@ namespace gca {
 
     for (auto& sf : s) {
       point sf_normal = sf.face_orientation(sf.front());
-      cout << "### " << sf_normal << endl;
-      cout << "Normals ? " << endl;
       for (auto n : normals) {
-	cout << "--- " << n << endl;
 	double theta = angle_between(n, sf_normal);
-	cout << "$$$ theta = " << theta << endl;
 	if (within_eps(theta, 0, 1.0)) {
 	  surfs.push_back(sf);
 	}
@@ -54,7 +50,7 @@ namespace gca {
     double bound_x = max_in_dir(part, point(1, 0, 0));
     double bound_y = max_in_dir(part, point(0, 1, 0));
     double bound_z = max_in_dir(part, point(0, 0, 1));
-    
+
     double w_x = w.sides[0].len();
     double w_y = w.sides[1].len();
     double w_z = w.sides[2].len();

@@ -307,6 +307,17 @@ namespace gca {
     return z.t;
   }
 
+  std::vector<index_t>
+  vertex_indexes_for_faces(const vector<index_t>& face_inds,
+			   const triangular_mesh& part) {
+    vector<index_t> inds;
+    for (auto f_ind : face_inds) {
+      triangle_t t = part.triangle_vertices(f_ind);
+      concat(inds, {t.v[0], t.v[1], t.v[2]});
+    }
+    return sort_unique(inds);
+  }
+
   // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
   bool is_outer_surface(const vector<index_t>& s, const triangular_mesh& part) {
     assert(s.size() > 0);
@@ -320,9 +331,10 @@ namespace gca {
     vector<index_t> s_inds = s;
     sort(begin(s_inds), end(s_inds));
 
-    //    for (auto p : part.vertex_list()) {
+    vector<index_t> s_vertices = vertex_indexes_for_faces(s, part);
+
     for (auto i : inds(part.vertex_list())) {
-      if (!binary_search(begin(s_inds), end(s_inds), i)) {
+      if (!binary_search(begin(s_vertices), end(s_vertices), i)) {
 	point p = part.vertex(i);
 	double sgn = n.dot(p) + d; // - v1);
 	// TODO: Eliminate ad hoc tolerance

@@ -43,10 +43,36 @@ namespace gca {
     for (auto s : p.surfaces_left_to_cut()) {
       cout << "--- normal = " << s.face_orientation(s.front()) << endl;
     }
-    
+
+    auto outer_axis_surfs = outer_surfaces(*axis_jaw);
+
     vtk_debug_highlight_inds(p.surfaces_left_to_cut());
 
-    REQUIRE(p.stable_surfaces().size() == 6);
-    REQUIRE(p.surfaces_left_to_cut().size() == 2);
+    REQUIRE(outer_axis_surfs.size() == 6);
+    
+    triangular_mesh aligned =
+      align_workpiece(outer_axis_surfs, workpiece_dims);
+
+    auto aligned_surfs = outer_surfaces(aligned);
+    
+    int num_aligned_surfs = 0;
+    for (auto s : outer_axis_surfs) {
+      point sf_normal = s.face_orientation(s.front());
+      for (auto a : aligned_surfs) {
+	point a_normal = a.face_orientation(a.front());
+	double theta = angle_between(sf_normal, a_normal);
+	if (within_eps(theta, 0, 1.0)) {
+	  num_aligned_surfs++;
+	}
+      }
+    }
+
+    //vtk_debug_highlight_inds(p.surfaces_left_to_cut());
+
+    REQUIRE(num_aligned_surfs >= 6);
+
+    // TODO: Reintroduce? I'm not sure whether these should still be true
+    //REQUIRE(p.stable_surfaces().size() == 6);
+    //REQUIRE(p.surfaces_left_to_cut().size() == 2);
   }
 }
