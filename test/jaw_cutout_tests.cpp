@@ -46,7 +46,7 @@ namespace gca {
 
     auto outer_axis_surfs = outer_surfaces(*axis_jaw);
 
-    vtk_debug_highlight_inds(p.surfaces_left_to_cut());
+    vtk_debug_highlight_inds(outer_axis_surfs);
 
     REQUIRE(outer_axis_surfs.size() == 6);
     

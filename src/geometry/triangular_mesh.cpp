@@ -390,7 +390,7 @@ namespace gca {
   std::vector<std::vector<index_t>>
   const_orientation_regions(const triangular_mesh& part) {
     vector<index_t> inds = part.face_indexes();
-    return normal_delta_regions(inds, part, 0.0001);
+    return normal_delta_regions(inds, part, 1.0);
   }
 
   double diameter(const point normal, const triangular_mesh& m) {
