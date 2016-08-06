@@ -13,6 +13,21 @@
 using namespace gca;
 using namespace std;
 
+void print_programs(const fabrication_plan& fix_plan) {
+  cout << "Programs" << endl;
+
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
+
+  for (auto f : fix_plan.steps()) {
+    auto program = f.prog;
+    cout << program.name << endl;
+    cout << program.blocks << endl;
+    
+  }
+
+}
+
 int main(int argc, char* argv[]) {
   assert(argc == 2);
 
@@ -30,15 +45,13 @@ int main(int argc, char* argv[]) {
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   vector<tool> tools{t1, t2};
   workpiece workpiece_dims(3.0, 1.9, 3.0, ALUMINUM);
-  auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+  fabrication_plan plan =
+    make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
 
-  cout << "All programs" << endl;
-
-  cout.setf(ios::fixed, ios::floatfield);
-  cout.setf(ios::showpoint);
-  for (auto program : result_programs) {
-    cout << program.name << endl;
-    cout << program.blocks << endl;
+  cout << "Custom fixtures" << endl;
+  for (auto fix_plan : plan.custom_fixtures()) {
+    print_programs(*fix_plan);
   }
+  print_programs(plan);
 }
 

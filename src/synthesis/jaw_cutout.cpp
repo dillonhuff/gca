@@ -42,23 +42,6 @@ namespace gca {
     return r.face_orientation(tris[0]);
   }
 
-  triangular_mesh
-  block_mesh(const point center,
-	     const point a1,
-	     const point a2,
-	     const point a3) {
-    point p0 = center + 1*a1 + 1*a2 + 1*a3;
-    point p1 = center + 1*a1 + 1*a2 + -1*a3;
-    point p2 = center + 1*a1 + -1*a2 + 1*a3;
-    point p3 = center + 1*a1 + -1*a2 + -1*a3;
-    point p4 = center + -1*a1 + 1*a2 + 1*a3;
-    point p5 = center + -1*a1 + 1*a2 + -1*a3;
-    point p6 = center + -1*a1 + -1*a2 + 1*a3;
-    point p7 = center + -1*a1 + -1*a2 + -1*a3;
-    std::vector<point> pts{p0, p1, p2, p3, p4, p5, p6, p7};
-    return make_mesh(triangulate_box_pts(pts), 0.001);
-  }
-
   std::vector<index_poly>
   clip_with_halfspace(const triangular_mesh& part_mesh,
 		      const std::vector<gca::edge>& p,
@@ -234,7 +217,6 @@ namespace gca {
     fabrication_plan* an_plan =
       new (allocate<fabrication_plan>()) fabrication_plan(anp);
 
-    
     // TODO: Sub select max point from only the given surface indexes
     point base_normal = top_of_contour.face_orientation(top_of_contour.front());
     point base_pt = max_point_in_dir(top_of_contour.get_parent_mesh(), base_normal);
@@ -287,6 +269,7 @@ namespace gca {
     // TODO: Actually use the custom jaw cutout fixtures!
     boost::optional<custom_jaw_cutout> custom =
       custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n, fab_inputs);
+
     if (custom) {
       std::vector<fixture_setup> clip_setups;
       clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));
@@ -299,6 +282,7 @@ namespace gca {
 
       return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom->left_jaw, custom->right_jaw});
     }
+
     return boost::none;
   }
   

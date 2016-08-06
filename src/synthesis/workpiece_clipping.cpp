@@ -50,19 +50,36 @@ namespace gca {
     }
     return plates;
   }
-  
-  fixture_setup
-  clip_top_and_sides(const triangular_mesh& aligned,
-		     const triangular_mesh& part,
-		     const fixture& f) {
-    double stock_top = max_in_dir(aligned, point(0, 0, 1));
+
+  pocket face_down(const triangular_mesh& stock,
+		   const triangular_mesh& part) {
+    double work_height = max_in_dir(stock, point(0, 0, 1));
+    double part_height = max_in_dir(part, point(0, 0, 1));
+
+    assert(work_height > part_height);
+
+    auto bound = contour_outline(stock.face_indexes(), stock, point(0, 0, 1));
+    if (bound) {
+    } else {
+      assert(false);
+    }
+    auto outlines =
+      mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+
+    assert(outlines.size() == 2);
+
+    return face_pocket(work_height, part_height, outlines.front());
+  }
+
+  pocket contour_around(const triangular_mesh& stock,
+			const triangular_mesh& part) {
+    double stock_top = max_in_dir(stock, point(0, 0, 1));
     double part_top = max_in_dir(part, point(0, 0, 1));
-    double part_bottom = min_in_dir(part, point(0, 0, 1));
 
     assert(stock_top > part_top);
 
     auto stock_bound =
-      contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1)); //part_outline_surface(aligned, point(0, 0, 1));
+      contour_outline(stock.face_indexes(), stock, point(0, 0, 1));
     if (stock_bound) {
     } else {
       assert(false);
@@ -71,8 +88,8 @@ namespace gca {
       mesh_bounds((*stock_bound).index_list(), (*stock_bound).get_parent_mesh());
     assert(stock_outlines.size() == 2);
     oriented_polygon stock_outline = stock_outlines.front();
-
-    auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1)); //part_outline_surface(part, point(0, 0, 1));
+    
+    auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1));
     if (part_bound) {
     } else {
       assert(false);
@@ -86,9 +103,15 @@ namespace gca {
 		       const oriented_polygon& r)
       { return area(l) < area(r); }));
 
-    vector<pocket> pockets{face_pocket(stock_top, part_top, stock_outline)};
-
-    pockets.push_back(contour_pocket(part_top, part_bottom, part_outline, stock_outline));
+    double part_bottom = min_in_dir(part, point(0, 0, 1));    
+    return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
+  }
+  
+  fixture_setup
+  clip_top_and_sides(const triangular_mesh& aligned,
+		     const triangular_mesh& part,
+		     const fixture& f) {
+    vector<pocket> pockets{face_down(aligned, part), contour_around(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
@@ -151,20 +174,21 @@ namespace gca {
   clip_base(const triangular_mesh& aligned,
 	    const triangular_mesh& part,
 	    const fixture& f) {
-    double work_height = max_in_dir(aligned, point(0, 0, 1));
-    double part_height = max_in_dir(part, point(0, 0, 1));
+    // double work_height = max_in_dir(aligned, point(0, 0, 1));
+    // double part_height = max_in_dir(part, point(0, 0, 1));
 
-    assert(work_height > part_height);
+    // assert(work_height > part_height);
 
-    auto bound = contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1));
-    if (bound) {
-    } else {
-      assert(false);
-    }
-    auto outlines =
-      mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
-    assert(outlines.size() == 2);
-    vector<pocket> pockets{face_pocket(work_height, part_height, outlines.front())};
+    // auto bound = contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1));
+    // if (bound) {
+    // } else {
+    //   assert(false);
+    // }
+    // auto outlines =
+    //   mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+    // assert(outlines.size() == 2);
+
+    vector<pocket> pockets{face_down(aligned, part)}; //face_pocket(work_height, part_height, outlines.front())};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
