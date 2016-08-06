@@ -123,21 +123,19 @@ namespace gca {
   trimesh_for_polydata(vtkPolyData* in_polydata) {
 
     auto tris = polydata_to_triangle_list(in_polydata);
-    triangular_mesh m = make_mesh(tris, 0.001);
+    triangular_mesh m = make_mesh(tris, 0.00001);
     assert(m.is_connected());
     return m;
   }
 
-
-  std::vector<triangle>
-  vtk_triangulate_poly(const oriented_polygon& p) {
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_polygon(const oriented_polygon& p) {
     vtkSmartPointer<vtkPoints> points =
       vtkSmartPointer<vtkPoints>::New();
 
     for (auto vert : p.vertices()) {
       points->InsertNextPoint(vert.x, vert.y, vert.z);
     }
-
 
     vtkSmartPointer<vtkPolygon> pl = vtkSmartPointer<vtkPolygon>::New();
     pl->GetPointIds()->SetNumberOfIds(p.vertices().size());
@@ -160,6 +158,14 @@ namespace gca {
     // Add the geometry and topology to the polydata
     polyData->SetPoints(points);
     polyData->SetPolys(polys);
+
+    return polyData;
+  }
+
+  std::vector<triangle>
+  vtk_triangulate_poly(const oriented_polygon& p) {
+    auto polyData =
+      polydata_for_polygon(p);
 
     return polydata_to_triangle_list(polyData);
 

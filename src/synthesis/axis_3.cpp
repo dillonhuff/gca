@@ -81,7 +81,6 @@ namespace gca {
 					  part);
     // TODO: Sort first? This is disgustingly inefficient
     if (intersection(side_faces, surface).size() == surface.size()) {
-      vtk_debug_highlight_inds(surface, part);
       return true;
     }
     return false;
@@ -106,30 +105,35 @@ namespace gca {
     	      [&mesh](const vector<index_t>& surface)
     	      { return !all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
     vector<pocket> pockets;
-    double base_z = mesh.bounding_box().z_min;
+    box b = mesh.bounding_box();
+    double base_z = b.z_min;
+    double top_z = b.z_max;
+    
     for (auto surface : surfaces) {
       if (has_no_base(surface, mesh)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
-	cout << "signed area of outline = " << signed_area(outline) << endl;
-	for (auto p : outline.vertices()) {
-	  cout << "--- " << p << endl;
-	}
-	if (signed_area(outline) > 0) {
-	  vector<point> rev_verts = outline.vertices();
-	  reverse(begin(rev_verts), end(rev_verts));
-	  outline = oriented_polygon(outline.normal, rev_verts);
-	  cout << "signed area of outline after reverse = " << signed_area(outline) << endl;
-	}
-	triangular_mesh new_base =
-	  make_mesh(vtk_triangulate_poly(outline), 0.01); //triangulate(outline);
-	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
-	triangular_mesh* base_mesh = new (new_base_cpy) triangular_mesh();
+	// cout << "signed area of outline = " << signed_area(outline) << endl;
+	// for (auto p : outline.vertices()) {
+	//   cout << "--- " << p << endl;
+	// }
+	// vtk_debug_polygon(outline);
+	// if (signed_area(outline) > 0) {
+	//   vector<point> rev_verts = outline.vertices();
+	//   reverse(begin(rev_verts), end(rev_verts));
+	//   outline = oriented_polygon(outline.normal, rev_verts);
+	//   cout << "signed area of outline after reverse = " << signed_area(outline) << endl;
+	// }
+	// triangular_mesh new_base =
+	//   make_mesh(vtk_triangulate_poly(outline), 0.01); //triangulate(outline);
+	// triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
+	// triangular_mesh* base_mesh = new (new_base_cpy) triangular_mesh();
 
-	assert(base_mesh == new_base_cpy);
+	// assert(base_mesh == new_base_cpy);
 
-	*base_mesh = new_base;
-	vector<oriented_polygon> holes;
-	pockets.push_back(freeform_pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
+	// *base_mesh = new_base;
+	pockets.push_back(face_pocket(top_z, base_z, outline));
+	//vector<oriented_polygon> holes;
+	//pockets.push_back(freeform_pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
       }
     }
     return pockets;

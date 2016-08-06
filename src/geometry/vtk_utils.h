@@ -23,6 +23,9 @@ namespace gca {
 
   vtkSmartPointer<vtkPolyData>
   polydata_for_triangles(const std::vector<triangle>& tris);
+
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_polygon(const oriented_polygon& p);
   
 }
 

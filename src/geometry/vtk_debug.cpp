@@ -106,6 +106,12 @@ namespace gca {
     vtk_debug_highlight_inds(mesh.face_indexes(), mesh);
   }
 
+  void vtk_debug_polygon(const oriented_polygon& p) {
+    auto pd = polydata_for_polygon(p);
+    auto act = polydata_actor(pd);
+    visualize_actors({act});
+  }
+
   void vtk_debug_meshes(const std::vector<const triangular_mesh*>& meshes) {
     std::vector<vtkSmartPointer<vtkActor>> actors;
     for (auto m : meshes) {
