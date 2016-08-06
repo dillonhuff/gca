@@ -110,11 +110,23 @@ namespace gca {
     for (auto surface : surfaces) {
       if (has_no_base(surface, mesh)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
+	cout << "signed area of outline = " << signed_area(outline) << endl;
+	for (auto p : outline.vertices()) {
+	  cout << "--- " << p << endl;
+	}
+	if (signed_area(outline) > 0) {
+	  vector<point> rev_verts = outline.vertices();
+	  reverse(begin(rev_verts), end(rev_verts));
+	  outline = oriented_polygon(outline.normal, rev_verts);
+	  cout << "signed area of outline after reverse = " << signed_area(outline) << endl;
+	}
 	triangular_mesh new_base =
 	  make_mesh(vtk_triangulate_poly(outline), 0.01); //triangulate(outline);
 	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
 	triangular_mesh* base_mesh = new (new_base_cpy) triangular_mesh();
+
 	assert(base_mesh == new_base_cpy);
+
 	*base_mesh = new_base;
 	vector<oriented_polygon> holes;
 	pockets.push_back(freeform_pocket(workpiece_height, base_mesh->face_indexes(), new_base_cpy));
@@ -127,20 +139,22 @@ namespace gca {
   make_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
 		       const triangular_mesh& mesh,
 		       double workpiece_height) {
-    // TODO: Optimize this away
     std::vector<std::vector<index_t>> surfaces = sfs;
-    // TODO: Reintroduce vertical surface pocketing
+
     vector<pocket> pockets =
       closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
     filter_vertical_surfaces(surfaces, mesh);
+
     if (surfaces.size() > 0) {
       surfaces = merge_connected_surfaces(surfaces, mesh);
       auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
       concat(pockets, nv_pockets);
     }
+
     sort(begin(pockets), end(pockets),
 	 [](const pocket& l, const pocket& r)
 	 { return l.get_end_depth() > r.get_end_depth(); });
+
     return pockets;
   }
 

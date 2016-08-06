@@ -192,7 +192,7 @@ namespace gca {
     delete_if(subsurfs,
 	      [top, bottom](const surface& s)
 	      { return !(surfaces_share_edge(s, top) && surfaces_share_edge(s, bottom)); });
-    //vtk_debug_highlight_inds(subsurfs);
+
     auto merged =
       connected_components_by(subsurfs,
 			      [](const surface& x, const surface& y)
