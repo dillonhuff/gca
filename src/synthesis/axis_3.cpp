@@ -1,4 +1,6 @@
 #include "geometry/polygon.h"
+#include "geometry/vtk_debug.h"
+#include "geometry/vtk_utils.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/millability.h"
 #include "synthesis/shapes_to_gcode.h"
@@ -79,6 +81,7 @@ namespace gca {
 					  part);
     // TODO: Sort first? This is disgustingly inefficient
     if (intersection(side_faces, surface).size() == surface.size()) {
+      vtk_debug_highlight_inds(surface, part);
       return true;
     }
     return false;
@@ -107,7 +110,8 @@ namespace gca {
     for (auto surface : surfaces) {
       if (has_no_base(surface, mesh)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
-	triangular_mesh new_base = triangulate(outline);
+	triangular_mesh new_base =
+	  make_mesh(vtk_triangulate_poly(outline), 0.01); //triangulate(outline);
 	triangular_mesh* new_base_cpy = allocate<triangular_mesh>();
 	triangular_mesh* base_mesh = new (new_base_cpy) triangular_mesh();
 	assert(base_mesh == new_base_cpy);
@@ -126,8 +130,8 @@ namespace gca {
     // TODO: Optimize this away
     std::vector<std::vector<index_t>> surfaces = sfs;
     // TODO: Reintroduce vertical surface pocketing
-    vector<pocket> pockets; // =
-    //   closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
+    vector<pocket> pockets =
+      closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
     filter_vertical_surfaces(surfaces, mesh);
     if (surfaces.size() > 0) {
       surfaces = merge_connected_surfaces(surfaces, mesh);

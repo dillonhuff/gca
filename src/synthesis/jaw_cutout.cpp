@@ -284,6 +284,7 @@ namespace gca {
 		  const fixture& top_fix,
 		  const point n,
 		  const fabrication_inputs& fab_inputs) {
+    // TODO: Actually use the custom jaw cutout fixtures!
     boost::optional<custom_jaw_cutout> custom =
       custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n, fab_inputs);
     if (custom) {

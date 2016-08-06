@@ -193,6 +193,8 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
+    cout << "Arm joint top" << endl;
+
     vice test_vice = large_jaw_vice(5.0, point(1.2, -4.4, 3.3));
     std::vector<plate_height> parallel_plates{0.1, 0.3};
     fixtures fixes(test_vice, parallel_plates);
