@@ -172,7 +172,7 @@ namespace gca {
 	if (outline_shares_edges(*surfs)) {
 	  return surfs;
 	} else {
-	  contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->visible_from_minus_n, surfs->visible_from_minus_n, surfs->rest};
+	  contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->visible_from_minus_n, surfs->visible_from_n, surfs->rest};
 	  if (outline_shares_edges(decomposition)) {
 	    return decomposition;
 	  }
