@@ -60,22 +60,15 @@ namespace gca {
     point third_pt = max_point_in_dir(m, third_vec);
 
     planes.push_back(plane(third_vec, third_pt));
-    
+
     return planes;
   }
 
   bool right_handed(const std::vector<plane>& planes) {
     assert(planes.size() == 3);
 
-    cout << "v0 = " << planes[0].normal() << endl;
-    cout << "v1 = " << planes[1].normal() << endl;
-    cout << "v2 = " << planes[2].normal() << endl;
-
     double d = cross(planes[0].normal(), planes[1].normal()).dot(planes[2].normal());
-    cout << "(v0 x v1) . v2 = " << d << endl;
-    double e = cross(planes[1].normal(), planes[0].normal()).dot(planes[2].normal());
-    cout << "(v1 x v0) . v2 = " << e << endl;
-    return d > 0.1;
+    return d > 0.0;
   }
 
   std::vector<plane> set_right_handed(const std::vector<plane>& basis) {
@@ -120,43 +113,7 @@ namespace gca {
     assert(t);
 
     return apply(*t, mesh);
-
-    // // TODO: Pick aligning orthogonal normals
-    // double part_x = diameter(point(1, 0, 0), part);
-    // double part_y = diameter(point(0, 1, 0), part);
-    // double part_z = diameter(point(0, 0, 1), part);
-
-    // double bound_x = max_in_dir(part, point(1, 0, 0));
-    // double bound_y = max_in_dir(part, point(0, 1, 0));
-    // double bound_z = max_in_dir(part, point(0, 0, 1));
-
-    // double w_x = w.sides[0].len();
-    // double w_y = w.sides[1].len();
-    // double w_z = w.sides[2].len();
-
-    // assert(w_x > part_x);
-    // assert(w_y > part_y);
-    // assert(w_z > part_z);
-
-    // double x_margin = (w_x - part_x) / 2.0;
-    // double y_margin = (w_y - part_y) / 2.0;
-    // double z_margin = (w_z - part_z) / 2.0;
-
-    // double x_bound = bound_x + x_margin;
-    // double y_bound = bound_y + y_margin;
-    // double z_bound = bound_z + z_margin;
-
-    // auto mesh = stock_mesh(w);
-    // point shift(x_bound - max_in_dir(mesh, point(1, 0, 0)),
-    // 		y_bound - max_in_dir(mesh, point(0, 1, 0)),
-    // 		z_bound - max_in_dir(mesh, point(0, 0, 1)));
-
-    // auto m =
-    //   mesh.apply_to_vertices([shift](const point p)
-    // 			     { return p + shift; });
-    // return m;
   }
-
 
   fixture_setup
   make_fixture_setup(const triangular_mesh& part_mesh,
