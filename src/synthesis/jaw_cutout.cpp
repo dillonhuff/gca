@@ -137,6 +137,10 @@ namespace gca {
     }
 
     index_t rect_start = curve_pts.size() - 4;
+    index_t ri0 = rect_start + 0;
+    index_t ri1 = rect_start + 1;
+    index_t ri2 = rect_start + 2;
+    index_t ri3 = rect_start + 3;
 
     point n1 = cutout_min + notch_x_inc*prof;
     point n2 = cutout_min + notch_x_inc*prof + notch_y_inc*a;
@@ -152,12 +156,21 @@ namespace gca {
     index_t ni3 = notch_start + 3;
 
     //notch_start, notch_start + 1, notch_start + 2, notch_start + 3};
+    // index_poly notch{ni0, ni1, ni2, ni3}; 
+    // index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
+
+    // index_poly base_rectangle{min_ind, ni0, ni3, max_ind, ri0, ri1, ri2, ri3};
+
+    //    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
+
     index_poly notch{ni0, ni1, ni2, ni3}; 
-    index_poly notch_negative{min_ind, notch_start, notch_start + 1, notch_start + 2, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
 
-    index_poly base_rectangle{min_ind, notch_start, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
+    //    index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
 
-    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
+    //index_poly base_rectangle{min_ind, ni0, ni3, max_ind, ri0, ri1, ri2, ri3};
+    index_poly base_rectangle{min_ind, max_ind, ri0, ri1, ri2, ri3};
+    
+    extrusion jaw{curve_pts, {ip, base_rectangle}, {z_h, z_h}, -1*n};
 
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
