@@ -11,6 +11,7 @@ namespace gca {
   struct custom_jaw_cutout {
     fixture base_fix;
     fixture clean_fix;
+    triangular_mesh* notch;
     fabrication_plan* left_jaw;
     fabrication_plan* right_jaw;
   };
@@ -87,7 +88,7 @@ namespace gca {
     point a = axis.normalize();
     point prof = cross(n, axis).normalize();
     double x_inc = v.x_len() / 10.0;
-    double z_h = v.jaw_height() / 2.0;
+    double z_h = v.jaw_height() / 3.0;
     polyline p = to_polyline(pts, surfs.top.get_parent_mesh().vertex_list());
     vector<point> curve_pts(begin(p), end(p));
     vector<point> endpts{curve_pts.front(), curve_pts.back()};
@@ -102,6 +103,9 @@ namespace gca {
 	   max_ind == 0);
     
     point cutout_min = min_along(endpts, prof);
+
+    double notch_x_inc = (cutout_max - cutout_min).len() / 3.0;
+    double notch_y_inc = diameter(a, curve_pts) / 2.0;
 
     // Rectangle outline points
     point r1 = cutout_max + x_inc*prof;
@@ -127,16 +131,27 @@ namespace gca {
     assert(!within_eps(cutout_max, cutout_min, 0.01));
     // Done with checks
 
-    
     index_poly ip;
     for (index_t i = 0; i < curve_pts.size(); i++) {
       ip.push_back(i);
     }
 
     index_t rect_start = curve_pts.size() - 4;
-    index_poly base_rectangle{min_ind, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
+
+    point n1 = cutout_min + notch_x_inc*prof;
+    point n2 = cutout_min + notch_x_inc*prof + notch_y_inc*a;
+    point n3 = cutout_max - notch_x_inc*prof + notch_y_inc*a;
+    point n4 = cutout_max - notch_x_inc*prof;
+
+    concat(curve_pts, {n1, n2, n3, n4});
+
+    index_t notch_start = curve_pts.size() - 4;
+
+    index_poly notch{min_ind, notch_start, notch_start + 1, notch_start + 2, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
     
-    return extrusion{curve_pts, {ip, base_rectangle}, {z_h, z_h}, -1*n};
+    index_poly base_rectangle{min_ind, notch_start, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
+    
+    return extrusion{curve_pts, {ip, notch, base_rectangle}, {z_h, z_h, z_h}, -1*n};
   }
 
   triangular_mesh
@@ -183,11 +198,11 @@ namespace gca {
     //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
-    assert(a_cutout->is_connected());
+    //assert(a_cutout->is_connected());
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
-    assert(an_cutout->is_connected());
-    //vtk_debug_meshes({a_cutout, an_cutout, &part_mesh});
+    //assert(an_cutout->is_connected());
+    vtk_debug_meshes({a_cutout, an_cutout}); //, &part_mesh});
 
     return soft_jaws{axis, a_cutout, an_cutout};
   }
@@ -236,29 +251,42 @@ namespace gca {
     // TODO: Actually produce the other fixture
     fixture f(cutout_orient, custom_jaw_vice);
 
-    return custom_jaw_cutout{f, f, a_plan, an_plan};
+    return custom_jaw_cutout{f, f, nullptr, a_plan, an_plan};
   }
 
-  clipping_plan
-  custom_jaw_clip_plan(const triangular_mesh& aligned,
+  std::vector<fixture_setup>
+  soft_jaw_clip_setups(const triangular_mesh& aligned,
 		       const triangular_mesh& part_mesh,
 		       const contour_surface_decomposition& surfs,
 		       const fixture& top_fix,
-		       const fixture& base_fix,
-		       const fixture& clean_fix) {
-    // TODO: Figure out what function the second operation ought to be
-    std::vector<fixture_setup> clip_setups;
-    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));
-    clip_setups.push_back(clip_base_transform(aligned, part_mesh, surfs.visible_from_minus_n, base_fix));
-    clip_setups.push_back(clip_base_transform(aligned, part_mesh, {}, clean_fix));
+		       const custom_jaw_cutout& custom) {
+    const triangular_mesh& notch = *(custom.notch);
+    const vector<surface>& top_surfs = surfs.visible_from_n;
+    const vector<surface>& base_surfs = surfs.visible_from_minus_n;
+
+    vector<fixture_setup> clip_setups;
+    clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
+    clip_setups.push_back(clip_base_transform(notch, part_mesh, {}, custom.clean_fix));
+    return clip_setups;
+  }
+  
+  clipping_plan
+  soft_jaw_clipping_plan(const triangular_mesh& aligned,
+			 const triangular_mesh& part_mesh,
+			 const contour_surface_decomposition& surfs,
+			 const fixture& top_fix,
+			 const custom_jaw_cutout& custom) {
+    std::vector<fixture_setup> clip_setups =
+      soft_jaw_clip_setups(aligned, part_mesh, surfs, top_fix, custom);
 
     auto clipped_surfs =
       stable_surfaces_after_clipping(part_mesh, aligned);
     auto surfs_to_cut = surfs.rest;
 
-    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {nullptr, nullptr});
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom.left_jaw, custom.right_jaw});
   }
-
+  
   boost::optional<clipping_plan>
   custom_jaw_plan(const triangular_mesh& aligned,
 		  const triangular_mesh& part_mesh,
@@ -271,16 +299,7 @@ namespace gca {
       custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n, fab_inputs);
 
     if (custom) {
-      std::vector<fixture_setup> clip_setups;
-      clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, surfs.visible_from_n, top_fix));
-      clip_setups.push_back(clip_base_transform(aligned, part_mesh, surfs.visible_from_minus_n, custom->base_fix));
-      clip_setups.push_back(clip_base_transform(aligned, part_mesh, {}, custom->clean_fix));
-
-      auto clipped_surfs =
-	stable_surfaces_after_clipping(part_mesh, aligned);
-      auto surfs_to_cut = surfs.rest;
-
-      return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom->left_jaw, custom->right_jaw});
+      return soft_jaw_clipping_plan(aligned, part_mesh, surfs, top_fix, *custom);
     }
 
     return boost::none;

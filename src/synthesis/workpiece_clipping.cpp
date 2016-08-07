@@ -130,6 +130,40 @@ namespace gca {
   }
 
   fixture_setup
+  clip_notch(const triangular_mesh& stock,
+	     const triangular_mesh& part,
+	     const triangular_mesh& notch,
+	     const fixture& f) {
+    vector<pocket> pockets{face_down(stock, notch), contour_around(stock, notch), contour_around(stock, part)};
+
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(part);
+    return fixture_setup(m, f, pockets);
+  }
+  
+  fixture_setup
+  clip_notch_transform(const triangular_mesh& wp_mesh,
+		       const triangular_mesh& part_mesh,
+		       const triangular_mesh& notch_mesh,
+		       const std::vector<surface>& surfaces,
+		       const fixture& f) {
+    auto s_t = mating_transform(wp_mesh, f.orient, f.v);
+    auto aligned = apply(s_t, wp_mesh);
+    auto part = apply(s_t, part_mesh);
+    auto notch = apply(s_t, notch_mesh);
+
+    fixture_setup setup = clip_notch(aligned, part, notch, f);
+    std::vector<pocket>& setup_pockets = setup.pockets;
+
+    unsigned old_size = setup.pockets.size();
+    concat(setup_pockets, make_pockets(part, surfaces));
+    unsigned new_size = setup.pockets.size();
+
+    assert((surfaces.size() == 0) || (new_size > old_size));
+
+    return setup;
+  }
+  
+  fixture_setup
   clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
 			       const triangular_mesh& part_mesh,
 			       const std::vector<surface>& surfaces,
@@ -174,21 +208,7 @@ namespace gca {
   clip_base(const triangular_mesh& aligned,
 	    const triangular_mesh& part,
 	    const fixture& f) {
-    // double work_height = max_in_dir(aligned, point(0, 0, 1));
-    // double part_height = max_in_dir(part, point(0, 0, 1));
-
-    // assert(work_height > part_height);
-
-    // auto bound = contour_outline(aligned.face_indexes(), aligned, point(0, 0, 1));
-    // if (bound) {
-    // } else {
-    //   assert(false);
-    // }
-    // auto outlines =
-    //   mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
-    // assert(outlines.size() == 2);
-
-    vector<pocket> pockets{face_down(aligned, part)}; //face_pocket(work_height, part_height, outlines.front())};
+    vector<pocket> pockets{face_down(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);

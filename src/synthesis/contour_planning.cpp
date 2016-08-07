@@ -141,11 +141,9 @@ namespace gca {
     const surface& outline = surfs.outline;
     const surface& bottom = surfs.bottom;
     auto outline_sets = connected_boundary_edge_sets(outline);
-    cout << "# of outline edge sets = " << outline_sets.size() << endl;
     assert(outline_sets.size() > 0);
 
     auto bottom_sets = connected_boundary_edge_sets(bottom);
-    cout << "# of bottom edge sets = " << bottom_sets.size() << endl;
     assert(bottom_sets.size() > 0);
 
     for (auto s : outline_sets) {

@@ -33,6 +33,13 @@ namespace gca {
   clip_base(const triangular_mesh& aligned,
 	    const triangular_mesh& part,
 	    const fixture& f);
+
+  fixture_setup
+  clip_notch_transform(const triangular_mesh& wp_mesh,
+		       const triangular_mesh& part_mesh,
+		       const triangular_mesh& notch_mesh,
+		       const std::vector<surface>& surfaces,
+		       const fixture& f);
   
 }
 

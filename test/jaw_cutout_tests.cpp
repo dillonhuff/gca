@@ -34,8 +34,8 @@ namespace gca {
     vector<surface> axis_surfs = surfaces_to_cut(*axis_jaw);
     vector<surface> neg_axis_surfs = surfaces_to_cut(*neg_axis_jaw);
 
-    REQUIRE(axis_surfs.size() == 8);
-    REQUIRE(neg_axis_surfs.size() == 8);
+    REQUIRE(axis_surfs.size() == 12);
+    REQUIRE(neg_axis_surfs.size() == 12);
 
     // clipping_plan p =
     //   workpiece_clipping_programs(workpiece_dims, *axis_jaw, tools, fixes);
