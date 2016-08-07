@@ -146,12 +146,17 @@ namespace gca {
     concat(curve_pts, {n1, n2, n3, n4});
 
     index_t notch_start = curve_pts.size() - 4;
+    index_t ni0 = notch_start + 0;
+    index_t ni1 = notch_start + 1;
+    index_t ni2 = notch_start + 2;
+    index_t ni3 = notch_start + 3;
 
-    index_poly notch{notch_start, notch_start + 1, notch_start + 2, notch_start + 3};
+    //notch_start, notch_start + 1, notch_start + 2, notch_start + 3};
+    index_poly notch{ni0, ni1, ni2, ni3}; 
     index_poly notch_negative{min_ind, notch_start, notch_start + 1, notch_start + 2, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
-    
+
     index_poly base_rectangle{min_ind, notch_start, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
-    
+
     extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
 
 
@@ -184,8 +189,11 @@ namespace gca {
     pair<extrusion, extrusion> custom_jaw =
       complete_jaw_outline(jaw_outline.front(), surfs, v, axis);
 
+    cout << "About to extrude m " << endl;
     triangular_mesh m = extrude(custom_jaw.first);
+    cout << "Extruded m " << endl;
     triangular_mesh notch = extrude(custom_jaw.second);
+    cout << "Extruded notch" << endl;
 
     return std::make_pair(m, notch);
   }
@@ -201,7 +209,7 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     auto a_meshes = cutout_mesh(surfs, v, axis, n);
     auto an_meshes = cutout_mesh(surfs, v, -1*axis, n);
 
@@ -219,7 +227,7 @@ namespace gca {
       new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
 
     assert(an_cutout->is_connected());
-    vtk_debug_meshes({&part_mesh, notch});//{a_cutout, an_cutout}); //, &part_mesh});
+    //vtk_debug_meshes({&part_mesh, notch});//{a_cutout, an_cutout}); //, &part_mesh});
 
     return soft_jaws{axis, notch, a_cutout, an_cutout};
   }

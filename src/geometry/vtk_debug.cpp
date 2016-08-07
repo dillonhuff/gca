@@ -108,6 +108,7 @@ namespace gca {
 
   void vtk_debug_polygon(const oriented_polygon& p) {
     auto pd = polydata_for_polygon(p);
+    debug_print_edge_summary(pd);
     auto act = polydata_actor(pd);
     visualize_actors({act});
   }
@@ -292,5 +293,13 @@ namespace gca {
     }
   }
 
+  void vtk_debug_polygons(const std::vector<oriented_polygon>& polys) {
+    vector<vtkSmartPointer<vtkActor>> actors;
+    for (auto p : polys) {
+      auto pd = polydata_for_polygon(p);
+      actors.push_back(polydata_actor(pd));
+    }
+    visualize_actors(actors);
+  }
   
 }

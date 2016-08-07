@@ -74,7 +74,6 @@ namespace gca {
   point min_along(const std::vector<point>& pts, const point proj_dir);
 
   std::vector<point> shift(const point s, const std::vector<point>& pts);
-  
   double greater_than_diameter(const point normal,
 			       const std::vector<point>& centroids);
 

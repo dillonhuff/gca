@@ -1,4 +1,4 @@
-//#include "geometry/vtk_debug.h"
+#include "geometry/vtk_debug.h"
 #include <boost/optional.hpp>
 
 #include "geometry/extrusion.h"
@@ -20,9 +20,11 @@ namespace gca {
 
   triangular_mesh
   mesh_for_polys(const std::vector<oriented_polygon>& polys) {
+    vtk_debug_polygons(polys);
     cout << "# of polygons = " << polys.size() << endl;
     std::vector<triangle> tris;
     for (auto p : polys) {
+      vtk_debug_polygon(p);
       concat(tris, vtk_triangulate_poly(p));
     }
 
@@ -221,7 +223,7 @@ namespace gca {
     std::vector<oriented_polygon> polys;
 
     double last_depth_offset = 0.0;
-    std::vector<gca::edge> last_edges;
+    std::vector<gca::edge> last_edges{};
     for (unsigned i = 0; i < layer_depths.size(); i++) {
       auto current_edges = index_poly_edges(poly_layers[i]);
       // Front polys

@@ -29,6 +29,8 @@ namespace gca {
   void vtk_debug_highlight_inds(const std::vector<surface>& surfs);
 
   void vtk_debug_polygon(const oriented_polygon& p);
+  void vtk_debug_polygons(const std::vector<oriented_polygon>& polys);
+  
 }
 
 #endif
