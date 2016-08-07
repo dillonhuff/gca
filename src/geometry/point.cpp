@@ -170,6 +170,14 @@ namespace gca {
     auto min_e = min_element(begin(face_projections), end(face_projections));
     return *min_e;
   }
+
+  std::vector<point> shift(const point s, const std::vector<point>& pts) {
+    vector<point> res;
+    for (auto p : pts) {
+      res.push_back(p + s);
+    }
+    return res;
+  }
   
 
 }

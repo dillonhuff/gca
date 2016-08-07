@@ -63,7 +63,7 @@ namespace gca {
     }
     return res;
   }
-
+  
   // TODO: Move to utils/algorithm
   template<typename T, typename F>
   index_t
@@ -79,7 +79,7 @@ namespace gca {
 
   
 
-  extrusion
+  std::pair<extrusion, extrusion>
   complete_jaw_outline(const index_poly& pts,
 		       const contour_surface_decomposition& surfs,
 		       const vice& v,
@@ -147,14 +147,21 @@ namespace gca {
 
     index_t notch_start = curve_pts.size() - 4;
 
-    index_poly notch{min_ind, notch_start, notch_start + 1, notch_start + 2, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
+    index_poly notch{notch_start, notch_start + 1, notch_start + 2, notch_start + 3};
+    index_poly notch_negative{min_ind, notch_start, notch_start + 1, notch_start + 2, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
     
     index_poly base_rectangle{min_ind, notch_start, notch_start + 3, max_ind, rect_start, rect_start + 1, rect_start + 2, rect_start + 3};
     
-    return extrusion{curve_pts, {ip, notch, base_rectangle}, {z_h, z_h, z_h}, -1*n};
+    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
+
+
+    auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
+    extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, n};
+
+    return std::make_pair(jaw, notch_e);
   }
 
-  triangular_mesh
+  std::pair<triangular_mesh, triangular_mesh>
   cutout_mesh(const contour_surface_decomposition& surfs,
 	      const vice& v,
 	      const point axis,
@@ -174,14 +181,13 @@ namespace gca {
 
     assert(jaw_outline.size() == 1);
 
-    extrusion custom_jaw = complete_jaw_outline(jaw_outline.front(),
-						surfs,
-						v,
-						axis);
+    pair<extrusion, extrusion> custom_jaw =
+      complete_jaw_outline(jaw_outline.front(), surfs, v, axis);
 
-    triangular_mesh m = extrude(custom_jaw);
+    triangular_mesh m = extrude(custom_jaw.first);
+    triangular_mesh notch = extrude(custom_jaw.second);
 
-    return m;
+    return std::make_pair(m, notch);
   }
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
@@ -195,16 +201,27 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    triangular_mesh* a_cutout =
-      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, axis, n));
-    //assert(a_cutout->is_connected());
-    triangular_mesh* an_cutout =
-      new (allocate<triangular_mesh>()) triangular_mesh(cutout_mesh(surfs, v, -1*axis, n));
-    //assert(an_cutout->is_connected());
-    vtk_debug_meshes({a_cutout, an_cutout}); //, &part_mesh});
+    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    auto a_meshes = cutout_mesh(surfs, v, axis, n);
+    auto an_meshes = cutout_mesh(surfs, v, -1*axis, n);
 
-    return soft_jaws{axis, a_cutout, an_cutout};
+    triangular_mesh* a_cutout =
+      new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
+
+    assert(a_cutout->is_connected());
+
+    triangular_mesh* notch =
+      new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.second);
+
+    assert(a_cutout->is_connected());
+
+    triangular_mesh* an_cutout =
+      new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
+
+    assert(an_cutout->is_connected());
+    vtk_debug_meshes({&part_mesh, notch});//{a_cutout, an_cutout}); //, &part_mesh});
+
+    return soft_jaws{axis, notch, a_cutout, an_cutout};
   }
 
   // TODO: Produce longer clamps
@@ -218,6 +235,7 @@ namespace gca {
 
     surface outline_of_contour = surfs.outline;
     surface top_of_contour = surfs.top;
+    surface bottom_of_contour = surfs.bottom;
     point axis = jaw_plan.axis;
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
@@ -245,13 +263,19 @@ namespace gca {
     
     clamp_orientation cutout_orient(left_plane, right_plane, base_plane);
 
-    // TODO: Actually construct vice with more sane dimensions
-    vice custom_jaw_vice = v;
-
     // TODO: Actually produce the other fixture
-    fixture f(cutout_orient, custom_jaw_vice);
+    fixture f_clean(cutout_orient, v);
 
-    return custom_jaw_cutout{f, f, nullptr, a_plan, an_plan};
+    point notch_base_normal =
+      bottom_of_contour.face_orientation(top_of_contour.front());
+    point notch_base_pt =
+      max_point_in_dir(*(jaw_plan.notch), notch_base_normal);
+    plane notch_plane(notch_base_normal, notch_base_pt);
+    
+    clamp_orientation clean_orient(left_plane, right_plane, notch_plane);
+    fixture f_base(clean_orient, v);
+
+    return custom_jaw_cutout{f_base, f_clean, jaw_plan.notch, a_plan, an_plan};
   }
 
   std::vector<fixture_setup>
@@ -266,7 +290,9 @@ namespace gca {
 
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
+    cout << "Starting first clip base" << endl;
     clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
+    cout << "Starting second clip base" << endl;
     clip_setups.push_back(clip_base_transform(notch, part_mesh, {}, custom.clean_fix));
     return clip_setups;
   }

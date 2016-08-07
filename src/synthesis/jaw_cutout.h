@@ -8,6 +8,7 @@ namespace gca {
 
   struct soft_jaws {
     point axis;
+    triangular_mesh* notch;
     triangular_mesh* a_jaw;
     triangular_mesh* an_jaw;
   };

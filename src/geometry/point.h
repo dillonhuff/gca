@@ -61,8 +61,8 @@ namespace gca {
   bool within_eps(double l, double r, double eps=0.0000001);
   point extend_back(point start, point end, double l);
   double angle_between(point u, point v);
-  ostream& operator<<(ostream& s, const point& p);
-  ostream& operator<<(ostream& s, const vector<point>& p);
+  std::ostream& operator<<(std::ostream& s, const point& p);
+  std::ostream& operator<<(std::ostream& s, const std::vector<point>& p);
   point project_onto(point p, point proj_d);
 
   double signed_distance_along(const point p, const point proj_dir);
@@ -72,6 +72,8 @@ namespace gca {
 
   point max_along(const std::vector<point>& pts, const point proj_dir);
   point min_along(const std::vector<point>& pts, const point proj_dir);
+
+  std::vector<point> shift(const point s, const std::vector<point>& pts);
   
   double greater_than_diameter(const point normal,
 			       const std::vector<point>& centroids);
