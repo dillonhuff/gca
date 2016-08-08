@@ -1,6 +1,7 @@
 #include "geometry/extrusion.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/mesh_operations.h"
+#include "geometry/rigid_arrangement.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/jaw_cutout.h"
@@ -74,7 +75,7 @@ namespace gca {
 	return i;
       }
     }
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   std::pair<extrusion, extrusion>
@@ -303,6 +304,17 @@ namespace gca {
 
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
+
+    homogeneous_transform nt = mating_transform(aligned, top_fix.orient, top_fix.v);
+
+    rigid_arrangement notch_top;
+    notch_top.insert("notch", nt, notch);
+    notch_top.insert("part", nt, part_mesh);
+    //notch_top.insert("stock", nt, aligned);
+    notch_top.insert("a_jaw", nt, a_jaw);
+    notch_top.insert("an_jaw", nt, an_jaw);
+
+    debug_arrangement(notch_top);
 
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));

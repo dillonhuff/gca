@@ -151,7 +151,7 @@ namespace gca {
 	interior(p_i), exterior(p_e) {}
     
     const vector<oriented_polygon>& get_holes() const
-    { CHECK(false); }
+    { DBG_ASSERT(false); }
 
     double get_end_depth() const
     { return end_depth; }
@@ -177,7 +177,7 @@ namespace gca {
       : start_depth(p_start_depth), end_depth(p_end_depth), base(p_base) {}
 
     const vector<oriented_polygon>& get_holes() const
-    { CHECK(false); }
+    { DBG_ASSERT(false); }
 
     double get_end_depth() const
     { return end_depth; }

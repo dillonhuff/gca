@@ -43,7 +43,7 @@ namespace gca {
 
   std::vector<oriented_polygon> interior_offset(const oriented_polygon& p,
 						const double inc) {
-    CHECK(p.vertices().size() > 0);
+    DBG_ASSERT(p.vertices().size() > 0);
     
     double z_va = p.vertices().front().z;
     Polygon_2 out;

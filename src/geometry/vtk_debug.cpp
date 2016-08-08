@@ -318,5 +318,14 @@ namespace gca {
 
     visualize_actors({pd_actor, edge_actor});
   }
-  
+
+  void debug_arrangement(const rigid_arrangement& a) {
+    cout << "Debugging" << endl;
+    vector<vtkSmartPointer<vtkActor>> actors;
+    for (auto name : a.mesh_names()) {
+      auto pd = polydata_for_trimesh(a.mesh(name));
+      actors.push_back(polydata_actor(pd));
+    }
+    visualize_actors(actors);
+  }
 }

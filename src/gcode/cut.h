@@ -10,6 +10,7 @@
 #include "geometry/parametric_curve.h"
 #include "geometry/point.h"
 #include "gcode/machine.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -42,8 +43,8 @@ namespace gca {
     virtual inline bool is_circular_helix_cut() const { return false; }
     virtual inline bool is_hole_punch() const { return false; }
 
-    virtual point final_orient() const { assert(false); }
-    virtual point initial_orient() const { assert(false); }
+    virtual point final_orient() const { DBG_ASSERT(false); }
+    virtual point initial_orient() const { DBG_ASSERT(false); }
     
     virtual bool operator==(const cut& other) const = 0;
 

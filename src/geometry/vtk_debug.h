@@ -5,6 +5,7 @@
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 
+#include "geometry/rigid_arrangement.h"
 #include "geometry/surface.h"
 
 namespace gca {
@@ -32,6 +33,7 @@ namespace gca {
   void vtk_debug_polygons(const std::vector<oriented_polygon>& polys);
 
   void vtk_debug_mesh_boundary_edges(const triangular_mesh& m);
+  void debug_arrangement(const rigid_arrangement& a);
 }
 
 #endif

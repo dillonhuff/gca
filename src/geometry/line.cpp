@@ -104,7 +104,7 @@ namespace gca {
 	double y = p_slope*x + p_b;
 	return maybe<point>(point(x, y, z));
       } else {
-	CHECK(false);
+	DBG_ASSERT(false);
       }
     } else if (p_slope_m.just) {
       double x = next.start.x;
@@ -115,7 +115,7 @@ namespace gca {
     } else if (!n_slope_m.just && !p_slope_m.just) {
       return maybe<point>();
     } else {
-      CHECK(false);
+      DBG_ASSERT(false);
     }
   }
 
@@ -141,12 +141,12 @@ namespace gca {
 
   point trim_or_extend_unsafe(line prev, line next) {
     maybe<point> p = trim_or_extend(prev, next);
-    CHECK(p.just);
+    DBG_ASSERT(p.just);
     return p.t;
   }
 
   vector<line> make_lines(const vector<point>& pts) {
-    CHECK(pts.size() > 1);
+    DBG_ASSERT(pts.size() > 1);
     vector<line> l;
     for (auto pt = begin(pts); pt != end(pts) - 1; ++pt) {
       l.push_back(line(*pt, *(pt + 1)));

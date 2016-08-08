@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "geometry/point.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -13,12 +14,12 @@ namespace gca {
 
   class mill_tool {
   public:
-    virtual bool contains(point p, double resolution, int i, int j) const { assert(false); }
+    virtual bool contains(point p, double resolution, int i, int j) const { DBG_ASSERT(false); }
 
-    virtual double x_min(point p) const { assert(false); }
-    virtual double x_max(point p) const { assert(false); }
-    virtual double y_min(point p) const { assert(false); }
-    virtual double y_max(point p) const { assert(false); }
+    virtual double x_min(point p) const { DBG_ASSERT(false); }
+    virtual double x_max(point p) const { DBG_ASSERT(false); }
+    virtual double y_min(point p) const { DBG_ASSERT(false); }
+    virtual double y_max(point p) const { DBG_ASSERT(false); }
     
   };
 

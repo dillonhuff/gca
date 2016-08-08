@@ -19,12 +19,12 @@ namespace gca {
     base_inds(basep),
     mesh(p_mesh) {
     
-    CHECK(base_inds.size() > 0);
+    DBG_ASSERT(base_inds.size() > 0);
     auto bounds = mesh_bounds(base_inds, base_mesh());
     // if (bounds.size() > 1) {
     //   vtk_debug_highlight_inds(basep, *p_mesh);
     // }
-    CHECK(bounds.size() > 0);
+    DBG_ASSERT(bounds.size() > 0);
     boundary = extract_boundary(bounds);
     holes = bounds;
   }
@@ -88,7 +88,7 @@ namespace gca {
 				    int num_repeats,
 				    offset_dir d,
 				    double inc) {
-    CHECK(num_repeats > 0);
+    DBG_ASSERT(num_repeats > 0);
     vector<polyline> paths;
     paths.push_back(offset(p, d, inc));
     for (int i = 1; i < num_repeats; i++) {
@@ -123,7 +123,7 @@ namespace gca {
       concat(offset_h, exterior_offset(h, t.radius()));
     }
     auto i_off = interior_offset(pocket.get_boundary(), t.radius());
-    CHECK(i_off.size() == 1);
+    DBG_ASSERT(i_off.size() == 1);
     oriented_polygon bound_poly = i_off.front();
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
@@ -182,7 +182,7 @@ namespace gca {
     // 	      [t](const oriented_polygon& p)
     // 	      { return exterior_offset(p, t.radius()); });
     auto i_off = interior_offset(p.get_boundary(), t.radius());
-    CHECK(i_off.size() == 1);
+    DBG_ASSERT(i_off.size() == 1);
     oriented_polygon bound_poly = i_off.front();
     //    oriented_polygon bound_poly = interior_offset(p.get_boundary(), t.radius());
 
@@ -222,7 +222,7 @@ namespace gca {
     // 	      [t](const oriented_polygon& p)
     // 	      { return exterior_offset(p, t.radius()); });
     auto i_off = interior_offset(pocket.get_boundary(), t.radius());
-    CHECK(i_off.size() == 1);
+    DBG_ASSERT(i_off.size() == 1);
     oriented_polygon bound_poly = i_off.front();
     //    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
     vector<double> depths = cut_depths(pocket.get_start_depth(),
@@ -273,7 +273,7 @@ namespace gca {
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
     auto i_off = interior_offset(exterior, t.radius());
-    CHECK(i_off.size() == 1);
+    DBG_ASSERT(i_off.size() == 1);
     auto o = project(i_off.front(), get_end_depth());
     auto inter = project(interior, get_end_depth());
     vector<double> depths =
@@ -360,7 +360,7 @@ namespace gca {
   }
 
   polyline compress_lines(const polyline& p, double tolerance) {
-    CHECK(p.num_points() > 1);
+    DBG_ASSERT(p.num_points() > 1);
     if (p.num_points() == 2) { return p; }
     vector<vector<line>> slope_groups;
     split_by(p.lines(), slope_groups,
