@@ -2,6 +2,7 @@
 
 #include "gcode/cut.h"
 #include "gcode/linear_cut.h"
+#include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/shape_layout.h"
@@ -266,18 +267,18 @@ namespace gca {
   std::vector<polyline>
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
-    //auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
-    // auto inter = project(interior, get_end_depth());
-    // vector<double> depths =
-    //   cut_depths(get_start_depth(), get_end_depth(), cut_depth);
-    // vector<polyline> level_template =
-    //   contour_level(o, interior, t, get_end_depth());
-    // vector<polyline> lines;
-    // for (auto depth : depths) {
-    //   concat(lines, project_lines(level_template, depth));
-    // }
-    // return lines;
-    return { to_polyline(project(interior, get_end_depth())) };
+    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+    auto inter = project(interior, get_end_depth());
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    vector<polyline> level_template =
+      contour_level(o, interior, t, get_end_depth());
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(level_template, depth));
+    }
+    return lines;
+    //    return { to_polyline(project(interior, get_end_depth())) };
   }
 
   std::vector<polyline>
@@ -302,18 +303,19 @@ namespace gca {
   face_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     auto inter = project(base, get_end_depth());
-    return { to_polyline(project(inter, get_end_depth())) };
-    // vector<polyline> face_template =
-    //   face_level(inter, t, cut_depth);
+    vector<polyline> face_template =
+      face_level(inter, t, cut_depth);
 
-    // vector<double> depths =
-    //   cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
 
-    // vector<polyline> lines;
-    // for (auto depth : depths) {
-    //   concat(lines, project_lines(face_template, depth));
-    // }
-    // return lines;
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
+
+    //    return { to_polyline(project(inter, get_end_depth())) };
   }
 
   tool

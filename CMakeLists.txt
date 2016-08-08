@@ -10,10 +10,14 @@ ENDIF()
 
 project(gca)
 
+find_package(CGAL REQUIRED COMPONENTS Core)
+include( ${CGAL_USE_FILE} )
+
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
- 
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -Werror -Wall")
+
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2")
+#-Werror -Wall")
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
@@ -30,6 +34,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 		     ./src/geometry/surface.h
 		     ./src/geometry/point.h
 		     ./src/geometry/plane.h
+		     ./src/geometry/offset.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/extrusion.h
 	    ./src/geometry/spline_sampling.h
@@ -43,6 +48,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
+		  ./src/geometry/offset.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/extrusion.cpp
@@ -61,7 +67,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/vtk_utils.cpp)
 
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
-target_link_libraries(geometry utils)
+target_link_libraries(geometry utils ${CGAL_LIBRARIES})
 
 SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h

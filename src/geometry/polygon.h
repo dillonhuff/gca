@@ -41,12 +41,6 @@ namespace gca {
 
   bool overlaps(line l, const oriented_polygon& p);
 
-  oriented_polygon exterior_offset(const oriented_polygon& p,
-				   double inc);
-
-  oriented_polygon interior_offset(const oriented_polygon& p,
-				   double inc);
-
   box bounding_box(const oriented_polygon& p);
 
   oriented_polygon project(const oriented_polygon& p, double z);
@@ -54,7 +48,6 @@ namespace gca {
   polyline to_polyline(const oriented_polygon& p);
 
   oriented_polygon extract_boundary(std::vector<oriented_polygon>& polygons);
-
 
   std::vector<polyline>
   clip_polyline_along(const polyline& p,

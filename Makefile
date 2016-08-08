@@ -1130,6 +1130,33 @@ src/geometry/mesh_operations.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/mesh_operations.cpp.s
 .PHONY : src/geometry/mesh_operations.cpp.s
 
+src/geometry/offset.o: src/geometry/offset.cpp.o
+
+.PHONY : src/geometry/offset.o
+
+# target to build an object file
+src/geometry/offset.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/offset.cpp.o
+.PHONY : src/geometry/offset.cpp.o
+
+src/geometry/offset.i: src/geometry/offset.cpp.i
+
+.PHONY : src/geometry/offset.i
+
+# target to preprocess a source file
+src/geometry/offset.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/offset.cpp.i
+.PHONY : src/geometry/offset.cpp.i
+
+src/geometry/offset.s: src/geometry/offset.cpp.s
+
+.PHONY : src/geometry/offset.s
+
+# target to generate assembly for a file
+src/geometry/offset.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/offset.cpp.s
+.PHONY : src/geometry/offset.cpp.s
+
 src/geometry/plane.o: src/geometry/plane.cpp.o
 
 .PHONY : src/geometry/plane.o
@@ -3325,6 +3352,9 @@ help:
 	@echo "... src/geometry/mesh_operations.o"
 	@echo "... src/geometry/mesh_operations.i"
 	@echo "... src/geometry/mesh_operations.s"
+	@echo "... src/geometry/offset.o"
+	@echo "... src/geometry/offset.i"
+	@echo "... src/geometry/offset.s"
 	@echo "... src/geometry/plane.o"
 	@echo "... src/geometry/plane.i"
 	@echo "... src/geometry/plane.s"
