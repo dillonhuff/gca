@@ -20,14 +20,14 @@ namespace gca {
 
   triangular_mesh
   mesh_for_polys(const std::vector<oriented_polygon>& polys) {
-    vtk_debug_polygons(polys);
+    //vtk_debug_polygons(polys);
     cout << "# of polygons = " << polys.size() << endl;
     std::vector<triangle> tris;
     for (auto p : polys) {
       //vtk_debug_polygon(p);
       concat(tris, vtk_triangulate_poly(p));
     }
-    vtk_debug_triangles(tris);
+    //vtk_debug_triangles(tris);
     return make_mesh(tris, 0.01);
   }
 
@@ -240,6 +240,9 @@ namespace gca {
 
       // Back
       if (i + 1 == layer_depths.size()) {
+	// auto last_edges = index_poly_edges(poly_layers[i]);
+	// auto last_polys = unordered_segments_to_index_polygons(last_edges);
+	// assert(last_polys.size() == 1);
 	oriented_polygon back =
 	  convert_index_poly(pts, poly_layers[i], last_depth_offset + layer_depths[i], extrude_dir);
 	vector<point> verts = back.vertices();

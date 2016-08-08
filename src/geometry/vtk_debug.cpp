@@ -316,7 +316,7 @@ namespace gca {
     auto edge_actor = polydata_actor(featureEdges->GetOutput());
     auto pd_actor = polydata_actor(pd);
 
-    visualize_actors({pd_actor, edge_actor});
+    visualize_actors({edge_actor}); //pd_actor, edge_actor});
   }
   
 }

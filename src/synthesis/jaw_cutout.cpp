@@ -155,10 +155,13 @@ namespace gca {
 
     index_poly notch{ni0, ni1, ni2, ni3}; 
 
+    //index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
     index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
-    index_poly base_rectangle{min_ind, ni3, ni0, max_ind, ri0, ri1, ri2, ri3};
+    
+    extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, z_h}, -1*n};
+    //    index_poly base_rectangle{min_ind, ni0, ni3, max_ind, ri0, ri1}; //min_ind, ni0, ni3, max_ind, ri0, ri1, ri2, ri3};
 
-    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
+    //extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
 
     //index_poly base_rectangle{min_ind, ni3, ni0, max_ind, ri0, ri1, ri2, ri3};
     //    index_poly base_rectangle{min_ind, max_ind, ri0, ri1, ri2, ri3};
@@ -197,7 +200,7 @@ namespace gca {
     triangular_mesh m = extrude(custom_jaw.first);
     auto pd = polydata_for_trimesh(m);
     debug_print_edge_summary(pd);
-    vtk_debug_mesh_boundary_edges(m);
+    //vtk_debug_mesh_boundary_edges(m);
     assert(m.is_connected());
     cout << "Extruded m " << endl;
     triangular_mesh notch = extrude(custom_jaw.second);
