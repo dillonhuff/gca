@@ -24,11 +24,10 @@ namespace gca {
     cout << "# of polygons = " << polys.size() << endl;
     std::vector<triangle> tris;
     for (auto p : polys) {
-      vtk_debug_polygon(p);
+      //vtk_debug_polygon(p);
       concat(tris, vtk_triangulate_poly(p));
     }
-
-    //vtk_debug_triangles(tris);
+    vtk_debug_triangles(tris);
     return make_mesh(tris, 0.01);
   }
 

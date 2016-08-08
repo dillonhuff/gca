@@ -301,5 +301,22 @@ namespace gca {
     }
     visualize_actors(actors);
   }
+
+  void vtk_debug_mesh_boundary_edges(const triangular_mesh& m) {
+    auto pd = polydata_for_trimesh(m);
+
+    vtkSmartPointer<vtkFeatureEdges> featureEdges = 
+      vtkSmartPointer<vtkFeatureEdges>::New();
+    featureEdges->FeatureEdgesOff();
+    featureEdges->BoundaryEdgesOn();
+    featureEdges->NonManifoldEdgesOff();
+    featureEdges->SetInputData(pd);
+    featureEdges->Update();
+
+    auto edge_actor = polydata_actor(featureEdges->GetOutput());
+    auto pd_actor = polydata_actor(pd);
+
+    visualize_actors({pd_actor, edge_actor});
+  }
   
 }

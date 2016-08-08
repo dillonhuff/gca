@@ -77,8 +77,6 @@ namespace gca {
     assert(false);
   }
 
-  
-
   std::pair<extrusion, extrusion>
   complete_jaw_outline(const index_poly& pts,
 		       const contour_surface_decomposition& surfs,
@@ -127,7 +125,7 @@ namespace gca {
 				 { return within_eps(x, cutout_max); });
 
     assert(max_ind == curve_pts.size() - 5);
-    
+
     assert(!within_eps(cutout_max, cutout_min, 0.01));
     // Done with checks
 
@@ -155,23 +153,16 @@ namespace gca {
     index_t ni2 = notch_start + 2;
     index_t ni3 = notch_start + 3;
 
-    //notch_start, notch_start + 1, notch_start + 2, notch_start + 3};
-    // index_poly notch{ni0, ni1, ni2, ni3}; 
-    // index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
-
-    // index_poly base_rectangle{min_ind, ni0, ni3, max_ind, ri0, ri1, ri2, ri3};
-
-    //    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
-
     index_poly notch{ni0, ni1, ni2, ni3}; 
 
-    //    index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
+    index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
+    index_poly base_rectangle{min_ind, ni3, ni0, max_ind, ri0, ri1, ri2, ri3};
 
-    //index_poly base_rectangle{min_ind, ni0, ni3, max_ind, ri0, ri1, ri2, ri3};
-    index_poly base_rectangle{min_ind, max_ind, ri0, ri1, ri2, ri3};
-    
-    extrusion jaw{curve_pts, {ip, base_rectangle}, {z_h, z_h}, -1*n};
+    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
 
+    //index_poly base_rectangle{min_ind, ni3, ni0, max_ind, ri0, ri1, ri2, ri3};
+    //    index_poly base_rectangle{min_ind, max_ind, ri0, ri1, ri2, ri3};
+    //    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
     extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, n};
@@ -204,8 +195,13 @@ namespace gca {
 
     cout << "About to extrude m " << endl;
     triangular_mesh m = extrude(custom_jaw.first);
+    auto pd = polydata_for_trimesh(m);
+    debug_print_edge_summary(pd);
+    vtk_debug_mesh_boundary_edges(m);
+    assert(m.is_connected());
     cout << "Extruded m " << endl;
     triangular_mesh notch = extrude(custom_jaw.second);
+    assert(notch.is_connected());
     cout << "Extruded notch" << endl;
 
     return std::make_pair(m, notch);
@@ -228,18 +224,11 @@ namespace gca {
 
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
-
-    assert(a_cutout->is_connected());
-
     triangular_mesh* notch =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.second);
-
-    assert(a_cutout->is_connected());
-
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
 
-    assert(an_cutout->is_connected());
     //vtk_debug_meshes({&part_mesh, notch});//{a_cutout, an_cutout}); //, &part_mesh});
 
     return soft_jaws{axis, notch, a_cutout, an_cutout};

@@ -30,7 +30,8 @@ namespace gca {
 
   void vtk_debug_polygon(const oriented_polygon& p);
   void vtk_debug_polygons(const std::vector<oriented_polygon>& polys);
-  
+
+  void vtk_debug_mesh_boundary_edges(const triangular_mesh& m);
 }
 
 #endif
