@@ -118,11 +118,13 @@ namespace gca {
 				 const tool& t,
 				 const double cut_depth) {
     auto holes = pocket.get_holes();
-    vector<oriented_polygon> offset_h(holes.size());
-    transform(begin(holes), end(holes), begin(offset_h),
-  	      [t](const oriented_polygon& p)
-  	      { return exterior_offset(p, t.radius()); });
-    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
+    vector<oriented_polygon> offset_h;//(holes.size());
+    for (auto h : holes) {
+      concat(offset_h, exterior_offset(h, t.radius()));
+    }
+    auto i_off = interior_offset(pocket.get_boundary(), t.radius());
+    CHECK(i_off.size() == 1);
+    oriented_polygon bound_poly = i_off.front();
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth);
@@ -171,11 +173,18 @@ namespace gca {
 				     const tool& t,
 				     const double cut_depth) {
     auto holes = p.get_holes();
-    vector<oriented_polygon> offset_h(holes.size());
-    transform(begin(holes), end(holes), begin(offset_h),
-  	      [t](const oriented_polygon& p)
-  	      { return exterior_offset(p, t.radius()); });
-    oriented_polygon bound_poly = interior_offset(p.get_boundary(), t.radius());
+    vector<oriented_polygon> offset_h; //(holes.size());
+    for (auto h : holes) {
+      concat(offset_h, exterior_offset(h, t.radius()));
+    }
+    
+    // transform(begin(holes), end(holes), begin(offset_h),
+    // 	      [t](const oriented_polygon& p)
+    // 	      { return exterior_offset(p, t.radius()); });
+    auto i_off = interior_offset(p.get_boundary(), t.radius());
+    CHECK(i_off.size() == 1);
+    oriented_polygon bound_poly = i_off.front();
+    //    oriented_polygon bound_poly = interior_offset(p.get_boundary(), t.radius());
 
     vector<polyline> plines = roughing_lines(p,
 					     p.base(),
@@ -204,11 +213,18 @@ namespace gca {
 				const tool& t,
 				double cut_depth) {
     auto holes = pocket.get_holes();
-    vector<oriented_polygon> offset_h(holes.size());
-    transform(begin(holes), end(holes), begin(offset_h),
-  	      [t](const oriented_polygon& p)
-  	      { return exterior_offset(p, t.radius()); });
-    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
+    vector<oriented_polygon> offset_h; //(holes.size());
+    for (auto h : holes) {
+      concat(offset_h, exterior_offset(h, t.radius()));
+    }
+    
+    // transform(begin(holes), end(holes), begin(offset_h),
+    // 	      [t](const oriented_polygon& p)
+    // 	      { return exterior_offset(p, t.radius()); });
+    auto i_off = interior_offset(pocket.get_boundary(), t.radius());
+    CHECK(i_off.size() == 1);
+    oriented_polygon bound_poly = i_off.front();
+    //    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth / 2.0);
@@ -222,17 +238,6 @@ namespace gca {
     return pocket_path;
   }
 
-  vector<polyline> rough_pockets(const vector<freeform_pocket>& pockets,
-				 const tool& t,
-				 double cut_depth) {
-    vector<polyline> ps;
-    for (auto pocket : pockets) {
-      auto ls = rough_pocket(pocket, t, cut_depth);
-      concat(ps, ls);
-    }
-    return ps;
-  }
-
   std::vector<polyline>
   contour_level(const oriented_polygon& outer,
 		const oriented_polygon& inter,
@@ -244,8 +249,8 @@ namespace gca {
     
     auto i = exterior_offset(inter, r);
     //    while (contains(outer, i)) {
-    while (!contains(i, outer)) {
-      polys.push_back(to_polyline(i));
+    while ((i.size() == 1) && !contains(i.front(), outer)) {
+      polys.push_back(to_polyline(i.front()));
       r += t.radius();
       i = exterior_offset(inter, r);
       // TODO: Come up with more precise end test
@@ -267,7 +272,9 @@ namespace gca {
   std::vector<polyline>
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
-    auto o = project(interior_offset(exterior, t.radius()), get_end_depth());
+    auto i_off = interior_offset(exterior, t.radius());
+    CHECK(i_off.size() == 1);
+    auto o = project(i_off.front(), get_end_depth());
     auto inter = project(interior, get_end_depth());
     vector<double> depths =
       cut_depths(get_start_depth(), get_end_depth(), cut_depth);
@@ -289,9 +296,9 @@ namespace gca {
     double r = t.radius();
     auto last_polygon = inter;
     auto i = interior_offset(inter, r);
-    while (contains(last_polygon, i)) {
-      polys.push_back(to_polyline(i));
-      last_polygon = i;
+    while ((i.size() == 1) && contains(last_polygon, i.front())) {
+      polys.push_back(to_polyline(i.front()));
+      last_polygon = i.front();
       r += t.radius();
       i = interior_offset(inter, r);
     }
@@ -337,13 +344,13 @@ namespace gca {
   std::vector<polyline>
   freeform_pocket::toolpath_lines(const tool& t,
 				  const double cut_depth) const {
-    // vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
-    // auto finish_surface = finish_base_lines(*this, t, cut_depth);
-    // concat(pocket_path, finish_surface);
-    // auto finish_edges = finish_pocket(*this, t, cut_depth);
-    // concat(pocket_path, finish_edges);
-    // return pocket_path;
-    return {to_polyline(project(boundary, get_start_depth()))};
+    vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
+    auto finish_surface = finish_base_lines(*this, t, cut_depth);
+    concat(pocket_path, finish_surface);
+    auto finish_edges = finish_pocket(*this, t, cut_depth);
+    concat(pocket_path, finish_edges);
+    return pocket_path;
+    //    return {to_polyline(project(boundary, get_start_depth()))};
   }
 
   // TODO: Move these to somewhere else, they really dont belong here

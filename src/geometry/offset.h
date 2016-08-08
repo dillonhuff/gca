@@ -3,13 +3,15 @@
 
 #include "geometry/polygon.h"
 
+#define CHECK(x) if (!(x)) { std::cout << "CHECK FAILED, EXITING..." << std::endl; exit(-1); }
+
 namespace gca {
+  
+  std::vector<oriented_polygon> exterior_offset(const oriented_polygon& p,
+						const double inc);
 
-  oriented_polygon exterior_offset(const oriented_polygon& p,
-				   const double inc);
-
-  oriented_polygon interior_offset(const oriented_polygon& p,
-				   const double inc);
+  std::vector<oriented_polygon> interior_offset(const oriented_polygon& p,
+						const double inc);
   
 }
 

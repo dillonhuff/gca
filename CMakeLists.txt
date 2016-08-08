@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 
-IF (APPLE)
-ELSE()
-
-SET(CMAKE_C_COMPILER "/usr/bin/gcc")
-SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
-
-ENDIF()
-
 project(gca)
 
 find_package(CGAL REQUIRED COMPONENTS Core)
@@ -15,6 +7,11 @@ include( ${CGAL_USE_FILE} )
 
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
+
+
+IF( NOT CMAKE_BUILD_TYPE )
+   SET( CMAKE_BUILD_TYPE Debug ... FORCE )
+ENDIF()
 
 SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2")
 #-Werror -Wall")
@@ -222,7 +219,7 @@ target_link_libraries(ublas geometry utils gcode gprocess gca)
 ######### VTK Example ##########
 
 # Make command:
-# /opt/local/bin/cmake -DVTK_DIR:PATH=/Users/dillon/Downloads/VTK-build/ .
+# /opt/local/bin/cmake -DVTK_DIR:PATH=/Users/dillon/Downloads/VTK-build/ -DCMAKE_BUILD_TYPE=Debug . 
 
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell)
 target_link_libraries(AddCell geometry utils gcode gprocess gca)
