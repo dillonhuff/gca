@@ -198,8 +198,8 @@ namespace gca {
 
     cout << "About to extrude m " << endl;
     triangular_mesh m = extrude(custom_jaw.first);
-    auto pd = polydata_for_trimesh(m);
-    debug_print_edge_summary(pd);
+    //    auto pd = polydata_for_trimesh(m);
+    //debug_print_edge_summary(pd);
     //vtk_debug_mesh_boundary_edges(m);
     assert(m.is_connected());
     cout << "Extruded m " << endl;

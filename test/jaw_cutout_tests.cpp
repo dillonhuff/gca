@@ -48,7 +48,7 @@ namespace gca {
 
     //vtk_debug_highlight_inds(outer_axis_surfs);
 
-    REQUIRE(outer_axis_surfs.size() == 6);
+    REQUIRE(outer_axis_surfs.size() == 7);
     
     triangular_mesh aligned =
       align_workpiece(outer_axis_surfs, workpiece_dims);
