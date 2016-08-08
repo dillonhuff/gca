@@ -1994,6 +1994,33 @@ src/synthesis/vice.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/vice.cpp.s
 .PHONY : src/synthesis/vice.cpp.s
 
+src/synthesis/visual_debug.o: src/synthesis/visual_debug.cpp.o
+
+.PHONY : src/synthesis/visual_debug.o
+
+# target to build an object file
+src/synthesis/visual_debug.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/visual_debug.cpp.o
+.PHONY : src/synthesis/visual_debug.cpp.o
+
+src/synthesis/visual_debug.i: src/synthesis/visual_debug.cpp.i
+
+.PHONY : src/synthesis/visual_debug.i
+
+# target to preprocess a source file
+src/synthesis/visual_debug.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/visual_debug.cpp.i
+.PHONY : src/synthesis/visual_debug.cpp.i
+
+src/synthesis/visual_debug.s: src/synthesis/visual_debug.cpp.s
+
+.PHONY : src/synthesis/visual_debug.s
+
+# target to generate assembly for a file
+src/synthesis/visual_debug.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/visual_debug.cpp.s
+.PHONY : src/synthesis/visual_debug.cpp.s
+
 src/synthesis/workpiece_clipping.o: src/synthesis/workpiece_clipping.cpp.o
 
 .PHONY : src/synthesis/workpiece_clipping.o
@@ -3448,6 +3475,9 @@ help:
 	@echo "... src/synthesis/vice.o"
 	@echo "... src/synthesis/vice.i"
 	@echo "... src/synthesis/vice.s"
+	@echo "... src/synthesis/visual_debug.o"
+	@echo "... src/synthesis/visual_debug.i"
+	@echo "... src/synthesis/visual_debug.s"
 	@echo "... src/synthesis/workpiece_clipping.o"
 	@echo "... src/synthesis/workpiece_clipping.i"
 	@echo "... src/synthesis/workpiece_clipping.s"

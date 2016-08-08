@@ -9,6 +9,7 @@
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/toolpath.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -150,7 +151,7 @@ namespace gca {
 	interior(p_i), exterior(p_e) {}
     
     const vector<oriented_polygon>& get_holes() const
-    { assert(false); }
+    { CHECK(false); }
 
     double get_end_depth() const
     { return end_depth; }
@@ -176,7 +177,7 @@ namespace gca {
       : start_depth(p_start_depth), end_depth(p_end_depth), base(p_base) {}
 
     const vector<oriented_polygon>& get_holes() const
-    { assert(false); }
+    { CHECK(false); }
 
     double get_end_depth() const
     { return end_depth; }

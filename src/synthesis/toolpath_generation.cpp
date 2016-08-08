@@ -19,12 +19,12 @@ namespace gca {
     base_inds(basep),
     mesh(p_mesh) {
     
-    assert(base_inds.size() > 0);
+    CHECK(base_inds.size() > 0);
     auto bounds = mesh_bounds(base_inds, base_mesh());
     // if (bounds.size() > 1) {
     //   vtk_debug_highlight_inds(basep, *p_mesh);
     // }
-    assert(bounds.size() > 0);
+    CHECK(bounds.size() > 0);
     boundary = extract_boundary(bounds);
     holes = bounds;
   }
@@ -88,7 +88,7 @@ namespace gca {
 				    int num_repeats,
 				    offset_dir d,
 				    double inc) {
-    assert(num_repeats > 0);
+    CHECK(num_repeats > 0);
     vector<polyline> paths;
     paths.push_back(offset(p, d, inc));
     for (int i = 1; i < num_repeats; i++) {
@@ -360,7 +360,7 @@ namespace gca {
   }
 
   polyline compress_lines(const polyline& p, double tolerance) {
-    assert(p.num_points() > 1);
+    CHECK(p.num_points() > 1);
     if (p.num_points() == 2) { return p; }
     vector<vector<line>> slope_groups;
     split_by(p.lines(), slope_groups,

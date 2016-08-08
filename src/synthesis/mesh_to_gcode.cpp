@@ -65,10 +65,10 @@ namespace gca {
     for (auto setup : plan.fixtures()) {
       gcode_program gprog =
 	cut_secured_mesh(setup.pockets, tools, w.stock_material);
-      setups.push_back(fabrication_setup(*(setup.m), setup.fix.v, gprog));
+      setups.push_back(fabrication_setup(*(setup.m), setup.other_meshes, setup.fix.v, gprog));
     }
 
-    return fabrication_plan(setups, plan.custom_fixtures());
+    return fabrication_plan(&part_mesh, setups, plan.custom_fixtures());
   }
 
 }

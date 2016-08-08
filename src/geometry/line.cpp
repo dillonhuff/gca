@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "geometry/line.h"
+#include "utils/check.h"
 
 namespace gca {
   
@@ -103,7 +104,7 @@ namespace gca {
 	double y = p_slope*x + p_b;
 	return maybe<point>(point(x, y, z));
       } else {
-	assert(false);
+	CHECK(false);
       }
     } else if (p_slope_m.just) {
       double x = next.start.x;
@@ -114,7 +115,7 @@ namespace gca {
     } else if (!n_slope_m.just && !p_slope_m.just) {
       return maybe<point>();
     } else {
-      assert(false);
+      CHECK(false);
     }
   }
 
@@ -140,12 +141,12 @@ namespace gca {
 
   point trim_or_extend_unsafe(line prev, line next) {
     maybe<point> p = trim_or_extend(prev, next);
-    assert(p.just);
+    CHECK(p.just);
     return p.t;
   }
 
   vector<line> make_lines(const vector<point>& pts) {
-    assert(pts.size() > 1);
+    CHECK(pts.size() > 1);
     vector<line> l;
     for (auto pt = begin(pts); pt != end(pts) - 1; ++pt) {
       l.push_back(line(*pt, *(pt + 1)));

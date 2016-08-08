@@ -268,10 +268,10 @@ namespace gca {
     point base_pt = max_point_in_dir(top_of_contour.get_parent_mesh(), base_normal);
     plane base_plane(base_normal, base_pt);
 
-    point left_pt = max_point_in_dir(outline_of_contour.get_parent_mesh(), axis);
+    point left_pt = max_point_in_dir(*(jaw_plan.a_jaw), axis);
     plane left_plane(axis, left_pt);
 
-    point right_pt = max_point_in_dir(outline_of_contour.get_parent_mesh(), neg_axis);
+    point right_pt = max_point_in_dir(*(jaw_plan.an_jaw), neg_axis);
     plane right_plane(neg_axis, right_pt);
     
     clamp_orientation cutout_orient(left_plane, right_plane, base_plane);
@@ -298,14 +298,15 @@ namespace gca {
 		       const fixture& top_fix,
 		       const custom_jaw_cutout& custom) {
     const triangular_mesh& notch = *(custom.notch);
+    const triangular_mesh& a_jaw = *(custom.left_jaw->final_part_mesh());
+    const triangular_mesh& an_jaw = *(custom.left_jaw->final_part_mesh());
+
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
 
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
-    cout << "Starting first clip base" << endl;
     clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
-    cout << "Starting second clip base" << endl;
     clip_setups.push_back(clip_base_transform(notch, part_mesh, {}, custom.clean_fix));
     return clip_setups;
   }

@@ -113,6 +113,7 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
 	./src/synthesis/clamp_orientation.h
+	./src/synthesis/visual_debug.h
 	./src/synthesis/jaw_cutout.h
 	./src/synthesis/clipping_plan.h
 	./src/synthesis/gcode_generation.h
@@ -152,6 +153,7 @@ SET(GCA_CPPS
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/vice.cpp
+	 ./src/synthesis/visual_debug.cpp
 	 ./src/system/settings.cpp
 	 ./src/system/file.cpp
 	 ./src/system/json.cpp

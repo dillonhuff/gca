@@ -43,9 +43,7 @@ namespace gca {
 
   std::vector<oriented_polygon> interior_offset(const oriented_polygon& p,
 						const double inc) {
-    cout << "Start interior offset" << endl;
     CHECK(p.vertices().size() > 0);
-    cout << "Done with vertices check" << endl;
     
     double z_va = p.vertices().front().z;
     Polygon_2 out;
@@ -53,13 +51,8 @@ namespace gca {
       out.push_back(Point(p.x, p.y));
     }
 
-    cout << "Interior offset" << endl;
-
     PolygonPtrVector inner_offset_polygons =
       CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
-
-    cout << "Got interior offset" << endl;
-    cout << "# of offset polygons = " << inner_offset_polygons.size() << endl;
 
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {

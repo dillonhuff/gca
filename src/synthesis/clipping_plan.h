@@ -16,14 +16,17 @@ namespace gca {
   };
 
   struct fixture_setup {
+    // TODO: Should be called a part mesh
     const triangular_mesh* m;
+    std::vector<triangular_mesh*> other_meshes;
     fixture fix;
     std::vector<pocket> pockets;
 
     fixture_setup(const triangular_mesh* p_m,
+		  const std::vector<triangular_mesh*>& p_other_meshes,
 		  const fixture& f,
 		  const std::vector<pocket>& p)
-      : m(p_m), fix(f), pockets(p) {}
+      : m(p_m), other_meshes(p_other_meshes), fix(f), pockets(p) {}
   };
 
   class clipping_plan {

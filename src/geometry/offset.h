@@ -2,8 +2,7 @@
 #define GCA_OFFSET_H
 
 #include "geometry/polygon.h"
-
-#define CHECK(x) if (!(x)) { std::cout << "CHECK FAILED, EXITING..." << std::endl; exit(-1); }
+#include "utils/check.h"
 
 namespace gca {
   

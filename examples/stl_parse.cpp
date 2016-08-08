@@ -7,6 +7,7 @@
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
+#include "synthesis/visual_debug.h"
 #include "utils/algorithm.h"
 #include "system/parse_stl.h"
 
@@ -47,6 +48,10 @@ int main(int argc, char* argv[]) {
   workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
   fabrication_plan plan =
     make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+
+  for (auto step : plan.steps()) {
+    visual_debug(step);
+  }
 
   cout << "Custom fixtures" << endl;
   for (auto fix_plan : plan.custom_fixtures()) {
