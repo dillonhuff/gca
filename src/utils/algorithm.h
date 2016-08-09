@@ -2,10 +2,13 @@
 #define GCA_SYSTEM_ALGORITHM_H
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <unordered_set>
 #include <utility>
+
+#include "utils/check.h"
 
 namespace gca {
 
@@ -405,7 +408,7 @@ namespace gca {
       }
     }
 
-    assert(false);
+    DBG_ASSERT(false);
   }
   
   // TODO: Move to utils/algorithm

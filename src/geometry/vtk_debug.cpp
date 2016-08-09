@@ -323,8 +323,10 @@ namespace gca {
     cout << "Debugging" << endl;
     vector<vtkSmartPointer<vtkActor>> actors;
     for (auto name : a.mesh_names()) {
-      auto pd = polydata_for_trimesh(a.mesh(name));
-      actors.push_back(polydata_actor(pd));
+      if (a.metadata(name).display_during_debugging) {
+	auto pd = polydata_for_trimesh(a.mesh(name));
+	actors.push_back(polydata_actor(pd));
+      }
     }
     visualize_actors(actors);
   }

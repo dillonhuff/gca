@@ -160,13 +160,6 @@ namespace gca {
     index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
     
     extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, z_h}, -1*n};
-    //    index_poly base_rectangle{min_ind, ni0, ni3, max_ind, ri0, ri1}; //min_ind, ni0, ni3, max_ind, ri0, ri1, ri2, ri3};
-
-    //extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
-
-    //index_poly base_rectangle{min_ind, ni3, ni0, max_ind, ri0, ri1, ri2, ri3};
-    //    index_poly base_rectangle{min_ind, max_ind, ri0, ri1, ri2, ri3};
-    //    extrusion jaw{curve_pts, {ip, notch_negative, base_rectangle}, {z_h, z_h, z_h}, -1*n};
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
     extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, n};
@@ -177,8 +170,8 @@ namespace gca {
   std::pair<triangular_mesh, triangular_mesh>
   cutout_mesh(const contour_surface_decomposition& surfs,
 	      const vice& v,
-	      const point axis,
-	      const point n) {
+	      const point axis) {
+	      //	      const point n) {
     vector<gca::edge> base_edges = shared_edges(surfs.outline, surfs.bottom);
 
     const triangular_mesh& part_mesh = surfs.outline.get_parent_mesh();
@@ -212,19 +205,18 @@ namespace gca {
   }
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
-			   const vice& v,
-			   const point n) {
+			   const vice& v) {
     auto outline_of_contour = surfs.outline;
     auto top_of_contour = surfs.top;
     point axis = pick_jaw_cutout_axis(surfs);
     cout << "axis = " << axis << endl;
-    cout << "n = " << n << endl;
-    cout << "axis.dot(n) = " << axis.dot(n) << endl;
+    cout << "n = " << surfs.n << endl;
+    cout << "axis.dot(n) = " << axis.dot(surfs.n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
     //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
-    auto a_meshes = cutout_mesh(surfs, v, axis, n);
-    auto an_meshes = cutout_mesh(surfs, v, -1*axis, n);
+    auto a_meshes = cutout_mesh(surfs, v, axis);
+    auto an_meshes = cutout_mesh(surfs, v, -1*axis);
 
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
@@ -242,10 +234,10 @@ namespace gca {
   boost::optional<custom_jaw_cutout>
   custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
 			    const vice& v,
-			    const point n,
+			    //			    const point n,
 			    const fabrication_inputs& fab_inputs) {
     soft_jaws jaw_plan =
-      make_soft_jaws(surfs, v, n);
+      make_soft_jaws(surfs, v); //, n);
 
     surface outline_of_contour = surfs.outline;
     surface top_of_contour = surfs.top;
@@ -300,7 +292,7 @@ namespace gca {
 		       const custom_jaw_cutout& custom) {
     const triangular_mesh& notch = *(custom.notch);
     const triangular_mesh& a_jaw = *(custom.left_jaw->final_part_mesh());
-    const triangular_mesh& an_jaw = *(custom.left_jaw->final_part_mesh());
+    const triangular_mesh& an_jaw = *(custom.right_jaw->final_part_mesh());
 
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
@@ -310,12 +302,24 @@ namespace gca {
     rigid_arrangement notch_top;
     notch_top.insert("notch", nt, notch);
     notch_top.insert("part", nt, part_mesh);
-    //notch_top.insert("stock", nt, aligned);
-    notch_top.insert("a_jaw", nt, a_jaw);
-    notch_top.insert("an_jaw", nt, an_jaw);
+    notch_top.insert("stock", nt, aligned);
+    notch_top.metadata("stock").display_during_debugging = false;
 
-    debug_arrangement(notch_top);
+    //debug_arrangement(notch_top);
 
+    homogeneous_transform bt =
+      mating_transform(aligned, custom.base_fix.orient, custom.base_fix.v);
+
+    rigid_arrangement base_clip;
+    base_clip.insert("notch", bt, notch);
+    base_clip.insert("part", bt, part_mesh);
+    base_clip.insert("stock", bt, aligned);
+    base_clip.metadata("stock").display_during_debugging = false;
+    base_clip.insert("a_jaw", bt, a_jaw);
+    base_clip.insert("an_jaw", bt, an_jaw);
+
+    //    debug_arrangement(base_clip);
+    
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
     clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
@@ -344,11 +348,10 @@ namespace gca {
 		  const triangular_mesh& part_mesh,
 		  const contour_surface_decomposition& surfs,
 		  const fixture& top_fix,
-		  const point n,
 		  const fabrication_inputs& fab_inputs) {
     // TODO: Actually use the custom jaw cutout fixtures!
     boost::optional<custom_jaw_cutout> custom =
-      custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), -1*n, fab_inputs);
+      custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), fab_inputs);
 
     if (custom) {
       return soft_jaw_clipping_plan(aligned, part_mesh, surfs, top_fix, *custom);

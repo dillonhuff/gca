@@ -13,7 +13,7 @@ namespace gca {
     for (index_t i = 0; i < 3; i++) {
       if (t1.v[i] == ind) { return i; }
     }
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   std::vector<index_t>
@@ -38,7 +38,7 @@ namespace gca {
       auto tl = vertex_face_neighbors(e.l);
       auto tr = vertex_face_neighbors(e.r);
       auto tris = intersection(tl, tr);
-      assert(tris.size() == 2);
+      DBG_ASSERT(tris.size() == 2);
       triangle_t t1 = triangle_vertices(tris[0]);
       triangle_t t2 = triangle_vertices(tris[1]);
       index_t t1l = vertex_index_of(e.l, t1);
@@ -68,7 +68,7 @@ namespace gca {
     for (unsigned i = 0; i < vertices.size(); i++) {
       if (within_eps(p, vertices[i])) { return i; }
     }
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   bool
@@ -163,12 +163,12 @@ namespace gca {
       auto ccs =
 	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
 				{ return share_edge(l, r); });
-      assert(ccs.size() == 1);
-      assert(num_winding_order_errors(tris) == 0);
+      DBG_ASSERT(ccs.size() == 1);
+      DBG_ASSERT(num_winding_order_errors(tris) == 0);
     }
 
-    assert(num_winding_order_errors(tris) == 0);
-    assert(tris.size() == triangles.size());
+    DBG_ASSERT(num_winding_order_errors(tris) == 0);
+    DBG_ASSERT(tris.size() == triangles.size());
     return tris;
   }
   
@@ -202,7 +202,7 @@ namespace gca {
       auto fixed_triangles = fix_winding_order_errors(vertex_triangles);
       int new_wind_errs = num_winding_order_errors(fixed_triangles);
       cout << "Num winding errors after fixing = " << new_wind_errs << endl;
-      assert(new_wind_errs == 0);
+      DBG_ASSERT(new_wind_errs == 0);
       return fixed_triangles;
     }
     return vertex_triangles;
@@ -302,7 +302,7 @@ namespace gca {
     maybe<double> z = z_at(x, y);
     if (!(z.just)) {
       cout << "ERROR: No z value for point: " << point(x, y, 0) << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
     return z.t;
   }
@@ -320,7 +320,7 @@ namespace gca {
 
   // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
   bool is_outer_surface(const vector<index_t>& s, const triangular_mesh& part) {
-    assert(s.size() > 0);
+    DBG_ASSERT(s.size() > 0);
     triangle plane_rep = part.face_triangle(s.front());
     point v1 = plane_rep.v1;
     point n = plane_rep.normal.normalize();
@@ -376,7 +376,7 @@ namespace gca {
   std::vector<vector<index_t>>
   connect_regions(std::vector<index_t>& indices,
 		  const triangular_mesh& part) {
-    assert(indices.size() > 0);
+    DBG_ASSERT(indices.size() > 0);
     vector<vector<index_t>> connected_regions;
     while (indices.size() > 0) {
       connected_regions.push_back(connected_region(indices,
@@ -452,7 +452,7 @@ namespace gca {
     maybe<double> z = z_at(x, y, faces, mesh);
     if (!(z.just)) {
       cout << "ERROR: No z value for point: " << point(x, y, 0) << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
     return z.t;
   }
@@ -513,7 +513,7 @@ namespace gca {
   std::vector<std::vector<index_t>>
   merge_connected_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 			   const triangular_mesh& part) {
-    assert(surfaces.size() > 0);
+    DBG_ASSERT(surfaces.size() > 0);
     vector<vector<unsigned>> components =
       connected_components_by(surfaces,
 			      [part](const vector<index_t>& l,
@@ -578,7 +578,7 @@ namespace gca {
 	  count++;
 	}
       }
-      assert(count > 0);
+      DBG_ASSERT(count > 0);
       if (count == 1) {
 	no_ds.push_back(l);
       }
@@ -652,7 +652,7 @@ namespace gca {
     auto tl = m.vertex_face_neighbors(e.l);
     auto tr = m.vertex_face_neighbors(e.r);
     auto tris = intersection(tl, tr);
-    assert(tris.size() == 2);
+    DBG_ASSERT(tris.size() == 2);
     point n1 = m.face_orientation(tris[0]);
     point n2 = m.face_orientation(tris[1]);
     return angle_between(n1, n2);
@@ -673,7 +673,7 @@ namespace gca {
 				    const triangular_mesh& m) {
     auto part_outlines = mesh_bounds(inds, m);
 
-    assert(part_outlines.size() > 0);
+    DBG_ASSERT(part_outlines.size() > 0);
 
     oriented_polygon part_outline =
       *(max_element(begin(part_outlines), end(part_outlines),

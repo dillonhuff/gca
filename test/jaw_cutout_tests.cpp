@@ -24,7 +24,7 @@ namespace gca {
 
     REQUIRE(decomp);
     
-    soft_jaws jaws = make_soft_jaws(*decomp, test_vice, -1*(decomp->n));
+    soft_jaws jaws = make_soft_jaws(*decomp, test_vice);
     triangular_mesh* axis_jaw = jaws.a_jaw;
     triangular_mesh* neg_axis_jaw = jaws.an_jaw;
     

@@ -14,15 +14,13 @@ namespace gca {
   };
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
-			   const vice& v,
-			   const point n);
+			   const vice& v);
   
   boost::optional<clipping_plan>
   custom_jaw_plan(const triangular_mesh& aligned,
 		  const triangular_mesh& part_mesh,
 		  const contour_surface_decomposition& surfs,
 		  const fixture& top_fix,
-		  const point n,
 		  const fabrication_inputs& fab_inputs);
 
 }
