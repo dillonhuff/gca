@@ -18,12 +18,15 @@ namespace gca {
     start_depth(start_depthp),
     base_inds(basep),
     mesh(p_mesh) {
+
+    //vtk_debug_highlight_inds(basep, *p_mesh);
     
     DBG_ASSERT(base_inds.size() > 0);
     auto bounds = mesh_bounds(base_inds, base_mesh());
     // if (bounds.size() > 1) {
     //   vtk_debug_highlight_inds(basep, *p_mesh);
     // }
+    cout << "# of bounds = " << bounds.size() << endl;
     DBG_ASSERT(bounds.size() > 0);
     boundary = extract_boundary(bounds);
     holes = bounds;
@@ -222,7 +225,9 @@ namespace gca {
     // 	      [t](const oriented_polygon& p)
     // 	      { return exterior_offset(p, t.radius()); });
     auto i_off = interior_offset(pocket.get_boundary(), t.radius());
-    DBG_ASSERT(i_off.size() == 1);
+    cout << "# of offset = " << i_off.size() << endl;
+    // TODO: Perhaps this should be a failure?
+    if (i_off.size() != 1) { return {}; }
     oriented_polygon bound_poly = i_off.front();
     //    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
     vector<double> depths = cut_depths(pocket.get_start_depth(),
@@ -344,13 +349,13 @@ namespace gca {
   std::vector<polyline>
   freeform_pocket::toolpath_lines(const tool& t,
 				  const double cut_depth) const {
-    vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
-    auto finish_surface = finish_base_lines(*this, t, cut_depth);
-    concat(pocket_path, finish_surface);
-    auto finish_edges = finish_pocket(*this, t, cut_depth);
-    concat(pocket_path, finish_edges);
-    return pocket_path;
-    //    return {to_polyline(project(boundary, get_start_depth()))};
+    // vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
+    // auto finish_surface = finish_base_lines(*this, t, cut_depth);
+    // concat(pocket_path, finish_surface);
+    // auto finish_edges = finish_pocket(*this, t, cut_depth);
+    // concat(pocket_path, finish_edges);
+    // return pocket_path;
+    return {to_polyline(project(boundary, get_start_depth()))};
   }
 
   // TODO: Move these to somewhere else, they really dont belong here

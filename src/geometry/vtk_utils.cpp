@@ -21,14 +21,14 @@ namespace gca {
     tri->GetPoints()->GetPoint(1, p1);
     tri->GetPoints()->GetPoint(2, p2);
 
-    point v1(p0[0], p0[1], p0[2]);
-    point v2(p1[0], p1[1], p1[2]);
-    point v3(p2[0], p2[1], p2[2]);
+    point v0(p0[0], p0[1], p0[2]);
+    point v1(p1[0], p1[1], p1[2]);
+    point v2(p2[0], p2[1], p2[2]);
 
-    point q1 = v1 - v3;
-    point q2 = v2 - v3;
+    point q1 = v1 - v0;
+    point q2 = v2 - v0;
     point norm = cross(q2, q1).normalize();
-    return triangle(norm, v1, v2, v3);
+    return triangle(norm, v0, v1, v2);
   }
 
   std::vector<triangle>

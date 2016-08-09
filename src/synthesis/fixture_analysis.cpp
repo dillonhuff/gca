@@ -1,3 +1,4 @@
+#include "geometry/vtk_debug.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
@@ -16,7 +17,9 @@ namespace gca {
     vector<surface> surfs;
 
     auto stock_surfs = outer_surfaces(aligned_workpiece_mesh);
-    assert(stock_surfs.size() == 6);
+
+    DBG_ASSERT(stock_surfs.size() == 6);
+
     vector<point> normals;
     for (auto s : stock_surfs) {
       index_t i = s.index_list().front();
@@ -37,7 +40,7 @@ namespace gca {
   }
 
   std::vector<plane> max_area_basis(const std::vector<surface>& surfaces) {
-    assert(surfaces.size() > 0);
+    DBG_ASSERT(surfaces.size() > 0);
     
     vector<surface> sorted_part_surfaces = surfaces;
     sort(begin(sorted_part_surfaces), end(sorted_part_surfaces),
@@ -65,7 +68,7 @@ namespace gca {
   }
 
   bool right_handed(const std::vector<plane>& planes) {
-    assert(planes.size() == 3);
+    DBG_ASSERT(planes.size() == 3);
 
     double d = cross(planes[0].normal(), planes[1].normal()).dot(planes[2].normal());
     return d > 0.0;
@@ -77,14 +80,14 @@ namespace gca {
     plane tmp = rh_basis[0];
     rh_basis[0] = rh_basis[1];
     rh_basis[1] = tmp;
-    assert(right_handed(rh_basis));
+    DBG_ASSERT(right_handed(rh_basis));
     return rh_basis;
   }
 
   // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
-    assert(part_surfaces.size() > 0);
+    DBG_ASSERT(part_surfaces.size() > 0);
     
     const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
 
@@ -94,15 +97,15 @@ namespace gca {
     vector<surface> sfs = outer_surfaces(mesh);
     vector<plane> basis = set_right_handed(max_area_basis(sfs));
 
-    assert(basis.size() == 3 && basis.size() == part_planes.size());
-    assert(right_handed(basis));
-    assert(right_handed(part_planes));
+    DBG_ASSERT(basis.size() == 3 && basis.size() == part_planes.size());
+    DBG_ASSERT(right_handed(basis));
+    DBG_ASSERT(right_handed(part_planes));
     
     vector<plane> offset_basis;
     for (unsigned i = 0; i < basis.size(); i++) {
       double stock_diam = diameter(basis[i].normal(), mesh);
       double part_diam = diameter(part_planes[i].normal(), part);
-      assert(stock_diam > part_diam);
+      DBG_ASSERT(stock_diam > part_diam);
       double margin = (stock_diam - part_diam) / 2.0;
       offset_basis.push_back(basis[i].flip().slide(margin));
     }
@@ -110,7 +113,7 @@ namespace gca {
     auto t = mate_planes(offset_basis[0], offset_basis[1], offset_basis[2],
 			 part_planes[0], part_planes[1], part_planes[2]);
 
-    assert(t);
+    DBG_ASSERT(t);
 
     return apply(*t, mesh);
   }
@@ -193,7 +196,14 @@ namespace gca {
     relation<surface*, fixture*> rel(surfaces, all_orients);
     vector<unsigned> surfaces_left = inds(surfaces);
     select_fixtures(rel, surfaces_left, surfaces, all_orients);
-    assert(surfaces_left.size() == 0);
+    if (!(surfaces_left.size() == 0)) {
+      // vector<surface> surfs;
+      // for (auto i : surfaces_left) {
+      // 	surfs.push_back(*(surfaces[i]));
+      // }
+      //vtk_debug_highlight_inds(surfs);
+      DBG_ASSERT(false);
+    }
     return constrained_partition<surface*, fixture*>(rel);
   }
 
@@ -237,7 +247,7 @@ namespace gca {
 	}
       } else {
 	cout << "No legal fixture for surface group" << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
     }
   }
@@ -250,7 +260,7 @@ namespace gca {
     constrained_partition<surface*, fixture*> surface_part =
       greedy_possible_fixtures(surfs_to_cut, all_orients);
 
-    assert(surface_part.all_items_are_assignable() > 0);
+    DBG_ASSERT(surface_part.all_items_are_assignable() > 0);
 
     greedy_pick_orientations(surface_part);
 
@@ -272,7 +282,7 @@ namespace gca {
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
 
-    assert(all_orients.size() > 0 || surfs_to_cut.size() == 0);
+    DBG_ASSERT(all_orients.size() > 0 || surfs_to_cut.size() == 0);
 
     auto orient_ptrs = ptrs(all_orients);
     auto surf_ptrs = ptrs(surfs_to_cut);

@@ -88,7 +88,7 @@ namespace gca {
 
       SECTION("Extrude in (0, -1, 0)") {
 	extrude_dir = point(0, -1, 0);
-	
+
 	triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
 	auto pd = polydata_for_trimesh(m);
 	debug_print_summary(pd);
