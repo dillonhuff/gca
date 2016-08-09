@@ -31,14 +31,20 @@ namespace gca {
     REQUIRE(axis_jaw->is_connected());
     REQUIRE(neg_axis_jaw->is_connected());
 
+    REQUIRE(axis_jaw->winding_order_is_consistent());
+    REQUIRE(neg_axis_jaw->winding_order_is_consistent());
+
     vector<surface> axis_surfs = surfaces_to_cut(*axis_jaw);
     vector<surface> neg_axis_surfs = surfaces_to_cut(*neg_axis_jaw);
 
     REQUIRE(axis_surfs.size() == 12);
     REQUIRE(neg_axis_surfs.size() == 12);
 
+    auto const_regions = const_orientation_regions(*axis_jaw);
+
     auto outer_axis_surfs = outer_surfaces(*axis_jaw);
 
+    //vtk_debug_highlight_inds(outer_axis_surfs);
     REQUIRE(outer_axis_surfs.size() == 7);
     
     triangular_mesh aligned =

@@ -5,12 +5,14 @@
 #include <set>
 #include <iostream>
 
+#include "utils/check.h"
+
 namespace gca {
   
   typedef std::map< std::pair< gca::trimesh_t::index_t, gca::trimesh_t::index_t >, gca::trimesh_t::index_t > directed_edge2index_map_t;
   gca::trimesh_t::index_t directed_edge2face_index( const directed_edge2index_map_t& de2fi, gca::trimesh_t::index_t vertex_i, gca::trimesh_t::index_t vertex_j )
   {
-    assert( !de2fi.empty() );
+    DBG_ASSERT( !de2fi.empty() );
     
     directed_edge2index_map_t::const_iterator it = de2fi.find( std::make_pair( vertex_i, vertex_j ) );
     
@@ -19,7 +21,7 @@ namespace gca {
     // In this case, the reverse orientation edge must have a face.
     if( it == de2fi.end() )
       {
-        assert( de2fi.find( std::make_pair( vertex_j, vertex_i ) ) != de2fi.end() );
+        DBG_ASSERT( de2fi.find( std::make_pair( vertex_j, vertex_i ) ) != de2fi.end() );
         return -1;
       }
     
@@ -39,8 +41,8 @@ namespace gca {
       Python version used heavily
     */
     
-    assert( triangles );
-    assert( edges );
+    DBG_ASSERT( triangles );
+    DBG_ASSERT( edges );
     
     directed_edge2index_map_t de2fi;
     for( int fi = 0; fi < num_triangles; ++fi )
@@ -85,8 +87,8 @@ namespace gca {
         he1.opposite_he = he0index;
         
         // Also store the index in our m_directed_edge2he_index map.
-        assert( m_directed_edge2he_index.find( std::make_pair( edge.v[0], edge.v[1] ) ) == m_directed_edge2he_index.end() );
-        assert( m_directed_edge2he_index.find( std::make_pair( edge.v[1], edge.v[0] ) ) == m_directed_edge2he_index.end() );
+        DBG_ASSERT( m_directed_edge2he_index.find( std::make_pair( edge.v[0], edge.v[1] ) ) == m_directed_edge2he_index.end() );
+        DBG_ASSERT( m_directed_edge2he_index.find( std::make_pair( edge.v[1], edge.v[0] ) ) == m_directed_edge2he_index.end() );
         m_directed_edge2he_index[ std::make_pair( edge.v[0], edge.v[1] ) ] = he0index;
         m_directed_edge2he_index[ std::make_pair( edge.v[1], edge.v[0] ) ] = he1index;
         
@@ -120,7 +122,7 @@ namespace gca {
 	  }
         
         // Store one of the half-edges for the edge.
-        assert( m_edge_halfedges[ ei ] == -1 );
+        DBG_ASSERT( m_edge_halfedges[ ei ] == -1 );
         m_edge_halfedges[ ei ] = he0index;
       }
     
@@ -144,7 +146,7 @@ namespace gca {
         if( face.v[0] == i ) j = face.v[1];
         else if( face.v[1] == i ) j = face.v[2];
         else if( face.v[2] == i ) j = face.v[0];
-        assert( -1 != j );
+        DBG_ASSERT( -1 != j );
         
         he.next_he = m_directed_edge2he_index[ std::make_pair(i,j) ];
       }
@@ -181,7 +183,7 @@ namespace gca {
 #ifndef NDEBUG
     for( std::map< index_t, std::set< index_t > >::const_iterator it = vertex2outgoing_boundary_hei.begin(); it != vertex2outgoing_boundary_hei.end(); ++it )
       {
-        assert( it->second.empty() );
+        DBG_ASSERT( it->second.empty() );
       }
 #endif
   }

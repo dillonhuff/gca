@@ -128,12 +128,14 @@ namespace gca {
       return mesh.boundary_vertices().size() == 0;
     }
 
-    inline point face_orientation(index_t i) const
-    { return face_orientations[i]; }
+    inline point face_orientation(index_t i) const {
+      //      return face_orientations[i];
+      
+    }
 
     inline triangle face_triangle(index_t i) const {
       auto t = tri_vertices[i];
-      return triangle(face_orientations[i],
+      return triangle(face_orientation(i),
 		      vertices[t.i()],
 		      vertices[t.j()],
 		      vertices[t.k()]);
@@ -160,7 +162,7 @@ namespace gca {
       point dummy_normal(1, 0, 0);
       for (unsigned i = 0; i < tri_vertices.size(); i++) {
 	auto t = tri_vertices[i];
-	ts.push_back(triangle(face_orientations[i],
+	ts.push_back(triangle(face_orientation(i),
 			      vertices[t.i()],
 			      vertices[t.j()],
 			      vertices[t.k()]));

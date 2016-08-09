@@ -22,7 +22,7 @@ namespace gca {
   }
 
   vector<point> collect_polygon(vector<line>& lines) {
-    assert(lines.size() > 0);
+    DBG_ASSERT(lines.size() > 0);
     vector<point> points;
     vector<line> to_remove;
     points.push_back(lines.front().start);
@@ -189,7 +189,7 @@ namespace gca {
 
   std::vector<triangle> square_triangles(const point n,
 					 const std::vector<point>& pts) {
-    assert(pts.size() == 4);
+    DBG_ASSERT(pts.size() == 4);
     vector<triangle> tris;
     tris.push_back(triangle(n, pts[0], pts[1], pts[2]));
     tris.push_back(triangle(n, pts[2], pts[3], pts[0]));
@@ -198,7 +198,7 @@ namespace gca {
 
   std::vector<triangle>
   triangulate_box_pts(const std::vector<point>& p) {
-    assert(p.size() == 8);
+    DBG_ASSERT(p.size() == 8);
 
     vector<point> f0{p[0], p[1], p[5], p[4]};
     vector<point> f1{p[2], p[3], p[1], p[0]};
@@ -216,7 +216,7 @@ namespace gca {
     concat(tris, square_triangles(point(0, 0, 1), f4));
     concat(tris, square_triangles(point(0, 0, -1), f5));
     
-    assert(tris.size() == 12);
+    DBG_ASSERT(tris.size() == 12);
 
     return tris;
   }
@@ -236,7 +236,7 @@ namespace gca {
   }
 
   unsigned find_ear_index(const std::vector<point>& pts) {
-    assert(pts.size() > 2);
+    DBG_ASSERT(pts.size() > 2);
     for (unsigned i = 1, j = 0; i < pts.size(); i++, j++) {
       unsigned ip1 = (i + 1) % pts.size();
       point l = pts[ip1];
@@ -249,7 +249,7 @@ namespace gca {
       }
     }
     cout << "Error: no ears left in " << endl;
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   triangle clip_ear(const unsigned ear_ind,
@@ -263,7 +263,7 @@ namespace gca {
 
   // TODO: Add more complex ear finding?
   std::vector<triangle> triangulate_polygon(const oriented_polygon& p) {
-    assert(p.vertices().size() > 2);
+    DBG_ASSERT(p.vertices().size() > 2);
     vector<point> pts = p.vertices();
     vector<triangle> tris;
     while (pts.size() > 3) {
@@ -271,7 +271,7 @@ namespace gca {
       tris.push_back(clip_ear(next_ear, pts));
     }
 
-    assert(pts.size() == 3);
+    DBG_ASSERT(pts.size() == 3);
     tris.push_back(triangle(point(0, 0, 1),
 			    pts[0],
 			    pts[1],

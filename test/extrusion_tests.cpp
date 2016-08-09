@@ -38,6 +38,10 @@ namespace gca {
 
       REQUIRE(m.face_indexes().size() == 12);
       REQUIRE(m.is_connected());
+
+      auto outer_surfs = outer_surfaces(m);
+
+      REQUIRE(outer_surfs.size() == 6);
     }
 
     SECTION("Extrude 2 layer jaw") {
@@ -54,28 +58,63 @@ namespace gca {
 
       std::vector<index_poly> polys{{0, 1, 2, 3, 4, 5, 6}, {0, 1, 2, 3, 5, 6}};
       std::vector<double> depths{2.3, 3.6};
-      triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
-      auto pd = polydata_for_trimesh(m);
-      debug_print_summary(pd);
-      debug_print_is_closed(pd);
-      debug_print_edge_summary(pd);
 
-      vector<gca::edge> nm_edges = non_manifold_edges(m);
-      cout << "# of vertices = " << m.vertex_indexes().size() << endl;
-      cout << "# of faces = " << m.face_indexes().size() << endl;
-      cout << "# of edges = " << m.edges().size() << endl;
-      cout << "Non manifold edges = " << endl;
-      for (auto e : nm_edges) {
-	cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+      SECTION("Extrude in (0, 1, 0)") {
+	triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+	auto pd = polydata_for_trimesh(m);
+	debug_print_summary(pd);
+	debug_print_is_closed(pd);
+	debug_print_edge_summary(pd);
+
+	vector<gca::edge> nm_edges = non_manifold_edges(m);
+	cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+	cout << "# of faces = " << m.face_indexes().size() << endl;
+	cout << "# of edges = " << m.edges().size() << endl;
+	cout << "Non manifold edges = " << endl;
+	for (auto e : nm_edges) {
+	  cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+	}
+
+	REQUIRE(nm_edges.size() == 0);
+
+	REQUIRE(m.winding_order_is_consistent());
+
+
+	REQUIRE(m.is_connected());
+
+	auto surfs = outer_surfaces(m);
+	REQUIRE(surfs.size() == 6);
       }
 
-      REQUIRE(nm_edges.size() == 0);
+      SECTION("Extrude in (0, -1, 0)") {
+	extrude_dir = point(0, -1, 0);
+	
+	triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+	auto pd = polydata_for_trimesh(m);
+	debug_print_summary(pd);
+	debug_print_is_closed(pd);
+	debug_print_edge_summary(pd);
 
-      REQUIRE(m.winding_order_is_consistent());
+	vector<gca::edge> nm_edges = non_manifold_edges(m);
+	cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+	cout << "# of faces = " << m.face_indexes().size() << endl;
+	cout << "# of edges = " << m.edges().size() << endl;
+	cout << "Non manifold edges = " << endl;
+	for (auto e : nm_edges) {
+	  cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+	}
 
-      //      vtk_debug_mesh(m);
+	REQUIRE(nm_edges.size() == 0);
 
-      REQUIRE(m.is_connected());
+	REQUIRE(m.winding_order_is_consistent());
+
+
+	REQUIRE(m.is_connected());
+
+	auto surfs = outer_surfaces(m);
+	REQUIRE(surfs.size() == 6);
+      }
+
     }
 
   }

@@ -17,33 +17,6 @@ namespace gca {
     fabrication_plan* right_jaw;
   };
 
-  point pick_jaw_cutout_axis(const contour_surface_decomposition& surfs) {
-    vector<surface> viable_regions =
-      regions_connected_to_both(surfs.outline, surfs.top, surfs.bottom);
-
-    // TODO: Later sort multiple regions
-    assert(viable_regions.size() == 1);
-
-    surface r = viable_regions.front();
-
-    std::vector<gca::edge> edges = shared_edges(r, surfs.bottom);
-
-    assert(edges.size() > 0);
-
-    // TODO: Check edge lengths
-    auto middle_ind = static_cast<unsigned>(ceil((edges.size() + 1) / 2.0) - 1);
-
-    assert(0 <= middle_ind && middle_ind < edges.size());
-
-    gca::edge e = edges[middle_ind];
-    auto tris = r.edge_face_neighbors(e);
-    if (!(tris.size() == 1)) {
-      cout << "# of tris = " << tris.size() << endl;
-      assert(false);
-    }
-    return r.face_orientation(tris[0]);
-  }
-
   std::vector<index_poly>
   clip_with_halfspace(const triangular_mesh& part_mesh,
 		      const std::vector<gca::edge>& p,
@@ -52,17 +25,6 @@ namespace gca {
     delete_if(q, [part_mesh, clip_plane](const edge e)
 	      { return signed_distance(clip_plane, part_mesh.vertex(e.l)) < 0 || signed_distance(clip_plane, part_mesh.vertex(e.r)) < 0; });
     return unordered_segments_to_index_polylines(q);
-  }
-
-  // TODO: Clarify open vs. closed
-  polyline
-  to_polyline(const index_poly& poly,
-	      const std::vector<point>& pts) {
-    vector<point> res;
-    for (auto i : poly) {
-      res.push_back(pts[i]);
-    }
-    return res;
   }
   
   // TODO: Move to utils/algorithm
@@ -154,12 +116,12 @@ namespace gca {
     index_t ni2 = notch_start + 2;
     index_t ni3 = notch_start + 3;
 
-    index_poly notch{ni0, ni1, ni2, ni3}; 
+    index_poly notch{ni0, ni1, ni2, ni3};
     index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
     extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, z_h}, -1*n};
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
-    extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, n};
+    extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, -1*n};
 
     return std::make_pair(jaw, notch_e);
   }
@@ -209,7 +171,7 @@ namespace gca {
     cout << "axis = " << axis << endl;
     cout << "n = " << surfs.n << endl;
     cout << "axis.dot(n) = " << axis.dot(surfs.n) << endl;
-    assert(within_eps(axis.dot(n), 0, 0.01));
+    DBG_ASSERT(within_eps(axis.dot(surfs.n), 0, 0.01));
 
     const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     auto a_meshes = cutout_mesh(surfs, v, axis);
@@ -222,7 +184,6 @@ namespace gca {
     notch_top.insert("an_jaw", an_meshes.first);
 
     //debug_arrangement(notch_top);
-
 
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);

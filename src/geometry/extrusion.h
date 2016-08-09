@@ -29,6 +29,10 @@ namespace gca {
   triangular_mesh
   extrude(const extrusion& ext);
 
+  polyline
+  to_polyline(const index_poly& poly,
+	      const std::vector<point>& pts);
+  
 }
 
 #endif

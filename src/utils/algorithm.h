@@ -433,7 +433,7 @@ namespace gca {
     }
     return pointers;
   }
-
+  
 }
 
 #endif

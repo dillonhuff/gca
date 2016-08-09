@@ -27,7 +27,7 @@ namespace gca {
     box b = workpiece_box(w);
     auto tris = box_triangles(b);
     auto m = make_mesh(tris, 0.001);
-    assert(m.is_connected());
+    DBG_ASSERT(m.is_connected());
     return m;
   }
 
@@ -36,12 +36,12 @@ namespace gca {
 			      const double clipped_z_height,
 			      const fixtures& f) {
     const vice& v = f.get_vice();
-    assert(!v.has_parallel_plate());
+    DBG_ASSERT(!v.has_parallel_plate());
 
     vector<plate_height> plates;
     for (auto p : f.parallel_plates()) {
       double adjusted_jaw_height = v.jaw_height() - p;
-      assert(adjusted_jaw_height > 0);
+      DBG_ASSERT(adjusted_jaw_height > 0);
       double leftover = aligned_z_height - clipped_z_height - adjusted_jaw_height;
       // TODO: Compute this magic number via friction analysis?
       if (leftover > 0.01 && (clipped_z_height - 0.01) > adjusted_jaw_height) {
@@ -56,17 +56,17 @@ namespace gca {
     double work_height = max_in_dir(stock, point(0, 0, 1));
     double part_height = max_in_dir(part, point(0, 0, 1));
 
-    assert(work_height > part_height);
+    DBG_ASSERT(work_height > part_height);
 
     auto bound = contour_outline(stock.face_indexes(), stock, point(0, 0, 1));
     if (bound) {
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
     auto outlines =
       mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
 
-    assert(outlines.size() == 2);
+    DBG_ASSERT(outlines.size() == 2);
 
     return face_pocket(work_height, part_height, outlines.front());
   }
@@ -76,23 +76,23 @@ namespace gca {
     double stock_top = max_in_dir(stock, point(0, 0, 1));
     double part_top = max_in_dir(part, point(0, 0, 1));
 
-    assert(stock_top > part_top);
+    DBG_ASSERT(stock_top > part_top);
 
     auto stock_bound =
       contour_outline(stock.face_indexes(), stock, point(0, 0, 1));
     if (stock_bound) {
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
     auto stock_outlines =
       mesh_bounds((*stock_bound).index_list(), (*stock_bound).get_parent_mesh());
-    assert(stock_outlines.size() == 2);
+    DBG_ASSERT(stock_outlines.size() == 2);
     oriented_polygon stock_outline = stock_outlines.front();
     
     auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1));
     if (part_bound) {
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
     auto part_outlines =
       mesh_bounds((*part_bound).index_list(), (*part_bound).get_parent_mesh());
@@ -158,7 +158,7 @@ namespace gca {
     concat(setup_pockets, make_pockets(part, surfaces));
     unsigned new_size = setup.pockets.size();
 
-    assert((surfaces.size() == 0) || (new_size > old_size));
+    DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));
 
     return setup;
   }
@@ -178,7 +178,7 @@ namespace gca {
     concat(setup_pockets, make_pockets(part, surfaces));
     unsigned new_size = setup.pockets.size();
 
-    assert((surfaces.size() == 0) || (new_size > old_size));
+    DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));
 
     return setup;
   }
@@ -199,7 +199,7 @@ namespace gca {
     concat(setup_pockets, make_pockets(part, surfaces));
     unsigned new_size = setup.pockets.size();
 
-    assert((surfaces.size() == 0) || (new_size > old_size));
+    DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));
 
     return setup;
   }
@@ -225,14 +225,14 @@ namespace gca {
       select(orients, [n](const clamp_orientation& s)
 	     { return within_eps(s.top_normal(), n, 0.0001); });
 
-    assert(top_orients.size() > 0);
+    DBG_ASSERT(top_orients.size() > 0);
 
     const triangular_mesh& m = surfs.front().get_parent_mesh();
     sort(begin(top_orients), end(top_orients),
 	 [m](const clamp_orientation& l, const clamp_orientation& r)
 	 { return l.contact_area(m) > r.contact_area(m); });
 
-    assert(top_orients.size() > 0);
+    DBG_ASSERT(top_orients.size() > 0);
       
     return top_orients.front();
   }

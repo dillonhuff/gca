@@ -141,10 +141,10 @@ namespace gca {
     const surface& outline = surfs.outline;
     const surface& bottom = surfs.bottom;
     auto outline_sets = connected_boundary_edge_sets(outline);
-    assert(outline_sets.size() > 0);
+    DBG_ASSERT(outline_sets.size() > 0);
 
     auto bottom_sets = connected_boundary_edge_sets(bottom);
-    assert(bottom_sets.size() > 0);
+    DBG_ASSERT(bottom_sets.size() > 0);
 
     for (auto s : outline_sets) {
       for (auto e : bottom_sets) {
@@ -198,4 +198,32 @@ namespace gca {
     return merge_surface_groups(subsurfs, merged);
   }
 
+  point pick_jaw_cutout_axis(const contour_surface_decomposition& surfs) {
+    vector<surface> viable_regions =
+      regions_connected_to_both(surfs.outline, surfs.top, surfs.bottom);
+
+    // TODO: Later sort multiple regions
+    DBG_ASSERT(viable_regions.size() == 1);
+
+    surface r = viable_regions.front();
+
+    std::vector<gca::edge> edges = shared_edges(r, surfs.bottom);
+
+    DBG_ASSERT(edges.size() > 0);
+
+    // TODO: Check edge lengths
+    auto middle_ind = static_cast<unsigned>(ceil((edges.size() + 1) / 2.0) - 1);
+
+    DBG_ASSERT(0 <= middle_ind && middle_ind < edges.size());
+
+    gca::edge e = edges[middle_ind];
+    auto tris = r.edge_face_neighbors(e);
+    if (!(tris.size() == 1)) {
+      cout << "# of tris = " << tris.size() << endl;
+      DBG_ASSERT(false);
+    }
+    return r.face_orientation(tris[0]);
+  }
+
+  
 }

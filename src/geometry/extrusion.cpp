@@ -263,4 +263,15 @@ namespace gca {
   }
 
 
+  // TODO: Clarify open vs. closed
+  polyline
+  to_polyline(const index_poly& poly,
+	      const std::vector<point>& pts) {
+    vector<point> res;
+    for (auto i : poly) {
+      res.push_back(pts[i]);
+    }
+    return res;
+  }
+
 }
