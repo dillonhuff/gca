@@ -120,7 +120,7 @@ namespace gca {
     index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
     reverse(begin(notch_negative), end(notch_negative));
     reverse(begin(ip), end(ip));
-    extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, z_h}, n};
+    extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, (3.0/2.0)*z_h}, n};
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
     extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, -1*n};

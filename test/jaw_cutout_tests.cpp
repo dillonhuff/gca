@@ -116,6 +116,10 @@ namespace gca {
       }
 
       REQUIRE(num_aligned_surfs >= 6);
+
+      auto after_surfs = stable_surfaces_after_clipping(*axis_jaw, aligned);
+
+      REQUIRE(after_surfs.size() == 7);
     }
 
   }

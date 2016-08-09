@@ -197,11 +197,16 @@ namespace gca {
     vector<unsigned> surfaces_left = inds(surfaces);
     select_fixtures(rel, surfaces_left, surfaces, all_orients);
     if (!(surfaces_left.size() == 0)) {
-      // vector<surface> surfs;
-      // for (auto i : surfaces_left) {
-      // 	surfs.push_back(*(surfaces[i]));
-      // }
-      //vtk_debug_highlight_inds(surfs);
+      for (auto f : all_orients) {
+	cout << "Considered fixture with orientation = " << f->orient.top_normal() << endl;
+      }
+      vector<surface> surfs;
+      for (auto i : surfaces_left) {
+	surface s = *(surfaces[i]);
+	cout << "Uncut surface normal = " << normal(s) << endl;
+      	surfs.push_back(s);
+      }
+      vtk_debug_highlight_inds(surfs);
       DBG_ASSERT(false);
     }
     return constrained_partition<surface*, fixture*>(rel);
