@@ -247,10 +247,10 @@ namespace gca {
     return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
   }
 
-  void
-  check_normal_consistency(const std::vector<triangle_t>& vertex_triangles,
-			   const std::vector<point>& vertices,
-			   const std::vector<point>& face_orientations) {
+  bool
+  all_normals_consistent(const std::vector<triangle_t>& vertex_triangles,
+			 const std::vector<point>& vertices,
+			 const std::vector<point>& face_orientations) {
     DBG_ASSERT(vertex_triangles.size() == face_orientations.size());
     for (unsigned i = 0; i < vertex_triangles.size(); i++) {
       auto t = vertex_triangles[i];
@@ -264,9 +264,23 @@ namespace gca {
 	cout << "i                  = " << i << endl;
 	cout << "Face orientation i = " << fi << endl;
 	cout << "Computed normal    = " << computed_normal << endl;
-	DBG_ASSERT(false);
+	return false;
       }
     }
+    return true;
+  }
+
+  std::vector<triangle_t>
+  flip_winding_orders(const std::vector<triangle_t>& vertex_triangles) {
+    vector<triangle_t> tris;
+    for (auto t : vertex_triangles) {
+      triangle_t f;
+      f.v[0] = t.v[1];
+      f.v[1] = t.v[0];
+      f.v[2] = t.v[2];
+      tris.push_back(f);
+    }
+    return tris;
   }
   
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
@@ -278,7 +292,11 @@ namespace gca {
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });
 
-    check_normal_consistency(vertex_triangles, vertices, face_orientations);
+    if (!all_normals_consistent(vertex_triangles, vertices, face_orientations)) {
+      vertex_triangles = flip_winding_orders(vertex_triangles);
+    }
+
+    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
     
     std::vector<edge_t> edges;
     unordered_edges_from_triangles(vertex_triangles.size(),
