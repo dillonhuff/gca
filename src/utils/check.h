@@ -1,7 +1,9 @@
 #ifndef GCA_CHECK_H
 #define GCA_CHECK_H
 
-#define DBG_ASSERT(x) if (!(x)) { std::cout << "CHECK FAILED, EXITING..." << std::endl; exit(-1); }
+#include <signal.h>
+
+#define DBG_ASSERT(x) if (!(x)) { std::cout << "CHECK FAILED, EXITING..." << std::endl; abort(); }
 
 
 #endif
