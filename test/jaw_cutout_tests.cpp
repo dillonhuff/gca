@@ -37,16 +37,7 @@ namespace gca {
     REQUIRE(axis_surfs.size() == 12);
     REQUIRE(neg_axis_surfs.size() == 12);
 
-    // clipping_plan p =
-    //   workpiece_clipping_programs(workpiece_dims, *axis_jaw, tools, fixes);
-
-    // for (auto s : p.surfaces_left_to_cut()) {
-    //   cout << "--- normal = " << s.face_orientation(s.front()) << endl;
-    // }
-
     auto outer_axis_surfs = outer_surfaces(*axis_jaw);
-
-    //vtk_debug_highlight_inds(outer_axis_surfs);
 
     REQUIRE(outer_axis_surfs.size() == 7);
     
@@ -67,12 +58,6 @@ namespace gca {
       }
     }
 
-    //vtk_debug_highlight_inds(p.surfaces_left_to_cut());
-
     REQUIRE(num_aligned_surfs >= 6);
-
-    // TODO: Reintroduce? I'm not sure whether these should still be true
-    //REQUIRE(p.stable_surfaces().size() == 6);
-    //REQUIRE(p.surfaces_left_to_cut().size() == 2);
   }
 }

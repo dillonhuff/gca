@@ -155,10 +155,7 @@ namespace gca {
     index_t ni3 = notch_start + 3;
 
     index_poly notch{ni0, ni1, ni2, ni3}; 
-
-    //index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
     index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
-    
     extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, z_h}, -1*n};
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
@@ -214,9 +211,18 @@ namespace gca {
     cout << "axis.dot(n) = " << axis.dot(surfs.n) << endl;
     assert(within_eps(axis.dot(n), 0, 0.01));
 
-    //const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
+    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     auto a_meshes = cutout_mesh(surfs, v, axis);
     auto an_meshes = cutout_mesh(surfs, v, -1*axis);
+
+    rigid_arrangement notch_top;
+    notch_top.insert("notch", a_meshes.second);
+    notch_top.insert("part", part_mesh);
+    notch_top.insert("a_jaw", a_meshes.first);
+    notch_top.insert("an_jaw", an_meshes.first);
+
+    //debug_arrangement(notch_top);
+
 
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
