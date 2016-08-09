@@ -131,8 +131,8 @@ namespace gca {
     inline point face_orientation(index_t i) const {
       //      return face_orientations[i];
       auto t = tri_vertices[i];
-      return cross(vertex(t.v[2]) - vertex(t.v[0]),
-		   vertex(t.v[1]) - vertex(t.v[0])).normalize();
+      return cross(vertex(t.v[1]) - vertex(t.v[0]),
+		   vertex(t.v[2]) - vertex(t.v[0])).normalize();
     }
 
     inline triangle face_triangle(index_t i) const {

@@ -246,6 +246,28 @@ namespace gca {
 	       &edges[0]);
     return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
   }
+
+  void
+  check_normal_consistency(const std::vector<triangle_t>& vertex_triangles,
+			   const std::vector<point>& vertices,
+			   const std::vector<point>& face_orientations) {
+    DBG_ASSERT(vertex_triangles.size() == face_orientations.size());
+    for (unsigned i = 0; i < vertex_triangles.size(); i++) {
+      auto t = vertex_triangles[i];
+      point computed_normal =
+	cross(vertices[t.v[1]] - vertices[t.v[0]],
+	      vertices[t.v[2]] - vertices[t.v[0]]).normalize();
+
+      point fi = (face_orientations[i]).normalize();
+      if (!within_eps(fi, computed_normal, 0.001)) {
+	cout << "Normal computation inconsistency: " << endl;
+	cout << "i                  = " << i << endl;
+	cout << "Face orientation i = " << fi << endl;
+	cout << "Computed normal    = " << computed_normal << endl;
+	DBG_ASSERT(false);
+      }
+    }
+  }
   
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance) {
@@ -255,6 +277,9 @@ namespace gca {
     std::vector<point> face_orientations(triangles.size());
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });
+
+    check_normal_consistency(vertex_triangles, vertices, face_orientations);
+    
     std::vector<edge_t> edges;
     unordered_edges_from_triangles(vertex_triangles.size(),
 				   &vertex_triangles[0],
