@@ -25,6 +25,14 @@ namespace gca {
       return false;
     }
 
+    bool is_boundary_edge(const gca::edge e) const {
+      auto face_neighbs = get_parent_mesh().edge_face_neighbors(e);
+      for (auto n : face_neighbs) {
+	if (!contains(n)) { return true; }
+      }
+      return false;
+    }
+
     std::vector<index_t>
     edge_face_neighbors(const gca::edge e) const {
       auto m_neighbs = get_parent_mesh().edge_face_neighbors(e);
@@ -175,6 +183,9 @@ namespace gca {
   std::vector<gca::edge>
   shared_edges(const surface& r, const surface& l);
 
+  std::vector<gca::edge>
+  boundary_edges(const surface& r);
+  
   point normal(const surface& s);
 }
 

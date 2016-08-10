@@ -47,7 +47,7 @@ namespace gca {
   bool elem(T e, const std::unordered_set<T>& t) {
     return t.find(e) != end(t);
   }
-  
+
   template<typename InputIt, typename OutputIt, typename F>
   OutputIt apply_between(InputIt s, InputIt e, OutputIt r, F f) {
     while (s != (e - 1)) {
@@ -253,8 +253,6 @@ namespace gca {
     return res;
   }
 
-
-  // TODO: system/algorithm ?
   template<typename I, typename F>
   std::vector<I>
   greedy_chain(const I& init, const std::vector<I>& elems, F f) {
@@ -432,6 +430,21 @@ namespace gca {
       pointers.push_back(&e);
     }
     return pointers;
+  }
+
+  template<typename T>
+  void reverse(T& t) {
+    reverse(begin(t), end(t));
+  }
+
+  template<typename T, typename F>
+  T min_e(const std::vector<T>& e, F f) {
+    return *min_element(begin(e), end(e), [f](const T& l, const T& r) { return f(l) < f(r); });
+  }
+
+  template<typename T, typename F>
+  T max_e(const std::vector<T>& e, F f) {
+    return *max_element(begin(e), end(e), [f](const T& l, const T& r) { return f(l) < f(r); });
   }
   
 }

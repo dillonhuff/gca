@@ -95,29 +95,6 @@ namespace gca {
     return {{0, 0, 1}, {0, 1, 0}};
   }
 
-  std::vector<gca::edge>
-  boundary_edges(const surface& s) {
-    std::vector<gca::edge> bound_edges;
-    for (auto e : s.get_parent_mesh().edges()) {
-      auto l_face_neighbors = s.get_parent_mesh().vertex_face_neighbors(e.l);
-      auto r_face_neighbors = s.get_parent_mesh().vertex_face_neighbors(e.r);
-      auto face_neighbors = intersection(l_face_neighbors, r_face_neighbors);
-      bool contains_some_neighbors = false;
-      bool contains_all_neighbors = true;
-      for (auto facet : face_neighbors) {
-	if (s.contains(facet)) {
-	  contains_some_neighbors = true;
-	} else {
-	  contains_all_neighbors = false;
-	}
-      }
-      if (contains_some_neighbors && !contains_all_neighbors) {
-	bound_edges.push_back(e);
-      }
-    }
-    return bound_edges;
-  }
-
   std::vector<std::vector<gca::edge>>
   connected_boundary_edge_sets(const surface& s) {
     std::vector<gca::edge> bound_edges = boundary_edges(s);

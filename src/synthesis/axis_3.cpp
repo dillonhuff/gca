@@ -1,3 +1,4 @@
+#include "geometry/extrusion.h"
 #include "geometry/polygon.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
@@ -29,7 +30,7 @@ namespace gca {
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
 				const std::vector<tool>& tools,
 				const material& stock_material) {
-    assert(pockets.size() > 0);
+    DBG_ASSERT(pockets.size() > 0);
     double h = (*(max_element(begin(pockets), end(pockets),
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
@@ -46,7 +47,7 @@ namespace gca {
       speed = 3000;
       feed = 5.0;
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
     vector<toolpath> lines;
     for (auto pocket : pockets) {
@@ -74,13 +75,61 @@ namespace gca {
     return pockets;
   }
 
-  bool has_no_base(const std::vector<index_t>& surface,
+  // TODO: Make this less hacky
+  index_poly
+  min_index_poly(const std::vector<point>& pts,
+		 const std::vector<index_poly>& polys) {
+    DBG_ASSERT(polys.size() > 0);
+    return *(min_element(begin(polys), end(polys),
+			 [pts](const index_poly& l, const index_poly& r)
+			 { return pts[l.front()].z < pts[r.front()].z; }));
+  }
+
+  std::vector<gca::edge>
+  index_poly_to_edges(const index_poly& p) {
+    DBG_ASSERT(p.size() > 0);
+    vector<gca::edge> edges;
+    for (unsigned i = 0; i < p.size(); i++) {
+      gca::edge e(p[i], p[(i + 1) % p.size()]);
+      edges.push_back(e);
+    }
+
+    DBG_ASSERT(p.size() == edges.size());
+    
+    return edges;
+  }
+
+  bool all_concave(const triangular_mesh& m, const std::vector<gca::edge>& e) {
+    for (auto ed : e) {
+      cout << "Dihedral angle = " << dihedral_angle(ed, m) << endl;
+    }
+    return all_of(begin(e), end(e), [m](const edge ed)
+		  { return dihedral_angle(ed, m) > 180; });
+  }
+
+  bool has_no_base(const std::vector<index_t>& surf,
 		   const triangular_mesh& part) {
+    
+    // surface s = surface(&part, surf);
+    // auto edges = boundary_edges(s);
+    // auto polys = unordered_segments_to_index_polygons(edges);
+    // cout << " of boundaries = " << polys.size() << endl;
+    // auto min_bound = min_index_poly(part.vertex_list(), polys);
+    // vector<gca::edge> min_bound_edges = index_poly_to_edges(min_bound);
+    // if (all_concave(part, min_bound_edges)) {
+    //   return true;
+    // }
+
+    // cout << "Has base" << endl;
+    // vtk_debug_highlight_inds(surf, part);
+
+    // return false;
+
     auto side_faces = side_millable_faces(point(0, 0, -1),
-					  part.face_indexes(),
-					  part);
+    					  part.face_indexes(),
+    					  part);
     // TODO: Sort first? This is disgustingly inefficient
-    if (intersection(side_faces, surface).size() == surface.size()) {
+    if (intersection(side_faces, surf).size() == surf.size()) {
       return true;
     }
     return false;
