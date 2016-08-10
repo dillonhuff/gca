@@ -323,10 +323,13 @@ namespace gca {
     DBG_ASSERT((base_surfs.size() == 0) || (new_size > old_size));
 
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
-    
-    //clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
 
-    clip_setups.push_back(clip_base_transform(notch, part_mesh, {}, custom.clean_fix));
+    vector<pocket> clean_pockets{face_down(clean_clip.mesh("notch"),
+					   clean_clip.mesh("part"))};
+
+
+    clip_setups.push_back(fixture_setup(clean_clip, custom.clean_fix, clean_pockets));
+
     return clip_setups;
   }
   
