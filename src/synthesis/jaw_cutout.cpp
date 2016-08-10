@@ -242,10 +242,8 @@ namespace gca {
     fabrication_plan* an_plan =
       new (allocate<fabrication_plan>()) fabrication_plan(anp);
 
-    // TODO: Sub select max point from only the given surface indexes
-    point base_normal = top_of_contour.face_orientation(top_of_contour.front());
-    point base_pt = max_point_in_dir(top_of_contour.get_parent_mesh(), base_normal);
-    plane base_plane(base_normal, base_pt);
+    surface base = jaw_plan.labeled_surface("a_jaw", "base");
+    plane base_plane = surface_plane(base);
 
     point left_pt = max_point_in_dir(jaw_plan.mesh("a_jaw"), axis);
     plane left_plane(axis, left_pt);

@@ -90,7 +90,6 @@ namespace gca {
     for (auto i : mesh.vertex_indexes()) {
       point p = mesh.vertex(i);
       points->InsertNextPoint(p.x, p.y, p.z);
-      i++;
     }
 
     vtkSmartPointer<vtkCellArray> triangles =

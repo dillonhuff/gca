@@ -171,7 +171,7 @@ namespace gca {
     surface labeled_surface(const std::string& mesh_name,
 			    const std::string& surface_name) const {
       cout << "finding labeled surface = " << mesh_name << endl;
-      auto s = labeled_mesh(mesh_name);
+      auto& s = labeled_mesh(mesh_name);
       cout << "found s, now finding label = " << surface_name << endl;
       return s.labeled_surface(surface_name);
     }
