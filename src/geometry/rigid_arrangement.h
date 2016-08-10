@@ -47,6 +47,14 @@ namespace gca {
       DBG_ASSERT(labeled_surfs.find(label_name) == end(labeled_surfs));
       labeled_surfs[label_name] = triangle_inds;
     }
+
+    labeled_mesh apply(const homogeneous_transform& t) const {
+      labeled_mesh m(gca::apply(t, mesh()));
+      m.labeled_surfs = labeled_surfs;
+      return m;
+    }
+    
+
   };
 
   struct arrangement_metadata {
@@ -102,6 +110,13 @@ namespace gca {
       insert(name, apply(t, m));
     }
 
+    void insert(const std::string& name,
+		const homogeneous_transform& t,
+		const gca::labeled_mesh& m) {
+      DBG_ASSERT(name_index.find(name) == end(name_index));
+      insert(name, m.apply(t));
+    }
+    
     const std::vector<std::string> mesh_names() const {
       std::vector<std::string> names;
       for (auto p : name_index) {

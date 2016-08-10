@@ -276,18 +276,19 @@ namespace gca {
 		       const contour_surface_decomposition& surfs,
 		       const fixture& top_fix,
 		       const custom_jaw_cutout& custom) {
-    const triangular_mesh& notch = custom.notch;
-    const triangular_mesh& a_jaw = *(custom.left_jaw->final_part_mesh());
-    const triangular_mesh& an_jaw = *(custom.right_jaw->final_part_mesh());
+    auto ar = custom.arrangement;
+    const labeled_mesh& a_jaw = ar.labeled_mesh("a_jaw"); //*(custom.left_jaw->final_part_mesh());
+    const labeled_mesh& an_jaw = ar.labeled_mesh("a_jaw"); //*(custom.right_jaw->final_part_mesh());
+    const labeled_mesh& notch = ar.labeled_mesh("notch");
 
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
 
     homogeneous_transform bt =
-      mating_transform(a_jaw, custom.base_fix.orient, custom.base_fix.v);
+      mating_transform(a_jaw.mesh(), custom.base_fix.orient, custom.base_fix.v);
 
     homogeneous_transform ct =
-      mating_transform(a_jaw, custom.clean_fix.orient, custom.clean_fix.v);
+      mating_transform(a_jaw.mesh(), custom.clean_fix.orient, custom.clean_fix.v);
 
     rigid_arrangement clean_clip;
     clean_clip.insert("notch", ct, notch);
@@ -300,7 +301,8 @@ namespace gca {
     //debug_arrangement(clean_clip);
     
     vector<fixture_setup> clip_setups;
-    clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
+    // TODO: Deal with notch alignment issue here
+    clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch.mesh(), top_surfs, top_fix));
 
     rigid_arrangement base_clip;
     base_clip.insert("notch", bt, notch);
