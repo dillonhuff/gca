@@ -11,6 +11,25 @@
 
 namespace gca {
 
+  class labeled_mesh {
+  protected:
+    std::map<std::string, std::vector<index_t>> labeled_surfs;
+    triangular_mesh* m;
+
+  public:
+
+    surface labeled_surface(const std::string& name) const {
+      auto r = labeled_surfs.find(name);
+      DBG_ASSERT(r != end(labeled_surfs));
+      return surface(m, r->second);
+    }
+
+    triangular_mesh* mesh() const {
+      return m;
+    }
+
+  };
+
   struct arrangement_metadata {
     bool display_during_debugging;
 
@@ -64,32 +83,32 @@ namespace gca {
       return names;
     }
 
-    const triangular_mesh& mesh(const std::string name) const {
+    const triangular_mesh& mesh(const std::string& name) const {
       auto r = name_index.find(name);
       DBG_ASSERT(r != end(name_index));
       return *(r->second);
     }
 
-    triangular_mesh& mesh(const std::string name) {
+    triangular_mesh& mesh(const std::string& name) {
       auto r = name_index.find(name);
       DBG_ASSERT(r != end(name_index));
       return *(r->second);
     }
     
 
-    arrangement_metadata& metadata(const std::string name) {
+    arrangement_metadata& metadata(const std::string& name) {
       auto r = metadata_index.find(name);
       DBG_ASSERT(r != end(metadata_index));
       return (r->second);
     }
 
-    void set_metadata(const std::string name, const arrangement_metadata& new_meta) {
+    void set_metadata(const std::string& name, const arrangement_metadata& new_meta) {
       auto r = metadata_index.find(name);
       DBG_ASSERT(r != end(metadata_index));
       metadata_index[name] = new_meta;
     }
     
-    const arrangement_metadata& metadata(const std::string name) const {
+    const arrangement_metadata& metadata(const std::string& name) const {
       auto r = metadata_index.find(name);
       DBG_ASSERT(r != end(metadata_index));
       return (r->second);
