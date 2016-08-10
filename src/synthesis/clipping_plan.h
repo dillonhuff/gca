@@ -31,6 +31,11 @@ namespace gca {
       a.insert("part", *p_m);
     }
 
+    fixture_setup(const rigid_arrangement& p_a,
+		  const fixture& f,
+		  const std::vector<pocket>& p)
+      : a(p_a), fix(f), pockets(p) {}
+    
     const triangular_mesh& part_mesh() const { return a.mesh("part"); }
     const rigid_arrangement& arrangement() const { return a; }
 

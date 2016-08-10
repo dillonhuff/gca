@@ -40,7 +40,19 @@ namespace gca {
 		       const triangular_mesh& notch_mesh,
 		       const std::vector<surface>& surfaces,
 		       const fixture& f);
-  
+
+  pocket face_down(const triangular_mesh& stock,
+		   const triangular_mesh& part);
+
+  pocket contour_around(const triangular_mesh& stock,
+			const triangular_mesh& part);
+
+  std::vector<pocket>
+  make_pockets(const triangular_mesh& part,
+	       const std::vector<surface>& surfaces);
+
+
+
 }
 
 #endif

@@ -19,15 +19,13 @@ namespace gca {
     base_inds(basep),
     mesh(p_mesh) {
 
-    //vtk_debug_highlight_inds(basep, *p_mesh);
     
     DBG_ASSERT(base_inds.size() > 0);
+
     auto bounds = mesh_bounds(base_inds, base_mesh());
-    // if (bounds.size() > 1) {
-    //   vtk_debug_highlight_inds(basep, *p_mesh);
-    // }
-    cout << "# of bounds = " << bounds.size() << endl;
+
     DBG_ASSERT(bounds.size() > 0);
+
     boundary = extract_boundary(bounds);
     holes = bounds;
   }

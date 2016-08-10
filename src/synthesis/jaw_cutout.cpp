@@ -233,9 +233,11 @@ namespace gca {
 
     // TODO: Remove these news
     fabrication_plan ap =
-      make_fabrication_plan(*(new triangular_mesh(jaw_plan.mesh("a_jaw"))), fab_inputs);
+      make_fabrication_plan(*(new (allocate<triangular_mesh>())triangular_mesh(jaw_plan.mesh("a_jaw"))), fab_inputs);
+
     fabrication_plan anp =
-      make_fabrication_plan(*(new triangular_mesh(jaw_plan.mesh("an_jaw"))), fab_inputs);
+      make_fabrication_plan(*(new (allocate<triangular_mesh>()) triangular_mesh(jaw_plan.mesh("an_jaw"))), fab_inputs);
+
     fabrication_plan* a_plan =
       new (allocate<fabrication_plan>()) fabrication_plan(ap);
     fabrication_plan* an_plan =
@@ -282,28 +284,8 @@ namespace gca {
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
 
-    // homogeneous_transform nt = mating_transform(aligned, top_fix.orient, top_fix.v);
-
-    // rigid_arrangement notch_top;
-    // notch_top.insert("notch", nt, notch);
-    // notch_top.insert("part", nt, part_mesh);
-    // notch_top.insert("stock", nt, aligned);
-    // notch_top.metadata("stock").display_during_debugging = false;
-
-    //debug_arrangement(notch_top);
-
     homogeneous_transform bt =
       mating_transform(a_jaw, custom.base_fix.orient, custom.base_fix.v);
-
-    rigid_arrangement base_clip;
-    base_clip.insert("notch", bt, notch);
-    base_clip.insert("part", bt, part_mesh);
-    base_clip.insert("stock", bt, aligned);
-    base_clip.metadata("stock").display_during_debugging = false;
-    base_clip.insert("a_jaw", bt, a_jaw);
-    base_clip.insert("an_jaw", bt, an_jaw);
-
-    //debug_arrangement(base_clip);
 
     homogeneous_transform ct =
       mating_transform(a_jaw, custom.clean_fix.orient, custom.clean_fix.v);
@@ -320,7 +302,30 @@ namespace gca {
     
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
-    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
+
+    rigid_arrangement base_clip;
+    base_clip.insert("notch", bt, notch);
+    base_clip.insert("part", bt, part_mesh);
+    base_clip.insert("stock", bt, aligned);
+    base_clip.metadata("stock").display_during_debugging = false;
+    base_clip.insert("a_jaw", bt, a_jaw);
+    base_clip.insert("an_jaw", bt, an_jaw);
+
+    //debug_arrangement(base_clip);
+    
+    vector<pocket> pockets{face_down(base_clip.mesh("stock"),
+				     base_clip.mesh("part"))};
+
+    unsigned old_size = pockets.size();
+    concat(pockets, make_pockets(base_clip.mesh("part"), base_surfs));
+    unsigned new_size = pockets.size();
+
+    DBG_ASSERT((base_surfs.size() == 0) || (new_size > old_size));
+
+    clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
+    
+    //clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_surfs, custom.base_fix));
+
     clip_setups.push_back(clip_base_transform(notch, part_mesh, {}, custom.clean_fix));
     return clip_setups;
   }

@@ -208,8 +208,8 @@ namespace gca {
 
     REQUIRE(plan.steps().size() == 3);
 
-    REQUIRE(plan.steps()[1].arrangement().mesh_names().size() == 3);
-    REQUIRE(plan.steps()[2].arrangement().mesh_names().size() == 3);
+    REQUIRE(plan.steps()[1].arrangement().mesh_names().size() == 5);
+    REQUIRE(plan.steps()[2].arrangement().mesh_names().size() == 5);
     
     REQUIRE(plan.custom_fixtures().size() == 2);
 
