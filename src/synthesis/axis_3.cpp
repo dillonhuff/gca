@@ -100,6 +100,7 @@ namespace gca {
   closed_vertical_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
 				  const triangular_mesh& mesh,
 				  double workpiece_height) {
+    cout << "START CLOSED VERTICAL" << endl;
     std::vector<std::vector<index_t>> surfaces = sfs;
     delete_if(surfaces,
     	      [&mesh](const vector<index_t>& surface)
@@ -115,6 +116,8 @@ namespace gca {
 	pockets.push_back(face_pocket(top_z, base_z, outline));
       }
     }
+
+    cout << "END CLOSED VERTICAL" << endl;
     return pockets;
   }
 

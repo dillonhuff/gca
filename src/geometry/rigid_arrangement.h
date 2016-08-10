@@ -113,7 +113,7 @@ namespace gca {
       DBG_ASSERT(r != end(metadata_index));
       return (r->second);
     }
-    
+
   };
 }
 
