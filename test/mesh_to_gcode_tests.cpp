@@ -207,10 +207,15 @@ namespace gca {
     auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
     
     REQUIRE(plan.steps().size() == 3);
+
+    REQUIRE(plan.steps()[1].arrangement().mesh_names().size() == 3);
+    
     REQUIRE(plan.custom_fixtures().size() == 2);
+
     for (auto f : plan.custom_fixtures()) {
       REQUIRE(f != nullptr);
     }
+
   }
 
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {
