@@ -165,6 +165,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/main.cpp
+	       test/rigid_arrangement_tests.cpp
 	       test/jaw_cutout_tests.cpp
 	       test/extrusion_tests.cpp
 	       test/plane_tests.cpp

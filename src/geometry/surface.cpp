@@ -323,4 +323,18 @@ namespace gca {
     return bound_edges;
   }
 
+  plane surface_plane(const surface& s) {
+    triangle t = s.face_triangle(s.front());
+    return plane(t.normal, t.v1);
+  }
+
+  surface find_surface_by_normal(const std::vector<surface>& surfs,
+				 const point n) {
+    auto r = find_if(begin(surfs), end(surfs),
+		     [n](const surface& s)
+		     { return within_eps(angle_between(normal(s), n), 0, 1.0); });
+    assert(r != end(surfs));
+    return *r;
+  }
+
 }

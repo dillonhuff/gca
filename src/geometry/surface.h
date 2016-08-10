@@ -3,6 +3,7 @@
 
 #include <boost/optional.hpp>
 
+#include "geometry/plane.h"
 #include "geometry/triangular_mesh.h"
 
 namespace gca {
@@ -187,6 +188,11 @@ namespace gca {
   boundary_edges(const surface& r);
   
   point normal(const surface& s);
+
+  plane surface_plane(const surface& s);
+
+  surface find_surface_by_normal(const std::vector<surface>& surfs,
+				 const point n);
 }
 
 #endif

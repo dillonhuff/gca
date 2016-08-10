@@ -99,7 +99,7 @@ namespace gca {
   }
 
   oriented_polygon extract_boundary(vector<oriented_polygon>& polygons) {
-    assert(polygons.size() > 0);
+    DBG_ASSERT(polygons.size() > 0);
 
     for (unsigned i = 0; i < polygons.size(); i++) {
       auto possible_bound = polygons[i];
@@ -119,7 +119,7 @@ namespace gca {
       }
     }
 
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   vector<polyline> clip_polyline_along(const polyline& p,

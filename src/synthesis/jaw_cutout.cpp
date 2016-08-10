@@ -143,7 +143,8 @@ namespace gca {
     return std::make_pair(jaw, notch_e);
   }
 
-  std::pair<triangular_mesh, triangular_mesh>
+  //  std::pair<triangular_mesh, triangular_mesh>
+  rigid_arrangement
   cutout_mesh(const contour_surface_decomposition& surfs,
 	      const vice& v,
 	      const point axis) {
@@ -166,15 +167,24 @@ namespace gca {
     pair<extrusion, extrusion> custom_jaw =
       complete_jaw_outline(jaw_outline.front(), surfs, v, axis);
 
+
     triangular_mesh m = extrude(custom_jaw.first);
+    auto outer = outer_surfaces(m);
+    auto base = find_surface_by_normal(outer, surfs.n);
 
     assert(m.is_connected());
 
     triangular_mesh notch = extrude(custom_jaw.second);
 
+    rigid_arrangement a;
+    a.insert("jaw", m);
+    a.insert_label("jaw", "base", base.index_list());
+
+    a.insert("notch", notch);
+    
     assert(notch.is_connected());
 
-    return std::make_pair(m, notch);
+    return a;
   }
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
@@ -193,23 +203,12 @@ namespace gca {
     auto an_meshes = cutout_mesh(surfs, v, -1*axis);
 
     rigid_arrangement notch_top;
-    notch_top.insert("notch", a_meshes.second);
+    notch_top.insert("notch", a_meshes.labeled_mesh("notch"));
     notch_top.insert("part", part_mesh);
-    notch_top.insert("a_jaw", a_meshes.first);
-    notch_top.insert("an_jaw", an_meshes.first);
+    notch_top.insert("a_jaw", a_meshes.labeled_mesh("jaw"));
+    notch_top.insert("an_jaw", an_meshes.labeled_mesh("jaw"));
 
     return notch_top;
-
-    //debug_arrangement(notch_top);
-
-    // triangular_mesh* a_cutout =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
-    // triangular_mesh* notch =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.second);
-    // triangular_mesh* an_cutout =
-    //   new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
-
-    // return soft_jaws{notch, a_cutout, an_cutout};
   }
 
   // TODO: Produce longer clamps

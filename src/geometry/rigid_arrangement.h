@@ -14,20 +14,30 @@ namespace gca {
   class labeled_mesh {
   protected:
     std::map<std::string, std::vector<index_t>> labeled_surfs;
-    triangular_mesh* m;
+    triangular_mesh m;
 
   public:
 
+    labeled_mesh(const triangular_mesh& m_p)
+      : m(m_p), labeled_surfs{} {}
+
+    labeled_mesh(const labeled_mesh& m_p)
+      : m(m_p.mesh()), labeled_surfs(m_p.labeled_surfs) {}
+    
     surface labeled_surface(const std::string& name) const {
       auto r = labeled_surfs.find(name);
       DBG_ASSERT(r != end(labeled_surfs));
-      return surface(m, r->second);
+      return surface(&m, r->second);
     }
 
-    triangular_mesh* mesh() const {
-      return m;
-    }
+    triangular_mesh& mesh() { return m; }
+    const triangular_mesh& mesh() const { return m; }
 
+    void insert_label(const std::string& label_name,
+		      const std::vector<index_t>& triangle_inds) {
+      DBG_ASSERT(labeled_surfs.find(label_name) == end(labeled_surfs));
+      labeled_surfs[label_name] = triangle_inds;
+    }
   };
 
   struct arrangement_metadata {
@@ -38,8 +48,8 @@ namespace gca {
   };
 
   class rigid_arrangement {
-    std::vector<std::unique_ptr<triangular_mesh>> meshes;
-    std::map<std::string, triangular_mesh*> name_index;
+    std::vector<std::unique_ptr<labeled_mesh>> meshes;
+    std::map<std::string, labeled_mesh*> name_index;
     std::map<std::string, arrangement_metadata> metadata_index;
     
   public:
@@ -48,7 +58,7 @@ namespace gca {
 
     rigid_arrangement(const rigid_arrangement& x) {
       for (auto n : x.mesh_names()) {
-	insert(n, x.mesh(n));
+	insert(n, x.labeled_mesh(n));
 	set_metadata(n, x.metadata(n));
       }
     }
@@ -62,12 +72,20 @@ namespace gca {
     
     void insert(const std::string& name,
 		const triangular_mesh& m) {
-      meshes.push_back(unique_ptr<triangular_mesh>(new triangular_mesh(m)));
-      std::unique_ptr<triangular_mesh>* res = &(meshes.back());
+      meshes.push_back(unique_ptr<class labeled_mesh>(new class labeled_mesh(triangular_mesh(m))));
+      std::unique_ptr<class labeled_mesh>* res = &(meshes.back());
       name_index[name] = res->get();
       metadata_index[name] = arrangement_metadata();
     }
 
+    void insert(const std::string& name,
+    		const class labeled_mesh& m) {
+      meshes.push_back(unique_ptr<class labeled_mesh>(new class labeled_mesh(m)));
+      std::unique_ptr<class labeled_mesh>* res = &(meshes.back());
+      name_index[name] = res->get();
+      metadata_index[name] = arrangement_metadata();
+    }
+    
     void insert(const std::string& name,
 		const homogeneous_transform& t,
 		const triangular_mesh& m) {
@@ -83,16 +101,28 @@ namespace gca {
       return names;
     }
 
-    const triangular_mesh& mesh(const std::string& name) const {
+    const labeled_mesh& labeled_mesh(const std::string& name) const {
       auto r = name_index.find(name);
       DBG_ASSERT(r != end(name_index));
       return *(r->second);
     }
 
-    triangular_mesh& mesh(const std::string& name) {
+    class labeled_mesh& labeled_mesh(const std::string& name) {
       auto r = name_index.find(name);
       DBG_ASSERT(r != end(name_index));
       return *(r->second);
+    }
+    
+    const triangular_mesh& mesh(const std::string& name) const {
+      auto r = name_index.find(name);
+      DBG_ASSERT(r != end(name_index));
+      return r->second->mesh();
+    }
+
+    triangular_mesh& mesh(const std::string& name) {
+      auto r = name_index.find(name);
+      DBG_ASSERT(r != end(name_index));
+      return r->second->mesh();
     }
     
 
@@ -112,6 +142,17 @@ namespace gca {
       auto r = metadata_index.find(name);
       DBG_ASSERT(r != end(metadata_index));
       return (r->second);
+    }
+
+    surface labeled_surface(const std::string& mesh_name,
+			    const std::string& surface_name) const {
+      return labeled_mesh(mesh_name).labeled_surface(surface_name);
+    }
+
+    void insert_label(const std::string& mesh_name,
+		      const std::string& label_name,
+		      const std::vector<index_t>& triangle_inds) {
+      labeled_mesh(mesh_name).insert_label(label_name, triangle_inds);
     }
 
   };

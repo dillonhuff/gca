@@ -2993,6 +2993,33 @@ test/retargeting_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/retargeting_tests.cpp.s
 .PHONY : test/retargeting_tests.cpp.s
 
+test/rigid_arrangement_tests.o: test/rigid_arrangement_tests.cpp.o
+
+.PHONY : test/rigid_arrangement_tests.o
+
+# target to build an object file
+test/rigid_arrangement_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.o
+.PHONY : test/rigid_arrangement_tests.cpp.o
+
+test/rigid_arrangement_tests.i: test/rigid_arrangement_tests.cpp.i
+
+.PHONY : test/rigid_arrangement_tests.i
+
+# target to preprocess a source file
+test/rigid_arrangement_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.i
+.PHONY : test/rigid_arrangement_tests.cpp.i
+
+test/rigid_arrangement_tests.s: test/rigid_arrangement_tests.cpp.s
+
+.PHONY : test/rigid_arrangement_tests.s
+
+# target to generate assembly for a file
+test/rigid_arrangement_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.s
+.PHONY : test/rigid_arrangement_tests.cpp.s
+
 test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
 
 .PHONY : test/shapes_to_toolpaths_tests.o
@@ -3586,6 +3613,9 @@ help:
 	@echo "... test/retargeting_tests.o"
 	@echo "... test/retargeting_tests.i"
 	@echo "... test/retargeting_tests.s"
+	@echo "... test/rigid_arrangement_tests.o"
+	@echo "... test/rigid_arrangement_tests.i"
+	@echo "... test/rigid_arrangement_tests.s"
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"

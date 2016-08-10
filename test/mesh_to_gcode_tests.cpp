@@ -189,6 +189,19 @@ namespace gca {
     }
   }
 
+  void test_jaw_alignment(const rigid_arrangement& a,
+			  const vice& v) {
+    REQUIRE(a.mesh_names().size() == 5);
+
+    plane a_jaw_base = surface_plane(a.labeled_surface("a_jaw", "base"));
+
+    REQUIRE(within_eps(angle_between(a_jaw_base.normal(), point(0, 0, -1)),  0, 1.0));
+
+    double vice_z = v.base_z();
+
+    REQUIRE(within_eps(a_jaw_base.pt().z, vice_z, 0.001));
+  }
+  
   TEST_CASE("Pendulum Arm Joint Top") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -208,8 +221,8 @@ namespace gca {
 
     REQUIRE(plan.steps().size() == 3);
 
-    REQUIRE(plan.steps()[1].arrangement().mesh_names().size() == 5);
-    REQUIRE(plan.steps()[2].arrangement().mesh_names().size() == 5);
+    test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
+    test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
     
     REQUIRE(plan.custom_fixtures().size() == 2);
 
