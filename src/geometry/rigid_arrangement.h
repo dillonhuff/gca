@@ -25,8 +25,10 @@ namespace gca {
       : m(m_p.mesh()), labeled_surfs(m_p.labeled_surfs) {}
     
     surface labeled_surface(const std::string& name) const {
+      cout << "Trying to find surface = " << name << endl;
       auto r = labeled_surfs.find(name);
       DBG_ASSERT(r != end(labeled_surfs));
+      cout << "Found " << name << endl;
       return surface(&m, r->second);
     }
 
@@ -107,7 +109,7 @@ namespace gca {
       return *(r->second);
     }
 
-    class labeled_mesh& labeled_mesh(const std::string& name) {
+    gca::labeled_mesh& labeled_mesh(const std::string& name) {
       auto r = name_index.find(name);
       DBG_ASSERT(r != end(name_index));
       return *(r->second);
@@ -146,13 +148,17 @@ namespace gca {
 
     surface labeled_surface(const std::string& mesh_name,
 			    const std::string& surface_name) const {
-      return labeled_mesh(mesh_name).labeled_surface(surface_name);
+      cout << "finding labeled surface = " << mesh_name << endl;
+      auto s = labeled_mesh(mesh_name);
+      cout << "found s, now finding label = " << surface_name << endl;
+      return s.labeled_surface(surface_name);
     }
 
     void insert_label(const std::string& mesh_name,
 		      const std::string& label_name,
 		      const std::vector<index_t>& triangle_inds) {
-      labeled_mesh(mesh_name).insert_label(label_name, triangle_inds);
+      gca::labeled_mesh& s = labeled_mesh(mesh_name);
+      s.insert_label(label_name, triangle_inds);
     }
 
   };
