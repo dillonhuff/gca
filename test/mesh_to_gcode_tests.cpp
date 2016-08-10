@@ -200,6 +200,13 @@ namespace gca {
     double vice_z = v.base_z();
 
     REQUIRE(within_eps(a_jaw_base.pt().z, vice_z, 0.001));
+
+    point z_axis(0, 0, 1);
+    double part_top = max_point_in_dir(a.mesh("part"), z_axis).z;
+    double jaw_top = max_point_in_dir(a.mesh("an_jaw"), z_axis).z;
+
+    REQUIRE(part_top > jaw_top);
+    
   }
   
   TEST_CASE("Pendulum Arm Joint Top") {

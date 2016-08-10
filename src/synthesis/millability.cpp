@@ -209,21 +209,6 @@ namespace gca {
 	inds.push_back(vertical_faces[i]);
       }
 
-      // if (intersecting_faces.size() > 0) {
-      // 	auto m_e = max_element(begin(intersecting_faces), end(intersecting_faces),
-      // 			       [normal, part](const index_t l, const index_t r) {
-      // 				 point cl = part.face_triangle(l).centroid(); //centroids[l];
-      // 				 point cr = part.face_triangle(r).centroid(); //centroids[r];
-      // 				 return signed_distance_along(cl, normal) <
-      // 				 signed_distance_along(cr, normal);
-      // 			       });
-      // 	index_t m = *m_e;
-      // 	//	if (m == all_face_inds[i]) {
-      // 	  inds.push_back(m);
-      // 	  //	}
-      // } else if (intersecting_faces.size() == 0) {
-      // 	
-      // }
     }
     return inds;
   }
@@ -232,16 +217,6 @@ namespace gca {
 				      const triangular_mesh& part) {
     vector<index_t> all_face_inds = part.face_indexes();
     
-    //    cout << "# face inds = " << all_face_inds.size() << endl;
-    // delete_if(all_face_inds,
-    // 	      [part, normal](const index_t i) {
-    // 		return angle_between(part.face_triangle(i).normal, normal) > 100;
-    // 	      });
-    //    cout << "# face inds after deletion = " << all_face_inds.size() << endl;
-    // for (auto i : all_face_inds) {
-    //   cout << part.face_triangle(i) << endl;
-    // }
-
     vector<index_t> inds = top_millable_faces(normal, all_face_inds, part);
     vector<index_t> side_inds = side_millable_faces(normal, all_face_inds, part);
     concat(inds, side_inds);
