@@ -34,7 +34,9 @@ namespace gca {
     workpiece w;
   };
 
-  struct fabrication_setup {
+  class fabrication_setup {
+  protected:
+  public:
     triangular_mesh part;
     std::vector<triangular_mesh*> other_meshes;
     vice v;

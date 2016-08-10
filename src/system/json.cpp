@@ -115,7 +115,7 @@ namespace gca {
     read_json(ins, inputs);
 
     std::vector<tool> tools = decode_tools_json(inputs.get_child("tools"));
-    assert(tools.size() > 0);
+    DBG_ASSERT(tools.size() > 0);
     fixtures fixes = decode_fixtures_json(inputs.get_child("fixtures"));
     workpiece workpiece_dims = decode_workpiece_json(inputs.get_child("workpiece"));
 

@@ -79,7 +79,7 @@ namespace gca {
     } else if (name == "BRASS") {
       return BRASS;
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
   

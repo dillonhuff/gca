@@ -199,7 +199,7 @@ namespace gca {
     notch_top.insert("a_jaw", a_meshes.first);
     notch_top.insert("an_jaw", an_meshes.first);
 
-    debug_arrangement(notch_top);
+    //debug_arrangement(notch_top);
 
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
@@ -298,7 +298,7 @@ namespace gca {
     base_clip.insert("a_jaw", bt, a_jaw);
     base_clip.insert("an_jaw", bt, an_jaw);
 
-    debug_arrangement(base_clip);
+    //debug_arrangement(base_clip);
 
     homogeneous_transform ct =
       mating_transform(a_jaw, custom.clean_fix.orient, custom.clean_fix.v);
@@ -311,7 +311,7 @@ namespace gca {
     clean_clip.insert("a_jaw", bt, a_jaw);
     clean_clip.insert("an_jaw", bt, an_jaw);
 
-    debug_arrangement(clean_clip);
+    //debug_arrangement(clean_clip);
     
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
