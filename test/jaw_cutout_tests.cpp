@@ -27,8 +27,8 @@ namespace gca {
 
       point axis = pick_jaw_cutout_axis(*decomp);
       soft_jaws jaws = make_soft_jaws(*decomp, axis, test_vice);
-      triangular_mesh* axis_jaw = jaws.a_jaw;
-      triangular_mesh* neg_axis_jaw = jaws.an_jaw;
+      triangular_mesh* axis_jaw = &(jaws.mesh("a_jaw"));
+      triangular_mesh* neg_axis_jaw = &(jaws.mesh("an_jaw"));
     
       REQUIRE(axis_jaw->is_connected());
       REQUIRE(neg_axis_jaw->is_connected());
@@ -79,8 +79,8 @@ namespace gca {
       point axis = pick_jaw_cutout_axis(*decomp);
       soft_jaws jaws = make_soft_jaws(*decomp, axis, test_vice);
 
-      triangular_mesh* axis_jaw = jaws.a_jaw;
-      triangular_mesh* neg_axis_jaw = jaws.an_jaw;
+      triangular_mesh* axis_jaw = &(jaws.mesh("a_jaw"));
+      triangular_mesh* neg_axis_jaw = &(jaws.mesh("an_jaw"));
     
       REQUIRE(axis_jaw->is_connected());
       REQUIRE(neg_axis_jaw->is_connected());

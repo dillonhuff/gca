@@ -1,16 +1,19 @@
 #ifndef GCA_JAW_CUTOUT_H
 #define GCA_JAW_CUTOUT_H
 
+#include "geometry/rigid_arrangement.h"
 #include "synthesis/clipping_plan.h"
 #include "synthesis/contour_planning.h"
 
 namespace gca {
 
-  struct soft_jaws {
-    triangular_mesh* notch;
-    triangular_mesh* a_jaw;
-    triangular_mesh* an_jaw;
-  };
+  typedef rigid_arrangement soft_jaws;
+
+  // struct soft_jaws {
+  //   triangular_mesh* notch;
+  //   triangular_mesh* a_jaw;
+  //   triangular_mesh* an_jaw;
+  // };
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
 			   const point axis,

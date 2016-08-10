@@ -1,7 +1,6 @@
 #include "geometry/extrusion.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/mesh_operations.h"
-#include "geometry/rigid_arrangement.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/jaw_cutout.h"
@@ -12,7 +11,7 @@ namespace gca {
   struct custom_jaw_cutout {
     fixture base_fix;
     fixture clean_fix;
-    triangular_mesh* notch;
+    triangular_mesh notch;
     fabrication_plan* left_jaw;
     fabrication_plan* right_jaw;
   };
@@ -196,20 +195,21 @@ namespace gca {
     rigid_arrangement notch_top;
     notch_top.insert("notch", a_meshes.second);
     notch_top.insert("part", part_mesh);
-    notch_top.metadata("part").display_during_debugging = true;
     notch_top.insert("a_jaw", a_meshes.first);
     notch_top.insert("an_jaw", an_meshes.first);
 
+    return notch_top;
+
     //debug_arrangement(notch_top);
 
-    triangular_mesh* a_cutout =
-      new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
-    triangular_mesh* notch =
-      new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.second);
-    triangular_mesh* an_cutout =
-      new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
+    // triangular_mesh* a_cutout =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
+    // triangular_mesh* notch =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.second);
+    // triangular_mesh* an_cutout =
+    //   new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
 
-    return soft_jaws{notch, a_cutout, an_cutout};
+    // return soft_jaws{notch, a_cutout, an_cutout};
   }
 
   // TODO: Produce longer clamps
@@ -231,8 +231,11 @@ namespace gca {
     cout << "neg axis = " << neg_axis << endl;
     cout << "part diameter along axis = " << part_diam << endl;
 
-    fabrication_plan ap = make_fabrication_plan(*(jaw_plan.a_jaw), fab_inputs);
-    fabrication_plan anp = make_fabrication_plan(*(jaw_plan.an_jaw), fab_inputs);
+    // TODO: Remove these news
+    fabrication_plan ap =
+      make_fabrication_plan(*(new triangular_mesh(jaw_plan.mesh("a_jaw"))), fab_inputs);
+    fabrication_plan anp =
+      make_fabrication_plan(*(new triangular_mesh(jaw_plan.mesh("an_jaw"))), fab_inputs);
     fabrication_plan* a_plan =
       new (allocate<fabrication_plan>()) fabrication_plan(ap);
     fabrication_plan* an_plan =
@@ -243,10 +246,10 @@ namespace gca {
     point base_pt = max_point_in_dir(top_of_contour.get_parent_mesh(), base_normal);
     plane base_plane(base_normal, base_pt);
 
-    point left_pt = max_point_in_dir(*(jaw_plan.a_jaw), axis);
+    point left_pt = max_point_in_dir(jaw_plan.mesh("a_jaw"), axis);
     plane left_plane(axis, left_pt);
 
-    point right_pt = max_point_in_dir(*(jaw_plan.an_jaw), neg_axis);
+    point right_pt = max_point_in_dir(jaw_plan.mesh("an_jaw"), neg_axis);
     plane right_plane(neg_axis, right_pt);
     
     clamp_orientation cutout_orient(left_plane, right_plane, base_plane);
@@ -263,7 +266,7 @@ namespace gca {
 
     fixture f_clean(clean_orient, v);
 
-    return custom_jaw_cutout{f_base, f_clean, jaw_plan.notch, a_plan, an_plan};
+    return custom_jaw_cutout{f_base, f_clean, jaw_plan.mesh("notch"), a_plan, an_plan};
   }
 
   std::vector<fixture_setup>
@@ -272,7 +275,7 @@ namespace gca {
 		       const contour_surface_decomposition& surfs,
 		       const fixture& top_fix,
 		       const custom_jaw_cutout& custom) {
-    const triangular_mesh& notch = *(custom.notch);
+    const triangular_mesh& notch = custom.notch;
     const triangular_mesh& a_jaw = *(custom.left_jaw->final_part_mesh());
     const triangular_mesh& an_jaw = *(custom.right_jaw->final_part_mesh());
 
