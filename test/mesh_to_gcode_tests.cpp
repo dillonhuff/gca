@@ -228,6 +228,8 @@ namespace gca {
 
     REQUIRE(plan.steps().size() == 3);
 
+    REQUIRE(plan.steps()[0].arrangement().mesh_names().size() == 3);
+
     test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
     test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
     

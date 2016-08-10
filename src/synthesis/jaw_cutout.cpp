@@ -255,12 +255,6 @@ namespace gca {
 
     fixture f_base(cutout_orient, v);
 
-    // point bottom_base_normal =
-    //   bottom_of_contour.face_orientation(bottom_of_contour.front());
-    // point bottom_base_pt =
-    //   max_point_in_dir(bottom_of_contour.get_parent_mesh(), bottom_base_normal);
-    // plane bottom_plane(bottom_base_normal, bottom_base_pt);
-
     plane top_pl = surface_plane(top_of_contour);
     plane base_pl = surface_plane(bottom_of_contour);
     plane jaw_base_pl = base_plane;
