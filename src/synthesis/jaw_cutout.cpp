@@ -40,11 +40,13 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
+  // TODO: Simplify and refactor, there is way too much manual arithmetic here
   std::pair<extrusion, extrusion>
   complete_jaw_outline(const index_poly& pts,
 		       const contour_surface_decomposition& surfs,
 		       const vice& v,
 		       const point axis) {
+    const triangular_mesh& part_mesh = surfs.top.get_parent_mesh();
     point n = surfs.n;
     point a = axis.normalize();
     point prof = cross(n, axis).normalize();
@@ -121,16 +123,22 @@ namespace gca {
     reverse(begin(notch_negative), end(notch_negative));
     reverse(begin(ip), end(ip));
 
-    double cutout_height = z_h;
-    double base_height = (3.0 / 2.0) * z_h;
+    double cover_fraction = 4.0 / 5.0;
+    double part_diam = diameter(n, part_mesh);
+
+    double cutout_height = cover_fraction * part_diam;
+    double base_height = v.jaw_height() - cutout_height;
+
+    DBG_ASSERT(within_eps(cutout_height + base_height, v.jaw_height(), 0.01));
+    
     double notch_height = cutout_height / 2.0;
 
-    // Reintroduce when I have better dimensional analysis
-    // DBG_ASSERT(within_eps(cutout_height + base_height, 0, 0.001));
+    point shift_dir = ((1 - cover_fraction) * part_diam)*n;
+    curve_pts = shift(shift_dir, curve_pts);
 
     extrusion jaw{curve_pts, {ip, notch_negative}, {cutout_height, base_height}, n};
 
-    auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
+    auto shifted_curve_pts = shift( cutout_height*n , curve_pts );
     extrusion notch_e{shifted_curve_pts, {notch}, {notch_height}, n};
 
     return std::make_pair(jaw, notch_e);
@@ -190,10 +198,11 @@ namespace gca {
     rigid_arrangement notch_top;
     notch_top.insert("notch", a_meshes.second);
     notch_top.insert("part", part_mesh);
+    notch_top.metadata("part").display_during_debugging = true;
     notch_top.insert("a_jaw", a_meshes.first);
     notch_top.insert("an_jaw", an_meshes.first);
 
-    //debug_arrangement(notch_top);
+    debug_arrangement(notch_top);
 
     triangular_mesh* a_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(a_meshes.first);
