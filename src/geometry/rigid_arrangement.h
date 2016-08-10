@@ -27,7 +27,14 @@ namespace gca {
     surface labeled_surface(const std::string& name) const {
       cout << "Trying to find surface = " << name << endl;
       auto r = labeled_surfs.find(name);
-      DBG_ASSERT(r != end(labeled_surfs));
+      if (r == end(labeled_surfs)) {
+	cout << "Could not find " << name << endl;
+	cout << "Labels:" << endl;
+	for (auto n : labeled_surfs) {
+	  cout << n.first << endl;
+	}
+	DBG_ASSERT(false);
+      }
       cout << "Found " << name << endl;
       return surface(&m, r->second);
     }

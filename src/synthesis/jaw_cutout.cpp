@@ -11,7 +11,7 @@ namespace gca {
   struct custom_jaw_cutout {
     fixture base_fix;
     fixture clean_fix;
-    triangular_mesh notch;
+    rigid_arrangement arrangement;
     fabrication_plan* left_jaw;
     fabrication_plan* right_jaw;
   };
@@ -267,7 +267,7 @@ namespace gca {
 
     fixture f_clean(clean_orient, v);
 
-    return custom_jaw_cutout{f_base, f_clean, jaw_plan.mesh("notch"), a_plan, an_plan};
+    return custom_jaw_cutout{f_base, f_clean, jaw_plan, a_plan, an_plan};
   }
 
   std::vector<fixture_setup>
