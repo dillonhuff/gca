@@ -148,7 +148,7 @@ namespace gca {
   cutout_mesh(const contour_surface_decomposition& surfs,
 	      const vice& v,
 	      const point axis) {
-	      //	      const point n) {
+
     vector<gca::edge> base_edges = shared_edges(surfs.outline, surfs.bottom);
 
     const triangular_mesh& part_mesh = surfs.outline.get_parent_mesh();
@@ -167,16 +167,13 @@ namespace gca {
     pair<extrusion, extrusion> custom_jaw =
       complete_jaw_outline(jaw_outline.front(), surfs, v, axis);
 
-    cout << "About to extrude m " << endl;
     triangular_mesh m = extrude(custom_jaw.first);
-    //    auto pd = polydata_for_trimesh(m);
-    //debug_print_edge_summary(pd);
-    //vtk_debug_mesh_boundary_edges(m);
+
     assert(m.is_connected());
-    cout << "Extruded m " << endl;
+
     triangular_mesh notch = extrude(custom_jaw.second);
+
     assert(notch.is_connected());
-    cout << "Extruded notch" << endl;
 
     return std::make_pair(m, notch);
   }
@@ -211,8 +208,6 @@ namespace gca {
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
 
-    //vtk_debug_meshes({&part_mesh, notch});//{a_cutout, an_cutout}); //, &part_mesh});
-
     return soft_jaws{axis, notch, a_cutout, an_cutout};
   }
 
@@ -220,10 +215,9 @@ namespace gca {
   boost::optional<custom_jaw_cutout>
   custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
 			    const vice& v,
-			    //			    const point n,
 			    const fabrication_inputs& fab_inputs) {
     soft_jaws jaw_plan =
-      make_soft_jaws(surfs, v); //, n);
+      make_soft_jaws(surfs, v);
 
     surface outline_of_contour = surfs.outline;
     surface top_of_contour = surfs.top;
@@ -255,17 +249,17 @@ namespace gca {
     
     clamp_orientation cutout_orient(left_plane, right_plane, base_plane);
 
-    // TODO: Actually produce the other fixture
-    fixture f_clean(cutout_orient, v);
+    fixture f_base(cutout_orient, v);
 
-    point notch_base_normal =
-      bottom_of_contour.face_orientation(top_of_contour.front());
-    point notch_base_pt =
-      max_point_in_dir(*(jaw_plan.notch), notch_base_normal);
-    plane notch_plane(notch_base_normal, notch_base_pt);
+    point bottom_base_normal =
+      bottom_of_contour.face_orientation(bottom_of_contour.front());
+    point bottom_base_pt =
+      max_point_in_dir(bottom_of_contour.get_parent_mesh(), bottom_base_normal);
+    plane bottom_plane(bottom_base_normal, bottom_base_pt);
     
-    clamp_orientation clean_orient(left_plane, right_plane, notch_plane);
-    fixture f_base(clean_orient, v);
+    clamp_orientation clean_orient(left_plane, right_plane, bottom_plane);
+
+    fixture f_clean(clean_orient, v);
 
     return custom_jaw_cutout{f_base, f_clean, jaw_plan.notch, a_plan, an_plan};
   }
@@ -283,18 +277,18 @@ namespace gca {
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
 
-    homogeneous_transform nt = mating_transform(aligned, top_fix.orient, top_fix.v);
+    // homogeneous_transform nt = mating_transform(aligned, top_fix.orient, top_fix.v);
 
-    rigid_arrangement notch_top;
-    notch_top.insert("notch", nt, notch);
-    notch_top.insert("part", nt, part_mesh);
-    notch_top.insert("stock", nt, aligned);
-    notch_top.metadata("stock").display_during_debugging = false;
+    // rigid_arrangement notch_top;
+    // notch_top.insert("notch", nt, notch);
+    // notch_top.insert("part", nt, part_mesh);
+    // notch_top.insert("stock", nt, aligned);
+    // notch_top.metadata("stock").display_during_debugging = false;
 
     //debug_arrangement(notch_top);
 
     homogeneous_transform bt =
-      mating_transform(aligned, custom.base_fix.orient, custom.base_fix.v);
+      mating_transform(a_jaw, custom.base_fix.orient, custom.base_fix.v);
 
     rigid_arrangement base_clip;
     base_clip.insert("notch", bt, notch);
@@ -304,7 +298,20 @@ namespace gca {
     base_clip.insert("a_jaw", bt, a_jaw);
     base_clip.insert("an_jaw", bt, an_jaw);
 
-    //    debug_arrangement(base_clip);
+    debug_arrangement(base_clip);
+
+    homogeneous_transform ct =
+      mating_transform(a_jaw, custom.clean_fix.orient, custom.clean_fix.v);
+
+    rigid_arrangement clean_clip;
+    clean_clip.insert("notch", ct, notch);
+    clean_clip.insert("part", ct, part_mesh);
+    clean_clip.insert("stock", ct, aligned);
+    clean_clip.metadata("stock").display_during_debugging = false;
+    clean_clip.insert("a_jaw", bt, a_jaw);
+    clean_clip.insert("an_jaw", bt, an_jaw);
+
+    debug_arrangement(clean_clip);
     
     vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch, top_surfs, top_fix));
