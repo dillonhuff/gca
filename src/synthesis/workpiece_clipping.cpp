@@ -222,18 +222,11 @@ namespace gca {
       all_viable_clamp_orientations(surfs, parallel);
 
 
-    cout << "n            = " << n << endl;
-    cout << "# of orients = " << orients.size() << endl;
     DBG_ASSERT(orients.size() > 0);
 
-    for (auto o : orients) {
-      cout << "Top normal = " << o.top_normal() << endl;
-    }
     vector<clamp_orientation> top_orients =
       select(orients, [n](const clamp_orientation& s)
 	     { return within_eps(angle_between(s.top_normal(), n), 0, 1.0); });
-
-    cout << "# of top orients = " << top_orients.size() << endl;
 
     DBG_ASSERT(top_orients.size() > 0);
 

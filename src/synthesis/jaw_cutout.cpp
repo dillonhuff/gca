@@ -85,7 +85,7 @@ namespace gca {
     assert(min_ind == 0);
 
     max_ind = find_index(curve_pts, [cutout_max](const point x)
-				 { return within_eps(x, cutout_max); });
+			 { return within_eps(x, cutout_max); });
 
     assert(max_ind == curve_pts.size() - 5);
 
@@ -120,10 +120,18 @@ namespace gca {
     index_poly notch_negative{min_ind, ni0, ni1, ni2, ni3, max_ind, ri0, ri1, ri2, ri3};
     reverse(begin(notch_negative), end(notch_negative));
     reverse(begin(ip), end(ip));
-    extrusion jaw{curve_pts, {ip, notch_negative}, {z_h, (3.0/2.0)*z_h}, n};
+
+    double cutout_height = z_h;
+    double base_height = (3.0 / 2.0) * z_h;
+    double notch_height = cutout_height / 2.0;
+
+    // Reintroduce when I have better dimensional analysis
+    // DBG_ASSERT(within_eps(cutout_height + base_height, 0, 0.001));
+
+    extrusion jaw{curve_pts, {ip, notch_negative}, {cutout_height, base_height}, n};
 
     auto shifted_curve_pts = shift( ((z_h)*(-1))*n , curve_pts );
-    extrusion notch_e{shifted_curve_pts, {notch}, {z_h}, -1*n};
+    extrusion notch_e{shifted_curve_pts, {notch}, {notch_height}, n};
 
     return std::make_pair(jaw, notch_e);
   }
