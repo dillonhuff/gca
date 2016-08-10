@@ -36,9 +36,10 @@ namespace gca {
 
   class fabrication_setup {
   protected:
-  public:
     triangular_mesh part;
     std::vector<triangular_mesh*> other_meshes;
+
+  public:
     vice v;
     gcode_program prog;
 
@@ -53,6 +54,10 @@ namespace gca {
 		      const gcode_program& p)
       : part(m), other_meshes(ms), v(p_v), prog(p) {}
 
+    const triangular_mesh& part_mesh() const { return part; }
+    const std::vector<triangular_mesh*>& non_part_meshes() const
+    { return other_meshes; }
+    
   };
 
   class fabrication_plan {

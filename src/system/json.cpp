@@ -78,7 +78,7 @@ namespace gca {
 
   ptree encode_json(const fabrication_setup& prog) {
     ptree p;
-    p.add_child("partMesh", encode_json(prog.part));
+    p.add_child("partMesh", encode_json(prog.part_mesh()));
     p.add_child("gcode", encode_json(prog.prog));
     p.add_child("vice", encode_json(prog.v));
     return p;

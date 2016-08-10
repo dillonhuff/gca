@@ -18,10 +18,9 @@ namespace gca {
   class fixture_setup {
   protected:
     const triangular_mesh* m;
+    std::vector<triangular_mesh*> other_meshes;
 
   public:
-    // TODO: Should be called a part mesh
-    std::vector<triangular_mesh*> other_meshes;
     fixture fix;
     std::vector<pocket> pockets;
 
@@ -32,6 +31,8 @@ namespace gca {
       : m(p_m), other_meshes(p_other_meshes), fix(f), pockets(p) {}
 
     const triangular_mesh& part_mesh() const { return *m; }
+    const std::vector<triangular_mesh*>& non_part_meshes() const
+    { return other_meshes; }
   };
 
   class clipping_plan {
