@@ -2,7 +2,7 @@
 #define GCA_FABRICATION_PLAN_H
 
 #include "gcode/gcode_program.h"
-#include "geometry/triangular_mesh.h"
+#include "geometry/rigid_arrangement.h"
 #include "synthesis/vice.h"
 #include "synthesis/tool.h"
 #include "synthesis/workpiece.h"
@@ -36,8 +36,9 @@ namespace gca {
 
   class fabrication_setup {
   protected:
-    triangular_mesh part;
-    std::vector<triangular_mesh*> other_meshes;
+    rigid_arrangement a;
+    // triangular_mesh part;
+    // std::vector<triangular_mesh*> other_meshes;
 
   public:
     vice v;
@@ -46,18 +47,20 @@ namespace gca {
     fabrication_setup(const triangular_mesh& m,
 		      const vice& p_v,
 		      const gcode_program& p)
-      : part(m), other_meshes{}, v(p_v), prog(p) {}
+      : v(p_v), prog(p) {
+      a.insert("part", m);
+    }
 
-    fabrication_setup(const triangular_mesh& m,
-		      const std::vector<triangular_mesh*>& ms,
+    // TODO: Actually initialize meshes
+    fabrication_setup(const rigid_arrangement& p_a,
 		      const vice& p_v,
 		      const gcode_program& p)
-      : part(m), other_meshes(ms), v(p_v), prog(p) {}
+      : a(p_a), v(p_v), prog(p) {}
 
-    const triangular_mesh& part_mesh() const { return part; }
-    const std::vector<triangular_mesh*>& non_part_meshes() const
-    { return other_meshes; }
-    
+    const triangular_mesh& part_mesh() const { return a.mesh("part"); }
+
+    const rigid_arrangement& arrangement() const { return a; }
+
   };
 
   class fabrication_plan {

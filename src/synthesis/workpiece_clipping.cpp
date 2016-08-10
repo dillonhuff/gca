@@ -114,7 +114,7 @@ namespace gca {
     vector<pocket> pockets{face_down(aligned, part), contour_around(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, {}, f, pockets);
+    return fixture_setup(m, f, pockets);
   }
 
   // TODO: Unify this with the pocket making code in fixture analysis
@@ -137,7 +137,7 @@ namespace gca {
     vector<pocket> pockets{face_down(stock, notch), contour_around(stock, notch), contour_around(stock, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(part);
-    return fixture_setup(m, {}, f, pockets);
+    return fixture_setup(m, f, pockets);
   }
   
   fixture_setup
@@ -211,7 +211,7 @@ namespace gca {
     vector<pocket> pockets{face_down(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, {}, f, pockets);
+    return fixture_setup(m, f, pockets);
   }
 
   clamp_orientation

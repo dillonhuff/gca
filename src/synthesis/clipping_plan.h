@@ -1,6 +1,7 @@
 #ifndef GCA_CLIPPING_PLAN_H
 #define GCA_CLIPPING_PLAN_H
 
+#include "geometry/rigid_arrangement.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/fabrication_plan.h"
 #include "synthesis/toolpath_generation.h"
@@ -17,22 +18,22 @@ namespace gca {
 
   class fixture_setup {
   protected:
-    const triangular_mesh* m;
-    std::vector<triangular_mesh*> other_meshes;
+    rigid_arrangement a;
 
   public:
     fixture fix;
     std::vector<pocket> pockets;
 
     fixture_setup(const triangular_mesh* p_m,
-		  const std::vector<triangular_mesh*>& p_other_meshes,
 		  const fixture& f,
 		  const std::vector<pocket>& p)
-      : m(p_m), other_meshes(p_other_meshes), fix(f), pockets(p) {}
+      : fix(f), pockets(p) {
+      a.insert("part", *p_m);
+    }
 
-    const triangular_mesh& part_mesh() const { return *m; }
-    const std::vector<triangular_mesh*>& non_part_meshes() const
-    { return other_meshes; }
+    const triangular_mesh& part_mesh() const { return a.mesh("part"); }
+    const rigid_arrangement& arrangement() const { return a; }
+
   };
 
   class clipping_plan {

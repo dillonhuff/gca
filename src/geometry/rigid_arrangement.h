@@ -24,6 +24,23 @@ namespace gca {
     std::map<std::string, arrangement_metadata> metadata_index;
     
   public:
+
+    rigid_arrangement() {}
+
+    rigid_arrangement(const rigid_arrangement& x) {
+      for (auto n : x.mesh_names()) {
+	insert(n, x.mesh(n));
+	set_metadata(n, x.metadata(n));
+      }
+    }
+
+    rigid_arrangement(rigid_arrangement&&) noexcept = default;
+
+    rigid_arrangement& operator=(const rigid_arrangement& x)
+    { rigid_arrangement tmp(x); *this = std::move(tmp); return *this; }
+
+    rigid_arrangement& operator=(rigid_arrangement&&) noexcept = default;
+    
     void insert(const std::string& name,
 		const triangular_mesh& m) {
       meshes.push_back(unique_ptr<triangular_mesh>(new triangular_mesh(m)));
@@ -53,6 +70,12 @@ namespace gca {
       return *(r->second);
     }
 
+    triangular_mesh& mesh(const std::string name) {
+      auto r = name_index.find(name);
+      DBG_ASSERT(r != end(name_index));
+      return *(r->second);
+    }
+    
 
     arrangement_metadata& metadata(const std::string name) {
       auto r = metadata_index.find(name);
@@ -60,6 +83,12 @@ namespace gca {
       return (r->second);
     }
 
+    void set_metadata(const std::string name, const arrangement_metadata& new_meta) {
+      auto r = metadata_index.find(name);
+      DBG_ASSERT(r != end(metadata_index));
+      metadata_index[name] = new_meta;
+    }
+    
     const arrangement_metadata& metadata(const std::string name) const {
       auto r = metadata_index.find(name);
       DBG_ASSERT(r != end(metadata_index));

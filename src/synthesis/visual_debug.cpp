@@ -18,14 +18,12 @@ namespace gca {
   
   void visual_debug(const fabrication_setup& setup) {
     auto vice_pd = polydata_for_vice(setup.v);
-    auto mesh_pd = polydata_for_trimesh(setup.part_mesh());
-
     auto vice_actor = polydata_actor(vice_pd);
-    auto mesh_actor = polydata_actor(mesh_pd);
 
-    vector<vtkSmartPointer<vtkActor>> actors{vice_actor, mesh_actor};
-    for (auto m : setup.non_part_meshes()) {
-      auto other_pd = polydata_for_trimesh(*m);
+    vector<vtkSmartPointer<vtkActor>> actors{vice_actor};
+    auto a = setup.arrangement();
+    for (auto n : a.mesh_names()) {
+      auto other_pd = polydata_for_trimesh(a.mesh(n));
       actors.push_back(polydata_actor(other_pd));
     }
     visualize_actors(actors);
