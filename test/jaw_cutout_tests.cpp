@@ -24,8 +24,9 @@ namespace gca {
       auto decomp = contour_surface_decomposition_in_dir(part_mesh, point(0, 0, 1));
 
       REQUIRE(decomp);
-    
-      soft_jaws jaws = make_soft_jaws(*decomp, test_vice);
+
+      point axis = pick_jaw_cutout_axis(*decomp);
+      soft_jaws jaws = make_soft_jaws(*decomp, axis, test_vice);
       triangular_mesh* axis_jaw = jaws.a_jaw;
       triangular_mesh* neg_axis_jaw = jaws.an_jaw;
     
@@ -74,8 +75,10 @@ namespace gca {
       auto decomp = contour_surface_decomposition_in_dir(part_mesh, point(0, -1, 0));
 
       REQUIRE(decomp);
-    
-      soft_jaws jaws = make_soft_jaws(*decomp, test_vice);
+
+      point axis = pick_jaw_cutout_axis(*decomp);
+      soft_jaws jaws = make_soft_jaws(*decomp, axis, test_vice);
+
       triangular_mesh* axis_jaw = jaws.a_jaw;
       triangular_mesh* neg_axis_jaw = jaws.an_jaw;
     

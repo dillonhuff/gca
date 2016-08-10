@@ -205,10 +205,11 @@ namespace gca {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
     auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
-    
+
     REQUIRE(plan.steps().size() == 3);
 
     REQUIRE(plan.steps()[1].arrangement().mesh_names().size() == 3);
+    REQUIRE(plan.steps()[2].arrangement().mesh_names().size() == 3);
     
     REQUIRE(plan.custom_fixtures().size() == 2);
 

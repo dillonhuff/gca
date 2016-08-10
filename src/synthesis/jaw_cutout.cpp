@@ -179,10 +179,11 @@ namespace gca {
   }
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
+			   const point axis,
 			   const vice& v) {
     auto outline_of_contour = surfs.outline;
     auto top_of_contour = surfs.top;
-    point axis = pick_jaw_cutout_axis(surfs);
+
     cout << "axis = " << axis << endl;
     cout << "n = " << surfs.n << endl;
     cout << "axis.dot(n) = " << axis.dot(surfs.n) << endl;
@@ -208,7 +209,7 @@ namespace gca {
     triangular_mesh* an_cutout =
       new (allocate<triangular_mesh>()) triangular_mesh(an_meshes.first);
 
-    return soft_jaws{axis, notch, a_cutout, an_cutout};
+    return soft_jaws{notch, a_cutout, an_cutout};
   }
 
   // TODO: Produce longer clamps
@@ -216,13 +217,14 @@ namespace gca {
   custom_jaw_cutout_fixture(const contour_surface_decomposition& surfs,
 			    const vice& v,
 			    const fabrication_inputs& fab_inputs) {
+    point axis = pick_jaw_cutout_axis(surfs);
+    
     soft_jaws jaw_plan =
-      make_soft_jaws(surfs, v);
+      make_soft_jaws(surfs, axis, v);
 
     surface outline_of_contour = surfs.outline;
     surface top_of_contour = surfs.top;
     surface bottom_of_contour = surfs.bottom;
-    point axis = jaw_plan.axis;
     point neg_axis = -1*axis;
     double part_diam = diameter(axis, outline_of_contour.get_parent_mesh());
 

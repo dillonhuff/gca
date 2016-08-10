@@ -7,13 +7,13 @@
 namespace gca {
 
   struct soft_jaws {
-    point axis;
     triangular_mesh* notch;
     triangular_mesh* a_jaw;
     triangular_mesh* an_jaw;
   };
 
   soft_jaws make_soft_jaws(const contour_surface_decomposition& surfs,
+			   const point axis,
 			   const vice& v);
   
   boost::optional<clipping_plan>
