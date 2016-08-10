@@ -23,8 +23,10 @@ namespace gca {
     vector<vtkSmartPointer<vtkActor>> actors{vice_actor};
     auto a = setup.arrangement();
     for (auto n : a.mesh_names()) {
-      auto other_pd = polydata_for_trimesh(a.mesh(n));
-      actors.push_back(polydata_actor(other_pd));
+      if (a.metadata(n).display_during_debugging) {
+	auto other_pd = polydata_for_trimesh(a.mesh(n));
+	actors.push_back(polydata_actor(other_pd));
+      }
     }
     visualize_actors(actors);
   }
