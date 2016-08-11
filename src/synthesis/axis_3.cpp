@@ -110,22 +110,6 @@ namespace gca {
   bool has_no_base(const std::vector<index_t>& surf,
 		   const triangular_mesh& part,
 		   const std::vector<index_t>& side_faces) {
-    
-    // surface s = surface(&part, surf);
-    // auto edges = boundary_edges(s);
-    // auto polys = unordered_segments_to_index_polygons(edges);
-    // cout << " of boundaries = " << polys.size() << endl;
-    // auto min_bound = min_index_poly(part.vertex_list(), polys);
-    // vector<gca::edge> min_bound_edges = index_poly_to_edges(min_bound);
-    // if (all_concave(part, min_bound_edges)) {
-    //   return true;
-    // }
-
-    // cout << "Has base" << endl;
-    // vtk_debug_highlight_inds(surf, part);
-
-    // return false;
-
     // TODO: Sort first? This is disgustingly inefficient
     if (intersection(side_faces, surf).size() == surf.size()) {
       return true;
@@ -147,7 +131,6 @@ namespace gca {
   closed_vertical_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
 				  const triangular_mesh& mesh,
 				  double workpiece_height) {
-    cout << "START CLOSED VERTICAL" << endl;
     std::vector<std::vector<index_t>> surfaces = sfs;
     delete_if(surfaces,
     	      [&mesh](const vector<index_t>& surface)
@@ -168,7 +151,6 @@ namespace gca {
       }
     }
 
-    cout << "END CLOSED VERTICAL" << endl;
     return pockets;
   }
 

@@ -63,7 +63,7 @@ namespace gca {
 
     assert(max_ind == curve_pts.size() - 1 ||
 	   max_ind == 0);
-    
+
     point cutout_min = min_along(endpts, prof);
 
     double notch_x_inc = (cutout_max - cutout_min).len() / 3.0;
@@ -268,6 +268,16 @@ namespace gca {
     return custom_jaw_cutout{f_base, f_clean, jaw_plan, a_plan, an_plan};
   }
 
+  void add_surface_pockets(std::vector<pocket>& pockets,
+			   const triangular_mesh& m,
+			   const std::vector<surface>& surfs) {
+    unsigned old_size = pockets.size();
+    concat(pockets, make_pockets(m, surfs));
+    unsigned new_size = pockets.size();
+
+    DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
+  }
+
   std::vector<fixture_setup>
   soft_jaw_clip_setups(const triangular_mesh& aligned,
 		       const triangular_mesh& part_mesh,
@@ -275,18 +285,35 @@ namespace gca {
 		       const fixture& top_fix,
 		       const custom_jaw_cutout& custom) {
     auto ar = custom.arrangement;
-    const labeled_mesh& a_jaw = ar.labeled_mesh("a_jaw"); //*(custom.left_jaw->final_part_mesh());
-    const labeled_mesh& an_jaw = ar.labeled_mesh("an_jaw"); //*(custom.right_jaw->final_part_mesh());
+    const labeled_mesh& a_jaw = ar.labeled_mesh("a_jaw");
+    const labeled_mesh& an_jaw = ar.labeled_mesh("an_jaw");
     const labeled_mesh& notch = ar.labeled_mesh("notch");
 
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
+
+    homogeneous_transform pt =
+      mating_transform(aligned, top_fix.orient, top_fix.v);
 
     homogeneous_transform bt =
       mating_transform(a_jaw.mesh(), custom.base_fix.orient, custom.base_fix.v);
 
     homogeneous_transform ct =
       mating_transform(a_jaw.mesh(), custom.clean_fix.orient, custom.clean_fix.v);
+
+    rigid_arrangement top_clip;
+    top_clip.insert("notch", pt, notch);
+    top_clip.insert("part", pt, part_mesh);
+    top_clip.insert("stock", pt, aligned);
+    top_clip.metadata("stock").display_during_debugging = false;
+    
+    rigid_arrangement base_clip;
+    base_clip.insert("notch", bt, notch);
+    base_clip.insert("part", bt, part_mesh);
+    base_clip.insert("stock", bt, aligned);
+    base_clip.metadata("stock").display_during_debugging = false;
+    base_clip.insert("a_jaw", bt, a_jaw);
+    base_clip.insert("an_jaw", bt, an_jaw);
 
     rigid_arrangement clean_clip;
     clean_clip.insert("notch", ct, notch);
@@ -296,54 +323,22 @@ namespace gca {
     clean_clip.insert("a_jaw", bt, a_jaw);
     clean_clip.insert("an_jaw", bt, an_jaw);
 
-    //debug_arrangement(clean_clip);
-    
     vector<fixture_setup> clip_setups;
-
-    auto pt = mating_transform(aligned, top_fix.orient, top_fix.v);
-
-    rigid_arrangement top_clip;
-    top_clip.insert("notch", pt, notch);
-    top_clip.insert("part", pt, part_mesh);
-    top_clip.insert("stock", pt, aligned);
-    top_clip.metadata("stock").display_during_debugging = false;
-    
 
     vector<pocket> top_pockets{face_down(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("part"))};
 
-    unsigned old_size = top_pockets.size();
-    concat(top_pockets, make_pockets(top_clip.mesh("part"), top_surfs));
-    unsigned new_size = top_pockets.size();
+    add_surface_pockets(top_pockets, top_clip.mesh("part"), top_surfs);
 
-    DBG_ASSERT((top_surfs.size() == 0) || (new_size > old_size));
-    
     fixture_setup top_setup(top_clip, top_fix, top_pockets);
 
     clip_setups.push_back(top_setup);
 
-    // TODO: Deal with notch alignment issue here
-    //clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch.mesh(), top_surfs, top_fix));
-
-    rigid_arrangement base_clip;
-    base_clip.insert("notch", bt, notch);
-    base_clip.insert("part", bt, part_mesh);
-    base_clip.insert("stock", bt, aligned);
-    base_clip.metadata("stock").display_during_debugging = false;
-    base_clip.insert("a_jaw", bt, a_jaw);
-    base_clip.insert("an_jaw", bt, an_jaw);
-
-    //debug_arrangement(base_clip);
-
     vector<pocket> pockets{face_down(base_clip.mesh("stock"),
 				     base_clip.mesh("part"))};
 
-    old_size = pockets.size();
-    concat(pockets, make_pockets(base_clip.mesh("part"), base_surfs));
-    new_size = pockets.size();
-
-    DBG_ASSERT((base_surfs.size() == 0) || (new_size > old_size));
+    add_surface_pockets(pockets, base_clip.mesh("part"), base_surfs);
 
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
 
@@ -355,7 +350,7 @@ namespace gca {
 
     return clip_setups;
   }
-  
+
   clipping_plan
   soft_jaw_clipping_plan(const triangular_mesh& aligned,
 			 const triangular_mesh& part_mesh,
