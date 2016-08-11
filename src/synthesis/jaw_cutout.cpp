@@ -299,8 +299,32 @@ namespace gca {
     //debug_arrangement(clean_clip);
     
     vector<fixture_setup> clip_setups;
+
+    auto pt = mating_transform(aligned, top_fix.orient, top_fix.v);
+
+    rigid_arrangement top_clip;
+    top_clip.insert("notch", pt, notch);
+    top_clip.insert("part", pt, part_mesh);
+    top_clip.insert("stock", pt, aligned);
+    top_clip.metadata("stock").display_during_debugging = false;
+    
+
+    vector<pocket> top_pockets{face_down(top_clip.mesh("stock"), top_clip.mesh("notch")),
+	contour_around(top_clip.mesh("stock"), top_clip.mesh("notch")),
+	contour_around(top_clip.mesh("stock"), top_clip.mesh("part"))};
+
+    unsigned old_size = top_pockets.size();
+    concat(top_pockets, make_pockets(top_clip.mesh("part"), top_surfs));
+    unsigned new_size = top_pockets.size();
+
+    DBG_ASSERT((top_surfs.size() == 0) || (new_size > old_size));
+    
+    fixture_setup top_setup(top_clip, top_fix, top_pockets);
+
+    clip_setups.push_back(top_setup);
+
     // TODO: Deal with notch alignment issue here
-    clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch.mesh(), top_surfs, top_fix));
+    //clip_setups.push_back(clip_notch_transform(aligned, part_mesh, notch.mesh(), top_surfs, top_fix));
 
     rigid_arrangement base_clip;
     base_clip.insert("notch", bt, notch);
@@ -315,9 +339,9 @@ namespace gca {
     vector<pocket> pockets{face_down(base_clip.mesh("stock"),
 				     base_clip.mesh("part"))};
 
-    unsigned old_size = pockets.size();
+    old_size = pockets.size();
     concat(pockets, make_pockets(base_clip.mesh("part"), base_surfs));
-    unsigned new_size = pockets.size();
+    new_size = pockets.size();
 
     DBG_ASSERT((base_surfs.size() == 0) || (new_size > old_size));
 
