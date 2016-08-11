@@ -108,7 +108,8 @@ namespace gca {
   }
 
   bool has_no_base(const std::vector<index_t>& surf,
-		   const triangular_mesh& part) {
+		   const triangular_mesh& part,
+		   const std::vector<index_t>& side_faces) {
     
     // surface s = surface(&part, surf);
     // auto edges = boundary_edges(s);
@@ -125,9 +126,6 @@ namespace gca {
 
     // return false;
 
-    auto side_faces = side_millable_faces(point(0, 0, -1),
-    					  part.face_indexes(),
-    					  part);
     // TODO: Sort first? This is disgustingly inefficient
     if (intersection(side_faces, surf).size() == surf.size()) {
       return true;
@@ -158,9 +156,13 @@ namespace gca {
     box b = mesh.bounding_box();
     double base_z = b.z_min;
     double top_z = b.z_max;
-    
+
+    auto side_faces = side_millable_faces(point(0, 0, -1),
+    					  mesh.face_indexes(),
+    					  mesh);
+
     for (auto surface : surfaces) {
-      if (has_no_base(surface, mesh)) {
+      if (has_no_base(surface, mesh, side_faces)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
 	pockets.push_back(face_pocket(top_z, base_z, outline));
       }
