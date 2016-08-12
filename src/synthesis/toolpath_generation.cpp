@@ -270,10 +270,11 @@ namespace gca {
     double r = t.radius();
     
     vector<polyline> polys;
-    
+
     auto i = exterior_offset(inter, r);
 
     while ((i.size() == 1) && !contains(i.front(), outer)) {
+      cout << "next iteration" << endl;
       polys.push_back(to_polyline(i.front()));
       r += t.radius();
       i = exterior_offset(inter, r);

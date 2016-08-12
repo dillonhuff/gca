@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "gcode/linear_cut.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/gcode_generation.h"
@@ -71,10 +73,13 @@ namespace gca {
   }
 
   std::vector<block>
-  tool_comment_prefix(const tool& t) {
+  tool_comment_prefix(const toolpath& t) {
     vector<block> blks;
-    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.diameter()))});
-    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.length()))});
+    std::stringstream ss;
+    ss << t.pocket_type();
+    blks.push_back({token("OPERATION = " + ss.str())});
+    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.t.diameter()))});
+    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()))});
     return blks;
   }
   
@@ -82,7 +87,7 @@ namespace gca {
   comment_prefix(const toolpath& tp, const cut_params& params) {
     vector<block> blks;
     blks.push_back({token("TOOLPATH")});
-    concat(blks, tool_comment_prefix(tp.t));
+    concat(blks, tool_comment_prefix(tp));
     return blks;
   }
 

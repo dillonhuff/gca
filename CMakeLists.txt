@@ -112,6 +112,7 @@ add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})
 target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
+	./src/synthesis/operation.h
 	./src/synthesis/clamp_orientation.h
 	./src/synthesis/visual_debug.h
 	./src/synthesis/jaw_cutout.h
@@ -139,6 +140,7 @@ SET(GCA_CPPS
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
+	./src/synthesis/operation.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/synthesis/dxf_reader.cpp

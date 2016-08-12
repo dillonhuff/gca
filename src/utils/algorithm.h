@@ -434,7 +434,7 @@ namespace gca {
 
   template<typename T>
   void reverse(T& t) {
-    reverse(begin(t), end(t));
+    std::reverse(begin(t), end(t));
   }
 
   template<typename T, typename F>

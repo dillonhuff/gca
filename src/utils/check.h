@@ -3,7 +3,7 @@
 
 #include <signal.h>
 
-#define DBG_ASSERT(x) if (!(x)) { std::cout << "CHECK FAILED, EXITING..." << std::endl; abort(); }
+#define DBG_ASSERT(x) if (!(x)) { std::cout << "CHECK AT " << __FILE__ << ": " << __LINE__ << ", EXITING..." << std::endl; abort(); }
 
 
 #endif

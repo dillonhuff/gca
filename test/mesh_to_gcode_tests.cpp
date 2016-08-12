@@ -209,15 +209,45 @@ namespace gca {
     
   }
 
+  template<typename A, typename B>
+  void print_map_info(const std::map<A, B>& m) {
+    for (auto p : m) {
+      cout << p.first << " -> " << p.second << endl;
+    }
+  }
+  
   void test_no_empty_toolpaths(const fabrication_plan& plan) {
     int num_empty_toolpaths = 0;
+
+    std::map<pocket_name, int> empty_map;
+    std::map<pocket_name, int> total_map;
     
     for (auto s : plan.steps()) {
       for (auto& tp : s.toolpaths()) {
-	if (tp.lines.size() == 0) { num_empty_toolpaths++; }
+	if (total_map.find(tp.pocket_type()) != end(total_map)) {
+	  total_map[tp.pocket_type()] = total_map[tp.pocket_type()] + 1;
+	} else {
+	  total_map[tp.pocket_type()] = 1;
+	}
+
+	if (tp.lines.size() == 0) {
+
+	  if (empty_map.find(tp.pocket_type()) != end(empty_map)) {
+	    empty_map[tp.pocket_type()] = empty_map[tp.pocket_type()] + 1;
+	  } else {
+	    empty_map[tp.pocket_type()] = 1;
+	  }
+
+	  num_empty_toolpaths++;
+	}
       }
     }
 
+    cout << "Total toolpaths" << endl;
+    print_map_info(total_map);
+
+    cout << "Empty toolpaths" << endl;
+    print_map_info(empty_map);
     REQUIRE(num_empty_toolpaths == 0);
   }
 

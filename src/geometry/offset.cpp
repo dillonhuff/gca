@@ -16,17 +16,37 @@ namespace gca {
   typedef boost::shared_ptr<Polygon_2> PolygonPtr ;
   typedef std::vector<PolygonPtr> PolygonPtrVector ;
 
-  std::vector<oriented_polygon> exterior_offset(const oriented_polygon& p,
+  std::vector<oriented_polygon> exterior_offset(const oriented_polygon& q,
 						const double inc) {
+    DBG_ASSERT(q.vertices().size() > 0);
+
+    oriented_polygon p;
+    if (signed_area(q) < 0) {
+      p = q;
+    } else {
+      vector<point> pts = q.vertices();
+      reverse(begin(pts), end(pts));
+      p = oriented_polygon(q.normal, pts);
+    }
+
+    DBG_ASSERT(p.vertices().size() > 0);
+    DBG_ASSERT(signed_area(p) < 0);
+    
     double z_va = p.vertices().front().z;
     Polygon_2 out;
     for (auto p : p.vertices()) {
       out.push_back(Point(p.x, p.y));
     }
 
+    DBG_ASSERT(out.is_simple());
+
+    DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
+
+    cout << "Start computing exterior offset" << endl;
     PolygonPtrVector inner_offset_polygons =
       CGAL::create_exterior_skeleton_and_offset_polygons_2(inc, out);
-
+    cout << "Done computing exterior offset" << endl;
+    
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
       Polygon_2 off_p = *off_ptr;
@@ -41,10 +61,24 @@ namespace gca {
     return results;
   }
 
-  std::vector<oriented_polygon> interior_offset(const oriented_polygon& p,
+  std::vector<oriented_polygon> interior_offset(const oriented_polygon& q,
 						const double inc) {
-    DBG_ASSERT(p.vertices().size() > 0);
+
+    DBG_ASSERT(q.vertices().size() > 0);
+
+    oriented_polygon p;
+    if (signed_area(q) < 0) {
+      p = q;
+    } else {
+      vector<point> pts = q.vertices();
+      reverse(begin(pts), end(pts));
+      p = oriented_polygon(q.normal, pts);
+    }
     
+    DBG_ASSERT(p.vertices().size() > 0);
+    DBG_ASSERT(signed_area(p) < 0);
+    
+
     double z_va = p.vertices().front().z;
     Polygon_2 out;
     for (auto p : p.vertices()) {

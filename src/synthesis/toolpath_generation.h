@@ -13,13 +13,6 @@
 
 namespace gca {
 
-  enum pocket_name {
-    FREEFORM_POCKET,
-    FACE_POCKET,
-    CONTOUR_POCKET,
-    FLAT_POCKET,
-  };
-
   class pocket {
   public:
     template<typename T>
@@ -159,6 +152,14 @@ namespace gca {
 		const std::vector<index_t>& basep,
 		const triangular_mesh* p_mesh);
 
+    flat_pocket(double p_start_depth,
+		double p_end_depth,
+		const oriented_polygon& p_boundary)
+      : boundary(p_boundary),
+	holes{},
+	start_depth(p_start_depth),
+	end_depth(p_end_depth) {}
+    
     pocket_name pocket_type() const { return FLAT_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;

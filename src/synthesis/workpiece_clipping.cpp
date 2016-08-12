@@ -52,6 +52,27 @@ namespace gca {
   }
 
   pocket face_down(const triangular_mesh& stock,
+		   const triangular_mesh& part,
+		   const triangular_mesh& out) {
+    double work_height = max_in_dir(stock, point(0, 0, 1));
+    double part_height = max_in_dir(part, point(0, 0, 1));
+
+    DBG_ASSERT(work_height > part_height);
+
+    auto bound = contour_outline(out.face_indexes(), out, point(0, 0, 1));
+    if (bound) {
+    } else {
+      DBG_ASSERT(false);
+    }
+    auto outlines =
+      mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+
+    DBG_ASSERT(outlines.size() == 2);
+
+    return face_pocket(work_height, part_height, outlines.front());
+  }
+  
+  pocket face_down(const triangular_mesh& stock,
 		   const triangular_mesh& part) {
     double work_height = max_in_dir(stock, point(0, 0, 1));
     double part_height = max_in_dir(part, point(0, 0, 1));
@@ -71,6 +92,7 @@ namespace gca {
     return face_pocket(work_height, part_height, outlines.front());
   }
 
+  
   pocket contour_around(const triangular_mesh& stock,
 			const triangular_mesh& part) {
     double stock_top = max_in_dir(stock, point(0, 0, 1));

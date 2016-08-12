@@ -1832,6 +1832,33 @@ src/synthesis/millability.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/millability.cpp.s
 .PHONY : src/synthesis/millability.cpp.s
 
+src/synthesis/operation.o: src/synthesis/operation.cpp.o
+
+.PHONY : src/synthesis/operation.o
+
+# target to build an object file
+src/synthesis/operation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation.cpp.o
+.PHONY : src/synthesis/operation.cpp.o
+
+src/synthesis/operation.i: src/synthesis/operation.cpp.i
+
+.PHONY : src/synthesis/operation.i
+
+# target to preprocess a source file
+src/synthesis/operation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation.cpp.i
+.PHONY : src/synthesis/operation.cpp.i
+
+src/synthesis/operation.s: src/synthesis/operation.cpp.s
+
+.PHONY : src/synthesis/operation.s
+
+# target to generate assembly for a file
+src/synthesis/operation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation.cpp.s
+.PHONY : src/synthesis/operation.cpp.s
+
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -3484,6 +3511,9 @@ help:
 	@echo "... src/synthesis/millability.o"
 	@echo "... src/synthesis/millability.i"
 	@echo "... src/synthesis/millability.s"
+	@echo "... src/synthesis/operation.o"
+	@echo "... src/synthesis/operation.i"
+	@echo "... src/synthesis/operation.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"

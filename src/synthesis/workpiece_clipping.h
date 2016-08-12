@@ -28,6 +28,10 @@ namespace gca {
 		      const triangular_mesh& part,
 		      const std::vector<surface>& surfaces,
 		      const fixture& f);
+
+  pocket face_down(const triangular_mesh& stock,
+		   const triangular_mesh& part,
+		   const triangular_mesh& out);
   
   fixture_setup
   clip_base(const triangular_mesh& aligned,

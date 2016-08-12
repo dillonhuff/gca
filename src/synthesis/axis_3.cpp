@@ -66,7 +66,7 @@ namespace gca {
     for (auto pocket : pockets) {
       tool t = pocket.select_tool(tools);
       auto pocket_paths = pocket.toolpath_lines(t, cut_depth);
-      lines.push_back(toolpath(safe_z, speed, feed, t, pocket_paths));
+      lines.push_back(toolpath(pocket.pocket_type(), safe_z, speed, feed, t, pocket_paths));
     }
     return lines;
   }
@@ -160,7 +160,7 @@ namespace gca {
     for (auto surface : surfaces) {
       if (has_no_base(surface, mesh, side_faces)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
-	pockets.push_back(face_pocket(top_z, base_z, outline));
+	pockets.push_back(flat_pocket(top_z, base_z, outline));
       }
     }
 

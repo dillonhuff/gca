@@ -4,11 +4,13 @@
 #include <vector>
 
 #include "geometry/polyline.h"
+#include "synthesis/operation.h"
 #include "synthesis/tool.h"
 
 namespace gca {
 
   struct toolpath {
+    pocket_name pocket_tp;
     double safe_z_before_tlc;
     double spindle_speed;
     double feedrate;
@@ -16,16 +18,20 @@ namespace gca {
     tool t;
     std::vector<polyline> lines;
 
-    toolpath(const double p_safe_z,
+    toolpath(const pocket_name& p_pocket_type,
+	     const double p_safe_z,
 	     const double p_spindle,
 	     const double p_feed,
 	     const tool& p_t,
 	     const std::vector<polyline>& p_lines)
-      : safe_z_before_tlc(p_safe_z),
+      : pocket_tp(p_pocket_type),
+	safe_z_before_tlc(p_safe_z),
 	spindle_speed(p_spindle),
 	feedrate(p_feed),
 	t(p_t),
 	lines(p_lines) {}
+
+    pocket_name pocket_type() const { return pocket_tp; }
   };
 
 }
