@@ -86,10 +86,13 @@ namespace gca {
     }
     auto outlines =
       mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+    oriented_polygon outl =
+      min_e(outlines, [](const oriented_polygon& p)
+	    { return min_z(p); }); // outlines.front();
 
     DBG_ASSERT(outlines.size() == 2);
 
-    return face_pocket(work_height, part_height, outlines.front());
+    return face_pocket(work_height, part_height, outl);
   }
 
   
@@ -120,10 +123,14 @@ namespace gca {
       mesh_bounds((*part_bound).index_list(), (*part_bound).get_parent_mesh());
 
     oriented_polygon part_outline =
-      *(max_element(begin(part_outlines), end(part_outlines),
-		    [](const oriented_polygon& l,
-		       const oriented_polygon& r)
-      { return area(l) < area(r); }));
+      min_e(part_outlines, [](const oriented_polygon& p)
+	    { return min_z(p); }); // outlines.front();
+
+    // oriented_polygon part_outline =
+    //   *(max_element(begin(part_outlines), end(part_outlines),
+    // 		    [](const oriented_polygon& l,
+    // 		       const oriented_polygon& r)
+    //   { return area(l) < area(r); }));
 
     double part_bottom = min_in_dir(part, point(0, 0, 1));    
     return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
