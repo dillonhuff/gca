@@ -62,7 +62,7 @@ namespace gca {
   std::vector<index_t> initial_side_faces(const point normal,
 					  const std::vector<index_t>& inds,
 					  const triangular_mesh& part) {
-    assert(inds.size() > 0);
+    DBG_ASSERT(inds.size() > 0);
     vector<index_t> face_inds_left = part.face_indexes();
     subtract(face_inds_left, inds);
     vector<index_t> faces;
@@ -138,9 +138,8 @@ namespace gca {
     double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
     vector<line> segments = construct_test_segments(normal, centroids, ray_len);
 
-
-    assert(all_face_inds.size() == segments.size());
-    assert(centroids.size() == segments.size());
+    DBG_ASSERT(all_face_inds.size() == segments.size());
+    DBG_ASSERT(centroids.size() == segments.size());
     
     for (unsigned i = 0; i < all_face_inds.size(); i++) {
       auto test_segment = segments[i];
@@ -188,15 +187,15 @@ namespace gca {
     double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
     vector<line> segments = construct_test_segments(normal, centroids, ray_len);
 
-    assert(vertical_faces.size() == segments.size());
-    assert(centroids.size() == segments.size());
+    DBG_ASSERT(vertical_faces.size() == segments.size());
+    DBG_ASSERT(centroids.size() == segments.size());
     
     for (unsigned i = 0; i < vertical_faces.size(); i++) {
       auto test_segment = segments[i];
       vector<index_t> intersecting_faces = all_intersections(all_face_inds,
     							     part,
     							     test_segment);
-      bool found_larger = false;;
+      bool found_larger = false;
       point pc = part.face_triangle(vertical_faces[i]).centroid();
       for (auto k : intersecting_faces) {
 	point cl = part.face_triangle(k).centroid();

@@ -20,8 +20,6 @@ namespace gca {
     vector<index_t> outer_vertical_faces =
       intersection(outer_faces, millable_faces);
 
-    //vtk_debug_highlight_inds(outer_vertical_faces, part_mesh);
-
     auto regions =
       connect_regions(outer_vertical_faces, part_mesh);
 
@@ -54,9 +52,6 @@ namespace gca {
 	if (outline) {
 	  cout << "Has outline" << endl;
 	  subtract(inds, outline->index_list());
-
-	  // vtk_debug_highlight_inds(outline->index_list(),
-	  // 			   outline->get_parent_mesh());
 
 	  vector<surface> surfs_to_cut = surfaces_to_cut(inds, part_mesh);
 	  

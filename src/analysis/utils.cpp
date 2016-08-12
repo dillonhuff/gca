@@ -13,7 +13,7 @@ namespace gca {
 
   bool is_end_block(const block& t) {
     int num_end_codes = count_if(t.begin(), t.end(), is_end_code);
-    assert(num_end_codes == 0 || num_end_codes == 1);
+    DBG_ASSERT(num_end_codes == 0 || num_end_codes == 1);
     bool contains_end_instr = num_end_codes == 1;
     return contains_end_instr;
   }
@@ -26,7 +26,7 @@ namespace gca {
 
   bool is_ret_block(const block& t) {
     int num_end_codes = count_if(t.begin(), t.end(), is_ret_code);
-    assert(num_end_codes == 0 || num_end_codes == 1);
+    DBG_ASSERT(num_end_codes == 0 || num_end_codes == 1);
     bool contains_end_instr = num_end_codes == 1;
     return contains_end_instr;
   }
@@ -40,7 +40,7 @@ namespace gca {
   
   bool is_call_block(const block& t) {
     int num_end_codes = count_if(t.begin(), t.end(), is_call_code);
-    assert(num_end_codes == 0 || num_end_codes == 1);
+    DBG_ASSERT(num_end_codes == 0 || num_end_codes == 1);
     bool contains_end_instr = num_end_codes == 1;
     return contains_end_instr;
   }
@@ -55,7 +55,7 @@ namespace gca {
     for (const auto pr : p) {
       if (pr.first == line_no) { return pr.second; }
     }
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   program_loc find_loc(const vector<block>& p, const token& t) {
@@ -131,7 +131,7 @@ namespace gca {
     } else if (s.tool_radius_comp == TOOL_RADIUS_COMP_RIGHT) {
       return s.spindle_setting == SPINDLE_COUNTERCLOCKWISE;
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
 
@@ -140,7 +140,7 @@ namespace gca {
       if (spindle_off(s)) {
 	cout << "Spindle off during cut: " << endl;
 	cout << s << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
     }
   }

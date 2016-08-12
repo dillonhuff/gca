@@ -54,13 +54,12 @@ namespace gca {
 				 inputs.tools,
 				 inputs.w);
   }
-  
-  fabrication_plan make_fabrication_plan(const triangular_mesh& part_mesh,
-					 const fixtures& f,
-					 const vector<tool>& tools,
-					 const workpiece w) {
-    fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
 
+  fabrication_plan
+  fabrication_plan_from_fixture_plan(const fixture_plan& plan,
+				     const triangular_mesh& part_mesh,
+				     const std::vector<tool>& tools,
+				     const workpiece& w) {
     vector<fabrication_setup> setups;
     for (auto setup : plan.fixtures()) {
       gcode_program gprog =
@@ -69,6 +68,15 @@ namespace gca {
     }
 
     return fabrication_plan(&part_mesh, setups, plan.custom_fixtures());
+  }
+  
+  fabrication_plan make_fabrication_plan(const triangular_mesh& part_mesh,
+					 const fixtures& f,
+					 const vector<tool>& tools,
+					 const workpiece w) {
+    fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
+
+    return fabrication_plan_from_fixture_plan(plan, part_mesh, tools, w);
   }
 
 }
