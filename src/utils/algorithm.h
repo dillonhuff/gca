@@ -446,6 +446,16 @@ namespace gca {
   T max_e(const std::vector<T>& e, F f) {
     return *max_element(begin(e), end(e), [f](const T& l, const T& r) { return f(l) < f(r); });
   }
+
+  template<typename T>
+  T min_e(const std::vector<T>& e) {
+    return *min_element(begin(e), end(e), [](const T& l, const T& r) { return l < r; });
+  }
+
+  template<typename T>
+  T max_e(const std::vector<T>& e) {
+    return *max_element(begin(e), end(e), [](const T& l, const T& r) { return l < r; });
+  }
   
 }
 

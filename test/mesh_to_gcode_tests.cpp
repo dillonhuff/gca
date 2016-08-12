@@ -230,7 +230,7 @@ namespace gca {
     }
     REQUIRE(num_freeform_pockets == 0);
   }
-  
+
   TEST_CASE("Pendulum Arm Joint Top") {
     arena_allocator a;
     set_system_allocator(&a);

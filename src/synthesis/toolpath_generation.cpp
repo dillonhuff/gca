@@ -30,7 +30,35 @@ namespace gca {
     holes = bounds;
   }
 
+  flat_pocket::flat_pocket(double start_depthp,
+			   const std::vector<index_t>& basep,
+			   const triangular_mesh* p_mesh) :
+    start_depth(start_depthp),
+    end_depth(p_mesh->face_triangle(basep.front()).v1.z) {
+    
+    DBG_ASSERT(basep.size() > 0);
 
+    auto bounds = mesh_bounds(basep, *p_mesh);
+
+    DBG_ASSERT(bounds.size() > 0);
+
+    boundary = extract_boundary(bounds);
+    holes = bounds;
+  }
+  
+  tool
+  flat_pocket::select_tool(const std::vector<tool>& tools) const {
+    tool t = *(max_element(begin(tools), end(tools),
+  			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
+    return t;
+  }
+
+  std::vector<polyline>
+  flat_pocket::toolpath_lines(const tool& t,
+			      const double cut_depth) const {
+    return { to_polyline(project(boundary, get_end_depth())) };
+  }
 
   pocket box_pocket(const box b) {
     point p1(b.x_min, b.y_min, b.z_min);

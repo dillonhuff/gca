@@ -146,6 +146,38 @@ namespace gca {
     }
   };
 
+  struct flat_pocket {
+  private:
+    oriented_polygon boundary;
+    std::vector<oriented_polygon> holes;
+
+    double start_depth;
+    double end_depth;
+
+  public:
+    flat_pocket(double start_depthp,
+		const std::vector<index_t>& basep,
+		const triangular_mesh* p_mesh);
+
+    pocket_name pocket_type() const { return FLAT_POCKET; }
+    tool select_tool(const std::vector<tool>& tools) const;
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
+
+    inline const vector<oriented_polygon>& get_holes() const
+    { return holes; }
+
+    inline const oriented_polygon& get_boundary() const
+    { return boundary; }
+
+    inline double get_start_depth() const { return start_depth; }
+
+    inline double get_end_depth() const { return end_depth; }
+
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }      
+
+  };
+  
   class contour_pocket {
   protected:
     double start_depth;

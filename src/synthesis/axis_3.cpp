@@ -11,10 +11,23 @@
 
 namespace gca {
 
-  pocket pocket_for_surface(const std::vector<index_t>& surface,
+  double max_z(const triangle t) {
+    vector<double> zs = {t.v1.z, t.v2.z, t.v3.z};
+    return max_e(zs);
+  }
+
+  pocket pocket_for_surface(const std::vector<index_t>& sfs,
 			    double top_height,
 			    const triangular_mesh& mesh) {
-    return pocket(freeform_pocket(top_height, surface, &mesh));
+    auto regions = constant_orientation_subsurfaces(surface(&mesh, sfs));
+    if (regions.size() == 1) {
+      point norm = mesh.face_orientation(sfs.front());
+      if (within_eps(angle_between(norm, point(0, 0, 1)), 0, 1.0)) {
+	cout << "Found flat pocket" << endl;
+	return flat_pocket(top_height, sfs, &mesh);
+      }
+    }
+    return pocket(freeform_pocket(top_height, sfs, &mesh));
   }
   
   std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
