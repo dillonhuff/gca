@@ -5,6 +5,7 @@
 #include "geometry/rigid_arrangement.h"
 #include "synthesis/vice.h"
 #include "synthesis/tool.h"
+#include "synthesis/toolpath.h"
 #include "synthesis/workpiece.h"
 
 namespace gca {
@@ -37,29 +38,33 @@ namespace gca {
   class fabrication_setup {
   protected:
     rigid_arrangement a;
-    // triangular_mesh part;
-    // std::vector<triangular_mesh*> other_meshes;
+    std::vector<toolpath> tps;
 
   public:
     vice v;
-    gcode_program prog;
 
     fabrication_setup(const triangular_mesh& m,
 		      const vice& p_v,
-		      const gcode_program& p)
-      : v(p_v), prog(p) {
+		      const std::vector<toolpath>& p_tps)
+      : v(p_v), tps(p_tps) {
       a.insert("part", m);
     }
 
-    // TODO: Actually initialize meshes
     fabrication_setup(const rigid_arrangement& p_a,
 		      const vice& p_v,
-		      const gcode_program& p)
-      : a(p_a), v(p_v), prog(p) {}
+		      const std::vector<toolpath>& p_tps)
+      : a(p_a), v(p_v), tps(p_tps) {}
 
     const triangular_mesh& part_mesh() const { return a.mesh("part"); }
 
     const rigid_arrangement& arrangement() const { return a; }
+
+    const std::vector<toolpath>& toolpaths() const { return tps; }
+
+    template<typename F>
+    gcode_program gcode_for_toolpaths(F f) const {
+      return build_gcode_program("Surface cut", toolpaths(), f);
+    }
 
   };
 

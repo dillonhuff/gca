@@ -208,6 +208,28 @@ namespace gca {
     REQUIRE(part_top > jaw_top);
     
   }
+
+  void test_no_empty_toolpaths(const fabrication_plan& plan) {
+    int num_empty_toolpaths = 0;
+    
+    for (auto s : plan.steps()) {
+      for (auto& tp : s.toolpaths()) {
+	if (tp.lines.size() == 0) { num_empty_toolpaths++; }
+      }
+    }
+
+    REQUIRE(num_empty_toolpaths == 0);
+  }
+
+  void test_no_freeform_pockets(const fixture_plan& fix_plan) {
+    int num_freeform_pockets = 0;
+    for (auto f : fix_plan.fixtures()) {
+      for (auto pocket : f.pockets) {
+	if (pocket.pocket_type() == FREEFORM_POCKET) { num_freeform_pockets++; }
+      }
+    }
+    REQUIRE(num_freeform_pockets == 0);
+  }
   
   TEST_CASE("Pendulum Arm Joint Top") {
     arena_allocator a;
@@ -224,7 +246,12 @@ namespace gca {
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
-    auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+    auto fix_plan = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+
+    test_no_freeform_pockets(fix_plan);
+
+    auto plan =
+      fabrication_plan_for_fixture_plan(fix_plan, mesh, tools, workpiece_dims);
 
     REQUIRE(plan.steps().size() == 3);
 
@@ -232,11 +259,14 @@ namespace gca {
 
     test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
     test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
+
+    test_no_empty_toolpaths(plan);
     
     REQUIRE(plan.custom_fixtures().size() == 2);
 
     for (auto f : plan.custom_fixtures()) {
       REQUIRE(f != nullptr);
+      test_no_empty_toolpaths(*f);
     }
 
   }

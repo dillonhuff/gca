@@ -24,15 +24,15 @@ namespace gca {
     return pockets;
   }
 
-  gcode_program cut_secured_mesh(vector<pocket>& pockets,
-  				 const std::vector<tool>& tools,
-				 const material& stock_material) {
+  std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
+					 const std::vector<tool>& tools,
+					 const material& stock_material) {
     assert(tools.size() > 0);
 
     vector<toolpath> toolpaths =
       mill_pockets(pockets, tools, stock_material);
 
-    return build_gcode_program("Surface cut", toolpaths, emco_f1_code);
+    return toolpaths; //build_gcode_program("Surface cut", toolpaths); //toolpaths, emco_f1_code);
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
@@ -42,7 +42,7 @@ namespace gca {
     fabrication_plan plan = make_fabrication_plan(part_mesh, f, tools, w);
     vector<gcode_program> progs;
     for (auto f : plan.steps()) {
-      progs.push_back(f.prog);
+      progs.push_back(f.gcode_for_toolpaths(emco_f1_code));
     }
     return progs;
   }
@@ -56,15 +56,15 @@ namespace gca {
   }
 
   fabrication_plan
-  fabrication_plan_from_fixture_plan(const fixture_plan& plan,
+  fabrication_plan_for_fixture_plan(const fixture_plan& plan,
 				     const triangular_mesh& part_mesh,
 				     const std::vector<tool>& tools,
 				     const workpiece& w) {
     vector<fabrication_setup> setups;
     for (auto setup : plan.fixtures()) {
-      gcode_program gprog =
+      auto toolpaths =
 	cut_secured_mesh(setup.pockets, tools, w.stock_material);
-      setups.push_back(fabrication_setup(setup.arrangement(), setup.fix.v, gprog));
+      setups.push_back(fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths));
     }
 
     return fabrication_plan(&part_mesh, setups, plan.custom_fixtures());
@@ -76,7 +76,7 @@ namespace gca {
 					 const workpiece w) {
     fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
 
-    return fabrication_plan_from_fixture_plan(plan, part_mesh, tools, w);
+    return fabrication_plan_for_fixture_plan(plan, part_mesh, tools, w);
   }
 
 }

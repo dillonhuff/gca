@@ -76,10 +76,11 @@ namespace gca {
     return encode_json(vice_boxes);
   }
 
+  // TODO: Encode toolpaths somehow
   ptree encode_json(const fabrication_setup& prog) {
     ptree p;
     p.add_child("partMesh", encode_json(prog.part_mesh()));
-    p.add_child("gcode", encode_json(prog.prog));
+    //p.add_child("gcode", encode_json(prog.prog));
     p.add_child("vice", encode_json(prog.v));
     return p;
   }

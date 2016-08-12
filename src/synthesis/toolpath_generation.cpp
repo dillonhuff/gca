@@ -174,18 +174,14 @@ namespace gca {
 				     const tool& t,
 				     const double cut_depth) {
     auto holes = p.get_holes();
-    vector<oriented_polygon> offset_h; //(holes.size());
+    vector<oriented_polygon> offset_h;
     for (auto h : holes) {
       concat(offset_h, exterior_offset(h, t.radius()));
     }
     
-    // transform(begin(holes), end(holes), begin(offset_h),
-    // 	      [t](const oriented_polygon& p)
-    // 	      { return exterior_offset(p, t.radius()); });
     auto i_off = interior_offset(p.get_boundary(), t.radius());
     DBG_ASSERT(i_off.size() == 1);
     oriented_polygon bound_poly = i_off.front();
-    //    oriented_polygon bound_poly = interior_offset(p.get_boundary(), t.radius());
 
     vector<polyline> plines = roughing_lines(p,
 					     p.base(),
@@ -214,20 +210,17 @@ namespace gca {
 				const tool& t,
 				double cut_depth) {
     auto holes = pocket.get_holes();
-    vector<oriented_polygon> offset_h; //(holes.size());
+    vector<oriented_polygon> offset_h;
     for (auto h : holes) {
       concat(offset_h, exterior_offset(h, t.radius()));
     }
     
-    // transform(begin(holes), end(holes), begin(offset_h),
-    // 	      [t](const oriented_polygon& p)
-    // 	      { return exterior_offset(p, t.radius()); });
     auto i_off = interior_offset(pocket.get_boundary(), t.radius());
     cout << "# of offset = " << i_off.size() << endl;
-    // TODO: Perhaps this should be a failure?
+
     if (i_off.size() != 1) { return {}; }
     oriented_polygon bound_poly = i_off.front();
-    //    oriented_polygon bound_poly = interior_offset(pocket.get_boundary(), t.radius());
+
     vector<double> depths = cut_depths(pocket.get_start_depth(),
 				       pocket.get_end_depth(),
 				       cut_depth / 2.0);
@@ -251,13 +244,14 @@ namespace gca {
     vector<polyline> polys;
     
     auto i = exterior_offset(inter, r);
-    //    while (contains(outer, i)) {
+
     while ((i.size() == 1) && !contains(i.front(), outer)) {
       polys.push_back(to_polyline(i.front()));
       r += t.radius();
       i = exterior_offset(inter, r);
       // TODO: Come up with more precise end test
     }
+
     reverse(begin(polys), end(polys));
 
     return polys;
@@ -275,20 +269,20 @@ namespace gca {
   std::vector<polyline>
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
-    // auto i_off = interior_offset(exterior, t.radius());
-    // DBG_ASSERT(i_off.size() == 1);
-    // auto o = project(i_off.front(), get_end_depth());
-    // auto inter = project(interior, get_end_depth());
-    // vector<double> depths =
-    //   cut_depths(get_start_depth(), get_end_depth(), cut_depth);
-    // vector<polyline> level_template =
-    //   contour_level(o, interior, t, get_end_depth());
-    // vector<polyline> lines;
-    // for (auto depth : depths) {
-    //   concat(lines, project_lines(level_template, depth));
-    // }
-    // return lines;
-    return { to_polyline(project(interior, get_end_depth())) };
+    auto i_off = interior_offset(exterior, t.radius());
+    DBG_ASSERT(i_off.size() == 1);
+    auto o = project(i_off.front(), get_end_depth());
+    auto inter = project(interior, get_end_depth());
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    vector<polyline> level_template =
+      contour_level(o, interior, t, get_end_depth());
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(level_template, depth));
+    }
+    return lines;
+    //    return { to_polyline(project(interior, get_end_depth())) };
   }
 
   std::vector<polyline>
@@ -313,19 +307,19 @@ namespace gca {
   face_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     auto inter = project(base, get_end_depth());
-    // vector<polyline> face_template =
-    //   face_level(inter, t, cut_depth);
+    vector<polyline> face_template =
+      face_level(inter, t, cut_depth);
 
-    // vector<double> depths =
-    //   cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
 
-    // vector<polyline> lines;
-    // for (auto depth : depths) {
-    //   concat(lines, project_lines(face_template, depth));
-    // }
-    // return lines;
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
 
-    return { to_polyline(project(inter, get_end_depth())) };
+    //    return { to_polyline(project(inter, get_end_depth())) };
   }
 
   tool

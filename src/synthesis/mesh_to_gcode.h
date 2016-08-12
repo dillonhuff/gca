@@ -24,6 +24,12 @@ namespace gca {
   fabrication_plan make_fabrication_plan(const triangular_mesh& m,
 					 const fabrication_inputs& inputs);
 
+
+  fabrication_plan
+  fabrication_plan_for_fixture_plan(const fixture_plan& plan,
+				    const triangular_mesh& part_mesh,
+				    const std::vector<tool>& tools,
+				    const workpiece& w);
   
 }
 

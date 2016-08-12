@@ -13,6 +13,13 @@
 
 namespace gca {
 
+  enum pocket_name {
+    FREEFORM_POCKET,
+    FACE_POCKET,
+    CONTOUR_POCKET,
+    FLAT_POCKET,
+  };
+
   class pocket {
   public:
     template<typename T>
@@ -27,6 +34,7 @@ namespace gca {
 
     pocket& operator=(pocket&&) noexcept = default;
 
+    pocket_name pocket_type() const { return self_->pocket_type(); }
     tool select_tool(const std::vector<tool>& tools) const
     { return self_->select_tool(tools); }
     const vector<oriented_polygon>& get_holes() const
@@ -44,6 +52,7 @@ namespace gca {
     struct concept_t {
       virtual ~concept_t() = default;
       virtual tool select_tool(const std::vector<tool>& tools) const = 0;
+      virtual pocket_name pocket_type() const = 0;
       virtual const vector<oriented_polygon>& get_holes() const = 0;
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
@@ -55,6 +64,7 @@ namespace gca {
     template<typename T>
     struct model : concept_t {
       model(T x) : data_(move(x)) {}
+      pocket_name pocket_type() const { return data_.pocket_type(); }
       tool select_tool(const std::vector<tool>& tools) const
       { return data_.select_tool(tools); }
       virtual concept_t* copy_() const { return new model<T>(*this); }
@@ -85,6 +95,7 @@ namespace gca {
 		    const std::vector<index_t>& basep,
 		    const triangular_mesh* p_mesh);
 
+    pocket_name pocket_type() const { return FREEFORM_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
@@ -160,6 +171,7 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
+    pocket_name pocket_type() const { return CONTOUR_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
   };
@@ -178,6 +190,8 @@ namespace gca {
 
     const vector<oriented_polygon>& get_holes() const
     { DBG_ASSERT(false); }
+
+    pocket_name pocket_type() const { return FACE_POCKET; }    
 
     double get_end_depth() const
     { return end_depth; }
