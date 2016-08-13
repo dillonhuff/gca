@@ -163,6 +163,19 @@ ublas/fast:
 .PHONY : ublas/fast
 
 #=============================================================================
+# Target rules for targets named plate-cutter
+
+# Build rule for target.
+plate-cutter: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 plate-cutter
+.PHONY : plate-cutter
+
+# fast build rule for target.
+plate-cutter/fast:
+	$(MAKE) -f CMakeFiles/plate-cutter.dir/build.make CMakeFiles/plate-cutter.dir/build
+.PHONY : plate-cutter/fast
+
+#=============================================================================
 # Target rules for targets named all-tests
 
 # Build rule for target.
@@ -346,6 +359,33 @@ examples/json_plan.s: examples/json_plan.cpp.s
 examples/json_plan.cpp.s:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/examples/json_plan.cpp.s
 .PHONY : examples/json_plan.cpp.s
+
+examples/plate_cutter.o: examples/plate_cutter.cpp.o
+
+.PHONY : examples/plate_cutter.o
+
+# target to build an object file
+examples/plate_cutter.cpp.o:
+	$(MAKE) -f CMakeFiles/plate-cutter.dir/build.make CMakeFiles/plate-cutter.dir/examples/plate_cutter.cpp.o
+.PHONY : examples/plate_cutter.cpp.o
+
+examples/plate_cutter.i: examples/plate_cutter.cpp.i
+
+.PHONY : examples/plate_cutter.i
+
+# target to preprocess a source file
+examples/plate_cutter.cpp.i:
+	$(MAKE) -f CMakeFiles/plate-cutter.dir/build.make CMakeFiles/plate-cutter.dir/examples/plate_cutter.cpp.i
+.PHONY : examples/plate_cutter.cpp.i
+
+examples/plate_cutter.s: examples/plate_cutter.cpp.s
+
+.PHONY : examples/plate_cutter.s
+
+# target to generate assembly for a file
+examples/plate_cutter.cpp.s:
+	$(MAKE) -f CMakeFiles/plate-cutter.dir/build.make CMakeFiles/plate-cutter.dir/examples/plate_cutter.cpp.s
+.PHONY : examples/plate_cutter.cpp.s
 
 examples/stl_parse.o: examples/stl_parse.cpp.o
 
@@ -3328,6 +3368,7 @@ help:
 	@echo "... json-plan"
 	@echo "... json-mesh"
 	@echo "... ublas"
+	@echo "... plate-cutter"
 	@echo "... all-tests"
 	@echo "... gca"
 	@echo "... rebuild_cache"
@@ -3346,6 +3387,9 @@ help:
 	@echo "... examples/json_plan.o"
 	@echo "... examples/json_plan.i"
 	@echo "... examples/json_plan.s"
+	@echo "... examples/plate_cutter.o"
+	@echo "... examples/plate_cutter.i"
+	@echo "... examples/plate_cutter.s"
 	@echo "... examples/stl_parse.o"
 	@echo "... examples/stl_parse.i"
 	@echo "... examples/stl_parse.s"

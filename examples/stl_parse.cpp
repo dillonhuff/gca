@@ -30,7 +30,7 @@ void print_programs(const fabrication_plan& fix_plan) {
 }
 
 int main(int argc, char* argv[]) {
-  assert(argc == 2);
+  DBG_ASSERT(argc == 2);
 
   arena_allocator a;
   set_system_allocator(&a);

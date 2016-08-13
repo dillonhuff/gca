@@ -55,9 +55,38 @@ namespace gca {
   }
 
   std::vector<polyline>
+  face_level(const oriented_polygon& inter,
+	     const tool& t,
+	     const double cut_depth) {
+    vector<polyline> polys;
+    double r = t.radius();
+    auto last_polygon = inter;
+    auto i = interior_offset(inter, r);
+    while ((i.size() == 1) && contains(last_polygon, i.front())) {
+      polys.push_back(to_polyline(i.front()));
+      last_polygon = i.front();
+      r += t.radius();
+      i = interior_offset(inter, r);
+    }
+    return polys;
+  }
+
+  std::vector<polyline>
   flat_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
-    return { to_polyline(project(boundary, get_end_depth())) };
+    auto inter = project(boundary, get_end_depth());
+    vector<polyline> face_template =
+      face_level(inter, t, cut_depth);
+
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
+    //  return { to_polyline(project(boundary, get_end_depth())) };
   }
 
   pocket box_pocket(const box b) {
@@ -273,6 +302,17 @@ namespace gca {
 
     auto i = exterior_offset(inter, r);
 
+    cout << "# of exterior offsets = " << i.size() << endl;
+    
+    DBG_ASSERT(i.size() > 0);
+
+    for (auto off : i) {
+      cout << "EXTERIOR OFFSET: " << endl;
+      vtk_debug_polygon(off);
+    }
+    cout << "DONE EXTERIOR OFFSETS" << endl;
+
+    vtk_debug_polygon(outer);
     while ((i.size() == 1) && !contains(i.front(), outer)) {
       cout << "next iteration" << endl;
       polys.push_back(to_polyline(i.front()));
@@ -312,23 +352,6 @@ namespace gca {
     }
     return lines;
     //    return { to_polyline(project(interior, get_end_depth())) };
-  }
-
-  std::vector<polyline>
-  face_level(const oriented_polygon& inter,
-	     const tool& t,
-	     const double cut_depth) {
-    vector<polyline> polys;
-    double r = t.radius();
-    auto last_polygon = inter;
-    auto i = interior_offset(inter, r);
-    while ((i.size() == 1) && contains(last_polygon, i.front())) {
-      polys.push_back(to_polyline(i.front()));
-      last_polygon = i.front();
-      r += t.radius();
-      i = interior_offset(inter, r);
-    }
-    return polys;
   }
 
   // TODO: Use tile vertical?

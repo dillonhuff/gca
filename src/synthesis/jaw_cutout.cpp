@@ -343,8 +343,8 @@ namespace gca {
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
 
     vector<pocket> clean_pockets{face_down(clean_clip.mesh("notch"),
+					   clean_clip.mesh("part"),
 					   clean_clip.mesh("part"))};
-					   //					   clean_clip.mesh("part"))};
 
 
     clip_setups.push_back(fixture_setup(clean_clip, custom.clean_fix, clean_pockets));

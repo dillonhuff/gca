@@ -261,6 +261,15 @@ namespace gca {
     return sfs;
   }
 
+  std::vector<std::vector<index_t>>
+  surfaces_to_inds(const std::vector<surface>& surfs) {
+    std::vector<std::vector<index_t>> inds;
+    for (auto s : surfs) {
+      inds.push_back(s.index_list());
+    }
+    return inds;
+  }
+
   std::vector<surface>
   connected_vertical_surfaces(std::vector<index_t>& inds,
 			      const triangular_mesh& m,

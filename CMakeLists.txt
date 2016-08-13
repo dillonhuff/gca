@@ -218,6 +218,9 @@ target_link_libraries(json-plan geometry utils gcode gprocess gca)
 add_executable(stl-parse examples/stl_parse.cpp)
 target_link_libraries(stl-parse geometry utils gcode gprocess gca)
 
+add_executable(plate-cutter examples/plate_cutter.cpp)
+target_link_libraries(plate-cutter geometry utils gcode gprocess gca)
+
 add_executable(ublas examples/ublas.cpp)
 target_link_libraries(ublas geometry utils gcode gprocess gca)
 

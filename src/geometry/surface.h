@@ -193,6 +193,10 @@ namespace gca {
 
   surface find_surface_by_normal(const std::vector<surface>& surfs,
 				 const point n);
+
+  std::vector<std::vector<index_t>>
+  surfaces_to_inds(const std::vector<surface>& surfs);
+
 }
 
 #endif
