@@ -89,6 +89,37 @@ namespace gca {
     //  return { to_polyline(project(boundary, get_end_depth())) };
   }
 
+  tool
+  trace_pocket::select_tool(const std::vector<tool>& tools) const {
+    tool t = *(max_element(begin(tools), end(tools),
+  			   [](const tool& l, const tool& r)
+      { return l.diameter() < r.diameter(); }));
+    return t;
+  }
+
+  std::vector<polyline>
+  trace_pocket::toolpath_lines(const tool& t,
+			       const double cut_depth) const {
+    vector<oriented_polygon> inter =
+      exterior_offset(project(outline, get_end_depth()), t.radius());
+
+    // for (auto ipoly : inter) {
+    //   vtk_debug_polygon(ipoly);
+    // }
+    DBG_ASSERT(inter.size() == 2);
+
+    vector<polyline> face_template{to_polyline(inter[1])};
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
+    //  return { to_polyline(project(boundary, get_end_depth())) };
+  }
+  
   pocket box_pocket(const box b) {
     point p1(b.x_min, b.y_min, b.z_min);
     point p2(b.x_min, b.y_max, b.z_min);

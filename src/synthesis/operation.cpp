@@ -17,6 +17,9 @@ namespace gca {
     case FLAT_POCKET:
       out << "FLAT_POCKET";
       break;
+    case TRACE_POCKET:
+      out << "TRACE_POCKET";
+      break;
     default:
       DBG_ASSERT(false);
     }

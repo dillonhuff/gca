@@ -9,7 +9,8 @@ namespace gca {
     FREEFORM_POCKET,
     FACE_POCKET,
     CONTOUR_POCKET,
-    FLAT_POCKET
+    FLAT_POCKET,
+    TRACE_POCKET
   };
 
   std::ostream& operator<<(std::ostream& out, const pocket_name p);

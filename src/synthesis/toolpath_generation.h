@@ -239,6 +239,36 @@ namespace gca {
     toolpath_lines(const tool& t, const double cut_depth) const;
   };
 
+  class trace_pocket {
+  protected:
+    double start_depth;
+    double end_depth;
+    oriented_polygon outline;
+
+  public:
+    trace_pocket(const double p_start_depth,
+		const double p_end_depth,
+		const oriented_polygon& p_outline)
+      : start_depth(p_start_depth), end_depth(p_end_depth), outline(p_outline) {}
+
+    const vector<oriented_polygon>& get_holes() const
+    { DBG_ASSERT(false); }
+
+    pocket_name pocket_type() const { return TRACE_POCKET; }    
+
+    double get_end_depth() const
+    { return end_depth; }
+    double get_start_depth() const
+    { return start_depth; }
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }
+
+    tool select_tool(const std::vector<tool>& tools) const;
+
+    std::vector<polyline>
+    toolpath_lines(const tool& t, const double cut_depth) const;
+  };
+  
   pocket box_pocket(const box b);
 
   std::vector<polyline> deepen_polyline(const std::vector<double>& depths,

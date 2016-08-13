@@ -33,10 +33,29 @@ int main(int argc, char* argv[]) {
 
   vector<surface> sfs = decomp->visible_from_n;
 
+  // NOTE: Should really rotate decomp->n onto (0, 0, 1) instead
+  // of just assuming it is already there
+
+  double part_height = max_in_dir(mesh, point(0, 0, 1));
+  double part_base = min_in_dir(mesh, point(0, 0, 1));
+  
   vector<pocket> pockets =
     make_surface_pockets(surfaces_to_inds(sfs),
 			 mesh,
-			 diameter(decomp->n, mesh));
+			 part_height);
+
+  auto bound = contour_outline(mesh.face_indexes(), mesh, point(0, 0, 1));
+
+  DBG_ASSERT(bound);
+
+  auto outlines =
+    mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+
+  DBG_ASSERT(outlines.size() == 2);
+
+  oriented_polygon outline = outlines.front();
+
+  pockets.push_back(trace_pocket(part_height, part_base, outline));
 
   tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
   vector<toolpath> toolpaths = mill_pockets(pockets, {t1}, ALUMINUM);
