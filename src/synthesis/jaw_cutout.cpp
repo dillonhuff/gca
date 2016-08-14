@@ -268,22 +268,12 @@ namespace gca {
     return custom_jaw_cutout{f_base, f_clean, jaw_plan, a_plan, an_plan};
   }
 
-  void add_surface_pockets(std::vector<pocket>& pockets,
-			   const triangular_mesh& m,
-			   const std::vector<surface>& surfs) {
-    unsigned old_size = pockets.size();
-    concat(pockets, make_pockets(m, surfs));
-    unsigned new_size = pockets.size();
-
-    DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
-  }
-
-  std::vector<fixture_setup>
+    std::vector<fixture_setup>
   soft_jaw_clip_setups(const triangular_mesh& aligned,
-		       const triangular_mesh& part_mesh,
-		       const contour_surface_decomposition& surfs,
-		       const fixture& top_fix,
-		       const custom_jaw_cutout& custom) {
+                       const triangular_mesh& part_mesh,
+                       const contour_surface_decomposition& surfs,
+                       const fixture& top_fix,
+                       const custom_jaw_cutout& custom) {
     auto ar = custom.arrangement;
     const labeled_mesh& a_jaw = ar.labeled_mesh("a_jaw");
     const labeled_mesh& an_jaw = ar.labeled_mesh("an_jaw");

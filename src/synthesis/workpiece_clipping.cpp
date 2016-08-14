@@ -1,3 +1,5 @@
+#include "synthesis/mesh_to_gcode.h"
+#include "geometry/extrusion.h"
 #include <boost/optional.hpp>
 
 #include "gcode/gcode_program.h"
@@ -14,9 +16,20 @@
 #include "synthesis/vice.h"
 #include "synthesis/workpiece_clipping.h"
 
+
 namespace gca {
 
-  box workpiece_box(const workpiece& w) {
+    void add_surface_pockets(vector<gca::pocket>& pockets,
+                             const gca::triangular_mesh& m,
+                             const vector<gca::surface>& surfs) {
+        unsigned old_size = pockets.size();
+        concat(pockets, make_pockets(m, surfs));
+        unsigned new_size = pockets.size();
+
+        DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
+    }
+
+    box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();
     double z_len = w.sides[2].len();
@@ -126,15 +139,6 @@ namespace gca {
     oriented_polygon part_outline =
       min_e(part_outlines, [](const oriented_polygon& p)
 	    { return min_z(p); }); // outlines.front();
-
-    //vtk_debug_polygon(part_outline);
-    //vtk_debug_polygon(stock_outline);
-
-    // oriented_polygon part_outline =
-    //   *(max_element(begin(part_outlines), end(part_outlines),
-    // 		    [](const oriented_polygon& l,
-    // 		       const oriented_polygon& r)
-    //   { return area(l) < area(r); }));
 
     double part_bottom = min_in_dir(part, point(0, 0, 1));    
     return contour_pocket(part_top, part_bottom, part_outline, stock_outline);

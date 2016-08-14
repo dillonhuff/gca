@@ -12,7 +12,7 @@ namespace gca {
   void select_visible_triangles(vector<triangle>& triangles);
   
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
-				   const double workpiece_height);
+								   const double workpiece_height);
 
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
 
