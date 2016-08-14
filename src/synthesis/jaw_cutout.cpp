@@ -319,7 +319,7 @@ namespace gca {
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("part"))};
 
-    add_surface_pockets(top_pockets, top_clip.mesh("part"), top_surfs);
+    add_surface_pockets(top_pockets, top_clip, top_surfs); //top_clip.mesh("part"), top_surfs);
 
     fixture_setup top_setup(top_clip, top_fix, top_pockets);
 
@@ -328,7 +328,7 @@ namespace gca {
     vector<pocket> pockets{face_down(base_clip.mesh("stock"),
 				     base_clip.mesh("part"))};
 
-    add_surface_pockets(pockets, base_clip.mesh("part"), base_surfs);
+    add_surface_pockets(pockets, base_clip, base_surfs); //base_clip.mesh("part"), base_surfs);
 
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
 

@@ -7,11 +7,12 @@
 
 namespace gca {
 
-    void add_surface_pockets(vector<gca::pocket>& pockets,
-                             const gca::triangular_mesh& m,
-                             const vector<gca::surface>& surfs) {
+  void add_surface_pockets(vector<gca::pocket>& pockets,
+			   const rigid_arrangement& a,
+			   const vector<gca::surface>& surfs);
+
   // TODO: Move to workpiece?
-        triangular_mesh stock_mesh(const workpiece& w);
+  triangular_mesh stock_mesh(const workpiece& w);
   
   clipping_plan
   workpiece_clipping_programs(const workpiece aligned_workpiece,

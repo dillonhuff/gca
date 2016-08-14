@@ -19,17 +19,20 @@
 
 namespace gca {
 
-    void add_surface_pockets(vector<gca::pocket>& pockets,
-                             const gca::triangular_mesh& m,
-                             const vector<gca::surface>& surfs) {
-        unsigned old_size = pockets.size();
-        concat(pockets, make_pockets(m, surfs));
-        unsigned new_size = pockets.size();
+  void add_surface_pockets(vector<gca::pocket>& pockets,
+			   const rigid_arrangement& a,
+			   const vector<gca::surface>& surfs) {
+    DBG_ASSERT(a.contains_mesh("part"));
+    
+    auto m = a.mesh("part");
+    unsigned old_size = pockets.size();
+    concat(pockets, make_pockets(m, surfs));
+    unsigned new_size = pockets.size();
 
-        DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
-    }
+    DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
+  }
 
-    box workpiece_box(const workpiece& w) {
+  box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();
     double z_len = w.sides[2].len();
@@ -248,24 +251,24 @@ namespace gca {
 			   const triangular_mesh& part_mesh,
 			   const fixtures& f,
 			   const point n) {
-      double aligned_z_height = diameter(n, aligned);
-      double clipped_z_height = diameter(n, part_mesh);
-      vector<plate_height> viable_plates =
-      	find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
+    double aligned_z_height = diameter(n, aligned);
+    double clipped_z_height = diameter(n, part_mesh);
+    vector<plate_height> viable_plates =
+      find_viable_parallel_plates(aligned_z_height, clipped_z_height, f);
 
-      cout << "# of viable parallel plates = " << viable_plates.size() << endl;
+    cout << "# of viable parallel plates = " << viable_plates.size() << endl;
 
-      if (viable_plates.size() > 0) {
-      	vice parallel(f.get_vice(), viable_plates.front());
+    if (viable_plates.size() > 0) {
+      vice parallel(f.get_vice(), viable_plates.front());
 
-      	vector<surface> stock_surfs = outer_surfaces(aligned);
+      vector<surface> stock_surfs = outer_surfaces(aligned);
 
-	cout << "n = " << n << endl;
-      	auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel, n);
-	return fixture(stock_top_orient, parallel);
-      } else {
-	return boost::none;
-      }
+      cout << "n = " << n << endl;
+      auto stock_top_orient = largest_upward_orientation(stock_surfs, parallel, n);
+      return fixture(stock_top_orient, parallel);
+    } else {
+      return boost::none;
+    }
   }
 
   // TODO: Add code to generate jaws for base fixture

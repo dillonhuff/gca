@@ -95,6 +95,9 @@ namespace gca {
       metadata_index[name] = arrangement_metadata();
     }
 
+    bool contains_mesh(const std::string& name) const
+    { return name_index.find(name) != end(name_index); }
+
     void insert(const std::string& name,
     		const class labeled_mesh& m) {
       meshes.push_back(unique_ptr<class labeled_mesh>(new class labeled_mesh(m)));
