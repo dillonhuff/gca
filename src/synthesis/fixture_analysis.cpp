@@ -1,4 +1,5 @@
 #include "geometry/vtk_debug.h"
+#include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"

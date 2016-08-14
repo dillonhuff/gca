@@ -158,7 +158,9 @@ namespace gca {
       : boundary(p_boundary),
 	holes{},
 	start_depth(p_start_depth),
-	end_depth(p_end_depth) {}
+	end_depth(p_end_depth) {
+	  DBG_ASSERT(area(boundary) > 0.001);
+	}
     
     pocket_name pocket_type() const { return FLAT_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;

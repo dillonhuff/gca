@@ -43,14 +43,30 @@ namespace gca {
     DBG_ASSERT(bounds.size() > 0);
 
     boundary = extract_boundary(bounds);
+
+    DBG_ASSERT(area(boundary) > 0.001);
+    
     holes = bounds;
   }
   
   tool
   flat_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(max_element(begin(tools), end(tools),
-  			   [](const tool& l, const tool& r)
-      { return l.diameter() < r.diameter(); }));
+    double bound_area = area(boundary);
+    
+    cout << "Bound area = " << bound_area << endl;
+    for (auto p : boundary.vertices()) {
+      cout << "--- " << p << endl;
+    }
+    vtk_debug_polygon(boundary);
+
+    vector<tool> viable =
+      select(tools, [bound_area](const tool& t)
+	     { return t.cross_section_area() < bound_area; });
+
+    DBG_ASSERT(viable.size() > 0);
+
+    tool t = max_e(viable, [](const tool& l) { return l.diameter(); });
+
     return t;
   }
 

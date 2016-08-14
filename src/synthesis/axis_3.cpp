@@ -24,7 +24,10 @@ namespace gca {
       point norm = mesh.face_orientation(sfs.front());
       if (within_eps(angle_between(norm, point(0, 0, 1)), 0, 1.0)) {
 	cout << "Found flat pocket" << endl;
-	return flat_pocket(top_height, sfs, &mesh);
+	vtk_debug_highlight_inds(sfs, mesh);
+	auto p = flat_pocket(top_height, sfs, &mesh);
+	vtk_debug_polygon(p.get_boundary());
+	return p;
       }
     }
     return pocket(freeform_pocket(top_height, sfs, &mesh));
@@ -160,7 +163,12 @@ namespace gca {
     for (auto surface : surfaces) {
       if (has_no_base(surface, mesh, side_faces)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
-	pockets.push_back(flat_pocket(top_z, base_z, outline));
+	cout << "Found flat pocket" << endl;
+	vtk_debug_highlight_inds(surface, mesh);
+	flat_pocket p(top_z, base_z, outline);
+	vtk_debug_polygon(p.get_boundary());
+	
+	pockets.push_back(p);
       }
     }
 
@@ -190,4 +198,13 @@ namespace gca {
     return pockets;
   }
 
+  std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
+					   std::vector<std::vector<index_t>>& surfaces) {
+					   
+    double h = max_in_dir(mesh, point(0, 0, 1));
+    vector<pocket> pockets =
+      make_surface_pockets(surfaces, mesh, h);
+    return pockets;
+  }
+  
 }

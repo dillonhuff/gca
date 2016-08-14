@@ -15,15 +15,6 @@ namespace gca {
     return out;
   }
 
-  std::vector<pocket> make_surface_pockets(const triangular_mesh& mesh,
-					   std::vector<std::vector<index_t>>& surfaces) {
-					   
-    double h = max_in_dir(mesh, point(0, 0, 1));
-    vector<pocket> pockets =
-      make_surface_pockets(surfaces, mesh, h);
-    return pockets;
-  }
-
   std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
 					 const std::vector<tool>& tools,
 					 const material& stock_material) {

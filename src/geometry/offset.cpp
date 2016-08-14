@@ -7,6 +7,7 @@
 #include<CGAL/create_offset_polygons_2.h>
 
 #include "geometry/offset.h"
+#include "geometry/vtk_debug.h"
 
 namespace gca {
 
@@ -61,23 +62,24 @@ namespace gca {
     return results;
   }
 
-  std::vector<oriented_polygon> interior_offset(const oriented_polygon& q,
+  std::vector<oriented_polygon> interior_offset(const oriented_polygon& p,
 						const double inc) {
 
-    DBG_ASSERT(q.vertices().size() > 0);
-
-    oriented_polygon p;
-    if (signed_area(q) < 0) {
-      p = q;
-    } else {
-      vector<point> pts = q.vertices();
-      reverse(begin(pts), end(pts));
-      p = oriented_polygon(q.normal, pts);
-    }
-    
     DBG_ASSERT(p.vertices().size() > 0);
-    DBG_ASSERT(signed_area(p) < 0);
-    
+
+    // oriented_polygon p;
+    // if (signed_area(q) < 0) {
+    //   p = q;
+    // } else {
+    //   vector<point> pts = q.vertices();
+    //   reverse(begin(pts), end(pts));
+    //   p = oriented_polygon(q.normal, pts);
+    // }
+
+    // vtk_debug_polygon(p);
+
+    // DBG_ASSERT(p.vertices().size() > 0);
+    // DBG_ASSERT(signed_area(p) < 0);
 
     double z_va = p.vertices().front().z;
     Polygon_2 out;
@@ -85,6 +87,11 @@ namespace gca {
       out.push_back(Point(p.x, p.y));
     }
 
+    if (out.orientation() == CGAL::CLOCKWISE) {
+      out.reverse_orientation();
+    }
+
+    
     PolygonPtrVector inner_offset_polygons =
       CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
 

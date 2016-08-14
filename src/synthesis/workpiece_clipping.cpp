@@ -4,6 +4,7 @@
 #include "gcode/lexer.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/axis_3.h"
 #include "synthesis/contour_planning.h"
 #include "synthesis/face_clipping.h"
 #include "synthesis/jaw_cutout.h"
@@ -126,8 +127,8 @@ namespace gca {
       min_e(part_outlines, [](const oriented_polygon& p)
 	    { return min_z(p); }); // outlines.front();
 
-    vtk_debug_polygon(part_outline);
-    vtk_debug_polygon(stock_outline);
+    //vtk_debug_polygon(part_outline);
+    //vtk_debug_polygon(stock_outline);
 
     // oriented_polygon part_outline =
     //   *(max_element(begin(part_outlines), end(part_outlines),

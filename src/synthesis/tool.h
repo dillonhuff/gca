@@ -1,6 +1,8 @@
 #ifndef GCA_TOOL_H
 #define GCA_TOOL_H
 
+#include <cmath>
+
 #include "synthesis/material.h"
 
 namespace gca {
@@ -28,6 +30,8 @@ namespace gca {
     inline double length() const { return len; }
     inline unsigned num_flutes() const { return flutes; }
     inline material material() const { return mat; }
+    inline double cross_section_area() const
+    { return M_PI*radius()*radius(); }
   };
 
 }
