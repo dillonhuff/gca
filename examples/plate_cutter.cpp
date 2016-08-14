@@ -38,11 +38,10 @@ int main(int argc, char* argv[]) {
 
   double part_height = max_in_dir(mesh, point(0, 0, 1));
   double part_base = min_in_dir(mesh, point(0, 0, 1));
-  
+
+  auto inds = surfaces_to_inds(sfs);
   vector<pocket> pockets =
-    make_surface_pockets(surfaces_to_inds(sfs),
-			 mesh,
-			 part_height);
+    make_surface_pockets(mesh, inds);
 
   auto bound = contour_outline(mesh.face_indexes(), mesh, point(0, 0, 1));
 
