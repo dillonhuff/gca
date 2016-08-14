@@ -14,11 +14,6 @@ namespace gca {
   std::vector<pocket> make_pockets(const triangular_mesh& mesh,
 				   const double workpiece_height);
 
-  // std::vector<pocket>
-  // make_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
-  // 		       const triangular_mesh& mesh,
-  // 		       double workpiece_height);
-  
   std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh);
 
   vector<toolpath> mill_pockets(vector<pocket>& pockets,

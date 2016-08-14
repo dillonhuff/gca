@@ -206,5 +206,5 @@ namespace gca {
       make_surface_pockets(surfaces, mesh, h);
     return pockets;
   }
-  
+
 }
