@@ -17,6 +17,19 @@ namespace gca {
   typedef boost::shared_ptr<Polygon_2> PolygonPtr ;
   typedef std::vector<PolygonPtr> PolygonPtrVector ;
 
+  oriented_polygon
+  oriented_polygon_for_CGAL_polygon(const Polygon_2& off_p,
+				    const double z,
+				    const point n) {
+    vector<point> res_pts;
+    for (auto it = CGAL::CGAL_SS_i::vertices_begin(off_p);
+	 it != CGAL::CGAL_SS_i::vertices_end(off_p); ++it) {
+      Point vert = *it;
+      res_pts.push_back(point(vert.x(), vert.y(), z));
+    }
+    return oriented_polygon(n, res_pts);
+  }
+
   std::vector<oriented_polygon> exterior_offset(const oriented_polygon& q,
 						const double inc) {
     DBG_ASSERT(q.vertices().size() > 0);
@@ -50,13 +63,8 @@ namespace gca {
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
       Polygon_2 off_p = *off_ptr;
-      vector<point> res_pts;
-      for (auto it = CGAL::CGAL_SS_i::vertices_begin(off_p);
-	   it != CGAL::CGAL_SS_i::vertices_end(off_p); ++it) {
-	Point vert = *it;
-	res_pts.push_back(point(vert.x(), vert.y(), z_va));
-      }
-      results.push_back(oriented_polygon(p.normal, res_pts));
+      auto op = oriented_polygon_for_CGAL_polygon(off_p, z_va, p.normal);
+      results.push_back(op);
     }
     return results;
   }
@@ -85,13 +93,8 @@ namespace gca {
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
       Polygon_2 off_p = *off_ptr;
-      vector<point> res_pts;
-      for (auto it = CGAL::CGAL_SS_i::vertices_begin(off_p);
-	   it != CGAL::CGAL_SS_i::vertices_end(off_p); ++it) {
-	Point vert = *it;
-	res_pts.push_back(point(vert.x(), vert.y(), z_va));
-      }
-      results.push_back(oriented_polygon(p.normal, res_pts));
+      auto op = oriented_polygon_for_CGAL_polygon(off_p, z_va, p.normal);
+      results.push_back(op);
     }
     return results;
   }

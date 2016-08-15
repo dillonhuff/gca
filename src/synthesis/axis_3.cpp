@@ -154,9 +154,11 @@ namespace gca {
     vector<index_poly> ps =
       unordered_segments_to_index_polylines(edges);
 
+    DBG_ASSERT(ps.size() == 2);
+
     vector<oriented_polygon> bounds;
     for (auto ip : ps) {
-      bounds.push_back(oriented_polygon_for_index_poly(part.vertex_list(), ip, point(0, 0, 1)));
+      bounds.push_back(oriented_polygon_for_index_polyline(part.vertex_list(), ip, point(0, 0, 1)));
     }
 
     auto min_poly = min_e(bounds, [](const oriented_polygon& l) { return min_z(l); });

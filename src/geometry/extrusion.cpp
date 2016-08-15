@@ -7,12 +7,16 @@
 namespace gca {
 
   oriented_polygon
-  oriented_polygon_for_index_poly(const std::vector<point>& pts,
-				  const index_poly& p,
-				  const point n) {
+  oriented_polygon_for_index_polyline(const std::vector<point>& pts,
+				      const index_poly& p,
+				      const point n) {
     vector<point> poly_pts;
-    for (auto i : p) {
-      poly_pts.push_back(pts[i]);
+    for (unsigned in = 0; in < p.size(); in++) {
+      if (in < p.size() - 1) {
+	poly_pts.push_back(pts[p[in]]);
+      } else if (p[in] != p[0]) {
+	poly_pts.push_back(pts[p[in]]);
+      }
     }
     return oriented_polygon(n, poly_pts);
   }
