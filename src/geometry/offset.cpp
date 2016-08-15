@@ -40,7 +40,6 @@ namespace gca {
     }
 
     DBG_ASSERT(out.is_simple());
-
     DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
 
     cout << "Start computing exterior offset" << endl;
@@ -91,6 +90,8 @@ namespace gca {
       out.reverse_orientation();
     }
 
+    DBG_ASSERT(out.is_simple());
+    DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
     
     PolygonPtrVector inner_offset_polygons =
       CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);

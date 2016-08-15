@@ -24,9 +24,9 @@ namespace gca {
       point norm = mesh.face_orientation(sfs.front());
       if (within_eps(angle_between(norm, point(0, 0, 1)), 0, 1.0)) {
 	cout << "Found flat pocket" << endl;
-	vtk_debug_highlight_inds(sfs, mesh);
+	//vtk_debug_highlight_inds(sfs, mesh);
 	auto p = flat_pocket(top_height, sfs, &mesh);
-	vtk_debug_polygon(p.get_boundary());
+	//vtk_debug_polygon(p.get_boundary());
 	return p;
       }
     }
@@ -188,9 +188,9 @@ namespace gca {
       if (has_no_base(surface, mesh, side_faces)) {
 	oriented_polygon outline = project(base_outline(surface, mesh), base_z);
 	cout << "Found flat pocket" << endl;
-	vtk_debug_highlight_inds(surface, mesh);
+	//vtk_debug_highlight_inds(surface, mesh);
 	flat_pocket p(top_z, base_z, outline);
-	vtk_debug_polygon(p.get_boundary());
+	//vtk_debug_polygon(p.get_boundary());
 	
 	pockets.push_back(p);
       }

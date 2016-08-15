@@ -57,7 +57,7 @@ namespace gca {
     for (auto p : boundary.vertices()) {
       cout << "--- " << p << endl;
     }
-    vtk_debug_polygon(boundary);
+    //vtk_debug_polygon(boundary);
 
     vector<tool> viable =
       select(tools, [bound_area](const tool& t)
@@ -74,16 +74,33 @@ namespace gca {
   face_level(const oriented_polygon& inter,
 	     const tool& t,
 	     const double cut_depth) {
+    cout << "START FACE LEVEL" << endl;
+    cout << "inter: " << endl;
+    vtk_debug_polygon(inter);
+
+
     vector<polyline> polys;
     double r = t.radius();
     auto last_polygon = inter;
     auto i = interior_offset(inter, r);
+
+    cout << "# of offsets = " << i.size() << endl;
+    for (auto ip : i) {
+      vtk_debug_polygon(ip);
+    }
+
     while ((i.size() == 1) && contains(last_polygon, i.front())) {
+      
       polys.push_back(to_polyline(i.front()));
       last_polygon = i.front();
       r += t.radius();
       i = interior_offset(inter, r);
+      
+      cout << "# of offsets = " << i.size() << endl;
     }
+
+    cout << "END FACE LEVEL" << endl;
+
     return polys;
   }
 
@@ -355,11 +372,11 @@ namespace gca {
 
     for (auto off : i) {
       cout << "EXTERIOR OFFSET: " << endl;
-      vtk_debug_polygon(off);
+      //vtk_debug_polygon(off);
     }
     cout << "DONE EXTERIOR OFFSETS" << endl;
 
-    vtk_debug_polygon(outer);
+    //vtk_debug_polygon(outer);
     while ((i.size() == 1) && !contains(i.front(), outer)) {
       cout << "next iteration" << endl;
       polys.push_back(to_polyline(i.front()));
