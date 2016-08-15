@@ -78,7 +78,6 @@ namespace gca {
     cout << "inter: " << endl;
     vtk_debug_polygon(inter);
 
-
     vector<polyline> polys;
     double r = t.radius();
     auto last_polygon = inter;
@@ -86,16 +85,16 @@ namespace gca {
 
     cout << "# of offsets = " << i.size() << endl;
     for (auto ip : i) {
-      vtk_debug_polygon(ip);
+      //vtk_debug_polygon(ip);
     }
 
     while ((i.size() == 1) && contains(last_polygon, i.front())) {
-      
+
       polys.push_back(to_polyline(i.front()));
       last_polygon = i.front();
       r += t.radius();
       i = interior_offset(inter, r);
-      
+
       cout << "# of offsets = " << i.size() << endl;
     }
 

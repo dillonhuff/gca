@@ -66,20 +66,6 @@ namespace gca {
 
     DBG_ASSERT(p.vertices().size() > 0);
 
-    // oriented_polygon p;
-    // if (signed_area(q) < 0) {
-    //   p = q;
-    // } else {
-    //   vector<point> pts = q.vertices();
-    //   reverse(begin(pts), end(pts));
-    //   p = oriented_polygon(q.normal, pts);
-    // }
-
-    // vtk_debug_polygon(p);
-
-    // DBG_ASSERT(p.vertices().size() > 0);
-    // DBG_ASSERT(signed_area(p) < 0);
-
     double z_va = p.vertices().front().z;
     Polygon_2 out;
     for (auto p : p.vertices()) {
