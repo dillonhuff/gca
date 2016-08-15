@@ -50,3 +50,4 @@ json-plan
 surface-test.app/*
 ublas
 plate-cutter
+.idea/*

@@ -32,6 +32,11 @@ namespace gca {
   polyline
   to_polyline(const index_poly& poly,
 	      const std::vector<point>& pts);
+
+  oriented_polygon
+  oriented_polygon_for_index_poly(const std::vector<point>& pts,
+				  const index_poly& p,
+				  const point n);
   
 }
 

@@ -50,7 +50,8 @@ namespace gca {
 
   std::vector<pocket>
   make_pockets(const triangular_mesh& part,
-			   const std::vector<surface>& surfaces);
+	       const triangular_mesh& stock,
+	       const std::vector<surface>& surfaces);
 
 
 

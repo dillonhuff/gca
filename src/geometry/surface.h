@@ -26,6 +26,8 @@ namespace gca {
       return false;
     }
 
+    point vertex(const index_t i) const { return get_parent_mesh().vertex(i); }
+
     bool is_boundary_edge(const gca::edge e) const {
       auto face_neighbs = get_parent_mesh().edge_face_neighbors(e);
       for (auto n : face_neighbs) {

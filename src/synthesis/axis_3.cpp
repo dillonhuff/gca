@@ -133,21 +133,45 @@ namespace gca {
     return false;
   }
 
-  oriented_polygon base_outline(const std::vector<index_t>& surface,
+  std::vector<gca::edge>
+  orthogonal_boundary_edges(const surface& s,
+			    const point n) {
+    vector<gca::edge> edges;
+    for (auto e : boundary_edges(s)) {
+      point ev = s.vertex(e.l) - s.vertex(e.r);
+      if (within_eps(angle_between(ev, n), 90.0, 1.0)) {
+	edges.push_back(e);
+      }
+    }
+    return edges;
+  }
+
+  oriented_polygon base_outline(const std::vector<index_t>& sfs,
 				const triangular_mesh& part) {
-    auto bounds = mesh_bounds(surface, part);
-    auto min_poly =
-      min_element(begin(bounds), end(bounds),
-		  [](const oriented_polygon& l, const oriented_polygon& r)
-		  { return min_z(l) < min_z(r); });
-    return *min_poly;
+    std::vector<gca::edge> edges =
+      orthogonal_boundary_edges(surface(&part, sfs), point(0, 0, 1));
+
+    vector<index_poly> ps =
+      unordered_segments_to_index_polylines(edges);
+
+    vector<oriented_polygon> bounds;
+    for (auto ip : ps) {
+      bounds.push_back(oriented_polygon_for_index_poly(part.vertex_list(), ip, point(0, 0, 1)));
+    }
+
+    auto min_poly = min_e(bounds, [](const oriented_polygon& l) { return min_z(l); });
+    return min_poly;
   }
 
   std::vector<pocket>
   closed_vertical_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
 				  const triangular_mesh& mesh,
 				  double workpiece_height) {
-    std::vector<std::vector<index_t>> surfaces = sfs;
+    if (sfs.size() == 0) { return {}; }
+
+    std::vector<std::vector<index_t>> surfaces =
+      merge_connected_surfaces(sfs, mesh);
+    
     delete_if(surfaces,
     	      [&mesh](const vector<index_t>& surface)
     	      { return !all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
@@ -206,5 +230,41 @@ namespace gca {
       make_surface_pockets(surfaces, mesh, h);
     return pockets;
   }
+
+  std::vector<pocket>
+  make_sliced_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
+			      const triangular_mesh& mesh,
+			      const triangular_mesh& stock,
+			      double workpiece_height) {
+    std::vector<std::vector<index_t>> surfaces = sfs;
+
+     vector<pocket> pockets =
+      closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
+    filter_vertical_surfaces(surfaces, mesh);
+
+    if (surfaces.size() > 0) {
+      surfaces = merge_connected_surfaces(surfaces, mesh);
+      auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
+      concat(pockets, nv_pockets);
+    }
+
+    sort(begin(pockets), end(pockets),
+	 [](const pocket& l, const pocket& r)
+	 { return l.get_end_depth() > r.get_end_depth(); });
+
+    return pockets;
+  }
+  
+  std::vector<pocket>
+  make_sliced_surface_pockets(const triangular_mesh& mesh,
+			      const triangular_mesh& stock,
+			      std::vector<std::vector<index_t>>& surfaces) {
+    double h = max_in_dir(mesh, point(0, 0, 1));
+    vector<pocket> pockets =
+      make_sliced_surface_pockets(surfaces, mesh, stock, h);
+    return pockets;
+
+  }
+
 
 }

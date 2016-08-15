@@ -7,6 +7,17 @@
 namespace gca {
 
   oriented_polygon
+  oriented_polygon_for_index_poly(const std::vector<point>& pts,
+				  const index_poly& p,
+				  const point n) {
+    vector<point> poly_pts;
+    for (auto i : p) {
+      poly_pts.push_back(pts[i]);
+    }
+    return oriented_polygon(n, poly_pts);
+  }
+  
+  oriented_polygon
   convert_index_poly(const std::vector<point>& pts,
 		     const index_poly& p,
 		     const double d,
