@@ -76,7 +76,7 @@ namespace gca {
 	     const double cut_depth) {
     cout << "START FACE LEVEL" << endl;
     cout << "inter: " << endl;
-    vtk_debug_polygon(inter);
+    //vtk_debug_polygon(inter);
 
     vector<polyline> polys;
     double r = t.radius();

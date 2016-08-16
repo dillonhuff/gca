@@ -171,12 +171,16 @@ namespace gca {
 				  double workpiece_height) {
     if (sfs.size() == 0) { return {}; }
 
-    std::vector<std::vector<index_t>> surfaces =
-      merge_connected_surfaces(sfs, mesh);
-    
-    delete_if(surfaces,
+    auto surf_list = sfs;
+    delete_if(surf_list,
     	      [&mesh](const vector<index_t>& surface)
     	      { return !all_orthogonal_to(surface, mesh, point(0, 0, 1), 5.0); });
+
+    if (surf_list.size() == 0) { return {}; }
+
+    std::vector<std::vector<index_t>> surfaces =
+      merge_connected_surfaces(surf_list, mesh);
+    
     vector<pocket> pockets;
     box b = mesh.bounding_box();
     double base_z = b.z_min;
