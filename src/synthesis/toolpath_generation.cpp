@@ -2,6 +2,7 @@
 
 #include "gcode/cut.h"
 #include "gcode/linear_cut.h"
+#include "geometry/mesh_operations.h"
 #include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/gcode_generation.h"
@@ -35,6 +36,12 @@ namespace gca {
 			   const triangular_mesh* p_mesh) :
     start_depth(start_depthp),
     end_depth(p_mesh->face_triangle(basep.front()).v1.z) {
+
+    surface sf(p_mesh, basep);
+    plane pl = surface_plane(sf);
+    vtk_debug(*p_mesh, pl);
+    auto polys = mesh_cross_section(*p_mesh, pl);
+    vtk_debug_polygons(polys);
     
     DBG_ASSERT(basep.size() > 0);
 
@@ -48,17 +55,11 @@ namespace gca {
     
     holes = bounds;
   }
-  
+
   tool
   flat_pocket::select_tool(const std::vector<tool>& tools) const {
     double bound_area = area(boundary);
     
-    cout << "Bound area = " << bound_area << endl;
-    for (auto p : boundary.vertices()) {
-      cout << "--- " << p << endl;
-    }
-    //vtk_debug_polygon(boundary);
-
     vector<tool> viable =
       select(tools, [bound_area](const tool& t)
 	     { return t.cross_section_area() < bound_area; });
@@ -74,19 +75,11 @@ namespace gca {
   face_level(const oriented_polygon& inter,
 	     const tool& t,
 	     const double cut_depth) {
-    cout << "START FACE LEVEL" << endl;
-    cout << "inter: " << endl;
-    //vtk_debug_polygon(inter);
 
     vector<polyline> polys;
     double r = t.radius();
     auto last_polygon = inter;
     auto i = interior_offset(inter, r);
-
-    cout << "# of offsets = " << i.size() << endl;
-    for (auto ip : i) {
-      //vtk_debug_polygon(ip);
-    }
 
     while ((i.size() == 1) && contains(last_polygon, i.front())) {
 
@@ -95,10 +88,7 @@ namespace gca {
       r += t.radius();
       i = interior_offset(inter, r);
 
-      cout << "# of offsets = " << i.size() << endl;
     }
-
-    cout << "END FACE LEVEL" << endl;
 
     return polys;
   }
@@ -117,6 +107,11 @@ namespace gca {
     for (auto depth : depths) {
       concat(lines, project_lines(face_template, depth));
     }
+
+    // if (lines.size() == 0) {
+    //   vtk_debug_polygon(boundary);
+    // }
+    
     return lines;
     //  return { to_polyline(project(boundary, get_end_depth())) };
   }
@@ -135,9 +130,6 @@ namespace gca {
     vector<oriented_polygon> inter =
       exterior_offset(project(outline, get_end_depth()), t.radius());
 
-    // for (auto ipoly : inter) {
-    //   vtk_debug_polygon(ipoly);
-    // }
     DBG_ASSERT(inter.size() == 2);
 
     vector<polyline> face_template{to_polyline(inter[1])};
@@ -367,21 +359,13 @@ namespace gca {
 
     cout << "# of exterior offsets = " << i.size() << endl;
     
-    DBG_ASSERT(i.size() > 0);
+    DBG_ASSERT(i.size() == 2);
 
-    for (auto off : i) {
-      cout << "EXTERIOR OFFSET: " << endl;
-      //vtk_debug_polygon(off);
-    }
-    cout << "DONE EXTERIOR OFFSETS" << endl;
 
-    //vtk_debug_polygon(outer);
-    while ((i.size() == 1) && !contains(i.front(), outer)) {
-      cout << "next iteration" << endl;
-      polys.push_back(to_polyline(i.front()));
+    while ((i.size() == 2) && !contains(i.front(), outer)) {
+      polys.push_back(to_polyline(i.back()));
       r += t.radius();
       i = exterior_offset(inter, r);
-      // TODO: Come up with more precise end test
     }
 
     reverse(begin(polys), end(polys));
@@ -439,7 +423,7 @@ namespace gca {
 
   tool
   face_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(max_element(begin(tools), end(tools),
+    tool t = *(min_element(begin(tools), end(tools),
   			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
     return t;

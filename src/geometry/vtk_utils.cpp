@@ -1,13 +1,30 @@
 #include <vtkCellData.h>
 #include <vtkCellArray.h>
-#include <vtkTriangle.h>
-#include <vtkTriangleFilter.h>
+#include <vtkLine.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkPolygon.h>
+#include <vtkTriangle.h>
+#include <vtkTriangleFilter.h>
 
 #include "geometry/vtk_utils.h"
 
 namespace gca {
+
+  line vtkCell_to_line(vtkCell* c) {
+    DBG_ASSERT(c->GetCellType() == VTK_LINE);
+    DBG_ASSERT(c->GetNumberOfPoints() == 2);
+
+    vtkLine* ln = dynamic_cast<vtkLine*>(c);
+    double p0[3];
+    double p1[3];
+    ln->GetPoints()->GetPoint(0, p0);
+    ln->GetPoints()->GetPoint(1, p1);
+
+    point v0(p0[0], p0[1], p0[2]);
+    point v1(p1[0], p1[1], p1[2]);
+
+    return line(v0, v1);
+  }
 
   triangle vtkCell_to_triangle(vtkCell* c) {
     assert(c->GetCellType() == VTK_TRIANGLE);
@@ -168,5 +185,16 @@ namespace gca {
     return polydata_to_triangle_list(polyData);
 
   }
+
+  vtkSmartPointer<vtkPlane> vtk_plane(const plane pl) {
+    vtkSmartPointer<vtkPlane> clipPlane = 
+      vtkSmartPointer<vtkPlane>::New();
+    point n = pl.normal();
+    point pt = pl.pt();
+    clipPlane->SetNormal(n.x, n.y, n.z);
+    clipPlane->SetOrigin(pt.x, pt.y, pt.z);
+    return clipPlane;
+  }
+
   
 }

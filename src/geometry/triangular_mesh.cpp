@@ -260,10 +260,6 @@ namespace gca {
 
       point fi = (face_orientations[i]).normalize();
       if (!within_eps(fi, computed_normal, 0.001)) {
-	cout << "Normal computation inconsistency: " << endl;
-	cout << "i                  = " << i << endl;
-	cout << "Face orientation i = " << fi << endl;
-	cout << "Computed normal    = " << computed_normal << endl;
 	return false;
       }
     }

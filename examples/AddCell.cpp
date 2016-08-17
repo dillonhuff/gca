@@ -211,7 +211,7 @@ int main(int argc, char* argv[]) {
   auto to_render = mesh;
 
   auto poly_data = polydata_for_trimesh(to_render);
-  color_polydata_by_millability(poly_data, to_render);
+  //color_polydata_by_millability(poly_data, to_render);
   auto poly_actor = polydata_actor(poly_data);
 
   vector<vtkSmartPointer<vtkActor>> actors{poly_actor};

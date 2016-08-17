@@ -7,6 +7,7 @@
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkClipPolyData.h>
+#include <vtkPlaneSource.h>
 #include <vtkProperty.h>
 #include <vtkCellArray.h>
 #include <vtkPolyDataNormals.h>
@@ -57,6 +58,33 @@ namespace gca {
     return actor;
   }
 
+  vtkSmartPointer<vtkActor> plane_actor(vtkSmartPointer<vtkPlane> pl)
+  {
+    double n[3];
+    pl->GetNormal(n);
+    double pt[3];
+    pl->GetOrigin(pt);
+    
+    vtkSmartPointer<vtkPlaneSource> planeSource =
+      vtkSmartPointer<vtkPlaneSource>::New();
+    planeSource->SetCenter(pt);
+    planeSource->SetNormal(n);
+    planeSource->Update();
+ 
+    vtkPolyData* plane = planeSource->GetOutput();
+ 
+    // Create a mapper and actor
+    vtkSmartPointer<vtkPolyDataMapper> mapper =
+      vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInputData(plane);
+ 
+    vtkSmartPointer<vtkActor> actor =
+      vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);    
+
+    return actor;
+  }
+  
   void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& actors)
   {
     vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
@@ -329,5 +357,13 @@ namespace gca {
       }
     }
     visualize_actors(actors);
+  }
+
+  void vtk_debug(const triangular_mesh& m,
+		 const plane pl) {
+    auto mpd = polydata_for_trimesh(m);
+    auto mpl = vtk_plane(pl);
+
+    visualize_actors({polydata_actor(mpd), plane_actor(mpl)});
   }
 }

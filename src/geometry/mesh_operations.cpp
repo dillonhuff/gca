@@ -13,7 +13,6 @@
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkClipPolyData.h>
-#include <vtkPlane.h>
 #include <vtkProperty.h>
 #include <vtkCellArray.h>
 #include <vtkTriangle.h>
@@ -27,18 +26,129 @@
 
 namespace gca {
 
+  boost::optional<std::vector<point>>
+  merge_center(const std::vector<point>& l, const std::vector<point>& r) {
+    if (within_eps(l.back(), r.front(), 0.0001)) {
+      std::vector<point> rest(begin(r) + 1, end(r));
+      std::vector<point> lc = l;
+      concat(lc, rest);
+      return lc;
+    }
+    return boost::none;
+  }
+  
+  boost::optional<std::vector<point>>
+  merge_adjacent_chains(const std::vector<point>& l, const std::vector<point>& r) {
+    auto res = merge_center(l, r);
+    if (res) { return *res; }
+    res = merge_center(r, l);
+    if (res) { return *res; }
+    std::vector<point> lc = l;
+    reverse(begin(lc), end(lc));
+    res = merge_center(lc, r);
+    if (res) { return *res; }
+    std::vector<point> rc = r;
+    reverse(begin(rc), end(rc));
+    res = merge_center(l, rc);
+    if (res) { return *res; }
+    return boost::none;
+  }
+
+  bool
+  try_to_merge_chains(std::vector<std::vector<point>>& plines) {
+    for (unsigned i = 0; i < plines.size(); i++) {
+      std::vector<point>* pi = &(plines[i]);
+      for (unsigned j = 0; j < plines.size(); j++) {
+	std::vector<point>* pj = &(plines[j]);
+	if (i != j) {
+	  boost::optional<std::vector<point>> res = merge_adjacent_chains(*pi, *pj);
+	  if (res) {
+	    *pi = *res;
+	    plines.erase(begin(plines) + j);
+	    return true;
+	  }
+	}
+      }
+    }
+    return false;
+  }
+  
+  // TODO: Templatize and merge with unordered_segments_to_index_polylines code?
+  std::vector<std::vector<point>>
+  connect_chains(std::vector<std::vector<point>> chains) {
+    bool merged_one = true;
+    while (merged_one) {
+      merged_one = try_to_merge_chains(chains);
+    }
+    return chains;
+  }
+
+  std::vector<oriented_polygon>
+  mesh_cross_section(const triangular_mesh& m,
+		     const plane p) {
+    auto clipPlane = vtk_plane(p);
+
+    vtkSmartPointer<vtkPolyData> input_mesh_data =
+      polydata_for_trimesh(m);
+
+    // Clip the source with the plane
+    vtkSmartPointer<vtkClipPolyData> clipper = 
+      vtkSmartPointer<vtkClipPolyData>::New();
+    clipper->SetInputData(input_mesh_data);
+    clipper->SetClipFunction(clipPlane);
+    clipper->Update();
+    
+    vtkPolyData* m_data = clipper->GetOutput();
+
+    auto act = polydata_actor(m_data);
+    visualize_actors({act});
+
+    // Now extract clipped edges
+    vtkSmartPointer<vtkFeatureEdges> boundaryEdges =
+      vtkSmartPointer<vtkFeatureEdges>::New();
+    boundaryEdges->SetInputData(m_data);
+    boundaryEdges->BoundaryEdgesOn();
+    boundaryEdges->FeatureEdgesOff();
+    boundaryEdges->NonManifoldEdgesOff();
+    boundaryEdges->ManifoldEdgesOff();
+    boundaryEdges->Update();
+
+    vtkPolyData& edges = *(boundaryEdges->GetOutput());
+
+    cout << "# of edges = " << edges.GetNumberOfCells() << endl;
+
+    vector<vector<point>> ln;
+    for (vtkIdType i = 0; i < edges.GetNumberOfCells(); i++) {
+      vtkCell* c = edges.GetCell(i);
+      line l = vtkCell_to_line(c);
+      ln.push_back({l.start, l.end});
+    }
+
+    connect_chains(ln);
+
+    cout << "Number of connected chains = " << ln.size() << endl;
+
+    vector<oriented_polygon> polys;
+    for (auto pt : ln) {
+      auto r = pt;
+
+      DBG_ASSERT(within_eps(r.front(), r.back()));
+
+      r.pop_back();
+      
+      polys.push_back(oriented_polygon(point(0, 0, 1), r));
+    }
+
+    return polys;
+  }
+
   // TOOD: Simplify this atrocity of a function
   triangular_mesh
   clip_mesh(const triangular_mesh& m,
 	    const plane pl)
   {
 
-    vtkSmartPointer<vtkPlane> clipPlane = 
-      vtkSmartPointer<vtkPlane>::New();
-    point n = pl.normal();
-    point pt = pl.pt();
-    clipPlane->SetNormal(n.x, n.y, n.z);
-    clipPlane->SetOrigin(pt.x, pt.y, pt.z);
+    auto clipPlane = vtk_plane(pl);
 
     vtkSmartPointer<vtkPolyData> input_mesh_data =
       polydata_for_trimesh(m);
@@ -169,32 +279,6 @@ namespace gca {
     normalGenerator2->Update();
 
     b_poly = normalGenerator2->GetOutput();
-
-    // auto data = vtkImplicitDataSet::New();
-    // data->SetDataSet(b_poly);
-    
-    // // Clip the source with the plane
-    // vtkSmartPointer<vtkClipPolyData> clipper = 
-    //   vtkSmartPointer<vtkClipPolyData>::New();
-    // clipper->SetInputData(a_poly);
-    // clipper->SetClipFunction(data);
-    // clipper->Update();
-
-    // vtkPolyData* res_poly = clipper->GetOutput();
-
-    // debug_print_summary(res_poly);
-    // debug_print_is_closed(res_poly);
-    // debug_print_edge_summary(res_poly);
-    
-    // auto rp = vtkSmartPointer<vtkPolyData>::New();
-    // rp->DeepCopy(res_poly);
-    // auto actor = polydata_actor(rp);
-    // visualize_actors({actor});
-
-    // assert(false);
-
-    // triangular_mesh result = trimesh_for_polydata(a_poly);
-    // return result;
 
     vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
       vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();

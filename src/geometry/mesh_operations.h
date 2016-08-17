@@ -6,6 +6,10 @@
 
 namespace gca {
 
+  std::vector<oriented_polygon>
+  mesh_cross_section(const triangular_mesh& m,
+		     const plane p);
+  
   triangular_mesh
   clip_mesh(const triangular_mesh& m, const plane pl);
 
