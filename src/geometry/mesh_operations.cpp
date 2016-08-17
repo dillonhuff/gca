@@ -34,7 +34,7 @@ namespace gca {
 
   boost::optional<std::vector<point>>
   merge_center(const std::vector<point>& l, const std::vector<point>& r) {
-    if (components_within_eps(l.back(), r.front(), 0.001)) {
+    if (components_within_eps(l.back(), r.front(), 0.01)) {
       std::vector<point> rest(begin(r) + 1, end(r));
       std::vector<point> lc = l;
       concat(lc, rest);
@@ -130,9 +130,7 @@ namespace gca {
     for (vtkIdType i = 0; i < edges.GetNumberOfCells(); i++) {
       vtkCell* c = edges.GetCell(i);
       line l = vtkCell_to_line(c);
-      if (!components_within_eps(l.start, l.end, 0.001)) {
-	ln.push_back({l.start, l.end});
-      }
+      ln.push_back({l.start, l.end});
     }
 
     cout << "Number of initial edges = " << ln.size() << endl;
@@ -152,7 +150,7 @@ namespace gca {
     for (auto pt : ln) {
       auto r = pt;
 
-      DBG_ASSERT(components_within_eps(r.front(), r.back(), 0.001));
+      DBG_ASSERT(components_within_eps(r.front(), r.back(), 0.01));
 
       r.pop_back();
       
