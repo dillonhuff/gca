@@ -25,10 +25,16 @@
 #include "geometry/vtk_utils.h"
 
 namespace gca {
+  
+  bool components_within_eps(const point l, const point r, const double tol) {
+    return within_eps(l.x, r.x, tol) &&
+      within_eps(l.y, r.y, tol) &&
+      within_eps(l.z, r.z, tol);
+  }
 
   boost::optional<std::vector<point>>
   merge_center(const std::vector<point>& l, const std::vector<point>& r) {
-    if (within_eps(l.back(), r.front(), 0.0001)) {
+    if (components_within_eps(l.back(), r.front(), 0.001)) {
       std::vector<point> rest(begin(r) + 1, end(r));
       std::vector<point> lc = l;
       concat(lc, rest);
@@ -75,7 +81,7 @@ namespace gca {
   
   // TODO: Templatize and merge with unordered_segments_to_index_polylines code?
   std::vector<std::vector<point>>
-  connect_chains(std::vector<std::vector<point>> chains) {
+  connect_chains(std::vector<std::vector<point>>& chains) {
     bool merged_one = true;
     while (merged_one) {
       merged_one = try_to_merge_chains(chains);
@@ -117,22 +123,36 @@ namespace gca {
 
     cout << "# of edges = " << edges.GetNumberOfCells() << endl;
 
+    auto act2 = polydata_actor(&edges);
+    visualize_actors({act2});
+
     vector<vector<point>> ln;
     for (vtkIdType i = 0; i < edges.GetNumberOfCells(); i++) {
       vtkCell* c = edges.GetCell(i);
       line l = vtkCell_to_line(c);
-      ln.push_back({l.start, l.end});
+      if (!components_within_eps(l.start, l.end, 0.001)) {
+	ln.push_back({l.start, l.end});
+      }
     }
 
-    connect_chains(ln);
+    cout << "Number of initial edges = " << ln.size() << endl;
+
+    ln = connect_chains(ln);
 
     cout << "Number of connected chains = " << ln.size() << endl;
+
+    for (auto c : ln) {
+      cout << "CHAIN" << endl;
+      for (auto p : c) {
+	cout << "---" << p << endl;
+      }
+    }
 
     vector<oriented_polygon> polys;
     for (auto pt : ln) {
       auto r = pt;
 
-      DBG_ASSERT(within_eps(r.front(), r.back()));
+      DBG_ASSERT(components_within_eps(r.front(), r.back(), 0.001));
 
       r.pop_back();
       

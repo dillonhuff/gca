@@ -38,7 +38,7 @@ namespace gca {
     end_depth(p_mesh->face_triangle(basep.front()).v1.z) {
 
     surface sf(p_mesh, basep);
-    plane pl = surface_plane(sf);
+    plane pl = surface_plane(sf).slide(0.001);
     vtk_debug(*p_mesh, pl);
     auto polys = mesh_cross_section(*p_mesh, pl);
     vtk_debug_polygons(polys);
