@@ -33,6 +33,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 	    ./src/geometry/extrusion.h
 	    ./src/geometry/spline_sampling.h
 	    ./src/geometry/matrix.h
+	    ./src/geometry/rotation.h
 	    ./src/geometry/triangle.h
 	    ./src/geometry/triangular_mesh.h
 	    ./src/geometry/homogeneous_transformation.h
@@ -52,6 +53,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/polygon.cpp
 	 ./src/geometry/polyline.cpp
 	 ./src/geometry/spline_sampling.cpp
+	 ./src/geometry/rotation.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/geometry/triangular_mesh.cpp
 	 ./src/geometry/trimesh.cpp

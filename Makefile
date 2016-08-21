@@ -1332,6 +1332,33 @@ src/geometry/polyline.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polyline.cpp.s
 .PHONY : src/geometry/polyline.cpp.s
 
+src/geometry/rotation.o: src/geometry/rotation.cpp.o
+
+.PHONY : src/geometry/rotation.o
+
+# target to build an object file
+src/geometry/rotation.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/rotation.cpp.o
+.PHONY : src/geometry/rotation.cpp.o
+
+src/geometry/rotation.i: src/geometry/rotation.cpp.i
+
+.PHONY : src/geometry/rotation.i
+
+# target to preprocess a source file
+src/geometry/rotation.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/rotation.cpp.i
+.PHONY : src/geometry/rotation.cpp.i
+
+src/geometry/rotation.s: src/geometry/rotation.cpp.s
+
+.PHONY : src/geometry/rotation.s
+
+# target to generate assembly for a file
+src/geometry/rotation.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/rotation.cpp.s
+.PHONY : src/geometry/rotation.cpp.s
+
 src/geometry/spline_sampling.o: src/geometry/spline_sampling.cpp.o
 
 .PHONY : src/geometry/spline_sampling.o
@@ -3549,6 +3576,9 @@ help:
 	@echo "... src/geometry/polyline.o"
 	@echo "... src/geometry/polyline.i"
 	@echo "... src/geometry/polyline.s"
+	@echo "... src/geometry/rotation.o"
+	@echo "... src/geometry/rotation.i"
+	@echo "... src/geometry/rotation.s"
 	@echo "... src/geometry/spline_sampling.o"
 	@echo "... src/geometry/spline_sampling.i"
 	@echo "... src/geometry/spline_sampling.s"

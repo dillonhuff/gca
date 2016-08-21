@@ -1,4 +1,5 @@
 #include "feature_recognition/feature_decomposition.h"
+#include "geometry/rotation.h"
 #include "geometry/surface.h"
 #include "synthesis/contour_planning.h"
 #include "utils/arena_allocator.h"
@@ -39,11 +40,16 @@ namespace gca {
 
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
 
+    // TODO: Rotate the polygons back using r_inv once results are calculated
+    rotation r = rotate_from_to(n, point(0, 0, 1));
+
+    triangular_mesh mr = apply(r, m);
+    
     vector<labeled_polygon_3> surf_polys;
     for (auto s : surfs) {
       DBG_ASSERT(s.size() > 0);
 
-      auto bounds = mesh_bounds(s, m);
+      auto bounds = mesh_bounds(s, mr);
 
       DBG_ASSERT(bounds.size() > 0);
 
@@ -68,7 +74,23 @@ namespace gca {
   initial_surface_levels(const triangular_mesh& m,
 			 const point n) {
     auto h_surfs = horizontal_surfaces(m, n);
-    DBG_ASSERT(false);
+    auto surface_it = begin(h_surfs);
+    surface_levels levels;
+    while (surface_it != end(h_surfs)) {
+      const labeled_polygon_3& current_surf = *surface_it;
+      double current_surf_dist = max_distance_along(current_surf.vertices(), n);
+      auto next_it =
+	find_if_not(surface_it, end(h_surfs),
+		    [current_surf_dist, n](const labeled_polygon_3& p) {
+		      double pd = max_distance_along(p.vertices(), n);
+		      return within_eps(current_surf_dist, pd, 0.01);
+		    });
+      vector<labeled_polygon_3> level(surface_it, next_it);
+      levels.push_back(level);
+
+      surface_it = next_it;
+    }
+    return levels;
   }
 
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
@@ -87,15 +109,47 @@ namespace gca {
     return top_poly;
   }
 
-  feature_decomposition*
-  decompose_volume(const labeled_polygon_3& current_level,
-		   surface_levels& levels,
-		   feature_decomposition* parent) {
-    if (levels.size() == 0) { return parent; }
+  std::vector<labeled_polygon_3>
+  subtract_level(const labeled_polygon_3& p,
+		 const std::vector<labeled_polygon_3>& to_subtract) {
+    
+  }
 
-    const std::vector<labeled_polygon_3> level_polys = levels.back();
-    vector<labeled_polygon_3> result_polys = ;
-    return parent;
+  void
+  decompose_volume(const labeled_polygon_3& current_level,
+		   surface_levels levels,
+		   feature_decomposition* parent) {
+    cout << "decompose" << endl;
+    if (levels.size() == 0) { return; }
+
+    const std::vector<labeled_polygon_3>& level_polys = levels.back();
+
+    vector<labeled_polygon_3> result_polys =
+      subtract_level(current_level, level_polys);
+
+    // If the result is the empty set then build feature
+    // from the current surface and finish
+    if (result_polys.size() == 0) {
+      return;
+    }
+
+    levels.pop_back();
+
+    // If none of the surfaces in this level overlap the
+    // current surface then just continue
+    if (result_polys.size() == 1) {
+      decompose_volume(result_polys.front(), levels, parent);
+      return;
+    }
+
+    // Otherwise recursively build decompositions of the child polygons
+    vector<feature_decomposition*> children;
+    for (auto r : result_polys) {
+      feature_decomposition* child =
+	new (allocate<feature_decomposition>()) feature_decomposition();
+      decompose_volume(r, levels, child);
+    }
+
   }
   
   feature_decomposition*
@@ -103,10 +157,12 @@ namespace gca {
     labeled_polygon_3 init_outline = initial_outline(m, n);
     surface_levels levels = initial_surface_levels(m, n);
 
-    feature_decomposition* empty_decomp =
+    feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
 
-    return decompose_volume(init_outline, levels, empty_decomp);
+    decompose_volume(init_outline, levels, decomp);
+
+    return decomp;
   }
 
 }

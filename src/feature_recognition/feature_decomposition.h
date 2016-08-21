@@ -31,6 +31,8 @@ namespace gca {
 
     point vertex(const unsigned i) const { return outer_ring[i]; }
 
+    const std::vector<point>& vertices() const { return outer_ring; }
+    
     unsigned num_vertices() const { return outer_ring.size(); }
   };
 
