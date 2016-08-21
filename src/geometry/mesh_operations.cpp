@@ -106,9 +106,6 @@ namespace gca {
     
     vtkPolyData* m_data = clipper->GetOutput();
 
-    auto act = polydata_actor(m_data);
-    visualize_actors({act});
-
     // Now extract clipped edges
     vtkSmartPointer<vtkFeatureEdges> boundaryEdges =
       vtkSmartPointer<vtkFeatureEdges>::New();
@@ -123,9 +120,6 @@ namespace gca {
 
     cout << "# of edges = " << edges.GetNumberOfCells() << endl;
 
-    auto act2 = polydata_actor(&edges);
-    visualize_actors({act2});
-
     vector<vector<point>> ln;
     for (vtkIdType i = 0; i < edges.GetNumberOfCells(); i++) {
       vtkCell* c = edges.GetCell(i);
@@ -139,12 +133,12 @@ namespace gca {
 
     cout << "Number of connected chains = " << ln.size() << endl;
 
-    for (auto c : ln) {
-      cout << "CHAIN" << endl;
-      for (auto p : c) {
-	cout << "---" << p << endl;
-      }
-    }
+    // for (auto c : ln) {
+    //   cout << "CHAIN" << endl;
+    //   for (auto p : c) {
+    // 	cout << "---" << p << endl;
+    //   }
+    // }
 
     vector<oriented_polygon> polys;
     for (auto pt : ln) {

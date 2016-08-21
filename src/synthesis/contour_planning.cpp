@@ -197,5 +197,27 @@ namespace gca {
     return r.face_orientation(tris[0]);
   }
 
+
+  boost::optional<oriented_polygon>
+  simple_outline(const triangular_mesh& out,
+		 const point n) {
+    auto bound = contour_outline(out.face_indexes(), out, n);
+    if (bound) {
+    } else {
+      return boost::none;
+    }
+    vector<oriented_polygon> outlines =
+      mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+
+    if (outlines.size() != 2) {
+      DBG_ASSERT(false);
+    }
+
+    oriented_polygon outl =
+      min_e(outlines, [](const oriented_polygon& p)
+	    { return min_z(p); });
+
+    return outl;
+  }
   
 }

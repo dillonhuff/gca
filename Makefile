@@ -819,6 +819,33 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
+src/feature_recognition/feature_decomposition.o: src/feature_recognition/feature_decomposition.cpp.o
+
+.PHONY : src/feature_recognition/feature_decomposition.o
+
+# target to build an object file
+src/feature_recognition/feature_decomposition.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/feature_decomposition.cpp.o
+.PHONY : src/feature_recognition/feature_decomposition.cpp.o
+
+src/feature_recognition/feature_decomposition.i: src/feature_recognition/feature_decomposition.cpp.i
+
+.PHONY : src/feature_recognition/feature_decomposition.i
+
+# target to preprocess a source file
+src/feature_recognition/feature_decomposition.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/feature_decomposition.cpp.i
+.PHONY : src/feature_recognition/feature_decomposition.cpp.i
+
+src/feature_recognition/feature_decomposition.s: src/feature_recognition/feature_decomposition.cpp.s
+
+.PHONY : src/feature_recognition/feature_decomposition.s
+
+# target to generate assembly for a file
+src/feature_recognition/feature_decomposition.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/feature_decomposition.cpp.s
+.PHONY : src/feature_recognition/feature_decomposition.cpp.s
+
 src/gcode/cut.o: src/gcode/cut.cpp.o
 
 .PHONY : src/gcode/cut.o
@@ -2574,6 +2601,33 @@ test/extrusion_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.s
 .PHONY : test/extrusion_tests.cpp.s
 
+test/feature_recognition_tests.o: test/feature_recognition_tests.cpp.o
+
+.PHONY : test/feature_recognition_tests.o
+
+# target to build an object file
+test/feature_recognition_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_recognition_tests.cpp.o
+.PHONY : test/feature_recognition_tests.cpp.o
+
+test/feature_recognition_tests.i: test/feature_recognition_tests.cpp.i
+
+.PHONY : test/feature_recognition_tests.i
+
+# target to preprocess a source file
+test/feature_recognition_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_recognition_tests.cpp.i
+.PHONY : test/feature_recognition_tests.cpp.i
+
+test/feature_recognition_tests.s: test/feature_recognition_tests.cpp.s
+
+.PHONY : test/feature_recognition_tests.s
+
+# target to generate assembly for a file
+test/feature_recognition_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_recognition_tests.cpp.s
+.PHONY : test/feature_recognition_tests.cpp.s
+
 test/fixture_analysis_tests.o: test/fixture_analysis_tests.cpp.o
 
 .PHONY : test/fixture_analysis_tests.o
@@ -3438,6 +3492,9 @@ help:
 	@echo "... src/dxflib/dl_writer_ascii.o"
 	@echo "... src/dxflib/dl_writer_ascii.i"
 	@echo "... src/dxflib/dl_writer_ascii.s"
+	@echo "... src/feature_recognition/feature_decomposition.o"
+	@echo "... src/feature_recognition/feature_decomposition.i"
+	@echo "... src/feature_recognition/feature_decomposition.s"
 	@echo "... src/gcode/cut.o"
 	@echo "... src/gcode/cut.i"
 	@echo "... src/gcode/cut.s"
@@ -3633,6 +3690,9 @@ help:
 	@echo "... test/extrusion_tests.o"
 	@echo "... test/extrusion_tests.i"
 	@echo "... test/extrusion_tests.s"
+	@echo "... test/feature_recognition_tests.o"
+	@echo "... test/feature_recognition_tests.i"
+	@echo "... test/feature_recognition_tests.s"
 	@echo "... test/fixture_analysis_tests.o"
 	@echo "... test/fixture_analysis_tests.i"
 	@echo "... test/fixture_analysis_tests.s"

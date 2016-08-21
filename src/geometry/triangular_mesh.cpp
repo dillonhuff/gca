@@ -679,6 +679,16 @@ namespace gca {
     	      { return all_normals_below(surface, mesh, -0.1); });
   }
 
+  void
+  filter_non_horizontal_surfaces_wrt_dir(std::vector<std::vector<index_t>>& delta_regions,
+					 const triangular_mesh& mesh,
+					 const point n) {
+    delete_if(delta_regions,
+    	      [mesh, n](const vector<index_t>& surface)
+    	      { return !all_parallel_to(surface, mesh, n, 1.0); });
+  }
+  
+
   bool operator==(const edge x, const edge y) {
     return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
   }

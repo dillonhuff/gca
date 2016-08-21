@@ -132,6 +132,7 @@ SET(GCA_HEADERS
 	    ./src/system/parse_stl.h)
 
 SET(GCA_CPPS
+	./src/feature_recognition/feature_decomposition.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp
@@ -164,6 +165,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(TEST_FILES test/main.cpp
+	       test/feature_recognition_tests.cpp
 	       test/rigid_arrangement_tests.cpp
 	       test/jaw_cutout_tests.cpp
 	       test/extrusion_tests.cpp

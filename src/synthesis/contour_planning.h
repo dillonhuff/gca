@@ -39,6 +39,9 @@ namespace gca {
 			    const surface& bottom);
 
   point pick_jaw_cutout_axis(const contour_surface_decomposition& surfs);
+
+  boost::optional<oriented_polygon>
+  simple_outline(const triangular_mesh& m, const point n);
 }
 
 #endif

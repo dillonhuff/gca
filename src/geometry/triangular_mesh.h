@@ -329,6 +329,11 @@ namespace gca {
   void filter_vertical_surfaces(std::vector<std::vector<index_t>>& delta_regions,
 				const triangular_mesh& mesh);
 
+  void
+  filter_non_horizontal_surfaces_wrt_dir(std::vector<std::vector<index_t>>& delta_regions,
+					 const triangular_mesh& mesh,
+					 const point n);
+  
   bool all_normals_below(const vector<index_t>& triangles,
 			 const triangular_mesh& mesh,
 			 const double v);

@@ -31,35 +31,48 @@ namespace gca {
     holes = bounds;
   }
 
+
+  std::pair<oriented_polygon, std::vector<oriented_polygon>>
+  optimize_pocket_size(const std::vector<index_t> base,
+		       const triangular_mesh& mesh) {
+    // surface sf(&mesh, base);
+    // plane pl = surface_plane(sf).slide(0.001);
+    // auto polys = mesh_cross_section(mesh, pl);
+    // vector<polygon_2> p = project(polys);
+    
+
+    DBG_ASSERT(base.size() > 0);
+
+    auto bounds = mesh_bounds(base, mesh);
+
+    DBG_ASSERT(bounds.size() > 0);
+
+    auto boundary = extract_boundary(bounds);
+
+    DBG_ASSERT(area(boundary) > 0.001);
+    
+    auto holes = bounds;
+
+    return std::make_pair(boundary, holes);
+  }
+
   flat_pocket::flat_pocket(double start_depthp,
 			   const std::vector<index_t>& basep,
 			   const triangular_mesh* p_mesh) :
     start_depth(start_depthp),
     end_depth(p_mesh->face_triangle(basep.front()).v1.z) {
 
-    surface sf(p_mesh, basep);
-    plane pl = surface_plane(sf).slide(0.001);
-    vtk_debug(*p_mesh, pl);
-    auto polys = mesh_cross_section(*p_mesh, pl);
-    vtk_debug_polygons(polys);
-    
-    DBG_ASSERT(basep.size() > 0);
+    pair<oriented_polygon, std::vector<oriented_polygon>> bound_and_holes =
+      optimize_pocket_size(basep, *p_mesh);
 
-    auto bounds = mesh_bounds(basep, *p_mesh);
-
-    DBG_ASSERT(bounds.size() > 0);
-
-    boundary = extract_boundary(bounds);
-
-    DBG_ASSERT(area(boundary) > 0.001);
-    
-    holes = bounds;
+    boundary = bound_and_holes.first;
+    holes = bound_and_holes.second;
   }
 
   tool
   flat_pocket::select_tool(const std::vector<tool>& tools) const {
     double bound_area = area(boundary);
-    
+
     vector<tool> viable =
       select(tools, [bound_area](const tool& t)
 	     { return t.cross_section_area() < bound_area; });
