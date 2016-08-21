@@ -196,7 +196,6 @@ namespace gca {
 
     boost_poly_2 pb = to_boost_poly_2(apply(r, p));
 
-
     boost_multipoly_2 to_sub;
     for (auto s : to_subtract) {
       to_sub.push_back(to_boost_poly_2(apply(r, s)));
@@ -214,7 +213,9 @@ namespace gca {
     // TODO: How to preserve edge labels etc?
     std::vector<labeled_polygon_3> res;
     for (auto r : result) {
-      res.push_back(to_labeled_polygon_3(r_inv, level_z, r));
+      if (boost::geometry::area(r) > 0.001) {
+	res.push_back(to_labeled_polygon_3(r_inv, level_z, r));
+      }
     }
 
     for (auto rp : res) {
