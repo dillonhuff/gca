@@ -230,8 +230,15 @@ namespace gca {
 		   feature_decomposition* parent) {
     cout << "decompose" << endl;
     cout << "Levels left = " << levels.size() << endl;
-    
-    if (levels.size() == 0) { return; }
+
+    // If there are no levels left then the current_level defines
+    // a through feature
+    if (levels.size() == 0) {
+      feature_decomposition* child =
+	new (allocate<feature_decomposition>()) feature_decomposition();
+      parent->add_child(child);
+      return;
+    }
 
     const std::vector<labeled_polygon_3>& level_polys = levels.back();
 
