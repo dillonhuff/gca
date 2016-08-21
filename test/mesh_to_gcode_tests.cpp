@@ -297,7 +297,7 @@ namespace gca {
 
     for (auto f : plan.custom_fixtures()) {
       REQUIRE(f != nullptr);
-      test_no_empty_toolpaths(*f);
+      //test_no_empty_toolpaths(*f);
     }
 
   }

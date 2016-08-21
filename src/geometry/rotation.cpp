@@ -6,14 +6,10 @@
 namespace gca {
 
   rotation rotate_from_to(const point from, const point to) {
-    cout << "Rotating from " << from << " to " << to << endl;
-    
     if (within_eps(angle_between(from, to), 0, 0.01)) {
       return boost::numeric::ublas::identity_matrix<double>(3);
     }
 
-    cout << "from != to" << endl;
-    
     point from_unit = from.normalize();
     point to_unit = to.normalize();
 
@@ -39,8 +35,6 @@ namespace gca {
     auto vx2 = prod(vx, vx);
     const ublas::matrix<double> r = id + vx + ((1.0 - c)/(s*s))*vx2;
 
-    cout << "Rotation matrix is " << r << endl;
-    
     if (!(within_eps(determinant(r), 1.0, 0.001))) {
       cout << "ERROR: determinant of rotation = " << determinant(r) << endl;
       cout << r << endl;
@@ -51,8 +45,6 @@ namespace gca {
       DBG_ASSERT(false);
     }
 
-    cout << "Checking angle between result and to" << endl;
-    
     if (!(within_eps(angle_between(times_3(r, from), to), 0.0, 0.1))) {
       cout << "ERROR: Incorrect rotation " << endl;
       cout << r << endl;

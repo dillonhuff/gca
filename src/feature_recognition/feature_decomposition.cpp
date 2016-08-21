@@ -139,6 +139,14 @@ namespace gca {
       boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
     }
 
+    boost::geometry::interior_rings(pr).resize(p.holes().size());
+    for (int i = 0; i < p.holes().size(); i++) {
+      auto& h = p.holes()[i];
+      for (auto p : h) {
+	boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y), i);
+      }
+    }
+
     // TODO: Add holes
     boost::geometry::correct(pr);
     
@@ -153,7 +161,17 @@ namespace gca {
       point pt(p2d.get<0>(), p2d.get<1>(), z);
       vertices.push_back(times_3(r, pt));
     }
-    return labeled_polygon_3(vertices);
+
+    vector<vector<point>> holes;
+    for (auto ir : boost::geometry::interior_rings(p)) {
+      vector<point> hole_verts;
+      for (auto p2d : ir) {
+	point pt(p2d.get<0>(), p2d.get<1>(), z);
+	hole_verts.push_back(times_3(r, pt));
+      }
+      holes.push_back(hole_verts);
+    }
+    return labeled_polygon_3(vertices, holes);
   }
 
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
@@ -199,6 +217,10 @@ namespace gca {
       res.push_back(to_labeled_polygon_3(r_inv, level_z, r));
     }
 
+    for (auto rp : res) {
+      vtk_debug_polygon(to_oriented_polygon(rp));
+    }
+
     return res;
   }
 
@@ -207,6 +229,8 @@ namespace gca {
 		   surface_levels levels,
 		   feature_decomposition* parent) {
     cout << "decompose" << endl;
+    cout << "Levels left = " << levels.size() << endl;
+    
     if (levels.size() == 0) { return; }
 
     const std::vector<labeled_polygon_3>& level_polys = levels.back();
@@ -217,6 +241,9 @@ namespace gca {
     // If the result is the empty set then build feature
     // from the current surface and finish
     if (result_polys.size() == 0) {
+      feature_decomposition* child =
+	new (allocate<feature_decomposition>()) feature_decomposition();
+      parent->add_child(child);
       return;
     }
 
@@ -224,16 +251,17 @@ namespace gca {
 
     // If none of the surfaces in this level overlap the
     // current surface then just continue
-    if (result_polys.size() == 1) {
-      decompose_volume(result_polys.front(), levels, parent);
-      return;
-    }
+    // if (result_polys.size() == 1) {
+    //   decompose_volume(result_polys.front(), levels, parent);
+    //   return;
+    // }
 
     // Otherwise recursively build decompositions of the child polygons
     vector<feature_decomposition*> children;
     for (auto r : result_polys) {
       feature_decomposition* child =
 	new (allocate<feature_decomposition>()) feature_decomposition();
+      parent->add_child(child);
       decompose_volume(r, levels, child);
     }
 
@@ -243,6 +271,8 @@ namespace gca {
   build_feature_decomposition(const triangular_mesh& m, const point n) {
     labeled_polygon_3 init_outline = initial_outline(m, n);
     surface_levels levels = initial_surface_levels(m, n);
+
+    cout << "initial # of levels = " << levels.size() << endl;
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
