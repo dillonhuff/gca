@@ -16,5 +16,7 @@ namespace gca {
       build_feature_decomposition(mesh, point(0, -1, 0));
 
     REQUIRE(f->num_levels() == 4);
+
+    REQUIRE(f->num_features() == 8);
   }
 }

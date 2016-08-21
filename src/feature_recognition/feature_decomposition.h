@@ -51,7 +51,15 @@ namespace gca {
   public:
     void add_child(feature_decomposition* decomp)
     { children.push_back(decomp); }
-    
+
+    unsigned num_features() const {
+      unsigned num_child_features = 0;
+      for (auto c : children) {
+	num_child_features += c->num_features();
+      }
+      return 1 + num_child_features;
+    }
+
     unsigned num_levels() const {
       if (children.size() > 0) {
 	unsigned max_child_num_levels =
