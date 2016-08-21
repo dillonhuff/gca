@@ -174,11 +174,14 @@ namespace gca {
     return labeled_polygon_3(vertices, holes);
   }
 
+  // TODO: Version of this code that can handle holes?
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
+    DBG_ASSERT(p.holes().size() == 0);
+
     return oriented_polygon(p.normal(), p.vertices());
   }
 
-  std::vector<labeled_polygon_3>
+  boost::optional<std::vector<labeled_polygon_3>>
   subtract_level(const labeled_polygon_3& p,
 		 const std::vector<labeled_polygon_3>& to_subtract) {
     DBG_ASSERT(to_subtract.size() > 0);
@@ -203,12 +206,28 @@ namespace gca {
     
     cout << "# polys to subtract = " << to_sub.size() << endl;
 
-    vtk_debug_polygon(to_oriented_polygon(apply(r, p)));
+    //vtk_debug_polygon(to_oriented_polygon(apply(r, p)));
 
     boost_multipoly_2 result;
     boost::geometry::difference(pb, to_sub, result);
 
     cout << "# polys in result = " << result.size() << endl;
+
+    if (result.size() > 0) {
+      auto lr =
+	max_element(begin(result), end(result),
+		    [](const boost_poly_2& l, const boost_poly_2& r)
+		    { return boost::geometry::area(l) < boost::geometry::area(r); });
+
+      auto& largest_result = *lr;
+      
+      // The result is the same as before
+      if (within_eps(boost::geometry::area(largest_result),
+		     boost::geometry::area(pb),
+		     0.005)) {
+	return boost::none;
+      }
+    }
 
     // TODO: How to preserve edge labels etc?
     std::vector<labeled_polygon_3> res;
@@ -219,7 +238,7 @@ namespace gca {
     }
 
     for (auto rp : res) {
-      vtk_debug_polygon(to_oriented_polygon(rp));
+      //vtk_debug_polygon(to_oriented_polygon(rp));
     }
 
     return res;
@@ -235,41 +254,39 @@ namespace gca {
     // If there are no levels left then the current_level defines
     // a through feature
     if (levels.size() == 0) {
+      feature* f = new (allocate<feature>()) feature();
       feature_decomposition* child =
-	new (allocate<feature_decomposition>()) feature_decomposition();
+    	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
       return;
     }
 
     const std::vector<labeled_polygon_3>& level_polys = levels.back();
 
-    vector<labeled_polygon_3> result_polys =
+    boost::optional<vector<labeled_polygon_3>> r_polys =
       subtract_level(current_level, level_polys);
-
-    // If the result is the empty set then build feature
-    // from the current surface and finish
-    if (result_polys.size() == 0) {
-      feature_decomposition* child =
-	new (allocate<feature_decomposition>()) feature_decomposition();
-      parent->add_child(child);
-      return;
-    }
 
     levels.pop_back();
 
-    // If none of the surfaces in this level overlap the
-    // current surface then just continue
-    // if (result_polys.size() == 1) {
-    //   decompose_volume(result_polys.front(), levels, parent);
-    //   return;
-    // }
+    // The result is exactly the same as before, just recurse with no
+    // updates
+    if (!r_polys) {
+      decompose_volume(current_level, levels, parent);
+      return;
+    }
 
-    // Otherwise recursively build decompositions of the child polygons
+    auto result_polys = *r_polys;
+    
+    // Add a new feature for the current level
+    // and recursively build decompositions for each new level
+    // produced by the subtraction
+    feature* f = new (allocate<feature>()) feature();
+    feature_decomposition* child =
+      new (allocate<feature_decomposition>()) feature_decomposition(f);
+    parent->add_child(child);
+
     vector<feature_decomposition*> children;
     for (auto r : result_polys) {
-      feature_decomposition* child =
-	new (allocate<feature_decomposition>()) feature_decomposition();
-      parent->add_child(child);
       decompose_volume(r, levels, child);
     }
 

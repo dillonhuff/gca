@@ -44,11 +44,17 @@ namespace gca {
 
   class feature_decomposition {
   protected:
-    feature feat;
+    feature* feat;
 
     std::vector<feature_decomposition*> children;
 
   public:
+    feature_decomposition() :
+      feat(nullptr) {}
+
+    feature_decomposition(feature* p_feat) :
+      feat(p_feat) {}
+    
     void add_child(feature_decomposition* decomp)
     { children.push_back(decomp); }
 
@@ -57,7 +63,7 @@ namespace gca {
       for (auto c : children) {
 	num_child_features += c->num_features();
       }
-      return 1 + num_child_features;
+      return (feat == nullptr ? 0 : 1) + num_child_features;
     }
 
     unsigned num_levels() const {
