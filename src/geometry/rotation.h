@@ -10,7 +10,9 @@ namespace gca {
 
   rotation rotate_from_to(const point from, const point to);
 
-  triangular_mesh apply(const rotation& r, const triangular_mesh& m); 
+  triangular_mesh apply(const rotation& r, const triangular_mesh& m);
+
+  std::vector<point> apply(const rotation& r, const std::vector<point>& pts);
 }
 
 #endif

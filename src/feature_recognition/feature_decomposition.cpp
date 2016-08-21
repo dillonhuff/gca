@@ -1,6 +1,13 @@
+#include <boost/numeric/ublas/io.hpp>
+
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+
 #include "feature_recognition/feature_decomposition.h"
 #include "geometry/rotation.h"
 #include "geometry/surface.h"
+#include "geometry/vtk_debug.h"
 #include "synthesis/contour_planning.h"
 #include "utils/arena_allocator.h"
 #include "utils/check.h"
@@ -41,7 +48,8 @@ namespace gca {
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
 
     // TODO: Rotate the polygons back using r_inv once results are calculated
-    rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    rotation r_inv = inverse(r);
 
     triangular_mesh mr = apply(r, m);
     
@@ -61,10 +69,10 @@ namespace gca {
 
       vector<vector<point>> hole_verts;
       for (auto h : holes) {
-	hole_verts.push_back(h.vertices());
+	hole_verts.push_back(apply(r_inv, h.vertices()));
       }
 
-      surf_polys.push_back(labeled_polygon_3(boundary.vertices(), hole_verts));
+      surf_polys.push_back(labeled_polygon_3(apply(r_inv, boundary.vertices()), hole_verts));
     }
     
     return surf_polys;
@@ -109,10 +117,89 @@ namespace gca {
     return top_poly;
   }
 
+  typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > boost_poly_2;
+
+  typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
+
+  labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p) {
+    vector<point> pts = apply(r, p.vertices());
+
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+      holes.push_back(apply(r, h));
+    }
+
+    return labeled_polygon_3(pts, holes);
+  }
+
+  boost_poly_2
+  to_boost_poly_2(const labeled_polygon_3& p) {
+    boost_poly_2 pr;
+    for (auto p : p.vertices()) {
+      boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
+    }
+
+    // TODO: Add holes
+    boost::geometry::correct(pr);
+    
+    return pr;
+  }
+
+  // TODO: Handle holes
+  labeled_polygon_3
+  to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
+    vector<point> vertices;
+    for (auto p2d : boost::geometry::exterior_ring(p)) {
+      point pt(p2d.get<0>(), p2d.get<1>(), z);
+      vertices.push_back(times_3(r, pt));
+    }
+    return labeled_polygon_3(vertices);
+  }
+
+  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
+    return oriented_polygon(p.normal(), p.vertices());
+  }
+
   std::vector<labeled_polygon_3>
   subtract_level(const labeled_polygon_3& p,
 		 const std::vector<labeled_polygon_3>& to_subtract) {
+    DBG_ASSERT(to_subtract.size() > 0);
+
+    double level_z = to_subtract.front().vertex(0).z;
+    point n = to_subtract.front().normal();
+
+    cout << "n = " << n << endl;
     
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    cout << "rotation = " << r << endl;
+    cout << "r*n = " << times_3(r, n) << endl;
+
+    boost_poly_2 pb = to_boost_poly_2(apply(r, p));
+
+
+    boost_multipoly_2 to_sub;
+    for (auto s : to_subtract) {
+      to_sub.push_back(to_boost_poly_2(apply(r, s)));
+    }
+    
+    cout << "# polys to subtract = " << to_sub.size() << endl;
+
+    vtk_debug_polygon(to_oriented_polygon(apply(r, p)));
+
+    boost_multipoly_2 result;
+    boost::geometry::difference(pb, to_sub, result);
+
+    cout << "# polys in result = " << result.size() << endl;
+
+    // TODO: How to preserve edge labels etc?
+    std::vector<labeled_polygon_3> res;
+    for (auto r : result) {
+      res.push_back(to_labeled_polygon_3(r_inv, level_z, r));
+    }
+
+    return res;
   }
 
   void

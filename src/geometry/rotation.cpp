@@ -1,15 +1,25 @@
+#include <boost/numeric/ublas/io.hpp>
+
 #include "geometry/rotation.h"
 #include "utils/check.h"
 
 namespace gca {
 
   rotation rotate_from_to(const point from, const point to) {
+    cout << "Rotating from " << from << " to " << to << endl;
+    
+    if (within_eps(angle_between(from, to), 0, 0.01)) {
+      return boost::numeric::ublas::identity_matrix<double>(3);
+    }
+
+    cout << "from != to" << endl;
+    
     point from_unit = from.normalize();
     point to_unit = to.normalize();
+
     point v = cross(from_unit, to_unit);
     double s = v.len();
-    double c = from_unit.dot(to_unit);
-    
+    double c = from_unit.dot(to_unit);    
     
     boost::numeric::ublas::matrix<double> vx(3, 3);
     vx(0, 0) = 0;
@@ -27,10 +37,33 @@ namespace gca {
     auto id = boost::numeric::ublas::identity_matrix<double>(3);
 
     auto vx2 = prod(vx, vx);
-    const ublas::matrix<double> r = id + vx + ((1 - c)/(s*s))*vx2;
+    const ublas::matrix<double> r = id + vx + ((1.0 - c)/(s*s))*vx2;
 
-    DBG_ASSERT(within_eps(determinant(r), 1.0, 0.001));
+    cout << "Rotation matrix is " << r << endl;
+    
+    if (!(within_eps(determinant(r), 1.0, 0.001))) {
+      cout << "ERROR: determinant of rotation = " << determinant(r) << endl;
+      cout << r << endl;
 
+      cout << "c = " << c << endl;
+      cout << "s = " << s << endl;
+      cout << "v = " << v << endl;
+      DBG_ASSERT(false);
+    }
+
+    cout << "Checking angle between result and to" << endl;
+    
+    if (!(within_eps(angle_between(times_3(r, from), to), 0.0, 0.1))) {
+      cout << "ERROR: Incorrect rotation " << endl;
+      cout << r << endl;
+
+      cout << "r*" << from << " = " << times_3(r, from) << " != " << to << endl;
+      cout << "c = " << c << endl;
+      cout << "s = " << s << endl;
+      cout << "v = " << v << endl;
+      DBG_ASSERT(false);
+    }
+    
     return r;
   }
 
@@ -39,6 +72,14 @@ namespace gca {
       m.apply([r](const point p)
 	      { return times_3(r, p); });
     return rotated;
+  }
+
+  std::vector<point> apply(const rotation& r, const std::vector<point>& pts) {
+    std::vector<point> rpts;
+    for (auto p : pts) {
+      rpts.push_back(times_3(r, p));
+    }
+    return rpts;
   }
   
 }
