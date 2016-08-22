@@ -1,3 +1,4 @@
+#include "feature_recognition/feature_decomposition.h"
 #include "geometry/extrusion.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/mesh_operations.h"
@@ -279,6 +280,16 @@ namespace gca {
     const labeled_mesh& an_jaw = ar.labeled_mesh("an_jaw");
     const labeled_mesh& notch = ar.labeled_mesh("notch");
 
+    feature_decomposition* top_features =
+      build_feature_decomposition(part_mesh, surfs.n);
+
+    cout << "Top feature tree depth = " << top_features->num_levels() << endl;
+
+    feature_decomposition* bottom_features =
+      build_feature_decomposition(part_mesh, -1*(surfs.n));
+
+    cout << "Bottom feature tree depth = " << bottom_features->num_levels() << endl;
+
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
 
@@ -319,7 +330,7 @@ namespace gca {
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("part"))};
 
-    add_surface_pockets(top_pockets, top_clip, top_surfs); //top_clip.mesh("part"), top_surfs);
+    add_surface_pockets(top_pockets, top_clip, top_surfs);
 
     fixture_setup top_setup(top_clip, top_fix, top_pockets);
 
@@ -328,7 +339,7 @@ namespace gca {
     vector<pocket> pockets{face_down(base_clip.mesh("stock"),
 				     base_clip.mesh("part"))};
 
-    add_surface_pockets(pockets, base_clip, base_surfs); //base_clip.mesh("part"), base_surfs);
+    add_surface_pockets(pockets, base_clip, base_surfs);
 
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
 

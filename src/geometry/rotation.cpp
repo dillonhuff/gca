@@ -6,10 +6,18 @@
 namespace gca {
 
   rotation rotate_from_to(const point from, const point to) {
-    if (within_eps(angle_between(from, to), 0, 0.01)) {
+    double theta = angle_between(from, to);
+
+    std::cout << "theta = " << theta << endl;
+    
+    if (within_eps(theta, 0, 0.01)) {
       return boost::numeric::ublas::identity_matrix<double>(3);
     }
 
+    if (within_eps(theta, 180, 0.01)) {
+      return -1*boost::numeric::ublas::identity_matrix<double>(3);
+    }
+    
     point from_unit = from.normalize();
     point to_unit = to.normalize();
 
@@ -37,6 +45,9 @@ namespace gca {
 
     if (!(within_eps(determinant(r), 1.0, 0.001))) {
       cout << "ERROR: determinant of rotation = " << determinant(r) << endl;
+      cout << "from = " << from << endl;
+      cout << "to = " << to << endl;
+      cout << "theta = " << theta << endl;
       cout << r << endl;
 
       cout << "c = " << c << endl;

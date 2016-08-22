@@ -49,10 +49,10 @@ namespace gca {
 
     // TODO: Rotate the polygons back using r_inv once results are calculated
     const rotation r = rotate_from_to(n, point(0, 0, 1));
-    rotation r_inv = inverse(r);
+    const rotation r_inv = inverse(r);
 
     triangular_mesh mr = apply(r, m);
-    
+
     vector<labeled_polygon_3> surf_polys;
     for (auto s : surfs) {
       DBG_ASSERT(s.size() > 0);
@@ -276,7 +276,7 @@ namespace gca {
     }
 
     auto result_polys = *r_polys;
-    
+
     // Add a new feature for the current level
     // and recursively build decompositions for each new level
     // produced by the subtraction
