@@ -7,7 +7,7 @@
 namespace gca {
 
   std::vector<pocket>
-  feature_pockets_ignoring_top_face(feature_decomposition& r);
+  feature_pockets(feature_decomposition& r);
 
 }
 

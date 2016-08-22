@@ -26,24 +26,22 @@ namespace gca {
   }
   
   std::vector<pocket>
-  feature_pockets_ignoring_top_face(feature_decomposition& r) {
+  feature_pockets(feature_decomposition& r) {
 
     DBG_ASSERT(r.feature() == nullptr);
     DBG_ASSERT(r.num_children() == 1);
 
     auto face_feature_node = r.child(0);
-    const feature* top_face_feature = face_feature_node->feature();
-
-    vector<feature*> non_top_face_features;
-    auto func = [top_face_feature, &non_top_face_features](feature* f) {
-      if (f != nullptr && f != top_face_feature)
-	{ non_top_face_features.push_back(f); }
+    vector<feature*> features;
+    auto func = [&features](feature* f) {
+      if (f != nullptr)
+	{ features.push_back(f); }
     };
 
     traverse_bf(face_feature_node, func);
 
     vector<pocket> pockets;
-    for (auto f : non_top_face_features) {
+    for (auto f : features) {
       concat(pockets, pockets_for_feature(*f));
     }
     

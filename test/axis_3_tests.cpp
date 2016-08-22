@@ -46,8 +46,7 @@ namespace gca {
     SECTION("CylinderSquare") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl", 0.001);
       feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
-      vector<pocket> pockets =
-	feature_pockets_ignoring_top_face(*f);
+      vector<pocket> pockets = feature_pockets(*f);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -60,11 +59,11 @@ namespace gca {
 		       }));
       }
 
-      SECTION("First pocket has no holes") {
+      SECTION("First pocket has one hole") {
       	REQUIRE(pockets.front().get_holes().size() == 1);
       }
 
-      SECTION("Last pocket has one hole") {
+      SECTION("Last pocket has no holes") {
       	REQUIRE(pockets.back().get_holes().size() == 0);
       }
     }
