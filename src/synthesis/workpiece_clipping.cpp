@@ -18,33 +18,28 @@
 
 namespace gca {
 
-  // TODO: Unify this with the pocket making code in fixture analysis
-  std::vector<pocket>
-  make_pockets(const triangular_mesh& part,
-	       const std::vector<surface>& surfaces) {
-    std::vector<std::vector<index_t>> inds;
-    for (auto s : surfaces) {
-      inds.push_back(s.index_list());
-    }
-    auto mesh_cpy = new (allocate<triangular_mesh>()) triangular_mesh(part);
-    return make_surface_pockets(*mesh_cpy, inds);
-  }
-
   // May not be needed in new feature based system
   void add_surface_pockets(vector<gca::pocket>& pockets,
-			   const rigid_arrangement& a,
+			   const triangular_mesh& m,
 			   const vector<gca::surface>& surfs) {
-    DBG_ASSERT(a.contains_mesh("part"));
-    DBG_ASSERT(a.contains_mesh("stock"));
-    
-    auto m = a.mesh("part");
     unsigned old_size = pockets.size();
-    concat(pockets, make_pockets(m, surfs));
+    concat(pockets, make_surface_pockets(m, surfs));
     unsigned new_size = pockets.size();
 
     DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
   }
 
+  void add_surface_pockets(vector<gca::pocket>& pockets,
+			   const triangular_mesh& m,
+			   const std::vector<std::vector<index_t>>& surfs) {
+    auto sfs = surfs;
+    unsigned old_size = pockets.size();
+    concat(pockets, make_surface_pockets(m, sfs));
+    unsigned new_size = pockets.size();
+
+    DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
+  }
+  
   box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();
@@ -122,7 +117,7 @@ namespace gca {
       mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
     oriented_polygon outl =
       min_e(outlines, [](const oriented_polygon& p)
-	    { return min_z(p); }); // outlines.front();
+	    { return min_z(p); });
 
     DBG_ASSERT(outlines.size() == 2);
 
@@ -158,7 +153,7 @@ namespace gca {
 
     oriented_polygon part_outline =
       min_e(part_outlines, [](const oriented_polygon& p)
-	    { return min_z(p); }); // outlines.front();
+	    { return min_z(p); });
 
     double part_bottom = min_in_dir(part, point(0, 0, 1));    
     return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
@@ -185,12 +180,8 @@ namespace gca {
     fixture_setup setup = clip_top_and_sides(aligned, part, f);
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    unsigned old_size = setup.pockets.size();
-    concat(setup_pockets, make_pockets(part, surfaces));
-    unsigned new_size = setup.pockets.size();
-
-    DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));
-
+    add_surface_pockets(setup_pockets, part, surfaces);
+    
     return setup;
   }
 
@@ -206,11 +197,7 @@ namespace gca {
     fixture_setup setup = clip_base(aligned, part, f);
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    unsigned old_size = setup.pockets.size();
-    concat(setup_pockets, make_pockets(part, surfaces));
-    unsigned new_size = setup.pockets.size();
-
-    DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));
+    add_surface_pockets(setup_pockets, part, surfaces);
 
     return setup;
   }

@@ -32,7 +32,7 @@ namespace gca {
     return pocket(freeform_pocket(top_height, sfs, &mesh));
   }
   
-  std::vector<pocket> make_pockets(const std::vector<std::vector<index_t>>& surfaces,
+  std::vector<pocket> pockets_for_surfaces(const std::vector<std::vector<index_t>>& surfaces,
 				   double workpiece_height,
 				   const triangular_mesh& mesh) {
     vector<pocket> pockets;
@@ -197,7 +197,7 @@ namespace gca {
 
     if (surfaces.size() > 0) {
       surfaces = merge_connected_surfaces(surfaces, mesh);
-      auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
+      auto nv_pockets = pockets_for_surfaces(surfaces, workpiece_height, mesh);
       concat(pockets, nv_pockets);
     }
 
@@ -217,4 +217,16 @@ namespace gca {
     return pockets;
   }
 
+  std::vector<pocket>
+  make_surface_pockets(const triangular_mesh& part,
+		       const std::vector<surface>& surfaces) {
+    std::vector<std::vector<index_t>> inds;
+    for (auto s : surfaces) {
+      inds.push_back(s.index_list());
+    }
+    auto mesh_cpy = new (allocate<triangular_mesh>()) triangular_mesh(part);
+    return make_surface_pockets(*mesh_cpy, inds);
+  }
+
+  
 }

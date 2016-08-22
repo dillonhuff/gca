@@ -1548,6 +1548,33 @@ src/geometry/vtk_utils.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/vtk_utils.cpp.s
 .PHONY : src/geometry/vtk_utils.cpp.s
 
+src/process_planning/feature_to_pocket.o: src/process_planning/feature_to_pocket.cpp.o
+
+.PHONY : src/process_planning/feature_to_pocket.o
+
+# target to build an object file
+src/process_planning/feature_to_pocket.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.o
+.PHONY : src/process_planning/feature_to_pocket.cpp.o
+
+src/process_planning/feature_to_pocket.i: src/process_planning/feature_to_pocket.cpp.i
+
+.PHONY : src/process_planning/feature_to_pocket.i
+
+# target to preprocess a source file
+src/process_planning/feature_to_pocket.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.i
+.PHONY : src/process_planning/feature_to_pocket.cpp.i
+
+src/process_planning/feature_to_pocket.s: src/process_planning/feature_to_pocket.cpp.s
+
+.PHONY : src/process_planning/feature_to_pocket.s
+
+# target to generate assembly for a file
+src/process_planning/feature_to_pocket.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.s
+.PHONY : src/process_planning/feature_to_pocket.cpp.s
+
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 .PHONY : src/simulators/mill_tool.o
@@ -3600,6 +3627,9 @@ help:
 	@echo "... src/geometry/vtk_utils.o"
 	@echo "... src/geometry/vtk_utils.i"
 	@echo "... src/geometry/vtk_utils.s"
+	@echo "... src/process_planning/feature_to_pocket.o"
+	@echo "... src/process_planning/feature_to_pocket.i"
+	@echo "... src/process_planning/feature_to_pocket.s"
 	@echo "... src/simulators/mill_tool.o"
 	@echo "... src/simulators/mill_tool.i"
 	@echo "... src/simulators/mill_tool.s"

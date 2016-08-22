@@ -14,6 +14,8 @@
 
 namespace gca {
 
+  gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
+
   labeled_polygon_3 slide_onto(const plane p,
 			       const labeled_polygon_3& poly) {
     point n = poly.normal();
@@ -72,7 +74,11 @@ namespace gca {
 	hole_verts.push_back(apply(r_inv, h.vertices()));
       }
 
-      surf_polys.push_back(labeled_polygon_3(apply(r_inv, boundary.vertices()), hole_verts));
+      labeled_polygon_3 lp(apply(r_inv, boundary.vertices()), hole_verts);
+
+      lp.correct_winding_order(n);
+
+      surf_polys.push_back(lp);
     }
     
     return surf_polys;
@@ -233,7 +239,9 @@ namespace gca {
     std::vector<labeled_polygon_3> res;
     for (auto r : result) {
       if (boost::geometry::area(r) > 0.001) {
-	res.push_back(to_labeled_polygon_3(r_inv, level_z, r));
+	labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+	lp.correct_winding_order(p.normal());
+	res.push_back(lp);
       }
     }
 
@@ -254,7 +262,7 @@ namespace gca {
     // If there are no levels left then the current_level defines
     // a through feature
     if (levels.size() == 0) {
-      feature* f = new (allocate<feature>()) feature();
+      feature* f = new (allocate<feature>()) feature(1.0, current_level);
       feature_decomposition* child =
     	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
@@ -280,7 +288,7 @@ namespace gca {
     // Add a new feature for the current level
     // and recursively build decompositions for each new level
     // produced by the subtraction
-    feature* f = new (allocate<feature>()) feature();
+    feature* f = new (allocate<feature>()) feature(1.0, current_level);
     feature_decomposition* child =
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);

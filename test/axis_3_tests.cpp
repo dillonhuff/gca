@@ -1,4 +1,6 @@
 #include "catch.hpp"
+#include "feature_recognition/feature_decomposition.h"
+#include "process_planning/feature_to_pocket.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/millability.h"
 #include "utils/arena_allocator.h"
@@ -14,13 +16,12 @@ namespace gca {
     filter_vertical_surfaces(delta_regions, mesh);
     return delta_regions;
   }
-
   
   std::vector<pocket> make_top_pockets(const triangular_mesh& mesh,
 				       const double workpiece_height) {
     vector<vector<index_t>> surfaces = make_top_surfaces(mesh);
     auto merged_surfaces = merge_connected_surfaces(surfaces, mesh);
-    auto pockets = make_pockets(merged_surfaces, workpiece_height, mesh);
+    auto pockets = pockets_for_surfaces(merged_surfaces, workpiece_height, mesh);
     return pockets;
   }
 
@@ -43,9 +44,10 @@ namespace gca {
     double workpiece_depth = 1.0;
 
     SECTION("CylinderSquare") {
-      vector<triangle> triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl").triangles;
-      auto mesh = make_mesh(triangles, 0.001);
-      auto pockets = make_top_pockets(mesh, workpiece_depth);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl", 0.001);
+      feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
+      vector<pocket> pockets =
+	feature_pockets_ignoring_top_face(*f);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);

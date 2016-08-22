@@ -1,10 +1,33 @@
 #ifndef GCA_FEATURE_DECOMPOSITION_H
 #define GCA_FEATURE_DECOMPOSITION_H
 
+#include <deque>
+
 #include "synthesis/contour_planning.h"
 
 namespace gca {
 
+  template<typename Ring>
+  point ring_normal(const Ring& r) {
+    point l1 = r[1] - r[0];
+    point l2 = r[2] - r[0];
+    return cross(l1, l2).normalize();
+  }
+
+  template<typename Ring>
+  void correct_winding_order(Ring& r, const point n) {
+    double theta = angle_between(ring_normal(r), n);
+    if (within_eps(theta, 0, 0.1)) { return; }
+      
+    DBG_ASSERT(within_eps(theta, 180, 0.1));
+
+    reverse(r);
+
+    double new_theta = angle_between(ring_normal(r), n);
+
+    DBG_ASSERT(within_eps(new_theta, 0, 0.1));
+  }
+  
   class labeled_polygon_3 {
   protected:
     std::vector<point> outer_ring;
@@ -24,9 +47,7 @@ namespace gca {
     }
     
     point normal() const {
-      point l1 = outer_ring[1] - outer_ring[0];
-      point l2 = outer_ring[2] - outer_ring[0];
-      return cross(l1, l2).normalize();
+      return ring_normal(outer_ring);
     }
 
     point vertex(const unsigned i) const { return outer_ring[i]; }
@@ -36,11 +57,34 @@ namespace gca {
     const std::vector<std::vector<point>>& holes() const { return inner_rings; }
     
     unsigned num_vertices() const { return outer_ring.size(); }
+
+    void correct_winding_order(const point n) {
+      gca::correct_winding_order(outer_ring, n);
+      for (std::vector<point>& ir : inner_rings) {
+	gca::correct_winding_order(ir, n);
+      }
+    }
   };
 
   typedef std::vector<std::vector<labeled_polygon_3>> surface_levels;
 
-  class feature {};
+  class feature {
+  protected:
+    labeled_polygon_3 base_poly;
+    double dp;
+    
+  public:
+    feature(const double p_depth,
+	    const labeled_polygon_3& p_base) :
+      base_poly(p_base), dp(p_depth) {
+      DBG_ASSERT(depth() > 0);
+    }
+
+    double depth() const { return dp; }
+
+    labeled_polygon_3 base() const { return base_poly; }
+    
+  };
 
   class feature_decomposition {
   protected:
@@ -54,9 +98,19 @@ namespace gca {
 
     feature_decomposition(feature* p_feat) :
       feat(p_feat) {}
+
+    const gca::feature* feature() const { return feat; }
+    gca::feature* feature() { return feat; }
     
     void add_child(feature_decomposition* decomp)
     { children.push_back(decomp); }
+
+    unsigned num_children() const { return children.size(); }
+
+    feature_decomposition* child(unsigned i) const {
+      DBG_ASSERT(i < children.size());
+      return children[i];
+    }
 
     unsigned num_features() const {
       unsigned num_child_features = 0;
@@ -78,6 +132,25 @@ namespace gca {
     }
   };
 
+  gca::feature* node_value(feature_decomposition* f);
+
+  template<typename T, typename F>
+  void traverse_bf(T* tree, F f) {
+    std::deque<T*> active{tree};
+    while (active.size() > 0) {
+      T* next = active.front();
+      f(node_value(next));
+
+      active.pop_front();
+
+      for (auto i = 0; i < next->num_children(); i++) {
+	active.push_back(next->child(i));
+      }
+    }
+  }
+
+  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
+  
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& m, const point n);
 

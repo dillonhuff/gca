@@ -125,7 +125,8 @@ namespace gca {
 		     surface_list& surfaces) {
     triangular_mesh m = oriented_part_mesh(part_mesh, f.orient, f.v);
     triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
-    auto pockets = make_surface_pockets(*mesh, surfaces);
+    vector<pocket> pockets;
+    add_surface_pockets(pockets, *mesh, surfaces);
     return fixture_setup(mesh, f, pockets);
   }
 

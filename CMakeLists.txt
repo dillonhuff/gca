@@ -111,6 +111,7 @@ add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})
 target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
+	./src/process_planning/feature_to_pocket.h
 	./src/synthesis/operation.h
 	./src/synthesis/clamp_orientation.h
 	./src/synthesis/visual_debug.h
@@ -135,6 +136,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/feature_recognition/feature_decomposition.cpp
+	./src/process_planning/feature_to_pocket.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp
