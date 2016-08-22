@@ -21,7 +21,6 @@ namespace gca {
   // TODO: Unify this with the pocket making code in fixture analysis
   std::vector<pocket>
   make_pockets(const triangular_mesh& part,
-	       const triangular_mesh& stock,
 	       const std::vector<surface>& surfaces) {
     std::vector<std::vector<index_t>> inds;
     for (auto s : surfaces) {
@@ -39,9 +38,8 @@ namespace gca {
     DBG_ASSERT(a.contains_mesh("stock"));
     
     auto m = a.mesh("part");
-    auto s = a.mesh("stock");
     unsigned old_size = pockets.size();
-    concat(pockets, make_pockets(m, s, surfs));
+    concat(pockets, make_pockets(m, surfs));
     unsigned new_size = pockets.size();
 
     DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
@@ -188,7 +186,7 @@ namespace gca {
     std::vector<pocket>& setup_pockets = setup.pockets;
 
     unsigned old_size = setup.pockets.size();
-    concat(setup_pockets, make_pockets(part, aligned, surfaces));
+    concat(setup_pockets, make_pockets(part, surfaces));
     unsigned new_size = setup.pockets.size();
 
     DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));
@@ -209,7 +207,7 @@ namespace gca {
     std::vector<pocket>& setup_pockets = setup.pockets;
 
     unsigned old_size = setup.pockets.size();
-    concat(setup_pockets, make_pockets(part, aligned, surfaces));
+    concat(setup_pockets, make_pockets(part, surfaces));
     unsigned new_size = setup.pockets.size();
 
     DBG_ASSERT((surfaces.size() == 0) || (new_size > old_size));

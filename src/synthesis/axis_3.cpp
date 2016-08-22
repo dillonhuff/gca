@@ -73,23 +73,6 @@ namespace gca {
     return lines;
   }
 
-  std::vector<std::vector<index_t>> make_surfaces(const triangular_mesh& mesh) {
-    double normal_degrees_delta = 30.0;
-    auto inds = millable_faces(point(0, 0, 1), mesh);
-    vector<vector<index_t>> delta_regions =
-      normal_delta_regions(inds, mesh, normal_degrees_delta);
-    filter_vertical_surfaces(delta_regions, mesh);
-    return delta_regions;
-  }
-
-  std::vector<pocket> make_pockets(const triangular_mesh& mesh,
-  				   const double workpiece_height) {
-    vector<vector<index_t>> surfaces = make_surfaces(mesh);
-    auto merged_surfaces = merge_connected_surfaces(surfaces, mesh);
-    auto pockets = make_pockets(merged_surfaces, workpiece_height, mesh);
-    return pockets;
-  }
-
   // TODO: Make this less hacky
   index_poly
   min_index_poly(const std::vector<point>& pts,

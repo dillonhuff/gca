@@ -67,14 +67,6 @@ namespace gca {
       REQUIRE(result_programs.size() == 2);
     }
     
-    // TODO: Reintroduce this test
-    // SECTION("Mesh box plinth has 6 clippings and one pocketing") {
-    //   auto box_triangles = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/MeshBoxPlinth.stl").triangles;
-    //   auto mesh = make_mesh(box_triangles, 0.001);
-    //   auto result_programs = mesh_to_gcode(mesh, test_vice, tools, workpiece_dims);
-    //   REQUIRE(result_programs.size() == 7);
-    // }
-
   }
 
     TEST_CASE("Mesh to gcode with parallel plates") {
@@ -88,21 +80,7 @@ namespace gca {
 
       tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
       vector<tool> tools{t1};
-      workpiece workpiece_dims(3.0, 5.0, 3.0, ACETAL); //2.7, 1.9, 4.0, ACETAL);
-
-      // Probably shouldnt be able to cut this out with contouring due
-      // to tool height issues
-      // wait and see whether this test should be reintroduced
-      // SECTION("Complex rectangle part") {
-      // 	auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
-
-      // 	auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      // 	REQUIRE(programs.size() == 6);
-
-      // 	for (auto p : programs) {
-      // 	  REQUIRE(p.blocks.size() > 0);
-      // 	}
-      // }
+      workpiece workpiece_dims(3.0, 5.0, 3.0, ACETAL);
 
       SECTION("Clipped Pill") {
 	auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
@@ -384,23 +362,5 @@ namespace gca {
       }
     }
 
-    // TODO: Reintroduce this test
-    // SECTION("Complex rectangular part 1") {
-    //   vice test_vice = current_setup();
-    //   std::vector<plate_height> plates{0.1, 0.3};
-    //   fixtures fixes(test_vice, plates);
-
-    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
-    //   fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
-
-    //   SECTION("Toolpaths don't gouge the mesh") {
-    // 	for (unsigned i = 0; i < p.steps().size(); i++) {
-    // 	  cout << "Toolpath # " << i << endl;
-    // 	  auto program = p.steps()[i].prog;
-    // 	  auto mesh = p.steps()[i].part;
-    // 	  REQUIRE(no_gouging_within(program.blocks, mesh, 0.05));
-    // 	}
-    //   }
-    // }
   }
 }
