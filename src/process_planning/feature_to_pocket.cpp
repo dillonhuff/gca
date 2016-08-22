@@ -19,8 +19,10 @@ namespace gca {
       holes.push_back(oriented_polygon(n, h));
     }
 
+    double base_z = base.vertex(0).z;
+    double top_z = base_z + f.depth();
     // TODO: Add real depth values
-    return {flat_pocket(1.0, 0.0, ob, holes)};
+    return {flat_pocket(top_z, base_z, ob, holes)};
   }
   
   std::vector<pocket>
