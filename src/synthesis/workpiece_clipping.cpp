@@ -16,7 +16,6 @@
 #include "synthesis/vice.h"
 #include "synthesis/workpiece_clipping.h"
 
-
 namespace gca {
 
   // TODO: Unify this with the pocket making code in fixture analysis
@@ -29,9 +28,10 @@ namespace gca {
       inds.push_back(s.index_list());
     }
     auto mesh_cpy = new (allocate<triangular_mesh>()) triangular_mesh(part);
-    return make_sliced_surface_pockets(*mesh_cpy, stock, inds);
+    return make_surface_pockets(*mesh_cpy, inds);
   }
-  
+
+  // May not be needed in new feature based system
   void add_surface_pockets(vector<gca::pocket>& pockets,
 			   const rigid_arrangement& a,
 			   const vector<gca::surface>& surfs) {

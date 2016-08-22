@@ -280,16 +280,6 @@ namespace gca {
     const labeled_mesh& an_jaw = ar.labeled_mesh("an_jaw");
     const labeled_mesh& notch = ar.labeled_mesh("notch");
 
-    feature_decomposition* top_features =
-      build_feature_decomposition(part_mesh, surfs.n);
-
-    cout << "Top feature tree depth = " << top_features->num_levels() << endl;
-
-    feature_decomposition* bottom_features =
-      build_feature_decomposition(part_mesh, -1*(surfs.n));
-
-    cout << "Bottom feature tree depth = " << bottom_features->num_levels() << endl;
-
     const vector<surface>& top_surfs = surfs.visible_from_n;
     const vector<surface>& base_surfs = surfs.visible_from_minus_n;
 
@@ -324,13 +314,17 @@ namespace gca {
     clean_clip.insert("a_jaw", bt, a_jaw);
     clean_clip.insert("an_jaw", bt, an_jaw);
 
+    vector<feature_decomposition*> decomps;
+    decomps.push_back(build_feature_decomposition(part_mesh, surfs.n));
+    decomps.push_back(build_feature_decomposition(part_mesh, -1*(surfs.n)));
+
     vector<fixture_setup> clip_setups;
 
     vector<pocket> top_pockets{face_down(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("part"))};
 
-    add_surface_pockets(top_pockets, top_clip, top_surfs);
+    //    add_surface_pockets(top_pockets, top_clip, top_surfs);
 
     fixture_setup top_setup(top_clip, top_fix, top_pockets);
 
@@ -339,7 +333,7 @@ namespace gca {
     vector<pocket> pockets{face_down(base_clip.mesh("stock"),
 				     base_clip.mesh("part"))};
 
-    add_surface_pockets(pockets, base_clip, base_surfs);
+    //    add_surface_pockets(pockets, base_clip, base_surfs);
 
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
 

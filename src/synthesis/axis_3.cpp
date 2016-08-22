@@ -234,40 +234,4 @@ namespace gca {
     return pockets;
   }
 
-  std::vector<pocket>
-  make_sliced_surface_pockets(const std::vector<std::vector<index_t>>& sfs,
-			      const triangular_mesh& mesh,
-			      const triangular_mesh& stock,
-			      double workpiece_height) {
-    std::vector<std::vector<index_t>> surfaces = sfs;
-
-     vector<pocket> pockets =
-      closed_vertical_surface_pockets(sfs, mesh, workpiece_height);
-    filter_vertical_surfaces(surfaces, mesh);
-
-    if (surfaces.size() > 0) {
-      surfaces = merge_connected_surfaces(surfaces, mesh);
-      auto nv_pockets = make_pockets(surfaces, workpiece_height, mesh);
-      concat(pockets, nv_pockets);
-    }
-
-    sort(begin(pockets), end(pockets),
-	 [](const pocket& l, const pocket& r)
-	 { return l.get_end_depth() > r.get_end_depth(); });
-
-    return pockets;
-  }
-  
-  std::vector<pocket>
-  make_sliced_surface_pockets(const triangular_mesh& mesh,
-			      const triangular_mesh& stock,
-			      std::vector<std::vector<index_t>>& surfaces) {
-    double h = max_in_dir(mesh, point(0, 0, 1));
-    vector<pocket> pockets =
-      make_sliced_surface_pockets(surfaces, mesh, stock, h);
-    return pockets;
-
-  }
-
-
 }
