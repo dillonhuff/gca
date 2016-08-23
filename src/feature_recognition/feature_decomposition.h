@@ -77,7 +77,7 @@ namespace gca {
     feature(const double p_depth,
 	    const labeled_polygon_3& p_base) :
       base_poly(p_base), dp(p_depth) {
-      DBG_ASSERT(depth() > 0);
+      DBG_ASSERT(depth() >= 0);
     }
 
     double depth() const { return dp; }

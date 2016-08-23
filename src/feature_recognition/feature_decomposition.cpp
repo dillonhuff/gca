@@ -262,16 +262,25 @@ namespace gca {
   void
   decompose_volume(const labeled_polygon_3& current_level,
 		   surface_levels levels,
-		   feature_decomposition* parent) {
+		   feature_decomposition* parent,
+		   const double base_depth) {
     cout << "decompose" << endl;
     cout << "Levels left = " << levels.size() << endl;
 
+    double current_depth =
+      max_distance_along(current_level.vertices(), current_level.normal());
+
+    cout << "current depth = " << current_depth << endl;
+
+    DBG_ASSERT(current_depth >= base_depth);
+    
     //    vtk_debug_polygon(current_level);
     
     // If there are no levels left then the current_level defines
     // a through feature
     if (levels.size() == 0) {
-      feature* f = new (allocate<feature>()) feature(1.0, current_level);
+      double feature_depth = current_depth - base_depth;
+      feature* f = new (allocate<feature>()) feature(feature_depth, current_level);
       feature_decomposition* child =
     	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
@@ -283,12 +292,16 @@ namespace gca {
     boost::optional<vector<labeled_polygon_3>> r_polys =
       subtract_level(current_level, level_polys);
 
+    double next_depth =
+      max_distance_along(levels.back().front().vertices(),
+			 levels.back().front().normal());
+
     levels.pop_back();
 
     // The result is exactly the same as before, just recurse with no
     // updates
     if (!r_polys) {
-      decompose_volume(current_level, levels, parent);
+      decompose_volume(current_level, levels, parent, base_depth);
       return;
     }
 
@@ -297,14 +310,20 @@ namespace gca {
     // Add a new feature for the current level
     // and recursively build decompositions for each new level
     // produced by the subtraction
-    feature* f = new (allocate<feature>()) feature(1.0, current_level);
+    cout << "Current depth = " << current_depth << endl;
+    cout << "Next depth    = " << next_depth << endl;
+    DBG_ASSERT(current_depth >= next_depth);
+
+    double feature_depth = current_depth - next_depth;
+
+    feature* f = new (allocate<feature>()) feature(feature_depth, current_level);
     feature_decomposition* child =
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);
 
     vector<feature_decomposition*> children;
     for (auto r : result_polys) {
-      decompose_volume(r, levels, child);
+      decompose_volume(r, levels, child, base_depth);
     }
 
   }
@@ -313,13 +332,14 @@ namespace gca {
   build_feature_decomposition(const triangular_mesh& m, const point n) {
     labeled_polygon_3 init_outline = initial_outline(m, n);
     surface_levels levels = initial_surface_levels(m, n);
+    double base_depth = min_distance_along(m.vertex_list(), n);
 
     cout << "initial # of levels = " << levels.size() << endl;
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
 
-    decompose_volume(init_outline, levels, decomp);
+    decompose_volume(init_outline, levels, decomp, base_depth);
 
     return decomp;
   }

@@ -30,6 +30,13 @@ namespace gca {
 		       }));
       }
 
+      SECTION("No pockets more than 0.75 inches tall") {
+	REQUIRE(all_of(begin(pockets), end(pockets),
+		       [](const pocket& p) {
+			 return p.get_start_depth() - p.get_end_depth() < 0.75;
+		       }));
+      }
+
       SECTION("First pocket has no holes") {
       	REQUIRE(pockets.front().get_holes().size() == 0);
       }
