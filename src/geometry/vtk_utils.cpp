@@ -100,140 +100,51 @@ namespace gca {
 
   vtkSmartPointer<vtkPolyData>
   polydata_for_ring(const std::vector<point>& mpts) {
-    // vtkSmartPointer<vtkPoints> points =
-    //   vtkSmartPointer<vtkPoints>::New();
-    // vtkSmartPointer<vtkCellArray> lines =
-    //   vtkSmartPointer<vtkCellArray>::New();
+    // Create the polydata where we will store all the geometric data
+    vtkSmartPointer<vtkPolyData> linesPolyData =
+      vtkSmartPointer<vtkPolyData>::New();
+ 
+ 
+    // Create a vtkPoints container and store the points in it
+    vtkSmartPointer<vtkPoints> pts =
+      vtkSmartPointer<vtkPoints>::New();
+    for (auto p : mpts) {
+      pts->InsertNextPoint(p.x, p.y, p.z);
+    }
+ 
+    // Add the points to the polydata container
+    linesPolyData->SetPoints(pts);
+ 
+    vtkSmartPointer<vtkCellArray> lines =
+      vtkSmartPointer<vtkCellArray>::New();
 
-    // for (unsigned i = 0; i < pts.size(); i++) {
-    //   point current = pts[i];
-    //   points->InsertNextPoint(current.x, current.y, current.z);
-    // }
+    for (vtkIdType i = 0; i < linesPolyData->GetNumberOfPoints(); i++) { 
+      vtkSmartPointer<vtkLine> line0 =
+	vtkSmartPointer<vtkLine>::New();
+      line0->GetPointIds()->SetId(0, i);
+      line0->GetPointIds()->SetId(1, (i + 1) % linesPolyData->GetNumberOfPoints());
 
-    // for (unsigned i = 0; i < pts.size(); i++) {
-    //   vtkIdType cid = static_cast<vtkIdType>(i);
-    //   vtkIdType cidp1 = (cid + 1) % pts.size();
+      lines->InsertNextCell(line0);
+    }
+ 
+    // Add the lines to the polydata container
+    linesPolyData->SetLines(lines);
+ 
+ 
+    unsigned char red[3] = { 255, 0, 0 };
+ 
+    // Create a vtkUnsignedCharArray container and store the colors in it
+    vtkSmartPointer<vtkUnsignedCharArray> colors =
+      vtkSmartPointer<vtkUnsignedCharArray>::New();
+    colors->SetNumberOfComponents(3);
+    for (vtkIdType i = 0; i < lines->GetNumberOfCells(); i++) {
+      colors->InsertNextTupleValue(red);
+    }
+ 
 
-    //   vtkSmartPointer<vtkLine> line =
-    // 	vtkSmartPointer<vtkLine>::New();
+    linesPolyData->GetCellData()->SetScalars(colors);
 
-    //   line->GetPointIds()->SetId(0, cid);
-    //   line->GetPointIds()->SetId(1, cidp1);
-
-    //   lines->InsertNextCell(line);    
-    // }
-    
-    // // Create a polydata object
-    // vtkSmartPointer<vtkPolyData> polyData =
-    //   vtkSmartPointer<vtkPolyData>::New();
- 
-    // // Add the geometry and topology to the polydata
-    // polyData->SetPoints(points);
-    // polyData->SetPolys(lines);
-
-    // // Create two colors - one for each line
-    // unsigned char red[3] = { 255, 0, 0 };
- 
-    // // Create a vtkUnsignedCharArray container and store the colors in it
-    // vtkSmartPointer<vtkUnsignedCharArray> colors =
-    //   vtkSmartPointer<vtkUnsignedCharArray>::New();
-    // colors->SetNumberOfComponents(3);
-
- 
-    // // Color the lines.
-    // // SetScalars() automatically associates the values in the data array passed as parameter
-    // // to the elements in the same indices of the cell data array on which it is called.
-    // // This means the first component (red) of the colors array
-    // // is matched with the first component of the cell array (line 0)
-    // // and the second component (green) of the colors array
-    // // is matched with the second component of the cell array (line 1)
-    // for (auto i = 0; i < polyData->GetNumberOfCells(); i++) {
-    //   colors->InsertNextTupleValue(red);      
-    // }
-
-    // polyData->GetCellData()->SetScalars(colors);    
-
-    // return polyData;
-
-// Create the polydata where we will store all the geometric data
-  vtkSmartPointer<vtkPolyData> linesPolyData =
-    vtkSmartPointer<vtkPolyData>::New();
- 
- 
-  // Create three points
-  double origin[3] = { 0.0, 0.0, 0.0 };
-  double p0[3] = { 100.0, 0.0, 0.0 };
-  double p1[3] = { 0.0, 100.0, 0.0 };
- 
-  // Create a vtkPoints container and store the points in it
-  vtkSmartPointer<vtkPoints> pts =
-    vtkSmartPointer<vtkPoints>::New();
-  for (auto p : mpts) {
-    pts->InsertNextPoint(p.x, p.y, p.z);
-  }
-
-  // pts->InsertNextPoint(origin);
-  // pts->InsertNextPoint(p0);
-  // pts->InsertNextPoint(p1);
- 
-  // Add the points to the polydata container
-  linesPolyData->SetPoints(pts);
- 
-  vtkSmartPointer<vtkCellArray> lines =
-    vtkSmartPointer<vtkCellArray>::New();
-
-  for (vtkIdType i = 0; i < linesPolyData->GetNumberOfPoints(); i++) { 
-    vtkSmartPointer<vtkLine> line0 =
-      vtkSmartPointer<vtkLine>::New();
-    line0->GetPointIds()->SetId(0, i); // the second 0 is the index of the Origin in linesPolyData's points
-    line0->GetPointIds()->SetId(1, (i + 1) % linesPolyData->GetNumberOfPoints()); // the second 1 is the index of P0 in linesPol
-
-    lines->InsertNextCell(line0);
-  }
-  
-  // Create the first line (between Origin and P0)
-  // vtkSmartPointer<vtkLine> line0 =
-  //   vtkSmartPointer<vtkLine>::New();
-  // line0->GetPointIds()->SetId(0, 0); // the second 0 is the index of the Origin in linesPolyData's points
-  // line0->GetPointIds()->SetId(1, 1); // the second 1 is the index of P0 in linesPolyData's points
- 
-  // // Create the second line (between Origin and P1)
-  // vtkSmartPointer<vtkLine> line1 =
-  //   vtkSmartPointer<vtkLine>::New();
-  // line1->GetPointIds()->SetId(0, 0); // the second 0 is the index of the Origin in linesPolyData's points
-  // line1->GetPointIds()->SetId(1, 2); // 2 is the index of P1 in linesPolyData's points
- 
-  // Create a vtkCellArray container and store the lines in it
-  // vtkSmartPointer<vtkCellArray> lines =
-  //   vtkSmartPointer<vtkCellArray>::New();
-  // lines->InsertNextCell(line0);
-  // lines->InsertNextCell(line1);
- 
-  // Add the lines to the polydata container
-  linesPolyData->SetLines(lines);
- 
- 
-  // Create two colors - one for each line
-  unsigned char red[3] = { 255, 0, 0 };
-  unsigned char green[3] = { 0, 255, 0 };
- 
-  // Create a vtkUnsignedCharArray container and store the colors in it
-  vtkSmartPointer<vtkUnsignedCharArray> colors =
-    vtkSmartPointer<vtkUnsignedCharArray>::New();
-  colors->SetNumberOfComponents(3);
-  colors->InsertNextTupleValue(red);
-  colors->InsertNextTupleValue(green);
- 
-  // Color the lines.
-  // SetScalars() automatically associates the values in the data array passed as parameter
-  // to the elements in the same indices of the cell data array on which it is called.
-  // This means the first component (red) of the colors array
-  // is matched with the first component of the cell array (line 0)
-  // and the second component (green) of the colors array
-  // is matched with the second component of the cell array (line 1)
-  linesPolyData->GetCellData()->SetScalars(colors);
-
-  return linesPolyData;
+    return linesPolyData;
   }
   
   vtkSmartPointer<vtkPolyData>

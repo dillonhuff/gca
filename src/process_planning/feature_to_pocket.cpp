@@ -1,4 +1,4 @@
-#include "geometry/vtk_debug.h"
+#include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
 #include "utils/check.h"
 
@@ -13,17 +13,15 @@ namespace gca {
     
     DBG_ASSERT(within_eps(angle_between(n, point(0, 0, 1)), 0.0, 0.1));
 
+    vtk_debug_polygon(base);
+    
     oriented_polygon ob = to_oriented_polygon(base);
 
-    vtk_debug_polygon(ob);
-
-    cout << "HOLES" << endl;
+    cout << "# of HOLES = " << base.holes().size() << endl;
 
     vector<oriented_polygon> holes;
-    for (auto h : f.base().holes()) {
+    for (auto h : base.holes()) {
       auto hp = oriented_polygon(n, h);
-
-      vtk_debug_polygon(hp);
 
       holes.push_back(hp);
     }
