@@ -16,6 +16,9 @@ namespace gca {
   vtkSmartPointer<vtkPolyData>
   polydata_for_trimesh(const triangular_mesh& mesh);
 
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_ring(const std::vector<point>& ring);
+  
   triangular_mesh
   trimesh_for_polydata(vtkPolyData* in_polydata);
 

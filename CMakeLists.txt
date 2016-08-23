@@ -112,6 +112,8 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
 	./src/process_planning/feature_to_pocket.h
+	./src/feature_recognition/feature_decomposition.h
+	./src/feature_recognition/visual_debug.h
 	./src/synthesis/operation.h
 	./src/synthesis/clamp_orientation.h
 	./src/synthesis/visual_debug.h
@@ -136,6 +138,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/feature_recognition/feature_decomposition.cpp
+	./src/feature_recognition/visual_debug.cpp
 	./src/process_planning/feature_to_pocket.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp
@@ -223,6 +226,9 @@ target_link_libraries(stl-parse geometry utils gcode gprocess gca)
 
 add_executable(plate-cutter examples/plate_cutter.cpp)
 target_link_libraries(plate-cutter geometry utils gcode gprocess gca)
+
+add_executable(feature-decomp examples/feature_decomp.cpp)
+target_link_libraries(feature-decomp geometry utils gcode gprocess gca)
 
 add_executable(ublas examples/ublas.cpp)
 target_link_libraries(ublas geometry utils gcode gprocess gca)

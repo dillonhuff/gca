@@ -124,6 +124,19 @@ AddCell/fast:
 .PHONY : AddCell/fast
 
 #=============================================================================
+# Target rules for targets named ublas
+
+# Build rule for target.
+ublas: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ublas
+.PHONY : ublas
+
+# fast build rule for target.
+ublas/fast:
+	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/build
+.PHONY : ublas/fast
+
+#=============================================================================
 # Target rules for targets named json-plan
 
 # Build rule for target.
@@ -148,19 +161,6 @@ json-mesh: cmake_check_build_system
 json-mesh/fast:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/build
 .PHONY : json-mesh/fast
-
-#=============================================================================
-# Target rules for targets named ublas
-
-# Build rule for target.
-ublas: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ublas
-.PHONY : ublas
-
-# fast build rule for target.
-ublas/fast:
-	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/build
-.PHONY : ublas/fast
 
 #=============================================================================
 # Target rules for targets named plate-cutter
@@ -189,19 +189,6 @@ all-tests/fast:
 .PHONY : all-tests/fast
 
 #=============================================================================
-# Target rules for targets named gca
-
-# Build rule for target.
-gca: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gca
-.PHONY : gca
-
-# fast build rule for target.
-gca/fast:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/build
-.PHONY : gca/fast
-
-#=============================================================================
 # Target rules for targets named gprocess
 
 # Build rule for target.
@@ -213,6 +200,32 @@ gprocess: cmake_check_build_system
 gprocess/fast:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/build
 .PHONY : gprocess/fast
+
+#=============================================================================
+# Target rules for targets named feature-decomp
+
+# Build rule for target.
+feature-decomp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 feature-decomp
+.PHONY : feature-decomp
+
+# fast build rule for target.
+feature-decomp/fast:
+	$(MAKE) -f CMakeFiles/feature-decomp.dir/build.make CMakeFiles/feature-decomp.dir/build
+.PHONY : feature-decomp/fast
+
+#=============================================================================
+# Target rules for targets named gca
+
+# Build rule for target.
+gca: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gca
+.PHONY : gca
+
+# fast build rule for target.
+gca/fast:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/build
+.PHONY : gca/fast
 
 #=============================================================================
 # Target rules for targets named gcode
@@ -305,6 +318,33 @@ examples/AddCell.s: examples/AddCell.cpp.s
 examples/AddCell.cpp.s:
 	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/examples/AddCell.cpp.s
 .PHONY : examples/AddCell.cpp.s
+
+examples/feature_decomp.o: examples/feature_decomp.cpp.o
+
+.PHONY : examples/feature_decomp.o
+
+# target to build an object file
+examples/feature_decomp.cpp.o:
+	$(MAKE) -f CMakeFiles/feature-decomp.dir/build.make CMakeFiles/feature-decomp.dir/examples/feature_decomp.cpp.o
+.PHONY : examples/feature_decomp.cpp.o
+
+examples/feature_decomp.i: examples/feature_decomp.cpp.i
+
+.PHONY : examples/feature_decomp.i
+
+# target to preprocess a source file
+examples/feature_decomp.cpp.i:
+	$(MAKE) -f CMakeFiles/feature-decomp.dir/build.make CMakeFiles/feature-decomp.dir/examples/feature_decomp.cpp.i
+.PHONY : examples/feature_decomp.cpp.i
+
+examples/feature_decomp.s: examples/feature_decomp.cpp.s
+
+.PHONY : examples/feature_decomp.s
+
+# target to generate assembly for a file
+examples/feature_decomp.cpp.s:
+	$(MAKE) -f CMakeFiles/feature-decomp.dir/build.make CMakeFiles/feature-decomp.dir/examples/feature_decomp.cpp.s
+.PHONY : examples/feature_decomp.cpp.s
 
 examples/json_mesh.o: examples/json_mesh.cpp.o
 
@@ -845,6 +885,33 @@ src/feature_recognition/feature_decomposition.s: src/feature_recognition/feature
 src/feature_recognition/feature_decomposition.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/feature_decomposition.cpp.s
 .PHONY : src/feature_recognition/feature_decomposition.cpp.s
+
+src/feature_recognition/visual_debug.o: src/feature_recognition/visual_debug.cpp.o
+
+.PHONY : src/feature_recognition/visual_debug.o
+
+# target to build an object file
+src/feature_recognition/visual_debug.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/visual_debug.cpp.o
+.PHONY : src/feature_recognition/visual_debug.cpp.o
+
+src/feature_recognition/visual_debug.i: src/feature_recognition/visual_debug.cpp.i
+
+.PHONY : src/feature_recognition/visual_debug.i
+
+# target to preprocess a source file
+src/feature_recognition/visual_debug.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/visual_debug.cpp.i
+.PHONY : src/feature_recognition/visual_debug.cpp.i
+
+src/feature_recognition/visual_debug.s: src/feature_recognition/visual_debug.cpp.s
+
+.PHONY : src/feature_recognition/visual_debug.s
+
+# target to generate assembly for a file
+src/feature_recognition/visual_debug.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/visual_debug.cpp.s
+.PHONY : src/feature_recognition/visual_debug.cpp.s
 
 src/gcode/cut.o: src/gcode/cut.cpp.o
 
@@ -3473,14 +3540,15 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... AddCell"
+	@echo "... ublas"
 	@echo "... json-plan"
 	@echo "... json-mesh"
-	@echo "... ublas"
 	@echo "... plate-cutter"
 	@echo "... all-tests"
-	@echo "... gca"
 	@echo "... rebuild_cache"
 	@echo "... gprocess"
+	@echo "... feature-decomp"
+	@echo "... gca"
 	@echo "... gcode"
 	@echo "... surface-test"
 	@echo "... geometry"
@@ -3489,6 +3557,9 @@ help:
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
 	@echo "... examples/AddCell.s"
+	@echo "... examples/feature_decomp.o"
+	@echo "... examples/feature_decomp.i"
+	@echo "... examples/feature_decomp.s"
 	@echo "... examples/json_mesh.o"
 	@echo "... examples/json_mesh.i"
 	@echo "... examples/json_mesh.s"
@@ -3549,6 +3620,9 @@ help:
 	@echo "... src/feature_recognition/feature_decomposition.o"
 	@echo "... src/feature_recognition/feature_decomposition.i"
 	@echo "... src/feature_recognition/feature_decomposition.s"
+	@echo "... src/feature_recognition/visual_debug.o"
+	@echo "... src/feature_recognition/visual_debug.i"
+	@echo "... src/feature_recognition/visual_debug.s"
 	@echo "... src/gcode/cut.o"
 	@echo "... src/gcode/cut.i"
 	@echo "... src/gcode/cut.s"

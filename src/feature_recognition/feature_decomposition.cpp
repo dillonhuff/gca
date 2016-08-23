@@ -5,6 +5,7 @@
 #include <boost/geometry/geometries/polygon.hpp>
 
 #include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
 #include "geometry/rotation.h"
 #include "geometry/surface.h"
 #include "geometry/vtk_debug.h"
@@ -265,6 +266,8 @@ namespace gca {
     cout << "decompose" << endl;
     cout << "Levels left = " << levels.size() << endl;
 
+    vtk_debug_polygon(current_level);
+    
     // If there are no levels left then the current_level defines
     // a through feature
     if (levels.size() == 0) {
