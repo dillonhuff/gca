@@ -266,7 +266,7 @@ namespace gca {
     cout << "decompose" << endl;
     cout << "Levels left = " << levels.size() << endl;
 
-    vtk_debug_polygon(current_level);
+    //    vtk_debug_polygon(current_level);
     
     // If there are no levels left then the current_level defines
     // a through feature
@@ -315,16 +315,6 @@ namespace gca {
     surface_levels levels = initial_surface_levels(m, n);
 
     cout << "initial # of levels = " << levels.size() << endl;
-
-    for (auto l : levels) {
-      cout << "START LEVEL" << endl;
-
-      for (auto p : l) {
-	vtk_debug_polygon(to_oriented_polygon(p));
-      }
-
-      cout << "END LEVEL" << endl;
-    }
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
