@@ -1,3 +1,4 @@
+#include "geometry/vtk_debug.h"
 #include "process_planning/feature_to_pocket.h"
 #include "utils/check.h"
 
@@ -14,10 +15,20 @@ namespace gca {
 
     oriented_polygon ob = to_oriented_polygon(base);
 
+    vtk_debug_polygon(ob);
+
+    cout << "HOLES" << endl;
+
     vector<oriented_polygon> holes;
     for (auto h : f.base().holes()) {
-      holes.push_back(oriented_polygon(n, h));
+      auto hp = oriented_polygon(n, h);
+
+      vtk_debug_polygon(hp);
+
+      holes.push_back(hp);
     }
+
+    cout << "DONE HOLES" << endl;
 
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();

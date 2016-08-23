@@ -314,9 +314,9 @@ namespace gca {
     clean_clip.insert("a_jaw", bt, a_jaw);
     clean_clip.insert("an_jaw", bt, an_jaw);
 
-    vector<feature_decomposition*> decomps;
-    decomps.push_back(build_feature_decomposition(part_mesh, surfs.n));
-    decomps.push_back(build_feature_decomposition(part_mesh, -1*(surfs.n)));
+    // vector<feature_decomposition*> decomps;
+    // decomps.push_back(build_feature_decomposition(part_mesh, surfs.n));
+    // decomps.push_back(build_feature_decomposition(part_mesh, -1*(surfs.n)));
 
     vector<fixture_setup> clip_setups;
 
