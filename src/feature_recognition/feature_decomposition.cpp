@@ -80,6 +80,12 @@ namespace gca {
 
       surf_polys.push_back(lp);
     }
+
+    sort(begin(surf_polys), end(surf_polys),
+	 [n](const labeled_polygon_3& x, const labeled_polygon_3& y) {
+	   return max_distance_along(x.vertices(), n) <
+	     max_distance_along(y.vertices(), n);
+	 });
     
     return surf_polys;
   }
@@ -182,7 +188,7 @@ namespace gca {
 
   // TODO: Version of this code that can handle holes?
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
-    DBG_ASSERT(p.holes().size() == 0);
+    //    DBG_ASSERT(p.holes().size() == 0);
 
     return oriented_polygon(p.normal(), p.vertices());
   }
@@ -306,6 +312,16 @@ namespace gca {
     surface_levels levels = initial_surface_levels(m, n);
 
     cout << "initial # of levels = " << levels.size() << endl;
+
+    for (auto l : levels) {
+      cout << "START LEVEL" << endl;
+
+      for (auto p : l) {
+	vtk_debug_polygon(to_oriented_polygon(p));
+      }
+
+      cout << "END LEVEL" << endl;
+    }
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
