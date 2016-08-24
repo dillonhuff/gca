@@ -176,6 +176,8 @@ namespace gca {
 
     labeled_polygon_3 rotated(pts, holes);
 
+    rotated.correct_winding_order(times_3(r, p.normal()));
+
     point rnorm = rotated.normal();
     point pnorm = p.normal();
     point rtnorm = times_3(r, p.normal());
@@ -245,7 +247,8 @@ namespace gca {
 		 const std::vector<labeled_polygon_3>& to_subtract) {
     DBG_ASSERT(to_subtract.size() > 0);
 
-    double level_z = to_subtract.front().vertex(0).z;
+    double level_z =
+      max_distance_along(to_subtract.front().vertices(), p.normal()); //vertex(0).z;
     point n = to_subtract.front().normal();
 
     cout << "n = " << n << endl;
@@ -318,6 +321,7 @@ namespace gca {
 
     cout << "current normal = " << current_level.normal() << endl;
     cout << "current depth  = " << current_depth << endl;
+    cout << "base depth     = " << base_depth << endl;
 
     DBG_ASSERT(current_depth >= base_depth);
     
@@ -385,6 +389,12 @@ namespace gca {
     double base_depth = min_distance_along(m.vertex_list(), n);
 
     cout << "initial # of levels = " << levels.size() << endl;
+    for (auto level : levels) {
+      DBG_ASSERT(level.size() > 0);
+
+      cout << "??? z = " << level.front().vertex(0).z << endl;
+    }
+    cout << "done levels" << endl;
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();

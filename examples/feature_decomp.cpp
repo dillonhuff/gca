@@ -16,10 +16,12 @@ int main(int argc, char* argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  auto mesh = parse_stl(argv[1], 0.001);
-  feature_decomposition* f = build_feature_decomposition(mesh, point(0, -1, 0));
+  point n(0, 1, 0);
 
-  vector<pocket> pockets = feature_pockets(*f);
+  auto mesh = parse_stl(argv[1], 0.001);
+  feature_decomposition* f = build_feature_decomposition(mesh, n);
+
+  vector<pocket> pockets = feature_pockets(*f, n);
 
   cout << "# of pockets = " << pockets.size() << endl;
 
