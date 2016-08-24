@@ -78,11 +78,15 @@ namespace gca {
       out.push_back(Point(p.x, p.y));
     }
 
+    if (!(out.is_simple())) {
+      vtk_debug_polygon(p);
+      DBG_ASSERT(false);
+    }
+    
     if (out.orientation() == CGAL::CLOCKWISE) {
       out.reverse_orientation();
     }
 
-    DBG_ASSERT(out.is_simple());
     DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
     
     PolygonPtrVector inner_offset_polygons =
