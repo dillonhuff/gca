@@ -3,6 +3,7 @@
 
 #include <deque>
 
+#include "geometry/rotation.h"
 #include "synthesis/contour_planning.h"
 
 namespace gca {
@@ -18,10 +19,14 @@ namespace gca {
   void correct_winding_order(Ring& r, const point n) {
     double theta = angle_between(ring_normal(r), n);
     if (within_eps(theta, 0, 0.1)) { return; }
+
+    cout << "Ring normal before = " << ring_normal(r) << endl;
       
     DBG_ASSERT(within_eps(theta, 180, 0.1));
 
     reverse(r);
+
+    cout << "Ring normal after = " << ring_normal(r) << endl;
 
     double new_theta = angle_between(ring_normal(r), n);
 
@@ -66,6 +71,8 @@ namespace gca {
     }
   };
 
+  labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p);
+
   typedef std::vector<std::vector<labeled_polygon_3>> surface_levels;
 
   class feature {
@@ -83,6 +90,10 @@ namespace gca {
     double depth() const { return dp; }
 
     labeled_polygon_3 base() const { return base_poly; }
+
+    feature apply(const rotation& r) const {
+      return feature(dp, gca::apply(r, base_poly));
+    }
     
   };
 
@@ -154,6 +165,7 @@ namespace gca {
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& m, const point n);
 
+  vector<feature*> collect_features(feature_decomposition* f);
 }
 
 #endif

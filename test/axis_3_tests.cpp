@@ -44,6 +44,17 @@ namespace gca {
       SECTION("Last pocket has one hole") {
       	REQUIRE(pockets.back().get_holes().size() == 1);
       }
+      
+    }
+
+    SECTION("Arm joint top") {
+      point n(0, -1, 0);
+      
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+      feature_decomposition* f = build_feature_decomposition(mesh, n);
+      vector<pocket> pockets = feature_pockets(*f, n);
+
+      REQUIRE(pockets.size() == 8);
     }
 
     // TODO: Possible reintroduce this test when outline detection is improved

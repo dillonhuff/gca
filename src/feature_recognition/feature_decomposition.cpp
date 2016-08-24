@@ -17,8 +17,29 @@ namespace gca {
 
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
-  labeled_polygon_3 slide_onto(const plane p,
-			       const labeled_polygon_3& poly) {
+  point project(const plane pl, const point p) {
+    point v = project_onto(pl.pt() - p, pl.normal());
+    return p + v;
+  }
+
+  std::vector<point> project(const plane pl, const std::vector<point>& pts) {
+    std::vector<point> ppts;
+    //    for (auto p : pts) {
+    for (unsigned i = 0; i < pts.size(); i++) {
+      point p = pts[i];
+      point pp1 = pts[(i + 1) % pts.size()];
+      point diff = pp1 - p;
+      if (!within_eps(angle_between(diff, pl.normal()), 0.0, 1.0) &&
+	  !within_eps(angle_between(diff, pl.normal()), 180.0, 1.0)) {
+	ppts.push_back(project(pl, p));
+      }
+    }
+
+    return ppts;
+  }
+
+  labeled_polygon_3 project_onto(const plane p,
+				 const labeled_polygon_3& poly) {
     point n = poly.normal();
 
     if (!within_eps(n, p.normal(), 0.01)) {
@@ -30,14 +51,20 @@ namespace gca {
 
     DBG_ASSERT(within_eps(n, p.normal(), 0.01));
 
-    point v = project_onto(p.pt() - poly.vertex(0), n);
+    //point v = project_onto(p.pt() - poly.vertex(0), n);
 
-    vector<point> verts;
-    for (unsigned i = 0; i < poly.num_vertices(); i++) {
-      verts.push_back(poly.vertex(i) + v);
+    // vector<point> verts;
+    // for (unsigned i = 0; i < poly.num_vertices(); i++) {
+      //      verts.push_back(project_onto(poly.vertex(i)//poly.vertex(i) + v);
+    //    }
+    vector<point> proj_outer = project(p, poly.vertices());
+
+    vector<vector<point>> proj_holes;
+    for (auto h : poly.holes()) {
+      proj_holes.push_back(project(p, h));
     }
 
-    return labeled_polygon_3(verts);
+    return labeled_polygon_3(proj_outer, proj_holes);
   }
 
   std::vector<labeled_polygon_3>
@@ -125,7 +152,11 @@ namespace gca {
     point top_point = max_point_in_dir(m, n);
     plane max_plane(n, top_point);
 
-    labeled_polygon_3 top_poly = slide_onto(max_plane, top_and_bottom_outline);
+    labeled_polygon_3 top_poly = project_onto(max_plane, top_and_bottom_outline);
+
+    vtk_debug_polygon(top_poly);
+    
+    top_poly.correct_winding_order(n);
 
     return top_poly;
   }
@@ -142,7 +173,21 @@ namespace gca {
       holes.push_back(apply(r, h));
     }
 
-    return labeled_polygon_3(pts, holes);
+    labeled_polygon_3 rotated(pts, holes);
+
+    point rnorm = rotated.normal();
+    point pnorm = p.normal();
+    point rtnorm = times_3(r, p.normal());
+
+    cout << "Original normal             = " << pnorm << endl;
+    cout << "Rotated normal              = " << rnorm << endl;
+    cout << "Rotation of original normal = " << rtnorm << endl;
+    
+    double theta = angle_between(rotated.normal(), rtnorm);
+  
+    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
+
+    return rotated;
   }
 
   boost_poly_2
@@ -270,7 +315,8 @@ namespace gca {
     double current_depth =
       max_distance_along(current_level.vertices(), current_level.normal());
 
-    cout << "current depth = " << current_depth << endl;
+    cout << "current normal = " << current_level.normal() << endl;
+    cout << "current depth  = " << current_depth << endl;
 
     DBG_ASSERT(current_depth >= base_depth);
     
@@ -331,6 +377,9 @@ namespace gca {
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& m, const point n) {
     labeled_polygon_3 init_outline = initial_outline(m, n);
+
+    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
+    
     surface_levels levels = initial_surface_levels(m, n);
     double base_depth = min_distance_along(m.vertex_list(), n);
 
@@ -344,4 +393,18 @@ namespace gca {
     return decomp;
   }
 
+  vector<feature*> collect_features(feature_decomposition* f) {
+    DBG_ASSERT(f != nullptr);
+    
+    vector<feature*> features;
+
+    auto func = [&features](feature* f) {
+      if (f != nullptr)
+	{ features.push_back(f); }
+    };
+
+    traverse_bf(f, func);
+
+    return features;
+  }
 }

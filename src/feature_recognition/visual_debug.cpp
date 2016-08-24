@@ -25,4 +25,9 @@ namespace gca {
     visualize_actors(ring_acts);
   }
 
+  void vtk_debug_feature_decomposition(feature_decomposition* f) {
+    vector<feature*> non_void_features;
+
+    DBG_ASSERT(false);
+  }
 }

@@ -9,6 +9,9 @@ namespace gca {
   std::vector<pocket>
   feature_pockets(feature_decomposition& r);
 
+  std::vector<pocket>
+  feature_pockets(feature_decomposition& r, const point n);
+
 }
 
 #endif

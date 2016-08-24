@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/millability.h"
@@ -16,7 +17,8 @@ int main(int argc, char* argv[]) {
   set_system_allocator(&a);
 
   auto mesh = parse_stl(argv[1], 0.001);
-  feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
+  feature_decomposition* f = build_feature_decomposition(mesh, point(0, -1, 0));
+
   vector<pocket> pockets = feature_pockets(*f);
 
   cout << "# of pockets = " << pockets.size() << endl;
