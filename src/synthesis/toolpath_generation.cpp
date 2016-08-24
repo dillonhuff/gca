@@ -56,6 +56,42 @@ namespace gca {
     return std::make_pair(boundary, holes);
   }
 
+  flat_pocket::flat_pocket(double p_start_depth,
+			   double p_end_depth,
+			   const oriented_polygon& p_boundary) :
+    boundary(p_boundary),
+    holes{},
+    start_depth(p_start_depth),
+    end_depth(p_end_depth) {
+      DBG_ASSERT(area(boundary) > 0.001);
+
+    }
+
+  void check_simplicity(const oriented_polygon& p) {
+    if (!CGAL_polygon_for_oriented_polygon(p).is_simple()) {
+      vtk_debug_polygon(p);
+      DBG_ASSERT(false);
+    }
+  }
+
+  flat_pocket::flat_pocket(double p_start_depth,
+			   double p_end_depth,
+			   const oriented_polygon& p_boundary,
+			   const std::vector<oriented_polygon>& p_holes) :
+    boundary(p_boundary),
+    holes(p_holes),
+    start_depth(p_start_depth),
+    end_depth(p_end_depth) {
+      DBG_ASSERT(area(boundary) > 0.001);
+
+      check_simplicity(boundary);
+
+      for (auto h : holes) {
+	check_simplicity(h);
+      }
+
+    }
+  
   flat_pocket::flat_pocket(double start_depthp,
 			   const std::vector<index_t>& basep,
 			   const triangular_mesh* p_mesh) :

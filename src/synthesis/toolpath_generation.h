@@ -154,24 +154,12 @@ namespace gca {
 
     flat_pocket(double p_start_depth,
 		double p_end_depth,
-		const oriented_polygon& p_boundary)
-      : boundary(p_boundary),
-	holes{},
-	start_depth(p_start_depth),
-	end_depth(p_end_depth) {
-	  DBG_ASSERT(area(boundary) > 0.001);
-	}
+		const oriented_polygon& p_boundary);
 
     flat_pocket(double p_start_depth,
 		double p_end_depth,
 		const oriented_polygon& p_boundary,
-		const std::vector<oriented_polygon>& p_holes)
-      : boundary(p_boundary),
-	holes(p_holes),
-	start_depth(p_start_depth),
-	end_depth(p_end_depth) {
-	  DBG_ASSERT(area(boundary) > 0.001);
-	}
+		const std::vector<oriented_polygon>& p_holes);
     
     pocket_name pocket_type() const { return FLAT_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;
