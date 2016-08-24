@@ -7,8 +7,6 @@
 
 namespace gca {
 
-  void vtk_debug_ring(const std::vector<point>& pts);
-
   void vtk_debug_polygon(const labeled_polygon_3& p);
 
   void vtk_debug_feature_decomposition(feature_decomposition* f);

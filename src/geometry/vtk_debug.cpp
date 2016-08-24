@@ -366,4 +366,10 @@ namespace gca {
 
     visualize_actors({polydata_actor(mpd), plane_actor(mpl)});
   }
+
+  void vtk_debug_ring(const std::vector<point>& pts) {
+    auto pd = polydata_for_ring(pts);
+    vector<vtkSmartPointer<vtkActor>> actors{polydata_actor(pd)};
+    visualize_actors(actors);
+  }
 }

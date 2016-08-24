@@ -67,13 +67,6 @@ namespace gca {
 
     }
 
-  void check_simplicity(const oriented_polygon& p) {
-    if (!CGAL_polygon_for_oriented_polygon(p).is_simple()) {
-      vtk_debug_polygon(p);
-      DBG_ASSERT(false);
-    }
-  }
-
   flat_pocket::flat_pocket(double p_start_depth,
 			   double p_end_depth,
 			   const oriented_polygon& p_boundary,

@@ -17,13 +17,16 @@ namespace gca {
 
   Polygon_2
   CGAL_polygon_for_oriented_polygon(const oriented_polygon& p);
+
+  void check_simplicity(const oriented_polygon& p);
   
   std::vector<oriented_polygon> exterior_offset(const oriented_polygon& p,
 						const double inc);
 
   std::vector<oriented_polygon> interior_offset(const oriented_polygon& p,
 						const double inc);
-  
+
+  void check_simplicity(const std::vector<point>& pts);
 }
 
 #endif

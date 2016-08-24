@@ -6,6 +6,7 @@
 
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
+#include "geometry/offset.h"
 #include "geometry/rotation.h"
 #include "geometry/surface.h"
 #include "geometry/vtk_debug.h"
@@ -155,6 +156,8 @@ namespace gca {
 
     labeled_polygon_3 top_poly = project_onto(max_plane, top_and_bottom_outline);
 
+    check_simplicity(top_poly.vertices());
+    
     vtk_debug_polygon(top_poly);
     
     top_poly.correct_winding_order(n);
