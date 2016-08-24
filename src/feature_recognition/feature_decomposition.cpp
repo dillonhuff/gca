@@ -24,7 +24,8 @@ namespace gca {
 
   std::vector<point> project(const plane pl, const std::vector<point>& pts) {
     std::vector<point> ppts;
-    //    for (auto p : pts) {
+
+    // TODO: Should really check that pts is planar
     for (unsigned i = 0; i < pts.size(); i++) {
       point p = pts[i];
       point pp1 = pts[(i + 1) % pts.size()];
