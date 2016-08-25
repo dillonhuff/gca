@@ -52,6 +52,10 @@ namespace gca {
       return plane_intersection(p, l);
     }
   };
+
+  std::vector<point> project(const plane pl, const std::vector<point>& pts);
+  point project(const plane pl, const point p);
+
   
 }
 

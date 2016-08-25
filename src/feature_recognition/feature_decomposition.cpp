@@ -31,59 +31,6 @@ namespace gca {
   
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
-  point project(const plane pl, const point p) {
-    // double d = -1*(pl.normal().dot(pl.pt()));
-
-    // double scalar_distance_to_plane = pl.normal().dot(p) + d;
-
-    // point projected = p + (-1*scalar_distance_to_plane)*pl.normal();
-
-    // cout << "Original distance to plane  = " << scalar_distance_to_plane << endl;
-    // cout << "New point distance to plane = " << pl.normal().dot(projected) + d << endl;
-    // cout << "d                           = " << d << endl;
-    
-    //    DBG_ASSERT(within_eps(pl.normal().dot(projected) + d, 0, 0.001));
-
-    //    return projected;
-    
-    point v = project_onto(pl.pt() - p, pl.normal());
-    return p + v;
-  }
-
-  std::vector<point> project(const plane pl, const std::vector<point>& pts) {
-    std::vector<point> ppts;
-
-    // TODO: Should really check that pts is planar
-    for (unsigned i = 0; i < pts.size(); i++) {
-      point p = pts[i];
-      //      ppts.push_back(project(pl, p));
-      
-      point pp1 = pts[(i + 1) % pts.size()];
-      point diff = pp1 - p;
-      if (!within_eps(angle_between(diff, pl.normal()), 0.0, 1.0) &&
-      	  !within_eps(angle_between(diff, pl.normal()), 180.0, 1.0)) {
-	ppts.push_back(project(pl, p));
-      }
-    }
-
-    // TODO: Add tolerance as parameter?
-    // TODO: Actual ring unique function?
-
-    auto r_eq = [](const point x, const point y)
-      { return components_within_eps(x, y, 0.001); };
-
-    auto last = std::unique(begin(ppts), end(ppts), r_eq);
-    ppts.erase(last, end(ppts));
-
-    if (r_eq(ppts.front(), ppts.back())) {
-      ppts.pop_back();
-    }
-
-    check_simplicity(ppts);
-
-    return ppts;
-  }
-
   labeled_polygon_3 project_onto(const plane p,
 				 const labeled_polygon_3& poly) {
 
@@ -211,24 +158,16 @@ namespace gca {
 
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
 				    const point n) {
-    //    oriented_polygon out = convex_hull_2D(m, n);
 
     labeled_polygon_3 top_and_bottom_outline =
       convex_hull_2D(m, n); //(out->vertices());
-
-    cout << "Top and bottom outline has " << top_and_bottom_outline.vertices().size() << "vertices" << endl;
-    vtk_debug_polygon(top_and_bottom_outline);
 
     point top_point = max_point_in_dir(m, n);
     plane max_plane(n, top_point);
 
     labeled_polygon_3 top_poly = project_onto(max_plane, top_and_bottom_outline);
 
-    cout << "Projected outline has " << top_poly.vertices().size() << "vertices" << endl;
-    
     check_simplicity(top_poly.vertices());
-    
-    vtk_debug_polygon(top_poly);
     
     top_poly.correct_winding_order(n);
 
@@ -376,17 +315,13 @@ namespace gca {
       if (boost::geometry::area(r) > 0.001) {
 	labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
 
-	vtk_debug_polygon(lp);
+	//vtk_debug_polygon(lp);
 
 	check_simplicity(lp);
 
 	lp.correct_winding_order(p.normal());
 	res.push_back(lp);
       }
-    }
-
-    for (auto rp : res) {
-      //vtk_debug_polygon(to_oriented_polygon(rp));
     }
 
     return res;
@@ -503,4 +438,5 @@ namespace gca {
 
     return features;
   }
+
 }
