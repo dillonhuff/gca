@@ -16,25 +16,33 @@
 
 namespace gca {
 
+  void check_simplicity(const labeled_polygon_3& p) {
+    check_simplicity(p.vertices());
+
+    for (auto h : p.holes()) {
+      check_simplicity(h);
+    }
+  }
+  
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
   point project(const plane pl, const point p) {
-    double d = -1*(pl.normal().dot(pl.pt()));
+    // double d = -1*(pl.normal().dot(pl.pt()));
 
-    double scalar_distance_to_plane = pl.normal().dot(p) + d;
+    // double scalar_distance_to_plane = pl.normal().dot(p) + d;
 
-    point projected = p + (-1*scalar_distance_to_plane)*pl.normal();
+    // point projected = p + (-1*scalar_distance_to_plane)*pl.normal();
 
-    cout << "Original distance to plane  = " << scalar_distance_to_plane << endl;
-    cout << "New point distance to plane = " << pl.normal().dot(projected) + d << endl;
-    cout << "d                           = " << d << endl;
+    // cout << "Original distance to plane  = " << scalar_distance_to_plane << endl;
+    // cout << "New point distance to plane = " << pl.normal().dot(projected) + d << endl;
+    // cout << "d                           = " << d << endl;
     
     //    DBG_ASSERT(within_eps(pl.normal().dot(projected) + d, 0, 0.001));
 
-    return projected;
+    //    return projected;
     
-    // point v = project_onto(pl.pt() - p, pl.normal());
-    // return p + v;
+    point v = project_onto(pl.pt() - p, pl.normal());
+    return p + v;
   }
 
   std::vector<point> project(const plane pl, const std::vector<point>& pts) {
@@ -73,12 +81,7 @@ namespace gca {
 
   labeled_polygon_3 project_onto(const plane p,
 				 const labeled_polygon_3& poly) {
-    //point v = project_onto(p.pt() - poly.vertex(0), n);
 
-    // vector<point> verts;
-    // for (unsigned i = 0; i < poly.num_vertices(); i++) {
-      //      verts.push_back(project_onto(poly.vertex(i)//poly.vertex(i) + v);
-    //    }
     vector<point> proj_outer = project(p, poly.vertices());
 
     vector<vector<point>> proj_holes;
@@ -88,6 +91,10 @@ namespace gca {
 
     labeled_polygon_3 l(proj_outer, proj_holes);
 
+    if (!(within_eps(angle_between(l.normal(), p.normal()), 0.0, 0.1))) {
+      l.correct_winding_order(p.normal());
+    }
+    
     DBG_ASSERT(within_eps(angle_between(l.normal(), p.normal()), 0.0, 0.1));
     
     return l;
@@ -171,13 +178,18 @@ namespace gca {
     return levels;
   }
 
+  labeled_polygon_3
+  convex_hull_2D(const triangular_mesh& m,
+		 const point n) {
+    
+  }
+
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
 				    const point n) {
-    boost::optional<oriented_polygon> out = simple_outline(m, n);
+    //    oriented_polygon out = convex_hull_2D(m, n);
 
-    DBG_ASSERT(out);
-
-    labeled_polygon_3 top_and_bottom_outline(out->vertices());
+    labeled_polygon_3 top_and_bottom_outline =
+      convex_hull_2D(m, n); //(out->vertices());
 
     cout << "Top and bottom outline has " << top_and_bottom_outline.vertices().size() << "vertices" << endl;
     vtk_debug_polygon(top_and_bottom_outline);
@@ -250,7 +262,17 @@ namespace gca {
     return pr;
   }
 
-  // TODO: Handle holes
+  std::vector<point> clean_vertices(const std::vector<point>& pts) {
+    if (pts.size() < 3) { return pts; }
+
+    vector<point> rpts = pts;
+    if (components_within_eps(pts.front(), pts.back(), 0.001)) {
+      rpts.pop_back();
+    }
+
+    return rpts;
+  }
+
   labeled_polygon_3
   to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
     vector<point> vertices;
@@ -266,9 +288,9 @@ namespace gca {
 	point pt(p2d.get<0>(), p2d.get<1>(), z);
 	hole_verts.push_back(times_3(r, pt));
       }
-      holes.push_back(hole_verts);
+      holes.push_back(clean_vertices(hole_verts));
     }
-    return labeled_polygon_3(vertices, holes);
+    return labeled_polygon_3(clean_vertices(vertices), holes);
   }
 
   // TODO: Version of this code that can handle holes?
@@ -332,7 +354,11 @@ namespace gca {
     for (auto r : result) {
       if (boost::geometry::area(r) > 0.001) {
 	labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+
 	vtk_debug_polygon(lp);
+
+	check_simplicity(lp);
+
 	lp.correct_winding_order(p.normal());
 	res.push_back(lp);
       }
