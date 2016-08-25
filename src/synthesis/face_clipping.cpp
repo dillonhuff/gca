@@ -69,10 +69,14 @@ namespace gca {
   }
 
   clipping_plan
-  axis_by_axis_clipping(const workpiece w, 
+  axis_by_axis_clipping(const std::vector<workpiece>& wps, 
 			const triangular_mesh& part_mesh,
 			const std::vector<tool>& tools,
 			const fixtures& f) {
+    DBG_ASSERT(wps.size() > 0);
+
+    const auto& w = wps.front();
+
     vector<surface> surfs_to_cut = surfaces_to_cut(part_mesh);
     triangular_mesh wp_mesh = align_workpiece(surfs_to_cut, w);
 

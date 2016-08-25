@@ -12,7 +12,7 @@ namespace gca {
 			      const triangular_mesh& part_mesh);
 
   clipping_plan
-  axis_by_axis_clipping(const workpiece w, 
+  axis_by_axis_clipping(const std::vector<workpiece>& w, 
 			const triangular_mesh& part_mesh,
 			const std::vector<tool>& tools,
 			const fixtures& f);

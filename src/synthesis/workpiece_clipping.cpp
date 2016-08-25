@@ -361,16 +361,14 @@ namespace gca {
 
     DBG_ASSERT(wps.size() > 0);
 
-    const auto& w = wps.front();
-
     auto contour_clip =
-      parallel_plate_clipping(part_mesh, fabrication_inputs{f, tools, w});
+      parallel_plate_clipping(part_mesh, fabrication_inputs{f, tools, wps});
 
     if (contour_clip) {
       cout << "Contouring" << endl;
       return *contour_clip;
     } else {
-      return axis_by_axis_clipping(w, part_mesh, tools, f);
+      return axis_by_axis_clipping(wps, part_mesh, tools, f);
     }
   }
 
