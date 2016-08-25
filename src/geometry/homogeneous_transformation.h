@@ -18,6 +18,7 @@ namespace gca {
   mate_planes(const plane a, const plane b, const plane c,
 	      const plane ap, const plane bp, const plane cp);
 
+  point apply(const homogeneous_transform& t, const point p);
 }
 
 #endif

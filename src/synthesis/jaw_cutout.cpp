@@ -272,13 +272,14 @@ namespace gca {
 
   std::vector<pocket>
   below_face_pockets(const triangular_mesh& part_mesh,
+		     const homogeneous_transform& t,
 		     const point n) {
     feature_decomposition* f = build_feature_decomposition(part_mesh, n);
-    vector<pocket> pockets = feature_pockets(*f, n);
+    vector<pocket> pockets = feature_pockets(*f, t, n);
 
     DBG_ASSERT(pockets.size() > 0);
     
-    pockets.erase(begin(pockets)); //pop_front();
+    pockets.erase(begin(pockets));
 
     return pockets;
   }
@@ -328,21 +329,15 @@ namespace gca {
     clean_clip.insert("a_jaw", bt, a_jaw);
     clean_clip.insert("an_jaw", bt, an_jaw);
 
-    vector<feature_decomposition*> decomps;
-    
-    //decomps.push_back(build_feature_decomposition(part_mesh, -1*(surfs.n)));
-
     vector<fixture_setup> clip_setups;
 
     vector<pocket> top_pockets{face_down(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("notch")),
 	contour_around(top_clip.mesh("stock"), top_clip.mesh("part"))};
 
-    vector<pocket> n_pockets = below_face_pockets(part_mesh, surfs.n);
+    vector<pocket> n_pockets = below_face_pockets(part_mesh, pt, surfs.n);
     concat(top_pockets, n_pockets);
     
-    //    add_surface_pockets(top_pockets, top_clip.mesh("part"), top_surfs);
-
     fixture_setup top_setup(top_clip, top_fix, top_pockets);
 
     clip_setups.push_back(top_setup);
@@ -350,11 +345,9 @@ namespace gca {
     vector<pocket> pockets{face_down(base_clip.mesh("stock"),
 				     base_clip.mesh("part"))};
 
-    vector<pocket> neg_n_pockets = below_face_pockets(part_mesh, -1*(surfs.n));
+    vector<pocket> neg_n_pockets = below_face_pockets(part_mesh, bt, -1*(surfs.n));
     concat(pockets, neg_n_pockets);
     
-    //    add_surface_pockets(pockets, base_clip.mesh("part"), base_surfs);
-
     clip_setups.push_back(fixture_setup(base_clip, custom.base_fix, pockets));
 
     vector<pocket> clean_pockets{face_down(clean_clip.mesh("notch"),

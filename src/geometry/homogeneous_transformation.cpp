@@ -3,6 +3,10 @@
 #include "geometry/homogeneous_transformation.h"
 
 namespace gca {
+
+  point apply(const homogeneous_transform& t, const point p) {
+    return times_3(t.first, p) + from_vector(t.second);
+  }
   
   triangular_mesh apply(const homogeneous_transform& t, const triangular_mesh& m) {
     triangular_mesh rotated =

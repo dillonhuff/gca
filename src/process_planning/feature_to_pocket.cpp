@@ -9,9 +9,11 @@ namespace gca {
 
     labeled_polygon_3 base = f.base();
     point n = base.normal();
+    double theta = angle_between(n, point(0, 0, 1));
     cout << "base normal = " << n << endl;
+    cout << "theta       = " << theta << endl;
     
-    DBG_ASSERT(within_eps(angle_between(n, point(0, 0, 1)), 0.0, 0.1));
+    DBG_ASSERT(within_eps(theta, 0.0, 0.3));
 
     //    vtk_debug_polygon(base);
     
@@ -70,4 +72,24 @@ namespace gca {
     return pockets;
   }
 
+  std::vector<pocket>
+  feature_pockets(feature_decomposition& r,
+		  const homogeneous_transform& t,
+		  const point n) {
+
+    DBG_ASSERT(r.feature() == nullptr);
+    DBG_ASSERT(r.num_children() == 1);
+
+    auto face_feature_node = r.child(0);
+    vector<feature*> features = collect_features(&r);
+
+    vector<pocket> pockets;
+    for (auto f : features) {
+      concat(pockets, pockets_for_feature(f->apply(t)));
+    }
+    
+    return pockets;
+    
+  }
+  
 }

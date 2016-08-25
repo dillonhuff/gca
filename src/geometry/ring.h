@@ -40,7 +40,8 @@ namespace gca {
     if (within_eps(theta, 0, 0.1)) { return; }
 
     std::cout << "Ring normal before = " << ring_normal(r) << std::endl;
-      
+    std::cout << "theta              = " << theta << std::endl;
+    
     DBG_ASSERT(within_eps(theta, 180, 0.1));
 
     reverse(r);

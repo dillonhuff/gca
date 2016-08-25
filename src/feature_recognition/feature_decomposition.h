@@ -3,6 +3,7 @@
 
 #include <deque>
 
+#include "geometry/homogeneous_transformation.h"
 #include "geometry/ring.h"
 #include "geometry/rotation.h"
 #include "synthesis/contour_planning.h"
@@ -48,6 +49,7 @@ namespace gca {
   };
 
   labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p);
+  labeled_polygon_3 apply(const homogeneous_transform& r, const labeled_polygon_3& p);
 
   typedef std::vector<std::vector<labeled_polygon_3>> surface_levels;
 
@@ -69,6 +71,10 @@ namespace gca {
 
     feature apply(const rotation& r) const {
       return feature(dp, gca::apply(r, base_poly));
+    }
+
+    feature apply(const homogeneous_transform& t) const {
+      return feature(dp, gca::apply(t, base_poly));
     }
     
   };
