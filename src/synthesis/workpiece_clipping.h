@@ -19,7 +19,7 @@ namespace gca {
   triangular_mesh stock_mesh(const workpiece& w);
   
   clipping_plan
-  workpiece_clipping_programs(const workpiece aligned_workpiece,
+  workpiece_clipping_programs(const workpiece workpiece,
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const fixtures& fixes);

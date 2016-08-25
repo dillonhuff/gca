@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
   vector<tool> tools{t1, t2};
   workpiece workpiece_dims(3.5, 3.0, 3.0, ACETAL);
 
-  auto plan = make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+  auto plan = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
   ptree json_tree = encode_json(plan);
   write_json(argv[2], json_tree);

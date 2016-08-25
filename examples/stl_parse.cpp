@@ -46,8 +46,9 @@ int main(int argc, char* argv[]) {
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   vector<tool> tools{t1, t2};
   workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+
   fabrication_plan plan =
-    make_fabrication_plan(mesh, fixes, tools, workpiece_dims);
+    make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
   for (auto step : plan.steps()) {
     visual_debug(step);

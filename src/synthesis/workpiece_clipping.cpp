@@ -308,11 +308,15 @@ namespace gca {
   }
 
   boost::optional<clipping_plan>
-  parallel_plate_clipping(const triangular_mesh& aligned,
-			  const triangular_mesh& part_mesh,
-			  const fixtures& f,
+  parallel_plate_clipping(const triangular_mesh& part_mesh,
 			  const fabrication_inputs& fab_inputs) {
+
     cout << "Trying parallel plate clipping" << endl;
+
+    const auto& f = fab_inputs.f;
+    
+    vector<surface> stable_surfaces = outer_surfaces(part_mesh);
+    triangular_mesh aligned = align_workpiece(stable_surfaces, fab_inputs.w);
 
     boost::optional<contour_surface_decomposition> surfs =
       compute_contour_surfaces(part_mesh);
@@ -349,11 +353,9 @@ namespace gca {
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
-    vector<surface> stable_surfaces = outer_surfaces(part_mesh);
-    triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
     auto contour_clip =
-      parallel_plate_clipping(wp_mesh, part_mesh, f, fabrication_inputs{f, tools, w});
+      parallel_plate_clipping(part_mesh, fabrication_inputs{f, tools, w});
 
     if (contour_clip) {
       cout << "Contouring" << endl;

@@ -23,14 +23,14 @@ namespace gca {
     vector<toolpath> toolpaths =
       mill_pockets(pockets, tools, stock_material);
 
-    return toolpaths; //build_gcode_program("Surface cut", toolpaths); //toolpaths, emco_f1_code);
+    return toolpaths;
   }
 
   std::vector<gcode_program> mesh_to_gcode(const triangular_mesh& part_mesh,
 					   const fixtures& f,
 					   const vector<tool>& tools,
 					   const workpiece w) {
-    fabrication_plan plan = make_fabrication_plan(part_mesh, f, tools, w);
+    fabrication_plan plan = make_fabrication_plan(part_mesh, f, tools, {w});
     vector<gcode_program> progs;
     for (auto f : plan.steps()) {
       progs.push_back(f.gcode_for_toolpaths(emco_f1_code));
@@ -43,7 +43,7 @@ namespace gca {
     return make_fabrication_plan(part_mesh,
 				 inputs.f,
 				 inputs.tools,
-				 inputs.w);
+				 {inputs.w});
   }
 
   fabrication_plan
@@ -60,11 +60,15 @@ namespace gca {
 
     return fabrication_plan(&part_mesh, setups, plan.custom_fixtures());
   }
-  
+
   fabrication_plan make_fabrication_plan(const triangular_mesh& part_mesh,
 					 const fixtures& f,
 					 const vector<tool>& tools,
-					 const workpiece w) {
+					 const std::vector<workpiece>& wps) {
+    DBG_ASSERT(wps.size() > 0);
+
+    auto w = wps.front();
+    
     fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
 
     return fabrication_plan_for_fixture_plan(plan, part_mesh, tools, w);
