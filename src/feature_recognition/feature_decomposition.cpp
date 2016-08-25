@@ -16,6 +16,11 @@
 
 namespace gca {
 
+  typedef boost::geometry::model::d2::point_xy<double> boost_point_2;
+  typedef boost::geometry::model::polygon<boost_point_2> boost_poly_2;
+  typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
+  typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
+
   void check_simplicity(const labeled_polygon_3& p) {
     check_simplicity(p.vertices());
 
@@ -181,7 +186,27 @@ namespace gca {
   labeled_polygon_3
   convex_hull_2D(const triangular_mesh& m,
 		 const point n) {
+    double z_level = max_distance_along(m.vertex_list(), n);
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
     
+    auto rotated_pts = apply(r, m.vertex_list());
+
+    boost_multipoint_2 mp;
+    for (auto p : rotated_pts) {
+      boost::geometry::append(mp, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
+    }
+
+    boost_multipoint_2 res;
+    boost::geometry::convex_hull(mp, res);
+
+    vector<point> res_pts;
+    for (auto p : res) {
+      point pz(p.x(), p.y(), z_level);
+      res_pts.push_back(times_3(r_inv, pz));
+    }
+
+    return labeled_polygon_3(res_pts);
   }
 
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
@@ -209,10 +234,6 @@ namespace gca {
 
     return top_poly;
   }
-
-  typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<double> > boost_poly_2;
-
-  typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
 
   labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p) {
     vector<point> pts = apply(r, p.vertices());
