@@ -28,9 +28,7 @@ namespace gca {
       normal_z += (((pi.y) + (pj.y)) *
 		   ((pj.x) - (pi.x)));
     }
-    // point l1 = r[1] - r[0];
-    // point l2 = r[2] - r[0];
-    // return cross(l1, l2).normalize();
+
     return point(normal_x, normal_y, normal_z).normalize();
   }
 
@@ -39,15 +37,9 @@ namespace gca {
     double theta = angle_between(ring_normal(r), n);
     if (within_eps(theta, 0, 0.1)) { return; }
 
-    std::cout << "Ring normal before = " << ring_normal(r) << std::endl;
-    std::cout << "theta              = " << theta << std::endl;
-    
     DBG_ASSERT(within_eps(theta, 180, 0.1));
 
     reverse(r);
-
-    std::cout << "Ring normal after = " << ring_normal(r) << std::endl;
-    std::cout << "Expected normal   = " << n << std::endl;
 
     double new_theta = angle_between(ring_normal(r), n);
 

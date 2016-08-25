@@ -47,22 +47,27 @@ namespace gca {
     std::vector<surface> surfs_to_cut;
     std::vector<fixture_setup> fixtures;
     std::vector<fabrication_plan*> custom_fixes;
-
-    clipping_plan(const std::vector<surface>& p_stable_surfs,
-		  const std::vector<surface>& p_surfs_to_cut,
-		  const std::vector<fixture_setup>& p_fixtures)
-      : stable_surfs(p_stable_surfs),
-	surfs_to_cut(p_surfs_to_cut),
-	fixtures(p_fixtures) {}
+    workpiece w;
 
     clipping_plan(const std::vector<surface>& p_stable_surfs,
 		  const std::vector<surface>& p_surfs_to_cut,
 		  const std::vector<fixture_setup>& p_fixtures,
-		  const std::vector<fabrication_plan*>& p_custom_fixes)
+		  const workpiece p_w)
       : stable_surfs(p_stable_surfs),
 	surfs_to_cut(p_surfs_to_cut),
 	fixtures(p_fixtures),
-	custom_fixes(p_custom_fixes) {}
+	w(p_w) {}
+
+    clipping_plan(const std::vector<surface>& p_stable_surfs,
+		  const std::vector<surface>& p_surfs_to_cut,
+		  const std::vector<fixture_setup>& p_fixtures,
+		  const std::vector<fabrication_plan*>& p_custom_fixes,
+		  const workpiece p_w)
+      : stable_surfs(p_stable_surfs),
+	surfs_to_cut(p_surfs_to_cut),
+	fixtures(p_fixtures),
+	custom_fixes(p_custom_fixes),
+	w(p_w) {}
     
     inline const std::vector<surface>& stable_surfaces() const
     { return stable_surfs; }
@@ -72,6 +77,8 @@ namespace gca {
 
     const std::vector<fabrication_plan*>& custom_fixtures() const
     { return custom_fixes; }
+
+    workpiece stock() const { return w; }
     
   };
 

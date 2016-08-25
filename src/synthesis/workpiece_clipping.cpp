@@ -291,7 +291,8 @@ namespace gca {
   }
 
   clipping_plan
-  base_fix_clip_plan(const triangular_mesh& aligned,
+  base_fix_clip_plan(const workpiece& w,
+		     const triangular_mesh& aligned,
 		     const triangular_mesh& part_mesh,
 		     const contour_surface_decomposition& surfs,
 		     const fixture& top_fix,
@@ -304,7 +305,7 @@ namespace gca {
       stable_surfaces_after_clipping(part_mesh, aligned);
     auto surfs_to_cut = surfs.rest;
 
-    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, w);
   }
 
   boost::optional<clipping_plan>
@@ -314,9 +315,13 @@ namespace gca {
     cout << "Trying parallel plate clipping" << endl;
 
     const auto& f = fab_inputs.f;
+
+    DBG_ASSERT(fab_inputs.w.size() > 0);
+    
+    const auto& w = fab_inputs.w.front();
     
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
-    triangular_mesh aligned = align_workpiece(stable_surfaces, fab_inputs.w.front());
+    triangular_mesh aligned = align_workpiece(stable_surfaces, w);
 
     boost::optional<contour_surface_decomposition> surfs =
       compute_contour_surfaces(part_mesh);
@@ -338,7 +343,7 @@ namespace gca {
 	  find_base_contour_fixture(outline, top, (*top_fix).v, -1*n);
 
 	if (base_fix) {
-	  return base_fix_clip_plan(aligned, part_mesh, *surfs, *top_fix, *base_fix);
+	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix);
 	} else {
 	  return custom_jaw_plan(aligned, part_mesh, *surfs, *top_fix, fab_inputs);
 	}
@@ -349,10 +354,14 @@ namespace gca {
   }
 
   clipping_plan
-  workpiece_clipping_programs(const workpiece w,
+  workpiece_clipping_programs(const std::vector<workpiece>& wps,
 			      const triangular_mesh& part_mesh,
 			      const std::vector<tool>& tools,
 			      const fixtures& f) {
+
+    DBG_ASSERT(wps.size() > 0);
+
+    const auto& w = wps.front();
 
     auto contour_clip =
       parallel_plate_clipping(part_mesh, fabrication_inputs{f, tools, w});

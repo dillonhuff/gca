@@ -82,7 +82,7 @@ namespace gca {
       stable_surfaces_after_clipping(part_mesh, wp_mesh);
     remove_contained_surfaces(clipped_surfs, surfs_to_cut);
 
-    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups);
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, w);
   }
 
 }

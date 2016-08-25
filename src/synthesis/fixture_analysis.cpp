@@ -281,10 +281,10 @@ namespace gca {
 
     DBG_ASSERT(wps.size() > 0);
 
-    const auto& w = wps.front();
+    //    const auto& w = wps.front();
     
     clipping_plan wp_setups =
-      workpiece_clipping_programs(w, part_mesh, tools, f);
+      workpiece_clipping_programs(wps, part_mesh, tools, f);
 
     vector<fixture_setup> setups = wp_setups.fixtures;
     const vector<surface>& stable_surfaces =
@@ -303,7 +303,10 @@ namespace gca {
 
     concat(setups, rest);
 
-    return fixture_plan(part_mesh, setups, wp_setups.custom_fixtures(), w);
+    return fixture_plan(part_mesh,
+			setups,
+			wp_setups.custom_fixtures(),
+			wp_setups.stock());
   }
 
 }

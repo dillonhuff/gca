@@ -361,7 +361,8 @@ namespace gca {
   }
 
   clipping_plan
-  soft_jaw_clipping_plan(const triangular_mesh& aligned,
+  soft_jaw_clipping_plan(const workpiece& w,
+			 const triangular_mesh& aligned,
 			 const triangular_mesh& part_mesh,
 			 const contour_surface_decomposition& surfs,
 			 const fixture& top_fix,
@@ -373,7 +374,7 @@ namespace gca {
       stable_surfaces_after_clipping(part_mesh, aligned);
     auto surfs_to_cut = surfs.rest;
 
-    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom.left_jaw, custom.right_jaw});
+    return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom.left_jaw, custom.right_jaw}, w);
   }
   
   boost::optional<clipping_plan>
@@ -387,7 +388,11 @@ namespace gca {
       custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), fab_inputs);
 
     if (custom) {
-      return soft_jaw_clipping_plan(aligned, part_mesh, surfs, top_fix, *custom);
+
+      DBG_ASSERT(fab_inputs.w.size() > 0);
+      
+      const auto& w = fab_inputs.w.front();
+      return soft_jaw_clipping_plan(w, aligned, part_mesh, surfs, top_fix, *custom);
     }
 
     return boost::none;
