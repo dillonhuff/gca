@@ -378,7 +378,8 @@ namespace gca {
   }
   
   boost::optional<clipping_plan>
-  custom_jaw_plan(const triangular_mesh& aligned,
+  custom_jaw_plan(const workpiece& w,
+		  const triangular_mesh& aligned,
 		  const triangular_mesh& part_mesh,
 		  const contour_surface_decomposition& surfs,
 		  const fixture& top_fix,
@@ -388,10 +389,6 @@ namespace gca {
       custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), fab_inputs);
 
     if (custom) {
-
-      DBG_ASSERT(fab_inputs.w.size() > 0);
-      
-      const auto& w = fab_inputs.w.front();
       return soft_jaw_clipping_plan(w, aligned, part_mesh, surfs, top_fix, *custom);
     }
 

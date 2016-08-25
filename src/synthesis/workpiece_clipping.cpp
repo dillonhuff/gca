@@ -345,7 +345,7 @@ namespace gca {
 	if (base_fix) {
 	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix);
 	} else {
-	  return custom_jaw_plan(aligned, part_mesh, *surfs, *top_fix, fab_inputs);
+	  return custom_jaw_plan(w, aligned, part_mesh, *surfs, *top_fix, fab_inputs);
 	}
       }
     }
