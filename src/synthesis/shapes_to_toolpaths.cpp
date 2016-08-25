@@ -8,6 +8,7 @@
 #include "geometry/spline_sampling.h"
 #include "synthesis/toolpath_generation.h"
 #include "utils/algorithm.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -28,7 +29,7 @@ namespace gca {
     } else if (tools == DRILL_ONLY) {
       return DRILL;
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
 
@@ -132,7 +133,7 @@ namespace gca {
 				  double offset,
 				  vector<polyline>& last_main_cuts,
 				  vector<polyline>& last_finish_cuts) {
-    assert(pl.num_points() > 1);
+    DBG_ASSERT(pl.num_points() > 1);
     vector<point> split_points(pl.num_points());
     adjacent_difference(pl.begin(), pl.end(),
 			split_points.begin(),

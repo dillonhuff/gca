@@ -19,19 +19,22 @@ namespace gca {
   protected:
     const triangular_mesh& part;
     std::vector<fixture_setup> setups;
+    workpiece w;
     std::vector<fabrication_plan*> custom_fixes;
     
   public:
     fixture_plan(const triangular_mesh& p_part,
-		 const std::vector<fixture_setup>& p_fixture_pairs) :
-      part(p_part), setups(p_fixture_pairs) {
+		 const std::vector<fixture_setup>& p_fixture_pairs,
+		 const workpiece p_w) :
+      part(p_part), setups(p_fixture_pairs), w(p_w) {
       std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
 
     fixture_plan(const triangular_mesh& p_part,
 		 const std::vector<fixture_setup>& p_fixture_pairs,
-		 const std::vector<fabrication_plan*>& p_custom_fixes) :
-      part(p_part), setups(p_fixture_pairs),
+		 const std::vector<fabrication_plan*>& p_custom_fixes,
+		 const workpiece p_w) :
+      part(p_part), setups(p_fixture_pairs), w(p_w),
       custom_fixes(p_custom_fixes) {
       std::cout << "Fixture plan: # of setups = " << setups.size() << endl;
     }
@@ -41,6 +44,8 @@ namespace gca {
 
     const std::vector<fabrication_plan*>& custom_fixtures() const
     { return custom_fixes; }
+
+    workpiece stock() const { return w; }
     
   };
 
@@ -61,7 +66,7 @@ namespace gca {
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 const fixtures& fixes,
 				 const vector<tool>& tools,
-				 const workpiece w);
+				 const std::vector<workpiece>& w);
 
   std::vector<surface>
   stable_surfaces_after_clipping(const triangular_mesh& part_mesh,

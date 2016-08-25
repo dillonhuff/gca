@@ -109,7 +109,7 @@ namespace gca {
     auto outer_surfs = outer_surfaces(mesh);
 
     fixture_plan plan =
-      make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
     for (auto setup : plan.fixtures()) {
       double last_depth = max_distance_along(setup.part_mesh().vertex_list(), point(0, 0, 1));
@@ -255,7 +255,7 @@ namespace gca {
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
-    auto fix_plan = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+    auto fix_plan = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
     test_no_freeform_pockets(fix_plan);
 

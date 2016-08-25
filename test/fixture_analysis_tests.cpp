@@ -21,7 +21,7 @@ namespace gca {
     SECTION("Clipped pill") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 2);
     }
@@ -31,7 +31,7 @@ namespace gca {
 
       cout << "Making round w/ thru holes plan" << endl;
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 2);
     }
@@ -39,7 +39,7 @@ namespace gca {
     SECTION("Cylinder") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ShortCylinder.stl", 0.001);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 3);
     }
@@ -51,7 +51,7 @@ namespace gca {
       std::vector<plate_height> parallel_plates{0.5, 0.7};
       fixtures fixes(test_vice, parallel_plates);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 3);
     }
@@ -76,7 +76,7 @@ namespace gca {
     }
 
     SECTION("9 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
       REQUIRE(p.fixtures().size() == 9);
     }
   }
@@ -100,7 +100,7 @@ namespace gca {
     }
 
     SECTION("8 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 8);
 
@@ -131,7 +131,7 @@ namespace gca {
     // Change back to 7 once optimization / feature
     // recognition is done. 10 works, but is not efficient
     SECTION("10 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 10);
 
@@ -161,7 +161,7 @@ namespace gca {
     }
     
     SECTION("7 setups, no duplicates") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 7);
 
@@ -185,7 +185,7 @@ namespace gca {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
     
     SECTION("10 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 10);
 
@@ -210,7 +210,7 @@ namespace gca {
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
 
-    fixture_plan p = make_fixture_plan(mesh, fixes, tools, workpiece_dims);
+    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
     REQUIRE(p.fixtures().size() == 2);
   }

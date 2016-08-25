@@ -65,13 +65,9 @@ namespace gca {
 					 const fixtures& f,
 					 const vector<tool>& tools,
 					 const std::vector<workpiece>& wps) {
-    DBG_ASSERT(wps.size() > 0);
+    fixture_plan plan = make_fixture_plan(part_mesh, f, tools, wps);
 
-    auto w = wps.front();
-    
-    fixture_plan plan = make_fixture_plan(part_mesh, f, tools, w);
-
-    return fabrication_plan_for_fixture_plan(plan, part_mesh, tools, w);
+    return fabrication_plan_for_fixture_plan(plan, part_mesh, tools, plan.stock());
   }
 
 }

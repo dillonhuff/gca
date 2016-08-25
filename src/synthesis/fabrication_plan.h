@@ -31,8 +31,19 @@ namespace gca {
 
   struct fabrication_inputs {
     fixtures f;
-    vector<tool> tools;
-    workpiece w;
+    std::vector<tool> tools;
+    std::vector<workpiece> w;
+
+    fabrication_inputs(const fixtures& p_f,
+		       const std::vector<tool>& p_tools,
+		       const workpiece& p_w) :
+      f(p_f), tools(p_tools), w{p_w} {}
+
+    fabrication_inputs(const fixtures& p_f,
+		       const std::vector<tool>& p_tools,
+		       const std::vector<workpiece>& p_w) :
+      f(p_f), tools(p_tools), w(p_w) {}
+
   };
 
   class fabrication_setup {

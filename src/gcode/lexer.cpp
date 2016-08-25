@@ -5,6 +5,7 @@
 
 #include "gcode/lexer.h"
 #include "gcode/parse_stream.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -87,7 +88,7 @@ namespace gca {
       cout << "Invalid c = " << c << endl;
       cout << "Inavlid c as int = " << ((int) c) << endl;
       cout << "Is EOF? " << (((int) c) == EOF) << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
 

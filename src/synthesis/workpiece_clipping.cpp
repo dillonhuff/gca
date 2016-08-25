@@ -316,7 +316,7 @@ namespace gca {
     const auto& f = fab_inputs.f;
     
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
-    triangular_mesh aligned = align_workpiece(stable_surfaces, fab_inputs.w);
+    triangular_mesh aligned = align_workpiece(stable_surfaces, fab_inputs.w.front());
 
     boost::optional<contour_surface_decomposition> surfs =
       compute_contour_surfaces(part_mesh);

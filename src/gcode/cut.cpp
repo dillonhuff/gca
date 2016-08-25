@@ -1,4 +1,5 @@
 #include "gcode/cut.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -68,7 +69,7 @@ namespace gca {
     value* f = c->get_feedrate();
     double fr;
     if (!c->is_safe_move()) {
-      assert(f->is_lit());
+      DBG_ASSERT(f->is_lit());
       fr = static_cast<lit*>(f)->v;
     } else {
       // This is the fast feedrate for HAAS VF1
@@ -136,7 +137,7 @@ namespace gca {
       cout << "ERROR" << endl;
       cout << *c << endl;
       cout << "Active tool = " << *(c->settings.active_tool) << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
     auto tl = static_cast<ilit*>(tn);
     int current_tool_no = tl->v;
@@ -150,7 +151,7 @@ namespace gca {
       cout << "is lit ? " << tn->is_lit() << endl;
       cout << "is omitted ? " << tn->is_omitted() << endl;
       cout << *c << endl;
-      assert(false);
+      DBG_ASSERT(false);
     } else if (tn->is_ilit()) {
       auto ss = static_cast<ilit*>(tn);
       return ss->v;
@@ -158,7 +159,7 @@ namespace gca {
       auto ss = static_cast<lit*>(tn);
       return ss->v;
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
 
