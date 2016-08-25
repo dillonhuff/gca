@@ -29,13 +29,30 @@ namespace gca {
     // TODO: Should really check that pts is planar
     for (unsigned i = 0; i < pts.size(); i++) {
       point p = pts[i];
+      //      ppts.push_back(project(pl, p));
+      
       point pp1 = pts[(i + 1) % pts.size()];
       point diff = pp1 - p;
       if (!within_eps(angle_between(diff, pl.normal()), 0.0, 1.0) &&
-	  !within_eps(angle_between(diff, pl.normal()), 180.0, 1.0)) {
+      	  !within_eps(angle_between(diff, pl.normal()), 180.0, 1.0)) {
 	ppts.push_back(project(pl, p));
       }
     }
+
+    // TODO: Add tolerance as parameter?
+    // TODO: Actual ring unique function?
+
+    auto r_eq = [](const point x, const point y)
+      { return components_within_eps(x, y, 0.001); };
+
+    auto last = std::unique(begin(ppts), end(ppts), r_eq);
+    ppts.erase(last, end(ppts));
+
+    if (r_eq(ppts.front(), ppts.back())) {
+      ppts.pop_back();
+    }
+
+    check_simplicity(ppts);
 
     return ppts;
   }
@@ -79,7 +96,6 @@ namespace gca {
 
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
 
-    // TODO: Rotate the polygons back using r_inv once results are calculated
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
 
@@ -95,12 +111,15 @@ namespace gca {
 
       auto boundary = extract_boundary(bounds);
 
+      check_simplicity(boundary.vertices());
+
       DBG_ASSERT(area(boundary) > 0.001);
 
       auto holes = bounds;
 
       vector<vector<point>> hole_verts;
       for (auto h : holes) {
+	check_simplicity(h.vertices());
 	hole_verts.push_back(apply(r_inv, h.vertices()));
       }
 
@@ -116,6 +135,8 @@ namespace gca {
 	   return max_distance_along(x.vertices(), n) <
 	     max_distance_along(y.vertices(), n);
 	 });
+
+    cout << "Got horizontal surfaces" << endl;
     
     return surf_polys;
   }
@@ -151,11 +172,16 @@ namespace gca {
 
     labeled_polygon_3 top_and_bottom_outline(out->vertices());
 
+    cout << "Top and bottom outline has " << top_and_bottom_outline.vertices().size() << "vertices" << endl;
+    vtk_debug_polygon(top_and_bottom_outline);
+
     point top_point = max_point_in_dir(m, n);
     plane max_plane(n, top_point);
 
     labeled_polygon_3 top_poly = project_onto(max_plane, top_and_bottom_outline);
 
+    cout << "Projected outline has " << top_poly.vertices().size() << "vertices" << endl;
+    
     check_simplicity(top_poly.vertices());
     
     vtk_debug_polygon(top_poly);
@@ -299,6 +325,7 @@ namespace gca {
     for (auto r : result) {
       if (boost::geometry::area(r) > 0.001) {
 	labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+	vtk_debug_polygon(lp);
 	lp.correct_winding_order(p.normal());
 	res.push_back(lp);
       }
@@ -384,11 +411,12 @@ namespace gca {
   
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& m, const point n) {
+    surface_levels levels = initial_surface_levels(m, n);
+
     labeled_polygon_3 init_outline = initial_outline(m, n);
 
     DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
     
-    surface_levels levels = initial_surface_levels(m, n);
     double base_depth = min_distance_along(m.vertex_list(), n);
 
     cout << "initial # of levels = " << levels.size() << endl;

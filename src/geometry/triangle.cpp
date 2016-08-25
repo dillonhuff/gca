@@ -32,7 +32,10 @@ namespace gca {
     while (lines.size() > 0 && i < lines.size()) {
       if (within_eps(lines[i].start, points.back())) {
 	if (within_eps(lines[i].end, points.front())) {
-	  lines.erase(lines.begin() + i);	  
+	  lines.erase(lines.begin() + i);
+
+	  DBG_ASSERT(no_duplicate_points(points, 0.001));
+	  
 	  return points;
 	}
 	points.push_back(lines[i].end);
@@ -41,6 +44,9 @@ namespace gca {
       } else if (within_eps(lines[i].end, points.back())) {
 	if (within_eps(lines[i].start, points.front())) {
 	  lines.erase(lines.begin() + i);
+
+	  DBG_ASSERT(no_duplicate_points(points, 0.001));
+	  
 	  return points;
 	}
 	points.push_back(lines[i].start);
@@ -50,6 +56,9 @@ namespace gca {
 	i++;
       }
     }
+
+    DBG_ASSERT(no_duplicate_points(points, 0.001));
+    
     return points;
   }
 

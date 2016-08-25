@@ -180,4 +180,38 @@ namespace gca {
   }
   
 
+  bool components_within_eps(const point l, const point r, const double tol) {
+    return within_eps(l.x, r.x, tol) &&
+      within_eps(l.y, r.y, tol) &&
+      within_eps(l.z, r.z, tol);
+  }
+
+  bool no_duplicate_points(const std::vector<point>& pts, const double tol) {
+    for (unsigned i = 0; i < pts.size(); i++) {
+      point p = pts[i];
+
+      for (unsigned j = 0; j < pts.size(); j++) {
+	if (i != j) {
+	  point q = pts[j];
+
+	  if (components_within_eps(p, q, tol)) {
+	    for (unsigned k = 0; k < pts.size(); k++) {
+	      cout << "pts[" << k << "] = " << pts[k] << endl;
+	    }
+
+	    cout << "DONE WITH POINTS" << endl;
+	    
+	    cout << "# of points = " << pts.size() << endl;
+	    cout << "duplicate points at i = " << i << " , j = " << j << endl;
+	    cout << "pts[i] = " << p << endl;
+	    cout << "pts[j] = " << q << endl;
+	    return false;
+	  }
+	}
+      }
+    }
+
+    return true;
+  }
+
 }

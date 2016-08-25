@@ -1,6 +1,7 @@
 #include "synthesis/contour_planning.h"
 #include "synthesis/millability.h"
 
+#include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
 
 namespace gca {
@@ -214,8 +215,8 @@ namespace gca {
     }
 
     oriented_polygon outl =
-      min_e(outlines, [](const oriented_polygon& p)
-	    { return min_z(p); });
+      min_e(outlines, [n](const oriented_polygon& p)
+	    { return min_distance_along(p.vertices(), n); });
 
     return outl;
   }

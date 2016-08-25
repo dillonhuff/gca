@@ -80,6 +80,9 @@ namespace gca {
   double diameter(const point normal,
 		  const std::vector<point>& pts);
 
+  bool components_within_eps(const point l, const point r, const double tol);
+
+  bool no_duplicate_points(const std::vector<point>& pts, const double tol);
 }
 
 #endif

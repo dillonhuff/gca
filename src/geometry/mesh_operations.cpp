@@ -26,12 +26,6 @@
 
 namespace gca {
   
-  bool components_within_eps(const point l, const point r, const double tol) {
-    return within_eps(l.x, r.x, tol) &&
-      within_eps(l.y, r.y, tol) &&
-      within_eps(l.z, r.z, tol);
-  }
-
   boost::optional<std::vector<point>>
   merge_center(const std::vector<point>& l, const std::vector<point>& r) {
     if (components_within_eps(l.back(), r.front(), 0.01)) {
