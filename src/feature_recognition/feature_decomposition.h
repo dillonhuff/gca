@@ -69,6 +69,9 @@ namespace gca {
 
     labeled_polygon_3 base() const { return base_poly; }
 
+    double base_distance_along_normal() const
+    { return min_distance_along(base_poly.vertices(), base_poly.normal()); }
+
     feature apply(const rotation& r) const {
       return feature(dp, gca::apply(r, base_poly));
     }

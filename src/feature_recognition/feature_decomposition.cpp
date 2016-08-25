@@ -387,10 +387,16 @@ namespace gca {
     // a through feature
     if (levels.size() == 0) {
       double feature_depth = current_depth - base_depth;
-      feature* f = new (allocate<feature>()) feature(feature_depth, current_level);
+      point v = feature_depth*current_level.normal();
+      plane base_pl(current_level.normal(), current_level.vertex(0) - v);
+
+      labeled_polygon_3 shifted = project_onto(base_pl, current_level);
+
+      feature* f = new (allocate<feature>()) feature(feature_depth, shifted);
       feature_decomposition* child =
     	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
+
       return;
     }
 
