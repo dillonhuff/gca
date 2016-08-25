@@ -52,3 +52,10 @@ ublas
 plate-cutter
 .idea/*
 feature-decomp
+examples/useless.cpp
+non_simple_poly.txt
+src/utils/selection.h
+src/geometry/octree.h
+test/stl-files/BoxMesh.stl
+test/stl-files/ShortPill.stl
+test/stl-files/VerticalDiagonals.stl
