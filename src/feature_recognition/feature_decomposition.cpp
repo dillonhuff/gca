@@ -19,8 +19,22 @@ namespace gca {
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
   point project(const plane pl, const point p) {
-    point v = project_onto(pl.pt() - p, pl.normal());
-    return p + v;
+    double d = -1*(pl.normal().dot(pl.pt()));
+
+    double scalar_distance_to_plane = pl.normal().dot(p) + d;
+
+    point projected = p + (-1*scalar_distance_to_plane)*pl.normal();
+
+    cout << "Original distance to plane  = " << scalar_distance_to_plane << endl;
+    cout << "New point distance to plane = " << pl.normal().dot(projected) + d << endl;
+    cout << "d                           = " << d << endl;
+    
+    //    DBG_ASSERT(within_eps(pl.normal().dot(projected) + d, 0, 0.001));
+
+    return projected;
+    
+    // point v = project_onto(pl.pt() - p, pl.normal());
+    // return p + v;
   }
 
   std::vector<point> project(const plane pl, const std::vector<point>& pts) {
@@ -59,17 +73,6 @@ namespace gca {
 
   labeled_polygon_3 project_onto(const plane p,
 				 const labeled_polygon_3& poly) {
-    point n = poly.normal();
-
-    if (!within_eps(n, p.normal(), 0.01)) {
-      n = -1*n;
-    }
-
-    cout << "poly normal  = " << n << endl;
-    cout << "plane normal = " << p.normal() << endl;
-
-    DBG_ASSERT(within_eps(n, p.normal(), 0.01));
-
     //point v = project_onto(p.pt() - poly.vertex(0), n);
 
     // vector<point> verts;
@@ -83,7 +86,11 @@ namespace gca {
       proj_holes.push_back(project(p, h));
     }
 
-    return labeled_polygon_3(proj_outer, proj_holes);
+    labeled_polygon_3 l(proj_outer, proj_holes);
+
+    DBG_ASSERT(within_eps(angle_between(l.normal(), p.normal()), 0.0, 0.1));
+    
+    return l;
   }
 
   std::vector<labeled_polygon_3>
