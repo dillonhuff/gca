@@ -274,6 +274,10 @@ namespace gca {
     return partition_fixture_setups(surface_part);
   }
 
+  point normal(const fixture& f) {
+    return f.orient.top_normal();
+  }
+  
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 const fixtures& f,
 				 const vector<tool>& tools,
@@ -294,17 +298,25 @@ namespace gca {
       wp_setups.stable_surfaces();
     auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
 
-    vector<fixture> all_orients =
-      all_stable_fixtures(stable_surfaces, f);
+    if (surfs_to_cut.size() > 0) {
+      vector<fixture> all_orients =
+	all_stable_fixtures(stable_surfaces, f);
 
-    DBG_ASSERT(all_orients.size() > 0 || surfs_to_cut.size() == 0);
+      auto basis =
+	take_basis(all_orients,
+		   [](const fixture& x, const fixture& y)
+		   { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
+		   3);
 
-    auto orient_ptrs = ptrs(all_orients);
-    auto surf_ptrs = ptrs(surfs_to_cut);
-    vector<fixture_setup> rest =
-      orientations_to_cut(surf_ptrs, orient_ptrs);
+      DBG_ASSERT(all_orients.size() > 0 || surfs_to_cut.size() == 0);
 
-    concat(setups, rest);
+      auto orient_ptrs = ptrs(all_orients);
+      auto surf_ptrs = ptrs(surfs_to_cut);
+      vector<fixture_setup> rest =
+	orientations_to_cut(surf_ptrs, orient_ptrs);
+
+      concat(setups, rest);
+    }
 
     return fixture_plan(part_mesh,
 			setups,
