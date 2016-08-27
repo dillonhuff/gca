@@ -84,10 +84,10 @@ namespace gca {
     return u.dot(v);
   }
 
-  point cross(point b, point c) {
-    double x = (b).y * (c).z - (c).y * (b).z;
-    double y = (b).z * (c).x - (c).z * (b).x;
-    double z = (b).x * (c).y - (c).x * (b).y;
+  point cross(point u, point v) {
+    double x = u.y * v.z - v.y * u.z;
+    double y = u.z * v.x - v.z * u.x;
+    double z = u.x * v.y - v.x * u.y;
     return point(x, y, z);
   }
 

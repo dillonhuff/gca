@@ -23,8 +23,8 @@ namespace gca {
 
     point v = cross(from_unit, to_unit);
     double s = v.len();
-    double c = from_unit.dot(to_unit);    
-    
+    double c = from_unit.dot(to_unit);
+
     boost::numeric::ublas::matrix<double> vx(3, 3);
     vx(0, 0) = 0;
     vx(0, 1) = -v.z;
@@ -40,8 +40,12 @@ namespace gca {
 
     auto id = boost::numeric::ublas::identity_matrix<double>(3);
 
+    const boost::numeric::ublas::matrix<double> vxc = vx;
+    
     auto vx2 = prod(vx, vx);
-    const ublas::matrix<double> r = id + vx + ((1.0 - c)/(s*s))*vx2;
+    const ublas::matrix<double> r = id + vxc + ((1.0 - c)/(s*s))*vx2;
+
+    cout << "r * from_unit = " << times_3(r, from_unit) << endl;
 
     double d = determinant(r);
     if (!(within_eps(d, 1.0, 0.001))) {
@@ -63,14 +67,23 @@ namespace gca {
       cout << "c = " << c << endl;
       cout << "s = " << s << endl;
       cout << "v = " << v << endl;
+
+      cout << "vx = " << endl;
+      cout << vx << endl;
+      
       DBG_ASSERT(false);
     }
 
-    if (!(within_eps(angle_between(times_3(r, from), to), 0.0, 0.1))) {
+    if (!(within_eps(angle_between(times_3(r, from_unit), to_unit), 0.0, 0.1))) {
       cout << "ERROR: Incorrect rotation " << endl;
       cout << r << endl;
 
-      cout << "r*" << from << " = " << times_3(r, from) << " != " << to << endl;
+      cout << "from = " << from << endl;
+      cout << "to = " << to << endl;
+      cout << "from unit normal = " << from_unit << endl;
+      cout << "to unit normal = " << to_unit << endl;
+      
+      cout << "r*" << from_unit << " = " << times_3(r, from_unit) << " != " << to_unit << endl;
       cout << "c = " << c << endl;
       cout << "s = " << s << endl;
       cout << "v = " << v << endl;
