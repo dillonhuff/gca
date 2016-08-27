@@ -277,6 +277,16 @@ namespace gca {
   point normal(const fixture& f) {
     return f.orient.top_normal();
   }
+
+  fixture
+  find_by_normal(const std::vector<fixture>& fixes,
+		 const point n) {
+    auto r = find_if(begin(fixes), end(fixes),
+		     [n](const fixture& s)
+		     { return within_eps(angle_between(s.orient.top_normal(), n), 0, 1.0); });
+    assert(r != end(orients));
+    return *r;
+  }
   
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 const fixtures& f,
@@ -299,16 +309,32 @@ namespace gca {
     auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
 
     if (surfs_to_cut.size() > 0) {
+
+      vtk_debug_highlight_inds(surfs_to_cut);
+
       vector<fixture> all_orients =
 	all_stable_fixtures(stable_surfaces, f);
 
+      DBG_ASSERT(all_orients.size() > 0);
+      
       auto basis =
 	take_basis(all_orients,
 		   [](const fixture& x, const fixture& y)
 		   { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
 		   3);
 
-      DBG_ASSERT(all_orients.size() > 0 || surfs_to_cut.size() == 0);
+      vector<fixture> directions;
+      for (auto b : basis) {
+	directions.push_back(b);
+	auto negative = find_by_normal(all_orients, -1*b.orient.top_normal());
+	directions.push_back(negative);
+      }
+
+      DBG_ASSERT(directions.size() == 6);
+
+      for (auto b : directions) {
+	
+      }
 
       auto orient_ptrs = ptrs(all_orients);
       auto surf_ptrs = ptrs(surfs_to_cut);
