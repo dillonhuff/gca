@@ -1,3 +1,4 @@
+#include "feature_recognition/feature_decomposition.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
@@ -310,8 +311,6 @@ namespace gca {
 
     if (surfs_to_cut.size() > 0) {
 
-      vtk_debug_highlight_inds(surfs_to_cut);
-
       vector<fixture> all_orients =
 	all_stable_fixtures(stable_surfaces, f);
 
@@ -332,8 +331,9 @@ namespace gca {
 
       DBG_ASSERT(directions.size() == 6);
 
+      vector<feature_decomposition*> decomps;
       for (auto b : directions) {
-	
+	decomps.push_back(build_feature_decomposition(part_mesh, b.orient.top_normal()));
       }
 
       auto orient_ptrs = ptrs(all_orients);

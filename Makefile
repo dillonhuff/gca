@@ -3302,6 +3302,33 @@ test/rigid_arrangement_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.s
 .PHONY : test/rigid_arrangement_tests.cpp.s
 
+test/rotation_tests.o: test/rotation_tests.cpp.o
+
+.PHONY : test/rotation_tests.o
+
+# target to build an object file
+test/rotation_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.o
+.PHONY : test/rotation_tests.cpp.o
+
+test/rotation_tests.i: test/rotation_tests.cpp.i
+
+.PHONY : test/rotation_tests.i
+
+# target to preprocess a source file
+test/rotation_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.i
+.PHONY : test/rotation_tests.cpp.i
+
+test/rotation_tests.s: test/rotation_tests.cpp.s
+
+.PHONY : test/rotation_tests.s
+
+# target to generate assembly for a file
+test/rotation_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.s
+.PHONY : test/rotation_tests.cpp.s
+
 test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
 
 .PHONY : test/shapes_to_toolpaths_tests.o
@@ -3928,6 +3955,9 @@ help:
 	@echo "... test/rigid_arrangement_tests.o"
 	@echo "... test/rigid_arrangement_tests.i"
 	@echo "... test/rigid_arrangement_tests.s"
+	@echo "... test/rotation_tests.o"
+	@echo "... test/rotation_tests.i"
+	@echo "... test/rotation_tests.s"
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"

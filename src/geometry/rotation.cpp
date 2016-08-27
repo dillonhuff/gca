@@ -43,12 +43,22 @@ namespace gca {
     auto vx2 = prod(vx, vx);
     const ublas::matrix<double> r = id + vx + ((1.0 - c)/(s*s))*vx2;
 
-    if (!(within_eps(determinant(r), 1.0, 0.001))) {
-      cout << "ERROR: determinant of rotation = " << determinant(r) << endl;
+    double d = determinant(r);
+    if (!(within_eps(d, 1.0, 0.001))) {
+      cout << "ERROR: determinant of rotation = " << d << endl;
       cout << "from = " << from << endl;
       cout << "to = " << to << endl;
+      cout << "from unit normal = " << from_unit << endl;
+      cout << "to unit normal = " << to_unit << endl;
+
       cout << "theta = " << theta << endl;
       cout << r << endl;
+
+      point rfu = times_3(r, from_unit);
+      double res_angle = angle_between(rfu, to_unit);
+
+      cout << "r * from_unit = " << rfu << endl;
+      cout << "resulting angle = " << res_angle << endl;
 
       cout << "c = " << c << endl;
       cout << "s = " << s << endl;
