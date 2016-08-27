@@ -21,9 +21,14 @@ namespace gca {
     point from_unit = from.normalize();
     point to_unit = to.normalize();
 
-    point v = cross(from_unit, to_unit);
-    double s = v.len();
-    double c = from_unit.dot(to_unit);
+    // point v = cross(from_unit, to_unit).normalize();
+    // //    double s = v.len();
+    // double dt = from_unit.dot(to_unit);
+
+    // double th = safe_acos(dt / (from_unit.len() * to_unit.len()));
+
+    point v = cross(from, to).normalize();
+    theta = safe_acos(from.dot(to) / (from.len() * to.len()));
 
     boost::numeric::ublas::matrix<double> vx(3, 3);
     vx(0, 0) = 0;
@@ -43,7 +48,8 @@ namespace gca {
     const boost::numeric::ublas::matrix<double> vxc = vx;
     
     auto vx2 = prod(vx, vx);
-    const ublas::matrix<double> r = id + vxc + ((1.0 - c)/(s*s))*vx2;
+    const ublas::matrix<double> r =
+      id + sin(theta) * vxc + (1.0 - cos(theta))*vx2; //id + vxc + ((1.0 - c)/(s*s))*vx2;
 
     cout << "r * from_unit = " << times_3(r, from_unit) << endl;
 
@@ -64,9 +70,9 @@ namespace gca {
       cout << "r * from_unit = " << rfu << endl;
       cout << "resulting angle = " << res_angle << endl;
 
-      cout << "c = " << c << endl;
-      cout << "s = " << s << endl;
-      cout << "v = " << v << endl;
+      // cout << "c = " << c << endl;
+      // cout << "s = " << s << endl;
+      // cout << "v = " << v << endl;
 
       cout << "vx = " << endl;
       cout << vx << endl;
@@ -84,9 +90,9 @@ namespace gca {
       cout << "to unit normal = " << to_unit << endl;
       
       cout << "r*" << from_unit << " = " << times_3(r, from_unit) << " != " << to_unit << endl;
-      cout << "c = " << c << endl;
-      cout << "s = " << s << endl;
-      cout << "v = " << v << endl;
+      // cout << "c = " << c << endl;
+      // cout << "s = " << s << endl;
+      // cout << "v = " << v << endl;
       DBG_ASSERT(false);
     }
     

@@ -53,6 +53,8 @@ namespace gca {
 
   };
 
+  double safe_acos(double v);
+  
   point cross(point b, point c);
   double dot(point u, point v);
 
