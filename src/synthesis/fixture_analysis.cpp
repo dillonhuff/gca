@@ -281,12 +281,15 @@ namespace gca {
 
     DBG_ASSERT(wps.size() > 0);
 
-    //    const auto& w = wps.front();
-    
     clipping_plan wp_setups =
       workpiece_clipping_programs(wps, part_mesh, tools, f);
 
     vector<fixture_setup> setups = wp_setups.fixtures;
+
+    auto num_setups = setups.size();
+
+    DBG_ASSERT(num_setups == 6 || num_setups == 2 || num_setups == 3);
+
     const vector<surface>& stable_surfaces =
       wp_setups.stable_surfaces();
     auto surfs_to_cut = wp_setups.surfaces_left_to_cut();

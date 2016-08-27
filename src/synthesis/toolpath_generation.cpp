@@ -150,9 +150,9 @@ namespace gca {
       concat(lines, project_lines(face_template, depth));
     }
 
-    // if (lines.size() == 0) {
-    //   vtk_debug_polygon(boundary);
-    // }
+    if (lines.size() == 0) {
+      vtk_debug_polygon(boundary);
+    }
     
     return lines;
     //  return { to_polyline(project(boundary, get_end_depth())) };
@@ -418,7 +418,7 @@ namespace gca {
   // TODO: Check legality of tool size
   tool
   contour_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(max_element(begin(tools), end(tools),
+    tool t = *(min_element(begin(tools), end(tools),
   			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
     return t;

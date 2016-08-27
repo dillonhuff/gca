@@ -190,9 +190,9 @@ namespace gca {
     point pnorm = p.normal();
     point rtnorm = times_3(r, p.normal());
 
-    cout << "Original normal             = " << pnorm << endl;
-    cout << "Rotated normal              = " << rnorm << endl;
-    cout << "Rotation of original normal = " << rtnorm << endl;
+    // cout << "Original normal             = " << pnorm << endl;
+    // cout << "Rotated normal              = " << rnorm << endl;
+    // cout << "Rotation of original normal = " << rtnorm << endl;
     
     double theta = angle_between(rotated.normal(), rtnorm);
   

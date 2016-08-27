@@ -124,6 +124,19 @@ AddCell/fast:
 .PHONY : AddCell/fast
 
 #=============================================================================
+# Target rules for targets named vtk-mass
+
+# Build rule for target.
+vtk-mass: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 vtk-mass
+.PHONY : vtk-mass
+
+# fast build rule for target.
+vtk-mass/fast:
+	$(MAKE) -f CMakeFiles/vtk-mass.dir/build.make CMakeFiles/vtk-mass.dir/build
+.PHONY : vtk-mass/fast
+
+#=============================================================================
 # Target rules for targets named ublas
 
 # Build rule for target.
@@ -507,6 +520,33 @@ examples/ublas.s: examples/ublas.cpp.s
 examples/ublas.cpp.s:
 	$(MAKE) -f CMakeFiles/ublas.dir/build.make CMakeFiles/ublas.dir/examples/ublas.cpp.s
 .PHONY : examples/ublas.cpp.s
+
+examples/vtk_mass_test.o: examples/vtk_mass_test.cpp.o
+
+.PHONY : examples/vtk_mass_test.o
+
+# target to build an object file
+examples/vtk_mass_test.cpp.o:
+	$(MAKE) -f CMakeFiles/vtk-mass.dir/build.make CMakeFiles/vtk-mass.dir/examples/vtk_mass_test.cpp.o
+.PHONY : examples/vtk_mass_test.cpp.o
+
+examples/vtk_mass_test.i: examples/vtk_mass_test.cpp.i
+
+.PHONY : examples/vtk_mass_test.i
+
+# target to preprocess a source file
+examples/vtk_mass_test.cpp.i:
+	$(MAKE) -f CMakeFiles/vtk-mass.dir/build.make CMakeFiles/vtk-mass.dir/examples/vtk_mass_test.cpp.i
+.PHONY : examples/vtk_mass_test.cpp.i
+
+examples/vtk_mass_test.s: examples/vtk_mass_test.cpp.s
+
+.PHONY : examples/vtk_mass_test.s
+
+# target to generate assembly for a file
+examples/vtk_mass_test.cpp.s:
+	$(MAKE) -f CMakeFiles/vtk-mass.dir/build.make CMakeFiles/vtk-mass.dir/examples/vtk_mass_test.cpp.s
+.PHONY : examples/vtk_mass_test.cpp.s
 
 src/analysis/extract_cuts.o: src/analysis/extract_cuts.cpp.o
 
@@ -3540,6 +3580,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... AddCell"
+	@echo "... vtk-mass"
 	@echo "... ublas"
 	@echo "... json-plan"
 	@echo "... json-mesh"
@@ -3578,6 +3619,9 @@ help:
 	@echo "... examples/ublas.o"
 	@echo "... examples/ublas.i"
 	@echo "... examples/ublas.s"
+	@echo "... examples/vtk_mass_test.o"
+	@echo "... examples/vtk_mass_test.i"
+	@echo "... examples/vtk_mass_test.s"
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"

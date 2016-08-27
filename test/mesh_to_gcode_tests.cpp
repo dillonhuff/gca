@@ -280,6 +280,51 @@ namespace gca {
 
   }
 
+  TEST_CASE("Small Arm Joint Dummy Part") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    cout << "Arm joint dummy" << endl;
+
+    vice test_vice = current_setup();
+    std::vector<plate_height> parallel_plates{0.5};
+    fixtures fixes(test_vice, parallel_plates);
+
+    tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
+    tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
+    tool t3(0.10, 3.15, 2, HSS, FLAT_NOSE);
+    
+    vector<tool> tools{t1, t2, t3};
+    
+    workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ArmJointDummy.stl", 0.001);
+
+    auto fix_plan = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+    test_no_freeform_pockets(fix_plan);
+
+    auto plan =
+      fabrication_plan_for_fixture_plan(fix_plan, mesh, tools, workpiece_dims);
+
+    REQUIRE(plan.steps().size() == 3);
+
+    REQUIRE(plan.steps()[0].arrangement().mesh_names().size() == 3);
+
+    test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
+    test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
+
+    test_no_empty_toolpaths(plan);
+    
+    REQUIRE(plan.custom_fixtures().size() == 2);
+
+    for (auto f : plan.custom_fixtures()) {
+      REQUIRE(f != nullptr);
+      test_no_empty_toolpaths(*f);
+    }
+
+  }
+  
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {
     vector<vector<cut*>> cuts;
     auto r = gcode_to_cuts(blocks, cuts);

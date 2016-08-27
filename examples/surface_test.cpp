@@ -46,12 +46,9 @@ int main(int argc, char *argv[]) {
 			   0, 0);
   vtkSmartPointer<vtkPolyDataMapper> input2Mapper =
     vtkSmartPointer<vtkPolyDataMapper>::New();
-#if VTK_MAJOR_VERSION <= 5
-  input2Mapper->SetInputConnection( input2->GetProducerPort() );
-#else
   input2Mapper->SetInputData( input2 );
-#endif
   input2Mapper->ScalarVisibilityOff();
+
   vtkSmartPointer<vtkActor> input2Actor =
     vtkSmartPointer<vtkActor>::New();
   input2Actor->SetMapper( input2Mapper );
