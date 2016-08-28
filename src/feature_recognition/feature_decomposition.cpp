@@ -56,7 +56,7 @@ namespace gca {
   horizontal_surfaces(const triangular_mesh& m, const point n) {
     auto inds = m.face_indexes();
     vector<std::vector<index_t>> surfs =
-      normal_delta_regions(inds, m, 5.0);
+      normal_delta_regions(inds, m, 3.0);
       //const_orientation_regions(m);
 
     // TODO: Add virtual polygons for surfaces that are non horizontal and
