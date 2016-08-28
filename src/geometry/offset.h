@@ -27,6 +27,13 @@ namespace gca {
 						const double inc);
 
   void check_simplicity(const std::vector<point>& pts);
+
+  std::vector<point>
+  exterior_offset(const std::vector<point>& pts, const double tol);
+
+  std::vector<point>
+  interior_offset(const std::vector<point>& pts, const double tol);
+
 }
 
 #endif

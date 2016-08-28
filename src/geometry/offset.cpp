@@ -143,4 +143,38 @@ namespace gca {
     }
   }
 
+  std::vector<point> exterior_offset(const std::vector<point>& pts, const double tol) {
+    point n(0, 0, 1);
+    const rotation r = rotate_from_to(ring_normal(pts), n);
+    const rotation r_inv = inverse(r);
+    auto res = exterior_offset(oriented_polygon(n, apply(r, pts)), tol);
+
+    cout << "Number of offsets = " << res.size() << endl;
+    DBG_ASSERT(res.size() == 2);
+
+    auto rpoly = res[1];
+    auto rpts = apply(r_inv, rpoly.vertices());
+
+    correct_winding_order(rpts, ring_normal(pts));
+
+    return rpts;
+  }
+
+  std::vector<point> interior_offset(const std::vector<point>& pts, const double tol) {
+    point n(0, 0, 1);
+    const rotation r = rotate_from_to(ring_normal(pts), n);
+    const rotation r_inv = inverse(r);
+    auto res = interior_offset(oriented_polygon(n, apply(r, pts)), tol);
+
+    DBG_ASSERT(res.size() == 1);
+
+    auto rpoly = res.front();
+    auto rpts = apply(r_inv, rpoly.vertices());
+
+    correct_winding_order(rpts, ring_normal(pts));
+
+    return rpts;
+  }
+  
+
 }

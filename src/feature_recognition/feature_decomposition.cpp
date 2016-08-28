@@ -296,6 +296,28 @@ namespace gca {
     return oriented_polygon(p.normal(), p.vertices());
   }
 
+  labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol) {
+    auto dr = exterior_offset(p.vertices(), tol);
+
+    vector<vector<point>> dh;
+    for (auto h : p.holes()) {
+      dh.push_back(interior_offset(h, tol));
+    }
+
+    labeled_polygon_3 poly(dr, dh);
+    return poly;
+  }
+  
+  std::vector<labeled_polygon_3>
+  dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol) {
+    std::vector<labeled_polygon_3> dilated_polys;
+    for (auto p : polys) {
+      dilated_polys.push_back(dilate(p, tol));
+    }
+    return dilated_polys;
+  }
+
+
   boost::optional<std::vector<labeled_polygon_3>>
   subtract_level(const labeled_polygon_3& p,
 		 const std::vector<labeled_polygon_3>& to_subtract) {
@@ -320,8 +342,9 @@ namespace gca {
 
     boost_poly_2 pb = to_boost_poly_2(apply(r, p));
 
+    auto to_subtract_dilated = dilate_polygons(to_subtract, 0.01);
     boost_multipoly_2 to_sub;
-    for (auto s : to_subtract) {
+    for (auto s : to_subtract_dilated) {
       to_sub.push_back(to_boost_poly_2(apply(r, s)));
     }
     
