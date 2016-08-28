@@ -106,7 +106,10 @@ namespace gca {
       select(tools, [bound_area](const tool& t)
 	     { return t.cross_section_area() < bound_area; });
 
-    DBG_ASSERT(viable.size() > 0);
+    if (viable.size() == 0) {
+      vtk_debug_polygon(boundary);
+      DBG_ASSERT(viable.size() > 0);
+    }
 
     tool t = min_e(viable, [](const tool& l) { return l.diameter(); });
 

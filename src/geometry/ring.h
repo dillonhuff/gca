@@ -35,15 +35,21 @@ namespace gca {
   template<typename Ring>
   void correct_winding_order(Ring& r, const point n) {
     double theta = angle_between(ring_normal(r), n);
-    if (within_eps(theta, 0, 0.1)) { return; }
 
-    DBG_ASSERT(within_eps(theta, 180, 0.1));
+    if (within_eps(theta, 0, 0.5)) { return; }
+
+    if (!(within_eps(theta, 180, 0.5))) {
+      cout << "n              = " << n << endl;
+      cout << "ring_normal(r) = " << ring_normal(r) << endl;
+      cout << "theta          = " << theta << endl;
+      DBG_ASSERT(within_eps(theta, 180, 0.5));
+    }
 
     reverse(r);
 
     double new_theta = angle_between(ring_normal(r), n);
 
-    DBG_ASSERT(within_eps(new_theta, 0, 0.1));
+    DBG_ASSERT(within_eps(new_theta, 0, 0.5));
   }
   
 }

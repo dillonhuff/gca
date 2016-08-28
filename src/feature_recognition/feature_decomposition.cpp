@@ -343,8 +343,8 @@ namespace gca {
 
     cout << "Subtracting" << endl;
 
-    vtk_debug_polygon(p);
-    vtk_debug_polygons(to_subtract);
+    //vtk_debug_polygon(p);
+    //vtk_debug_polygons(to_subtract);
 
     double level_z =
       max_distance_along(to_subtract.front().vertices(), p.normal());

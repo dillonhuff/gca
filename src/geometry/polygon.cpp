@@ -2,6 +2,7 @@
 
 #include "geometry/polygon.h"
 #include "geometry/polyline.h"
+#include "geometry/vtk_debug.h"
 #include "utils/algorithm.h"
 
 namespace gca {
@@ -98,8 +99,13 @@ namespace gca {
     return polyline(v);
   }
 
-  oriented_polygon extract_boundary(vector<oriented_polygon>& polygons) {
+  oriented_polygon extract_boundary(std::vector<oriented_polygon>& polygons) {
     DBG_ASSERT(polygons.size() > 0);
+
+    cout << "# of polygons = " << polygons.size() << endl;
+    for (auto p : polygons) {
+      vtk_debug_polygon(p);
+    }
 
     for (unsigned i = 0; i < polygons.size(); i++) {
       auto possible_bound = polygons[i];
@@ -118,6 +124,8 @@ namespace gca {
 	return possible_bound;
       }
     }
+
+    vtk_debug_polygons(polygons);
 
     DBG_ASSERT(false);
   }
