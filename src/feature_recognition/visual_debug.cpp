@@ -23,6 +23,27 @@ namespace gca {
     visualize_actors(ring_acts);
   }
 
+  void vtk_debug_polygons(const std::vector<labeled_polygon_3>& polys) {
+    vector<vtkSmartPointer<vtkPolyData>> ring_pds;
+
+    for (auto p : polys) {
+      auto pd = polydata_for_ring(p.vertices());
+      ring_pds.push_back(pd);
+    
+      for (auto ir : p.holes()) {
+	auto pd = polydata_for_ring(ir);
+	ring_pds.push_back(polydata_for_ring(ir));
+      }
+    }
+    
+    vector<vtkSmartPointer<vtkActor>> ring_acts;
+    for (auto r : ring_pds) {
+      ring_acts.push_back(polydata_actor(r));
+    }
+
+    visualize_actors(ring_acts);
+  }
+  
   void vtk_debug_feature_decomposition(feature_decomposition* f) {
     vector<feature*> non_void_features;
 

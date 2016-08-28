@@ -8,6 +8,7 @@
 namespace gca {
 
   void vtk_debug_polygon(const labeled_polygon_3& p);
+  void vtk_debug_polygons(const std::vector<labeled_polygon_3>& p);
 
   void vtk_debug_feature_decomposition(feature_decomposition* f);
 }

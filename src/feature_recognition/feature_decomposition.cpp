@@ -293,8 +293,6 @@ namespace gca {
 
   // TODO: Version of this code that can handle holes?
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
-    //    DBG_ASSERT(p.holes().size() == 0);
-
     return oriented_polygon(p.normal(), p.vertices());
   }
 
@@ -303,8 +301,13 @@ namespace gca {
 		 const std::vector<labeled_polygon_3>& to_subtract) {
     DBG_ASSERT(to_subtract.size() > 0);
 
+    cout << "Subtracting" << endl;
+
+    vtk_debug_polygon(p);
+    vtk_debug_polygons(to_subtract);
+
     double level_z =
-      max_distance_along(to_subtract.front().vertices(), p.normal()); //vertex(0).z;
+      max_distance_along(to_subtract.front().vertices(), p.normal());
     point n = to_subtract.front().normal();
 
     cout << "n = " << n << endl;
@@ -323,8 +326,6 @@ namespace gca {
     }
     
     cout << "# polys to subtract = " << to_sub.size() << endl;
-
-    //vtk_debug_polygon(to_oriented_polygon(apply(r, p)));
 
     boost_multipoly_2 result;
     boost::geometry::difference(pb, to_sub, result);
@@ -352,8 +353,6 @@ namespace gca {
     for (auto r : result) {
       if (boost::geometry::area(r) > 0.001) {
 	labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
-
-	//vtk_debug_polygon(lp);
 
 	check_simplicity(lp);
 
