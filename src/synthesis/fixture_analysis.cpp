@@ -1,5 +1,6 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "geometry/vtk_debug.h"
+#include "process_planning/feature_to_pocket.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
@@ -288,7 +289,63 @@ namespace gca {
     assert(r != end(orients));
     return *r;
   }
-  
+
+  std::vector<fixture_setup>
+  plan_fixtures(const triangular_mesh& part_mesh,
+		const std::vector<surface>& stable_surfaces,
+		std::vector<surface>& surfs_to_cut,
+		const fixtures& f) {
+
+    vector<fixture> all_orients =
+      all_stable_fixtures(stable_surfaces, f);
+
+    DBG_ASSERT(all_orients.size() > 0);
+      
+    auto basis =
+      take_basis(all_orients,
+		 [](const fixture& x, const fixture& y)
+		 { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
+		 3);
+
+    vector<fixture> directions;
+    for (auto b : basis) {
+      directions.push_back(b);
+      auto negative = find_by_normal(all_orients, -1*b.orient.top_normal());
+      directions.push_back(negative);
+    }
+
+    DBG_ASSERT(directions.size() == 6);
+
+    vector<feature_decomposition*> decomps;
+    for (auto b : directions) {
+      decomps.push_back(build_feature_decomposition(part_mesh, b.orient.top_normal()));
+    }
+
+    DBG_ASSERT(decomps.size() == directions.size());
+
+    vector<fixture_setup> rest;
+    for (unsigned i = 0; i < decomps.size(); i++) {
+      fixture d = directions[i];
+      feature_decomposition* decomp = decomps[i];
+
+      auto t = mating_transform(part_mesh, d.orient, d.v);
+      
+      triangular_mesh* m =
+	new (allocate<triangular_mesh>()) triangular_mesh(apply(t, part_mesh));
+
+      vector<pocket> pockets = feature_pockets(*decomp, t, d.orient.top_normal());
+
+      rest.push_back(fixture_setup(m, d, pockets));
+    }
+
+    // auto orient_ptrs = ptrs(all_orients);
+    // auto surf_ptrs = ptrs(surfs_to_cut);
+    // vector<fixture_setup> rest =
+    //   orientations_to_cut(surf_ptrs, orient_ptrs);
+
+    return rest;
+  }
+
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 const fixtures& f,
 				 const vector<tool>& tools,
@@ -310,37 +367,7 @@ namespace gca {
     auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
 
     if (surfs_to_cut.size() > 0) {
-
-      vector<fixture> all_orients =
-	all_stable_fixtures(stable_surfaces, f);
-
-      DBG_ASSERT(all_orients.size() > 0);
-      
-      auto basis =
-	take_basis(all_orients,
-		   [](const fixture& x, const fixture& y)
-		   { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
-		   3);
-
-      vector<fixture> directions;
-      for (auto b : basis) {
-	directions.push_back(b);
-	auto negative = find_by_normal(all_orients, -1*b.orient.top_normal());
-	directions.push_back(negative);
-      }
-
-      DBG_ASSERT(directions.size() == 6);
-
-      vector<feature_decomposition*> decomps;
-      for (auto b : directions) {
-	decomps.push_back(build_feature_decomposition(part_mesh, b.orient.top_normal()));
-      }
-
-      auto orient_ptrs = ptrs(all_orients);
-      auto surf_ptrs = ptrs(surfs_to_cut);
-      vector<fixture_setup> rest =
-	orientations_to_cut(surf_ptrs, orient_ptrs);
-
+      auto rest = plan_fixtures(part_mesh, stable_surfaces, surfs_to_cut, f);
       concat(setups, rest);
     }
 

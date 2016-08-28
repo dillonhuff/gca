@@ -6,8 +6,6 @@
 namespace gca {
 
   void test_rotation(const point from_unit, const point to_unit, const rotation& r) {
-    cout << "r * from_unit = " << times_3(r, from_unit) << endl;
-
     double d = determinant(r);
     if (!(within_eps(d, 1.0, 0.001))) {
       cout << "ERROR: determinant of rotation = " << d << endl;
@@ -53,10 +51,6 @@ namespace gca {
     double s = v.len();
     double c = dot(from_unit, to_unit);
 
-    cout << "c = " << c << endl;
-    cout << "s = " << s << endl;
-    cout << "v = " << v << endl;
-    
     boost::numeric::ublas::matrix<double> vx(3, 3);
     vx(0, 0) = 0;
     vx(0, 1) = -v.z;
@@ -69,9 +63,6 @@ namespace gca {
     vx(2, 0) = -v.y;
     vx(2, 1) = v.x;
     vx(2, 2) = 0;
-
-    cout << "VX = " << endl;
-    cout << vx << endl;
 
     const boost::numeric::ublas::matrix<double> id =
       boost::numeric::ublas::identity_matrix<double>(3);
@@ -93,8 +84,6 @@ namespace gca {
     
     double theta = angle_between(from_unit, to_unit);
 
-    std::cout << "theta = " << theta << endl;
-    
     if (within_eps(theta, 0, 0.01)) {
       return boost::numeric::ublas::identity_matrix<double>(3);
     }
