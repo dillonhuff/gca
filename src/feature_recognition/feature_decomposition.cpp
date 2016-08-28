@@ -160,7 +160,7 @@ namespace gca {
 				    const point n) {
 
     labeled_polygon_3 top_and_bottom_outline =
-      convex_hull_2D(m, n); //(out->vertices());
+      convex_hull_2D(m, n);
 
     point top_point = max_point_in_dir(m, n);
     plane max_plane(n, top_point);
@@ -171,7 +171,8 @@ namespace gca {
     
     top_poly.correct_winding_order(n);
 
-    return top_poly;
+    plane eps_pl(top_poly.normal(), top_poly.vertex(0) + 0.01*top_poly.normal());
+    return project_onto(eps_pl, top_poly);
   }
 
   labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p) {
@@ -425,7 +426,17 @@ namespace gca {
     // produced by the subtraction
     cout << "Current depth = " << current_depth << endl;
     cout << "Next depth    = " << next_depth << endl;
-    DBG_ASSERT(current_depth >= next_depth);
+
+    if (!(current_depth >= next_depth)) {
+      cout << "Direction = " << current_level.normal() << endl;
+      
+      vtk_debug_polygon(current_level);
+      for (auto p : *r_polys) {
+	vtk_debug_polygon(p);
+	
+      }
+      DBG_ASSERT(false);
+    }
 
     double feature_depth = current_depth - next_depth;
 
