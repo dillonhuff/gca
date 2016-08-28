@@ -338,11 +338,6 @@ namespace gca {
       rest.push_back(fixture_setup(m, d, pockets));
     }
 
-    // auto orient_ptrs = ptrs(all_orients);
-    // auto surf_ptrs = ptrs(surfs_to_cut);
-    // vector<fixture_setup> rest =
-    //   orientations_to_cut(surf_ptrs, orient_ptrs);
-
     return rest;
   }
 

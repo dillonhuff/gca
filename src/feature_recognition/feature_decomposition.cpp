@@ -528,7 +528,7 @@ namespace gca {
     vector<feature*> features;
 
     auto func = [&features](feature* f) {
-      if (f != nullptr)
+      if (f != nullptr && !within_eps(f->depth(), 0.0))
 	{ features.push_back(f); }
     };
 
