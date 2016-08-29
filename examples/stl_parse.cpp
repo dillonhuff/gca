@@ -2,7 +2,6 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
-#include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/mesh_to_gcode.h"

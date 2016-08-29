@@ -2,7 +2,6 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
-#include "synthesis/axis_3.h"
 #include "synthesis/millability.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"

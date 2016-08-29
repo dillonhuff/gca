@@ -1,6 +1,7 @@
 #include "analysis/position_table.h"
 #include "analysis/utils.h"
 #include "utils/algorithm.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -17,12 +18,12 @@ namespace gca {
   }
 
   position last_position(coord_system c, const position_table& t) {
-    assert(t.size() > 0);
+    DBG_ASSERT(t.size() > 0);
     position_table_row r = t.back();
     for (auto e : r) {
       if (e.first == c) { return e.second; }
     }
-    assert(false);
+    DBG_ASSERT(false);
   }
 
   position_table_row unknown_row() {
@@ -43,7 +44,7 @@ namespace gca {
   }
 
   void copy_last_row(position_table& t) {
-    assert(t.size() > 0);
+    DBG_ASSERT(t.size() > 0);
     t.push_back(t.back());
   }
   
@@ -91,7 +92,7 @@ namespace gca {
     } else {
       cout << "V = " << *v << endl;
       cout << "Inc = " << *inc << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
   
@@ -103,7 +104,7 @@ namespace gca {
 
   position next_relative_position(const machine_state& s,
 				  const position_table& t) {
-    assert(t.size() > 0);
+    DBG_ASSERT(t.size() > 0);
     position last = last_position(s.active_coord_system, t);
     position inc(s.x, s.y, s.z);
     return increment_position(last, inc);
@@ -125,7 +126,7 @@ namespace gca {
 	update_table(s.active_coord_system, p, t);
       } else {
 	cout << "Error: No distance mode set" << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
     } else if (s.active_tool != next.active_tool) {
       add_unk_row(t);

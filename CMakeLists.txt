@@ -126,7 +126,6 @@ SET(GCA_HEADERS
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
-	    ./src/synthesis/axis_3.h
 	    ./src/synthesis/millability.h
 	    ./src/synthesis/vice.h
 	    ./src/synthesis/tool.h
@@ -156,7 +155,6 @@ SET(GCA_CPPS
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/toolpath_generation.cpp
-	 ./src/synthesis/axis_3.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/vice.cpp

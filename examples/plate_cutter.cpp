@@ -1,5 +1,4 @@
 #include "geometry/vtk_debug.h"
-#include "synthesis/axis_3.h"
 #include "synthesis/contour_planning.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/gcode_generation.h"

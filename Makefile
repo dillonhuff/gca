@@ -1763,33 +1763,6 @@ src/synthesis/align_blade.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/align_blade.cpp.s
 .PHONY : src/synthesis/align_blade.cpp.s
 
-src/synthesis/axis_3.o: src/synthesis/axis_3.cpp.o
-
-.PHONY : src/synthesis/axis_3.o
-
-# target to build an object file
-src/synthesis/axis_3.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/axis_3.cpp.o
-.PHONY : src/synthesis/axis_3.cpp.o
-
-src/synthesis/axis_3.i: src/synthesis/axis_3.cpp.i
-
-.PHONY : src/synthesis/axis_3.i
-
-# target to preprocess a source file
-src/synthesis/axis_3.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/axis_3.cpp.i
-.PHONY : src/synthesis/axis_3.cpp.i
-
-src/synthesis/axis_3.s: src/synthesis/axis_3.cpp.s
-
-.PHONY : src/synthesis/axis_3.s
-
-# target to generate assembly for a file
-src/synthesis/axis_3.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/axis_3.cpp.s
-.PHONY : src/synthesis/axis_3.cpp.s
-
 src/synthesis/clamp_orientation.o: src/synthesis/clamp_orientation.cpp.o
 
 .PHONY : src/synthesis/clamp_orientation.o
@@ -3784,9 +3757,6 @@ help:
 	@echo "... src/synthesis/align_blade.o"
 	@echo "... src/synthesis/align_blade.i"
 	@echo "... src/synthesis/align_blade.s"
-	@echo "... src/synthesis/axis_3.o"
-	@echo "... src/synthesis/axis_3.i"
-	@echo "... src/synthesis/axis_3.s"
 	@echo "... src/synthesis/clamp_orientation.o"
 	@echo "... src/synthesis/clamp_orientation.i"
 	@echo "... src/synthesis/clamp_orientation.s"

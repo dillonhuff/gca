@@ -1,7 +1,6 @@
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "geometry/triangular_mesh.h"
-#include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
