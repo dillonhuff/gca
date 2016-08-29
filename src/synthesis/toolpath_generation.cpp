@@ -153,9 +153,9 @@ namespace gca {
       concat(lines, project_lines(face_template, depth));
     }
 
-    if (lines.size() == 0) {
-      vtk_debug_polygon(boundary);
-    }
+    // if (lines.size() == 0) {
+    //   vtk_debug_polygon(boundary);
+    // }
     
     return lines;
     //  return { to_polyline(project(boundary, get_end_depth())) };
