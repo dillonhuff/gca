@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
 #include "synthesis/contour_planning.h"
 #include "system/parse_stl.h"
 #include "utils/arena_allocator.h"
@@ -44,10 +45,33 @@ namespace gca {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RectangleWithCircularNotch.stl", 0.001);
 
     point n(0, -1, 0);
+
+    surface_levels ls = initial_surface_levels(mesh, n);
+
+    REQUIRE(ls.size() == 1);
+    REQUIRE(ls.front().size() == 2);
+
+    cout << "LEVELS" << endl;
+
+    for (auto l : ls.front()) {
+      vtk_debug_polygon(l);
+    }
+    cout << "DONE LEVELS" << endl;
     
     feature_decomposition* f =
       build_feature_decomposition(mesh, n);
 
+    cout << "Traversing feature tree" << endl;
+
+    auto display_feature_base = [](feature* f) {
+      if (f != nullptr) {
+	vtk_debug_polygon(f->base());
+      }
+    };
+    traverse_bf(f, display_feature_base);
+
+    cout << "Done traversing feature tree" << endl;
+    
     REQUIRE(f->num_levels() == 2);
 
     double current_min = 100000;

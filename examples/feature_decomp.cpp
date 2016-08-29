@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  point n(0, 1, 0);
+  point n(0, -1, 0);
 
   auto mesh = parse_stl(argv[1], 0.001);
   feature_decomposition* f = build_feature_decomposition(mesh, n);

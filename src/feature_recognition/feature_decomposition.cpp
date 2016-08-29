@@ -435,8 +435,8 @@ namespace gca {
 
     cout << "Subtracting" << endl;
 
-    //vtk_debug_polygon(p);
-    //vtk_debug_polygons(to_subtract);
+    vtk_debug_polygon(p);
+    vtk_debug_polygons(to_subtract);
 
     double level_z =
       max_distance_along(to_subtract.front().vertices(), p.normal());
@@ -453,15 +453,21 @@ namespace gca {
     boost_poly_2 pb = to_boost_poly_2(apply(r, p));
 
     auto to_subtract_dilated = dilate_polygons(to_subtract, 0.01);
-    boost_multipoly_2 to_sub;
-    for (auto s : to_subtract_dilated) {
-      to_sub.push_back(to_boost_poly_2(apply(r, s)));
-    }
-    
-    cout << "# polys to subtract = " << to_sub.size() << endl;
+    // boost_multipoly_2 to_sub;
+    // for (auto s : to_subtract_dilated) {
+    //   auto bp = to_boost_poly_2(apply(r, s));
+    //   boost::geometry::union_(to_sub, bp, to_sub);
+    //   //to_sub_polys.push_back(to_boost_poly_2(apply(r, s)));
+    // }
+
+    cout << "# polys to subtract = " << to_subtract_dilated.size() << endl;
 
     boost_multipoly_2 result;
-    boost::geometry::difference(pb, to_sub, result);
+    result.push_back(pb);
+    for (auto s : to_subtract_dilated) {
+      auto bp = to_boost_poly_2(apply(r, s));
+      boost::geometry::difference(result, bp, result);
+    }
 
     cout << "# polys in result = " << result.size() << endl;
 
@@ -493,6 +499,9 @@ namespace gca {
 	res.push_back(lp);
       }
     }
+
+    cout << "RESULT OF SUBTRACTION" << endl;
+    vtk_debug_polygons(res);
 
     return res;
   }

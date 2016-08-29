@@ -151,6 +151,11 @@ namespace gca {
   build_feature_decomposition(const triangular_mesh& m, const point n);
 
   vector<feature*> collect_features(feature_decomposition* f);
+
+  surface_levels
+  initial_surface_levels(const triangular_mesh& m,
+			 const point n);
+  
 }
 
 #endif
