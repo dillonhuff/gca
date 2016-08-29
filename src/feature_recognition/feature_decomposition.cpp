@@ -21,6 +21,35 @@ namespace gca {
   typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
   typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
+  std::vector<point> clean_vertices(const std::vector<point>& pts) {
+    if (pts.size() < 3) { return pts; }
+
+    vector<point> rpts = pts;
+
+    bool found_duplicate = true;
+    while (found_duplicate) {
+
+      found_duplicate = false;
+      
+      for (unsigned i = 0; i < rpts.size(); i++) {
+
+	point p = rpts[i];
+	point pp1 = rpts[(i + 1) % rpts.size()];
+
+	if (components_within_eps(p, pp1, 0.001)) {
+
+	  found_duplicate = true;
+	  rpts.erase(begin(rpts) + i);
+	  break;
+
+	}
+      }
+
+    }
+
+    return rpts;
+  }
+
   void check_simplicity(const labeled_polygon_3& p) {
     check_simplicity(p.vertices());
 
@@ -85,7 +114,7 @@ namespace gca {
       res_pts.push_back(times_3(r_inv, pz));
     }
 
-    return labeled_polygon_3(res_pts);
+    return labeled_polygon_3(clean_vertices(res_pts));
   }
 
   labeled_polygon_3
@@ -120,12 +149,25 @@ namespace gca {
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<std::vector<index_t>>& surfs,
 			 const point n) {
-    auto not_vertical_or_horizontal =
+    auto not_vert_or_horiz =
       select(surfs, [n, m](const std::vector<index_t>& s) {
 	  return !all_parallel_to(s, m, n, 1.0) &&
-	  !all_orthogonal_to(s, m, n, 1.0);
+	  !all_orthogonal_to(s, m, n, 1.0) &&
+	  !all_antiparallel_to(s, m, n, 1.0);
 	});
 
+    vector<index_t> vz;
+    for (auto s : not_vert_or_horiz) {
+      concat(vz, s);
+    }
+
+    if (vz.size() == 0) { return {}; }
+
+    auto not_vertical_or_horizontal =
+      connect_regions(vz, m);
+
+    cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
+    
     vector<labeled_polygon_3> polys;
     for (auto s : not_vertical_or_horizontal) {
       vector<point> raw_points = vertexes_on_surface(s, m);
@@ -133,10 +175,18 @@ namespace gca {
       point max_pt = max_along(raw_points, n);
       plane top(n, max_pt);
 
+      auto pts = project_points(top, raw_points);
+	
       labeled_polygon_3 p =
-	convex_hull_2D(project_points(top, raw_points), n, max_pt.z);
+	convex_hull_2D(pts, n, max_distance_along(pts, n));
 
+      vtk_debug_polygon(p);
       
+      check_simplicity(p);
+      
+      p.correct_winding_order(n);
+      
+      polys.push_back(p);
     }
 
     return polys;
@@ -329,35 +379,6 @@ namespace gca {
     boost::geometry::correct(pr);
     
     return pr;
-  }
-
-  std::vector<point> clean_vertices(const std::vector<point>& pts) {
-    if (pts.size() < 3) { return pts; }
-
-    vector<point> rpts = pts;
-
-    bool found_duplicate = true;
-    while (found_duplicate) {
-
-      found_duplicate = false;
-      
-      for (unsigned i = 0; i < rpts.size(); i++) {
-
-	point p = rpts[i];
-	point pp1 = rpts[(i + 1) % rpts.size()];
-
-	if (components_within_eps(p, pp1, 0.001)) {
-
-	  found_duplicate = true;
-	  rpts.erase(begin(rpts) + i);
-	  break;
-
-	}
-      }
-
-    }
-
-    return rpts;
   }
 
   labeled_polygon_3
@@ -578,6 +599,8 @@ namespace gca {
       DBG_ASSERT(level.size() > 0);
 
       cout << "??? z = " << level.front().vertex(0).z << endl;
+      cout << "Distance along = " <<
+	max_distance_along(level.front().vertices(), n) << endl;
     }
     cout << "done levels" << endl;
 
