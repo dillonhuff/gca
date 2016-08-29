@@ -1,7 +1,6 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "geometry/vtk_debug.h"
 #include "process_planning/feature_to_pocket.h"
-#include "synthesis/axis_3.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"

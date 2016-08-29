@@ -8,7 +8,6 @@
 #include "geometry/vtk_debug.h"
 #include "geometry/triangular_mesh.h"
 #include "process_planning/feature_to_pocket.h"
-#include "synthesis/axis_3.h"
 #include "synthesis/contour_planning.h"
 #include "synthesis/face_clipping.h"
 #include "synthesis/jaw_cutout.h"
