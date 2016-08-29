@@ -261,17 +261,27 @@ namespace gca {
     }
   }
 
-  std::vector<fixture_setup>
-  orientations_to_cut(const std::vector<surface*>& surfs_to_cut,
-		      std::vector<fixture*>& all_orients) {
-    if (surfs_to_cut.size() == 0) { return {}; }
-
+  constrained_partition<surface*, fixture*>
+  assign_surfaces_to_fixtures(const std::vector<surface*>& surfs_to_cut,
+			      std::vector<fixture*>& all_orients) {
     constrained_partition<surface*, fixture*> surface_part =
       greedy_possible_fixtures(surfs_to_cut, all_orients);
 
     DBG_ASSERT(surface_part.all_items_are_assignable() > 0);
 
     greedy_pick_orientations(surface_part);
+
+    return surface_part;
+  }
+  
+  std::vector<fixture_setup>
+  orientations_to_cut(const std::vector<surface*>& surfs_to_cut,
+		      std::vector<fixture*>& all_orients) {
+
+    if (surfs_to_cut.size() == 0) { return {}; }
+
+    auto surface_part =
+      assign_surfaces_to_fixtures(surfs_to_cut, all_orients);
 
     return partition_fixture_setups(surface_part);
   }
@@ -300,21 +310,30 @@ namespace gca {
       all_stable_fixtures(stable_surfaces, f);
 
     DBG_ASSERT(all_orients.size() > 0);
-      
-    auto basis =
-      take_basis(all_orients,
-		 [](const fixture& x, const fixture& y)
-		 { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
-		 3);
+
+    auto orient_ptrs = ptrs(all_orients);
+    auto surf_ptrs = ptrs(surfs_to_cut);
+    constrained_partition<surface*, fixture*> fixes =
+      assign_surfaces_to_fixtures(surf_ptrs, orient_ptrs);
+
+    // auto basis =
+    //   take_basis(all_orients,
+    // 		 [](const fixture& x, const fixture& y)
+    // 		 { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
+    // 		 3);
 
     vector<fixture> directions;
-    for (auto b : basis) {
-      directions.push_back(b);
-      auto negative = find_by_normal(all_orients, -1*b.orient.top_normal());
-      directions.push_back(negative);
+    for (auto i : fixes.non_empty_bucket_inds()) {
+      directions.push_back(*(fixes.bucket(i)));
     }
+    
+    // for (auto b : basis) {
+    //   directions.push_back(b);
+    //   auto negative = find_by_normal(all_orients, -1*b.orient.top_normal());
+    //   directions.push_back(negative);
+    // }
 
-    DBG_ASSERT(directions.size() == 6);
+    // DBG_ASSERT(directions.size() == 6);
 
     vector<feature_decomposition*> decomps;
     for (auto b : directions) {
@@ -337,11 +356,6 @@ namespace gca {
 
       rest.push_back(fixture_setup(m, d, pockets));
     }
-
-    // auto orient_ptrs = ptrs(all_orients);
-    // auto surf_ptrs = ptrs(surfs_to_cut);
-    // vector<fixture_setup> rest =
-    //   orientations_to_cut(surf_ptrs, orient_ptrs);
 
     return rest;
   }

@@ -42,6 +42,9 @@ namespace gca {
     inline
     const std::vector<Item>& items() const { return part.items(); }
 
+    inline
+    const std::vector<Bucket>& buckets() const { return part.buckets(); }
+    
     std::vector<unsigned> non_empty_bucket_inds() const {
       std::vector<unsigned> all_inds = bucket_inds();
       delete_if(all_inds,
