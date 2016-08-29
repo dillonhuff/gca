@@ -39,29 +39,29 @@ int main(int argc, char* argv[]) {
   double part_height = max_in_dir(mesh, point(0, 0, 1));
   double part_base = min_in_dir(mesh, point(0, 0, 1));
 
-  auto inds = surfaces_to_inds(sfs);
-  vector<pocket> pockets =
-    make_surface_pockets(mesh, inds);
+  // auto inds = surfaces_to_inds(sfs);
+  // vector<pocket> pockets =
+  //   make_surface_pockets(mesh, inds);
 
-  auto bound = contour_outline(mesh.face_indexes(), mesh, point(0, 0, 1));
+  // auto bound = contour_outline(mesh.face_indexes(), mesh, point(0, 0, 1));
 
-  DBG_ASSERT(bound);
+  // DBG_ASSERT(bound);
 
-  auto outlines =
-    mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
+  // auto outlines =
+  //   mesh_bounds((*bound).index_list(), (*bound).get_parent_mesh());
 
-  DBG_ASSERT(outlines.size() == 2);
+  // DBG_ASSERT(outlines.size() == 2);
 
-  oriented_polygon outline = outlines.front();
+  // oriented_polygon outline = outlines.front();
 
-  pockets.push_back(trace_pocket(part_height, part_base, outline));
+  // pockets.push_back(trace_pocket(part_height, part_base, outline));
 
-  tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
-  vector<toolpath> toolpaths = mill_pockets(pockets, {t1}, ALUMINUM);
+  // tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
+  // vector<toolpath> toolpaths = mill_pockets(pockets, {t1}, ALUMINUM);
 
-  gcode_program p =
-    build_gcode_program(target_file, toolpaths, emco_f1_code);
+  // gcode_program p =
+  //   build_gcode_program(target_file, toolpaths, emco_f1_code);
 
-  cout << p.name << endl;
-  cout << p.blocks << endl;
+  // cout << p.name << endl;
+  // cout << p.blocks << endl;
 }

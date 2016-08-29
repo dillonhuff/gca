@@ -15,17 +15,17 @@ namespace gca {
 				const std::vector<tool>& tools,
 				const material& stock_material);
 
-  std::vector<pocket>
-  make_surface_pockets(const triangular_mesh& mesh,
-		       std::vector<std::vector<index_t>>& surfaces);
+  // std::vector<pocket>
+  // make_surface_pockets(const triangular_mesh& mesh,
+  // 		       std::vector<std::vector<index_t>>& surfaces);
 
-  std::vector<pocket> pockets_for_surfaces(const std::vector<std::vector<index_t>>& surfaces,
-					   double workpiece_height,
-					   const triangular_mesh& mesh);
+  // std::vector<pocket> pockets_for_surfaces(const std::vector<std::vector<index_t>>& surfaces,
+  // 					   double workpiece_height,
+  // 					   const triangular_mesh& mesh);
 
-  std::vector<pocket>
-  make_surface_pockets(const triangular_mesh& part,
-		       const std::vector<surface>& surfaces);
+  // std::vector<pocket>
+  // make_surface_pockets(const triangular_mesh& part,
+  // 		       const std::vector<surface>& surfaces);
 
 }
 
