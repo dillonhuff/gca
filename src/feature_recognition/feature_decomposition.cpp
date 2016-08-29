@@ -180,7 +180,7 @@ namespace gca {
       labeled_polygon_3 p =
 	convex_hull_2D(pts, n, max_distance_along(pts, n));
 
-      vtk_debug_polygon(p);
+      //vtk_debug_polygon(p);
       
       check_simplicity(p);
       
@@ -435,8 +435,8 @@ namespace gca {
 
     cout << "Subtracting" << endl;
 
-    vtk_debug_polygon(p);
-    vtk_debug_polygons(to_subtract);
+    // vtk_debug_polygon(p);
+    // vtk_debug_polygons(to_subtract);
 
     double level_z =
       max_distance_along(to_subtract.front().vertices(), p.normal());
@@ -464,26 +464,29 @@ namespace gca {
 
     boost_multipoly_2 result;
     result.push_back(pb);
+
     for (auto s : to_subtract_dilated) {
       auto bp = to_boost_poly_2(apply(r, s));
-      boost::geometry::difference(result, bp, result);
+      boost_multipoly_2 r_tmp = result;
+      boost::geometry::clear(result);
+      boost::geometry::difference(r_tmp, bp, result);
     }
 
     cout << "# polys in result = " << result.size() << endl;
 
     if (result.size() > 0) {
       auto lr =
-	max_element(begin(result), end(result),
-		    [](const boost_poly_2& l, const boost_poly_2& r)
-		    { return boost::geometry::area(l) < boost::geometry::area(r); });
+    	max_element(begin(result), end(result),
+    		    [](const boost_poly_2& l, const boost_poly_2& r)
+    		    { return boost::geometry::area(l) < boost::geometry::area(r); });
 
       auto& largest_result = *lr;
       
       // The result is the same as before
       if (within_eps(boost::geometry::area(largest_result),
-		     boost::geometry::area(pb),
-		     0.005)) {
-	return boost::none;
+    		     boost::geometry::area(pb),
+    		     0.005)) {
+    	return boost::none;
       }
     }
 
@@ -501,7 +504,7 @@ namespace gca {
     }
 
     cout << "RESULT OF SUBTRACTION" << endl;
-    vtk_debug_polygons(res);
+    //vtk_debug_polygons(res);
 
     return res;
   }
