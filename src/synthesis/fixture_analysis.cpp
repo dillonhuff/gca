@@ -316,25 +316,11 @@ namespace gca {
     constrained_partition<surface*, fixture*> fixes =
       assign_surfaces_to_fixtures(surf_ptrs, orient_ptrs);
 
-    // auto basis =
-    //   take_basis(all_orients,
-    // 		 [](const fixture& x, const fixture& y)
-    // 		 { return within_eps(angle_between(normal(x), normal(y)), 90, 2.0); },
-    // 		 3);
-
     vector<fixture> directions;
     for (auto i : fixes.non_empty_bucket_inds()) {
       directions.push_back(*(fixes.bucket(i)));
     }
     
-    // for (auto b : basis) {
-    //   directions.push_back(b);
-    //   auto negative = find_by_normal(all_orients, -1*b.orient.top_normal());
-    //   directions.push_back(negative);
-    // }
-
-    // DBG_ASSERT(directions.size() == 6);
-
     vector<feature_decomposition*> decomps;
     for (auto b : directions) {
       decomps.push_back(build_feature_decomposition(part_mesh, b.orient.top_normal()));
@@ -348,7 +334,7 @@ namespace gca {
       feature_decomposition* decomp = decomps[i];
 
       auto t = mating_transform(part_mesh, d.orient, d.v);
-      
+
       triangular_mesh* m =
 	new (allocate<triangular_mesh>()) triangular_mesh(apply(t, part_mesh));
 

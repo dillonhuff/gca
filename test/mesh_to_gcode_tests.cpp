@@ -94,31 +94,32 @@ namespace gca {
       }
     }
 
-  TEST_CASE("Complex part pocket ordering") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TODO: Currently only handling prismatic parts
+  // TEST_CASE("Complex part pocket ordering") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
-    fixtures fixes(test_vice);
-    workpiece workpiece_dims(2.0, 1.6, 3.98, BRASS);
-    tool t1(0.25, 3.0, 4, CARBIDE, FLAT_NOSE);
-    vector<tool> tools{t1};
+  //   vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
+  //   fixtures fixes(test_vice);
+  //   workpiece workpiece_dims(2.0, 1.6, 3.98, BRASS);
+  //   tool t1(0.25, 3.0, 4, CARBIDE, FLAT_NOSE);
+  //   vector<tool> tools{t1};
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
 
-    auto outer_surfs = outer_surfaces(mesh);
+  //   auto outer_surfs = outer_surfaces(mesh);
 
-    fixture_plan plan =
-      make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   fixture_plan plan =
+  //     make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-    for (auto setup : plan.fixtures()) {
-      double last_depth = max_distance_along(setup.part_mesh().vertex_list(), point(0, 0, 1));
-      for (auto p : setup.pockets) {
-	REQUIRE(p.get_end_depth() <= last_depth);
-	last_depth = p.get_end_depth();
-      }
-    }
-  }
+  //   for (auto setup : plan.fixtures()) {
+  //     double last_depth = max_distance_along(setup.part_mesh().vertex_list(), point(0, 0, 1));
+  //     for (auto p : setup.pockets) {
+  // 	REQUIRE(p.get_end_depth() <= last_depth);
+  // 	last_depth = p.get_end_depth();
+  //     }
+  //   }
+  // }
 
   TEST_CASE("Outer surfaces") {
     arena_allocator a;

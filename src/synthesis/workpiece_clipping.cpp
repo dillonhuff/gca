@@ -2,10 +2,12 @@
 #include "geometry/extrusion.h"
 #include <boost/optional.hpp>
 
+#include "feature_recognition/feature_decomposition.h"
 #include "gcode/gcode_program.h"
 #include "gcode/lexer.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/triangular_mesh.h"
+#include "process_planning/feature_to_pocket.h"
 #include "synthesis/axis_3.h"
 #include "synthesis/contour_planning.h"
 #include "synthesis/face_clipping.h"
@@ -175,12 +177,17 @@ namespace gca {
 			       const std::vector<surface>& surfaces,
 			       const fixture& f) {
     auto s_t = mating_transform(wp_mesh, f.orient, f.v);
+
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
+
     fixture_setup setup = clip_top_and_sides(aligned, part, f);
+
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    add_surface_pockets(setup_pockets, part, surfaces);
+    auto decomp = build_feature_decomposition(part_mesh, f.orient.top_normal());
+    auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
+    //add_surface_pockets(setup_pockets, part, surfaces);
     
     return setup;
   }
@@ -191,10 +198,12 @@ namespace gca {
 		      const std::vector<surface>& surfaces,
 		      const fixture& f) {
     auto s_t = mating_transform(part_mesh, f.orient, f.v);
+
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
     fixture_setup setup = clip_base(aligned, part, f);
+
     std::vector<pocket>& setup_pockets = setup.pockets;
 
     add_surface_pockets(setup_pockets, part, surfaces);

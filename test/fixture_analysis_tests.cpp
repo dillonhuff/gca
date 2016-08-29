@@ -172,29 +172,30 @@ namespace gca {
     }
   }
 
-  TEST_CASE("Complex rectangular part") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(2.5, 1.9, 2.3, ALUMINUM);
+  // NOTE: Currently only handling prismatic parts
+  // TEST_CASE("Complex rectangular part") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
+  //   vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
+  //   fixtures fixes(test_vice);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+  //   vector<tool> tools{t1, t2};
+  //   workpiece workpiece_dims(2.5, 1.9, 2.3, ALUMINUM);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
     
-    SECTION("10 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   SECTION("10 setups") {
+  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 10);
+  //     REQUIRE(p.fixtures().size() == 10);
 
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
-      }
-    }
-  }
+  //     // No use of base plates
+  //     for (auto fixture : p.fixtures()) {
+  // 	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
+  //     }
+  //   }
+  // }
 
   TEST_CASE("Box with thru hole") {
     arena_allocator a;
