@@ -187,7 +187,8 @@ namespace gca {
 
     auto decomp = build_feature_decomposition(part_mesh, f.orient.top_normal());
     auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
-    //add_surface_pockets(setup_pockets, part, surfaces);
+
+    concat(setup_pockets, pockets);
     
     return setup;
   }
@@ -206,7 +207,10 @@ namespace gca {
 
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    add_surface_pockets(setup_pockets, part, surfaces);
+    auto decomp = build_feature_decomposition(part_mesh, f.orient.top_normal());
+    auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
+
+    concat(setup_pockets, pockets);
 
     return setup;
   }
