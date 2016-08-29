@@ -9,7 +9,7 @@
 namespace gca {
 
   // TODO: Is this needed?
-  void select_visible_triangles(vector<triangle>& triangles);
+  //  void select_visible_triangles(vector<triangle>& triangles);
   
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
 				const std::vector<tool>& tools,
