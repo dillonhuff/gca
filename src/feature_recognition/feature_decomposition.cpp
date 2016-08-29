@@ -31,6 +31,16 @@ namespace gca {
   
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
+  std::vector<point> project_points(const plane pl,
+				    const std::vector<point>& pts) {
+    vector<point> res_pts;
+    for (auto p : pts) {
+      res_pts.push_back(project(pl, p));
+    }
+
+    return res_pts;
+  }
+  
   labeled_polygon_3 project_onto(const plane p,
 				 const labeled_polygon_3& poly) {
 
@@ -52,6 +62,86 @@ namespace gca {
     return l;
   }
 
+  labeled_polygon_3
+  convex_hull_2D(const std::vector<point>& pts,
+		 const point n,
+		 const double z_level) {
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+    
+    auto rotated_pts = apply(r, pts);
+
+    boost_multipoint_2 mp;
+    for (auto p : rotated_pts) {
+      boost::geometry::append(mp, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
+    }
+
+    boost_multipoint_2 res;
+    boost::geometry::convex_hull(mp, res);
+
+    vector<point> res_pts;
+    for (auto p : res) {
+      point pz(p.x(), p.y(), z_level);
+      res_pts.push_back(times_3(r_inv, pz));
+    }
+
+    return labeled_polygon_3(res_pts);
+  }
+
+  labeled_polygon_3
+  convex_hull_2D(const triangular_mesh& m,
+		 const point n) {
+    double z_level = max_distance_along(m.vertex_list(), n);
+
+    return convex_hull_2D(m.vertex_list(), n, z_level);
+  }
+
+  std::vector<point>
+  vertexes_on_surface(const std::vector<index_t>& s,
+		      const triangular_mesh& m) {
+    std::vector<point> pts;
+    std::unordered_set<index_t> already_added;
+
+    for (auto j : s) {
+      auto t = m.triangle_vertices(j);
+      for (unsigned i = 0; i < 3; i++) {
+	index_t v = t.v[i];
+	if (already_added.find(v) == end(already_added)) {
+	  already_added.insert(v);
+	  pts.push_back(m.vertex(v));
+	}
+      }
+    }
+    
+    return pts;
+  }
+
+  std::vector<labeled_polygon_3>
+  build_virtual_surfaces(const triangular_mesh& m,
+			 const std::vector<std::vector<index_t>>& surfs,
+			 const point n) {
+    auto not_vertical_or_horizontal =
+      select(surfs, [n, m](const std::vector<index_t>& s) {
+	  return !all_parallel_to(s, m, n, 1.0) &&
+	  !all_orthogonal_to(s, m, n, 1.0);
+	});
+
+    vector<labeled_polygon_3> polys;
+    for (auto s : not_vertical_or_horizontal) {
+      vector<point> raw_points = vertexes_on_surface(s, m);
+
+      point max_pt = max_along(raw_points, n);
+      plane top(n, max_pt);
+
+      labeled_polygon_3 p =
+	convex_hull_2D(project_points(top, raw_points), n, max_pt.z);
+
+      
+    }
+
+    return polys;
+  }
+
   std::vector<labeled_polygon_3>
   horizontal_surfaces(const triangular_mesh& m, const point n) {
     auto inds = m.face_indexes();
@@ -59,6 +149,9 @@ namespace gca {
     // TODO: More robust way to find constant orientation regions?
     vector<std::vector<index_t>> surfs =
       normal_delta_regions(inds, m, 3.0);
+
+    auto virtual_surfaces =
+      build_virtual_surfaces(m, surfs, n);
 
     // TODO: Add virtual polygons for surfaces that are non horizontal and
     // non vertical
@@ -71,7 +164,7 @@ namespace gca {
 
     triangular_mesh mr = apply(r, m);
 
-    vector<labeled_polygon_3> surf_polys;
+    vector<labeled_polygon_3> surf_polys = virtual_surfaces;
     for (auto s : surfs) {
       DBG_ASSERT(s.size() > 0);
 
@@ -132,32 +225,6 @@ namespace gca {
       surface_it = next_it;
     }
     return levels;
-  }
-
-  labeled_polygon_3
-  convex_hull_2D(const triangular_mesh& m,
-		 const point n) {
-    double z_level = max_distance_along(m.vertex_list(), n);
-    const rotation r = rotate_from_to(n, point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-    
-    auto rotated_pts = apply(r, m.vertex_list());
-
-    boost_multipoint_2 mp;
-    for (auto p : rotated_pts) {
-      boost::geometry::append(mp, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
-    }
-
-    boost_multipoint_2 res;
-    boost::geometry::convex_hull(mp, res);
-
-    vector<point> res_pts;
-    for (auto p : res) {
-      point pz(p.x(), p.y(), z_level);
-      res_pts.push_back(times_3(r_inv, pz));
-    }
-
-    return labeled_polygon_3(res_pts);
   }
 
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
