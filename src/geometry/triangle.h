@@ -67,6 +67,8 @@ namespace gca {
 
   std::vector<triangle> triangulate_polygon(const oriented_polygon& p);
 
+  double max_z(const triangle t);
+
 }
 
 #endif

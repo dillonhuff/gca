@@ -289,4 +289,28 @@ namespace gca {
     return res;
   }
 
+  // TODO: Make this less hacky
+  index_poly
+  min_index_poly(const std::vector<point>& pts,
+		 const std::vector<index_poly>& polys) {
+    DBG_ASSERT(polys.size() > 0);
+    return *(min_element(begin(polys), end(polys),
+			 [pts](const index_poly& l, const index_poly& r)
+			 { return pts[l.front()].z < pts[r.front()].z; }));
+  }
+
+  std::vector<gca::edge>
+  index_poly_to_edges(const index_poly& p) {
+    DBG_ASSERT(p.size() > 0);
+    vector<gca::edge> edges;
+    for (unsigned i = 0; i < p.size(); i++) {
+      gca::edge e(p[i], p[(i + 1) % p.size()]);
+      edges.push_back(e);
+    }
+
+    DBG_ASSERT(p.size() == edges.size());
+    
+    return edges;
+  }
+  
 }

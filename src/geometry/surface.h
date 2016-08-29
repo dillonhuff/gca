@@ -199,6 +199,10 @@ namespace gca {
   std::vector<std::vector<index_t>>
   surfaces_to_inds(const std::vector<surface>& surfs);
 
+  std::vector<gca::edge>
+  orthogonal_boundary_edges(const surface& s,
+			    const point n);
+  
 }
 
 #endif

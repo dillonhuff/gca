@@ -733,4 +733,22 @@ namespace gca {
     return part_outline;
   }
 
+  bool has_no_base(const std::vector<index_t>& surf,
+		   const triangular_mesh& part,
+		   const std::vector<index_t>& side_faces) {
+    // TODO: Sort first? This is disgustingly inefficient
+    if (intersection(side_faces, surf).size() == surf.size()) {
+      return true;
+    }
+    return false;
+  }
+
+  bool all_concave(const triangular_mesh& m, const std::vector<gca::edge>& e) {
+    for (auto ed : e) {
+      cout << "Dihedral angle = " << dihedral_angle(ed, m) << endl;
+    }
+    return all_of(begin(e), end(e), [m](const edge ed)
+		  { return dihedral_angle(ed, m) > 180; });
+  }
+  
 }

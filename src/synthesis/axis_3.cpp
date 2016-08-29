@@ -11,11 +11,6 @@
 
 namespace gca {
 
-  double max_z(const triangle t) {
-    vector<double> zs = {t.v1.z, t.v2.z, t.v3.z};
-    return max_e(zs);
-  }
-
   // pocket pocket_for_surface(const std::vector<index_t>& sfs,
   // 			    double top_height,
   // 			    const triangular_mesh& mesh) {
@@ -41,92 +36,6 @@ namespace gca {
   //   }
   //   return pockets;
   // }
-
-  vector<toolpath> mill_pockets(vector<pocket>& pockets,
-				const std::vector<tool>& tools,
-				const material& stock_material) {
-    DBG_ASSERT(pockets.size() > 0);
-    double h = (*(max_element(begin(pockets), end(pockets),
-			      [](const pocket& l, const pocket& r)
-      { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
-
-    double safe_z = h + 0.1;
-    
-    double cut_depth, speed, feed;
-    if (stock_material == ACETAL) {
-      cut_depth = 0.2;
-      speed = 3000;
-      feed = 8.0;
-    } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
-    } else {
-      DBG_ASSERT(false);
-    }
-    vector<toolpath> lines;
-    for (auto pocket : pockets) {
-      tool t = pocket.select_tool(tools);
-      auto pocket_paths = pocket.toolpath_lines(t, cut_depth);
-      lines.push_back(toolpath(pocket.pocket_type(), safe_z, speed, feed, t, pocket_paths));
-    }
-    return lines;
-  }
-
-  // TODO: Make this less hacky
-  index_poly
-  min_index_poly(const std::vector<point>& pts,
-		 const std::vector<index_poly>& polys) {
-    DBG_ASSERT(polys.size() > 0);
-    return *(min_element(begin(polys), end(polys),
-			 [pts](const index_poly& l, const index_poly& r)
-			 { return pts[l.front()].z < pts[r.front()].z; }));
-  }
-
-  std::vector<gca::edge>
-  index_poly_to_edges(const index_poly& p) {
-    DBG_ASSERT(p.size() > 0);
-    vector<gca::edge> edges;
-    for (unsigned i = 0; i < p.size(); i++) {
-      gca::edge e(p[i], p[(i + 1) % p.size()]);
-      edges.push_back(e);
-    }
-
-    DBG_ASSERT(p.size() == edges.size());
-    
-    return edges;
-  }
-
-  bool all_concave(const triangular_mesh& m, const std::vector<gca::edge>& e) {
-    for (auto ed : e) {
-      cout << "Dihedral angle = " << dihedral_angle(ed, m) << endl;
-    }
-    return all_of(begin(e), end(e), [m](const edge ed)
-		  { return dihedral_angle(ed, m) > 180; });
-  }
-
-  bool has_no_base(const std::vector<index_t>& surf,
-		   const triangular_mesh& part,
-		   const std::vector<index_t>& side_faces) {
-    // TODO: Sort first? This is disgustingly inefficient
-    if (intersection(side_faces, surf).size() == surf.size()) {
-      return true;
-    }
-    return false;
-  }
-
-  std::vector<gca::edge>
-  orthogonal_boundary_edges(const surface& s,
-			    const point n) {
-    vector<gca::edge> edges;
-    for (auto e : boundary_edges(s)) {
-      point ev = s.vertex(e.l) - s.vertex(e.r);
-      if (within_eps(angle_between(ev, n), 90.0, 1.0)) {
-	edges.push_back(e);
-      }
-    }
-    return edges;
-  }
 
   // oriented_polygon base_outline(const std::vector<index_t>& sfs,
   // 				const triangular_mesh& part) {

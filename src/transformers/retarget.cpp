@@ -1,4 +1,5 @@
 #include "transformers/retarget.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -6,30 +7,30 @@ namespace gca {
     auto ss = get_spindle_speed(path);
     for (auto c : path) {
       auto css = c->settings.spindle_speed;
-      assert(css->is_lit());
+      DBG_ASSERT(css->is_lit());
       lit* cssl = static_cast<lit*>(css);
-      assert(within_eps(cssl->v, ss));
+      DBG_ASSERT(within_eps(cssl->v, ss));
     }
   }
   
   void sanity_check_height_comp(const vector<cut*>& path) {
     auto lc_setting = path.front()->settings.tool_height_comp;
     for (auto c : path) {
-      assert(c->settings.tool_height_comp == lc_setting);
+      DBG_ASSERT(c->settings.tool_height_comp == lc_setting);
     }
   }
 
   void sanity_check_toolpath(const vector<cut*>& path) {
-    assert(path.size() > 0);
+    DBG_ASSERT(path.size() > 0);
     for (auto c : path) {
-      assert(!c->settings.active_tool->is_omitted());
+      DBG_ASSERT(!c->settings.active_tool->is_omitted());
     }
     int tn = get_active_tool_no(path);
     for (auto c : path) {
       value* tl = c->settings.active_tool;
-      assert(tl->is_ilit());
+      DBG_ASSERT(tl->is_ilit());
       ilit* til = static_cast<ilit*>(tl);
-      assert(til->v == tn);
+      DBG_ASSERT(til->v == tn);
     }
     sanity_check_height_comp(path);
     sanity_check_spindle_speed(path);
@@ -39,8 +40,8 @@ namespace gca {
 		      const tool_table& old_tools,
 		      const tool_table& new_tools) {
     int current = get_active_tool_no(path);
-    assert(old_tools.find(current) != end(old_tools));
-    assert(new_tools.find(current) != end(new_tools));
+    DBG_ASSERT(old_tools.find(current) != end(old_tools));
+    DBG_ASSERT(new_tools.find(current) != end(new_tools));
     return current;
   }
 
@@ -60,19 +61,19 @@ namespace gca {
 	r->settings.tool_height_comp = TOOL_HEIGHT_COMP_OFF;
       } else if (height_comp_setting == TOOL_HEIGHT_COMP_POSITIVE) {
 	cout << "ERROR: Positive tool height compensation is not supported" << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
       if (r->settings.active_tool->is_omitted()) {
 	cout << "ERROR IN RETARGET TOOLPATH" << endl;
 	cout << *c << endl;
 	cout << *r << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
       if (r->settings.spindle_speed->is_omitted()) {
 	cout << "ERROR IN RETARGET TOOLPATH" << endl;
 	cout << *c << endl;
 	cout << *r << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
 
       cuts.push_back(r);
@@ -104,7 +105,7 @@ namespace gca {
 					 tool_table& new_tools) {
     vector<vector<cut*>> paths;
     auto r = gcode_to_cuts(p, paths);
-    assert(r == GCODE_TO_CUTS_SUCCESS);
+    DBG_ASSERT(r == GCODE_TO_CUTS_SUCCESS);
     auto res_paths = haas_to_minimill(paths, old_tools, new_tools);
     vector<vector<block>> result_programs;
     for (auto path : res_paths) {

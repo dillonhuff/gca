@@ -578,4 +578,35 @@ namespace gca {
     return shift_lines(lines, point(0, 0, tool.length()));
   }
 
+  vector<toolpath> mill_pockets(vector<pocket>& pockets,
+				const std::vector<tool>& tools,
+				const material& stock_material) {
+    DBG_ASSERT(pockets.size() > 0);
+    double h = (*(max_element(begin(pockets), end(pockets),
+			      [](const pocket& l, const pocket& r)
+      { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
+
+    double safe_z = h + 0.1;
+    
+    double cut_depth, speed, feed;
+    if (stock_material == ACETAL) {
+      cut_depth = 0.2;
+      speed = 3000;
+      feed = 8.0;
+    } else if (stock_material == ALUMINUM) {
+      cut_depth = 0.1;
+      speed = 3000;
+      feed = 5.0;
+    } else {
+      DBG_ASSERT(false);
+    }
+    vector<toolpath> lines;
+    for (auto pocket : pockets) {
+      tool t = pocket.select_tool(tools);
+      auto pocket_paths = pocket.toolpath_lines(t, cut_depth);
+      lines.push_back(toolpath(pocket.pocket_type(), safe_z, speed, feed, t, pocket_paths));
+    }
+    return lines;
+  }
+  
 }

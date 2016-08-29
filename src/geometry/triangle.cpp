@@ -288,4 +288,10 @@ namespace gca {
 
     return tris;
   }
+
+  double max_z(const triangle t) {
+    vector<double> zs = {t.v1.z, t.v2.z, t.v3.z};
+    return max_e(zs);
+  }
+
 }

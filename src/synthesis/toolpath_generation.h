@@ -304,6 +304,13 @@ namespace gca {
 					  const triangular_mesh& mesh,
 					  const double max,
 					  const tool& tool);
+
+  vector<toolpath> mill_pockets(vector<pocket>& pockets,
+				const std::vector<tool>& tools,
+				const material& stock_material);
+
+
+
 }
 
 #endif

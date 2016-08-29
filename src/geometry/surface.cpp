@@ -346,4 +346,18 @@ namespace gca {
     return *r;
   }
 
+
+  std::vector<gca::edge>
+  orthogonal_boundary_edges(const surface& s,
+			    const point n) {
+    vector<gca::edge> edges;
+    for (auto e : boundary_edges(s)) {
+      point ev = s.vertex(e.l) - s.vertex(e.r);
+      if (within_eps(angle_between(ev, n), 90.0, 1.0)) {
+	edges.push_back(e);
+      }
+    }
+    return edges;
+  }
+
 }

@@ -358,6 +358,12 @@ namespace gca {
 
   std::ostream& operator<<(std::ostream& out, const triangle_t t);
 
+  bool has_no_base(const std::vector<index_t>& surf,
+		   const triangular_mesh& part,
+		   const std::vector<index_t>& side_faces);
+
+  bool all_concave(const triangular_mesh& m, const std::vector<gca::edge>& e);  
+
 }
 
 #endif
