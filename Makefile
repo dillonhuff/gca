@@ -163,6 +163,19 @@ json-plan/fast:
 .PHONY : json-plan/fast
 
 #=============================================================================
+# Target rules for targets named check-contours
+
+# Build rule for target.
+check-contours: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 check-contours
+.PHONY : check-contours
+
+# fast build rule for target.
+check-contours/fast:
+	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/build
+.PHONY : check-contours/fast
+
+#=============================================================================
 # Target rules for targets named json-mesh
 
 # Build rule for target.
@@ -331,6 +344,33 @@ examples/AddCell.s: examples/AddCell.cpp.s
 examples/AddCell.cpp.s:
 	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/examples/AddCell.cpp.s
 .PHONY : examples/AddCell.cpp.s
+
+examples/check_contours.o: examples/check_contours.cpp.o
+
+.PHONY : examples/check_contours.o
+
+# target to build an object file
+examples/check_contours.cpp.o:
+	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/examples/check_contours.cpp.o
+.PHONY : examples/check_contours.cpp.o
+
+examples/check_contours.i: examples/check_contours.cpp.i
+
+.PHONY : examples/check_contours.i
+
+# target to preprocess a source file
+examples/check_contours.cpp.i:
+	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/examples/check_contours.cpp.i
+.PHONY : examples/check_contours.cpp.i
+
+examples/check_contours.s: examples/check_contours.cpp.s
+
+.PHONY : examples/check_contours.s
+
+# target to generate assembly for a file
+examples/check_contours.cpp.s:
+	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/examples/check_contours.cpp.s
+.PHONY : examples/check_contours.cpp.s
 
 examples/feature_decomp.o: examples/feature_decomp.cpp.o
 
@@ -3583,6 +3623,7 @@ help:
 	@echo "... vtk-mass"
 	@echo "... ublas"
 	@echo "... json-plan"
+	@echo "... check-contours"
 	@echo "... json-mesh"
 	@echo "... plate-cutter"
 	@echo "... all-tests"
@@ -3598,6 +3639,9 @@ help:
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
 	@echo "... examples/AddCell.s"
+	@echo "... examples/check_contours.o"
+	@echo "... examples/check_contours.i"
+	@echo "... examples/check_contours.s"
 	@echo "... examples/feature_decomp.o"
 	@echo "... examples/feature_decomp.i"
 	@echo "... examples/feature_decomp.s"

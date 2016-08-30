@@ -232,6 +232,9 @@ target_link_libraries(feature-decomp geometry utils gcode gprocess gca)
 add_executable(ublas examples/ublas.cpp)
 target_link_libraries(ublas geometry utils gcode gprocess gca)
 
+add_executable(check-contours examples/check_contours.cpp)
+target_link_libraries(check-contours geometry utils gcode gprocess gca)
+
 add_executable(vtk-mass examples/vtk_mass_test.cpp)
 target_link_libraries(vtk-mass geometry utils gcode gprocess gca)
 
