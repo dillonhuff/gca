@@ -107,7 +107,11 @@ namespace gca {
     double work_height = max_in_dir(stock, point(0, 0, 1));
     double part_height = max_in_dir(part, point(0, 0, 1));
 
-    DBG_ASSERT(work_height > part_height);
+    if (!(work_height > part_height)) {
+      cout << "Work height = " << work_height << endl;
+      cout << "Part height = " << part_height << endl;
+      DBG_ASSERT(work_height > part_height);
+    }
 
     auto bound = contour_outline(stock.face_indexes(), stock, point(0, 0, 1));
     if (bound) {

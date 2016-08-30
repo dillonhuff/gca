@@ -103,7 +103,7 @@ namespace gca {
 	}
       }
     }
-    cout << "triangle has correct orientation" << endl;
+
     return ti;
   }
 
@@ -142,7 +142,7 @@ namespace gca {
     cout << "Initial # of triangles = " << triangles.size() << endl;
     
     while (remaining_inds.size() > 0) {
-      cout << "# remaining inds = " << remaining_inds.size() << endl;
+
       for (auto ind : remaining_inds) {
 	triangle_t next_t = triangles[ind];
 	vector<triangle_t> sub_tris =
