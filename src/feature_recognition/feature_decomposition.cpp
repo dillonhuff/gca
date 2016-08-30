@@ -170,23 +170,52 @@ namespace gca {
     
     vector<labeled_polygon_3> polys;
     for (auto s : not_vertical_or_horizontal) {
-      vector<point> raw_points = vertexes_on_surface(s, m);
+      auto bounds = mesh_bounds(s, m);
+
+      DBG_ASSERT(bounds.size() > 0);
+
+      auto boundary = extract_boundary(bounds);
+
+      check_simplicity(boundary.vertices());
+      DBG_ASSERT(area(boundary) > 0.001);
+
+      auto raw_pts = boundary.vertices();
 
       point max_pt = max_along(raw_points, n);
       plane top(n, max_pt);
-
-      auto pts = project_points(top, raw_points);
-	
-      labeled_polygon_3 p =
-	convex_hull_2D(pts, n, max_distance_along(pts, n));
-
-      //vtk_debug_polygon(p);
       
+      auto pts = project_points(raw_pts, top);
+
+      labeled_polygon_3 p =
+      	convex_hull_2D(pts, n, max_distance_along(pts, n));
+
       check_simplicity(p);
       
       p.correct_winding_order(n);
       
-      polys.push_back(p);
+      auto holes = bounds;
+
+      vector<vector<point>> hole_verts;
+      for (auto h : holes) {
+
+	check_simplicity(h.vertices());
+
+	auto h_verts = project_points(h.vertices(), top);
+
+	hole_verts.push_back(h_verts);
+      }
+      
+      // vector<point> raw_points = vertexes_on_surface(s, m);
+
+      // point max_pt = max_along(raw_points, n);
+      // plane top(n, max_pt);
+
+      // auto pts = project_points(top, raw_points);
+	
+      // //vtk_debug_polygon(p);
+      
+      
+      // polys.push_back(p);
     }
 
     return polys;
