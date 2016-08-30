@@ -181,10 +181,10 @@ namespace gca {
 
       auto raw_pts = boundary.vertices();
 
-      point max_pt = max_along(raw_points, n);
+      point max_pt = max_along(raw_pts, n);
       plane top(n, max_pt);
       
-      auto pts = project_points(raw_pts, top);
+      auto pts = project_points(top, raw_pts);
 
       labeled_polygon_3 p =
       	convex_hull_2D(pts, n, max_distance_along(pts, n));
@@ -200,10 +200,23 @@ namespace gca {
 
 	check_simplicity(h.vertices());
 
-	auto h_verts = project_points(h.vertices(), top);
+	auto h_verts = project_points(top, h.vertices());
 
-	hole_verts.push_back(h_verts);
+	labeled_polygon_3 rh = convex_hull_2D(h_verts, n, max_distance_along(h_verts, n));
+
+	check_simplicity(rh);
+
+	rh.correct_winding_order(n);
+
+	hole_verts.push_back(rh.vertices());
       }
+
+      labeled_polygon_3 l(p.vertices(), hole_verts);
+
+      check_simplicity(l);
+      l.correct_winding_order(n);
+      
+      polys.push_back(l);
       
       // vector<point> raw_points = vertexes_on_surface(s, m);
 
