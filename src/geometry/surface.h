@@ -104,13 +104,17 @@ namespace gca {
     { return *parent_mesh; }
 
     bool orthogonal_to(const point n, double tol) const {
-      return all_orthogonal_to(index_list(), get_parent_mesh(), n, tol);
+      return gca::all_orthogonal_to(index_list(), get_parent_mesh(), n, tol);
     }
 
     bool parallel_to(const point n, double tol) const {
-      return all_parallel_to(index_list(), get_parent_mesh(), n, tol);
+      return gca::all_parallel_to(index_list(), get_parent_mesh(), n, tol);
     }
 
+    bool antiparallel_to(const point n, double tol) const {
+      return gca::all_antiparallel_to(index_list(), get_parent_mesh(), n, tol);
+    }
+    
   };
 
   bool surfaces_share_edge(const unsigned i,
@@ -199,6 +203,10 @@ namespace gca {
   std::vector<std::vector<index_t>>
   surfaces_to_inds(const std::vector<surface>& surfs);
 
+  std::vector<surface>
+  inds_to_surfaces(const std::vector<std::vector<index_t>> regions,
+		   const triangular_mesh& m);
+  
   std::vector<gca::edge>
   orthogonal_boundary_edges(const surface& s,
 			    const point n);

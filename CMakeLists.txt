@@ -112,6 +112,7 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
 	./src/process_planning/feature_to_pocket.h
+	./src/process_planning/axis_location.h
 	./src/feature_recognition/feature_decomposition.h
 	./src/feature_recognition/visual_debug.h
 	./src/synthesis/operation.h
@@ -139,6 +140,7 @@ SET(GCA_CPPS
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/visual_debug.cpp
 	./src/process_planning/feature_to_pocket.cpp
+	./src/process_planning/axis_location.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp

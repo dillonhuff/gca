@@ -1695,6 +1695,33 @@ src/geometry/vtk_utils.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/vtk_utils.cpp.s
 .PHONY : src/geometry/vtk_utils.cpp.s
 
+src/process_planning/axis_location.o: src/process_planning/axis_location.cpp.o
+
+.PHONY : src/process_planning/axis_location.o
+
+# target to build an object file
+src/process_planning/axis_location.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/axis_location.cpp.o
+.PHONY : src/process_planning/axis_location.cpp.o
+
+src/process_planning/axis_location.i: src/process_planning/axis_location.cpp.i
+
+.PHONY : src/process_planning/axis_location.i
+
+# target to preprocess a source file
+src/process_planning/axis_location.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/axis_location.cpp.i
+.PHONY : src/process_planning/axis_location.cpp.i
+
+src/process_planning/axis_location.s: src/process_planning/axis_location.cpp.s
+
+.PHONY : src/process_planning/axis_location.s
+
+# target to generate assembly for a file
+src/process_planning/axis_location.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/axis_location.cpp.s
+.PHONY : src/process_planning/axis_location.cpp.s
+
 src/process_planning/feature_to_pocket.o: src/process_planning/feature_to_pocket.cpp.o
 
 .PHONY : src/process_planning/feature_to_pocket.o
@@ -3789,6 +3816,9 @@ help:
 	@echo "... src/geometry/vtk_utils.o"
 	@echo "... src/geometry/vtk_utils.i"
 	@echo "... src/geometry/vtk_utils.s"
+	@echo "... src/process_planning/axis_location.o"
+	@echo "... src/process_planning/axis_location.i"
+	@echo "... src/process_planning/axis_location.s"
 	@echo "... src/process_planning/feature_to_pocket.o"
 	@echo "... src/process_planning/feature_to_pocket.i"
 	@echo "... src/process_planning/feature_to_pocket.s"
