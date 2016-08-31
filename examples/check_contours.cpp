@@ -25,13 +25,16 @@ int main(int argc, char* argv[]) {
 
     auto mesh = parse_stl(n, 0.001);
     point axis = part_axis(mesh);
+    point neg_axis = part_axis(mesh);
 
     cout << "Major part axis   = " << axis << endl;
     cout << "Length along axis = " << diameter(axis, mesh) << endl;
 
     feature_decomposition* f = build_feature_decomposition(mesh, axis);
+    feature_decomposition* g = build_feature_decomposition(mesh, -1*axis);
 
-    cout << "# of features = " << collect_features(f).size() << endl;
+    cout << "# of features along " << axis << "  = " << collect_features(f).size() << endl;
+    cout << "# of features along " << neg_axis << " = " << collect_features(g).size() << endl;
 
     //    vtk_debug_mesh(mesh);
     //    vtk_debug_feature_tree(f);
