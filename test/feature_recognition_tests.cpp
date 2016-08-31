@@ -105,17 +105,8 @@ namespace gca {
     feature_decomposition* f =
       build_feature_decomposition(mesh, n);
 
-    cout << "Traversing feature tree" << endl;
+    vtk_debug_feature_tree(f);
 
-    auto display_feature_base = [](feature* f) {
-      if (f != nullptr) {
-    	vtk_debug_polygon(f->base());
-      }
-    };
-    traverse_bf(f, display_feature_base);
-
-    cout << "Done traversing feature tree" << endl;
-    
     REQUIRE(f->num_levels() == 6);
 
     double current_min = 100000;

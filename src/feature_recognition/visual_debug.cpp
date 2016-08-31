@@ -49,4 +49,19 @@ namespace gca {
 
     DBG_ASSERT(false);
   }
+
+  void vtk_debug_feature_tree(feature_decomposition* f) {
+    cout << "Traversing feature tree" << endl;
+
+    auto display_feature_base = [](feature* f) {
+      if (f != nullptr) {
+    	vtk_debug_polygon(f->base());
+      }
+    };
+    traverse_bf(f, display_feature_base);
+
+    cout << "Done traversing feature tree" << endl;
+  }
+    
+
 }
