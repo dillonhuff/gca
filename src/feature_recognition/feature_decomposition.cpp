@@ -145,6 +145,20 @@ namespace gca {
     return pts;
   }
 
+  std::vector<point> projected_hull(const plane pl,
+				    const std::vector<point>& raw_pts) {
+    auto pts = project_points(pl, raw_pts);
+
+    labeled_polygon_3 p =
+      convex_hull_2D(pts, pl.normal(), max_distance_along(pts, pl.normal()));
+
+    check_simplicity(p);
+      
+    p.correct_winding_order(pl.normal());
+
+    return p.vertices();
+  }
+
   std::vector<labeled_polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<std::vector<index_t>>& surfs,
@@ -167,53 +181,74 @@ namespace gca {
       connect_regions(vz, m);
 
     cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
+
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    triangular_mesh mr = apply(r, m);
     
     vector<labeled_polygon_3> polys;
     for (auto s : not_vertical_or_horizontal) {
-      auto bounds = mesh_bounds(s, m);
+      auto bounds = mesh_bounds(s, mr);
 
       DBG_ASSERT(bounds.size() > 0);
 
       auto boundary = extract_boundary(bounds);
 
       check_simplicity(boundary.vertices());
-      DBG_ASSERT(area(boundary) > 0.001);
+
+      // if (!(area(boundary) > 0.001)) {
+
+      // 	vtk_debug_highlight_inds(s, mr);
+	
+      // 	vtk_debug_polygon(boundary);
+      // 	vtk_debug_polygons(bounds);
+	
+      // 	DBG_ASSERT(area(boundary) > 0.001);
+      // }
 
       auto raw_pts = boundary.vertices();
 
-      point max_pt = max_along(raw_pts, n);
-      plane top(n, max_pt);
+      point n_r = times_3(r, n);
+      point max_pt = max_along(raw_pts, n_r);
+      plane top(n_r, max_pt);
       
-      auto pts = project_points(top, raw_pts);
+      // auto pts = project_points(top, raw_pts);
 
-      labeled_polygon_3 p =
-      	convex_hull_2D(pts, n, max_distance_along(pts, n));
+      // labeled_polygon_3 p =
+      // 	convex_hull_2D(pts, n, max_distance_along(pts, n));
 
-      check_simplicity(p);
+      // check_simplicity(p);
       
-      p.correct_winding_order(n);
+      // p.correct_winding_order(n);
+
+      auto outer_ring = projected_hull(top, raw_pts);
       
       auto holes = bounds;
 
       vector<vector<point>> hole_verts;
       for (auto h : holes) {
 
-	check_simplicity(h.vertices());
+	// check_simplicity(h.vertices());
 
-	auto h_verts = project_points(top, h.vertices());
+	// auto h_verts = project_points(top, h.vertices());
 
-	labeled_polygon_3 rh = convex_hull_2D(h_verts, n, max_distance_along(h_verts, n));
+	// labeled_polygon_3 rh = convex_hull_2D(h_verts, n, max_distance_along(h_verts, n));
 
-	check_simplicity(rh);
+	// check_simplicity(rh);
 
-	rh.correct_winding_order(n);
+	// rh.correct_winding_order(n);
+	auto inner_ring = projected_hull(top, raw_pts);
 
-	hole_verts.push_back(rh.vertices());
+	hole_verts.push_back(inner_ring);
       }
 
-      labeled_polygon_3 l(p.vertices(), hole_verts);
+      labeled_polygon_3 l_before(outer_ring, hole_verts);
+
+      auto l = apply(r_inv, l_before);
 
       check_simplicity(l);
+
       l.correct_winding_order(n);
       
       polys.push_back(l);
