@@ -211,7 +211,7 @@ namespace gca {
     if (polys.size() == 0) { return {}; }
 
     // vtk_debug_polygon(p);
-    // vtk_debug_polygons(to_subtract);
+    vtk_debug_polygons(polys);
 
     double level_z =
       max_distance_along(polys.front().vertices(), polys.front().normal());
@@ -281,6 +281,8 @@ namespace gca {
       }
     }
 
+    vtk_debug_highlight_inds(s, m);
+    
     std::vector<labeled_polygon_3> result_polys =
       planar_polygon_union(ts);
 
