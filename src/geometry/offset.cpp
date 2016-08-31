@@ -128,7 +128,7 @@ namespace gca {
     const gca::rotation r = rotate_from_to(ring_normal(rpts), point(0, 0, 1));
     auto pts = apply(r, rpts);
 
-    if (!(no_duplicate_points(pts, 0.001))) {
+    if (!(no_duplicate_points(pts, 0.0001))) {
       vtk_debug_ring(pts);
       DBG_ASSERT(false);
     }

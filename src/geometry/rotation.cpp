@@ -79,8 +79,8 @@ namespace gca {
 
   rotation rotate_unit_from_to(const point from_unit, const point to_unit) {
 
-    DBG_ASSERT(within_eps(from_unit.len(), 1.0, 0.0000001));
-    DBG_ASSERT(within_eps(to_unit.len(),   1.0, 0.0000001));
+    DBG_ASSERT(within_eps(from_unit.len(), 1.0, 0.00001));
+    DBG_ASSERT(within_eps(to_unit.len(),   1.0, 0.00001));
     
     double theta = angle_between(from_unit, to_unit);
 

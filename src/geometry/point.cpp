@@ -187,6 +187,7 @@ namespace gca {
   }
 
   bool no_duplicate_points(const std::vector<point>& pts, const double tol) {
+    int num_duplicates = 0;
     for (unsigned i = 0; i < pts.size(); i++) {
       point p = pts[i];
 
@@ -205,13 +206,15 @@ namespace gca {
 	    cout << "duplicate points at i = " << i << " , j = " << j << endl;
 	    cout << "pts[i] = " << p << endl;
 	    cout << "pts[j] = " << q << endl;
-	    return false;
+	    num_duplicates++;
 	  }
 	}
       }
     }
 
-    return true;
+    cout << "# of duplicate points = " << num_duplicates << endl;
+
+    return num_duplicates == 0; //true;
   }
 
 }
