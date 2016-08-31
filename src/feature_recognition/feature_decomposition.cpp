@@ -219,7 +219,7 @@ namespace gca {
     if (polys.size() == 0) { return {}; }
 
     // vtk_debug_polygon(p);
-    vtk_debug_polygons(polys);
+    //vtk_debug_polygons(polys);
 
     double level_z =
       max_distance_along(polys.front().vertices(), polys.front().normal());
@@ -289,7 +289,7 @@ namespace gca {
       }
     }
 
-    vtk_debug_highlight_inds(s, m);
+    //vtk_debug_highlight_inds(s, m);
     
     std::vector<labeled_polygon_3> result_polys =
       planar_polygon_union(ts);
@@ -514,8 +514,8 @@ namespace gca {
 
     cout << "Subtracting" << endl;
 
-    // vtk_debug_polygon(p);
-    // vtk_debug_polygons(to_subtract);
+    //vtk_debug_polygon(p);
+    //vtk_debug_polygons(to_subtract);
 
     double level_z =
       max_distance_along(to_subtract.front().vertices(), p.normal());
@@ -532,12 +532,6 @@ namespace gca {
     boost_poly_2 pb = to_boost_poly_2(apply(r, p));
 
     auto to_subtract_dilated = dilate_polygons(to_subtract, 0.01);
-    // boost_multipoly_2 to_sub;
-    // for (auto s : to_subtract_dilated) {
-    //   auto bp = to_boost_poly_2(apply(r, s));
-    //   boost::geometry::union_(to_sub, bp, to_sub);
-    //   //to_sub_polys.push_back(to_boost_poly_2(apply(r, s)));
-    // }
 
     cout << "# polys to subtract = " << to_subtract_dilated.size() << endl;
 
@@ -553,6 +547,8 @@ namespace gca {
 
     cout << "# polys in result = " << result.size() << endl;
 
+    bool result_same = false;
+
     if (result.size() > 0) {
       auto lr =
     	max_element(begin(result), end(result),
@@ -560,12 +556,14 @@ namespace gca {
     		    { return boost::geometry::area(l) < boost::geometry::area(r); });
 
       auto& largest_result = *lr;
-      
+
       // The result is the same as before
       if (within_eps(boost::geometry::area(largest_result),
     		     boost::geometry::area(pb),
-    		     0.005)) {
-    	return boost::none;
+    		     0.0005)) {
+	cout << "Result is the same" << endl;
+	result_same = true;
+    	//return boost::none;
       }
     }
 
@@ -582,8 +580,10 @@ namespace gca {
       }
     }
 
-    cout << "RESULT OF SUBTRACTION" << endl;
+    //cout << "RESULT OF SUBTRACTION" << endl;
     //vtk_debug_polygons(res);
+
+    if (result_same) { return boost::none; }
 
     return res;
   }
