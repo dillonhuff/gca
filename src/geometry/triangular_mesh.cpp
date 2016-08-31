@@ -407,22 +407,33 @@ namespace gca {
   index_t back_face(const triangular_mesh&, std::vector<index_t>& face_indices)
   {  return face_indices.back(); }
 
+  std::vector<index_t> last_face(std::vector<index_t>& face_indices, const triangular_mesh&)
+  {  return { face_indices.back() }; }
+  
   std::vector<index_t> all_neighbors(const triangular_mesh& part,
 				     const index_t next_vertex) {
     return part.vertex_face_neighbors(next_vertex);
+  }
+
+  bool neighbors_share_edge(const index_t next_face,
+			    const index_t last_face,
+			    const triangular_mesh& part) {
+    return share_edge(next_face, last_face, part);
   }
 
   std::vector<vector<index_t>>
   connect_regions(std::vector<index_t>& indices,
 		  const triangular_mesh& part) {
     DBG_ASSERT(indices.size() > 0);
+
     vector<vector<index_t>> connected_regions;
     while (indices.size() > 0) {
-      connected_regions.push_back(connected_region(indices,
-						   part,
-						   back_face,
-						   all_neighbors));
+      connected_regions.push_back(region(indices,
+					 part,
+					 last_face,
+					 neighbors_share_edge));
     }
+
     return connected_regions;
   }
 
@@ -507,12 +518,15 @@ namespace gca {
       return within_eps(angle_between(m.face_triangle(f).normal,
 				      m.face_triangle(i).normal),
 			0,
-			delta_degrees);
+			delta_degrees) &&
+      share_edge(f, i, m);
     };
+
     auto back_face_vec = [](const vector<index_t>& faces,
 			    const triangular_mesh& mesh) {
       return vector<index_t>{faces.back()};
     };
+
     while (indices.size() > 0) {
       connected_regions.push_back(region(indices,
 					 mesh,

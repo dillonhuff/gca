@@ -245,17 +245,20 @@ namespace gca {
     }
     return surface_face_inds;
   }
-
+  
   template<typename S, typename B>
   std::vector<index_t> region(vector<index_t>& face_indices,
 			      const triangular_mesh& part,
 			      S select_initial_faces,
 			      B is_neighbor) {
-    assert(face_indices.size() > 0);
+    DBG_ASSERT(face_indices.size() > 0);
+
     sort(begin(face_indices), end(face_indices));
+
     vector<index_t> surface_face_inds = select_initial_faces(face_indices, part);
     vector<index_t> unchecked_face_inds = surface_face_inds;
     subtract(face_indices, surface_face_inds);
+
     while (unchecked_face_inds.size() > 0) {
       auto next_face = unchecked_face_inds.back();
       unchecked_face_inds.pop_back();
@@ -268,6 +271,7 @@ namespace gca {
 	}
       }
     }
+
     return surface_face_inds;
   }
 
