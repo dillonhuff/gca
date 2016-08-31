@@ -369,6 +369,10 @@ namespace gca {
 
   bool all_concave(const triangular_mesh& m, const std::vector<gca::edge>& e);  
 
+  std::vector<point>
+  vertexes_on_surface(const std::vector<index_t>& s,
+		      const triangular_mesh& m);
+  
 }
 
 #endif

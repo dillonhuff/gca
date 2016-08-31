@@ -763,5 +763,25 @@ namespace gca {
     return all_of(begin(e), end(e), [m](const edge ed)
 		  { return dihedral_angle(ed, m) > 180; });
   }
-  
+
+  std::vector<point>
+  vertexes_on_surface(const std::vector<index_t>& s,
+		      const triangular_mesh& m) {
+    std::vector<point> pts;
+    std::unordered_set<index_t> already_added;
+
+    for (auto j : s) {
+      auto t = m.triangle_vertices(j);
+      for (unsigned i = 0; i < 3; i++) {
+	index_t v = t.v[i];
+	if (already_added.find(v) == end(already_added)) {
+	  already_added.insert(v);
+	  pts.push_back(m.vertex(v));
+	}
+      }
+    }
+    
+    return pts;
+  }
+
 }

@@ -91,6 +91,52 @@ namespace gca {
     return l;
   }
 
+  boost_poly_2
+  to_boost_poly_2(const labeled_polygon_3& p) {
+    boost_poly_2 pr;
+    for (auto p : p.vertices()) {
+      boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
+    }
+
+    boost::geometry::interior_rings(pr).resize(p.holes().size());
+    for (int i = 0; i < p.holes().size(); i++) {
+      auto& h = p.holes()[i];
+      for (auto p : h) {
+	boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y), i);
+      }
+    }
+
+    // TODO: Add holes
+    boost::geometry::correct(pr);
+    
+    return pr;
+  }
+
+  labeled_polygon_3
+  to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
+    vector<point> vertices;
+    for (auto p2d : boost::geometry::exterior_ring(p)) {
+      point pt(p2d.get<0>(), p2d.get<1>(), z);
+      vertices.push_back(times_3(r, pt));
+    }
+
+    vector<vector<point>> holes;
+    for (auto ir : boost::geometry::interior_rings(p)) {
+      vector<point> hole_verts;
+      for (auto p2d : ir) {
+	point pt(p2d.get<0>(), p2d.get<1>(), z);
+	hole_verts.push_back(times_3(r, pt));
+      }
+      holes.push_back(clean_vertices(hole_verts));
+    }
+    return labeled_polygon_3(clean_vertices(vertices), holes);
+  }
+
+  // TODO: Version of this code that can handle holes?
+  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
+    return oriented_polygon(p.normal(), p.vertices());
+  }
+
   labeled_polygon_3
   convex_hull_2D(const std::vector<point>& pts,
 		 const point n,
@@ -125,26 +171,6 @@ namespace gca {
     return convex_hull_2D(m.vertex_list(), n, z_level);
   }
 
-  std::vector<point>
-  vertexes_on_surface(const std::vector<index_t>& s,
-		      const triangular_mesh& m) {
-    std::vector<point> pts;
-    std::unordered_set<index_t> already_added;
-
-    for (auto j : s) {
-      auto t = m.triangle_vertices(j);
-      for (unsigned i = 0; i < 3; i++) {
-	index_t v = t.v[i];
-	if (already_added.find(v) == end(already_added)) {
-	  already_added.insert(v);
-	  pts.push_back(m.vertex(v));
-	}
-      }
-    }
-    
-    return pts;
-  }
-
   std::vector<point> projected_hull(const plane pl,
 				    const std::vector<point>& raw_pts) {
     auto pts = project_points(pl, raw_pts);
@@ -159,10 +185,10 @@ namespace gca {
     return p.vertices();
   }
 
-  std::vector<labeled_polygon_3>
-  build_virtual_surfaces(const triangular_mesh& m,
-			 const std::vector<std::vector<index_t>>& surfs,
-			 const point n) {
+  std::vector<std::vector<index_t>>
+  not_vertical_or_horizontal_regions(const triangular_mesh& m,
+				     const std::vector<std::vector<index_t>>& surfs,
+				     const point n) {
     auto not_vert_or_horiz =
       select(surfs, [n, m](const std::vector<index_t>& s) {
 	  return !all_parallel_to(s, m, n, 1.0) &&
@@ -177,93 +203,129 @@ namespace gca {
 
     if (vz.size() == 0) { return {}; }
 
-    auto not_vertical_or_horizontal =
-      connect_regions(vz, m);
+    return connect_regions(vz, m);
+  }  
 
-    cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
+  std::vector<labeled_polygon_3>
+  planar_polygon_union(const std::vector<labeled_polygon_3>& polys) {
+    if (polys.size() == 0) { return {}; }
 
+    // vtk_debug_polygon(p);
+    // vtk_debug_polygons(to_subtract);
+
+    double level_z =
+      max_distance_along(polys.front().vertices(), polys.front().normal());
+    point n = polys.front().normal();
+
+    cout << "n = " << n << endl;
+    
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
 
-    triangular_mesh mr = apply(r, m);
+    cout << "rotation = " << r << endl;
+    cout << "r*n = " << times_3(r, n) << endl;
+
+    cout << "# polys to union = " << polys.size() << endl;
+
+    boost_multipoly_2 result;
+    result.push_back(to_boost_poly_2(apply(r, polys.front())));
+
+    for (unsigned i = 1; i < polys.size(); i++) {
+      auto& s = polys[i];
+
+      auto bp = to_boost_poly_2(apply(r, s));
+      boost_multipoly_2 r_tmp = result;
+      boost::geometry::clear(result);
+      boost::geometry::union_(r_tmp, bp, result);
+    }
+
+    cout << "# polys in result = " << result.size() << endl;
+
+    std::vector<labeled_polygon_3> res;
+    for (auto r : result) {
+      labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+
+      check_simplicity(lp);
+
+      lp.correct_winding_order(polys.front().normal());
+      res.push_back(lp);
+    }
+
+    return res;
     
-    vector<labeled_polygon_3> polys;
-    for (auto s : not_vertical_or_horizontal) {
-      auto bounds = mesh_bounds(s, mr);
+  }
 
-      DBG_ASSERT(bounds.size() > 0);
+  labeled_polygon_3
+  virtual_surface_for_surface(const std::vector<index_t>& s,
+			      const triangular_mesh& m,
+			      const point n) {
+    DBG_ASSERT(s.size() > 0);
+    
+    auto raw_pts = vertexes_on_surface(s, m);
+    point max_pt = max_along(raw_pts, n);
+    plane top(n, max_pt);
 
-      auto boundary = extract_boundary(bounds);
-
-      check_simplicity(boundary.vertices());
-
-      // if (!(area(boundary) > 0.001)) {
-
-      // 	vtk_debug_highlight_inds(s, mr);
-	
-      // 	vtk_debug_polygon(boundary);
-      // 	vtk_debug_polygons(bounds);
-	
-      // 	DBG_ASSERT(area(boundary) > 0.001);
-      // }
-
-      auto raw_pts = boundary.vertices();
-
-      point n_r = times_3(r, n);
-      point max_pt = max_along(raw_pts, n_r);
-      plane top(n_r, max_pt);
+    std::vector<labeled_polygon_3> ts;
+    for (auto i : s) {
+      triangle t = m.face_triangle(i);
+      vector<point> pts = project_points(top, {t.v1, t.v2, t.v3});
       
-      // auto pts = project_points(top, raw_pts);
-
-      // labeled_polygon_3 p =
-      // 	convex_hull_2D(pts, n, max_distance_along(pts, n));
-
-      // check_simplicity(p);
-      
-      // p.correct_winding_order(n);
-
-      auto outer_ring = projected_hull(top, raw_pts);
-      
-      auto holes = bounds;
-
-      vector<vector<point>> hole_verts;
-      for (auto h : holes) {
-
-	// check_simplicity(h.vertices());
-
-	// auto h_verts = project_points(top, h.vertices());
-
-	// labeled_polygon_3 rh = convex_hull_2D(h_verts, n, max_distance_along(h_verts, n));
-
-	// check_simplicity(rh);
-
-	// rh.correct_winding_order(n);
-	auto inner_ring = projected_hull(top, raw_pts);
-
-	hole_verts.push_back(inner_ring);
-      }
-
-      labeled_polygon_3 l_before(outer_ring, hole_verts);
-
-      auto l = apply(r_inv, l_before);
+      labeled_polygon_3 l(pts);
 
       check_simplicity(l);
 
       l.correct_winding_order(n);
       
+      ts.push_back(l);
+    }
+
+    std::vector<labeled_polygon_3> result_polys =
+      planar_polygon_union(ts);
+
+    DBG_ASSERT(result_polys.size() == 1);
+
+    return result_polys.front();
+    
+    // auto bounds = mesh_bounds(s, m);
+
+    // DBG_ASSERT(bounds.size() > 0);
+
+    // auto boundary = extract_boundary(bounds);
+
+    // check_simplicity(boundary.vertices());
+
+      
+    // auto outer_ring = projected_hull(top, raw_pts);
+      
+    // auto holes = bounds;
+
+    // vector<vector<point>> hole_verts;
+    // for (auto h : holes) {
+    //   auto inner_ring = projected_hull(top, raw_pts);
+    //   hole_verts.push_back(inner_ring);
+    // }
+
+    // labeled_polygon_3 l_before(outer_ring, hole_verts);
+    // auto l = apply(r_inv, l_before);
+
+    // check_simplicity(l);
+
+    // l.correct_winding_order(n);
+  }
+
+  std::vector<labeled_polygon_3>
+  build_virtual_surfaces(const triangular_mesh& m,
+			 const std::vector<std::vector<index_t>>& surfs,
+			 const point n) {
+    auto not_vertical_or_horizontal =
+      not_vertical_or_horizontal_regions(m, surfs, n);
+
+    cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
+
+    vector<labeled_polygon_3> polys;
+    for (auto s : not_vertical_or_horizontal) {
+      auto l = virtual_surface_for_surface(s, m, n);
       polys.push_back(l);
-      
-      // vector<point> raw_points = vertexes_on_surface(s, m);
-
-      // point max_pt = max_along(raw_points, n);
-      // plane top(n, max_pt);
-
-      // auto pts = project_points(top, raw_points);
-	
-      // //vtk_debug_polygon(p);
-      
-      
-      // polys.push_back(p);
     }
 
     return polys;
@@ -435,52 +497,6 @@ namespace gca {
     DBG_ASSERT(within_eps(theta, 0.0, 0.1));
 
     return transformed;
-  }
-
-  boost_poly_2
-  to_boost_poly_2(const labeled_polygon_3& p) {
-    boost_poly_2 pr;
-    for (auto p : p.vertices()) {
-      boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
-    }
-
-    boost::geometry::interior_rings(pr).resize(p.holes().size());
-    for (int i = 0; i < p.holes().size(); i++) {
-      auto& h = p.holes()[i];
-      for (auto p : h) {
-	boost::geometry::append(pr, boost::geometry::model::d2::point_xy<double>(p.x, p.y), i);
-      }
-    }
-
-    // TODO: Add holes
-    boost::geometry::correct(pr);
-    
-    return pr;
-  }
-
-  labeled_polygon_3
-  to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
-    vector<point> vertices;
-    for (auto p2d : boost::geometry::exterior_ring(p)) {
-      point pt(p2d.get<0>(), p2d.get<1>(), z);
-      vertices.push_back(times_3(r, pt));
-    }
-
-    vector<vector<point>> holes;
-    for (auto ir : boost::geometry::interior_rings(p)) {
-      vector<point> hole_verts;
-      for (auto p2d : ir) {
-	point pt(p2d.get<0>(), p2d.get<1>(), z);
-	hole_verts.push_back(times_3(r, pt));
-      }
-      holes.push_back(clean_vertices(hole_verts));
-    }
-    return labeled_polygon_3(clean_vertices(vertices), holes);
-  }
-
-  // TODO: Version of this code that can handle holes?
-  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
-    return oriented_polygon(p.normal(), p.vertices());
   }
 
   labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol) {
