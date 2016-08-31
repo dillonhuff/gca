@@ -297,32 +297,6 @@ namespace gca {
     DBG_ASSERT(result_polys.size() == 1);
 
     return result_polys.front();
-    
-    // auto bounds = mesh_bounds(s, m);
-
-    // DBG_ASSERT(bounds.size() > 0);
-
-    // auto boundary = extract_boundary(bounds);
-
-    // check_simplicity(boundary.vertices());
-
-      
-    // auto outer_ring = projected_hull(top, raw_pts);
-      
-    // auto holes = bounds;
-
-    // vector<vector<point>> hole_verts;
-    // for (auto h : holes) {
-    //   auto inner_ring = projected_hull(top, raw_pts);
-    //   hole_verts.push_back(inner_ring);
-    // }
-
-    // labeled_polygon_3 l_before(outer_ring, hole_verts);
-    // auto l = apply(r_inv, l_before);
-
-    // check_simplicity(l);
-
-    // l.correct_winding_order(n);
   }
 
   std::vector<labeled_polygon_3>
