@@ -294,7 +294,14 @@ namespace gca {
     std::vector<labeled_polygon_3> result_polys =
       planar_polygon_union(ts);
 
-    DBG_ASSERT(result_polys.size() == 1);
+    if (!(result_polys.size() == 1)) {
+
+      vtk_debug_highlight_inds(s, m);
+      
+      vtk_debug_polygons(result_polys);
+      
+      DBG_ASSERT(result_polys.size() == 1);
+    }
 
     return result_polys.front();
   }

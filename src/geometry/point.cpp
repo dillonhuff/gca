@@ -212,9 +212,11 @@ namespace gca {
       }
     }
 
-    cout << "# of duplicate points = " << num_duplicates << endl;
+    if (num_duplicates > 0) {
+      cout << "# of duplicate points = " << num_duplicates << endl;
+    }
 
-    return num_duplicates == 0; //true;
+    return num_duplicates == 0;
   }
 
 }

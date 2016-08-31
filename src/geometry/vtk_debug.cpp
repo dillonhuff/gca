@@ -34,11 +34,14 @@ namespace gca {
       unsigned char color[3];
       if (elem(i, inds)) {
 	color[0] = 200;
+	color[1] = 0;
+	color[2] = 0;
       } else {
 	color[0] = 0;
+	color[1] = 0;
+	color[2] = 200;
+	
       }
-      color[1] = 0;
-      color[2] = 0;
 
       colors->InsertNextTupleValue(color);
     }
