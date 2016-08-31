@@ -269,14 +269,16 @@ namespace gca {
     for (auto i : s) {
       triangle t = m.face_triangle(i);
       vector<point> pts = project_points(top, {t.v1, t.v2, t.v3});
-      
-      labeled_polygon_3 l(pts);
 
-      check_simplicity(l);
+      if (no_duplicate_points(pts, 0.001)) {
+	labeled_polygon_3 l(pts);
 
-      l.correct_winding_order(n);
+	check_simplicity(l);
+
+	l.correct_winding_order(n);
       
-      ts.push_back(l);
+	ts.push_back(l);
+      }
     }
 
     std::vector<labeled_polygon_3> result_polys =
