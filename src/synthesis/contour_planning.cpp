@@ -68,7 +68,7 @@ namespace gca {
 
 	  surfs_to_cut = surfaces_to_cut(inds, part_mesh);
 
-	  return contour_surface_decomposition{n, *outline, *top, *bottom, from_n, from_minus_n, surfs_to_cut};
+	  return contour_surface_decomposition{n, *outline, *top, *bottom, surfs_to_cut};
 	  
 	} else {
 	  cout << "No outline" << endl;
@@ -143,7 +143,9 @@ namespace gca {
 	if (outline_shares_edges(*surfs)) {
 	  return surfs;
 	} else {
-	  contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->visible_from_minus_n, surfs->visible_from_n, surfs->rest};
+	  // contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->visible_from_minus_n, surfs->visible_from_n, surfs->rest};
+	  contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->rest};
+
 	  if (outline_shares_edges(decomposition)) {
 	    return decomposition;
 	  }
