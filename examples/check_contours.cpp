@@ -36,15 +36,10 @@ int main(int argc, char* argv[]) {
     cout << "# of features along " << axis << "  = " << collect_features(f).size() << endl;
     cout << "# of features along " << neg_axis << " = " << collect_features(g).size() << endl;
 
-    //    vtk_debug_mesh(mesh);
+    vtk_debug_mesh(mesh);
     //    vtk_debug_feature_tree(f);
   };
 
   read_dir(argv[1], check_mesh);
 
 }  
-  
-
-  // auto box_triangles = parse_stl(argv[1]).triangles;
-  // auto mesh = make_mesh(box_triangles, 0.001);
-

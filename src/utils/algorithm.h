@@ -7,6 +7,7 @@
 #include <numeric>
 #include <unordered_set>
 #include <utility>
+#include <vector>
 
 #include "utils/check.h"
 

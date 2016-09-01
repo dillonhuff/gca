@@ -19,28 +19,6 @@
 
 namespace gca {
 
-  // May not be needed in new feature based system
-  // void add_surface_pockets(vector<gca::pocket>& pockets,
-  // 			   const triangular_mesh& m,
-  // 			   const vector<gca::surface>& surfs) {
-  //   unsigned old_size = pockets.size();
-  //   concat(pockets, make_surface_pockets(m, surfs));
-  //   unsigned new_size = pockets.size();
-
-  //   DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
-  // }
-
-  // void add_surface_pockets(vector<gca::pocket>& pockets,
-  // 			   const triangular_mesh& m,
-  // 			   const std::vector<std::vector<index_t>>& surfs) {
-  //   auto sfs = surfs;
-  //   unsigned old_size = pockets.size();
-  //   concat(pockets, make_surface_pockets(m, sfs));
-  //   unsigned new_size = pockets.size();
-
-  //   DBG_ASSERT((surfs.size() == 0) || (new_size > old_size));
-  // }
-  
   box workpiece_box(const workpiece& w) {
     double x_len = w.sides[0].len();
     double y_len = w.sides[1].len();

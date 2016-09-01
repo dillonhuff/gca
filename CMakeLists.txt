@@ -240,6 +240,9 @@ target_link_libraries(check-contours geometry utils gcode gprocess gca)
 add_executable(vtk-mass examples/vtk_mass_test.cpp)
 target_link_libraries(vtk-mass geometry utils gcode gprocess gca)
 
+add_executable(scale-down-mesh examples/scale_down_mesh.cpp)
+target_link_libraries(scale-down-mesh geometry utils gcode gprocess gca)
+
 ######### VTK Example ##########
 
 # Make command:

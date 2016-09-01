@@ -124,6 +124,19 @@ AddCell/fast:
 .PHONY : AddCell/fast
 
 #=============================================================================
+# Target rules for targets named scale-down-mesh
+
+# Build rule for target.
+scale-down-mesh: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 scale-down-mesh
+.PHONY : scale-down-mesh
+
+# fast build rule for target.
+scale-down-mesh/fast:
+	$(MAKE) -f CMakeFiles/scale-down-mesh.dir/build.make CMakeFiles/scale-down-mesh.dir/build
+.PHONY : scale-down-mesh/fast
+
+#=============================================================================
 # Target rules for targets named vtk-mass
 
 # Build rule for target.
@@ -479,6 +492,33 @@ examples/plate_cutter.s: examples/plate_cutter.cpp.s
 examples/plate_cutter.cpp.s:
 	$(MAKE) -f CMakeFiles/plate-cutter.dir/build.make CMakeFiles/plate-cutter.dir/examples/plate_cutter.cpp.s
 .PHONY : examples/plate_cutter.cpp.s
+
+examples/scale_down_mesh.o: examples/scale_down_mesh.cpp.o
+
+.PHONY : examples/scale_down_mesh.o
+
+# target to build an object file
+examples/scale_down_mesh.cpp.o:
+	$(MAKE) -f CMakeFiles/scale-down-mesh.dir/build.make CMakeFiles/scale-down-mesh.dir/examples/scale_down_mesh.cpp.o
+.PHONY : examples/scale_down_mesh.cpp.o
+
+examples/scale_down_mesh.i: examples/scale_down_mesh.cpp.i
+
+.PHONY : examples/scale_down_mesh.i
+
+# target to preprocess a source file
+examples/scale_down_mesh.cpp.i:
+	$(MAKE) -f CMakeFiles/scale-down-mesh.dir/build.make CMakeFiles/scale-down-mesh.dir/examples/scale_down_mesh.cpp.i
+.PHONY : examples/scale_down_mesh.cpp.i
+
+examples/scale_down_mesh.s: examples/scale_down_mesh.cpp.s
+
+.PHONY : examples/scale_down_mesh.s
+
+# target to generate assembly for a file
+examples/scale_down_mesh.cpp.s:
+	$(MAKE) -f CMakeFiles/scale-down-mesh.dir/build.make CMakeFiles/scale-down-mesh.dir/examples/scale_down_mesh.cpp.s
+.PHONY : examples/scale_down_mesh.cpp.s
 
 examples/stl_parse.o: examples/stl_parse.cpp.o
 
@@ -3647,6 +3687,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... AddCell"
+	@echo "... scale-down-mesh"
 	@echo "... vtk-mass"
 	@echo "... ublas"
 	@echo "... json-plan"
@@ -3681,6 +3722,9 @@ help:
 	@echo "... examples/plate_cutter.o"
 	@echo "... examples/plate_cutter.i"
 	@echo "... examples/plate_cutter.s"
+	@echo "... examples/scale_down_mesh.o"
+	@echo "... examples/scale_down_mesh.i"
+	@echo "... examples/scale_down_mesh.s"
 	@echo "... examples/stl_parse.o"
 	@echo "... examples/stl_parse.i"
 	@echo "... examples/stl_parse.s"

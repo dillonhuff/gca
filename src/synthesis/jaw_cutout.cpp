@@ -295,9 +295,6 @@ namespace gca {
     const labeled_mesh& an_jaw = ar.labeled_mesh("an_jaw");
     const labeled_mesh& notch = ar.labeled_mesh("notch");
 
-    const vector<surface>& top_surfs = surfs.visible_from_n;
-    const vector<surface>& base_surfs = surfs.visible_from_minus_n;
-
     homogeneous_transform pt =
       mating_transform(aligned, top_fix.orient, top_fix.v);
 

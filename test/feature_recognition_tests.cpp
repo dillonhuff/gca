@@ -51,27 +51,9 @@ namespace gca {
     REQUIRE(ls.size() == 1);
     REQUIRE(ls.front().size() == 2);
 
-    // cout << "LEVELS" << endl;
-
-    // for (auto l : ls.front()) {
-    //   vtk_debug_polygon(l);
-    // }
-    // cout << "DONE LEVELS" << endl;
-    
     feature_decomposition* f =
       build_feature_decomposition(mesh, n);
 
-    // cout << "Traversing feature tree" << endl;
-
-    // auto display_feature_base = [](feature* f) {
-    //   if (f != nullptr) {
-    // 	vtk_debug_polygon(f->base());
-    //   }
-    // };
-    // traverse_bf(f, display_feature_base);
-
-    //    cout << "Done traversing feature tree" << endl;
-    
     REQUIRE(f->num_levels() == 2);
 
     double current_min = 100000;
@@ -105,7 +87,7 @@ namespace gca {
     feature_decomposition* f =
       build_feature_decomposition(mesh, n);
 
-    vtk_debug_feature_tree(f);
+    //vtk_debug_feature_tree(f);
 
     REQUIRE(f->num_levels() == 6);
 
