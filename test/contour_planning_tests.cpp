@@ -53,8 +53,6 @@ namespace gca {
       REQUIRE(within_eps(decomp->n, point(0, 0, 1), 0.001));
       REQUIRE(decomp->rest.size() == 0);
 
-      //vtk_debug_highlight_inds(decomp->bottom);
-
       SECTION("Outline 1 region connected to top and bottom") {
 	vector<surface> rs =
 	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
@@ -72,5 +70,14 @@ namespace gca {
       }
     }
 
+    SECTION("OnShape Part 1 1") {
+      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.001);
+
+      auto decomp = compute_contour_surfaces(m);
+
+      REQUIRE(decomp);
+      REQUIRE(within_eps(decomp->n, point(0, -1, 0), 0.001));
+      REQUIRE(decomp->rest.size() == 0);
+    }
   }
 }

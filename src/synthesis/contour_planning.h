@@ -12,8 +12,6 @@ namespace gca {
     surface outline;
     surface top;
     surface bottom;
-    //    std::vector<surface> visible_from_n;
-    //    std::vector<surface> visible_from_minus_n;
     std::vector<surface> rest;
   };
 

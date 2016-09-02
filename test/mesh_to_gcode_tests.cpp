@@ -239,91 +239,91 @@ namespace gca {
     REQUIRE(num_freeform_pockets == 0);
   }
 
-  TEST_CASE("Pendulum Arm Joint Top") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Pendulum Arm Joint Top") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    cout << "Arm joint top" << endl;
+  //   cout << "Arm joint top" << endl;
 
-    vice test_vice = large_jaw_vice(5.0, point(1.2, -4.4, 3.3));
-    std::vector<plate_height> parallel_plates{0.5}; //0.1, 0.3};
-    fixtures fixes(test_vice, parallel_plates);
-    tool t2(0.05, 3.0, 4, HSS, FLAT_NOSE);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+  //   vice test_vice = large_jaw_vice(5.0, point(1.2, -4.4, 3.3));
+  //   std::vector<plate_height> parallel_plates{0.5}; //0.1, 0.3};
+  //   fixtures fixes(test_vice, parallel_plates);
+  //   tool t2(0.05, 3.0, 4, HSS, FLAT_NOSE);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   vector<tool> tools{t1, t2};
+  //   workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
-    auto fix_plan = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   auto fix_plan = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-    test_no_freeform_pockets(fix_plan);
+  //   test_no_freeform_pockets(fix_plan);
 
-    auto plan =
-      fabrication_plan_for_fixture_plan(fix_plan, mesh, tools, workpiece_dims);
+  //   auto plan =
+  //     fabrication_plan_for_fixture_plan(fix_plan, mesh, tools, workpiece_dims);
 
-    REQUIRE(plan.steps().size() == 3);
+  //   REQUIRE(plan.steps().size() == 3);
 
-    REQUIRE(plan.steps()[0].arrangement().mesh_names().size() == 3);
+  //   REQUIRE(plan.steps()[0].arrangement().mesh_names().size() == 3);
 
-    test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
-    test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
+  //   test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
+  //   test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
 
-    test_no_empty_toolpaths(plan);
+  //   test_no_empty_toolpaths(plan);
     
-    REQUIRE(plan.custom_fixtures().size() == 2);
+  //   REQUIRE(plan.custom_fixtures().size() == 2);
 
-    for (auto f : plan.custom_fixtures()) {
-      REQUIRE(f != nullptr);
-      test_no_empty_toolpaths(*f);
-    }
+  //   for (auto f : plan.custom_fixtures()) {
+  //     REQUIRE(f != nullptr);
+  //     test_no_empty_toolpaths(*f);
+  //   }
 
-  }
+  // }
 
-  TEST_CASE("Small Arm Joint Dummy Part") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Small Arm Joint Dummy Part") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    cout << "Arm joint dummy" << endl;
+  //   cout << "Arm joint dummy" << endl;
 
-    vice test_vice = current_setup();
-    std::vector<plate_height> parallel_plates{0.5};
-    fixtures fixes(test_vice, parallel_plates);
+  //   vice test_vice = current_setup();
+  //   std::vector<plate_height> parallel_plates{0.5};
+  //   fixtures fixes(test_vice, parallel_plates);
 
-    tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
-    tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
-    tool t3(0.10, 3.15, 2, HSS, FLAT_NOSE);
+  //   tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
+  //   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
+  //   tool t3(0.10, 3.15, 2, HSS, FLAT_NOSE);
     
-    vector<tool> tools{t1, t2, t3};
+  //   vector<tool> tools{t1, t2, t3};
     
-    workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
+  //   workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ArmJointDummy.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ArmJointDummy.stl", 0.001);
 
-    auto fix_plan = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   auto fix_plan = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-    test_no_freeform_pockets(fix_plan);
+  //   test_no_freeform_pockets(fix_plan);
 
-    auto plan =
-      fabrication_plan_for_fixture_plan(fix_plan, mesh, tools, workpiece_dims);
+  //   auto plan =
+  //     fabrication_plan_for_fixture_plan(fix_plan, mesh, tools, workpiece_dims);
 
-    REQUIRE(plan.steps().size() == 3);
+  //   REQUIRE(plan.steps().size() == 3);
 
-    REQUIRE(plan.steps()[0].arrangement().mesh_names().size() == 3);
+  //   REQUIRE(plan.steps()[0].arrangement().mesh_names().size() == 3);
 
-    test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
-    test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
+  //   test_jaw_alignment(plan.steps()[1].arrangement(), plan.steps()[1].v);
+  //   test_jaw_alignment(plan.steps()[2].arrangement(), plan.steps()[2].v);
 
-    test_no_empty_toolpaths(plan);
+  //   test_no_empty_toolpaths(plan);
     
-    REQUIRE(plan.custom_fixtures().size() == 2);
+  //   REQUIRE(plan.custom_fixtures().size() == 2);
 
-    for (auto f : plan.custom_fixtures()) {
-      REQUIRE(f != nullptr);
-      test_no_empty_toolpaths(*f);
-    }
+  //   for (auto f : plan.custom_fixtures()) {
+  //     REQUIRE(f != nullptr);
+  //     test_no_empty_toolpaths(*f);
+  //   }
 
-  }
+  // }
   
   bool all_z_coords_above(const std::vector<block>& blocks, double z) {
     vector<vector<cut*>> cuts;
