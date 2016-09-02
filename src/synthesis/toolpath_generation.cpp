@@ -413,6 +413,10 @@ namespace gca {
       i = exterior_offset(inter, r);
     }
 
+    if (contains(i.front(), outer)) {
+      polys.push_back(to_polyline(i.back()));
+    }
+
     reverse(begin(polys), end(polys));
 
     return polys;

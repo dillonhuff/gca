@@ -21,35 +21,6 @@ namespace gca {
   typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
   typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
-  // std::vector<point> clean_vertices(const std::vector<point>& pts) {
-  //   if (pts.size() < 3) { return pts; }
-
-  //   vector<point> rpts = pts;
-
-  //   bool found_duplicate = true;
-  //   while (found_duplicate) {
-
-  //     found_duplicate = false;
-      
-  //     for (unsigned i = 0; i < rpts.size(); i++) {
-
-  // 	point p = rpts[i];
-  // 	point pp1 = rpts[(i + 1) % rpts.size()];
-
-  // 	if (components_within_eps(p, pp1, 0.001)) {
-
-  // 	  found_duplicate = true;
-  // 	  rpts.erase(begin(rpts) + i);
-  // 	  break;
-
-  // 	}
-  //     }
-
-  //   }
-
-  //   return rpts;
-  // }
-
   void check_simplicity(const labeled_polygon_3& p) {
     check_simplicity(p.vertices());
 
@@ -538,7 +509,7 @@ namespace gca {
 
     boost_poly_2 pb = to_boost_poly_2(apply(r, p));
 
-    auto to_subtract_dilated = dilate_polygons(to_subtract, 0.01);
+    auto to_subtract_dilated = dilate_polygons(to_subtract, 0.00001);
 
     cout << "# polys to subtract = " << to_subtract_dilated.size() << endl;
 

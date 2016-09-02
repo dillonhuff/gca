@@ -156,25 +156,13 @@ namespace gca {
     DBG_ASSERT(stock_outlines.size() == 2);
     oriented_polygon stock_outline = stock_outlines.front();
 
-    // auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1));
-    // if (part_bound) {
-    // } else {
-    //   DBG_ASSERT(false);
-    // }
-    // auto part_outlines =
-    //   mesh_bounds((*part_bound).index_list(), (*part_bound).get_parent_mesh());
-
-    // oriented_polygon part_outline =
-    //   min_e(part_outlines, [](const oriented_polygon& p)
-    // 	    { return min_z(p); });
-
     vector<point> part_hull = convex_hull_2D(part.vertex_list(), part_top);
     oriented_polygon part_outline(point(0, 0, 1), part_hull);
 
     double part_bottom = min_in_dir(part, point(0, 0, 1));    
     return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
   }
-  
+
   fixture_setup
   clip_top_and_sides(const triangular_mesh& aligned,
 		     const triangular_mesh& part,
