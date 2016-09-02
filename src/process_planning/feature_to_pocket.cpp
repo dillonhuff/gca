@@ -72,6 +72,9 @@ namespace gca {
 		  const point n) {
 
     DBG_ASSERT(r.feature() == nullptr);
+
+    if (r.num_children() == 0) { return {}; }
+
     DBG_ASSERT(r.num_children() == 1);
 
     auto face_feature_node = r.child(0);

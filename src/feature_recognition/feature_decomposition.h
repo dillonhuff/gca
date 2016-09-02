@@ -109,6 +109,9 @@ namespace gca {
     void add_child(feature_decomposition* decomp)
     { children.push_back(decomp); }
 
+    void delete_child(const unsigned i)
+    { children.erase(begin(children) + i); }
+
     unsigned num_children() const { return children.size(); }
 
     feature_decomposition* child(unsigned i) const {
@@ -139,6 +142,29 @@ namespace gca {
   gca::feature* node_value(feature_decomposition* f);
 
   template<typename T, typename F>
+  void delete_leaves(T* tree, F should_delete) {
+    bool deleted_one = true;
+
+    while (deleted_one) {
+      deleted_one = false;
+      
+      for (unsigned i = 0; i < tree->num_children(); i++) {
+	T* next = tree->child(i);
+	if (next->num_children() == 0 && should_delete(node_value(next))) {
+	  tree->delete_child(i);
+	  deleted_one = true;
+	  break;
+	}
+      }
+
+    }
+
+    for (unsigned i = 0; i < tree->num_children(); i++) {
+      delete_leaves(tree->child(i), should_delete);
+    }
+  }
+
+  template<typename T, typename F>
   void traverse_bf(T* tree, F f) {
     std::deque<T*> active{tree};
     while (active.size() > 0) {
@@ -163,6 +189,11 @@ namespace gca {
   surface_levels
   initial_surface_levels(const triangular_mesh& m,
 			 const point n);
+
+  point normal(feature_decomposition* f);
+
+  bool contains(const feature& maybe_contained,
+		const feature& container);
   
 }
 

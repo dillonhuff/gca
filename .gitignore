@@ -59,3 +59,7 @@ src/geometry/octree.h
 test/stl-files/BoxMesh.stl
 test/stl-files/ShortPill.stl
 test/stl-files/VerticalDiagonals.stl
+scale-down-mesh
+vtk-mass
+check-contours
+test/stl-files/hard_onshape_parts/

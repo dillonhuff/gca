@@ -712,4 +712,24 @@ namespace gca {
     return features;
   }
 
+  point normal(feature_decomposition* f) {
+    point n;
+    auto check_normal = [&n](const feature* f) {
+      if (f != nullptr) {
+	n = f->normal();
+      }
+    };
+
+    traverse_bf(f, check_normal);
+
+    return n;
+  }
+
+  bool contains(const feature& maybe_contained,
+		const feature& container) {
+    DBG_ASSERT(angle_eps(maybe_contained.normal(), container.normal(), 180.0, 1.0));
+    return true;
+  }
+  
+  
 }

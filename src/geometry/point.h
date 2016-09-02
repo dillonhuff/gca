@@ -88,6 +88,7 @@ namespace gca {
 
   std::vector<point> clean_vertices(const std::vector<point>& pts);
 
+  bool angle_eps(const point l, const point r, const double val, const double eps);
 }
 
 #endif

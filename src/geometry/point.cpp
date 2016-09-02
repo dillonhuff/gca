@@ -28,6 +28,10 @@ namespace gca {
     return diff <= eps;
   }
 
+  bool angle_eps(const point l, const point r, const double val, const double eps) {
+    return within_eps(angle_between(l, r), val, eps);
+  }
+
   point point::normalize() const {
     double l = len();
     assert(!within_eps(l, 0.0));

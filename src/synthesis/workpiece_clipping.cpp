@@ -11,6 +11,7 @@
 #include "gcode/lexer.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/triangular_mesh.h"
+#include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "synthesis/contour_planning.h"
 #include "synthesis/face_clipping.h"
@@ -282,11 +283,14 @@ namespace gca {
 			const triangular_mesh& part_mesh,
 			const fixture& top_fix,
 			const fixture& base_fix) {
-      auto top_decomp =
-	build_feature_decomposition(part_mesh, top_fix.orient.top_normal());
+      DBG_ASSERT(angle_eps(top_fix.orient.top_normal(), base_fix.orient.top_normal(), 180.0, 1.0));
 
-      auto base_decomp =
-	build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
+      auto decomps = select_features(part_mesh, {top_fix, base_fix});
+
+      DBG_ASSERT(decomps.size() == 2);
+
+      auto top_decomp = decomps[0];
+      auto base_decomp = decomps[1];
 
       std::vector<fixture_setup> clip_setups;
       clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix));
@@ -322,9 +326,9 @@ namespace gca {
     const auto& f = fab_inputs.f;
 
     DBG_ASSERT(fab_inputs.w.size() > 0);
-    
+
     const auto& w = fab_inputs.w.front();
-    
+
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
     triangular_mesh aligned = align_workpiece(stable_surfaces, w);
 
