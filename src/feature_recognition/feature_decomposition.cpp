@@ -730,7 +730,7 @@ namespace gca {
   range_containing(const point n,
 		   const feature& maybe_contained,
 		   const std::vector<feature*>& container) {
-    return container;
+    DBG_ASSERT(false);
   }
 
   // TODO: Should really be containing outlines

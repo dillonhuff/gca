@@ -32,7 +32,8 @@ namespace gca {
 
       if (l != end(cmap)) {
 	auto cover_set = l->second;
-	double num_covered = intersection(cover_set, covered_features).size();
+	double num_covered =
+	  static_cast<double>(intersection(cover_set, covered_features).size());
 	f_score += num_covered;
       } else {
 	DBG_ASSERT(false);
@@ -41,7 +42,7 @@ namespace gca {
       return f_score;
     };
 
-    return max_e(to_prune, score);
+    return min_e(to_prune, score);
   }
   
   // TODO: Handle cascades of coverings?
@@ -61,6 +62,7 @@ namespace gca {
       if (l != end(cmap)) {
 	auto cover_set = l->second;
 	if (intersection(cover_set, covered_features).size() == cover_set.size()) {
+	  cout << "Newly covered feature" << endl;
 	  newly_covered.push_back(c);
 	}
       } else {
