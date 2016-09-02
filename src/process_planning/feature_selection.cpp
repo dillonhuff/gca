@@ -19,11 +19,57 @@ namespace gca {
     return cmap;
   }
 
+  feature*
+  pick_next_feature(const containment_map& cmap,
+		      std::vector<feature*>& covered_features,
+		      std::vector<feature*>& to_prune) {
+    DBG_ASSERT(to_prune.size() > 0);
+    
+    auto score = [cmap, covered_features](feature* f) {
+      double f_score = 0.0;
+
+      auto l = cmap.find(f);
+
+      if (l != end(cmap)) {
+	auto cover_set = l->second;
+	double num_covered = intersection(cover_set, covered_features).size();
+	f_score += num_covered;
+      } else {
+	DBG_ASSERT(false);
+      }
+
+      return f_score;
+    };
+
+    return max_e(to_prune, score);
+  }
+  
+  // TODO: Handle cascades of coverings?
   void
   select_next_feature(const containment_map& cmap,
 		      std::vector<feature*>& covered_features,
 		      std::vector<feature*>& to_prune) {
-    
+    feature* next = pick_next_feature(cmap, covered_features, to_prune);
+
+    remove(next, to_prune);
+    covered_features.push_back(next);
+
+    std::vector<feature*> newly_covered;
+    for (auto c : to_prune) {
+      auto l = cmap.find(c);
+      
+      if (l != end(cmap)) {
+	auto cover_set = l->second;
+	if (intersection(cover_set, covered_features).size() == cover_set.size()) {
+	  newly_covered.push_back(c);
+	}
+      } else {
+	DBG_ASSERT(false);
+      }
+    }
+
+    subtract(to_prune, newly_covered);
+    concat(covered_features, newly_covered);
   }
   
   void
