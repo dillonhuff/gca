@@ -108,7 +108,6 @@ namespace gca {
     cout << "base depth  = " << base_depth <<  endl;
 
     REQUIRE(within_eps(current_min, base_depth, 0.0001));
-    
   }
 
 }

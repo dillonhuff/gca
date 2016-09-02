@@ -1,3 +1,4 @@
+#include "geometry/vtk_debug.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/millability.h"
 
@@ -257,5 +258,34 @@ namespace gca {
     
     return take_basis(orients, orthogonal_to, 3);
   }
-  
+
+  clamp_orientation
+  largest_upward_orientation(const std::vector<surface>& surfs,
+			     const vice& parallel,
+			     const point n) {
+    vector<clamp_orientation> orients =
+      all_viable_clamp_orientations(surfs, parallel);
+
+
+    if (!(orients.size() > 0)) {
+      vtk_debug_highlight_inds(surfs);
+      DBG_ASSERT(orients.size() > 0);
+    }
+
+    vector<clamp_orientation> top_orients =
+      select(orients, [n](const clamp_orientation& s)
+	     { return within_eps(angle_between(s.top_normal(), n), 0, 1.0); });
+
+    DBG_ASSERT(top_orients.size() > 0);
+
+    const triangular_mesh& m = surfs.front().get_parent_mesh();
+    sort(begin(top_orients), end(top_orients),
+	 [m](const clamp_orientation& l, const clamp_orientation& r)
+	 { return l.contact_area(m) > r.contact_area(m); });
+
+    DBG_ASSERT(top_orients.size() > 0);
+      
+    return top_orients.front();
+  }
+
 }

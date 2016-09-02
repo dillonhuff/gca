@@ -670,7 +670,12 @@ namespace gca {
 
     double feature_depth = current_depth - next_depth;
 
-    feature* f = new (allocate<feature>()) feature(feature_depth, current_level);
+    point v = feature_depth*current_level.normal();
+    plane base_pl(current_level.normal(), current_level.vertex(0) - v);
+
+    labeled_polygon_3 shifted = project_onto(base_pl, current_level);
+    
+    feature* f = new (allocate<feature>()) feature(feature_depth, shifted);
     feature_decomposition* child =
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);
@@ -706,6 +711,17 @@ namespace gca {
       new (allocate<feature_decomposition>()) feature_decomposition();
 
     decompose_volume(init_outline, levels, decomp, base_depth);
+
+    auto check_normal = [n](const feature* f) {
+      if (f != nullptr) {
+	cout << "feature normal = " << f->normal() << endl;
+	cout << "feature depth  = " << f->depth() << endl;
+	DBG_ASSERT(f->depth() >= 0);
+	DBG_ASSERT(within_eps(angle_between(n, f->normal()), 0.0, 1.0));
+      }
+    };
+
+    traverse_bf(decomp, check_normal);
 
     return decomp;
   }

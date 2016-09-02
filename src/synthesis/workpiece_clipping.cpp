@@ -125,7 +125,7 @@ namespace gca {
       mesh_bounds((*stock_bound).index_list(), (*stock_bound).get_parent_mesh());
     DBG_ASSERT(stock_outlines.size() == 2);
     oriented_polygon stock_outline = stock_outlines.front();
-    
+
     auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1));
     if (part_bound) {
     } else {
@@ -146,7 +146,7 @@ namespace gca {
   clip_top_and_sides(const triangular_mesh& aligned,
 		     const triangular_mesh& part,
 		     const fixture& f) {
-    vector<pocket> pockets{face_down(aligned, part), contour_around(aligned, part)};
+    vector<pocket> pockets{face_down(aligned, part)}; //, contour_around(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
@@ -166,6 +166,7 @@ namespace gca {
     std::vector<pocket>& setup_pockets = setup.pockets;
 
     auto decomp = build_feature_decomposition(part_mesh, f.orient.top_normal());
+
     auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
 
     concat(setup_pockets, pockets);
@@ -202,32 +203,6 @@ namespace gca {
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
-  }
-
-  clamp_orientation
-  largest_upward_orientation(const std::vector<surface>& surfs,
-			     const vice& parallel,
-			     const point n) {
-    vector<clamp_orientation> orients =
-      all_viable_clamp_orientations(surfs, parallel);
-
-
-    DBG_ASSERT(orients.size() > 0);
-
-    vector<clamp_orientation> top_orients =
-      select(orients, [n](const clamp_orientation& s)
-	     { return within_eps(angle_between(s.top_normal(), n), 0, 1.0); });
-
-    DBG_ASSERT(top_orients.size() > 0);
-
-    const triangular_mesh& m = surfs.front().get_parent_mesh();
-    sort(begin(top_orients), end(top_orients),
-	 [m](const clamp_orientation& l, const clamp_orientation& r)
-	 { return l.contact_area(m) > r.contact_area(m); });
-
-    DBG_ASSERT(top_orients.size() > 0);
-      
-    return top_orients.front();
   }
 
   boost::optional<fixture>

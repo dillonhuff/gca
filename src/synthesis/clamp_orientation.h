@@ -133,7 +133,12 @@ namespace gca {
   clamp_orientation
   next_orthogonal_to_all(const std::vector<clamp_orientation>& to_check,
 			 const std::vector<clamp_orientation>& to_return_from);
- 
+
+  clamp_orientation
+  largest_upward_orientation(const std::vector<surface>& surfs,
+			     const vice& parallel,
+			     const point n);
+  
 }
 
 #endif

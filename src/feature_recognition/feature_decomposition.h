@@ -73,12 +73,20 @@ namespace gca {
     { return min_distance_along(base_poly.vertices(), base_poly.normal()); }
 
     feature apply(const rotation& r) const {
-      return feature(dp, gca::apply(r, base_poly));
+      labeled_polygon_3 rotated_base = gca::apply(r, base_poly);
+      rotated_base.correct_winding_order(times_3(r, base_poly.normal()));
+
+      return feature(dp, rotated_base); //gca::apply(r, base_poly));
     }
 
     feature apply(const homogeneous_transform& t) const {
-      return feature(dp, gca::apply(t, base_poly));
+      labeled_polygon_3 rotated_base = gca::apply(t, base_poly);
+      rotated_base.correct_winding_order(times_3(t.first, base_poly.normal()));
+      
+      return feature(dp, rotated_base);
     }
+
+    point normal() const { return base_poly.normal(); }
     
   };
 

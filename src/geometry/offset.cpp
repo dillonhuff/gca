@@ -60,7 +60,6 @@ namespace gca {
     }
 
     DBG_ASSERT(p.vertices().size() > 0);
-    DBG_ASSERT(signed_area(p) < 0);
     
     double z_va = p.vertices().front().z;
     Polygon_2 out;
@@ -68,8 +67,18 @@ namespace gca {
       out.push_back(Point(p.x, p.y));
     }
 
-    DBG_ASSERT(out.is_simple());
+    if (!(out.is_simple())) {
+      vtk_debug_polygon(p);
+      DBG_ASSERT(false);
+    }
+    
+    if (out.orientation() == CGAL::CLOCKWISE) {
+      out.reverse_orientation();
+    }
+
     DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
+
+    DBG_ASSERT(out.is_simple());
 
     PolygonPtrVector inner_offset_polygons =
       CGAL::create_exterior_skeleton_and_offset_polygons_2(inc, out);

@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
   tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   vector<tool> tools{t1, t2};
 
-  workpiece workpiece_dims(10, 10, 10, ALUMINUM);
+  workpiece workpiece_dims(2, 2, 2.5, ALUMINUM);
   
   fabrication_plan plan =
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
