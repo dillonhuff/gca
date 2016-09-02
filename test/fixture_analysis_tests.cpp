@@ -45,11 +45,20 @@ namespace gca {
       for (auto p : p.fixtures()[1].pockets) {
 	cout << p.pocket_type() << endl;
       }
-      
+
       REQUIRE(p.fixtures()[1].pockets.size() == 2);
-      
     }
 
+    SECTION("onshape PSU Mount") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+      REQUIRE(p.fixtures().size() == 2);
+
+      //      REQUIRE(p.fixtures()[1].pockets.size() == 2);
+    }
+    
     // SECTION("Cylinder") {
     //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ShortCylinder.stl", 0.001);
 
