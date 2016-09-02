@@ -29,11 +29,25 @@ namespace gca {
     SECTION("Round with thru holes") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
 
-      cout << "Making round w/ thru holes plan" << endl;
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+      REQUIRE(p.fixtures().size() == 2);
+
+    }
+
+    SECTION("onshape part 1 (1)") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 2);
+
+      for (auto p : p.fixtures()[1].pockets) {
+	cout << p.pocket_type() << endl;
+      }
+      
+      REQUIRE(p.fixtures()[1].pockets.size() == 2);
+      
     }
 
     // SECTION("Cylinder") {

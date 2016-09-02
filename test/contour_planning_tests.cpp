@@ -79,5 +79,16 @@ namespace gca {
       REQUIRE(within_eps(decomp->n, point(0, -1, 0), 0.001));
       REQUIRE(decomp->rest.size() == 0);
     }
+
+    SECTION("OnShape Part 1 2") {
+      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.001);
+
+      auto decomp = compute_contour_surfaces(m);
+
+      REQUIRE(decomp);
+      REQUIRE(within_eps(decomp->n, point(0, 0, 1), 0.001));
+      REQUIRE(decomp->rest.size() == 0);
+    }
+
   }
 }

@@ -318,6 +318,10 @@ namespace gca {
 
     auto num_setups = setups.size();
 
+    for (unsigned i = 0; i < setups.size(); i++) { //auto s : setups) {
+      cout << "setup # " << i << " has " << setups[i].pockets.size() << " pockets" << endl;
+    }
+
     DBG_ASSERT(num_setups == 6 || num_setups == 2 || num_setups == 3);
 
     const vector<surface>& stable_surfaces =
