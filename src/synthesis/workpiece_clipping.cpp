@@ -176,6 +176,7 @@ namespace gca {
   fixture_setup
   clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
 			       const triangular_mesh& part_mesh,
+			       feature_decomposition* decomp,
 			       const fixture& f) {
     auto s_t = mating_transform(wp_mesh, f.orient, f.v);
 
@@ -185,8 +186,6 @@ namespace gca {
     fixture_setup setup = clip_top_and_sides(aligned, part, f);
 
     std::vector<pocket>& setup_pockets = setup.pockets;
-
-    auto decomp = build_feature_decomposition(part_mesh, f.orient.top_normal());
 
     auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
 
@@ -198,6 +197,7 @@ namespace gca {
   fixture_setup
   clip_base_transform(const triangular_mesh& wp_mesh,
 		      const triangular_mesh& part_mesh,
+		      feature_decomposition* decomp,
 		      const fixture& f) {
     auto s_t = mating_transform(part_mesh, f.orient, f.v);
 
@@ -208,7 +208,6 @@ namespace gca {
 
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    auto decomp = build_feature_decomposition(part_mesh, f.orient.top_normal());
     auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
 
     concat(setup_pockets, pockets);
@@ -283,9 +282,15 @@ namespace gca {
 			const triangular_mesh& part_mesh,
 			const fixture& top_fix,
 			const fixture& base_fix) {
+      auto top_decomp =
+	build_feature_decomposition(part_mesh, top_fix.orient.top_normal());
+
+      auto base_decomp =
+	build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
+
       std::vector<fixture_setup> clip_setups;
-      clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_fix));
-      clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_fix));
+      clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix));
+      clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix));
 
       return clip_setups;
     }
