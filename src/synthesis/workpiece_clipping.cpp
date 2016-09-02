@@ -278,6 +278,19 @@ namespace gca {
 
   }
 
+    std::vector<fixture_setup>
+    contour_clip_setups(const triangular_mesh& aligned,
+			const triangular_mesh& part_mesh,
+			const fixture& top_fix,
+			const fixture& base_fix) {
+      std::vector<fixture_setup> clip_setups;
+      clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_fix));
+      clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_fix));
+
+      return clip_setups;
+    }
+
+  
   clipping_plan
   base_fix_clip_plan(const workpiece& w,
 		     const triangular_mesh& aligned,
@@ -285,9 +298,8 @@ namespace gca {
 		     const contour_surface_decomposition& surfs,
 		     const fixture& top_fix,
 		     const fixture& base_fix) {
-    std::vector<fixture_setup> clip_setups;
-    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_fix));
-    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_fix));
+    std::vector<fixture_setup> clip_setups =
+      contour_clip_setups(aligned, part_mesh, top_fix, base_fix);
     
     auto clipped_surfs =
       stable_surfaces_after_clipping(part_mesh, aligned);
