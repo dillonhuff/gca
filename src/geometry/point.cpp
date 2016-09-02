@@ -219,4 +219,33 @@ namespace gca {
     return num_duplicates == 0;
   }
 
+  std::vector<point> clean_vertices(const std::vector<point>& pts) {
+    if (pts.size() < 3) { return pts; }
+
+    vector<point> rpts = pts;
+
+    bool found_duplicate = true;
+    while (found_duplicate) {
+
+      found_duplicate = false;
+      
+      for (unsigned i = 0; i < rpts.size(); i++) {
+
+	point p = rpts[i];
+	point pp1 = rpts[(i + 1) % rpts.size()];
+
+	if (components_within_eps(p, pp1, 0.001)) {
+
+	  found_duplicate = true;
+	  rpts.erase(begin(rpts) + i);
+	  break;
+
+	}
+      }
+
+    }
+
+    return rpts;
+  }
+
 }

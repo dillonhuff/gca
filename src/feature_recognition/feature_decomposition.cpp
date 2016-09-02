@@ -21,34 +21,34 @@ namespace gca {
   typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
   typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
-  std::vector<point> clean_vertices(const std::vector<point>& pts) {
-    if (pts.size() < 3) { return pts; }
+  // std::vector<point> clean_vertices(const std::vector<point>& pts) {
+  //   if (pts.size() < 3) { return pts; }
 
-    vector<point> rpts = pts;
+  //   vector<point> rpts = pts;
 
-    bool found_duplicate = true;
-    while (found_duplicate) {
+  //   bool found_duplicate = true;
+  //   while (found_duplicate) {
 
-      found_duplicate = false;
+  //     found_duplicate = false;
       
-      for (unsigned i = 0; i < rpts.size(); i++) {
+  //     for (unsigned i = 0; i < rpts.size(); i++) {
 
-	point p = rpts[i];
-	point pp1 = rpts[(i + 1) % rpts.size()];
+  // 	point p = rpts[i];
+  // 	point pp1 = rpts[(i + 1) % rpts.size()];
 
-	if (components_within_eps(p, pp1, 0.001)) {
+  // 	if (components_within_eps(p, pp1, 0.001)) {
 
-	  found_duplicate = true;
-	  rpts.erase(begin(rpts) + i);
-	  break;
+  // 	  found_duplicate = true;
+  // 	  rpts.erase(begin(rpts) + i);
+  // 	  break;
 
-	}
-      }
+  // 	}
+  //     }
 
-    }
+  //   }
 
-    return rpts;
-  }
+  //   return rpts;
+  // }
 
   void check_simplicity(const labeled_polygon_3& p) {
     check_simplicity(p.vertices());

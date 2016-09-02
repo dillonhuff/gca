@@ -1,6 +1,10 @@
 #include "synthesis/mesh_to_gcode.h"
 #include "geometry/extrusion.h"
+
 #include <boost/optional.hpp>
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
 
 #include "feature_recognition/feature_decomposition.h"
 #include "gcode/gcode_program.h"
@@ -107,6 +111,32 @@ namespace gca {
     return face_pocket(work_height, part_height, outl);
   }
 
+
+  typedef boost::geometry::model::d2::point_xy<double> boost_point_2;
+  typedef boost::geometry::model::polygon<boost_point_2> boost_poly_2;
+  typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
+  typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
+
+  std::vector<point>
+  convex_hull_2D(const std::vector<point>& pts,
+		 const double z_level) {
+    boost_multipoint_2 mp;
+    for (auto p : pts) {
+      boost::geometry::append(mp, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
+    }
+
+    boost_multipoint_2 res;
+    boost::geometry::convex_hull(mp, res);
+
+    vector<point> res_pts;
+    for (auto p : res) {
+      point pz(p.x(), p.y(), z_level);
+      res_pts.push_back(pz);
+    }
+
+    return clean_vertices(res_pts);
+  }
+
   
   pocket contour_around(const triangular_mesh& stock,
 			const triangular_mesh& part) {
@@ -126,17 +156,20 @@ namespace gca {
     DBG_ASSERT(stock_outlines.size() == 2);
     oriented_polygon stock_outline = stock_outlines.front();
 
-    auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1));
-    if (part_bound) {
-    } else {
-      DBG_ASSERT(false);
-    }
-    auto part_outlines =
-      mesh_bounds((*part_bound).index_list(), (*part_bound).get_parent_mesh());
+    // auto part_bound = contour_outline(part.face_indexes(), part, point(0, 0, 1));
+    // if (part_bound) {
+    // } else {
+    //   DBG_ASSERT(false);
+    // }
+    // auto part_outlines =
+    //   mesh_bounds((*part_bound).index_list(), (*part_bound).get_parent_mesh());
 
-    oriented_polygon part_outline =
-      min_e(part_outlines, [](const oriented_polygon& p)
-	    { return min_z(p); });
+    // oriented_polygon part_outline =
+    //   min_e(part_outlines, [](const oriented_polygon& p)
+    // 	    { return min_z(p); });
+
+    vector<point> part_hull = convex_hull_2D(part.vertex_list(), part_top);
+    oriented_polygon part_outline(point(0, 0, 1), part_hull);
 
     double part_bottom = min_in_dir(part, point(0, 0, 1));    
     return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
@@ -146,7 +179,7 @@ namespace gca {
   clip_top_and_sides(const triangular_mesh& aligned,
 		     const triangular_mesh& part,
 		     const fixture& f) {
-    vector<pocket> pockets{face_down(aligned, part)}; //, contour_around(aligned, part)};
+    vector<pocket> pockets{face_down(aligned, part), contour_around(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);

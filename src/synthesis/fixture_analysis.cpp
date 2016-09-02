@@ -120,35 +120,6 @@ namespace gca {
     return apply(*t, mesh);
   }
 
-  // fixture_setup
-  // make_fixture_setup(const triangular_mesh& part_mesh,
-  // 		     const fixture& f,
-  // 		     surface_list& surfaces) {
-  //   triangular_mesh m = oriented_part_mesh(part_mesh, f.orient, f.v);
-  //   triangular_mesh* mesh = new (allocate<triangular_mesh>()) triangular_mesh(m);
-  //   vector<pocket> pockets;
-  //   add_surface_pockets(pockets, *mesh, surfaces);
-  //   return fixture_setup(mesh, f, pockets);
-  // }
-
-  // std::vector<fixture_setup>
-  // partition_fixture_setups(const constrained_partition<surface*, fixture*>& surface_part) {
-  //   const triangular_mesh& part_mesh =
-  //     surface_part.items().front()->get_parent_mesh();
-    
-  //   vector<fixture_setup> orients;
-  //   for (auto j : surface_part.non_empty_bucket_inds()) {
-  //     fixture* fix = surface_part.bucket(j);
-  //     surface_list surfaces;
-  //     for (auto i : surface_part.items_in_bucket_inds(j)) {
-  // 	surfaces.push_back(surface_part.item(i)->index_list());
-  //     }
-  //     orients.push_back(make_fixture_setup(part_mesh, *fix, surfaces));
-  //   }
-
-  //   return orients;
-  // }
-
   std::vector<fixture>
   all_stable_fixtures(const std::vector<surface>& surfaces,
 		      const fixtures& f) {
@@ -273,18 +244,6 @@ namespace gca {
     return surface_part;
   }
   
-  // std::vector<fixture_setup>
-  // orientations_to_cut(const std::vector<surface*>& surfs_to_cut,
-  // 		      std::vector<fixture*>& all_orients) {
-
-  //   if (surfs_to_cut.size() == 0) { return {}; }
-
-  //   auto surface_part =
-  //     assign_surfaces_to_fixtures(surfs_to_cut, all_orients);
-
-  //   return partition_fixture_setups(surface_part);
-  // }
-
   point normal(const fixture& f) {
     return f.orient.top_normal();
   }
