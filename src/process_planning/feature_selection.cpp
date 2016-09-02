@@ -1,21 +1,66 @@
+#include <unordered_map>
+
 #include "process_planning/feature_selection.h"
 
 namespace gca {
 
-  std::vector<feature*>
-  contained_features(feature_decomposition* to_check,
-		     feature_decomposition* containing_decomp) {
-    DBG_ASSERT(angle_eps(normal(to_check), normal(containing_decomp), 180.0, 1.0));
+  typedef std::unordered_map<feature*, std::vector<feature*>> containment_map;
 
-    vector<feature*> contained;
-    for (auto c : collect_features(to_check)) {
-      for (auto f : collect_features(containing_decomp)) {
-	if (contains(*f, *c)) {
-	  contained.push_back(c);
-	  break;
-	}
-      }
+  containment_map
+  cont_map(feature_decomposition* left,
+	   feature_decomposition* right) {
+    vector<feature*> container = collect_features(right);
+
+    containment_map cmap;
+    for (auto c : collect_features(left)) {
+      cmap[c] = containing_subset(*c, container);
     }
+
+    return cmap;
+  }
+
+  void
+  select_next_feature(const containment_map& cmap,
+		      std::vector<feature*>& covered_features,
+		      std::vector<feature*>& to_prune) {
+    
+  }
+  
+  void
+  cont_features(const containment_map& cmap,
+		std::vector<feature*>& contained) {
+    auto not_contained = [cmap](feature* f) {
+      auto l = cmap.find(f);
+      if (l != end(cmap)) {
+	return l->second.size() == 0;
+      }
+		
+      DBG_ASSERT(false);
+    };
+
+    unsigned original_size = contained.size();
+    vector<feature*> already_picked = select(contained, not_contained);
+    delete_if(contained, not_contained);
+
+    while (already_picked.size() < original_size) {
+      select_next_feature(cmap, already_picked, contained);
+    }
+
+  }
+  
+  std::vector<feature*>
+  contained_features(feature_decomposition* left,
+		     feature_decomposition* right) {
+    DBG_ASSERT(angle_eps(normal(left), normal(right), 180.0, 1.0));
+
+    containment_map cmap = cont_map(left, right);
+    for (auto c : cont_map(right, left)) {
+      cmap[c.first] = c.second;
+    }
+
+    vector<feature*> contained = collect_features(left);
+    concat(contained, collect_features(right));
+    cont_features(cmap, contained);
 
     return contained;
   }
@@ -45,6 +90,7 @@ namespace gca {
 
     cout << "# of contained features = " << contained_base_features.size() << endl;
     prune_features(base_decomp, contained_base_features);
+    prune_features(top_decomp, contained_base_features);
     
     return {top_decomp, base_decomp};
   }

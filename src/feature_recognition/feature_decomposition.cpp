@@ -725,10 +725,79 @@ namespace gca {
     return n;
   }
 
+  // TODO: Actually implement this when needed
+  std::vector<feature*>
+  range_containing(const point n,
+		   const feature& maybe_contained,
+		   const std::vector<feature*>& container) {
+    return container;
+  }
+
+  // TODO: Should really be containing outlines
+  std::vector<feature*>
+  overlapping_outlines(const feature& maybe_contained,
+		       const std::vector<feature*>& container) {
+    vector<feature*> overlapping;
+
+    point n = maybe_contained.normal();
+
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+
+    labeled_polygon_3 rmc = apply(r, maybe_contained.base());
+    auto rmcbp = to_boost_poly_2(rmc);
+    //    double rmcbp_area = boost::g::area(rmcbp);
+    
+    for (auto c : container) {
+      DBG_ASSERT(c != nullptr);
+
+      labeled_polygon_3 rc = apply(r, c->base());
+      rc.correct_winding_order(point(0, 0, 1));
+
+      auto rcbp = to_boost_poly_2(rc);
+
+      if (boost::geometry::within(rmcbp, rcbp)) {
+	overlapping.push_back(c);
+      } else {
+	//      double rcbp_area = bg::area(rcbp);
+	boost_multipoly_2 res;
+	boost::geometry::sym_difference(rmcbp, rcbp, res);
+      
+	double not_shared_area = boost::geometry::area(res);
+
+	if (not_shared_area < 0.001) {
+	  overlapping.push_back(c);
+	}
+      }
+    }
+
+    cout << "# of overlapping = " << overlapping.size() << endl;
+
+    return overlapping;
+  }
+  
+  std::vector<feature*>
+  containing_subset(const feature& maybe_contained,
+		    const std::vector<feature*>& container) {
+    for (auto c : container) {
+      DBG_ASSERT(angle_eps(maybe_contained.normal(), c->normal(), 180.0, 1.0));
+    }
+
+    vector<feature*> outlines = overlapping_outlines(maybe_contained, container);
+
+    point n = maybe_contained.normal();
+    return range_containing(n, maybe_contained, outlines);
+  }
+
   bool contains(const feature& maybe_contained,
-		const feature& container) {
-    DBG_ASSERT(angle_eps(maybe_contained.normal(), container.normal(), 180.0, 1.0));
-    return true;
+		const std::vector<feature*>& container) {
+    for (auto c : container) {
+      DBG_ASSERT(angle_eps(maybe_contained.normal(), c->normal(), 180.0, 1.0));
+    }
+
+    vector<feature*> sub =
+      containing_subset(maybe_contained, container);
+
+    return sub.size() > 0;
   }
   
   

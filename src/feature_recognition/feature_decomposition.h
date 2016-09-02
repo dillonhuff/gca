@@ -76,13 +76,13 @@ namespace gca {
       labeled_polygon_3 rotated_base = gca::apply(r, base_poly);
       rotated_base.correct_winding_order(times_3(r, base_poly.normal()));
 
-      return feature(dp, rotated_base); //gca::apply(r, base_poly));
+      return feature(dp, rotated_base);
     }
 
     feature apply(const homogeneous_transform& t) const {
       labeled_polygon_3 rotated_base = gca::apply(t, base_poly);
       rotated_base.correct_winding_order(times_3(t.first, base_poly.normal()));
-      
+
       return feature(dp, rotated_base);
     }
 
@@ -193,7 +193,11 @@ namespace gca {
   point normal(feature_decomposition* f);
 
   bool contains(const feature& maybe_contained,
-		const feature& container);
+		const std::vector<feature*>& container);
+
+  std::vector<feature*>
+  containing_subset(const feature& maybe_contained,
+		    const std::vector<feature*>& container);
   
 }
 

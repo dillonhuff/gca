@@ -56,7 +56,12 @@ namespace gca {
 
       REQUIRE(p.fixtures().size() == 2);
 
-      //      REQUIRE(p.fixtures()[1].pockets.size() == 2);
+      for (auto f : p.fixtures()) {
+	cout << "orientation = " << f.fix.orient.top_normal() << endl;
+      }
+
+      REQUIRE(p.fixtures()[1].pockets.size() == 4);
+      REQUIRE(p.fixtures()[0].pockets.size() == 8);
     }
     
     // SECTION("Cylinder") {
