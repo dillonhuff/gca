@@ -15,6 +15,11 @@ namespace gca {
     auto ft = build_feature_decomposition(mesh, point(0, 0, 1));
     auto bt = build_feature_decomposition(mesh, point(0, 0, -1));
 
+    containment_map base_cont = cont_map(bt, ft);
+    unsigned num_base_features_contained = num_contained_features(base_cont);
+
+    REQUIRE(num_base_features_contained == 3);
+
     vector<feature_decomposition*> pruned =
       select_top_and_bottom_features(ft, bt);
 

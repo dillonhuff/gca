@@ -729,20 +729,19 @@ namespace gca {
   std::vector<feature*>
   range_containing(const point n,
 		   const feature& maybe_contained,
-		   const std::vector<feature*>& container) {
-    // feature* max_feature =
-    //   max_e(container,
-    // 	    [n](const feature* f) { return f->max_distance_along(n); });
+		   const std::vector<feature*>& maybe_container) {
 
-    // feature* min_e =
-    //   min_e(container,
-    // 	    [n](const feature* f) { return f->max_distance_along(n); });
+    auto contained_range = maybe_contained.range_along(n);
 
-    // double contained_max = maybe_contained->max_distance_along(n);
-    // double contained_min = maybe_contained->min_distance_along(n);
+    vector<feature*> container;
+    for (auto f : maybe_container) {
+      auto f_range = f->range_along(n);
+      if (intervals_overlap(f_range, contained_range)) {
+	container.push_back(f);
+      }
+    }
 
     return container;
-    
   }
 
   // TODO: Should really be containing outlines

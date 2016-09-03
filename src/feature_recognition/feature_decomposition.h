@@ -65,12 +65,38 @@ namespace gca {
       DBG_ASSERT(depth() >= 0);
     }
 
+    double min_distance_along(const point n) const {
+      vector<point> pts;
+      for (auto p : base_poly.vertices()) {
+	pts.push_back(p);
+	pts.push_back(p + dp*base_poly.normal());
+      }
+
+      return gca::min_distance_along(pts, n);
+    }
+
+    double max_distance_along(const point n) const {
+      vector<point> pts;
+      for (auto p : base_poly.vertices()) {
+	pts.push_back(p);
+	pts.push_back(p + dp*base_poly.normal());
+      }
+
+      return gca::max_distance_along(pts, n);
+    }
+    
+    std::pair<double, double> range_along(const point n) const {
+      double min = min_distance_along(n);
+      double max = max_distance_along(n);
+      return std::make_pair(min, max);
+    }
+
     double depth() const { return dp; }
 
     labeled_polygon_3 base() const { return base_poly; }
 
     double base_distance_along_normal() const
-    { return min_distance_along(base_poly.vertices(), base_poly.normal()); }
+    { return gca::min_distance_along(base_poly.vertices(), base_poly.normal()); }
 
     feature apply(const rotation& r) const {
       labeled_polygon_3 rotated_base = gca::apply(r, base_poly);

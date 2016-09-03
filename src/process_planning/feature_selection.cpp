@@ -1,10 +1,18 @@
-#include <unordered_map>
-
 #include "process_planning/feature_selection.h"
 
 namespace gca {
 
   typedef std::unordered_map<feature*, std::vector<feature*>> containment_map;
+
+  unsigned num_contained_features(const containment_map& m) {
+    unsigned num_contained = 0;
+    for (auto& c : m) {
+      if (c.second.size() != 0) {
+	num_contained++;
+      }
+    }
+    return num_contained;
+  }
 
   containment_map
   cont_map(feature_decomposition* left,

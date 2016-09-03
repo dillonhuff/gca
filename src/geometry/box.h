@@ -83,6 +83,15 @@ namespace gca {
     return bound_boxes(boxes);
   }
 
+  // TODO: Add some unit tests
+  template<typename T>
+  bool intervals_overlap(pair<T, T> i, pair<T, T> j) {
+    return (j.first <= i.second && i.second <= j.second) ||
+      (j.first <= i.first && i.first <= j.second) ||
+      (i.first <= j.first && i.first <= j.second &&
+       j.first <= i.second && j.second <= i.second);
+  }
+  
 }
 
 #endif
