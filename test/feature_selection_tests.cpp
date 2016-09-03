@@ -18,8 +18,14 @@ namespace gca {
     containment_map base_cont = cont_map(bt, ft);
     unsigned num_base_features_contained = num_contained_features(base_cont);
 
+
     REQUIRE(num_base_features_contained == 3);
 
+    containment_map top_cont = cont_map(ft, bt);
+    unsigned num_top_features_contained = num_contained_features(top_cont);
+
+    REQUIRE(num_top_features_contained == 3);
+    
     vector<feature_decomposition*> pruned =
       select_top_and_bottom_features(ft, bt);
 
