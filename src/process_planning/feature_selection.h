@@ -8,7 +8,6 @@
 namespace gca {
 
   typedef std::unordered_map<feature*, std::vector<feature*>> containment_map;
-
   unsigned num_contained_features(const containment_map& m);
 
   containment_map

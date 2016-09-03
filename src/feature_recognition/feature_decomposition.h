@@ -95,6 +95,31 @@ namespace gca {
 
     labeled_polygon_3 base() const { return base_poly; }
 
+    labeled_polygon_3 top() const {
+      vector<point> verts;
+
+      for (auto p : base_poly.vertices()) {
+	verts.push_back(p + dp*base_poly.normal());
+      }
+
+      cout << "# of verts = " << verts.size() << endl;
+
+      vector<vector<point>> holes;
+      for (auto h : base_poly.holes()) {
+	vector<point> hole_pts;
+	for (auto p : base().vertices()) {
+	  hole_pts.push_back(p + dp*base_poly.normal());
+	}
+	holes.push_back(hole_pts);
+      }
+
+      labeled_polygon_3 top(verts, holes);
+
+      top.correct_winding_order(base().normal());
+
+      return top;
+    }
+
     double base_distance_along_normal() const
     { return gca::min_distance_along(base_poly.vertices(), base_poly.normal()); }
 

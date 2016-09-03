@@ -62,6 +62,49 @@ namespace gca {
 
     cout << "Done traversing feature tree" << endl;
   }
+
+  vector<vtkSmartPointer<vtkActor>> feature_actors(const feature& f) {
+    auto base_pd = f.base();
+    auto top_pd = f.top();
+
+    vector<vtkSmartPointer<vtkPolyData>> ring_pds;
+
+    auto pd = polydata_for_ring(base_pd.vertices());
+    ring_pds.push_back(pd);
     
+    for (auto ir : base_pd.holes()) {
+      auto pd = polydata_for_ring(ir);
+      ring_pds.push_back(polydata_for_ring(ir));
+    }
+
+    auto bp = polydata_for_ring(top_pd.vertices());
+    ring_pds.push_back(bp);
+    
+    for (auto ir : top_pd.holes()) {
+      auto pd = polydata_for_ring(ir);
+      ring_pds.push_back(polydata_for_ring(ir));
+    }
+    
+    vector<vtkSmartPointer<vtkActor>> ring_acts;
+    for (auto r : ring_pds) {
+      ring_acts.push_back(polydata_actor(r));
+    }
+
+    return ring_acts;
+  }
+  
+  void vtk_debug_feature(const feature& f) {
+    auto ring_acts = feature_actors(f);
+    visualize_actors(ring_acts);
+  }
+
+  void vtk_debug_features(const std::vector<feature*>& fs) {
+    vector<vtkSmartPointer<vtkActor>> actors;
+    for (auto f : fs) {
+      concat(actors, feature_actors(*f));
+    }
+
+    visualize_actors(actors);
+  }
 
 }

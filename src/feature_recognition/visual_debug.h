@@ -13,6 +13,11 @@ namespace gca {
   void vtk_debug_feature_decomposition(feature_decomposition* f);
   void vtk_debug_feature_tree(feature_decomposition* f);
 
+  void vtk_debug_feature(const feature& f);
+
+  void vtk_debug_features(const std::vector<feature*>& f);
+
+  void vtk_debug_features(const std::vector<feature*>& fs);
 }
 
 #endif
