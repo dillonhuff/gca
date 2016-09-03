@@ -119,6 +119,20 @@ namespace gca {
     
     delete_leaves(f, prune);
   }
+
+
+  std::vector<feature_decomposition*>
+  select_top_and_bottom_features(feature_decomposition* top_decomp,
+				 feature_decomposition* base_decomp) {
+    vector<feature*> contained_base_features =
+      contained_features(base_decomp, top_decomp);
+
+    cout << "# of contained features = " << contained_base_features.size() << endl;
+    prune_features(base_decomp, contained_base_features);
+    prune_features(top_decomp, contained_base_features);
+    
+    return {top_decomp, base_decomp};
+  }
   
   std::vector<feature_decomposition*>
   select_features(const triangular_mesh& part_mesh,
@@ -133,14 +147,7 @@ namespace gca {
     auto base_decomp =
       build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
 
-    vector<feature*> contained_base_features =
-      contained_features(base_decomp, top_decomp);
-
-    cout << "# of contained features = " << contained_base_features.size() << endl;
-    prune_features(base_decomp, contained_base_features);
-    prune_features(top_decomp, contained_base_features);
-    
-    return {top_decomp, base_decomp};
+    return select_top_and_bottom_features(top_decomp, base_decomp);
   }
   
 }
