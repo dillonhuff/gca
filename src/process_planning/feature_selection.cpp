@@ -78,7 +78,7 @@ namespace gca {
       }
     }
 
-    subtract(to_prune, newly_covered);
+    //    subtract(to_prune, newly_covered);
     concat(covered_features, newly_covered);
   }
   
@@ -98,8 +98,12 @@ namespace gca {
     vector<feature*> already_picked = select(contained, not_contained);
     delete_if(contained, not_contained);
 
+    cout << "# of features left after removing uncontained features = " << contained.size() << endl;
+
     while (already_picked.size() < original_size) {
+      cout << "selecting another feature" << endl;
       select_next_feature(cmap, already_picked, contained);
+      cout << "# of contained features left = " << contained.size() << endl;
     }
 
   }
@@ -116,6 +120,11 @@ namespace gca {
 
     vector<feature*> contained = collect_features(left);
     concat(contained, collect_features(right));
+
+    cout << "# of features                 = " << contained.size() << endl;
+    cout << "total # of contained features = " << num_contained_features(cmap) << endl;
+
+    
     cont_features(cmap, contained);
 
     return contained;
