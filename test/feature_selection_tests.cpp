@@ -43,16 +43,16 @@ namespace gca {
 
     REQUIRE(collect_features(pruned[1]).size() == 3);
 
-    cout << "Top features " << endl;
-    vtk_debug_features(collect_features(pruned[0]));
+    //    cout << "Top features " << endl;
+    //vtk_debug_features(collect_features(pruned[0]));
 
-    cout << "Base features " << endl;
-    vtk_debug_features(collect_features(pruned[1]));
+    //    cout << "Base features " << endl;
+    //vtk_debug_features(collect_features(pruned[1]));
 
-    cout << "Combined features " << endl;
-    auto top = collect_features(pruned[0]);
-    concat(top, collect_features(pruned[1]));
-    vtk_debug_features(top);
+    //    cout << "Combined features " << endl;
+    //    auto top = collect_features(pruned[0]);
+    //    concat(top, collect_features(pruned[1]));
+    //vtk_debug_features(top);
 
     REQUIRE(collect_features(pruned[0]).size() == 6);
 

@@ -257,6 +257,13 @@ namespace gca {
     return {top_decomp, base_decomp};
   }
 
+  std::vector<feature*>
+  unreachable_features(const std::vector<feature*> features,
+		       const fixture& f) {
+    vector<feature*> unreachable;
+    return unreachable;
+  }
+
   std::vector<feature_decomposition*>
   select_features(const triangular_mesh& part_mesh,
 		  const std::vector<fixture>& fixtures) {
@@ -268,8 +275,16 @@ namespace gca {
     auto top_decomp =
       build_feature_decomposition(part_mesh, top_fix.orient.top_normal());
 
+    auto top_unreachable_features =
+      unreachable_features(collect_features(top_decomp), top_fix);
+    prune_features(top_decomp, top_unreachable_features);
+    
     auto base_decomp =
       build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
+
+    auto base_unreachable_features =
+      unreachable_features(collect_features(base_decomp), base_fix);
+    prune_features(base_decomp, base_unreachable_features);
 
     return clip_top_and_bottom_features(top_decomp, base_decomp);
   }
