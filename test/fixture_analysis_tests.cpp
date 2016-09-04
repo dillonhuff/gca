@@ -29,9 +29,12 @@ namespace gca {
     SECTION("Round with thru holes") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
 
+      cout << "Starting round with thru holes" << endl;
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       REQUIRE(p.fixtures().size() == 2);
+
+      cout << "Done with thru holes" << endl;
 
     }
 

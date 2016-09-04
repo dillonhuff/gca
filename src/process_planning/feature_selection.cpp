@@ -269,9 +269,9 @@ namespace gca {
     vector<feature*> to_cut;
     for (auto chain : chains) {
       cout << "CHAIN" << endl;
-      for (auto fset : chain) {
-	vtk_debug_features(fset);
-      }
+      // for (auto fset : chain) {
+      // 	vtk_debug_features(fset);
+      // }
       concat(to_cut, chain.back());
     }
 
@@ -299,9 +299,9 @@ namespace gca {
       pick_features_to_cut(cmap, contained);
 
     cout << "# of features to cut = " << features_to_cut.size() << endl;
-    for (auto f : features_to_cut) {
-      vtk_debug_feature(*f);
-    }
+    // for (auto f : features_to_cut) {
+    //   vtk_debug_feature(*f);
+    // }
 
     subtract(contained, features_to_cut);
 

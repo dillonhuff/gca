@@ -725,6 +725,18 @@ namespace gca {
     return n;
   }
 
+  bool tangent(const std::pair<double, double> r1,
+	       const std::pair<double, double> r2,
+	       const double tol) {
+    DBG_ASSERT(r1.first < r1.second);
+    DBG_ASSERT(r2.first < r2.second);
+
+    if (within_eps(r1.second, r2.first, tol)) { return true; }
+    if (within_eps(r2.second, r1.first, tol)) { return true; }
+
+    return false;
+  }
+
   // TODO: Actually implement this when needed
   std::vector<feature*>
   range_containing(const point n,
@@ -737,7 +749,12 @@ namespace gca {
     for (auto f : maybe_container) {
       auto f_range = f->range_along(n);
       if (intervals_overlap(f_range, contained_range)) {
-	container.push_back(f);
+
+	// Do not include features that just border the feature
+	// in the containing range
+	if (!tangent(f_range, contained_range, 0.001)) {
+	  container.push_back(f);
+	}
       }
     }
 

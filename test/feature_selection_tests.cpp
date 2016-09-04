@@ -36,7 +36,8 @@ namespace gca {
     REQUIRE(pruned.size() == 2);
 
     REQUIRE(collect_features(pruned[1]).size() == 3);
-    REQUIRE(collect_features(pruned[1]).size() == 6);
+    REQUIRE(collect_features(pruned[0]).size() == 6);
+
   }
 
 }
