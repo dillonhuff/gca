@@ -280,12 +280,22 @@ namespace gca {
     vector<point> touching_right_plane =
       select(boundary_points,
 	     [right_plane](const point p) {
-	       return within_eps(distance_to(left_plane, p), 0.0, 0.001);
+	       return within_eps(distance_to(right_plane, p), 0.0, 0.001);
 	     });
 
     if (touching_right_plane.size() > 0) { return true; }
 
-    //    if (v.
+    if (!v.has_parallel_plate()) {
+      plane base_plane = orient.base_plane();
+      vector<point> touching_base_plane =
+	select(boundary_points,
+	       [base_plane](const point p) {
+		 return within_eps(distance_to(base_plane, p), 0.0, 0.001);
+	       });
+
+      if (touching_base_plane.size() > 0) { return true; }
+      
+    }
     
     return false;
   }
