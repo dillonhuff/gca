@@ -269,6 +269,8 @@ namespace gca {
 		    const std::vector<feature*>& container);
 
   std::vector<feature*> collect_leaf_features(feature_decomposition* f);
-}
 
+  bool same_base(const feature& l, const feature& r, const double tol);
+
+}
 #endif

@@ -843,5 +843,20 @@ namespace gca {
     return sub.size() > 0;
   }
   
+
+  bool same_base(const feature& l, const feature& r, const double tol) {
+    auto l_p = l.base();
+    auto r_p = r.base();
+
+    const rotation rot = rotate_from_to(l_p.normal(), point(0, 0, 1));
+
+    auto l_pr = to_boost_poly_2(apply(rot, l_p));
+    auto r_pr = to_boost_poly_2(apply(rot, r_p));
+
+    boost_multipoly_2 res;
+    boost::geometry::sym_difference(l_pr, r_pr, res);
+
+    return boost::geometry::area(res) < tol;
+  }
   
 }
