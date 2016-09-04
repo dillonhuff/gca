@@ -858,5 +858,31 @@ namespace gca {
 
     return boost::geometry::area(res) < tol;
   }
-  
+
+  feature* parent_feature(feature* f, feature_decomposition* decomp) {
+    for (unsigned i = 0; i < decomp->num_children(); i++) {
+      feature* child_feature = decomp->child(i)->feature();
+
+      if (f == child_feature) { return decomp->feature(); }
+    }
+
+    for (unsigned i = 0; i < decomp->num_children(); i++) {
+      feature* possible_parent = parent_feature(f, decomp->child(i));
+
+      if (possible_parent != nullptr) { return possible_parent; }
+    }
+
+    return nullptr;
+  }
+
+  boost_poly_2 rotate_to_2D_polygon(const labeled_polygon_3& p) {
+    const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
+    return to_boost_poly_2(apply(r, p));
+  }
+
+  double base_area(const feature& f) {
+    boost_poly_2 bp = rotate_to_2D_polygon(f.base());
+    return boost::geometry::area(bp);
+  }
+
 }

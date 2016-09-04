@@ -272,5 +272,9 @@ namespace gca {
 
   bool same_base(const feature& l, const feature& r, const double tol);
 
+  feature* parent_feature(feature* f, feature_decomposition* decomp);
+
+  double base_area(const feature& f);
+
 }
 #endif

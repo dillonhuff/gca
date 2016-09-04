@@ -211,14 +211,33 @@ namespace gca {
       for (auto container : collect_leaf_features(container_decomp)) {
 	if (same_base(*target, *container, 0.001) &&
 	    past_overlap(*target, *container)) {
-	  duplicates.push_back(make_pair(target, container));
+
+	  feature* t_parent = parent_feature(target, target_decomp);
+	  feature* c_parent = parent_feature(container, container_decomp);
+
+	  if (!((t_parent != nullptr) && (c_parent != nullptr))) {
+	    cout << "target    = " << target << endl;
+	    cout << "container = " << container << endl;
+
+	    cout << "target decomp feature = " << target_decomp->child(0)->feature() << endl;;
+	    cout << "container decomp feature = " << container_decomp->child(0)->feature() << endl;
+	    
+	    DBG_ASSERT((t_parent != nullptr) && (c_parent != nullptr));
+	  }
+
+	  if (base_area(*t_parent) <= base_area(*c_parent)) {
+	    duplicates.push_back(make_pair(target, container));
+	  } else {
+	    duplicates.push_back(make_pair(container, target));
+	  }
+
 	}
       }
     }
 
     return duplicates;
   }
-  
+
   std::vector<feature_decomposition*>
   clip_top_and_bottom_features(feature_decomposition* top_decomp,
 			       feature_decomposition* base_decomp) {
@@ -226,8 +245,9 @@ namespace gca {
       duplicate_features(base_decomp, top_decomp);
 
     vector<feature*> dup_features;
-    for (auto trimmed_and_deleted_pair : dup_feature_pairs) {
-      dup_features.push_back(trimmed_and_deleted_pair.second);
+    for (auto overlap_pair : dup_feature_pairs) {
+      feature* to_delete = overlap_pair.second;
+      dup_features.push_back(to_delete);
     }
 
     cout << "# of duplicate features = " << dup_features.size() << endl;
@@ -236,7 +256,7 @@ namespace gca {
 
     return {top_decomp, base_decomp};
   }
-  
+
   std::vector<feature_decomposition*>
   select_features(const triangular_mesh& part_mesh,
 		  const std::vector<fixture>& fixtures) {
@@ -244,7 +264,7 @@ namespace gca {
 
     auto top_fix = fixtures[0];
     auto base_fix = fixtures[1];
-    
+
     auto top_decomp =
       build_feature_decomposition(part_mesh, top_fix.orient.top_normal());
 
