@@ -230,6 +230,24 @@ namespace gca {
     }
   }
 
+  template<typename T, typename F>
+  void traverse_leaves_bf(T* tree, F f) {
+    std::deque<T*> active{tree};
+    while (active.size() > 0) {
+      T* next = active.front();
+
+      if (next->num_children() == 0) {
+	f(node_value(next));
+      }
+
+      active.pop_front();
+
+      for (auto i = 0; i < next->num_children(); i++) {
+	active.push_back(next->child(i));
+      }
+    }
+  }
+  
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
   
   feature_decomposition*
@@ -249,7 +267,8 @@ namespace gca {
   std::vector<feature*>
   containing_subset(const feature& maybe_contained,
 		    const std::vector<feature*>& container);
-  
+
+  std::vector<feature*> collect_leaf_features(feature_decomposition* f);
 }
 
 #endif

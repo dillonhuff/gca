@@ -35,6 +35,12 @@ namespace gca {
   vtkSmartPointer<vtkPlane> vtk_plane(const plane p);  
 
   line vtkCell_to_line(vtkCell* c);
+
+  void color_polydata(vtkSmartPointer<vtkPolyData> data,
+		      const unsigned char red,
+		      const unsigned char green,
+		      const unsigned char blue);
+
 }
 
 #endif

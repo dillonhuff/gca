@@ -78,10 +78,12 @@ namespace gca {
     }
 
     auto bp = polydata_for_ring(top_pd.vertices());
+    color_polydata(bp, 0, 200, 0);
     ring_pds.push_back(bp);
     
     for (auto ir : top_pd.holes()) {
       auto pd = polydata_for_ring(ir);
+      color_polydata(bp, 0, 200, 0);
       ring_pds.push_back(polydata_for_ring(ir));
     }
     

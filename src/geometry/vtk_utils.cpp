@@ -98,6 +98,28 @@ namespace gca {
     return polyData;
   }
 
+  void color_polydata(vtkSmartPointer<vtkPolyData> data,
+		      const unsigned char red,
+		      const unsigned char green,
+		      const unsigned char blue) {
+    unsigned char color[3];
+    color[0] = red;
+    color[1] = green;
+    color[2] = blue;
+
+    // Create a vtkUnsignedCharArray container and store the colors in it
+    vtkSmartPointer<vtkUnsignedCharArray> colors =
+      vtkSmartPointer<vtkUnsignedCharArray>::New();
+    colors->SetNumberOfComponents(3);
+    for (vtkIdType i = 0; i < data->GetNumberOfCells(); i++) {
+      colors->InsertNextTupleValue(color);
+    }
+ 
+
+    data->GetCellData()->SetScalars(colors);
+
+  }
+
   vtkSmartPointer<vtkPolyData>
   polydata_for_ring(const std::vector<point>& mpts) {
     // Create the polydata where we will store all the geometric data

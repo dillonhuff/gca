@@ -68,19 +68,19 @@ namespace gca {
     return oac;
   }
   
-  feature*
-  pick_next_feature(const containment_map& cmap,
-		    std::vector<feature*>& covered_features,
-		    std::vector<feature*>& to_prune) {
-    DBG_ASSERT(to_prune.size() > 0);
+  // feature*
+  // pick_next_feature(const containment_map& cmap,
+  // 		    std::vector<feature*>& covered_features,
+  // 		    std::vector<feature*>& to_prune) {
+  //   DBG_ASSERT(to_prune.size() > 0);
 
-    vector<feature*> possible_features_to_cut = to_prune;
-    delete_if(possible_features_to_cut,
-	      [covered_features](const feature* f) { return elem(f, covered_features); });
+  //   vector<feature*> possible_features_to_cut = to_prune;
+  //   delete_if(possible_features_to_cut,
+  // 	      [covered_features](const feature* f) { return elem(f, covered_features); });
 
-    DBG_ASSERT(possible_features_to_cut.size() > 0);
+  //   DBG_ASSERT(possible_features_to_cut.size() > 0);
 
-    DBG_ASSERT(false);
+  //   DBG_ASSERT(false);
     
     // auto score = [cmap, covered_features](feature* f) {
     //   double f_score = 0.0;
@@ -114,96 +114,96 @@ namespace gca {
     // };
 
     // return max_e(to_prune, score);
-  }
+    //  }
   
   // TODO: Handle cascades of coverings?
-  void
-  select_next_feature(const containment_map& cmap,
-		      std::vector<feature*>& covered_features,
-		      std::vector<feature*>& to_prune) {
-    feature* next = pick_next_feature(cmap, covered_features, to_prune);
+  // void
+  // select_next_feature(const containment_map& cmap,
+  // 		      std::vector<feature*>& covered_features,
+  // 		      std::vector<feature*>& to_prune) {
+  //   feature* next = pick_next_feature(cmap, covered_features, to_prune);
 
-    remove(next, to_prune);
-    covered_features.push_back(next);
+  //   remove(next, to_prune);
+  //   covered_features.push_back(next);
 
-    std::vector<feature*> newly_covered;
-    for (auto c : to_prune) {
-      auto l = cmap.find(c);
+  //   std::vector<feature*> newly_covered;
+  //   for (auto c : to_prune) {
+  //     auto l = cmap.find(c);
       
-      if (l != end(cmap)) {
-	auto cover_set = l->second;
-	if (intersection(cover_set, covered_features).size() == cover_set.size()) {
-	  cout << "Newly covered feature" << endl;
-	  newly_covered.push_back(c);
-	}
-      } else {
-	DBG_ASSERT(false);
-      }
-    }
+  //     if (l != end(cmap)) {
+  // 	auto cover_set = l->second;
+  // 	if (intersection(cover_set, covered_features).size() == cover_set.size()) {
+  // 	  cout << "Newly covered feature" << endl;
+  // 	  newly_covered.push_back(c);
+  // 	}
+  //     } else {
+  // 	DBG_ASSERT(false);
+  //     }
+  //   }
 
-    concat(covered_features, newly_covered);
-  }
+  //   concat(covered_features, newly_covered);
+  // }
   
-  void
-  cont_features(const containment_map& cmap,
-		std::vector<feature*>& contained) {
-    auto not_contained = [cmap](feature* f) {
-      auto l = cmap.find(f);
-      if (l != end(cmap)) {
-	return l->second.size() == 0;
-      }
+  // void
+  // cont_features(const containment_map& cmap,
+  // 		std::vector<feature*>& contained) {
+  //   auto not_contained = [cmap](feature* f) {
+  //     auto l = cmap.find(f);
+  //     if (l != end(cmap)) {
+  // 	return l->second.size() == 0;
+  //     }
 		
-      DBG_ASSERT(false);
-    };
+  //     DBG_ASSERT(false);
+  //   };
 
-    unsigned original_size = contained.size();
-    vector<feature*> already_picked = select(contained, not_contained);
-    delete_if(contained, not_contained);
+  //   unsigned original_size = contained.size();
+  //   vector<feature*> already_picked = select(contained, not_contained);
+  //   delete_if(contained, not_contained);
 
-    cout << "# of features left after removing uncontained features = " << contained.size() << endl;
+  //   cout << "# of features left after removing uncontained features = " << contained.size() << endl;
 
-    while (already_picked.size() < original_size) {
-      cout << "selecting another feature" << endl;
-      select_next_feature(cmap, already_picked, contained);
-      cout << "# of contained features left = " << contained.size() << endl;
-    }
+  //   while (already_picked.size() < original_size) {
+  //     cout << "selecting another feature" << endl;
+  //     select_next_feature(cmap, already_picked, contained);
+  //     cout << "# of contained features left = " << contained.size() << endl;
+  //   }
 
-  }
+  // }
 
-  std::vector<feature*>
-  dominated_features(feature_decomposition* left,
-		     feature_decomposition* right) {
-    DBG_ASSERT(angle_eps(normal(left), normal(right), 180.0, 1.0));
+  // std::vector<feature*>
+  // dominated_features(feature_decomposition* left,
+  // 		     feature_decomposition* right) {
+  //   DBG_ASSERT(angle_eps(normal(left), normal(right), 180.0, 1.0));
 
-    containment_map cmap = cont_map(left, right);
-    for (auto c : cont_map(right, left)) {
-      cmap[c.first] = c.second;
-    }
+  //   containment_map cmap = cont_map(left, right);
+  //   for (auto c : cont_map(right, left)) {
+  //     cmap[c.first] = c.second;
+  //   }
 
-    vector<feature*> contained = collect_features(left);
-    concat(contained, collect_features(right));
+  //   vector<feature*> contained = collect_features(left);
+  //   concat(contained, collect_features(right));
 
-    cout << "# of features                 = " << contained.size() << endl;
-    cout << "total # of contained features = " << num_contained_features(cmap) << endl;
+  //   cout << "# of features                 = " << contained.size() << endl;
+  //   cout << "total # of contained features = " << num_contained_features(cmap) << endl;
 
-    vector<feature*> dominated_features;
-    for (auto feature_container_pair : cmap) {
-      auto f = feature_container_pair.first;
-      auto container = feature_container_pair.second;
+  //   vector<feature*> dominated_features;
+  //   for (auto feature_container_pair : cmap) {
+  //     auto f = feature_container_pair.first;
+  //     auto container = feature_container_pair.second;
 
-      if (container.size() > 0) {
-	vector<feature*> overlapped = features_overlapped_by(f, cmap);
-	subtract(overlapped, container);
-	if (overlapped.size() == 0) {
-	  dominated_features.push_back(f);
-	}
-      }
-    }
+  //     if (container.size() > 0) {
+  // 	vector<feature*> overlapped = features_overlapped_by(f, cmap);
+  // 	subtract(overlapped, container);
+  // 	if (overlapped.size() == 0) {
+  // 	  dominated_features.push_back(f);
+  // 	}
+  //     }
+  //   }
 
-    cout << "# of dominated features = " << dominated_features.size() << endl;
+  //   cout << "# of dominated features = " << dominated_features.size() << endl;
 
-    return dominated_features;
-  }
+  //   return dominated_features;
+  // }
 
   typedef std::vector<feature*> feature_set;
   typedef std::vector<feature_set> containment_chain;
@@ -269,9 +269,9 @@ namespace gca {
     vector<feature*> to_cut;
     for (auto chain : chains) {
       cout << "CHAIN" << endl;
-      // for (auto fset : chain) {
-      // 	vtk_debug_features(fset);
-      // }
+      for (auto fset : chain) {
+      	//vtk_debug_features(fset);
+      }
       concat(to_cut, chain.back());
     }
 
@@ -315,7 +315,7 @@ namespace gca {
     delete_leaves(f, prune);
   }
 
-
+  
   std::vector<feature_decomposition*>
   select_top_and_bottom_features(feature_decomposition* top_decomp,
 				 feature_decomposition* base_decomp) {
@@ -328,11 +328,39 @@ namespace gca {
     
     return {top_decomp, base_decomp};
   }
+
+  std::vector<std::pair<feature*, feature*> >
+  duplicate_features(feature_decomposition* target_decomp,
+		     feature_decomposition* container_decomp) {
+    DBG_ASSERT(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0));
+
+    vector<pair<feature*, feature*>> duplicates;
+    for (auto maybe_contained : collect_leaf_features(target_decomp)) {
+      for (auto container : collect_leaf_features(container_decomp)) {
+	
+      }
+    }
+
+    return duplicates;
+  }
+  
+  std::vector<feature_decomposition*>
+  clip_top_and_bottom_features(feature_decomposition* top_decomp,
+			       feature_decomposition* base_decomp) {
+    vector<pair<feature*, feature*>> dup_features =
+      duplicate_features(base_decomp, top_decomp);
+
+    cout << "# of duplicate features = " << dup_features.size() << endl;
+    //    prune_features(base_decomp, duplicate_features);
+
+    return {top_decomp, base_decomp};
+  }
   
   std::vector<feature_decomposition*>
   select_features(const triangular_mesh& part_mesh,
 		  const std::vector<fixture>& fixtures) {
     DBG_ASSERT(fixtures.size() == 2);
+
     auto top_fix = fixtures[0];
     auto base_fix = fixtures[1];
     
@@ -342,7 +370,7 @@ namespace gca {
     auto base_decomp =
       build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
 
-    return select_top_and_bottom_features(top_decomp, base_decomp);
+    return clip_top_and_bottom_features(top_decomp, base_decomp);
   }
   
 }

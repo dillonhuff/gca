@@ -712,6 +712,21 @@ namespace gca {
     return features;
   }
 
+  vector<feature*> collect_leaf_features(feature_decomposition* f) {
+    DBG_ASSERT(f != nullptr);
+    
+    vector<feature*> features;
+
+    auto func = [&features](feature* f) {
+      if (f != nullptr)
+	{ features.push_back(f); }
+    };
+
+    traverse_leaves_bf(f, func);
+
+    return features;
+  }
+  
   point normal(feature_decomposition* f) {
     point n;
     auto check_normal = [&n](const feature* f) {
