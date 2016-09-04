@@ -138,7 +138,11 @@ namespace gca {
   largest_upward_orientation(const std::vector<surface>& surfs,
 			     const vice& parallel,
 			     const point n);
-  
+
+  bool point_above_vice(const point p,
+			const clamp_orientation& orient,
+			const vice& v);
+
 }
 
 #endif

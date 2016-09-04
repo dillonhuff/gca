@@ -257,11 +257,49 @@ namespace gca {
     return {top_decomp, base_decomp};
   }
 
+  bool unreachable(const feature& f, const fixture& fix) {
+    vector<point> boundary_points = f.base().vertices();
+    concat(boundary_points, f.top().vertices());
+
+    const clamp_orientation& orient = fix.orient;
+    const vice& v = fix.v;
+
+    delete_if(boundary_points,
+	      [orient, v](const point p) { return point_above_vice(p, orient, v); });
+
+    plane left_plane = orient.left_plane();
+    vector<point> touching_left_plane =
+      select(boundary_points,
+	     [left_plane](const point p) {
+	       return within_eps(distance_to(left_plane, p), 0.0, 0.001);
+	     });
+
+    if (touching_left_plane.size() > 0) { return true; }
+
+    plane right_plane = orient.right_plane();
+    vector<point> touching_right_plane =
+      select(boundary_points,
+	     [right_plane](const point p) {
+	       return within_eps(distance_to(left_plane, p), 0.0, 0.001);
+	     });
+
+    if (touching_right_plane.size() > 0) { return true; }
+
+    //    if (v.
+    
+    return false;
+  }
+
   std::vector<feature*>
   unreachable_features(const std::vector<feature*> features,
-		       const fixture& f) {
-    vector<feature*> unreachable;
-    return unreachable;
+		       const fixture& fix) {
+    vector<feature*> unreachable_features;
+    for (auto f : features) {
+      if (unreachable(*f, fix)) {
+	unreachable_features.push_back(f);
+      }
+    }
+    return unreachable_features;
   }
 
   std::vector<feature_decomposition*>

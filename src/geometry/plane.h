@@ -56,6 +56,8 @@ namespace gca {
   std::vector<point> project(const plane pl, const std::vector<point>& pts);
   point project(const plane pl, const point p);
 
+  double distance_to(const plane pl, const point p);
+
   
 }
 

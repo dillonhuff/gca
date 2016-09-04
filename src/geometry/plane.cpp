@@ -56,5 +56,9 @@ namespace gca {
 
     return ppts;
   }
+
+  double distance_to(const plane pl, const point p) {
+    return dot(pl.normal(), pl.pt() - p);
+  }
   
 }

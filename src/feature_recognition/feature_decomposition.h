@@ -107,7 +107,7 @@ namespace gca {
       vector<vector<point>> holes;
       for (auto h : base_poly.holes()) {
 	vector<point> hole_pts;
-	for (auto p : base().vertices()) {
+	for (auto p : h) {
 	  hole_pts.push_back(p + dp*base_poly.normal());
 	}
 	holes.push_back(hole_pts);
