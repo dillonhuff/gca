@@ -11,35 +11,34 @@ namespace gca {
 
     vector<surface> regions = inds_to_surfaces(const_orientation_regions(m), m);
 
-    // Note: Should really filter duplicates here
-    // vector<double> ortho_areas;
-    // for (auto r : regions) { ortho_areas.push_back(0.0); }
-
     unordered_map<surface*, double> ortho_areas;
-    for (surface& r : regions) { ortho_areas[&r] = 0.0; }
-
-    // for (unsigned i = 0; i < regions.size(); i++) {
-    //   auto& ri = regions[i];
-    //   point ni = normal(ri);
-    //   for (unsigned j = 0; j < regions.size(); j++) {
-    // 	auto& rj = regions[j];
-
-
+    unordered_map<surface*, unsigned> horizontal_counts;
+    for (surface& r : regions) {
+      ortho_areas[&r] = 0.0;
+      horizontal_counts[&r] = 0;
+    }
 
     for (surface& ri : regions) {
       point ni = normal(ri);
       for (surface& rj : regions) {
+	if (rj.parallel_to(ni, 1.0)) {
+	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
+
+	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
+	  horizontal_counts[&ri] = horizontal_counts[&ri] + 1;
+	}
+	
 	if (rj.orthogonal_to(ni, 1.0) ||
-	    rj.parallel_to(ni, 1.0) ||
 	    rj.antiparallel_to(ni, 1.0)) {
 	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
 
 	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
 	}
+
       }
     }
 
-    auto max_region = //max_e(begin(ortho_areas), end(ortho_areas));
+    auto max_region =
       max_element(begin(ortho_areas),
 		  end(ortho_areas),
 		  [](const std::pair<surface*, double>& l,
@@ -49,7 +48,21 @@ namespace gca {
 
     cout << "Max area = " << max_region->second << endl;
 
-    return normal(*(max_region->first));
+    point n = normal(*(max_region->first));
+
+    point neg_n = -1*n;
+
+    unsigned horizontal_count = horizontal_counts[max_region->first];
+    
+    for (auto& r : regions) {
+      if (angle_eps(normal(r), neg_n, 0.0, 1.0)) {
+	unsigned neg_horizontal_count = horizontal_counts[&r];
+	if (neg_horizontal_count > horizontal_count) {
+	  return neg_n;
+	}
+      }
+    }
+    return n;
 
     // unsigned d = std::distance(begin(ortho_areas), max_region);
 
