@@ -143,6 +143,11 @@ namespace gca {
 			const clamp_orientation& orient,
 			const vice& v);
 
+  std::vector<clamp_orientation>
+  all_stable_orientations_with_top_normal(const std::vector<surface>& surfaces,
+					  const vice& v,
+					  const point n);
+
 }
 
 #endif

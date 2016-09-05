@@ -260,8 +260,13 @@ namespace gca {
     // std::vector<surface> const_orient_surfs =
     //   constant_orientation_subsurfaces(outline_of_contour);
 
+    cout << "Creating const orientation regions" << endl;
+    auto cont_region_inds =
+      const_orientation_regions(outline_of_contour.get_parent_mesh());
+    cout << "DONE with const orientation regions" << endl;
+
     vector<surface> const_orient_surfs =
-      inds_to_surfaces(const_orientation_regions(outline_of_contour.get_parent_mesh()), outline_of_contour.get_parent_mesh());
+      inds_to_surfaces(cont_region_inds, outline_of_contour.get_parent_mesh());
 
     double total_area = merge_surfaces(const_orient_surfs).surface_area();
 
@@ -273,8 +278,11 @@ namespace gca {
 
     //    vtk_debug_highlight_inds(const_orient_surfs);
 
+    cout << "START all_stable_orientations" << endl;
     std::vector<clamp_orientation> orients =
-      all_stable_orientations(const_orient_surfs, v);
+      all_stable_orientations_with_top_normal(const_orient_surfs, v, n);
+    cout << "DONE all_stable_orientations" << endl;
+
     if (orients.size() > 0) {
       cout << "NO CUSTOM JAW CUTOUT" << endl;
       auto cl = find_orientation_by_normal(orients, n);

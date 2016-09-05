@@ -101,6 +101,33 @@ namespace gca {
     }
     return all_viable_clamp_orientations(surfs, v);
   }  
+
+  std::vector<clamp_orientation>
+  all_clamp_orientations_with_top_normal(const std::vector<surface>& surfaces,
+					 const point n) {
+    vector<clamp_orientation> orients;
+    for (auto& next_bottom : surfaces) {
+
+      if (angle_eps(normal(next_bottom), n, 180, 1.0)) {
+	for (auto& next_left : surfaces) {
+	  for (auto& next_right : surfaces) {
+
+	    if (parallel_flat_surfaces(&next_right, &next_left)) {
+
+	      if (orthogonal_flat_surfaces(&next_bottom, &next_left) &&
+		  orthogonal_flat_surfaces(&next_bottom, &next_right)) {
+		orients.push_back(clamp_orientation(&next_left,
+						    &next_right,
+						    &next_bottom));
+	      }
+
+	    }
+	  }
+	}
+      }
+    }
+    return orients;
+  }
   
   std::vector<clamp_orientation>
   all_clamp_orientations(const std::vector<const surface*>& surfaces) {
@@ -172,6 +199,20 @@ namespace gca {
     return orients;
   }
 
+  std::vector<clamp_orientation>
+  all_stable_orientations_with_top_normal(const std::vector<surface>& surfaces,
+					  const vice& v,
+					  const point n) {
+    vector<clamp_orientation> orients =
+      all_clamp_orientations_with_top_normal(surfaces, n);
+
+    filter_stub_orientations(orients, v);
+
+    unique_by_top_normal(orients);
+
+    return orients;
+  }
+  
   bool point_above_vice(const point p,
 			const clamp_orientation& orient,
 			const vice& v) {
