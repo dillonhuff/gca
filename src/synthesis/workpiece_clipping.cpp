@@ -257,26 +257,14 @@ namespace gca {
 			    const surface& top_of_contour,
 			    const vice& v,
 			    const point n) {
-    // std::vector<surface> const_orient_surfs =
-    //   constant_orientation_subsurfaces(outline_of_contour);
 
-    cout << "Creating const orientation regions" << endl;
     auto cont_region_inds =
       const_orientation_regions(outline_of_contour.get_parent_mesh());
-    cout << "DONE with const orientation regions" << endl;
 
     vector<surface> const_orient_surfs =
       inds_to_surfaces(cont_region_inds, outline_of_contour.get_parent_mesh());
 
     double total_area = merge_surfaces(const_orient_surfs).surface_area();
-
-    // delete_if(const_orient_surfs,
-    // 	      [total_area](const surface& s)
-    // 	      { return s.surface_area() < (total_area / 20.0); });
-
-    //    const_orient_surfs.push_back(top_of_contour);
-
-    //    vtk_debug_highlight_inds(const_orient_surfs);
 
     cout << "START all_stable_orientations" << endl;
     std::vector<clamp_orientation> orients =

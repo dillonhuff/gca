@@ -126,6 +126,7 @@ namespace gca {
 	}
       }
     }
+
     return orients;
   }
   
