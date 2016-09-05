@@ -188,7 +188,7 @@ namespace gca {
 
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
+    auto pockets = feature_pockets(*decomp, s_t); //, f.orient.top_normal());
 
     concat(setup_pockets, pockets);
     
@@ -209,7 +209,7 @@ namespace gca {
 
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    auto pockets = feature_pockets(*decomp, s_t, f.orient.top_normal());
+    auto pockets = feature_pockets(*decomp, s_t); //, f.orient.top_normal());
 
     concat(setup_pockets, pockets);
 
@@ -284,27 +284,27 @@ namespace gca {
     return boost::none;
 
   }
+  
+  std::vector<fixture_setup>
+  contour_clip_setups(const triangular_mesh& aligned,
+		      const triangular_mesh& part_mesh,
+		      const fixture& top_fix,
+		      const fixture& base_fix) {
+    DBG_ASSERT(angle_eps(top_fix.orient.top_normal(), base_fix.orient.top_normal(), 180.0, 1.0));
 
-    std::vector<fixture_setup>
-    contour_clip_setups(const triangular_mesh& aligned,
-			const triangular_mesh& part_mesh,
-			const fixture& top_fix,
-			const fixture& base_fix) {
-      DBG_ASSERT(angle_eps(top_fix.orient.top_normal(), base_fix.orient.top_normal(), 180.0, 1.0));
+    auto decomps = select_features(part_mesh, {top_fix, base_fix});
 
-      auto decomps = select_features(part_mesh, {top_fix, base_fix});
+    DBG_ASSERT(decomps.size() == 2);
 
-      DBG_ASSERT(decomps.size() == 2);
+    auto top_decomp = decomps[0];
+    auto base_decomp = decomps[1];
 
-      auto top_decomp = decomps[0];
-      auto base_decomp = decomps[1];
+    std::vector<fixture_setup> clip_setups;
+    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix));
 
-      std::vector<fixture_setup> clip_setups;
-      clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix));
-      clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix));
-
-      return clip_setups;
-    }
+    return clip_setups;
+  }
 
   
   clipping_plan

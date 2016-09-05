@@ -68,8 +68,7 @@ namespace gca {
 
   std::vector<pocket>
   feature_pockets(feature_decomposition& r,
-		  const homogeneous_transform& t,
-		  const point n) {
+		  const homogeneous_transform& t) {
 
     DBG_ASSERT(r.feature() == nullptr);
 

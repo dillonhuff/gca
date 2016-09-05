@@ -275,7 +275,7 @@ namespace gca {
 		     const homogeneous_transform& t,
 		     const point n) {
     feature_decomposition* f = build_feature_decomposition(part_mesh, n);
-    vector<pocket> pockets = feature_pockets(*f, t, n);
+    vector<pocket> pockets = feature_pockets(*f, t); //, n);
 
     DBG_ASSERT(pockets.size() > 0);
     
