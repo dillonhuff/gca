@@ -18,7 +18,7 @@ namespace gca {
       point ni = normal(ri);
       for (unsigned j = 0; j < regions.size(); j++) {
 	const auto& rj = regions[j];
-	//	if (within_eps(angle_between(normal(regions[i]), normal(regions[j])), 0.0, 1.0)) {
+
 	if (rj.orthogonal_to(ni, 1.0) ||
 	    rj.parallel_to(ni, 1.0) ||
 	    rj.antiparallel_to(ni, 1.0)) {

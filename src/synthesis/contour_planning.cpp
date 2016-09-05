@@ -1,8 +1,8 @@
-#include "synthesis/contour_planning.h"
-#include "synthesis/millability.h"
-
 #include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
+#include "process_planning/axis_location.h"
+#include "synthesis/contour_planning.h"
+#include "synthesis/millability.h"
 
 namespace gca {
 
@@ -132,27 +132,24 @@ namespace gca {
   boost::optional<contour_surface_decomposition>
   compute_contour_surfaces(const triangular_mesh& part_mesh) {
 
-    vector<point> candidate_contour_normals =
-      possible_contour_normals(part_mesh);
+    // vector<point> candidate_contour_normals =
+    //   possible_contour_normals(part_mesh);
 
-    for (auto n : candidate_contour_normals) {
-      cout << "Checking for contour in " << n << endl;
-      boost::optional<contour_surface_decomposition> surfs =
-	contour_surface_decomposition_in_dir(part_mesh, n);
-      if (surfs) {
-	if (outline_shares_edges(*surfs)) {
-	  return surfs;
-	} else {
-	  contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->rest};
+    point n = part_axis(part_mesh);
+    //    for (auto n : candidate_contour_normals) {
+    cout << "Checking for contour in " << n << endl;
+    boost::optional<contour_surface_decomposition> surfs =
+      contour_surface_decomposition_in_dir(part_mesh, n);
+    if (surfs) {
+      //      if (outline_shares_edges(*surfs)) {
+	return surfs;
+      // } else {
+      // 	contour_surface_decomposition decomposition{-1*surfs->n, surfs->outline, surfs->bottom, surfs->top, surfs->rest};
 
-	  return decomposition;
-
-	  // if (outline_shares_edges(decomposition)) {
-	  //   return decomposition;
-	  // }
-	}
-      }
+      // 	return decomposition;
+      // }
     }
+    //    }
 
     return boost::none;
   }

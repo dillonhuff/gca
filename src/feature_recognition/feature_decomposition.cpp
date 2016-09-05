@@ -201,9 +201,6 @@ namespace gca {
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
 
-    cout << "rotation = " << r << endl;
-    cout << "r*n = " << times_3(r, n) << endl;
-
     cout << "# polys to union = " << polys.size() << endl;
 
     boost_multipoly_2 result;
@@ -452,9 +449,9 @@ namespace gca {
     point pnorm = p.normal();
     point rtnorm = times_3(t.first, p.normal());
 
-    cout << "Original normal             = " << pnorm << endl;
-    cout << "Transformed normal              = " << rnorm << endl;
-    cout << "Rotation of original normal = " << rtnorm << endl;
+    // cout << "Original normal             = " << pnorm << endl;
+    // cout << "Transformed normal              = " << rnorm << endl;
+    // cout << "Rotation of original normal = " << rtnorm << endl;
     
     double theta = angle_between(transformed.normal(), rtnorm);
   
@@ -577,9 +574,9 @@ namespace gca {
     double current_depth =
       max_distance_along(current_level.vertices(), current_level.normal());
 
-    cout << "current normal = " << current_level.normal() << endl;
-    cout << "current depth  = " << current_depth << endl;
-    cout << "base depth     = " << base_depth << endl;
+    // cout << "current normal = " << current_level.normal() << endl;
+    // cout << "current depth  = " << current_depth << endl;
+    // cout << "base depth     = " << base_depth << endl;
 
     DBG_ASSERT(current_depth >= base_depth);
     
@@ -668,15 +665,15 @@ namespace gca {
     
     double base_depth = min_distance_along(m.vertex_list(), n);
 
-    cout << "initial # of levels = " << levels.size() << endl;
+    // cout << "initial # of levels = " << levels.size() << endl;
     for (auto level : levels) {
       DBG_ASSERT(level.size() > 0);
 
-      cout << "??? z = " << level.front().vertex(0).z << endl;
-      cout << "Distance along = " <<
-	max_distance_along(level.front().vertices(), n) << endl;
+      // cout << "??? z = " << level.front().vertex(0).z << endl;
+      // cout << "Distance along = " <<
+      // 	max_distance_along(level.front().vertices(), n) << endl;
     }
-    cout << "done levels" << endl;
+    // cout << "done levels" << endl;
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
@@ -685,8 +682,6 @@ namespace gca {
 
     auto check_normal = [n](const feature* f) {
       if (f != nullptr) {
-	cout << "feature normal = " << f->normal() << endl;
-	cout << "feature depth  = " << f->depth() << endl;
 	DBG_ASSERT(f->depth() >= 0);
 	DBG_ASSERT(within_eps(angle_between(n, f->normal()), 0.0, 1.0));
       }
