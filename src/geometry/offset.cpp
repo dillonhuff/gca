@@ -158,7 +158,6 @@ namespace gca {
     const rotation r_inv = inverse(r);
     auto res = exterior_offset(oriented_polygon(n, apply(r, pts)), tol);
 
-    cout << "Number of offsets = " << res.size() << endl;
     DBG_ASSERT(res.size() == 2);
 
     auto rpoly = res[1];

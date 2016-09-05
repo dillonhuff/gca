@@ -501,8 +501,8 @@ namespace gca {
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
 
-    cout << "rotation = " << r << endl;
-    cout << "r*n = " << times_3(r, n) << endl;
+    // cout << "rotation = " << r << endl;
+    // cout << "r*n = " << times_3(r, n) << endl;
 
     boost_poly_2 pb = to_boost_poly_2(apply(r, p));
 
