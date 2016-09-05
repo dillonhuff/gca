@@ -18,56 +18,66 @@ namespace gca {
       REQUIRE(!decomp);
     }
 
-    SECTION("Arm joint") {
-      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+    // SECTION("Arm joint") {
+    //   triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
 
-      auto decomp = compute_contour_surfaces(m);
+    //   auto decomp = compute_contour_surfaces(m);
 
-      REQUIRE(decomp);
-      REQUIRE(within_eps(decomp->n, point(0, -1, 0), 0.001));
-      REQUIRE(decomp->rest.size() == 0);
+    //   REQUIRE(decomp);
+    //   REQUIRE(within_eps(decomp->n, point(0, -1, 0), 0.001));
+    //   REQUIRE(decomp->rest.size() == 0);
 
-      SECTION("Outline 1 region connected to top and bottom") {
-	vector<surface> rs =
-	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
+    //   SECTION("Outline 1 region connected to top and bottom") {
+    // 	vector<surface> rs =
+    // 	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
 
-	REQUIRE(rs.size() == 1);
+    // 	REQUIRE(rs.size() == 1);
 
-	REQUIRE(rs.front().surface_area() < decomp->outline.surface_area());
+    // 	REQUIRE(rs.front().surface_area() < decomp->outline.surface_area());
 
-	REQUIRE(rs.front().edges().size() > 0);
-	for (auto e : rs.front().edges()) {
-	  REQUIRE(rs.front().edge_face_neighbors(e).size() > 0);
-	}
+    // 	REQUIRE(rs.front().edges().size() > 0);
+    // 	for (auto e : rs.front().edges()) {
+    // 	  REQUIRE(rs.front().edge_face_neighbors(e).size() > 0);
+    // 	}
 
-	REQUIRE(shared_edges(rs.front(), decomp->bottom).size() > 0);
-      }
-    }
+    // 	REQUIRE(shared_edges(rs.front(), decomp->bottom).size() > 0);
+    //   }
+    // }
 
-    SECTION("Clipped Cylinder") {
-      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedCylinder.stl", 0.001);
+    // SECTION("Clipped Cylinder") {
+    //   triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedCylinder.stl", 0.001);
+
+    //   auto decomp = compute_contour_surfaces(m);
+
+    //   REQUIRE(decomp);
+    //   REQUIRE(within_eps(decomp->n, point(0, 0, 1), 0.001));
+    //   REQUIRE(decomp->rest.size() == 0);
+
+    //   SECTION("Outline 1 region connected to top and bottom") {
+    // 	vector<surface> rs =
+    // 	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
+
+    // 	REQUIRE(rs.size() == 1);
+
+    // 	REQUIRE(rs.front().surface_area() < decomp->outline.surface_area());
+
+    // 	REQUIRE(rs.front().edges().size() > 0);
+    // 	for (auto e : rs.front().edges()) {
+    // 	  REQUIRE(rs.front().edge_face_neighbors(e).size() > 0);
+    // 	}
+
+    // 	REQUIRE(shared_edges(rs.front(), decomp->bottom).size() > 0);
+    //   }
+    // }
+
+    SECTION("OnShape PSU Mount") {
+      triangular_mesh m = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
       auto decomp = compute_contour_surfaces(m);
 
       REQUIRE(decomp);
       REQUIRE(within_eps(decomp->n, point(0, 0, 1), 0.001));
       REQUIRE(decomp->rest.size() == 0);
-
-      SECTION("Outline 1 region connected to top and bottom") {
-	vector<surface> rs =
-	  regions_connected_to_both(decomp->outline, decomp->top, decomp->bottom);
-
-	REQUIRE(rs.size() == 1);
-
-	REQUIRE(rs.front().surface_area() < decomp->outline.surface_area());
-
-	REQUIRE(rs.front().edges().size() > 0);
-	for (auto e : rs.front().edges()) {
-	  REQUIRE(rs.front().edge_face_neighbors(e).size() > 0);
-	}
-
-	REQUIRE(shared_edges(rs.front(), decomp->bottom).size() > 0);
-      }
     }
 
     SECTION("OnShape Part 1 1") {
