@@ -33,6 +33,10 @@ namespace gca {
 		      (y_min < p.y && p.y < y_max) &&
 			       (z_min < p.z && p.z < z_max);
     }
+
+    double x_len() const { return x_max - x_min; }
+    double y_len() const { return y_max - y_min; }
+    double z_len() const { return z_max - z_min; }
   };
 
   ostream& operator<<(ostream& out, const box& b);

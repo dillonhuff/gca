@@ -376,7 +376,8 @@ namespace gca {
   std::vector<point>
   vertexes_on_surface(const std::vector<index_t>& s,
 		      const triangular_mesh& m);
-  
+
+
 }
 
 #endif
