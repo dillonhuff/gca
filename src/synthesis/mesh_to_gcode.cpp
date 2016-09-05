@@ -32,7 +32,7 @@ namespace gca {
     fabrication_plan plan = make_fabrication_plan(part_mesh, f, tools, {w});
     vector<gcode_program> progs;
     for (auto f : plan.steps()) {
-      progs.push_back(f.gcode_for_toolpaths(emco_f1_code));
+      progs.push_back(f.gcode_for_toolpaths(emco_f1_code_G10_TLC));
     }
     return progs;
   }
@@ -76,7 +76,7 @@ namespace gca {
     cout.setf(ios::showpoint);
 
     for (auto f : fix_plan.steps()) {
-      auto program = f.gcode_for_toolpaths(emco_f1_code);
+      auto program = f.gcode_for_toolpaths(emco_f1_code_G10_TLC);
       cout << program.name << endl;
       cout << program.blocks << endl;
     }

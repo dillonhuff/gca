@@ -82,6 +82,18 @@ namespace gca {
     blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()))});
     return blks;
   }
+
+  std::vector<block>
+  g10_TLC_prefix(const toolpath& t) {
+    vector<block> blks;
+
+    blks.push_back({token('G', 54)});
+    blks.push_back({token('G', 10), token('L', 2), token('P', 1), token('Z', t.t.length())});
+
+    //    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.t.diameter()))});
+    //    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()))});
+    return blks;
+  }
   
   std::vector<block>
   comment_prefix(const toolpath& tp, const cut_params& params) {
@@ -109,4 +121,22 @@ namespace gca {
     return blks;
   }
 
+  std::vector<block> emco_f1_code_G10_TLC(const toolpath& tp) {
+    for (auto l : tp.lines) {
+      assert(l.num_points() > 0);
+    }
+
+    point shift_vector = point(0, 0, tp.t.length());
+    vector<polyline> reflected_lines = reflect_y(tp.lines);
+
+    cut_params params;
+    params.target_machine = EMCO_F1;
+    params.safe_height = tp.safe_z_before_tlc; // + tp.t.length();
+
+    vector<block> blks = comment_prefix(tp, params);
+    concat(blks, g10_TLC_prefix(tp));
+    concat(blks, polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate));
+    return blks;
+  }
+  
 }

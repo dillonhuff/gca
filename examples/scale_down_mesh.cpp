@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   cout << bounding << endl;
 
   double max_dim = bounding.z_len();
-  double desired_dim = 1.5;
+  double desired_dim = 0.9;
   double scale_factor = desired_dim / max_dim;
 
   cout << "Scale factor = " << scale_factor << endl;
@@ -47,11 +47,12 @@ int main(int argc, char* argv[]) {
   std::vector<plate_height> parallel_plates{0.5};
   fixtures fixes(test_vice, parallel_plates);
 
-  tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
-  tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
-  vector<tool> tools{t1, t2};
+  // tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
+  // tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
+  tool t3{0.2334, 4.15, 4, HSS, FLAT_NOSE};
+  vector<tool> tools{t3}; //t1, t2};
 
-  workpiece workpiece_dims(2, 2, 2.7, ALUMINUM);
+  workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
 
   fabrication_plan plan =
     make_fabrication_plan(scaled_mesh, fixes, tools, {workpiece_dims});

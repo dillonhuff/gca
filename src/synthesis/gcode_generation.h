@@ -13,6 +13,7 @@ namespace gca {
 
   std::vector<block> emco_f1_code(const toolpath& pocket_lines);
 
+  std::vector<block> emco_f1_code_G10_TLC(const toolpath& tp);
 
   template<typename ToolpathGCODE>
   gcode_program
