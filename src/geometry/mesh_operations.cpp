@@ -1,3 +1,4 @@
+#include <vtkSTLWriter.h>
 #include <vtkImplicitDataSet.h>
 #include <vtkBooleanOperationPolyDataFilter.h>
 #include <vtkDecimatePro.h>
@@ -305,6 +306,17 @@ namespace gca {
 
     triangular_mesh result = trimesh_for_polydata(res_poly);
     return result;
+  }
+
+  void write_mesh_as_stl(const triangular_mesh& m,
+			 const std::string& file_name) {
+    auto mesh_data = polydata_for_trimesh(m);
+    
+    vtkSmartPointer<vtkSTLWriter> stlWriter =
+      vtkSmartPointer<vtkSTLWriter>::New();
+    stlWriter->SetFileName(file_name.c_str());
+    stlWriter->SetInputData(mesh_data);
+    stlWriter->Write();
   }
 
 }

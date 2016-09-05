@@ -37,6 +37,8 @@ namespace gca {
     stl_data info(h);
     unsigned int* r = (unsigned int*) n_triangles;
     unsigned int num_triangles = *r;
+
+    cout << "# of triangles in " << stl_path << " = " << num_triangles << endl;
     for (unsigned int i = 0; i < num_triangles; i++) {
       auto normal = parse_point(stl_file);
       auto v1 = parse_point(stl_file);

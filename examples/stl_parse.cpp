@@ -1,6 +1,3 @@
-#include "geometry/polygon.h"
-#include "geometry/polyline.h"
-#include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/gcode_generation.h"
@@ -13,20 +10,6 @@
 
 using namespace gca;
 using namespace std;
-
-void print_programs(const fabrication_plan& fix_plan) {
-  cout << "Programs" << endl;
-
-  cout.setf(ios::fixed, ios::floatfield);
-  cout.setf(ios::showpoint);
-
-  for (auto f : fix_plan.steps()) {
-    auto program = f.gcode_for_toolpaths(emco_f1_code);
-    cout << program.name << endl;
-    cout << program.blocks << endl;
-  }
-
-}
 
 int main(int argc, char* argv[]) {
   DBG_ASSERT(argc == 2);

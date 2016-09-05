@@ -30,7 +30,9 @@ namespace gca {
 				    const triangular_mesh& part_mesh,
 				    const std::vector<tool>& tools,
 				    const workpiece& w);
-  
+
+  void print_programs(const fabrication_plan& fix_plan);
+
 }
 
 #endif
