@@ -258,8 +258,9 @@ namespace gca {
 			    const vice& v,
 			    const point n) {
 
+    const triangular_mesh& part_mesh = outline_of_contour.get_parent_mesh();
     auto cont_region_inds =
-      const_orientation_regions(outline_of_contour.get_parent_mesh());
+      const_orientation_regions(part_mesh);
 
     vector<surface> const_orient_surfs =
       inds_to_surfaces(cont_region_inds, outline_of_contour.get_parent_mesh());
@@ -273,7 +274,8 @@ namespace gca {
 
     if (orients.size() > 0) {
       cout << "NO CUSTOM JAW CUTOUT" << endl;
-      auto cl = find_orientation_by_normal(orients, n);
+      auto cl = max_e(orients, [part_mesh](const clamp_orientation& c)
+		      { return c.contact_area(part_mesh); }); //find_orientation_by_normal(orients, n);
       return fixture(cl, v);
     }
 
