@@ -215,10 +215,10 @@ engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) 
   vector<pocket> pockets;
   auto depths = f.range_along(point(0, 0, 1));
   oriented_polygon p(point(0, 0, 1), f.base().vertices());
-  pockets.push_back(trace_pocket(depths.first, depths.second, p));
+  pockets.push_back(trace_pocket(depths.second, depths.first, p));
 
   for (auto h : f.base().holes()) {
-    oriented_polygon hp(point(0, 0, 1), f.base().vertices());
+    oriented_polygon hp(point(0, 0, 1), h);
     pockets.push_back(trace_pocket(depths.first, depths.second, hp));
   }
   return pockets;
