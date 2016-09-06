@@ -261,102 +261,62 @@ int main(int argc, char** argv) {
 						pixel_len,
 						pixel_width);
 
-    DBG_ASSERT(area_poly.
-    dark_polygons.push_back();
+    for (auto area_p : area_poly) {
+      cout << "Polygon area = " << bg::area(area_p) << endl;
+      
+      dark_polygons.push_back(area_p);
+    }
   }
 
-  // unordered_set<pixel> pixels_left;
-  // deque<pixel> to_search;
+  cout << "# of dark polygons = " << dark_polygons.size() << endl;
+  auto max_poly = max_e(dark_polygons,
+			[](const boost_poly_2& p) { return bg::area(p); });
 
-  // while (pixels_left.size() > 0) {
+  cout << "Max area polygon = " << bg::area(max_poly) << endl;
 
-  //   if (to_search.size() > 0) {
-  //   } else {
-  //     to_search.push_back();
-  //   }
+  auto min_poly = min_e(dark_polygons,
+			[](const boost_poly_2& p) { return bg::area(p); });
 
-    
-  // }
-
-  // while (black_pixels.size() > 0) {
-  //   if (black_pixels.size() % 200 == 0) {
-  //     cout << "# black pixels left = " << black_pixels.size() << endl;
-  //   }
-  //   pixel next = black_pixels.back();
-  //   auto next_neighbors = tblr_neighbor_pixels(next);
-  //   black_pixels.pop_back();
-
-  //   bool in_existing_group = false;
-
-  //   for (auto& pixel_group : pixel_groups) {
-
-  //     for (auto pixel : pixel_group) {
-  // 	if (elem(pixel, next_neighbors)) {
-  // 	  bool in_existing_group = true;
-  // 	  pixel_group.push_back(next);
-  // 	  break;
-  // 	}
-  //     }
-
-  //     if (in_existing_group) { break; }
-
-  //   }
-
-  //   if (!in_existing_group) {
-  //     pixel_groups.push_back({next});
-  //   }
-  // }
+  cout << "Min area polygon = " << bg::area(min_poly) << endl;
   
-    // connected_components_by_elems(black_pixels, [](const pixel l, const pixel r) {
-    // 	return tblr_neighbors(l, r);
-    //   });
+  const gca::rotation id_rotation =
+    gca::rotate_from_to(gca::point(0, 0, 1), gca::point(0, 0, 1));
+  vector<gca::labeled_polygon_3> dark_polys;
 
-  cout << "# of pixel groups = " << pixel_groups.size() << endl;
-  
-  //  cout 
+  for (auto& r : dark_polygons) {
+    gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.0, r);
 
-
-  // cout << "Num black pixels = " << black_pixels << endl;
-  // cout << "Num white pixels = " << white_pixels << endl;
-
-  // const gca::rotation id_rotation =
-  //   gca::rotate_from_to(gca::point(0, 0, 1), gca::point(0, 0, 1));
-  // vector<gca::labeled_polygon_3> dark_polys;
-
-  // for (auto& r : dark_areas) {
-  //   gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.0, r);
-
-  //   check_simplicity(lp);
+    check_simplicity(lp);
     
-  //   dark_polys.push_back(lp);
-  // }
+    dark_polys.push_back(lp);
+  }
 
-  // gca::vtk_debug_polygons(dark_polys);
+  gca::vtk_debug_polygons(dark_polys);
 
-  // double depth = 0.1;
-  // vector<gca::feature> features;
-  // for (auto dark_area : dark_polys) {
-  //   features.push_back(gca::feature(depth, dark_area));
-  // }
+  double depth = 0.1;
+  vector<gca::feature> features;
+  for (auto dark_area : dark_polys) {
+    features.push_back(gca::feature(depth, dark_area));
+  }
 
 
-  // vector<pocket> pockets;
-  // for (auto f : features) {
-  //   concat(pockets, pockets_for_feature(f));
-  // }
+  vector<pocket> pockets;
+  for (auto f : features) {
+    concat(pockets, pockets_for_feature(f));
+  }
 
-  // DBG_ASSERT(pockets.size() > 0);
+  DBG_ASSERT(pockets.size() > 0);
 
-  // vector<tool> tools{tool(0.01, 3.0, 4, HSS, FLAT_NOSE)};
-  // vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  vector<tool> tools{tool(0.01, 3.0, 4, HSS, FLAT_NOSE)};
+  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
 
-  // auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);
+  auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);
 
-  // cout.setf(ios::fixed, ios::floatfield);
-  // cout.setf(ios::showpoint);
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
 
-  // cout << program.name << endl;
-  // cout << program.blocks << endl;
+  cout << program.name << endl;
+  cout << program.blocks << endl;
 
   return 0;
 }
