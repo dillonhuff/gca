@@ -299,10 +299,6 @@ int main(int argc, char** argv) {
     dark_polys.push_back(lp);
   }
 
-  // for (auto p : dark_polys) {
-  //   vtk_debug_polygon(p);
-  // }
-
   gca::vtk_debug_polygons(dark_polys);
 
   double depth = 0.1;
