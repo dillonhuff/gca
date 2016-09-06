@@ -208,6 +208,50 @@ boost_multipoly_2 pixel_polygon(const std::vector<pixel>& pixels,
   return dark_areas;
 }
 
+std::vector<pocket>
+engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) {
+  DBG_ASSERT(angle_eps(f.normal(), point(0, 0, 1), 0.0, 1.0));
+  
+  vector<pocket> pockets;
+  auto depths = f.range_along(point(0, 0, 1));
+  oriented_polygon p(point(0, 0, 1), f.base().vertices());
+  pockets.push_back(trace_pocket(depths.first, depths.second, p));
+
+  for (auto h : f.base().holes()) {
+    oriented_polygon hp(point(0, 0, 1), f.base().vertices());
+    pockets.push_back(trace_pocket(depths.first, depths.second, hp));
+  }
+  return pockets;
+}
+
+std::vector<pocket>
+build_engraving_pockets(const std::vector<tool>& tools,
+			std::vector<feature>& features) {
+
+  // delete_if(features, [&t1](const feature& f) {
+  //     return t1.cross_section_area() > bg::area(to_boost_poly_2(f.base()));
+  //   });
+
+  cout << "# of features after area culling = " << features.size() << endl;
+
+  vtk_debug_features(ptrs(features));
+
+  DBG_ASSERT(features.size() > 0);
+
+  vector<pocket> pockets;
+  for (auto f : features) {
+    concat(pockets, engraving_pockets_for_feature(tools, f));
+  }
+
+  cout << "Done building pockets" << endl;
+  cout << "Number of pockets = " << pockets.size() << endl;
+
+  DBG_ASSERT(pockets.size() > 0);
+
+  return pockets;
+
+}
+
 int main(int argc, char** argv) {
   if( argc != 2) {
     cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
@@ -316,29 +360,20 @@ int main(int argc, char** argv) {
   tool t1(0.01, 3.0, 4, HSS, FLAT_NOSE);
   vector<tool> tools{t1};
 
-  delete_if(features, [&t1](const feature& f) {
-      return t1.cross_section_area() > bg::area(to_boost_poly_2(f.base()));
-    });
-
-  cout << "# of features after area culling = " << features.size() << endl;
-
-  vtk_debug_features(ptrs(features));
-
-  DBG_ASSERT(features.size() > 0);
-
-  vector<pocket> pockets;
-  for (auto f : features) {
-    concat(pockets, pockets_for_feature(f));
-  }
-
-  cout << "Done building pockets" << endl;
-  cout << "Number of pockets = " << pockets.size() << endl;
-
-  DBG_ASSERT(pockets.size() > 0);
+  vector<pocket> pockets = build_engraving_pockets(tools, features);
 
   cout << "Milling pockets" << endl;
   vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
   cout << "Done milling pockets" << endl;
+
+  int num_empty_toolpaths;
+  for (auto t : toolpaths) {
+    if (t.lines.size() == 0) {
+      num_empty_toolpaths++;
+    }
+  }
+
+  cout << "# of empty toolpaths = " << num_empty_toolpaths << endl;
 
   cout << "Building GCODE" << endl;
   auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);

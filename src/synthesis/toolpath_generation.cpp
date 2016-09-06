@@ -162,7 +162,7 @@ namespace gca {
 
   tool
   trace_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(max_element(begin(tools), end(tools),
+    tool t = *(min_element(begin(tools), end(tools),
   			   [](const tool& l, const tool& r)
       { return l.diameter() < r.diameter(); }));
     return t;
@@ -171,12 +171,12 @@ namespace gca {
   std::vector<polyline>
   trace_pocket::toolpath_lines(const tool& t,
 			       const double cut_depth) const {
-    vector<oriented_polygon> inter =
-      exterior_offset(project(outline, get_end_depth()), t.radius());
+    // vector<oriented_polygon> inter =
+    //   exterior_offset(project(outline, get_end_depth()), t.radius());
 
-    DBG_ASSERT(inter.size() == 2);
+    // DBG_ASSERT(inter.size() == 2);
 
-    vector<polyline> face_template{to_polyline(inter[1])};
+    vector<polyline> face_template{to_polyline(outline)};
     vector<double> depths =
       cut_depths(get_start_depth(), get_end_depth(), cut_depth);
 
