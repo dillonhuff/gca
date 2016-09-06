@@ -1,9 +1,10 @@
 #ifndef GCA_ARENA_ALLOCATOR_H
 #define GCA_ARENA_ALLOCATOR_H
 
-#include <cassert>
 #include <cstdlib>
 #include <vector>
+
+#include "utils/check.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ namespace gca {
 
     void* alloc(size_t s) {
       space_left = space_left - s;
-      assert(space_left > 0);
+      DBG_ASSERT(space_left > 0);
       void* to_alloc = current;
       current += s;
       return to_alloc;
@@ -42,7 +43,7 @@ namespace gca {
     T* allocate() {
       size_t s = sizeof(T);
       space_left = space_left - s;
-      assert(space_left > 0);
+      DBG_ASSERT(space_left > 0);
       void* to_alloc = current;
       current += s;
       return static_cast<T*>(to_alloc);

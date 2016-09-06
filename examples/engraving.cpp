@@ -214,6 +214,9 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  arena_allocator a;
+  set_system_allocator(&a);
+
   Mat image;
   image = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
 

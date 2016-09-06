@@ -9,7 +9,7 @@ namespace gca {
   }
 
   void* alloc(size_t s) {
-    assert(system_allocator != NULL);
+    DBG_ASSERT(system_allocator != NULL);
     void* to_alloc = system_allocator->alloc(s);
     return to_alloc;
   }
