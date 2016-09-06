@@ -202,28 +202,48 @@ namespace gca {
 
   template<typename I, typename P>
   std::vector<unsigned>
+  select_neighbors(std::vector<unsigned>& inds,
+		   const std::vector<I>& elems,
+		   std::vector<unsigned>& buf,
+		   unsigned next,
+		   P p) {
+
+    std::vector<unsigned> inds_to_remove;
+
+    for (unsigned i = 0; i < inds.size(); i++) {
+      unsigned u = inds[i];
+      if (u != next && p(elems[u], elems[next])) {
+    	buf.push_back(u);
+    	inds_to_remove.push_back(u);
+      }
+    }
+
+    return inds_to_remove;
+  }
+  
+  template<typename I, typename P>
+  std::vector<unsigned>
   dfs_by(std::vector<unsigned>& inds, const std::vector<I>& elems, P p) {
     std::vector<unsigned> comp;
     if (inds.size() == 0) {
       return comp;
     }
+
     std::vector<unsigned> buf;
     buf.push_back(inds.back());
     inds.pop_back();
+
     while (buf.size() > 0) {
       auto next = buf.back();
       comp.push_back(next);
       buf.pop_back();
-      std::vector<unsigned> inds_to_remove;
-      for (unsigned i = 0; i < inds.size(); i++) {
-	unsigned u = inds[i];
-	if (u != next && p(elems[u], elems[next])) {
-	  buf.push_back(u);
-	  inds_to_remove.push_back(u);
-	}
-      }
+
+      std::vector<unsigned> inds_to_remove =
+	select_neighbors(inds, elems, buf, next, p);
+
       subtract(inds, inds_to_remove);
     }
+
     return comp;
   }
 

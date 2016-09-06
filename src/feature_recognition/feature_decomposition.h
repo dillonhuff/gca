@@ -57,6 +57,8 @@ namespace gca {
     }
   };
 
+  void check_simplicity(const labeled_polygon_3& p);
+
   labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p);
   labeled_polygon_3 apply(const homogeneous_transform& r, const labeled_polygon_3& p);
 

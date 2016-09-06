@@ -29,6 +29,97 @@ typedef boost::geometry::model::polygon<boost_point_2> boost_poly_2;
 typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
 typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
+bool has_black_neighbor_tblr(const int i, const int j, Mat& img_bw) {
+  vector<int> row_neighbor_inds;
+  vector<int> col_neighbor_inds;
+
+  if (i == 0) {
+    row_neighbor_inds.push_back(i + 1);
+  } else if (i == (img_bw.rows - 1)) {
+    row_neighbor_inds.push_back(i - 1);
+  } else {
+    row_neighbor_inds.push_back(i + 1);
+    row_neighbor_inds.push_back(i - 1);
+  }
+
+  if (j == 0) {
+    col_neighbor_inds.push_back(j + 1);
+  } else if (j == (img_bw.cols - 1)) {
+    col_neighbor_inds.push_back(j - 1);
+  } else {
+    col_neighbor_inds.push_back(j + 1);
+    col_neighbor_inds.push_back(j - 1);
+  }
+  
+  for (auto r : row_neighbor_inds) {
+    const unsigned char* Mi = img_bw.ptr<unsigned char>(r);
+
+    for (auto c : col_neighbor_inds) {
+      if (Mi[c] == 0) { return true; }
+    }
+  }
+
+  return false;
+}
+
+typedef std::pair<int, int> pixel;
+
+bool operator==(const pixel l, const pixel r) {
+  return (l.first == r.first) && (l.second == r.second);
+}
+
+std::vector<pixel> tblr_neighbor_pixels(const pixel l) {
+  int top_row = l.second - 1;
+  int bottom_row = l.second + 1;
+
+  int left_col = l.second - 1;
+  int right_col = l.second + 1;
+
+  vector<pixel> neighbors;
+  neighbors.push_back(pixel(top_row, l.second));
+  neighbors.push_back(pixel(bottom_row, l.second));
+
+  neighbors.push_back(pixel(l.first, left_col));
+  neighbors.push_back(pixel(l.first, right_col));
+
+  return neighbors;
+}
+
+bool tblr_neighbors(const pixel l, const pixel r) {
+  for (auto n : tblr_neighbor_pixels(l)) {
+    if (r == n) { return true; }
+  }
+  return false;
+}
+
+std::vector<pixel> black_image_pixels(Mat& img_bw) {
+  vector<pixel> black_pixels;
+  unsigned white_pixels = 0;
+  for(int i = 0; i < img_bw.rows; i++) {
+
+    const unsigned char* Mi = img_bw.ptr<unsigned char>(i);
+
+    for(int j = 0; j < img_bw.cols; j++) {
+
+      if (Mi[j] == 0) {
+	black_pixels.push_back(pixel(i, j));
+      } else if (Mi[j] == 255) {
+	white_pixels += 1;
+      } else {
+	DBG_ASSERT(false);
+      }
+    }
+
+    cout << "Done with row " << i << endl;
+
+  }
+
+  cout << "Num black pixels = " << black_pixels.size() << endl;
+  cout << "Num white pixels = " << white_pixels << endl;
+
+  return black_pixels;
+}
+
 int main(int argc, char** argv) {
   if( argc != 2) {
     cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
@@ -60,83 +151,144 @@ int main(int argc, char** argv) {
   cout << "# rows = " << img_bw.rows << endl;
   cout << "# col  = " << img_bw.cols << endl;
 
-  boost_multipoly_2 dark_areas;
+  vector<pixel> black_pixels = black_image_pixels(img_bw);
+
+  vector<vector<pixel>> pixel_groups;
+
+  // unordered_set<pixel> pixels_left;
+  // deque<pixel> to_search;
+
+  // while (pixels_left.size() > 0) {
+
+  //   if (to_search.size() > 0) {
+  //   } else {
+  //     to_search.push_back();
+  //   }
+
+    
+  // }
+  // while (black_pixels.size() > 0) {
+  //   if (black_pixels.size() % 200 == 0) {
+  //     cout << "# black pixels left = " << black_pixels.size() << endl;
+  //   }
+  //   pixel next = black_pixels.back();
+  //   auto next_neighbors = tblr_neighbor_pixels(next);
+  //   black_pixels.pop_back();
+
+  //   bool in_existing_group = false;
+
+  //   for (auto& pixel_group : pixel_groups) {
+
+  //     for (auto pixel : pixel_group) {
+  // 	if (elem(pixel, next_neighbors)) {
+  // 	  bool in_existing_group = true;
+  // 	  pixel_group.push_back(next);
+  // 	  break;
+  // 	}
+  //     }
+
+  //     if (in_existing_group) { break; }
+
+  //   }
+
+  //   if (!in_existing_group) {
+  //     pixel_groups.push_back({next});
+  //   }
+  // }
   
-  unsigned black_pixels = 0;
-  unsigned white_pixels = 0;
-  for(int i = 0; i < img_bw.rows; i++) {
+    // connected_components_by_elems(black_pixels, [](const pixel l, const pixel r) {
+    // 	return tblr_neighbors(l, r);
+    //   });
 
-    const unsigned char* Mi = img_bw.ptr<unsigned char>(i);
+  cout << "# of pixel groups = " << pixel_groups.size() << endl;
+  
+  //  cout 
 
-    double start_y = -1*(pixel_width*i);
-    double end_y = -1*(pixel_width*(i + 1));
+  // boost_multipoly_2 dark_areas;
+  
+  // unsigned black_pixels = 0;
+  // unsigned white_pixels = 0;
+  // for(int i = 0; i < img_bw.rows; i++) {
 
-    for(int j = 0; j < img_bw.cols; j++) {
+  //   const unsigned char* Mi = img_bw.ptr<unsigned char>(i);
 
-      double start_x = pixel_len*j;
-      double end_x = pixel_len*(j + 1);
+  //   double start_y = -1*(pixel_width*i);
+  //   double end_y = -1*(pixel_width*(i + 1));
 
-      if (Mi[j] == 0) {
+  //   for(int j = 0; j < img_bw.cols; j++) {
+
+  //     double start_x = pixel_len*j;
+  //     double end_x = pixel_len*(j + 1);
+
+  //     if (Mi[j] == 0) {
+
+  // 	if (has_black_neighbor_tblr(i, j, img_bw)) {
       
-	boost_poly_2 p;
-	bg::append(p, bg::model::d2::point_xy<double>(start_x, start_y));
-	bg::append(p, bg::model::d2::point_xy<double>(start_x, end_y));
-	bg::append(p, bg::model::d2::point_xy<double>(end_x, end_y));
-	bg::append(p, bg::model::d2::point_xy<double>(end_x, start_y));
-	bg::correct(p);
+  // 	  boost_poly_2 p;
+  // 	  bg::append(p, bg::model::d2::point_xy<double>(start_x, start_y));
+  // 	  bg::append(p, bg::model::d2::point_xy<double>(start_x, end_y));
+  // 	  bg::append(p, bg::model::d2::point_xy<double>(end_x, end_y));
+  // 	  bg::append(p, bg::model::d2::point_xy<double>(end_x, start_y));
+  // 	  bg::correct(p);
 
-	boost_multipoly_2 r_tmp = dark_areas;
-	boost::geometry::clear(dark_areas);
-	boost::geometry::union_(r_tmp, p, dark_areas);
+  // 	  boost_multipoly_2 r_tmp = dark_areas;
+  // 	  boost::geometry::clear(dark_areas);
+  // 	  boost::geometry::union_(r_tmp, p, dark_areas);
+  // 	}
 
-	black_pixels += 1;
-      } else if (Mi[j] == 255) {
-	white_pixels += 1;
-      } else {
-	DBG_ASSERT(false);
-      }
-    }
+  // 	black_pixels += 1;
+  //     } else if (Mi[j] == 255) {
+  // 	white_pixels += 1;
+  //     } else {
+  // 	DBG_ASSERT(false);
+  //     }
+  //   }
 
-    cout << "Done with row " << i << endl;
+  //   cout << "Done with row " << i << endl;
 
-  }
+  // }
 
-  cout << "Num black pixels = " << black_pixels << endl;
-  cout << "Num white pixels = " << white_pixels << endl;
+  // cout << "Num black pixels = " << black_pixels << endl;
+  // cout << "Num white pixels = " << white_pixels << endl;
 
-  const gca::rotation id_rotation =
-    gca::rotate_from_to(gca::point(0, 0, 1), gca::point(0, 0, 1));
-  vector<gca::labeled_polygon_3> dark_polys;
+  // const gca::rotation id_rotation =
+  //   gca::rotate_from_to(gca::point(0, 0, 1), gca::point(0, 0, 1));
+  // vector<gca::labeled_polygon_3> dark_polys;
 
-  for (auto& r : dark_areas) {
-    gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.0, r);
-    dark_polys.push_back(lp);
-  }
+  // for (auto& r : dark_areas) {
+  //   gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.0, r);
 
-  gca::vtk_debug_polygons(dark_polys);
+  //   check_simplicity(lp);
+    
+  //   dark_polys.push_back(lp);
+  // }
 
-  double depth = 0.1;
-  vector<gca::feature> features;
-  for (auto dark_area : dark_polys) {
-    features.push_back(gca::feature(depth, dark_area));
-  }
+  // gca::vtk_debug_polygons(dark_polys);
+
+  // double depth = 0.1;
+  // vector<gca::feature> features;
+  // for (auto dark_area : dark_polys) {
+  //   features.push_back(gca::feature(depth, dark_area));
+  // }
 
 
-  vector<pocket> pockets;
-  for (auto f : features) {
-    concat(pockets, pockets_for_feature(f));
-  }
+  // vector<pocket> pockets;
+  // for (auto f : features) {
+  //   concat(pockets, pockets_for_feature(f));
+  // }
 
-  vector<tool> tools{tool(0.01, 3.0, 4, HSS, FLAT_NOSE)};
-  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  // DBG_ASSERT(pockets.size() > 0);
 
-  auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);
+  // vector<tool> tools{tool(0.01, 3.0, 4, HSS, FLAT_NOSE)};
+  // vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
 
-  cout.setf(ios::fixed, ios::floatfield);
-  cout.setf(ios::showpoint);
+  // auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);
 
-  cout << program.name << endl;
-  cout << program.blocks << endl;
+  // cout.setf(ios::fixed, ios::floatfield);
+  // cout.setf(ios::showpoint);
+
+  // cout << program.name << endl;
+  // cout << program.blocks << endl;
 
   return 0;
 }
