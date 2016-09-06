@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 
   // tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
   // tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
-  tool t3{0.2334, 4.15, 4, HSS, FLAT_NOSE};
+  tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
   vector<tool> tools{t3}; //t1, t2};
 
   workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);

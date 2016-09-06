@@ -246,6 +246,11 @@ target_link_libraries(vtk-mass geometry utils gcode gprocess gca)
 add_executable(scale-down-mesh examples/scale_down_mesh.cpp)
 target_link_libraries(scale-down-mesh geometry utils gcode gprocess gca)
 
+find_package( OpenCV REQUIRED )
+
+add_executable(engraving examples/engraving.cpp)
+target_link_libraries(engraving geometry utils gcode gprocess gca ${OpenCV_LIBS})
+
 ######### VTK Example ##########
 
 # Make command:

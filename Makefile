@@ -124,6 +124,19 @@ AddCell/fast:
 .PHONY : AddCell/fast
 
 #=============================================================================
+# Target rules for targets named engraving
+
+# Build rule for target.
+engraving: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 engraving
+.PHONY : engraving
+
+# fast build rule for target.
+engraving/fast:
+	$(MAKE) -f CMakeFiles/engraving.dir/build.make CMakeFiles/engraving.dir/build
+.PHONY : engraving/fast
+
+#=============================================================================
 # Target rules for targets named scale-down-mesh
 
 # Build rule for target.
@@ -384,6 +397,33 @@ examples/check_contours.s: examples/check_contours.cpp.s
 examples/check_contours.cpp.s:
 	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/examples/check_contours.cpp.s
 .PHONY : examples/check_contours.cpp.s
+
+examples/engraving.o: examples/engraving.cpp.o
+
+.PHONY : examples/engraving.o
+
+# target to build an object file
+examples/engraving.cpp.o:
+	$(MAKE) -f CMakeFiles/engraving.dir/build.make CMakeFiles/engraving.dir/examples/engraving.cpp.o
+.PHONY : examples/engraving.cpp.o
+
+examples/engraving.i: examples/engraving.cpp.i
+
+.PHONY : examples/engraving.i
+
+# target to preprocess a source file
+examples/engraving.cpp.i:
+	$(MAKE) -f CMakeFiles/engraving.dir/build.make CMakeFiles/engraving.dir/examples/engraving.cpp.i
+.PHONY : examples/engraving.cpp.i
+
+examples/engraving.s: examples/engraving.cpp.s
+
+.PHONY : examples/engraving.s
+
+# target to generate assembly for a file
+examples/engraving.cpp.s:
+	$(MAKE) -f CMakeFiles/engraving.dir/build.make CMakeFiles/engraving.dir/examples/engraving.cpp.s
+.PHONY : examples/engraving.cpp.s
 
 examples/feature_decomp.o: examples/feature_decomp.cpp.o
 
@@ -3741,6 +3781,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... AddCell"
+	@echo "... engraving"
 	@echo "... scale-down-mesh"
 	@echo "... vtk-mass"
 	@echo "... ublas"
@@ -3764,6 +3805,9 @@ help:
 	@echo "... examples/check_contours.o"
 	@echo "... examples/check_contours.i"
 	@echo "... examples/check_contours.s"
+	@echo "... examples/engraving.o"
+	@echo "... examples/engraving.i"
+	@echo "... examples/engraving.s"
 	@echo "... examples/feature_decomp.o"
 	@echo "... examples/feature_decomp.i"
 	@echo "... examples/feature_decomp.s"
