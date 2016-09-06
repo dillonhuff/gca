@@ -73,13 +73,15 @@ namespace gca {
   }
 
   std::vector<block>
-  tool_comment_prefix(const toolpath& t) {
+  tool_comment_prefix(const toolpath& t, const token_type comment_style) {
     vector<block> blks;
     std::stringstream ss;
     ss << t.pocket_type();
-    blks.push_back({token("OPERATION = " + ss.str())});
-    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.t.diameter()))});
-    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()))});
+    blks.push_back({token("OPERATION = " + ss.str(), comment_style)});
+    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.t.diameter()),
+			  comment_style)});
+    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()),
+			  comment_style)});
     return blks;
   }
 
@@ -99,7 +101,29 @@ namespace gca {
   comment_prefix(const toolpath& tp, const cut_params& params) {
     vector<block> blks;
     blks.push_back({token("TOOLPATH")});
-    concat(blks, tool_comment_prefix(tp));
+    concat(blks, tool_comment_prefix(tp, PAREN_COMMENT));
+    return blks;
+  }
+
+  std::vector<block>
+  camaster_comment_prefix(const toolpath& tp, const cut_params& params) {
+    vector<block> blks;
+    blks.push_back({token("TOOLPATH", BRACKET_COMMENT)});
+    concat(blks, tool_comment_prefix(tp, BRACKET_COMMENT));
+    return blks;
+  }
+  
+  std::vector<block> camaster_engraving(const toolpath& tp) {
+    for (auto l : tp.lines) {
+      assert(l.num_points() > 0);
+    }
+
+    cut_params params;
+    params.target_machine = CAMASTER;
+    params.safe_height = tp.safe_z_before_tlc;
+
+    vector<block> blks = camaster_comment_prefix(tp, params);
+    concat(blks, polylines_cuts(tp.lines, params, tp.spindle_speed, tp.feedrate));
     return blks;
   }
 

@@ -16,7 +16,8 @@ namespace gca {
   };
   
   enum token_type {
-    COMMENT = 0,
+    PAREN_COMMENT = 0,
+    BRACKET_COMMENT,
     ICODE
   };
 
@@ -29,7 +30,11 @@ namespace gca {
 
     token(const token& x) :
       ttp(x.ttp), text(x.text), c(x.c), v(x.v), line_no(x.line_no) {}
-    token(string textp) : ttp(COMMENT), text(textp), line_no(-1) {}
+    token(string textp) : ttp(PAREN_COMMENT), text(textp), line_no(-1) {}
+    token(string textp, token_type comment_type) :
+      ttp(comment_type), text(textp), line_no(-1) {
+      DBG_ASSERT((ttp == PAREN_COMMENT) || (ttp == BRACKET_COMMENT));
+    }
     token(char cp, value* vp) : ttp(ICODE), c(cp), v(vp), line_no(-1) {}
     token(char cp, int vp) : ttp(ICODE), c(cp), v(ilit::make(vp)), line_no(-1) {}
     token(char cp, double vp) : ttp(ICODE), c(cp), v(lit::make(vp)), line_no(-1) {}
@@ -45,15 +50,17 @@ namespace gca {
 
     bool operator==(const token& other) const {
       if (ttp != other.ttp) { return false; }
-      return ((ttp == COMMENT) && (text == other.text)) ||
+      return ((ttp == PAREN_COMMENT) && (text == other.text)) ||
 	((ttp == ICODE) && ((c == other.c) && (*v == *(other.v))));
     }
     
     token_type tp() const { return ttp; }
     
     void print(ostream& stream) const {
-      if (ttp == COMMENT) {
+      if (ttp == PAREN_COMMENT) {
 	stream << "(*** " << text << " ***)";
+      } else if (ttp == BRACKET_COMMENT) {
+	stream << "[*** " << text << " ***]";
       } else {
 	stream << c << *v;
       }
