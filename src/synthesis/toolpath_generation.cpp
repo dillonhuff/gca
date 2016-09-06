@@ -63,8 +63,7 @@ namespace gca {
     holes{},
     start_depth(p_start_depth),
     end_depth(p_end_depth) {
-      DBG_ASSERT(area(boundary) > 0.001);
-
+      //      DBG_ASSERT(area(boundary) > 0.001);
     }
 
   flat_pocket::flat_pocket(double p_start_depth,
@@ -75,7 +74,7 @@ namespace gca {
     holes(p_holes),
     start_depth(p_start_depth),
     end_depth(p_end_depth) {
-      DBG_ASSERT(area(boundary) > 0.001);
+    //      DBG_ASSERT(area(boundary) > 0.001);
 
       check_simplicity(boundary);
 
