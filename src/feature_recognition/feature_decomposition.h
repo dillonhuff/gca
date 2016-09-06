@@ -3,12 +3,21 @@
 
 #include <deque>
 
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+
 #include "geometry/homogeneous_transformation.h"
 #include "geometry/ring.h"
 #include "geometry/rotation.h"
 #include "synthesis/contour_planning.h"
 
 namespace gca {
+
+  typedef boost::geometry::model::d2::point_xy<double> boost_point_2;
+  typedef boost::geometry::model::polygon<boost_point_2> boost_poly_2;
+  typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
+  typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
   class labeled_polygon_3 {
   protected:
@@ -247,7 +256,10 @@ namespace gca {
       }
     }
   }
-  
+
+  labeled_polygon_3
+  to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p);
+
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
   
   feature_decomposition*

@@ -1,9 +1,5 @@
 #include <boost/numeric/ublas/io.hpp>
 
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
-
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
@@ -15,11 +11,6 @@
 #include "utils/check.h"
 
 namespace gca {
-
-  typedef boost::geometry::model::d2::point_xy<double> boost_point_2;
-  typedef boost::geometry::model::polygon<boost_point_2> boost_poly_2;
-  typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
-  typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
   void check_simplicity(const labeled_polygon_3& p) {
     check_simplicity(p.vertices());
