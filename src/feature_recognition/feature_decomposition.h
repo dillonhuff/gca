@@ -46,6 +46,8 @@ namespace gca {
     const std::vector<point>& vertices() const { return outer_ring; }
 
     const std::vector<std::vector<point>>& holes() const { return inner_rings; }
+
+    std::vector<point> hole(unsigned i) const { return inner_rings[i]; }
     
     unsigned num_vertices() const { return outer_ring.size(); }
 

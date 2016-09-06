@@ -84,7 +84,7 @@ namespace gca {
     for (auto ir : top_pd.holes()) {
       auto pd = polydata_for_ring(ir);
       color_polydata(pd, 0, 200, 0);
-      ring_pds.push_back(polydata_for_ring(ir));
+      ring_pds.push_back(pd);
     }
     
     vector<vtkSmartPointer<vtkActor>> ring_acts;

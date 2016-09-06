@@ -211,15 +211,23 @@ boost_multipoly_2 pixel_polygon(const std::vector<pixel>& pixels,
 std::vector<pocket>
 engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) {
   DBG_ASSERT(angle_eps(f.normal(), point(0, 0, 1), 0.0, 1.0));
-  
+
+  //  vtk_debug_feature(f);
+
   vector<pocket> pockets;
   auto depths = f.range_along(point(0, 0, 1));
   oriented_polygon p(point(0, 0, 1), f.base().vertices());
   pockets.push_back(trace_pocket(depths.second, depths.first, p));
 
-  for (auto h : f.base().holes()) {
+  for (unsigned i = 0; i < f.base().holes().size(); i++) {//auto& h : f.base().holes()) {
+    vector<point> h = f.base().hole(i);
+
+    cout << "Creating pockets for holes" << endl;
+
+    //    vtk_debug_ring(h);
+
     oriented_polygon hp(point(0, 0, 1), h);
-    pockets.push_back(trace_pocket(depths.first, depths.second, hp));
+    pockets.push_back(trace_pocket(depths.second, depths.first, hp));
   }
   return pockets;
 }
@@ -366,7 +374,7 @@ int main(int argc, char** argv) {
   vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
   cout << "Done milling pockets" << endl;
 
-  int num_empty_toolpaths;
+  int num_empty_toolpaths = 0;
   for (auto t : toolpaths) {
     if (t.lines.size() == 0) {
       num_empty_toolpaths++;
