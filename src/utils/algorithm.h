@@ -223,7 +223,7 @@ namespace gca {
   
   template<typename I, typename P>
   std::vector<unsigned>
-  dfs_by(std::vector<unsigned>& inds, const std::vector<I>& elems, P p) {
+  dfs_by_neighbors(std::vector<unsigned>& inds, const std::vector<I>& elems, P p) {
     std::vector<unsigned> comp;
     if (inds.size() == 0) {
       return comp;
@@ -238,8 +238,8 @@ namespace gca {
       comp.push_back(next);
       buf.pop_back();
 
-      std::vector<unsigned> inds_to_remove =
-	select_neighbors(inds, elems, buf, next, p);
+      std::vector<unsigned> inds_to_remove = p(inds, elems, buf, next);
+	//	select_neighbors(inds, elems, buf, next, p);
 
       subtract(inds, inds_to_remove);
     }
@@ -248,14 +248,29 @@ namespace gca {
   }
 
   template<typename I, typename P>
+  std::vector<unsigned>
+  dfs_by(std::vector<unsigned>& inds, const std::vector<I>& elems, P p) {
+    auto neighbors = [p](std::vector<unsigned>& inds,
+			 const std::vector<I>& elems,
+			 std::vector<unsigned>& buf,
+			 unsigned next) {
+      return select_neighbors(inds, elems, buf, next, p);
+    };
+
+    return dfs_by_neighbors(inds, elems, neighbors);
+  }
+
+  template<typename I, typename P>
   std::vector<std::vector<unsigned>>
   connected_components_by(const std::vector<I>& elems, P p) {
     std::vector<std::vector<unsigned>> components;
     std::vector<unsigned> inds(elems.size());
     std::iota(begin(inds), end(inds), 0);
+
     while (inds.size() > 0) {
       components.push_back(dfs_by(inds, elems, p));
     }
+
     return components;
   }
 

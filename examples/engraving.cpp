@@ -64,6 +64,21 @@ bool has_black_neighbor_tblr(const int i, const int j, Mat& img_bw) {
 
 typedef std::pair<int, int> pixel;
 
+namespace std
+{
+    template<> struct hash<pixel>
+    {
+        typedef pixel argument_type;
+        typedef std::size_t result_type;
+        result_type operator()(argument_type const& s) const
+        {
+            result_type const h1 ( std::hash<int>()(s.first) );
+            result_type const h2 ( std::hash<int>()(s.second) );
+            return h1 ^ (h2 << 1);
+        }
+    };
+}
+
 bool operator==(const pixel l, const pixel r) {
   return (l.first == r.first) && (l.second == r.second);
 }
@@ -120,6 +135,49 @@ std::vector<pixel> black_image_pixels(Mat& img_bw) {
   return black_pixels;
 }
 
+template<typename I, typename P>
+std::vector<I>
+dfs_by_value(std::unordered_set<I>& elems,
+	     P neighbors) {
+  vector<I> comp;
+  if (elems.size() == 0) {
+    return comp;
+  }
+
+  std::vector<I> buf;
+  buf.push_back(*begin(elems));
+  elems.erase(begin(elems));
+
+  while (buf.size() > 0) {
+    auto next = buf.back();
+    comp.push_back(next);
+    buf.pop_back();
+
+    std::vector<I> elems_to_remove = neighbors(next, elems);
+    concat(buf, elems_to_remove);
+
+    for (auto e : elems_to_remove) {
+      elems.erase(e);
+    }
+
+  }
+
+  return comp;
+}
+
+
+template<typename I, typename P>
+std::vector<std::vector<I>>
+connected_components_by_value(const std::vector<I>& i_elems, P p) {
+  std::vector<std::vector<I>> components;
+  std::unordered_set<I> elems(begin(i_elems), end(i_elems));
+  while (elems.size() > 0) {
+    components.push_back(dfs_by_value(elems, p));
+  }
+
+  return components;
+}
+
 int main(int argc, char** argv) {
   if( argc != 2) {
     cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
@@ -153,7 +211,21 @@ int main(int argc, char** argv) {
 
   vector<pixel> black_pixels = black_image_pixels(img_bw);
 
-  vector<vector<pixel>> pixel_groups;
+  auto neighbs = [](const pixel p, const std::unordered_set<pixel>& others) {
+    vector<pixel> ns;
+    for (auto n : tblr_neighbor_pixels(p)) {
+      if (others.find(n) != end(others)) {
+	ns.push_back(n);
+      }
+    }
+
+    return ns;
+  };
+
+  vector<vector<pixel>> pixel_groups =
+    connected_components_by_value(black_pixels, neighbs);
+
+  cout << "# black pixel groups = " << pixel_groups.size() << endl;
 
   // unordered_set<pixel> pixels_left;
   // deque<pixel> to_search;
