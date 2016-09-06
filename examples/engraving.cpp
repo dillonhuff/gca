@@ -125,8 +125,6 @@ std::vector<pixel> black_image_pixels(Mat& img_bw) {
       }
     }
 
-    cout << "Done with row " << i << endl;
-
   }
 
   cout << "Num black pixels = " << black_pixels.size() << endl;
@@ -178,6 +176,36 @@ connected_components_by_value(const std::vector<I>& i_elems, P p) {
   return components;
 }
 
+boost_multipoly_2 pixel_polygon(const std::vector<pixel>& pixels,
+				const double pixel_len,
+				const double pixel_width) {
+  boost_multipoly_2 dark_areas;
+
+  for (auto pixel : pixels) {
+    int i = pixel.first;
+    int j = pixel.second;
+
+    double start_y = -1*(pixel_width*i);
+    double end_y = -1*(pixel_width*(i + 1));
+
+    double start_x = pixel_len*j;
+    double end_x = pixel_len*(j + 1);
+
+    boost_poly_2 p;
+    bg::append(p, bg::model::d2::point_xy<double>(start_x, start_y));
+    bg::append(p, bg::model::d2::point_xy<double>(start_x, end_y));
+    bg::append(p, bg::model::d2::point_xy<double>(end_x, end_y));
+    bg::append(p, bg::model::d2::point_xy<double>(end_x, start_y));
+    bg::correct(p);
+
+    boost_multipoly_2 r_tmp = dark_areas;
+    boost::geometry::clear(dark_areas);
+    boost::geometry::union_(r_tmp, p, dark_areas);
+  }
+
+  return dark_areas;
+}
+
 int main(int argc, char** argv) {
   if( argc != 2) {
     cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
@@ -227,6 +255,16 @@ int main(int argc, char** argv) {
 
   cout << "# black pixel groups = " << pixel_groups.size() << endl;
 
+  vector<boost_poly_2> dark_polygons;
+  for (auto pixel_group : pixel_groups) {
+    boost_multipoly_2 area_poly = pixel_polygon(pixel_group,
+						pixel_len,
+						pixel_width);
+
+    DBG_ASSERT(area_poly.
+    dark_polygons.push_back();
+  }
+
   // unordered_set<pixel> pixels_left;
   // deque<pixel> to_search;
 
@@ -239,6 +277,7 @@ int main(int argc, char** argv) {
 
     
   // }
+
   // while (black_pixels.size() > 0) {
   //   if (black_pixels.size() % 200 == 0) {
   //     cout << "# black pixels left = " << black_pixels.size() << endl;
@@ -276,49 +315,6 @@ int main(int argc, char** argv) {
   
   //  cout 
 
-  // boost_multipoly_2 dark_areas;
-  
-  // unsigned black_pixels = 0;
-  // unsigned white_pixels = 0;
-  // for(int i = 0; i < img_bw.rows; i++) {
-
-  //   const unsigned char* Mi = img_bw.ptr<unsigned char>(i);
-
-  //   double start_y = -1*(pixel_width*i);
-  //   double end_y = -1*(pixel_width*(i + 1));
-
-  //   for(int j = 0; j < img_bw.cols; j++) {
-
-  //     double start_x = pixel_len*j;
-  //     double end_x = pixel_len*(j + 1);
-
-  //     if (Mi[j] == 0) {
-
-  // 	if (has_black_neighbor_tblr(i, j, img_bw)) {
-      
-  // 	  boost_poly_2 p;
-  // 	  bg::append(p, bg::model::d2::point_xy<double>(start_x, start_y));
-  // 	  bg::append(p, bg::model::d2::point_xy<double>(start_x, end_y));
-  // 	  bg::append(p, bg::model::d2::point_xy<double>(end_x, end_y));
-  // 	  bg::append(p, bg::model::d2::point_xy<double>(end_x, start_y));
-  // 	  bg::correct(p);
-
-  // 	  boost_multipoly_2 r_tmp = dark_areas;
-  // 	  boost::geometry::clear(dark_areas);
-  // 	  boost::geometry::union_(r_tmp, p, dark_areas);
-  // 	}
-
-  // 	black_pixels += 1;
-  //     } else if (Mi[j] == 255) {
-  // 	white_pixels += 1;
-  //     } else {
-  // 	DBG_ASSERT(false);
-  //     }
-  //   }
-
-  //   cout << "Done with row " << i << endl;
-
-  // }
 
   // cout << "Num black pixels = " << black_pixels << endl;
   // cout << "Num white pixels = " << white_pixels << endl;
