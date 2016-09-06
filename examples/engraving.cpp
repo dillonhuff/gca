@@ -384,7 +384,11 @@ int main(int argc, char** argv) {
   cout << "# of empty toolpaths = " << num_empty_toolpaths << endl;
 
   cout << "Building GCODE" << endl;
-  auto program = build_gcode_program("Engraving", toolpaths, camaster_engraving);
+  auto program = build_gcode_program("Engraving",
+				     toolpaths,
+				     camaster_prefix_blocks,
+				     camaster_suffix_blocks,
+				     camaster_engraving);
   cout << "Done building GCODE" << endl;
 
   cout.setf(ios::fixed, ios::floatfield);

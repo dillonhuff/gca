@@ -14,6 +14,8 @@ namespace gca {
   std::vector<block> emco_f1_code(const toolpath& pocket_lines);
 
   std::vector<block> camaster_engraving(const toolpath& pocket_lines);
+  std::vector<block> camaster_prefix_blocks();
+  std::vector<block> camaster_suffix_blocks();
 
   std::vector<block> emco_f1_code_G10_TLC(const toolpath& tp);
 
@@ -32,6 +34,23 @@ namespace gca {
     return gcode_program(program_name, blocks);
   }
 
+  template<typename ToolpathGCODE,
+	   typename PrefixBlocks,
+	   typename SuffixBlocks>
+  gcode_program
+  build_gcode_program(std::string program_name,
+		      const std::vector<toolpath>& toolpaths,
+		      PrefixBlocks prefix,
+		      SuffixBlocks suffix,
+		      ToolpathGCODE f) {
+    vector<block> blocks = prefix();
+    for (auto t : toolpaths) {
+      concat(blocks, f(t));
+    }
+    concat(blocks, suffix());
+    return gcode_program(program_name, blocks);
+  }
+  
 }
 
 #endif

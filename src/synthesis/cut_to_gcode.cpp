@@ -1,9 +1,10 @@
 #include <cmath>
 
-#include "synthesis/cut_to_gcode.h"
 #include "gcode/circular_arc.h"
-#include "synthesis/output.h"
 #include "gcode/safe_move.h"
+#include "synthesis/cut_to_gcode.h"
+#include "synthesis/output.h"
+#include "utils/algorithm.h"
 
 namespace gca {
 
@@ -57,6 +58,23 @@ namespace gca {
     blocks.push_back(b);
   }
 
+
+  std::vector<block>
+  camaster_spindle_speed_blocks(const double spindle_speed) {
+    vector<block> blks;
+
+    block stop_spindle_block{token('M', 5)};
+    blks.push_back(stop_spindle_block);
+
+    block set_spindle_speed_block{token('S', spindle_speed)};
+    blks.push_back(set_spindle_speed_block);
+
+    block start_spindle_block{token('M', 3)};
+    blks.push_back(start_spindle_block);
+
+    return blks;
+  }
+  
   // TODO: This needs to be changed to do FULL machine
   // settings changes
   void append_settings_block(const cut* last,
@@ -71,14 +89,16 @@ namespace gca {
       } else {
 	block b;
 	double next_ss = get_spindle_speed(next);
-	if (last == NULL) {
-	  block b;
-	  b.push_back(token('S', next_ss));
-	  blocks.push_back(b);
-	} else if (!within_eps(get_spindle_speed(last), next_ss)) {
-	  block b;
-	  b.push_back(token('S', next_ss));
-	  blocks.push_back(b);
+	if (last == NULL || !within_eps(get_spindle_speed(last), next_ss)) {
+	  if (params.target_machine == EMCO_F1) {
+	    block b;
+	    b.push_back(token('S', next_ss));
+	    blocks.push_back(b);
+	  } else if (params.target_machine == CAMASTER) {
+	    concat(blocks, camaster_spindle_speed_blocks(next_ss));
+	  } else {
+	    DBG_ASSERT(false);
+	  }
 	}
       }
     }

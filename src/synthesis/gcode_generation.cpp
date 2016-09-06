@@ -105,6 +105,24 @@ namespace gca {
     return blks;
   }
 
+  std::vector<block> camaster_prefix_blocks() {
+    vector<block> blks;
+    blks.push_back({token('G', 90)});
+    blks.push_back({token('G', 53), token('Z', 0.0)});
+    blks.push_back({token('M', 5)});
+
+    return blks;
+  }
+  
+  std::vector<block> camaster_suffix_blocks() {
+    vector<block> blks;
+    blks.push_back({token('G', 53), token('Z', 0.0)});
+    blks.push_back({token('M', 5)});
+    blks.push_back({token('M', 2)});
+
+    return blks;
+  }
+  
   std::vector<block>
   camaster_comment_prefix(const toolpath& tp, const cut_params& params) {
     vector<block> blks;
@@ -112,7 +130,7 @@ namespace gca {
     concat(blks, tool_comment_prefix(tp, BRACKET_COMMENT));
     return blks;
   }
-  
+
   std::vector<block> camaster_engraving(const toolpath& tp) {
     for (auto l : tp.lines) {
       assert(l.num_points() > 0);
