@@ -7,6 +7,8 @@
 
 namespace gca {
 
+  std::vector<pocket> pockets_for_feature(const feature& f);
+
   std::vector<pocket>
   feature_pockets(feature_decomposition& r);
 

@@ -9,8 +9,11 @@
 
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
+#include "process_planning/feature_to_pocket.h"
+#include "synthesis/gcode_generation.h"
 #include "utils/check.h"
 
+using namespace gca;
 using namespace cv;
 using namespace std;
 
@@ -109,8 +112,31 @@ int main(int argc, char** argv) {
     gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.0, r);
     dark_polys.push_back(lp);
   }
-  
+
   gca::vtk_debug_polygons(dark_polys);
-  
+
+  double depth = 0.1;
+  vector<gca::feature> features;
+  for (auto dark_area : dark_polys) {
+    features.push_back(gca::feature(depth, dark_area));
+  }
+
+
+  vector<pocket> pockets;
+  for (auto f : features) {
+    concat(pockets, pockets_for_feature(f));
+  }
+
+  vector<tool> tools{tool(0.01, 3.0, 4, HSS, FLAT_NOSE)};
+  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+
+  auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);
+
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
+
+  cout << program.name << endl;
+  cout << program.blocks << endl;
+
   return 0;
 }
