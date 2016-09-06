@@ -10,8 +10,8 @@ namespace gca {
     labeled_polygon_3 base = f.base();
     point n = base.normal();
     double theta = angle_between(n, point(0, 0, 1));
-    cout << "base normal = " << n << endl;
-    cout << "theta       = " << theta << endl;
+    // cout << "base normal = " << n << endl;
+    // cout << "theta       = " << theta << endl;
     
     DBG_ASSERT(within_eps(theta, 0.0, 0.3));
 

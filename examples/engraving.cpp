@@ -84,8 +84,8 @@ bool operator==(const pixel l, const pixel r) {
 }
 
 std::vector<pixel> tblr_neighbor_pixels(const pixel l) {
-  int top_row = l.second - 1;
-  int bottom_row = l.second + 1;
+  int top_row = l.first - 1;
+  int bottom_row = l.first + 1;
 
   int left_col = l.second - 1;
   int right_col = l.second + 1;
@@ -257,13 +257,13 @@ int main(int argc, char** argv) {
 
   vector<boost_poly_2> dark_polygons;
   for (auto pixel_group : pixel_groups) {
+    cout << "Creating dark polygon" << endl;
     boost_multipoly_2 area_poly = pixel_polygon(pixel_group,
 						pixel_len,
 						pixel_width);
+    cout << "Done creating dark polygon" << endl;
 
     for (auto area_p : area_poly) {
-      cout << "Polygon area = " << bg::area(area_p) << endl;
-      
       dark_polygons.push_back(area_p);
     }
   }
@@ -291,6 +291,10 @@ int main(int argc, char** argv) {
     dark_polys.push_back(lp);
   }
 
+  for (auto p : dark_polys) {
+    vtk_debug_polygon(p);
+  }
+
   gca::vtk_debug_polygons(dark_polys);
 
   double depth = 0.1;
@@ -299,18 +303,26 @@ int main(int argc, char** argv) {
     features.push_back(gca::feature(depth, dark_area));
   }
 
+  cout << "Done building features" << endl;
 
   vector<pocket> pockets;
   for (auto f : features) {
     concat(pockets, pockets_for_feature(f));
   }
 
+  cout << "Done building pockets" << endl;
+
   DBG_ASSERT(pockets.size() > 0);
 
-  vector<tool> tools{tool(0.01, 3.0, 4, HSS, FLAT_NOSE)};
-  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  vector<tool> tools{tool(0.001, 3.0, 4, HSS, FLAT_NOSE)};
 
+  cout << "Milling pockets" << endl;
+  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  cout << "Done milling pockets" << endl;
+
+  cout << "Building GCODE" << endl;
   auto program = build_gcode_program("Engraving", toolpaths, emco_f1_code_G10_TLC);
+  cout << "Done building GCODE" << endl;
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
