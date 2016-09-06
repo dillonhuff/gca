@@ -257,15 +257,21 @@ int main(int argc, char** argv) {
 
   vector<boost_poly_2> dark_polygons;
   for (auto pixel_group : pixel_groups) {
-    cout << "Creating dark polygon" << endl;
-    boost_multipoly_2 area_poly = pixel_polygon(pixel_group,
-						pixel_len,
-						pixel_width);
-    cout << "Done creating dark polygon" << endl;
+    
+    if (pixel_group.size() < 20000) {
+      cout << "Creating dark polygon from " << pixel_group.size() << " pixels" << endl;
+      boost_multipoly_2 area_poly = pixel_polygon(pixel_group,
+						  pixel_len,
+						  pixel_width);
+      cout << "Done creating dark polygon" << endl;
+      for (auto area_p : area_poly) {
+	dark_polygons.push_back(area_p);
+      }
 
-    for (auto area_p : area_poly) {
-      dark_polygons.push_back(area_p);
+    } else {
+      cout << "PIXEL GROUP IS TOO LARGE, SKIPPING FOR NOW" << endl;
     }
+
   }
 
   cout << "# of dark polygons = " << dark_polygons.size() << endl;
