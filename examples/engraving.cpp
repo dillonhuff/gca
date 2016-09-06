@@ -185,11 +185,13 @@ boost_multipoly_2 pixel_polygon(const std::vector<pixel>& pixels,
     int i = pixel.first;
     int j = pixel.second;
 
+    // TODO: Come up with a better solution, or do pixel dilation only
+    // on the pixels that are involved in a butterfly
     double start_y = -1*(pixel_width*i);
-    double end_y = -1*(pixel_width*(i + 1));
+    double end_y = -1*(pixel_width*(i + 1)) - 0.001;
 
     double start_x = pixel_len*j;
-    double end_x = pixel_len*(j + 1);
+    double end_x = pixel_len*(j + 1) + 0.001;
 
     boost_poly_2 p;
     bg::append(p, bg::model::d2::point_xy<double>(start_x, start_y));
@@ -297,9 +299,9 @@ int main(int argc, char** argv) {
     dark_polys.push_back(lp);
   }
 
-  for (auto p : dark_polys) {
-    vtk_debug_polygon(p);
-  }
+  // for (auto p : dark_polys) {
+  //   vtk_debug_polygon(p);
+  // }
 
   gca::vtk_debug_polygons(dark_polys);
 
@@ -310,6 +312,20 @@ int main(int argc, char** argv) {
   }
 
   cout << "Done building features" << endl;
+  cout << "Number of features = " << features.size() << endl;
+
+  tool t1(0.01, 3.0, 4, HSS, FLAT_NOSE);
+  vector<tool> tools{t1};
+
+  delete_if(features, [&t1](const feature& f) {
+      return t1.cross_section_area() > bg::area(to_boost_poly_2(f.base()));
+    });
+
+  cout << "# of features after area culling = " << features.size() << endl;
+
+  vtk_debug_features(ptrs(features));
+
+  DBG_ASSERT(features.size() > 0);
 
   vector<pocket> pockets;
   for (auto f : features) {
@@ -317,10 +333,9 @@ int main(int argc, char** argv) {
   }
 
   cout << "Done building pockets" << endl;
+  cout << "Number of pockets = " << pockets.size() << endl;
 
   DBG_ASSERT(pockets.size() > 0);
-
-  vector<tool> tools{tool(0.001, 3.0, 4, HSS, FLAT_NOSE)};
 
   cout << "Milling pockets" << endl;
   vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);

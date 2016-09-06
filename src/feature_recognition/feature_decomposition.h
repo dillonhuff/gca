@@ -64,6 +64,9 @@ namespace gca {
 
   typedef std::vector<std::vector<labeled_polygon_3>> surface_levels;
 
+  boost_poly_2
+  to_boost_poly_2(const labeled_polygon_3& p);
+
   class feature {
   protected:
     labeled_polygon_3 base_poly;
