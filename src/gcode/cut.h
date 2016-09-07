@@ -31,9 +31,11 @@ namespace gca {
     inline point get_end() const { return c.value(1.0); }
     inline point value_at(double t) const { return c.value(t); }
     inline double length() const { return (get_end() - get_start()).len(); }
+    inline value* get_tool_number() const { return settings.active_tool; }
 
     inline void set_spindle_speed(value* v) { settings.spindle_speed = v; }
     inline void set_feedrate(value* v) { settings.feedrate = v; }
+    inline void set_tool_number(value* v) { settings.active_tool = v; }
     inline void set_start(point p) { c = parametric_curve(line(p, get_end())); }
     inline void set_end(point p) { c = parametric_curve(line(get_start(), p)); }
     

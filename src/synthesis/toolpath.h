@@ -32,6 +32,8 @@ namespace gca {
 	lines(p_lines) {}
 
     pocket_name pocket_type() const { return pocket_tp; }
+
+    int tool_number() const { return t.tool_number(); }
   };
 
 }

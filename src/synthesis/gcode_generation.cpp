@@ -21,22 +21,27 @@ namespace gca {
   // TODO: Make the spindle_speed and feedrate parameters explicit
   cut* mk_cut(const point l,
 	      const point r,
+	      const int tool_num,
 	      const double spindle_speed,
 	      const double feedrate) {
     auto c = linear_cut::make(l, r);
     c->set_spindle_speed(lit::make(spindle_speed));
     c->set_feedrate(lit::make(feedrate));
+    if (tool_num != -1) {
+      c->set_tool_number(ilit::make(tool_num));
+    }
     return c;
   }
 
   vector<cut*> polyline_cuts(const polyline& p,
+			     const int tool_number,
 			     const double spindle_speed,
 			     const double feedrate) {
     auto ls = p.lines();
     assert(ls.size() > 0);
     vector<cut*> c;
     for (auto l : ls) {
-      c.push_back(mk_cut(l.start, l.end, spindle_speed, feedrate));
+      c.push_back(mk_cut(l.start, l.end, tool_number, spindle_speed, feedrate));
     }
     return c;
   }
@@ -57,12 +62,13 @@ namespace gca {
   }
 
   std::vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
+				    const int tool_number,
 				    const cut_params params,
 				    const double spindle_speed,
 				    const double feedrate) {
     vector<cut*> cuts;
     for (auto p : pocket_lines) {
-      auto cs = polyline_cuts(p, spindle_speed, feedrate);
+      auto cs = polyline_cuts(p, tool_number, spindle_speed, feedrate);
       cuts.insert(cuts.end(), cs.begin(), cs.end());
     }
 
@@ -141,7 +147,7 @@ namespace gca {
     params.safe_height = tp.safe_z_before_tlc;
 
     vector<block> blks = camaster_comment_prefix(tp, params);
-    concat(blks, polylines_cuts(tp.lines, params, tp.spindle_speed, tp.feedrate));
+    concat(blks, polylines_cuts(tp.lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }
 
@@ -159,7 +165,7 @@ namespace gca {
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
 
     vector<block> blks = comment_prefix(tp, params);
-    concat(blks, polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate));
+    concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }
 
@@ -177,7 +183,7 @@ namespace gca {
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, g10_TLC_prefix(tp));
-    concat(blks, polylines_cuts(reflected_lines, params, tp.spindle_speed, tp.feedrate));
+    concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }
   

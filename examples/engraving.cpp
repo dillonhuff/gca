@@ -365,7 +365,7 @@ int main(int argc, char** argv) {
   cout << "Done building features" << endl;
   cout << "Number of features = " << features.size() << endl;
 
-  tool t1(0.01, 3.0, 4, HSS, FLAT_NOSE);
+  tool t1(0.01, 3.0, 4, HSS, FLAT_NOSE, 2);
   vector<tool> tools{t1};
 
   vector<pocket> pockets = build_engraving_pockets(tools, features);
