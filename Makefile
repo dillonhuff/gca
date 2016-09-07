@@ -189,6 +189,19 @@ json-plan/fast:
 .PHONY : json-plan/fast
 
 #=============================================================================
+# Target rules for targets named camaster-test
+
+# Build rule for target.
+camaster-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 camaster-test
+.PHONY : camaster-test
+
+# fast build rule for target.
+camaster-test/fast:
+	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/build
+.PHONY : camaster-test/fast
+
+#=============================================================================
 # Target rules for targets named check-contours
 
 # Build rule for target.
@@ -370,6 +383,33 @@ examples/AddCell.s: examples/AddCell.cpp.s
 examples/AddCell.cpp.s:
 	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/examples/AddCell.cpp.s
 .PHONY : examples/AddCell.cpp.s
+
+examples/camaster_test.o: examples/camaster_test.cpp.o
+
+.PHONY : examples/camaster_test.o
+
+# target to build an object file
+examples/camaster_test.cpp.o:
+	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/examples/camaster_test.cpp.o
+.PHONY : examples/camaster_test.cpp.o
+
+examples/camaster_test.i: examples/camaster_test.cpp.i
+
+.PHONY : examples/camaster_test.i
+
+# target to preprocess a source file
+examples/camaster_test.cpp.i:
+	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/examples/camaster_test.cpp.i
+.PHONY : examples/camaster_test.cpp.i
+
+examples/camaster_test.s: examples/camaster_test.cpp.s
+
+.PHONY : examples/camaster_test.s
+
+# target to generate assembly for a file
+examples/camaster_test.cpp.s:
+	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/examples/camaster_test.cpp.s
+.PHONY : examples/camaster_test.cpp.s
 
 examples/check_contours.o: examples/check_contours.cpp.o
 
@@ -3786,6 +3826,7 @@ help:
 	@echo "... vtk-mass"
 	@echo "... ublas"
 	@echo "... json-plan"
+	@echo "... camaster-test"
 	@echo "... check-contours"
 	@echo "... json-mesh"
 	@echo "... plate-cutter"
@@ -3802,6 +3843,9 @@ help:
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
 	@echo "... examples/AddCell.s"
+	@echo "... examples/camaster_test.o"
+	@echo "... examples/camaster_test.i"
+	@echo "... examples/camaster_test.s"
 	@echo "... examples/check_contours.o"
 	@echo "... examples/check_contours.i"
 	@echo "... examples/check_contours.s"

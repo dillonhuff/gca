@@ -211,20 +211,32 @@ boost_multipoly_2 pixel_polygon(const std::vector<pixel>& pixels,
 std::vector<pocket>
 engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) {
   DBG_ASSERT(angle_eps(f.normal(), point(0, 0, 1), 0.0, 1.0));
+  DBG_ASSERT(tools.size() > 0);
 
-  //  vtk_debug_feature(f);
+  auto depths = f.range_along(point(0, 0, 1));
 
   vector<pocket> pockets;
-  auto depths = f.range_along(point(0, 0, 1));
+  if (f.base().holes().size() == 0) {
+    cout << "No holes" << endl;
+    oriented_polygon f_poly(point(0, 0, 1), f.base().vertices());
+    flat_pocket flat_p(depths.second, depths.first, f_poly);
+    tool t = tools.front();
+    cout << "Tool diameter = " << t.diameter() << endl;
+    auto lines = flat_p.toolpath_lines(t, 0.1);
+
+    if (lines.size() > 0) {
+      pockets.push_back(flat_p);
+      cout << "Created flat pocket" << endl;
+      return pockets;
+    }
+  }
+
+  // Last resort: the feature as its outline
   oriented_polygon p(point(0, 0, 1), f.base().vertices());
   pockets.push_back(trace_pocket(depths.second, depths.first, p));
 
-  for (unsigned i = 0; i < f.base().holes().size(); i++) {//auto& h : f.base().holes()) {
+  for (unsigned i = 0; i < f.base().holes().size(); i++) {
     vector<point> h = f.base().hole(i);
-
-    cout << "Creating pockets for holes" << endl;
-
-    //    vtk_debug_ring(h);
 
     oriented_polygon hp(point(0, 0, 1), h);
     pockets.push_back(trace_pocket(depths.second, depths.first, hp));
@@ -235,10 +247,6 @@ engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) 
 std::vector<pocket>
 build_engraving_pockets(const std::vector<tool>& tools,
 			std::vector<feature>& features) {
-
-  // delete_if(features, [&t1](const feature& f) {
-  //     return t1.cross_section_area() > bg::area(to_boost_poly_2(f.base()));
-  //   });
 
   cout << "# of features after area culling = " << features.size() << endl;
 
@@ -260,23 +268,7 @@ build_engraving_pockets(const std::vector<tool>& tools,
 
 }
 
-int main(int argc, char** argv) {
-  if( argc != 2) {
-    cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
-    return -1;
-  }
-
-  arena_allocator a;
-  set_system_allocator(&a);
-
-  Mat image;
-  image = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
-
-  if(! image.data ) { // Check for invalid input
-    cout <<  "Could not open or find the image" << std::endl ;
-    return -1;
-  }
-
+std::vector<boost_poly_2> picture_polygons(Mat image) {
   Mat gray_image;
   cvtColor( image, gray_image, CV_BGR2GRAY );
 
@@ -342,12 +334,47 @@ int main(int argc, char** argv) {
 
   cout << "Min area polygon = " << bg::area(min_poly) << endl;
   
+  return dark_polygons;
+}
+
+std::vector<toolpath>
+mill_engraving_toolpaths(std::vector<feature>& features,
+			 const std::vector<tool>& tools) {
+  vector<pocket> pockets = build_engraving_pockets(tools, features);
+
+  cout << "Milling pockets" << endl;
+  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  cout << "Done milling pockets" << endl;
+
+  return toolpaths;
+}
+
+
+int main(int argc, char** argv) {
+  if( argc != 2) {
+    cout <<" Usage: display_image ImageToLoadAndDisplay" << endl;
+    return -1;
+  }
+
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  Mat image;
+  image = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
+
+  if(! image.data ) { // Check for invalid input
+    cout <<  "Could not open or find the image" << std::endl ;
+    return -1;
+  }
+
+  auto dark_polygons = picture_polygons(image);
+
   const gca::rotation id_rotation =
     gca::rotate_from_to(gca::point(0, 0, 1), gca::point(0, 0, 1));
   vector<gca::labeled_polygon_3> dark_polys;
 
   for (auto& r : dark_polygons) {
-    gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.0, r);
+    gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.5, r);
 
     check_simplicity(lp);
     
@@ -356,7 +383,7 @@ int main(int argc, char** argv) {
 
   gca::vtk_debug_polygons(dark_polys);
 
-  double depth = 0.1;
+  double depth = 0.05;
   vector<gca::feature> features;
   for (auto dark_area : dark_polys) {
     features.push_back(gca::feature(depth, dark_area));
@@ -368,11 +395,7 @@ int main(int argc, char** argv) {
   tool t1(0.01, 3.0, 4, HSS, FLAT_NOSE, 2);
   vector<tool> tools{t1};
 
-  vector<pocket> pockets = build_engraving_pockets(tools, features);
-
-  cout << "Milling pockets" << endl;
-  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
-  cout << "Done milling pockets" << endl;
+  vector<toolpath> toolpaths = mill_engraving_toolpaths(features, tools);
 
   int num_empty_toolpaths = 0;
   for (auto t : toolpaths) {

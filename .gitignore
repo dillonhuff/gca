@@ -63,3 +63,7 @@ scale-down-mesh
 vtk-mass
 check-contours
 test/stl-files/hard_onshape_parts/
+*.nc
+*.jpg
+engraving
+camaster-test

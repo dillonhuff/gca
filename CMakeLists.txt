@@ -251,6 +251,9 @@ find_package( OpenCV REQUIRED )
 add_executable(engraving examples/engraving.cpp)
 target_link_libraries(engraving geometry utils gcode gprocess gca ${OpenCV_LIBS})
 
+add_executable(camaster-test examples/camaster_test.cpp)
+target_link_libraries(camaster-test geometry utils gcode gprocess gca ${OpenCV_LIBS})
+
 ######### VTK Example ##########
 
 # Make command:

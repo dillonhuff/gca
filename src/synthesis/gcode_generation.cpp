@@ -88,6 +88,9 @@ namespace gca {
 			  comment_style)});
     blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()),
 			  comment_style)});
+    blks.push_back({token("TOOL NUMBER = " + std::to_string(t.t.tool_number()),
+			  comment_style)});
+
     return blks;
   }
 
@@ -147,6 +150,7 @@ namespace gca {
     params.safe_height = tp.safe_z_before_tlc;
 
     vector<block> blks = camaster_comment_prefix(tp, params);
+    concat(blks, camaster_tool_change_block(tp.tool_number()));
     concat(blks, polylines_cuts(tp.lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }

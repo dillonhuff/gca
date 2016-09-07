@@ -98,21 +98,21 @@ namespace gca {
 			     const cut* next,
 			     vector<block>& blocks,
 			     const cut_params& params) {
-    if (last == NULL) {
-      value* v = next->get_tool_number();
-      if (v->is_ilit()) {
-	ilit* l = static_cast<ilit*>(v);
-	if (l->v != -1) {
-	  if (params.target_machine == CAMASTER) {
-	    concat(blocks, camaster_tool_change_block(l->v));
-	  } else {
-	    cout << "Error, " << params.target_machine << " does not support "
-		 << " automatic tool changes" << endl;
-	    DBG_ASSERT(false);
-	  }
-	}
-      }
-    }
+    // if (last == NULL) {
+    //   value* v = next->get_tool_number();
+    //   if (v->is_ilit()) {
+    // 	ilit* l = static_cast<ilit*>(v);
+    // 	if (l->v != -1) {
+    // 	  if (params.target_machine == CAMASTER) {
+    // 	    concat(blocks, camaster_tool_change_block(l->v));
+    // 	  } else {
+    // 	    cout << "Error, " << params.target_machine << " does not support "
+    // 		 << " automatic tool changes" << endl;
+    // 	    DBG_ASSERT(false);
+    // 	  }
+    // 	}
+    //   }
+    // }
     if (last == NULL || last->tool_no != next->tool_no) {
       if (next->tool_no == DRAG_KNIFE) {
     	append_drag_knife_transfer_block(blocks, params.target_machine);
