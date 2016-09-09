@@ -107,7 +107,7 @@ namespace gca {
     } else {
       DBG_ASSERT(false);
     }
-    
+
     tool t = select_tool(tools);
     auto pocket_paths = toolpath_lines(t, cut_depth);
     return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
@@ -132,8 +132,10 @@ namespace gca {
     } else {
       DBG_ASSERT(false);
     }
-    
-    tool t = select_tool(tools);
+
+    DBG_ASSERT(possible_tools.size() > 0);
+
+    tool t = select_tool(possible_tools);
     auto pocket_paths = toolpath_lines(t, cut_depth);
     return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
   }
