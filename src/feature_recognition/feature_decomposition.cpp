@@ -835,7 +835,6 @@ namespace gca {
       if (boost::geometry::within(rmcbp, rcbp)) {
 	overlapping.push_back(c);
       } else {
-	//      double rcbp_area = bg::area(rcbp);
 	boost_multipoly_2 res;
 	boost::geometry::sym_difference(rmcbp, rcbp, res);
       

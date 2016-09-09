@@ -22,22 +22,39 @@ namespace gca {
     cout << "region normal = " << tool_region.normal() << endl;
     check_simplicity(tool_region);
     
-    
     return feature(len, tool_region);
+  }
+
+  bool feature_is_safe(const feature& f, feature_decomposition* decomp) {
+    DBG_ASSERT(decomp != nullptr);
+    
+    auto features = collect_features(decomp);
+    
+    vector<feature*> subset = containing_subset(f, features);
+
+    if (subset.size() > 0) { return true; }
+
+    auto top_feature = decomp->child(0);
+
+    point n = top_feature->feature()->normal();
+    auto f_range = f.range_along(n);
+    auto top_range = top_feature->feature()->range_along(n);
+    
+    return f_range.first >= top_range.second;
   }
 
   bool can_access_feature_with_tool(const feature& f,
 				    const tool& t,
 				    feature_decomposition* decomp) {
-    // if ((t.cut_length() < f.depth()) &&
-    // 	(t.cut_diameter() <= t.shank_diameter())) { return false; }
+    if ((t.cut_length() < f.depth()) &&
+    	(t.cut_diameter() <= t.shank_diameter())) { return false; }
 
     boost::optional<feature> shank_region =
       access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
 
     if (!shank_region) { return false; }
 
-    if (containing_subset(*shank_region, collect_features(decomp)).size() == 0) {
+    if (!feature_is_safe(*shank_region, decomp)) {
       return false;
     }
 
@@ -46,7 +63,7 @@ namespace gca {
 
     if (!holder_region) { return false; }
 
-    if (containing_subset(*holder_region, collect_features(decomp)).size() == 0) {
+    if (!feature_is_safe(*holder_region, decomp)) {
       return false;
     }
 
