@@ -34,6 +34,10 @@ namespace gca {
   std::vector<point>
   interior_offset(const std::vector<point>& pts, const double tol);
 
+  std::vector<std::vector<point>>
+  interior_offsets(const std::vector<point>& pts,
+		   const double tol);
+
 }
 
 #endif

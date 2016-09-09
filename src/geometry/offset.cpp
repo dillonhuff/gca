@@ -189,6 +189,24 @@ namespace gca {
 
     return rpts;
   }
+
+  std::vector<std::vector<point>>
+  interior_offsets(const std::vector<point>& pts,
+		   const double tol) {
+    point n(0, 0, 1);
+    const rotation r = rotate_from_to(ring_normal(pts), n);
+    const rotation r_inv = inverse(r);
+    auto res = interior_offset(oriented_polygon(n, apply(r, pts)), tol);
+
+    vector<vector<point>> result_pts;
+    for (auto rpoly : res) {
+      auto rpts = apply(r_inv, rpoly.vertices());
+      correct_winding_order(rpts, ring_normal(pts));
+      result_pts.push_back(rpts);
+    }
+
+    return result_pts;
+  }
   
 
 }

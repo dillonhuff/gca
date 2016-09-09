@@ -8,6 +8,8 @@ namespace gca {
 
   template<typename Ring>
   point ring_normal(const Ring& r) {
+    DBG_ASSERT(r.size() >= 3);
+
     double normal_x = 0.0;
     double normal_y = 0.0;
     double normal_z = 0.0;

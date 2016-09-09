@@ -486,6 +486,25 @@ namespace gca {
     labeled_polygon_3 poly(dr, dh);
     return poly;
   }
+
+  boost::optional<labeled_polygon_3>
+  shrink_optional(const labeled_polygon_3& p,
+		  const double tol) {
+    auto drs = interior_offsets(p.vertices(), tol);
+
+    if (drs.size() == 0) { return boost::none; }
+
+    DBG_ASSERT(drs.size() == 1);
+
+    auto dr = drs.front();
+    vector<vector<point>> dh;
+    for (auto h : p.holes()) {
+      dh.push_back(exterior_offset(h, tol));
+    }
+
+    labeled_polygon_3 poly(dr, dh);
+    return poly;
+  }
   
   labeled_polygon_3 smooth_buffer(const labeled_polygon_3& p,
 				  const double tol) {
@@ -836,10 +855,14 @@ namespace gca {
   std::vector<feature*>
   containing_subset(const feature& maybe_contained,
 		    const std::vector<feature*>& container) {
+    cout << "Container size = " << container.size() << endl;
+    cout << "maybe_contained normal = " << maybe_contained.normal() << endl;
+    cout << "Start checking normals" << endl;
     for (auto c : container) {
       DBG_ASSERT(angle_eps(maybe_contained.normal(), c->normal(), 180.0, 1.0) ||
 		 angle_eps(maybe_contained.normal(), c->normal(), 0.0, 1.0));
     }
+    cout << "DONE CHECKING NORMALS" << endl;
 
     vector<feature*> outlines = overlapping_outlines(maybe_contained, container);
 

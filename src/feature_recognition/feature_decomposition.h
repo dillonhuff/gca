@@ -304,5 +304,9 @@ namespace gca {
 
   labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol);
 
+  boost::optional<labeled_polygon_3>
+  shrink_optional(const labeled_polygon_3& p,
+		  const double tol);
+
 }
 #endif
