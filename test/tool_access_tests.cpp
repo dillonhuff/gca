@@ -31,11 +31,32 @@ namespace gca {
     t1.set_holder_length(2.5);
 
     tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.14);
+    t2.set_cut_length(0.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.1);
+
+    t2.set_holder_diameter(2.0);
+    t2.set_holder_length(2.5);
+    
     vector<tool> tools{t1, t2};
 
     tool_access_info tool_info = find_accessable_tools(f, tools);
 
     REQUIRE(tool_info.size() == f->num_features());
+
+    auto top = f->child(0);
+
+    REQUIRE(tool_info[top->feature()].size() == 2);
+
+    auto outer_hole = top->child(0);
+
+    REQUIRE(tool_info[outer_hole->feature()].size() == 1);
+
+    auto inner_hole = outer_hole->child(0);
+
+    REQUIRE(tool_info[inner_hole->feature()].size() == 0);
   }
 
 }

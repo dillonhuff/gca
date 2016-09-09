@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <numeric>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -403,6 +404,18 @@ namespace gca {
     }
   }
 
+  template<typename A, typename B>
+  void map_insert(std::unordered_map<A, std::vector<B>>& m, A a, B b) {
+    if (m.find(a) == std::end(m)) {
+      std::vector<B> bs{b};
+      m[a] = bs;
+    } else {
+      auto elems = m[a];
+      elems.push_back(b);
+      m[a] = elems;
+    }
+  }
+  
   // TODO: Make this more efficient
   template<typename T, typename F>
   std::vector<T>

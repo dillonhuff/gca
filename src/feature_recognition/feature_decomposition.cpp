@@ -825,7 +825,8 @@ namespace gca {
   containing_subset(const feature& maybe_contained,
 		    const std::vector<feature*>& container) {
     for (auto c : container) {
-      DBG_ASSERT(angle_eps(maybe_contained.normal(), c->normal(), 180.0, 1.0));
+      DBG_ASSERT(angle_eps(maybe_contained.normal(), c->normal(), 180.0, 1.0) ||
+		 angle_eps(maybe_contained.normal(), c->normal(), 0.0, 1.0));
     }
 
     vector<feature*> outlines = overlapping_outlines(maybe_contained, container);
