@@ -15,6 +15,7 @@ namespace gca {
     unsigned flutes;
     material mat;
     int tool_num;
+    double cut_length, shank_diameter, shank_length, holder_diameter, holder_length;
 
   public:
     tool(double p_diameter,
@@ -44,6 +45,25 @@ namespace gca {
     inline double cross_section_area() const
     { return M_PI*radius()*radius(); }
     inline int tool_number() const { return tool_num; }
+
+    inline void set_cut_diameter(const double n)
+    { diam = n; }
+
+    inline void set_cut_length(const double n)
+    { cut_length = n; }
+
+    inline void set_shank_diameter(const double n)
+    { shank_diameter = n; }
+
+    inline void set_shank_length(const double n)
+    { shank_length = n; }
+
+    inline void set_holder_diameter(const double n)
+    { holder_diameter = n; }
+
+    inline void set_holder_length(const double n)
+    { holder_length = n; }
+    
   };
 
 }

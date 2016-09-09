@@ -21,6 +21,15 @@ namespace gca {
     REQUIRE(f->num_levels() == 4);
 
     tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.3);
+    t1.set_cut_length(0.4);
+
+    t1.set_shank_diameter(0.1);
+    t1.set_shank_length(0.1);
+
+    t1.set_holder_diameter(2.0);
+    t1.set_holder_length(2.5);
+
     tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
     vector<tool> tools{t1, t2};
 
