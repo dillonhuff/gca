@@ -24,8 +24,8 @@ namespace gca {
     t1.set_cut_diameter(0.3);
     t1.set_cut_length(0.4);
 
-    t1.set_shank_diameter(0.1);
-    t1.set_shank_length(0.1);
+    t1.set_shank_diameter(0.2);
+    t1.set_shank_length(0.2);
 
     t1.set_holder_diameter(2.0);
     t1.set_holder_length(2.5);

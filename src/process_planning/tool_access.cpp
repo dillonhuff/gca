@@ -7,6 +7,9 @@ namespace gca {
   find_accessable_tools(feature_decomposition* f,
 			const std::vector<tool>& tools) {
     tool_access_info info;
+    for (auto f : collect_features(f)) {
+      info[f] = {};
+    }
     return info;
   }
 
