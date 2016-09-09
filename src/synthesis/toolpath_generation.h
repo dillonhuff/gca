@@ -50,13 +50,18 @@ namespace gca {
 
     toolpath make_toolpath(const material& stock_material,
 			   const double safe_z,
-			   const std::vector<tool>& tools) const;
+			   const std::vector<tool>& tools) const
+    { return self_->make_toolpath(stock_material, safe_z, tools); }
 
   private:
     struct concept_t {
       virtual ~concept_t() = default;
       virtual tool select_tool(const std::vector<tool>& tools) const = 0;
       virtual pocket_name pocket_type() const = 0;
+      virtual toolpath make_toolpath(const material& stock_material,
+				     const double safe_z,
+				     const std::vector<tool>& tools) const = 0;
+
       virtual const vector<oriented_polygon>& get_holes() const = 0;
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
@@ -79,6 +84,12 @@ namespace gca {
       bool above_base(const point p) const { return data_.above_base(p); }
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }
+
+      virtual toolpath make_toolpath(const material& stock_material,
+				     const double safe_z,
+				     const std::vector<tool>& tools) const
+      { return data_.make_toolpath(stock_material, safe_z, tools); }
+
       T data_;
     };
   
@@ -115,6 +126,10 @@ namespace gca {
     inline const oriented_polygon& get_boundary() const
     { return boundary; }
 
+    toolpath make_toolpath(const material& stock_material,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
+    
     inline double get_start_depth() const { return start_depth; }
 
     // TODO: Optimize to use vertex list
@@ -187,6 +202,10 @@ namespace gca {
     inline const oriented_polygon& get_boundary() const
     { return boundary; }
 
+    toolpath make_toolpath(const material& stock_material,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
+    
     inline double get_start_depth() const { return start_depth; }
 
     inline double get_end_depth() const { return end_depth; }
@@ -221,6 +240,10 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
+    toolpath make_toolpath(const material& stock_material,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
+    
     pocket_name pocket_type() const { return CONTOUR_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
@@ -250,6 +273,10 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
+    toolpath make_toolpath(const material& stock_material,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
+    
     tool select_tool(const std::vector<tool>& tools) const;
 
     std::vector<polyline>
@@ -280,6 +307,10 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
+    toolpath make_toolpath(const material& stock_material,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
+    
     tool select_tool(const std::vector<tool>& tools) const;
 
     std::vector<polyline>
