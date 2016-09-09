@@ -158,19 +158,24 @@ namespace gca {
     double start_depth;
     double end_depth;
 
+    std::vector<tool> possible_tools;
+
   public:
     flat_pocket(double start_depthp,
 		const std::vector<index_t>& basep,
-		const triangular_mesh* p_mesh);
-
-    flat_pocket(double p_start_depth,
-		double p_end_depth,
-		const oriented_polygon& p_boundary);
+		const triangular_mesh* p_mesh,
+		const std::vector<tool>& p_tools);
 
     flat_pocket(double p_start_depth,
 		double p_end_depth,
 		const oriented_polygon& p_boundary,
-		const std::vector<oriented_polygon>& p_holes);
+		const std::vector<tool>& p_tools);
+
+    flat_pocket(double p_start_depth,
+		double p_end_depth,
+		const oriented_polygon& p_boundary,
+		const std::vector<oriented_polygon>& p_holes,
+		const std::vector<tool>& p_tools);
     
     pocket_name pocket_type() const { return FLAT_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;

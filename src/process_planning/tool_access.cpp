@@ -18,7 +18,7 @@ namespace gca {
     labeled_polygon_3 tool_region =
       dilate(shift(depth_offset*n, *a_region), diam / 2.0);
 
-    vtk_debug_polygon(tool_region);
+    //vtk_debug_polygon(tool_region);
 
     cout << "region normal = " << tool_region.normal() << endl;
     check_simplicity(tool_region);
@@ -47,8 +47,8 @@ namespace gca {
   bool can_access_feature_with_tool(const feature& f,
 				    const tool& t,
 				    feature_decomposition* decomp) {
-    // if ((t.cut_length() < f.depth()) &&
-    // 	(t.cut_diameter() <= t.shank_diameter())) { return false; }
+    if ((t.cut_length() < f.depth()) &&
+    	(t.cut_diameter() <= t.shank_diameter())) { return false; }
 
     boost::optional<feature> shank_region =
       access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());

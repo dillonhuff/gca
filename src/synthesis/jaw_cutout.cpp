@@ -274,14 +274,15 @@ namespace gca {
   below_face_pockets(const triangular_mesh& part_mesh,
 		     const homogeneous_transform& t,
 		     const point n) {
-    feature_decomposition* f = build_feature_decomposition(part_mesh, n);
-    vector<pocket> pockets = feature_pockets(*f, t); //, n);
+    DBG_ASSERT(false);
+    // feature_decomposition* f = build_feature_decomposition(part_mesh, n);
+    // vector<pocket> pockets = feature_pockets(*f, t); //, n);
 
-    DBG_ASSERT(pockets.size() > 0);
+    // DBG_ASSERT(pockets.size() > 0);
     
-    pockets.erase(begin(pockets));
+    // pockets.erase(begin(pockets));
 
-    return pockets;
+    // return pockets;
   }
   
   std::vector<fixture_setup>
@@ -373,7 +374,8 @@ namespace gca {
 
     return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, {custom.left_jaw, custom.right_jaw}, w);
   }
-  
+
+  // TODO: If this code is ever needed reintroduce
   boost::optional<clipping_plan>
   custom_jaw_plan(const workpiece& w,
 		  const triangular_mesh& aligned,
@@ -381,15 +383,16 @@ namespace gca {
 		  const contour_surface_decomposition& surfs,
 		  const fixture& top_fix,
 		  const fabrication_inputs& fab_inputs) {
+    DBG_ASSERT(false);
     // TODO: Actually use the custom jaw cutout fixtures!
-    boost::optional<custom_jaw_cutout> custom =
-      custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), fab_inputs);
+    // boost::optional<custom_jaw_cutout> custom =
+    //   custom_jaw_cutout_fixture(surfs, top_fix.v.without_extras(), fab_inputs);
 
-    if (custom) {
-      return soft_jaw_clipping_plan(w, aligned, part_mesh, surfs, top_fix, *custom);
-    }
+    // if (custom) {
+    //   return soft_jaw_clipping_plan(w, aligned, part_mesh, surfs, top_fix, *custom);
+    // }
 
-    return boost::none;
+    //    return boost::none;
   }
   
   

@@ -219,7 +219,7 @@ engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) 
   if (f.base().holes().size() == 0) {
     cout << "No holes" << endl;
     oriented_polygon f_poly(point(0, 0, 1), f.base().vertices());
-    flat_pocket flat_p(depths.second, depths.first, f_poly);
+    flat_pocket flat_p(depths.second, depths.first, f_poly, tools);
     tool t = tools.front();
     cout << "Tool diameter = " << t.diameter() << endl;
     auto lines = flat_p.toolpath_lines(t, 0.1);

@@ -83,22 +83,26 @@ namespace gca {
 
   flat_pocket::flat_pocket(double p_start_depth,
 			   double p_end_depth,
-			   const oriented_polygon& p_boundary) :
+			   const oriented_polygon& p_boundary,
+			   const std::vector<tool>& p_tools) :
     boundary(p_boundary),
     holes{},
     start_depth(p_start_depth),
-    end_depth(p_end_depth) {
+    end_depth(p_end_depth),
+    possible_tools(p_tools) {
       //      DBG_ASSERT(area(boundary) > 0.001);
     }
 
   flat_pocket::flat_pocket(double p_start_depth,
 			   double p_end_depth,
 			   const oriented_polygon& p_boundary,
-			   const std::vector<oriented_polygon>& p_holes) :
+			   const std::vector<oriented_polygon>& p_holes,
+			   const std::vector<tool>& p_tools) :
     boundary(p_boundary),
     holes(p_holes),
     start_depth(p_start_depth),
-    end_depth(p_end_depth) {
+    end_depth(p_end_depth),
+    possible_tools(p_tools) {
     //      DBG_ASSERT(area(boundary) > 0.001);
 
       check_simplicity(boundary);
@@ -111,9 +115,11 @@ namespace gca {
   
   flat_pocket::flat_pocket(double start_depthp,
 			   const std::vector<index_t>& basep,
-			   const triangular_mesh* p_mesh) :
+			   const triangular_mesh* p_mesh,
+			   const std::vector<tool>& p_tools) :
     start_depth(start_depthp),
-    end_depth(p_mesh->face_triangle(basep.front()).v1.z) {
+    end_depth(p_mesh->face_triangle(basep.front()).v1.z),
+    possible_tools(p_tools) {
 
     pair<oriented_polygon, std::vector<oriented_polygon>> bound_and_holes =
       optimize_pocket_size(basep, *p_mesh);
