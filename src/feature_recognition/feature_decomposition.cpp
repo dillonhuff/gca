@@ -456,7 +456,10 @@ namespace gca {
 
     vector<vector<point>> dh;
     for (auto h : p.holes()) {
-      dh.push_back(interior_offset(h, tol));
+      auto offs = interior_offsets(h, tol);
+      for (auto off : offs) {
+	dh.push_back(off);
+      }
     }
 
     labeled_polygon_3 poly(dr, dh);
