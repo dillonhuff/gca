@@ -178,7 +178,8 @@ namespace gca {
   clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
 			       const triangular_mesh& part_mesh,
 			       feature_decomposition* decomp,
-			       const fixture& f) {
+			       const fixture& f,
+			       const tool_access_info& tool_info) {
     auto s_t = mating_transform(wp_mesh, f.orient, f.v);
 
     auto aligned = apply(s_t, wp_mesh);
@@ -188,7 +189,7 @@ namespace gca {
 
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    auto pockets = feature_pockets(*decomp, s_t, {});
+    auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
     concat(setup_pockets, pockets);
     
@@ -199,7 +200,8 @@ namespace gca {
   clip_base_transform(const triangular_mesh& wp_mesh,
 		      const triangular_mesh& part_mesh,
 		      feature_decomposition* decomp,
-		      const fixture& f) {
+		      const fixture& f,
+		      const tool_access_info& tool_info) {
     auto s_t = mating_transform(part_mesh, f.orient, f.v);
 
     auto aligned = apply(s_t, wp_mesh);
@@ -213,7 +215,7 @@ namespace gca {
 
     cout << "Base clip pocket end = " << setup_pockets.front().get_end_depth() << endl;
 
-    auto pockets = feature_pockets(*decomp, s_t, {});
+    auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
     if (pockets.size() > 0) {
       cout << "Initial face pocket start = " << pockets.front().get_start_depth() << endl;
@@ -298,7 +300,8 @@ namespace gca {
   contour_clip_setups(const triangular_mesh& aligned,
 		      const triangular_mesh& part_mesh,
 		      const fixture& top_fix,
-		      const fixture& base_fix) {
+		      const fixture& base_fix,
+		      const std::vector<tool>& tools) {
     DBG_ASSERT(angle_eps(top_fix.orient.top_normal(), base_fix.orient.top_normal(), 180.0, 1.0));
 
     auto decomps = select_features(part_mesh, {top_fix, base_fix});
@@ -308,9 +311,12 @@ namespace gca {
     auto top_decomp = decomps[0];
     auto base_decomp = decomps[1];
 
+    auto top_tool_info = find_accessable_tools(top_decomp, tools);
+    auto base_tool_info = find_accessable_tools(base_decomp, tools);
+
     std::vector<fixture_setup> clip_setups;
-    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix));
-    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix));
+    clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix, top_tool_info));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix, top_tool_info));
 
     return clip_setups;
   }
@@ -322,9 +328,10 @@ namespace gca {
 		     const triangular_mesh& part_mesh,
 		     const contour_surface_decomposition& surfs,
 		     const fixture& top_fix,
-		     const fixture& base_fix) {
+		     const fixture& base_fix,
+		     const std::vector<tool>& tools) {
     std::vector<fixture_setup> clip_setups =
-      contour_clip_setups(aligned, part_mesh, top_fix, base_fix);
+      contour_clip_setups(aligned, part_mesh, top_fix, base_fix, tools);
     
     auto clipped_surfs =
       stable_surfaces_after_clipping(part_mesh, aligned);
@@ -368,7 +375,7 @@ namespace gca {
 	  find_base_contour_fixture(outline, top, (*top_fix).v, -1*n);
 
 	if (base_fix) {
-	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix);
+	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix, fab_inputs.tools);
 	} else {
 	  return custom_jaw_plan(w, aligned, part_mesh, *surfs, *top_fix, fab_inputs);
 	}

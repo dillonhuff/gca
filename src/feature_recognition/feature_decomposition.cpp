@@ -774,14 +774,27 @@ namespace gca {
     return n;
   }
 
+  std::ostream& operator<<(std::ostream& out, const std::pair<double, double>& r) {
+    out << "( " << r.first << " , " << r.second << " )" << endl;
+    return out;
+  }
+  
   bool tangent(const std::pair<double, double> r1,
 	       const std::pair<double, double> r2,
 	       const double tol) {
-    DBG_ASSERT(r1.first < r1.second);
-    DBG_ASSERT(r2.first < r2.second);
-
-    if (within_eps(r1.second, r2.first, tol)) { return true; }
-    if (within_eps(r2.second, r1.first, tol)) { return true; }
+    if ((r1.first < r1.second) &&
+	(r2.first < r2.second)) {
+      if (within_eps(r1.second, r2.first, tol)) { return true; }
+      if (within_eps(r2.second, r1.first, tol)) { return true; }
+    } else if ((r1.second < r1.first) &&
+	       (r2.second < r2.first)) {
+      if (within_eps(r1.second, r2.first, tol)) { return true; }
+      if (within_eps(r2.second, r1.first, tol)) { return true; }
+    } else {
+      cout << "r1 = " << r1 << endl;
+      cout << "r2 = " << r2 << endl;
+      DBG_ASSERT(false);
+    }
 
     return false;
   }
