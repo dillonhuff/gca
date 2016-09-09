@@ -140,9 +140,10 @@ SET(GCA_HEADERS
 SET(GCA_CPPS
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/visual_debug.cpp
+	./src/process_planning/axis_location.cpp
 	./src/process_planning/feature_to_pocket.cpp
 	./src/process_planning/feature_selection.cpp
-	./src/process_planning/axis_location.cpp
+	./src/process_planning/tool_access.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp

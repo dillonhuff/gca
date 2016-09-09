@@ -1896,6 +1896,33 @@ src/process_planning/feature_to_pocket.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.s
 .PHONY : src/process_planning/feature_to_pocket.cpp.s
 
+src/process_planning/tool_access.o: src/process_planning/tool_access.cpp.o
+
+.PHONY : src/process_planning/tool_access.o
+
+# target to build an object file
+src/process_planning/tool_access.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/tool_access.cpp.o
+.PHONY : src/process_planning/tool_access.cpp.o
+
+src/process_planning/tool_access.i: src/process_planning/tool_access.cpp.i
+
+.PHONY : src/process_planning/tool_access.i
+
+# target to preprocess a source file
+src/process_planning/tool_access.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/tool_access.cpp.i
+.PHONY : src/process_planning/tool_access.cpp.i
+
+src/process_planning/tool_access.s: src/process_planning/tool_access.cpp.s
+
+.PHONY : src/process_planning/tool_access.s
+
+# target to generate assembly for a file
+src/process_planning/tool_access.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/tool_access.cpp.s
+.PHONY : src/process_planning/tool_access.cpp.s
+
 src/simulators/mill_tool.o: src/simulators/mill_tool.cpp.o
 
 .PHONY : src/simulators/mill_tool.o
@@ -4038,6 +4065,9 @@ help:
 	@echo "... src/process_planning/feature_to_pocket.o"
 	@echo "... src/process_planning/feature_to_pocket.i"
 	@echo "... src/process_planning/feature_to_pocket.s"
+	@echo "... src/process_planning/tool_access.o"
+	@echo "... src/process_planning/tool_access.i"
+	@echo "... src/process_planning/tool_access.s"
 	@echo "... src/simulators/mill_tool.o"
 	@echo "... src/simulators/mill_tool.i"
 	@echo "... src/simulators/mill_tool.s"

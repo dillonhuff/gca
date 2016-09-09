@@ -20,7 +20,13 @@ namespace gca {
 
     REQUIRE(f->num_levels() == 4);
 
-    
+    tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
+    tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
+    vector<tool> tools{t1, t2};
+
+    tool_access_info tool_info = find_accessable_tools(f, tools);
+
+    REQUIRE(tool_info.size() == f->num_features());
   }
 
 }
