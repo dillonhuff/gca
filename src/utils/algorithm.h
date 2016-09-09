@@ -405,6 +405,16 @@ namespace gca {
   }
 
   template<typename A, typename B>
+  B map_find(const A& a, const std::unordered_map<A, B>& m) {
+    auto f = m.find(a);
+    if (f == std::end(m)) {
+      DBG_ASSERT(false);
+    }
+
+    return f->second;
+  }
+
+  template<typename A, typename B>
   void map_insert(std::unordered_map<A, std::vector<B>>& m, A a, B b) {
     if (m.find(a) == std::end(m)) {
       std::vector<B> bs{b};

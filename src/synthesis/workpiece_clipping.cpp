@@ -188,7 +188,7 @@ namespace gca {
 
     std::vector<pocket>& setup_pockets = setup.pockets;
 
-    auto pockets = feature_pockets(*decomp, s_t);
+    auto pockets = feature_pockets(*decomp, s_t, {});
 
     concat(setup_pockets, pockets);
     
@@ -213,7 +213,7 @@ namespace gca {
 
     cout << "Base clip pocket end = " << setup_pockets.front().get_end_depth() << endl;
 
-    auto pockets = feature_pockets(*decomp, s_t);
+    auto pockets = feature_pockets(*decomp, s_t, {});
 
     if (pockets.size() > 0) {
       cout << "Initial face pocket start = " << pockets.front().get_start_depth() << endl;

@@ -114,8 +114,8 @@ namespace gca {
   }
 
   toolpath flat_pocket::make_toolpath(const material& stock_material,
-					 const double safe_z,
-					 const std::vector<tool>& tools) const {
+				      const double safe_z,
+				      const std::vector<tool>& tools) const {
     double cut_depth, speed, feed;
     if (stock_material == ACETAL) {
       cut_depth = 0.2;

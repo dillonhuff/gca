@@ -1,11 +1,13 @@
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
+#include "utils/algorithm.h"
 #include "utils/check.h"
 
 namespace gca {
 
   // TODO: Deal with the polygon holes issue
-  std::vector<pocket> pockets_for_feature(const feature& f) {
+  std::vector<pocket> pockets_for_feature(const feature& f,
+					  const std::vector<tool>& tools) {
 
     labeled_polygon_3 base = f.base();
     point n = base.normal();
@@ -27,11 +29,12 @@ namespace gca {
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();
 
-    return {flat_pocket(top_z, base_z, ob, holes, {})};
+    return {flat_pocket(top_z, base_z, ob, holes, {tools})};
   }
 
   std::vector<pocket>
-  feature_pockets(feature_decomposition& r) {
+  feature_pockets(feature_decomposition& r,
+		  const tool_access_info& tool_info) {
 
     DBG_ASSERT(r.feature() == nullptr);
     DBG_ASSERT(r.num_children() == 1);
@@ -41,14 +44,17 @@ namespace gca {
 
     vector<pocket> pockets;
     for (auto f : features) {
-      concat(pockets, pockets_for_feature(*f));
+      vector<tool> tools = map_find(f, tool_info);
+      concat(pockets, pockets_for_feature(*f, tools));
     }
     
     return pockets;
   }
 
   std::vector<pocket>
-  feature_pockets(feature_decomposition& r, const point n) {
+  feature_pockets(feature_decomposition& r,
+		  const point n,
+		  const tool_access_info& tool_info) {
 
     DBG_ASSERT(r.feature() == nullptr);
     DBG_ASSERT(r.num_children() == 1);
@@ -60,7 +66,8 @@ namespace gca {
 
     vector<pocket> pockets;
     for (auto f : features) {
-      concat(pockets, pockets_for_feature(f->apply(rot)));
+      vector<tool> tools = map_find(f, tool_info);
+      concat(pockets, pockets_for_feature(f->apply(rot), tools));
     }
     
     return pockets;
@@ -68,7 +75,8 @@ namespace gca {
 
   std::vector<pocket>
   feature_pockets(feature_decomposition& r,
-		  const homogeneous_transform& t) {
+		  const homogeneous_transform& t,
+		  const tool_access_info& tool_info) {
 
     DBG_ASSERT(r.feature() == nullptr);
 
@@ -81,7 +89,8 @@ namespace gca {
 
     vector<pocket> pockets;
     for (auto f : features) {
-      concat(pockets, pockets_for_feature(f->apply(t)));
+      vector<tool> tools = map_find(f, tool_info);
+      concat(pockets, pockets_for_feature(f->apply(t), tools));
     }
     
     return pockets;

@@ -296,7 +296,7 @@ namespace gca {
       triangular_mesh* m =
 	new (allocate<triangular_mesh>()) triangular_mesh(apply(t, part_mesh));
 
-      vector<pocket> pockets = feature_pockets(*decomp, t); //, d.orient.top_normal());
+      vector<pocket> pockets = feature_pockets(*decomp, t, {});
 
       rest.push_back(fixture_setup(m, d, pockets));
     }

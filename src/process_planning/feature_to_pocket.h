@@ -3,21 +3,24 @@
 
 #include "feature_recognition/feature_decomposition.h"
 #include "geometry/homogeneous_transformation.h"
+#include "process_planning/tool_access.h"
 #include "synthesis/toolpath_generation.h"
 
 namespace gca {
 
-  std::vector<pocket> pockets_for_feature(const feature& f);
-
   std::vector<pocket>
-  feature_pockets(feature_decomposition& r);
-
-  std::vector<pocket>
-  feature_pockets(feature_decomposition& r, const point n);
+  feature_pockets(feature_decomposition& r,
+		  const tool_access_info& tool_info);
 
   std::vector<pocket>
   feature_pockets(feature_decomposition& r,
-		  const homogeneous_transform& t);
+		  const point n,
+		  const tool_access_info& tool_info);
+
+  std::vector<pocket>
+  feature_pockets(feature_decomposition& r,
+		  const homogeneous_transform& t,
+		  const tool_access_info& tool_info);
   
 }
 

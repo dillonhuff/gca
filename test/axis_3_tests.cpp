@@ -16,7 +16,7 @@ namespace gca {
     SECTION("CylinderSquare") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl", 0.001);
       feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
-      vector<pocket> pockets = feature_pockets(*f);
+      vector<pocket> pockets = feature_pockets(*f, {});
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -51,7 +51,7 @@ namespace gca {
       
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
       feature_decomposition* f = build_feature_decomposition(mesh, n);
-      vector<pocket> pockets = feature_pockets(*f, n);
+      vector<pocket> pockets = feature_pockets(*f, n, {});
 
       REQUIRE(pockets.size() == 8);
     }

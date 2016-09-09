@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
   auto mesh = parse_stl(argv[1], 0.001);
   feature_decomposition* f = build_feature_decomposition(mesh, n);
 
-  vector<pocket> pockets = feature_pockets(*f, n);
+  vector<pocket> pockets = feature_pockets(*f, n, {});
 
   cout << "# of pockets = " << pockets.size() << endl;
 
