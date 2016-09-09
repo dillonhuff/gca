@@ -7,7 +7,7 @@ namespace gca {
 			 const tool& t,
 			 const double diam,
 			 const double len) {
-    return f;
+    return feature(len + 100, f.base());
   }
 
   bool can_access_feature_with_tool(const feature& f,
@@ -24,7 +24,7 @@ namespace gca {
     }
 
     feature holder_region =
-      access_feature(f, t, t.holder_diameter(), t.holder_diameter());
+      access_feature(f, t, t.holder_diameter(), t.holder_length());
 
     if (containing_subset(holder_region, collect_features(decomp)).size() == 0) {
       return false;
