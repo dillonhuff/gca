@@ -59,6 +59,8 @@ namespace gca {
     }
   };
 
+  labeled_polygon_3 shift(const point p, const labeled_polygon_3& poly);
+
   void check_simplicity(const labeled_polygon_3& p);
 
   labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p);
@@ -299,6 +301,8 @@ namespace gca {
   feature* parent_feature(feature* f, feature_decomposition* decomp);
 
   double base_area(const feature& f);
+
+  labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol);
 
 }
 #endif

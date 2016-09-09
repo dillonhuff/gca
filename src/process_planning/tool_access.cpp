@@ -6,8 +6,12 @@ namespace gca {
   feature access_feature(const feature& f,
 			 const tool& t,
 			 const double diam,
-			 const double len) {
-    return feature(len + 100, f.base());
+			 const double len,
+			 const double depth_offset) {
+    point n = f.normal();
+    labeled_polygon_3 a_region = shrink(f.base(), t.diameter());
+    labeled_polygon_3 tool_region = dilate(shift(depth_offset*n, a_region), diam);
+    return feature(len, tool_region);
   }
 
   bool can_access_feature_with_tool(const feature& f,
@@ -17,14 +21,14 @@ namespace gca {
 	(t.cut_diameter() <= t.shank_diameter())) { return false; }
 
     feature shank_region =
-      access_feature(f, t, t.shank_diameter(), t.shank_length());
+      access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
 
     if (containing_subset(shank_region, collect_features(decomp)).size() == 0) {
       return false;
     }
 
     feature holder_region =
-      access_feature(f, t, t.holder_diameter(), t.holder_length());
+      access_feature(f, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
 
     if (containing_subset(holder_region, collect_features(decomp)).size() == 0) {
       return false;

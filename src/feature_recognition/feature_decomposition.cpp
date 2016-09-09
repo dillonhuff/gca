@@ -463,6 +463,18 @@ namespace gca {
     return poly;
   }
 
+  labeled_polygon_3 shift(const point p, const labeled_polygon_3& poly) {
+    auto dr = shift(p, poly.vertices());
+
+    vector<vector<point>> dh;
+    for (auto h : poly.holes()) {
+      dh.push_back(shift(p, h));
+    }
+
+    labeled_polygon_3 shifted(dr, dh);
+    return shifted;
+  }
+
   labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol) {
     auto dr = interior_offset(p.vertices(), tol);
 
