@@ -19,8 +19,28 @@ namespace gca {
     std::vector<plate_height> parallel_plates{0.1, 0.3};
     fixtures fixes(test_vice, parallel_plates);
 
+    // tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    // tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    
     tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.5);
+    t2.set_cut_length(0.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.5);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
     vector<tool> tools{t1, t2};
     workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL); //1.5, 1.2, 1.5, ACETAL);
 
@@ -70,30 +90,39 @@ namespace gca {
     
   }
 
-    TEST_CASE("Mesh to gcode with parallel plates") {
-      arena_allocator a;
-      set_system_allocator(&a);
+  TEST_CASE("Mesh to gcode with parallel plates") {
+    arena_allocator a;
+    set_system_allocator(&a);
 
-      // Restore emco_vice
-      vice test_vice = large_jaw_vice(6, point(-0.8, -4.4, -3.3));
-      std::vector<plate_height> parallel_plates{0.5};
-      fixtures fixes(test_vice, parallel_plates);
+    // Restore emco_vice
+    vice test_vice = large_jaw_vice(6, point(-0.8, -4.4, -3.3));
+    std::vector<plate_height> parallel_plates{0.5};
+    fixtures fixes(test_vice, parallel_plates);
 
-      tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-      vector<tool> tools{t1};
-      workpiece workpiece_dims(3.0, 5.0, 3.0, ACETAL);
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
 
-      SECTION("Clipped Pill") {
-	auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
 
-	auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-	REQUIRE(programs.size() == 2);
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+      
+    vector<tool> tools{t1};
+    workpiece workpiece_dims(3.0, 5.0, 3.0, ACETAL);
 
-	for (auto p : programs) {
-	  REQUIRE(p.blocks.size() > 0);
-	}
+    SECTION("Clipped Pill") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
+
+      auto programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+      REQUIRE(programs.size() == 2);
+
+      for (auto p : programs) {
+	REQUIRE(p.blocks.size() > 0);
       }
     }
+  }
 
   // TODO: Currently only handling prismatic parts
   // TEST_CASE("Complex part pocket ordering") {

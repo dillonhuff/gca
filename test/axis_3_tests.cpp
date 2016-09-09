@@ -13,10 +13,22 @@ namespace gca {
 
     double workpiece_depth = 1.0;
 
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    vector<tool> tools{t1};
+
     SECTION("CylinderSquare") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl", 0.001);
       feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
-      vector<pocket> pockets = feature_pockets(*f, {});
+      tool_access_info tool_info = find_accessable_tools(f, tools);
+      vector<pocket> pockets = feature_pockets(*f, tool_info);
 
       SECTION("Two pockets") {
 	REQUIRE(pockets.size() == 2);
@@ -51,7 +63,8 @@ namespace gca {
       
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
       feature_decomposition* f = build_feature_decomposition(mesh, n);
-      vector<pocket> pockets = feature_pockets(*f, n, {});
+      tool_access_info tool_info = find_accessable_tools(f, tools);
+      vector<pocket> pockets = feature_pockets(*f, n, tool_info);
 
       REQUIRE(pockets.size() == 8);
     }

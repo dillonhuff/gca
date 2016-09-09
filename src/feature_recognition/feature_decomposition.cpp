@@ -458,11 +458,11 @@ namespace gca {
     for (auto h : p.holes()) {
       auto offs = interior_offsets(h, tol);
       for (auto off : offs) {
-	dh.push_back(off);
+	dh.push_back(clean_vertices(off));
       }
     }
 
-    labeled_polygon_3 poly(dr, dh);
+    labeled_polygon_3 poly(clean_vertices(dr), dh);
     return poly;
   }
 
@@ -502,10 +502,10 @@ namespace gca {
     auto dr = drs.front();
     vector<vector<point>> dh;
     for (auto h : p.holes()) {
-      dh.push_back(exterior_offset(h, tol));
+      dh.push_back(clean_vertices(exterior_offset(h, tol)));
     }
 
-    labeled_polygon_3 poly(dr, dh);
+    labeled_polygon_3 poly(clean_vertices(dr), dh);
     return poly;
   }
   
