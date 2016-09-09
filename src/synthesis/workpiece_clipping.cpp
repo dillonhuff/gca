@@ -316,7 +316,7 @@ namespace gca {
 
     std::vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix, top_tool_info));
-    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix, top_tool_info));
+    clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix, base_tool_info));
 
     return clip_setups;
   }

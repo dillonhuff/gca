@@ -786,10 +786,6 @@ namespace gca {
 	(r2.first < r2.second)) {
       if (within_eps(r1.second, r2.first, tol)) { return true; }
       if (within_eps(r2.second, r1.first, tol)) { return true; }
-    } else if ((r1.second < r1.first) &&
-	       (r2.second < r2.first)) {
-      if (within_eps(r1.second, r2.first, tol)) { return true; }
-      if (within_eps(r2.second, r1.first, tol)) { return true; }
     } else {
       cout << "r1 = " << r1 << endl;
       cout << "r2 = " << r2 << endl;

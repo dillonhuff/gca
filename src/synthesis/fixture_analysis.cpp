@@ -262,7 +262,8 @@ namespace gca {
   plan_fixtures(const triangular_mesh& part_mesh,
 		const std::vector<surface>& stable_surfaces,
 		std::vector<surface>& surfs_to_cut,
-		const fixtures& f) {
+		const fixtures& f,
+		const std::vector<tool>& tools) {
 
     vector<fixture> all_orients =
       all_stable_fixtures(stable_surfaces, f);
@@ -280,8 +281,11 @@ namespace gca {
     }
     
     vector<feature_decomposition*> decomps;
+    vector<tool_access_info> access_info;
     for (auto b : directions) {
-      decomps.push_back(build_feature_decomposition(part_mesh, b.orient.top_normal()));
+      auto decomp = build_feature_decomposition(part_mesh, b.orient.top_normal());
+      decomps.push_back(decomp);
+      access_info.push_back(find_accessable_tools(decomp, tools));
     }
 
     DBG_ASSERT(decomps.size() == directions.size());
@@ -290,13 +294,14 @@ namespace gca {
     for (unsigned i = 0; i < decomps.size(); i++) {
       fixture d = directions[i];
       feature_decomposition* decomp = decomps[i];
+      const tool_access_info& acc_info = access_info[i];
 
       auto t = mating_transform(part_mesh, d.orient, d.v);
 
       triangular_mesh* m =
 	new (allocate<triangular_mesh>()) triangular_mesh(apply(t, part_mesh));
 
-      vector<pocket> pockets = feature_pockets(*decomp, t, {});
+      vector<pocket> pockets = feature_pockets(*decomp, t, acc_info);
 
       rest.push_back(fixture_setup(m, d, pockets));
     }
@@ -329,7 +334,7 @@ namespace gca {
     auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
 
     if (surfs_to_cut.size() > 0) {
-      auto rest = plan_fixtures(part_mesh, stable_surfaces, surfs_to_cut, f);
+      auto rest = plan_fixtures(part_mesh, stable_surfaces, surfs_to_cut, f, tools);
       concat(setups, rest);
     }
 

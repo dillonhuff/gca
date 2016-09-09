@@ -15,6 +15,15 @@ namespace gca {
     fixtures fixes(test_vice, parallel_plates);
 
     tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.1);
+    t1.set_cut_length(0.4);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.1);
+
+    t1.set_holder_diameter(2.0);
+    t1.set_holder_length(2.5);
+    
     vector<tool> tools{t1};
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
 
