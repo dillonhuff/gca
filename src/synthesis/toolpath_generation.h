@@ -8,6 +8,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
+#include "synthesis/material.h"
 #include "synthesis/toolpath.h"
 #include "utils/check.h"
 
@@ -47,9 +48,7 @@ namespace gca {
     double get_start_depth() const
     { return self_->get_start_depth(); }
 
-    toolpath make_toolpath(const double cut_depth,
-			   const double speed,
-			   const double feed,
+    toolpath make_toolpath(const material& stock_material,
 			   const double safe_z,
 			   const std::vector<tool>& tools) const;
 

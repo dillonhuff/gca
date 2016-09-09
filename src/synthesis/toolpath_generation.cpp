@@ -13,11 +13,26 @@
 
 namespace gca {
 
-  toolpath pocket::make_toolpath(const double cut_depth,
-				 const double speed,
-				 const double feed,
+  toolpath pocket::make_toolpath(const material& stock_material,
 				 const double safe_z,
 				 const std::vector<tool>& tools) const {
+    double cut_depth, speed, feed;
+    if (stock_material == ACETAL) {
+      cut_depth = 0.2;
+      speed = 3000;
+      feed = 8.0;
+    } else if (stock_material == ALUMINUM) {
+      cut_depth = 0.1;
+      speed = 3000;
+      feed = 5.0;
+    } else if (stock_material == BRASS) {
+      cut_depth = 0.1;
+      speed = 16000;
+      feed = 1.0;
+    } else {
+      DBG_ASSERT(false);
+    }
+    
     tool t = select_tool(tools);
     auto pocket_paths = toolpath_lines(t, cut_depth);
     return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
@@ -591,35 +606,21 @@ namespace gca {
     return shift_lines(lines, point(0, 0, tool.length()));
   }
 
+  // TODO: Does pocket list need to be non-const?
   vector<toolpath> mill_pockets(vector<pocket>& pockets,
 				const std::vector<tool>& tools,
 				const material& stock_material) {
     DBG_ASSERT(pockets.size() > 0);
+
     double h = (*(max_element(begin(pockets), end(pockets),
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
 
     double safe_z = h + 0.5;
     
-    double cut_depth, speed, feed;
-    if (stock_material == ACETAL) {
-      cut_depth = 0.2;
-      speed = 3000;
-      feed = 8.0;
-    } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
-    } else if (stock_material == BRASS) {
-      cut_depth = 0.1;
-      speed = 16000;
-      feed = 1.0;
-    } else {
-      DBG_ASSERT(false);
-    }
     vector<toolpath> toolpaths;
     for (auto pocket : pockets) {
-      toolpath tp = pocket.make_toolpath(cut_depth, speed, feed, safe_z, tools);
+      toolpath tp = pocket.make_toolpath(stock_material, safe_z, tools);
     }
     return toolpaths;
   }
