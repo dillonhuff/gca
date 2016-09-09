@@ -462,6 +462,23 @@ namespace gca {
     labeled_polygon_3 poly(dr, dh);
     return poly;
   }
+
+  labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol) {
+    auto dr = interior_offset(p.vertices(), tol);
+
+    vector<vector<point>> dh;
+    for (auto h : p.holes()) {
+      dh.push_back(exterior_offset(h, tol));
+    }
+
+    labeled_polygon_3 poly(dr, dh);
+    return poly;
+  }
+  
+  labeled_polygon_3 smooth_buffer(const labeled_polygon_3& p,
+				  const double tol) {
+    return shrink(dilate(p, tol), tol);
+  }
   
   std::vector<labeled_polygon_3>
   dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol) {

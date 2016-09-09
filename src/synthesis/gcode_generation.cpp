@@ -114,7 +114,7 @@ namespace gca {
     return blks;
   }
 
-  std::vector<block> camaster_prefix_blocks() {
+  std::vector<block> camaster_prefix_blocks(const toolpath& intial) {
     vector<block> blks;
     blks.push_back({token('G', 90)});
     blks.push_back({token('G', 53), token('Z', 0.0)});
@@ -140,7 +140,8 @@ namespace gca {
     return blks;
   }
 
-  std::vector<block> camaster_engraving(const toolpath& tp) {
+  std::vector<block> camaster_engraving(const toolpath& last,
+					const toolpath& tp) {
     for (auto l : tp.lines) {
       assert(l.num_points() > 0);
     }

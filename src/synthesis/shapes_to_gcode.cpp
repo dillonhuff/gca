@@ -60,9 +60,10 @@ namespace gca {
 				cut* next_cut,
 				const cut_params& params) {
     vector<cut*> trans;
-    if (next_cut->tool_no == DRILL) {
-      trans = move_to_next_cut_drill(last_cut, next_cut, params);
-    } else if (next_cut->tool_no == DRAG_KNIFE) {
+    // if (next_cut->tool_no == DRILL) {
+    //   trans = move_to_next_cut_drill(last_cut, next_cut, params);
+    //    } else
+    if (next_cut->tool_no == DRAG_KNIFE) {
       trans = move_to_next_cut_dn(last_cut, next_cut, params);
     } else {
       trans = move_to_next_cut_drill(last_cut, next_cut, params);
@@ -87,7 +88,8 @@ namespace gca {
       cut* shift = safe_move::make(above, dest);
       shift->tool_no = cuts.back()->tool_no;
       cuts.push_back(pull_up);
-      cuts.push_back(shift);
+      // TODO: Restore?
+      //      cuts.push_back(shift);
     }
   }
 

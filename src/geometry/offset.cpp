@@ -158,7 +158,13 @@ namespace gca {
     const rotation r_inv = inverse(r);
     auto res = exterior_offset(oriented_polygon(n, apply(r, pts)), tol);
 
-    DBG_ASSERT(res.size() == 2);
+    if (res.size() != 2) {
+      cout << "Wrong number of exterior offsets!" << endl;
+      cout << "# of exterior offsets = " << res.size() << endl;
+      cout << "tol = " << tol << endl;
+      vtk_debug_ring(pts);
+      DBG_ASSERT(res.size() == 2);
+    }
 
     auto rpoly = res[1];
     auto rpts = apply(r_inv, rpoly.vertices());

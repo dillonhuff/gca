@@ -13,6 +13,16 @@
 
 namespace gca {
 
+  toolpath pocket::make_toolpath(const double cut_depth,
+				 const double speed,
+				 const double feed,
+				 const double safe_z,
+				 const std::vector<tool>& tools) const {
+    tool t = select_tool(tools);
+    auto pocket_paths = toolpath_lines(t, cut_depth);
+    return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
+  }
+
   freeform_pocket::freeform_pocket(double start_depthp,
 				   const std::vector<index_t>& basep,
 				   const triangular_mesh* p_mesh) :
@@ -589,7 +599,7 @@ namespace gca {
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
 
-    double safe_z = h + 0.1;
+    double safe_z = h + 0.5;
     
     double cut_depth, speed, feed;
     if (stock_material == ACETAL) {
@@ -600,16 +610,18 @@ namespace gca {
       cut_depth = 0.1;
       speed = 3000;
       feed = 5.0;
+    } else if (stock_material == BRASS) {
+      cut_depth = 0.1;
+      speed = 16000;
+      feed = 1.0;
     } else {
       DBG_ASSERT(false);
     }
-    vector<toolpath> lines;
+    vector<toolpath> toolpaths;
     for (auto pocket : pockets) {
-      tool t = pocket.select_tool(tools);
-      auto pocket_paths = pocket.toolpath_lines(t, cut_depth);
-      lines.push_back(toolpath(pocket.pocket_type(), safe_z, speed, feed, t, pocket_paths));
+      toolpath tp = pocket.make_toolpath(cut_depth, speed, feed, safe_z, tools);
     }
-    return lines;
+    return toolpaths;
   }
   
 }

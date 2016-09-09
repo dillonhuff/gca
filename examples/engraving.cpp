@@ -268,20 +268,14 @@ build_engraving_pockets(const std::vector<tool>& tools,
 
 }
 
-std::vector<boost_poly_2> picture_polygons(Mat image) {
+// Crude raster -> vector conversion
+std::vector<boost_poly_2> picture_polygons(Mat image,
+					   const double pixel_len,
+					   const double pixel_width) {
   Mat gray_image;
   cvtColor( image, gray_image, CV_BGR2GRAY );
 
   Mat img_bw = gray_image > 240;
-
-  double img_len = 4.5;
-  double img_width = 1.5;
-
-  double pixel_len = img_len / static_cast<double>(img_bw.cols);
-  double pixel_width = img_width / static_cast<double>(img_bw.rows);
-
-  cout << "pixel length = " << pixel_len << " inches" << endl;
-  cout << "pixel width = " << pixel_width << " inches" << endl;
 
   cout << "# rows = " << img_bw.rows << endl;
   cout << "# col  = " << img_bw.cols << endl;
@@ -343,7 +337,7 @@ mill_engraving_toolpaths(std::vector<feature>& features,
   vector<pocket> pockets = build_engraving_pockets(tools, features);
 
   cout << "Milling pockets" << endl;
-  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  vector<toolpath> toolpaths = mill_pockets(pockets, tools, BRASS);
   cout << "Done milling pockets" << endl;
 
   return toolpaths;
@@ -363,36 +357,52 @@ int main(int argc, char** argv) {
   image = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
 
   if(! image.data ) { // Check for invalid input
-    cout <<  "Could not open or find the image" << std::endl ;
+    cout <<  "Could not open or find the image" << std::endl;
     return -1;
   }
 
-  auto dark_polygons = picture_polygons(image);
+  double img_len = 5.0*4.5;
+  double img_width = 5.0*1.5;
+
+  double pixel_len = img_len / static_cast<double>(image.cols);
+  double pixel_width = img_width / static_cast<double>(image.rows);
+
+  cout << "pixel length = " << pixel_len << " inches" << endl;
+  cout << "pixel width = " << pixel_width << " inches" << endl;
+
+  auto dark_polygons = picture_polygons(image,
+					pixel_len,
+					pixel_width);
 
   const gca::rotation id_rotation =
     gca::rotate_from_to(gca::point(0, 0, 1), gca::point(0, 0, 1));
   vector<gca::labeled_polygon_3> dark_polys;
 
+  double base_z = 0.0;
+  double total_depth_of_cut = 0.008;
+  double feature_base_z = base_z - total_depth_of_cut;
+
   for (auto& r : dark_polygons) {
-    gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, 0.5, r);
+    gca::labeled_polygon_3 lp = gca::to_labeled_polygon_3(id_rotation, feature_base_z, r);
 
     check_simplicity(lp);
+
+    lp = dilate(lp, 2.0*pixel_len);
     
     dark_polys.push_back(lp);
   }
 
   gca::vtk_debug_polygons(dark_polys);
 
-  double depth = 0.05;
   vector<gca::feature> features;
   for (auto dark_area : dark_polys) {
-    features.push_back(gca::feature(depth, dark_area));
+    features.push_back(gca::feature(total_depth_of_cut, dark_area));
   }
 
   cout << "Done building features" << endl;
   cout << "Number of features = " << features.size() << endl;
 
-  tool t1(0.01, 3.0, 4, HSS, FLAT_NOSE, 2);
+  tool t1(1.0 /16.0,  3.0, 4, HSS, FLAT_NOSE, 4);
   vector<tool> tools{t1};
 
   vector<toolpath> toolpaths = mill_engraving_toolpaths(features, tools);

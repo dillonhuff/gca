@@ -28,18 +28,30 @@ namespace gca {
     pocket& operator=(pocket&&) noexcept = default;
 
     pocket_name pocket_type() const { return self_->pocket_type(); }
+
     tool select_tool(const std::vector<tool>& tools) const
     { return self_->select_tool(tools); }
+
     const vector<oriented_polygon>& get_holes() const
     { return self_->get_holes(); }
+
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
     { return self_->toolpath_lines(t, cut_depth); }
+
     bool above_base(const point p) const
     { return self_->above_base(p); }
+
     double get_end_depth() const
     { return self_->get_end_depth(); }
+
     double get_start_depth() const
     { return self_->get_start_depth(); }
+
+    toolpath make_toolpath(const double cut_depth,
+			   const double speed,
+			   const double feed,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
 
   private:
     struct concept_t {

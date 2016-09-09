@@ -34,6 +34,19 @@ namespace gca {
     pocket_name pocket_type() const { return pocket_tp; }
 
     int tool_number() const { return t.tool_number(); }
+
+    point start_location() const {
+      DBG_ASSERT(lines.size() > 0);
+      point start_pt = lines.front().front();
+      return point(start_pt.x, start_pt.y, safe_z_before_tlc);
+    }
+
+    point end_location() const {
+      DBG_ASSERT(lines.size() > 0);
+      point start_pt = lines.front().front();
+      return point(start_pt.x, start_pt.y, safe_z_before_tlc);
+    }
+
   };
 
 }
