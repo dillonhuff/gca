@@ -34,7 +34,11 @@ namespace gca {
 		      const std::vector<std::vector<point>> hole_verts) :
       outer_ring(vertices),
       inner_rings(hole_verts) {
-      DBG_ASSERT(outer_ring.size() >= 3);
+      // There is an occasional test failure here in simple box
+      if (!(outer_ring.size() >= 3)) {
+	cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
+	DBG_ASSERT(outer_ring.size() >= 3);
+      }
     }
     
     point normal() const {
