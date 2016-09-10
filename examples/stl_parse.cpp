@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
   t1.set_cut_length(0.6);
 
   t1.set_shank_diameter(3.0 / 8.0);
-  t1.set_shank_length(0.3);
+  t1.set_shank_length(0.1);
 
   t1.set_holder_diameter(2.5);
   t1.set_holder_length(3.5);
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
   t2.set_cut_length(0.3);
 
   t2.set_shank_diameter(0.5);
-  t2.set_shank_length(0.5);
+  t2.set_shank_length(0.0);
 
   t2.set_holder_diameter(2.5);
   t2.set_holder_length(3.5);

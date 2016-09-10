@@ -620,7 +620,9 @@ namespace gca {
       { return l.diameter() < r.diameter(); }));
     return t;
   }
-  
+
+  // TODO: Reintroduce this mesh cutting strategy when it is better
+  // supported
   std::vector<polyline>
   freeform_pocket::toolpath_lines(const tool& t,
 				  const double cut_depth) const {
