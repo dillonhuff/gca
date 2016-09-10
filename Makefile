@@ -137,6 +137,19 @@ engraving/fast:
 .PHONY : engraving/fast
 
 #=============================================================================
+# Target rules for targets named debug-test
+
+# Build rule for target.
+debug-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 debug-test
+.PHONY : debug-test
+
+# fast build rule for target.
+debug-test/fast:
+	$(MAKE) -f CMakeFiles/debug-test.dir/build.make CMakeFiles/debug-test.dir/build
+.PHONY : debug-test/fast
+
+#=============================================================================
 # Target rules for targets named scale-down-mesh
 
 # Build rule for target.
@@ -437,6 +450,33 @@ examples/check_contours.s: examples/check_contours.cpp.s
 examples/check_contours.cpp.s:
 	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/examples/check_contours.cpp.s
 .PHONY : examples/check_contours.cpp.s
+
+examples/debug_test.o: examples/debug_test.cpp.o
+
+.PHONY : examples/debug_test.o
+
+# target to build an object file
+examples/debug_test.cpp.o:
+	$(MAKE) -f CMakeFiles/debug-test.dir/build.make CMakeFiles/debug-test.dir/examples/debug_test.cpp.o
+.PHONY : examples/debug_test.cpp.o
+
+examples/debug_test.i: examples/debug_test.cpp.i
+
+.PHONY : examples/debug_test.i
+
+# target to preprocess a source file
+examples/debug_test.cpp.i:
+	$(MAKE) -f CMakeFiles/debug-test.dir/build.make CMakeFiles/debug-test.dir/examples/debug_test.cpp.i
+.PHONY : examples/debug_test.cpp.i
+
+examples/debug_test.s: examples/debug_test.cpp.s
+
+.PHONY : examples/debug_test.s
+
+# target to generate assembly for a file
+examples/debug_test.cpp.s:
+	$(MAKE) -f CMakeFiles/debug-test.dir/build.make CMakeFiles/debug-test.dir/examples/debug_test.cpp.s
+.PHONY : examples/debug_test.cpp.s
 
 examples/engraving.o: examples/engraving.cpp.o
 
@@ -3873,9 +3913,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
 	@echo "... AddCell"
 	@echo "... engraving"
+	@echo "... edit_cache"
+	@echo "... debug-test"
 	@echo "... scale-down-mesh"
 	@echo "... vtk-mass"
 	@echo "... ublas"
@@ -3903,6 +3944,9 @@ help:
 	@echo "... examples/check_contours.o"
 	@echo "... examples/check_contours.i"
 	@echo "... examples/check_contours.s"
+	@echo "... examples/debug_test.o"
+	@echo "... examples/debug_test.i"
+	@echo "... examples/debug_test.s"
 	@echo "... examples/engraving.o"
 	@echo "... examples/engraving.i"
 	@echo "... examples/engraving.s"

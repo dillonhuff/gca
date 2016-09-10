@@ -12,6 +12,19 @@
 
 namespace gca {
 
+  labeled_polygon_3::labeled_polygon_3(const std::vector<point> vertices,
+				       const std::vector<std::vector<point>> hole_verts) :
+    outer_ring(vertices),
+    inner_rings(hole_verts) {
+    // There is an occasional test failure here in simple box
+    if (!(outer_ring.size() >= 3)) {
+      cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
+      vtk_debug_ring(outer_ring);
+
+      DBG_ASSERT(outer_ring.size() >= 3);
+    }
+  }
+
   void check_simplicity(const labeled_polygon_3& p) {
     check_simplicity(p.vertices());
 
@@ -502,11 +515,20 @@ namespace gca {
     auto dr = drs.front();
     vector<vector<point>> dh;
     for (auto h : p.holes()) {
-      dh.push_back(clean_vertices(exterior_offset(h, tol)));
+      auto h_clean = clean_vertices(exterior_offset(h, tol));
+      if (h_clean.size() >= 3) {
+	dh.push_back(h_clean);
+      }
     }
 
-    labeled_polygon_3 poly(clean_vertices(dr), dh);
-    return poly;
+    auto dr_pts = clean_vertices(dr);
+
+    if (dr_pts.size() >= 3) {
+      labeled_polygon_3 poly(dr_pts, dh);
+      return poly;
+    }
+    
+    return boost::none;
   }
   
   labeled_polygon_3 smooth_buffer(const labeled_polygon_3& p,

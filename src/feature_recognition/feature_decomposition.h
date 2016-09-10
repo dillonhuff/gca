@@ -31,16 +31,8 @@ namespace gca {
     }
 
     labeled_polygon_3(const std::vector<point> vertices,
-		      const std::vector<std::vector<point>> hole_verts) :
-      outer_ring(vertices),
-      inner_rings(hole_verts) {
-      // There is an occasional test failure here in simple box
-      if (!(outer_ring.size() >= 3)) {
-	cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
-	DBG_ASSERT(outer_ring.size() >= 3);
-      }
-    }
-    
+		      const std::vector<std::vector<point>> hole_verts);
+
     point normal() const {
       return ring_normal(outer_ring);
     }

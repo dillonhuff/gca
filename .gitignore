@@ -67,3 +67,4 @@ test/stl-files/hard_onshape_parts/
 *.jpg
 engraving
 camaster-test
+debug-test
