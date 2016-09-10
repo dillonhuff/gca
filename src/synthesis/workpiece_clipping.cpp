@@ -213,14 +213,7 @@ namespace gca {
 
     DBG_ASSERT(setup_pockets.size() == 1);
 
-    cout << "Base clip pocket end = " << setup_pockets.front().get_end_depth() << endl;
-
     auto pockets = feature_pockets(*decomp, s_t, tool_info);
-
-    if (pockets.size() > 0) {
-      cout << "Initial face pocket start = " << pockets.front().get_start_depth() << endl;
-      cout << "Initial face pocket end = " << pockets.front().get_end_depth() << endl;
-    }
 
     concat(setup_pockets, pockets);
 
