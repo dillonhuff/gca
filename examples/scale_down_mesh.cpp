@@ -50,6 +50,15 @@ int main(int argc, char* argv[]) {
   // tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
   // tool t2(0.14, 3.15, 2, HSS, FLAT_NOSE);
   tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+  t3.set_cut_diameter(0.2334);
+  t3.set_cut_length(0.3);
+
+  t3.set_shank_diameter(0.05);
+  t3.set_shank_length(0.5);
+
+  t3.set_holder_diameter(2.5);
+  t3.set_holder_length(3.5);
+  
   vector<tool> tools{t3}; //t1, t2};
 
   workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);

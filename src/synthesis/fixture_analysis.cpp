@@ -107,7 +107,12 @@ namespace gca {
     for (unsigned i = 0; i < basis.size(); i++) {
       double stock_diam = diameter(basis[i].normal(), mesh);
       double part_diam = diameter(part_planes[i].normal(), part);
-      DBG_ASSERT(stock_diam > part_diam);
+      if (!(stock_diam > part_diam)) {
+	cout << "stock_diam > part_diam" << endl;
+	cout << "stock_diam = " << stock_diam << endl;
+	cout << "part_diam  = " << part_diam << endl;
+	DBG_ASSERT(stock_diam > part_diam);
+      }
       double margin = (stock_diam - part_diam) / 2.0;
       offset_basis.push_back(basis[i].flip().slide(margin));
     }
