@@ -53,8 +53,8 @@ int main(int argc, char* argv[]) {
   t3.set_cut_diameter(0.2334);
   t3.set_cut_length(0.3);
 
-  t3.set_shank_diameter(0.05);
-  t3.set_shank_length(0.5);
+  t3.set_shank_diameter(0.5);
+  t3.set_shank_length(0.05);
 
   t3.set_holder_diameter(2.5);
   t3.set_holder_length(3.5);

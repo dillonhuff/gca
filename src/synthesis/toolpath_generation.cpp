@@ -133,7 +133,10 @@ namespace gca {
       DBG_ASSERT(false);
     }
 
-    DBG_ASSERT(possible_tools.size() > 0);
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
 
     tool t = select_tool(possible_tools);
     auto pocket_paths = toolpath_lines(t, cut_depth);
