@@ -140,12 +140,12 @@ namespace gca {
     t1.set_holder_diameter(2.5);
     t1.set_holder_length(3.5);
     
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.5);
-    t2.set_cut_length(0.3);
+    tool t2(0.1, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.1);
+    t2.set_cut_length(1.0);
 
     t2.set_shank_diameter(0.5);
-    t2.set_shank_length(0.5);
+    t2.set_shank_length(0.4);
 
     t2.set_holder_diameter(2.5);
     t2.set_holder_length(3.5);

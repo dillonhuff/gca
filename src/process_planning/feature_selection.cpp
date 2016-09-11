@@ -318,6 +318,14 @@ namespace gca {
     prune_features(top_decomp, top_unreachable_features);
 
     tool_info.push_back(find_accessable_tools(top_decomp, tools));
+
+    vector<feature*> features_that_cant_be_cut;
+    for (auto f : tool_info[0]) {
+      if (f.second.size() == 0) {
+	features_that_cant_be_cut.push_back(f.first);
+      }
+    }
+    prune_features(top_decomp, features_that_cant_be_cut);
     
     auto base_decomp =
       build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
