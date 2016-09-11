@@ -279,7 +279,7 @@ namespace gca {
     if (orients.size() > 0) {
       cout << "NO CUSTOM JAW CUTOUT" << endl;
       auto cl = max_e(orients, [part_mesh](const clamp_orientation& c)
-		      { return c.contact_area(part_mesh); }); //find_orientation_by_normal(orients, n);
+		      { return c.contact_area(part_mesh); });
       return fixture(cl, v);
     }
 
@@ -305,8 +305,8 @@ namespace gca {
     auto top_decomp = features.decomps[0];
     auto base_decomp = features.decomps[1];
 
-    const auto& top_tool_info = features.access_info[0]; //find_accessable_tools(top_decomp, tools);
-    const auto& base_tool_info = features.access_info[1]; //find_accessable_tools(base_decomp, tools);
+    const auto& top_tool_info = features.access_info[0];
+    const auto& base_tool_info = features.access_info[1];
 
     std::vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix, top_tool_info));
