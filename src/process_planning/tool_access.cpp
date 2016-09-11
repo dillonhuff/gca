@@ -93,8 +93,8 @@ namespace gca {
   bool can_access_feature_with_tool(const feature& f,
 				    const tool& t,
 				    feature_decomposition* decomp) {
-    // if ((t.cut_length() < f.depth()) &&
-    // 	(t.cut_diameter() <= t.shank_diameter())) { return false; }
+    if ((t.cut_length() < f.depth()) &&
+    	(t.cut_diameter() <= t.shank_diameter())) { return false; }
 
     boost::optional<feature> shank_region = 
       access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
@@ -113,15 +113,15 @@ namespace gca {
       return false;
     }
 
-    // boost::optional<feature> holder_region =
-    //   access_feature(f, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
+    boost::optional<feature> holder_region =
+      access_feature(f, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
 
-    // if (!holder_region) { return false; }
+    if (!holder_region) { return false; }
 
-    // if (!feature_is_safe(*holder_region, decomp)) {
-    //   cout << "Holder region is not safe" << endl;
-    //   return false;
-    // }
+    if (!feature_is_safe(*holder_region, decomp)) {
+      cout << "Holder region is not safe" << endl;
+      return false;
+    }
 
     return true;
   }
