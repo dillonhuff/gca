@@ -50,7 +50,7 @@ namespace gca {
     if ((t.cut_length() < f.depth()) &&
     	(t.cut_diameter() <= t.shank_diameter())) { return false; }
 
-    boost::optional<feature> shank_region =
+    boost::optional<feature> shank_region = 
       access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
 
     if (!shank_region) { return false; }

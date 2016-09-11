@@ -12,55 +12,45 @@
 
 namespace gca {
 
-  TEST_CASE("Recreate test") {
+  TEST_CASE("Parallel plates") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    // TODO: Make emco_vice again
+    // Change back to emco_vice
     vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
-    std::vector<plate_height> parallel_plates{0.1, 0.3};
+    std::vector<plate_height> parallel_plates{0.5, 0.7};
     fixtures fixes(test_vice, parallel_plates);
 
-    // tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    // tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+    tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.1);
+    t1.set_cut_length(0.4);
 
     t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+    t1.set_shank_length(0.1);
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
+    t1.set_holder_diameter(2.0);
+    t1.set_holder_length(2.5);
     
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.5);
-    t2.set_cut_length(0.3);
+    vector<tool> tools{t1};
+    workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
 
-    t2.set_shank_diameter(0.5);
-    t2.set_shank_length(0.5);
 
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
+    SECTION("onshape PSU Mount") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL); //1.5, 1.2, 1.5, ACETAL);
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-    SECTION("Simple box") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Cube0p5.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+      REQUIRE(p.fixtures().size() == 2);
 
-      SECTION("Produces only workpiece clipping programs") {
-	REQUIRE(result_programs.size() == 2);
+      for (auto f : p.fixtures()) {
+	cout << "orientation = " << f.fix.orient.top_normal() << endl;
       }
 
-      SECTION("Workpiece clipping programs actually contain code") {
-	for (auto r : result_programs) {
-	  REQUIRE(r.blocks.size() > 0);
-	}
-      }
+      REQUIRE(p.fixtures()[1].pockets.size() == 4);
+      REQUIRE(p.fixtures()[0].pockets.size() == 8);
     }
-
+    
   }
+  
 
 }

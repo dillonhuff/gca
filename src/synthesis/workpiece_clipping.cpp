@@ -7,6 +7,7 @@
 #include <boost/geometry/geometries/polygon.hpp>
 
 #include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
 #include "gcode/gcode_program.h"
 #include "gcode/lexer.h"
 #include "geometry/vtk_debug.h"
@@ -304,6 +305,9 @@ namespace gca {
 
     auto top_decomp = features.decomps[0];
     auto base_decomp = features.decomps[1];
+
+    vtk_debug_features(collect_features(top_decomp));
+    vtk_debug_features(collect_features(base_decomp));
 
     const auto& top_tool_info = features.access_info[0];
     const auto& base_tool_info = features.access_info[1];
