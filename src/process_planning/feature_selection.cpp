@@ -178,20 +178,6 @@ namespace gca {
     delete_leaves(f, prune);
   }
 
-  
-  std::vector<feature_decomposition*>
-  select_top_and_bottom_features(feature_decomposition* top_decomp,
-				 feature_decomposition* base_decomp) {
-    vector<feature*> contained_base_features =
-      contained_features(base_decomp, top_decomp);
-
-    cout << "# of contained features = " << contained_base_features.size() << endl;
-    prune_features(base_decomp, contained_base_features);
-    prune_features(top_decomp, contained_base_features);
-    
-    return {top_decomp, base_decomp};
-  }
-
   bool past_overlap(const feature& l, const feature& r) {
     point n = l.normal();
     
@@ -312,20 +298,26 @@ namespace gca {
     return unreachable_features;
   }
 
-  std::vector<feature_decomposition*>
+  //  std::vector<feature_decomposition*>
+  feature_selection
   select_features(const triangular_mesh& part_mesh,
-		  const std::vector<fixture>& fixtures) {
+		  const std::vector<fixture>& fixtures,
+		  const std::vector<tool>& tools) {
     DBG_ASSERT(fixtures.size() == 2);
 
     auto top_fix = fixtures[0];
     auto base_fix = fixtures[1];
 
+    vector<tool_access_info> tool_info;
+    
     auto top_decomp =
       build_feature_decomposition(part_mesh, top_fix.orient.top_normal());
 
     auto top_unreachable_features =
       unreachable_features(collect_features(top_decomp), top_fix);
     prune_features(top_decomp, top_unreachable_features);
+
+    tool_info.push_back(find_accessable_tools(top_decomp, tools));
     
     auto base_decomp =
       build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
@@ -334,7 +326,12 @@ namespace gca {
       unreachable_features(collect_features(base_decomp), base_fix);
     prune_features(base_decomp, base_unreachable_features);
 
-    return clip_top_and_bottom_features(top_decomp, base_decomp);
+    tool_info.push_back(find_accessable_tools(base_decomp, tools));
+
+    vector<feature_decomposition*> decomps =
+      clip_top_and_bottom_features(top_decomp, base_decomp);
+
+    return feature_selection{decomps, tool_info};
   }
   
 }

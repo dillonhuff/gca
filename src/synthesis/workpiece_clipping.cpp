@@ -297,15 +297,16 @@ namespace gca {
 		      const std::vector<tool>& tools) {
     DBG_ASSERT(angle_eps(top_fix.orient.top_normal(), base_fix.orient.top_normal(), 180.0, 1.0));
 
-    auto decomps = select_features(part_mesh, {top_fix, base_fix});
+    auto features = select_features(part_mesh, {top_fix, base_fix}, tools);
 
-    DBG_ASSERT(decomps.size() == 2);
+    DBG_ASSERT(features.decomps.size() == 2);
+    DBG_ASSERT(features.access_info.size() == 2);
 
-    auto top_decomp = decomps[0];
-    auto base_decomp = decomps[1];
+    auto top_decomp = features.decomps[0];
+    auto base_decomp = features.decomps[1];
 
-    auto top_tool_info = find_accessable_tools(top_decomp, tools);
-    auto base_tool_info = find_accessable_tools(base_decomp, tools);
+    const auto& top_tool_info = features.access_info[0]; //find_accessable_tools(top_decomp, tools);
+    const auto& base_tool_info = features.access_info[1]; //find_accessable_tools(base_decomp, tools);
 
     std::vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix, top_tool_info));
