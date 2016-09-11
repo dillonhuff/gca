@@ -325,6 +325,7 @@ namespace gca {
 	features_that_cant_be_cut.push_back(f.first);
       }
     }
+    cout << "# of features that cannot be cut = " << features_that_cant_be_cut.size() << endl;
     prune_features(top_decomp, features_that_cant_be_cut);
 
     for (auto f : collect_features(top_decomp)) {

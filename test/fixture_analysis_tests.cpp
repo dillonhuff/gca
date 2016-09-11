@@ -112,8 +112,18 @@ namespace gca {
 
     t1.set_holder_diameter(2.5);
     t1.set_holder_length(3.5);
+
+    tool t2(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.05);
+    t2.set_cut_length(0.6);
+
+    t2.set_shank_diameter(3.0 / 8.0);
+    t2.set_shank_length(0.3);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
     
-    vector<tool> tools{t1};
+    vector<tool> tools{t1, t2};
     workpiece workpiece_dims(3.5, 3.0, 3.98, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
@@ -145,8 +155,18 @@ namespace gca {
 
     t1.set_holder_diameter(2.5);
     t1.set_holder_length(3.5);
+
+    tool t2(0.05, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.01);
+    t2.set_cut_length(10.0);
+
+    t2.set_shank_diameter(3.0 / 8.0);
+    t2.set_shank_length(0.3);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
     
-    vector<tool> tools{t1};
+    vector<tool> tools{t1, t2};
     workpiece workpiece_dims(2.5, 1.8, 2.3, BRASS);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);

@@ -22,7 +22,18 @@ namespace gca {
 
     t1.set_holder_diameter(2.5);
     t1.set_holder_length(3.5);
-    vector<tool> tools{t1};
+
+    tool t2(0.1, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.1);
+    t2.set_cut_length(0.6);
+
+    t2.set_shank_diameter(3.0 / 8.0);
+    t2.set_shank_length(0.3);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2};
 
     SECTION("CylinderSquare") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl", 0.001);
