@@ -33,7 +33,9 @@ namespace gca {
 
 
     // TODO: Eventually make this a parameter, not just a builtin
-    labeled_polygon_3 safe_envelope = dilate(top_feature->feature()->base(), 1.0);
+    labeled_polygon_3 safe_envelope_outline =
+      dilate(top_feature->feature()->base(), 1.0);
+    labeled_polygon_3 safe_envelope(safe_envelope_outline.vertices(), {top_feature->feature()->base().vertices()});
 
     point n = top_feature->feature()->normal();
 
