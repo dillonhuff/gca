@@ -9,6 +9,12 @@ namespace gca {
   std::vector<pocket> pockets_for_feature(const feature& f,
 					  const std::vector<tool>& tools) {
 
+    if (tools.size() == 0) {
+      cout << "ERROR: No available tools for feature" << endl;
+      vtk_debug_feature(f);
+      DBG_ASSERT(tools.size() > 0);
+    }
+
     labeled_polygon_3 base = f.base();
     point n = base.normal();
     double theta = angle_between(n, point(0, 0, 1));

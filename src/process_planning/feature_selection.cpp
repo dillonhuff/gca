@@ -175,7 +175,7 @@ namespace gca {
 		      const std::vector<feature*>& to_prune) {
     auto prune = [to_prune](const feature* d) { return elem(d, to_prune); };
     
-    delete_leaves(f, prune);
+    delete_nodes(f, prune);
   }
 
   bool past_overlap(const feature& l, const feature& r) {
@@ -326,6 +326,10 @@ namespace gca {
       }
     }
     prune_features(top_decomp, features_that_cant_be_cut);
+
+    for (auto f : collect_features(top_decomp)) {
+      DBG_ASSERT(map_find(f, tool_info[0]).size() > 0);
+    }
     
     auto base_decomp =
       build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
@@ -335,6 +339,14 @@ namespace gca {
     prune_features(base_decomp, base_unreachable_features);
 
     tool_info.push_back(find_accessable_tools(base_decomp, tools));
+
+    vector<feature*> base_features_that_cant_be_cut;
+    for (auto f : tool_info[1]) {
+      if (f.second.size() == 0) {
+	base_features_that_cant_be_cut.push_back(f.first);
+      }
+    }
+    prune_features(base_decomp, base_features_that_cant_be_cut);
 
     vector<feature_decomposition*> decomps =
       clip_top_and_bottom_features(top_decomp, base_decomp);

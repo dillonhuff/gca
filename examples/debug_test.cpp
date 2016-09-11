@@ -12,45 +12,56 @@
 
 namespace gca {
 
-  TEST_CASE("Parallel plates") {
+  void sanity_check_toolpaths(const fabrication_plan& plan) {
+    for (auto step : plan.steps()) {
+      REQUIRE(step.toolpaths().size() > 0);
+    }
+  }
+
+  TEST_CASE("Part with hole unreachable from the top") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    // Change back to emco_vice
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
-    std::vector<plate_height> parallel_plates{0.5, 0.7};
-    fixtures fixes(test_vice, parallel_plates);
-
-    tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.1);
-    t1.set_cut_length(0.4);
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
 
     t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.1);
+    t1.set_shank_length(0.3);
 
-    t1.set_holder_diameter(2.0);
-    t1.set_holder_length(2.5);
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
     
-    vector<tool> tools{t1};
-    workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
+    tool t2(0.1, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.1);
+    t2.set_cut_length(1.0);
 
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.4);
 
-    SECTION("onshape PSU Mount") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+    std::vector<tool> tools{t1, t2};
 
-      REQUIRE(p.fixtures().size() == 2);
+    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    std::vector<plate_height> parallel_plates{0.1, 0.3, 0.5};
+    fixtures fixes(test_vice, parallel_plates);
 
-      for (auto f : p.fixtures()) {
-	cout << "orientation = " << f.fix.orient.top_normal() << endl;
-      }
+    workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL);
 
-      REQUIRE(p.fixtures()[1].pockets.size() == 4);
-      REQUIRE(p.fixtures()[0].pockets.size() == 8);
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.0001);
+
+    auto result_plan = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+
+    SECTION("Produces only workpiece clipping programs") {
+      REQUIRE(result_plan.steps().size() == 2);
+    }
+
+    SECTION("Workpiece clipping programs actually contain code") {
+      sanity_check_toolpaths(result_plan);
     }
     
   }
-  
 
 }
