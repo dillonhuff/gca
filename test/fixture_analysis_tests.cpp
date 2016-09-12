@@ -52,6 +52,18 @@ namespace gca {
     }
 
     SECTION("onshape part 1 (1)") {
+      tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+      t3.set_cut_diameter(0.2334);
+      t3.set_cut_length(1.2);
+
+      t3.set_shank_diameter(0.5);
+      t3.set_shank_length(0.05);
+
+      t3.set_holder_diameter(2.5);
+      t3.set_holder_length(3.5);
+
+      vector<tool> tools{t1, t3};
+      
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
@@ -62,7 +74,8 @@ namespace gca {
 	cout << p.pocket_type() << endl;
       }
 
-      REQUIRE(p.fixtures()[1].pockets.size() == 2);
+      REQUIRE(p.fixtures()[1].pockets.size() == 1);
+      REQUIRE(p.fixtures()[0].pockets.size() == 3);
     }
 
     SECTION("onshape PSU Mount") {
