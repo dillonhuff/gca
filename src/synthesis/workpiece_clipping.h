@@ -7,14 +7,6 @@
 
 namespace gca {
 
-  void add_surface_pockets(vector<gca::pocket>& pockets,
-			   const triangular_mesh& m,
-			   const vector<gca::surface>& surfs);
-
-  void add_surface_pockets(vector<gca::pocket>& pockets,
-			   const triangular_mesh& m,
-			   const std::vector<std::vector<index_t>>& surfs);
-  
   // TODO: Move to workpiece?
   triangular_mesh stock_mesh(const workpiece& w);
   
