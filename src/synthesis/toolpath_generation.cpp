@@ -227,14 +227,59 @@ namespace gca {
     return polys;
   }
 
+  boost_linestring_2 to_boost_linestring(const polyline& pl) {
+    boost_linestring_2 res;
+    for (auto p : pl) {
+      bg::append(res, bg::model::d2::point_xy<double>(p.x, p.y));
+    }
+    return res;
+  }
+
   boost_multilinestring_2
   to_boost_multilinestring_2(const std::vector<polyline>& lines) {
-    DBG_ASSERT(false);
+    boost_multilinestring_2 res;
+    for (auto pl : lines) {
+      res.push_back(to_boost_linestring(pl));
+    }
+    return res;
+  }
+
+  boost_poly_2 to_boost_poly(const oriented_polygon& pl) {
+    boost_poly_2 res;
+    for (auto p : pl.vertices()) {
+      bg::append(res, bg::model::d2::point_xy<double>(p.x, p.y));
+    }
+
+    bg::correct(res);
+
+    return res;
   }
 
   boost_multipoly_2
-  to_boost_multipoly_2(const std::vector<oriented_polygon>& holes) {
-    DBG_ASSERT(false);
+  to_boost_multipoly_2(const std::vector<oriented_polygon>& lines) {
+    boost_multipoly_2 res;
+    for (auto& pl : lines) {
+      res.push_back(to_boost_poly(pl));
+    }
+    return res;
+  }
+
+  polyline to_polyline(const boost_linestring_2& l,
+		       const double z) {
+    vector<point> pts;
+    for (boost_point_2 line_pt : l) {
+      pts.push_back(point(line_pt.get<0>(), line_pt.get<1>(), z));
+    }
+    return pts;
+  }
+  
+  std::vector<polyline> to_polylines(const boost_multilinestring_2& lines,
+				     const double z) {
+    std::vector<polyline> res;
+    for (const boost_linestring_2& l : lines) {
+      res.push_back(to_polyline(l, z));
+    }
+    return res;
   }
 
   std::vector<polyline>
@@ -251,7 +296,7 @@ namespace gca {
     boost_multilinestring_2 result;
     bg::difference(ml, hole_poly, result);
     
-    vector<polyline> clipped;// = to_polylines(result);
+    vector<polyline> clipped = to_polylines(result, z);
     
     return clipped;
   }
