@@ -193,8 +193,7 @@ namespace gca {
 		const std::vector<tool>& p_tools);
 
     std::vector<polyline>
-    flat_level_with_holes(const tool& t,
-			  const double cut_depth) const;
+    flat_level_with_holes(const tool& t) const;
 
     pocket_name pocket_type() const { return FLAT_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;

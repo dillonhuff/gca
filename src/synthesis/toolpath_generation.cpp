@@ -227,8 +227,16 @@ namespace gca {
   }
 
   std::vector<polyline>
-  flat_pocket::flat_level_with_holes(const tool& t,
-				     const double cut_depth) const {
+  zig_lines(const oriented_polygon& bound,
+	    const std::vector<oriented_polygon>& holes,
+	    const tool& t) {
+    box b = bounding_box(bound);
+    
+    DBG_ASSERT(false);
+  }
+
+  std::vector<polyline>
+  flat_pocket::flat_level_with_holes(const tool& t) const {
     vector<polyline> edges;
     auto inter = interior_offset(boundary, t.radius());
 
@@ -236,12 +244,16 @@ namespace gca {
       edges.push_back(to_polyline(i));
     }
 
+    // TODO: Proper polygon merging
     for (auto h : holes) {
       auto outer = exterior_offset(h, t.radius());
       DBG_ASSERT(outer.size() == 2);
       edges.push_back(to_polyline(outer.back()));
     }
 
+    vector<polyline> rough_lines = zig_lines(boundary,
+					     holes,
+					     t);
     return edges;
   }
 
@@ -255,7 +267,7 @@ namespace gca {
       face_template =
 	face_level(inter, t, cut_depth);
     } else {
-      face_template = flat_level_with_holes(t, cut_depth);
+      face_template = flat_level_with_holes(t);
     }
 
     vector<double> depths =
