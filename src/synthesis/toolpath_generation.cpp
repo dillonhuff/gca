@@ -231,13 +231,29 @@ namespace gca {
 	    const std::vector<oriented_polygon>& holes,
 	    const tool& t) {
     box b = bounding_box(bound);
-    
-    DBG_ASSERT(false);
+    cout << "Zig lines bounding box = " << endl << b << endl;
+    double stepover = t.radius();
+
+    vector<polyline> lines;
+    double current_y = b.y_min;
+    while (current_y < b.y_max) {
+      point start(b.x_min, current_y, b.z_min);
+      point end(b.x_max, current_y, b.z_min);
+      vector<point> pts{start, end};
+      lines.push_back(pts);
+
+      current_y += stepover;
+    }
+
+    cout << "# of lines = " << lines.size() << endl;
+
+    return lines;
   }
 
   std::vector<polyline>
   flat_pocket::flat_level_with_holes(const tool& t) const {
-    vector<polyline> edges;
+    vector<polyline> edges = zig_lines(boundary, holes, t);
+
     auto inter = interior_offset(boundary, t.radius());
 
     for (auto i : inter) {
@@ -250,10 +266,7 @@ namespace gca {
       DBG_ASSERT(outer.size() == 2);
       edges.push_back(to_polyline(outer.back()));
     }
-
-    vector<polyline> rough_lines = zig_lines(boundary,
-					     holes,
-					     t);
+    
     return edges;
   }
 
