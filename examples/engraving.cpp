@@ -22,8 +22,6 @@ int max_thresh = 255;
 
 RNG rng(12345);
 
-namespace bg = boost::geometry;
-
 typedef bg::model::d2::point_xy<double> boost_point_2;
 typedef boost::geometry::model::polygon<boost_point_2> boost_poly_2;
 typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;

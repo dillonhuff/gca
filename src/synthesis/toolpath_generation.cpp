@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "feature_recognition/feature_decomposition.h"
 #include "gcode/cut.h"
 #include "gcode/linear_cut.h"
 #include "geometry/mesh_operations.h"
@@ -226,6 +227,35 @@ namespace gca {
     return polys;
   }
 
+  boost_multilinestring_2
+  to_boost_multilinestring_2(const std::vector<polyline>& lines) {
+    DBG_ASSERT(false);
+  }
+
+  boost_multipoly_2
+  to_boost_multipoly_2(const std::vector<oriented_polygon>& holes) {
+    DBG_ASSERT(false);
+  }
+
+  std::vector<polyline>
+  clip_lines(const std::vector<polyline>& lines,
+	     const oriented_polygon& bound,
+	     const std::vector<oriented_polygon>& holes,
+	     const tool& t) {
+    if (lines.size() == 0) { return lines; }
+
+    double z = lines.front().front().z;
+    boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
+    boost_multipoly_2 hole_poly = to_boost_multipoly_2(holes);
+
+    boost_multilinestring_2 result;
+    bg::difference(ml, hole_poly, result);
+    
+    vector<polyline> clipped;// = to_polylines(result);
+    
+    return clipped;
+  }
+
   std::vector<polyline>
   zig_lines(const oriented_polygon& bound,
 	    const std::vector<oriented_polygon>& holes,
@@ -247,6 +277,7 @@ namespace gca {
 
     cout << "# of lines = " << lines.size() << endl;
 
+    lines = clip_lines(lines, bound, holes, t);
     return lines;
   }
 
