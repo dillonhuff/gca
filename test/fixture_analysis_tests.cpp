@@ -26,8 +26,10 @@ namespace gca {
     
     vector<tool> tools{t1};
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
-
+    
     SECTION("Clipped pill") {
+
+
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
@@ -36,6 +38,8 @@ namespace gca {
     }
 
     SECTION("Round with thru holes") {
+      workpiece workpiece_dims(1.76, 1.76, 1.76, BRASS);
+
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
 
       cout << "Starting round with thru holes" << endl;

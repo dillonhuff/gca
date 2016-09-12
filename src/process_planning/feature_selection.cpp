@@ -302,6 +302,22 @@ namespace gca {
     return unreachable_features;
   }
 
+  feature_decomposition*
+  build_legal_decomp(const triangular_mesh& stock,
+		     const triangular_mesh& part_mesh,
+		     const fixture& top_fix) {
+    auto top_decomp =
+      build_feature_decomposition(stock, part_mesh, top_fix.orient.top_normal());
+
+    vtk_debug_feature_decomposition(top_decomp);
+
+    auto top_unreachable_features =
+      unreachable_features(collect_features(top_decomp), top_fix);
+    prune_features(top_decomp, top_unreachable_features);
+
+    return top_decomp;
+  }
+
   //  std::vector<feature_decomposition*>
   feature_selection
   select_features(const triangular_mesh& stock,
@@ -315,38 +331,28 @@ namespace gca {
 
     vector<tool_access_info> tool_info;
     
-    auto top_decomp =
-      build_feature_decomposition(stock, part_mesh, top_fix.orient.top_normal());
-
-    vtk_debug_feature_decomposition(top_decomp);
-
-    auto top_unreachable_features =
-      unreachable_features(collect_features(top_decomp), top_fix);
-    prune_features(top_decomp, top_unreachable_features);
-
+    auto top_decomp = build_legal_decomp(stock, part_mesh, top_fix);
     tool_info.push_back(find_accessable_tools(top_decomp, tools));
+
+    cout << "# of top features = " << collect_features(top_decomp).size() << endl;
 
     vector<feature*> features_that_cant_be_cut;
     for (auto f : tool_info[0]) {
       if (f.second.size() == 0) {
+	cout << "Feature depth = " << (f.first)->depth() << endl;
 	features_that_cant_be_cut.push_back(f.first);
       }
     }
     cout << "# of features that cannot be cut = " << features_that_cant_be_cut.size() << endl;
+    vtk_debug_features(features_that_cant_be_cut);
     prune_features(top_decomp, features_that_cant_be_cut);
 
     for (auto f : collect_features(top_decomp)) {
       DBG_ASSERT(map_find(f, tool_info[0]).size() > 0);
     }
     
-    auto base_decomp =
-      build_feature_decomposition(stock, part_mesh, base_fix.orient.top_normal());
-
-    vtk_debug_feature_decomposition(base_decomp);
-
-    auto base_unreachable_features =
-      unreachable_features(collect_features(base_decomp), base_fix);
-    prune_features(base_decomp, base_unreachable_features);
+    auto base_decomp = build_legal_decomp(stock, part_mesh, base_fix);
+    cout << "# of base features = " << collect_features(base_decomp).size() << endl;
 
     tool_info.push_back(find_accessable_tools(base_decomp, tools));
 
@@ -357,6 +363,10 @@ namespace gca {
       }
     }
     prune_features(base_decomp, base_features_that_cant_be_cut);
+
+    cout << "# of top features after tool pruning  = " << collect_features(top_decomp).size() << endl;
+	cout << "# of base features after tool pruning = " << collect_features(base_decomp).size() << endl;
+
 
     vector<feature_decomposition*> decomps =
       clip_top_and_bottom_features(top_decomp, base_decomp);
