@@ -31,7 +31,6 @@ namespace gca {
 
     auto top_feature = decomp->child(0);
 
-
     // TODO: Eventually make this a parameter, not just a builtin
     labeled_polygon_3 safe_envelope_outline =
       dilate(top_feature->feature()->base(), 4.0);
@@ -84,10 +83,6 @@ namespace gca {
     
     if (boost::geometry::area(diff) < 0.001) { return true; }
     
-    //    vector<feature*> subset = containing_subset(f, features);
-
-    //    if (subset.size() > 0) { return true; }
-
     return false;
   }
 
@@ -95,8 +90,12 @@ namespace gca {
   bool can_access_feature_with_tool(const feature& f,
 				    const tool& t,
 				    feature_decomposition* decomp) {
-    if ((t.cut_length() < f.depth()) &&
-    	(t.cut_diameter() <= t.shank_diameter())) { return false; }
+    auto top_feature = decomp->child(0)->feature();
+    // NOTE: Top feature is always completely open
+    if (&f != top_feature) {
+      if ((t.cut_length() < f.depth()) &&
+	  (t.cut_diameter() <= t.shank_diameter())) { return false; }
+    }
 
     boost::optional<feature> shank_region = 
       access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
