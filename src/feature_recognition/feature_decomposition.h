@@ -19,18 +19,18 @@ namespace gca {
   typedef boost::geometry::model::multi_polygon<boost_poly_2> boost_multipoly_2;
   typedef boost::geometry::model::multi_point<boost_point_2> boost_multipoint_2;
 
-  class labeled_polygon_3 {
+  class polygon_3 {
   protected:
     std::vector<point> outer_ring;
     std::vector<std::vector<point>> inner_rings;
     
   public:
-    labeled_polygon_3(const std::vector<point> vertices) :
+    polygon_3(const std::vector<point> vertices) :
       outer_ring(vertices) {
       DBG_ASSERT(outer_ring.size() >= 3);
     }
 
-    labeled_polygon_3(const std::vector<point> vertices,
+    polygon_3(const std::vector<point> vertices,
 		      const std::vector<std::vector<point>> hole_verts);
 
     point normal() const {
@@ -54,6 +54,8 @@ namespace gca {
       }
     }
   };
+
+  typedef polygon_3 labeled_polygon_3;
 
   labeled_polygon_3 shift(const point p, const labeled_polygon_3& poly);
 

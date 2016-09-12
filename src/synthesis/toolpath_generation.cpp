@@ -229,9 +229,17 @@ namespace gca {
   std::vector<polyline>
   flat_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
-    auto inter = project(boundary, get_end_depth());
-    vector<polyline> face_template =
-      face_level(inter, t, cut_depth);
+    vector<polyline> face_template;
+    if (holes.size() == 0) {
+      auto inter = project(boundary, get_end_depth());
+
+      face_template =
+	face_level(inter, t, cut_depth);
+    } else {
+      // TODO: Add code to handle 
+      DBG_ASSERT(false);
+      //      face_template = flat_level_with_holes();
+    }
 
     vector<double> depths =
       cut_depths(get_start_depth(), get_end_depth(), cut_depth);
@@ -240,11 +248,6 @@ namespace gca {
     for (auto depth : depths) {
       concat(lines, project_lines(face_template, depth));
     }
-
-    // if (lines.size() == 0) {
-    //   vtk_debug_polygon(boundary);
-    // }
-    
     return lines;
   }
 

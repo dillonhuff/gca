@@ -12,8 +12,8 @@
 
 namespace gca {
 
-  labeled_polygon_3::labeled_polygon_3(const std::vector<point> vertices,
-				       const std::vector<std::vector<point>> hole_verts) :
+  polygon_3::polygon_3(const std::vector<point> vertices,
+		       const std::vector<std::vector<point>> hole_verts) :
     outer_ring(vertices),
     inner_rings(hole_verts) {
     // There is an occasional test failure here in simple box
