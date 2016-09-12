@@ -141,7 +141,7 @@ namespace gca {
 
   
   pocket contour_around(const triangular_mesh& stock,
-			const triangular_mesh& part) {
+  			const triangular_mesh& part) {
     double stock_top = max_in_dir(stock, point(0, 0, 1));
     double part_top = max_in_dir(part, point(0, 0, 1));
 
@@ -166,75 +166,44 @@ namespace gca {
   }
 
   fixture_setup
-  clip_top_and_sides(const triangular_mesh& aligned,
-		     const triangular_mesh& part,
-		     const fixture& f) {
-    vector<pocket> pockets{face_down(aligned, part), contour_around(aligned, part)};
-
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, f, pockets);
-  }
-
-  fixture_setup
   clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
-			       const triangular_mesh& part_mesh,
-			       feature_decomposition* decomp,
-			       const fixture& f,
-			       const tool_access_info& tool_info) {
+  			       const triangular_mesh& part_mesh,
+  			       feature_decomposition* decomp,
+  			       const fixture& f,
+  			       const tool_access_info& tool_info) {
     auto s_t = mating_transform(wp_mesh, f.orient, f.v);
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    //    fixture_setup setup = clip_top_and_sides(aligned, part, f);
-
-    //    std::vector<pocket>& setup_pockets = setup.pockets;
-
     auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
-    
-    //    return pockets;
-
-    //    concat(setup_pockets, pockets);
-    
-    //    return setup;
   }
 
   fixture_setup
   clip_base_transform(const triangular_mesh& wp_mesh,
-		      const triangular_mesh& part_mesh,
-		      feature_decomposition* decomp,
-		      const fixture& f,
-		      const tool_access_info& tool_info) {
+  		      const triangular_mesh& part_mesh,
+  		      feature_decomposition* decomp,
+  		      const fixture& f,
+  		      const tool_access_info& tool_info) {
     auto s_t = mating_transform(part_mesh, f.orient, f.v);
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    fixture_setup setup = clip_base(aligned, part, f);
-
-    //    std::vector<pocket>& setup_pockets = setup.pockets;
-
-    //    DBG_ASSERT(setup_pockets.size() == 1);
-
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-
     
     auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
     return fixture_setup(m, f, pockets);    
-
-    // concat(setup_pockets, pockets);
-
-    // return setup;
   }
 
   fixture_setup
   clip_base(const triangular_mesh& aligned,
-	    const triangular_mesh& part,
-	    const fixture& f) {
+  	    const triangular_mesh& part,
+  	    const fixture& f) {
     vector<pocket> pockets{face_down(aligned, part)};
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);

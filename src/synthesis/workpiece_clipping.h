@@ -24,19 +24,6 @@ namespace gca {
 			      const std::vector<tool>& tools,
 			      const fixtures& fixes);
 
-
-  fixture_setup
-  clip_top_and_sides_transform(const triangular_mesh& wp_mesh,
-			       const triangular_mesh& part_mesh,
-			       const std::vector<surface>& surfaces,
-			       const fixture& f);
-
-  fixture_setup
-  clip_base_transform(const triangular_mesh& aligned,
-		      const triangular_mesh& part,
-		      const std::vector<surface>& surfaces,
-		      const fixture& f);
-
   pocket face_down(const triangular_mesh& stock,
 		   const triangular_mesh& part,
 		   const triangular_mesh& out);
