@@ -327,5 +327,11 @@ namespace gca {
   shrink_optional(const labeled_polygon_3& p,
 		  const double tol);
 
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& stock,
+			      const triangular_mesh& m,
+			      const point n);
+
+
 }
 #endif

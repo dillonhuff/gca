@@ -298,7 +298,7 @@ namespace gca {
 		      const std::vector<tool>& tools) {
     DBG_ASSERT(angle_eps(top_fix.orient.top_normal(), base_fix.orient.top_normal(), 180.0, 1.0));
 
-    auto features = select_features(part_mesh, {top_fix, base_fix}, tools);
+    auto features = select_features(aligned, part_mesh, {top_fix, base_fix}, tools);
 
     DBG_ASSERT(features.decomps.size() == 2);
     DBG_ASSERT(features.access_info.size() == 2);

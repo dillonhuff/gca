@@ -22,7 +22,8 @@ namespace gca {
 	   feature_decomposition* right);
   
   feature_selection
-  select_features(const triangular_mesh& part_mesh,
+  select_features(const triangular_mesh& stock,
+		  const triangular_mesh& part_mesh,
 		  const std::vector<fixture>& fixtures,
 		  const std::vector<tool>& tools);
 

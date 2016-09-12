@@ -190,7 +190,11 @@ namespace gca {
   std::vector<std::pair<feature*, feature*> >
   duplicate_features(feature_decomposition* target_decomp,
 		     feature_decomposition* container_decomp) {
-    DBG_ASSERT(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0));
+    if (!(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0))) {
+      vtk_debug_features(collect_features(target_decomp));
+      vtk_debug_features(collect_features(container_decomp));
+      DBG_ASSERT(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0));
+    }
 
     vector<pair<feature*, feature*>> duplicates;
     for (auto target : collect_leaf_features(target_decomp)) {
@@ -300,7 +304,8 @@ namespace gca {
 
   //  std::vector<feature_decomposition*>
   feature_selection
-  select_features(const triangular_mesh& part_mesh,
+  select_features(const triangular_mesh& stock,
+		  const triangular_mesh& part_mesh,
 		  const std::vector<fixture>& fixtures,
 		  const std::vector<tool>& tools) {
     DBG_ASSERT(fixtures.size() == 2);
@@ -311,7 +316,9 @@ namespace gca {
     vector<tool_access_info> tool_info;
     
     auto top_decomp =
-      build_feature_decomposition(part_mesh, top_fix.orient.top_normal());
+      build_feature_decomposition(stock, part_mesh, top_fix.orient.top_normal());
+
+    vtk_debug_feature_decomposition(top_decomp);
 
     auto top_unreachable_features =
       unreachable_features(collect_features(top_decomp), top_fix);
@@ -333,7 +340,9 @@ namespace gca {
     }
     
     auto base_decomp =
-      build_feature_decomposition(part_mesh, base_fix.orient.top_normal());
+      build_feature_decomposition(stock, part_mesh, base_fix.orient.top_normal());
+
+    vtk_debug_feature_decomposition(base_decomp);
 
     auto base_unreachable_features =
       unreachable_features(collect_features(base_decomp), base_fix);
