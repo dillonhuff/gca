@@ -309,7 +309,7 @@ namespace gca {
     auto top_decomp =
       build_feature_decomposition(stock, part_mesh, top_fix.orient.top_normal());
 
-    vtk_debug_feature_decomposition(top_decomp);
+    //vtk_debug_feature_decomposition(top_decomp);
 
     auto top_unreachable_features =
       unreachable_features(collect_features(top_decomp), top_fix);
@@ -344,7 +344,7 @@ namespace gca {
       }
     }
     cout << "# of features that cannot be cut = " << features_that_cant_be_cut.size() << endl;
-    vtk_debug_features(features_that_cant_be_cut);
+    //vtk_debug_features(features_that_cant_be_cut);
     prune_features(top_decomp, features_that_cant_be_cut);
 
     for (auto f : collect_features(top_decomp)) {

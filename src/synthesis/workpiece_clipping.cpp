@@ -186,15 +186,20 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    fixture_setup setup = clip_top_and_sides(aligned, part, f);
+    //    fixture_setup setup = clip_top_and_sides(aligned, part, f);
 
-    std::vector<pocket>& setup_pockets = setup.pockets;
+    //    std::vector<pocket>& setup_pockets = setup.pockets;
 
     auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
-    concat(setup_pockets, pockets);
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+    return fixture_setup(m, f, pockets);
     
-    return setup;
+    //    return pockets;
+
+    //    concat(setup_pockets, pockets);
+    
+    //    return setup;
   }
 
   fixture_setup
@@ -210,15 +215,20 @@ namespace gca {
 
     fixture_setup setup = clip_base(aligned, part, f);
 
-    std::vector<pocket>& setup_pockets = setup.pockets;
+    //    std::vector<pocket>& setup_pockets = setup.pockets;
 
-    DBG_ASSERT(setup_pockets.size() == 1);
+    //    DBG_ASSERT(setup_pockets.size() == 1);
 
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+
+    
     auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
-    concat(setup_pockets, pockets);
+    return fixture_setup(m, f, pockets);    
 
-    return setup;
+    // concat(setup_pockets, pockets);
+
+    // return setup;
   }
 
   fixture_setup
