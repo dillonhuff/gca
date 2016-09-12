@@ -13,9 +13,15 @@
 
 namespace gca {
 
-  toolpath freeform_pocket::make_toolpath(const material& stock_material,
-					  const double safe_z,
-					  const std::vector<tool>& tools) const {
+  struct cut_move_parameters {
+    double feed;
+    double speed;
+    double cut_depth;
+  };
+
+  // TODO: More detailed cut parameter calculation
+  cut_move_parameters calculate_cut_params(const tool& t,
+					   const material& stock_material) {
     double cut_depth, speed, feed;
     if (stock_material == ACETAL) {
       cut_depth = 0.2;
@@ -32,115 +38,62 @@ namespace gca {
     } else {
       DBG_ASSERT(false);
     }
-    
+
+    return cut_move_parameters{feed, speed, cut_depth};
+  }
+
+  toolpath freeform_pocket::make_toolpath(const material& stock_material,
+					  const double safe_z,
+					  const std::vector<tool>& tools) const {
     tool t = select_tool(tools);
-    auto pocket_paths = toolpath_lines(t, cut_depth);
-    return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
+    auto params = calculate_cut_params(t, stock_material);
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
 
   toolpath trace_pocket::make_toolpath(const material& stock_material,
 					  const double safe_z,
 					  const std::vector<tool>& tools) const {
-    double cut_depth, speed, feed;
-    if (stock_material == ACETAL) {
-      cut_depth = 0.2;
-      speed = 3000;
-      feed = 8.0;
-    } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
-    } else if (stock_material == BRASS) {
-      cut_depth = 0.1;
-      speed = 16000;
-      feed = 1.0;
-    } else {
-      DBG_ASSERT(false);
-    }
-    
     tool t = select_tool(tools);
-    auto pocket_paths = toolpath_lines(t, cut_depth);
-    return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
+    auto params = calculate_cut_params(t, stock_material);
+
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
   
   toolpath contour_pocket::make_toolpath(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const {
-    double cut_depth, speed, feed;
-    if (stock_material == ACETAL) {
-      cut_depth = 0.2;
-      speed = 3000;
-      feed = 8.0;
-    } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
-    } else if (stock_material == BRASS) {
-      cut_depth = 0.1;
-      speed = 16000;
-      feed = 1.0;
-    } else {
-      DBG_ASSERT(false);
-    }
-    
     tool t = select_tool(tools);
-    auto pocket_paths = toolpath_lines(t, cut_depth);
-    return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
+    auto params = calculate_cut_params(t, stock_material);
+
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
 
   toolpath face_pocket::make_toolpath(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const {
-    double cut_depth, speed, feed;
-    if (stock_material == ACETAL) {
-      cut_depth = 0.2;
-      speed = 3000;
-      feed = 8.0;
-    } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
-    } else if (stock_material == BRASS) {
-      cut_depth = 0.1;
-      speed = 16000;
-      feed = 1.0;
-    } else {
-      DBG_ASSERT(false);
-    }
-
     tool t = select_tool(tools);
-    auto pocket_paths = toolpath_lines(t, cut_depth);
-    return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
+    auto params = calculate_cut_params(t, stock_material);
+
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
 
   toolpath flat_pocket::make_toolpath(const material& stock_material,
 				      const double safe_z,
 				      const std::vector<tool>& tools) const {
-    double cut_depth, speed, feed;
-    if (stock_material == ACETAL) {
-      cut_depth = 0.2;
-      speed = 3000;
-      feed = 8.0;
-    } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
-    } else if (stock_material == BRASS) {
-      cut_depth = 0.1;
-      speed = 16000;
-      feed = 1.0;
-    } else {
-      DBG_ASSERT(false);
-    }
-
     if (possible_tools.size() == 0) {
       cout << "ERROR, no viable tools for pocket" << endl;
       DBG_ASSERT(possible_tools.size() > 0);
     }
 
     tool t = select_tool(possible_tools);
-    auto pocket_paths = toolpath_lines(t, cut_depth);
-    return toolpath(pocket_type(), safe_z, speed, feed, t, pocket_paths);
+    auto params = calculate_cut_params(t, stock_material);
+
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
   
   freeform_pocket::freeform_pocket(double start_depthp,
@@ -293,7 +246,6 @@ namespace gca {
     // }
     
     return lines;
-    //  return { to_polyline(project(boundary, get_end_depth())) };
   }
 
   tool
@@ -321,7 +273,6 @@ namespace gca {
       concat(lines, project_lines(face_template, depth));
     }
     return lines;
-    //  return { to_polyline(project(boundary, get_end_depth())) };
   }
   
   pocket box_pocket(const box b) {
