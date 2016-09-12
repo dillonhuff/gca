@@ -76,7 +76,7 @@ namespace gca {
     cout.setf(ios::showpoint);
 
     for (auto f : fix_plan.steps()) {
-      auto program = f.gcode_for_toolpaths(emco_f1_code_G10_TLC);
+      auto program = f.gcode_for_toolpaths(emco_f1_code);
       cout << program.name << endl;
       cout << program.blocks << endl;
     }

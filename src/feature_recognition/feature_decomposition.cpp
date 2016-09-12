@@ -718,32 +718,8 @@ namespace gca {
     }
 
   }
-  
-  feature_decomposition*
-  build_feature_decomposition(const triangular_mesh& m, const point n) {
-    surface_levels levels = initial_surface_levels(m, n);
 
-    labeled_polygon_3 init_outline = initial_outline(m, n);
-
-    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
-    
-    double base_depth = min_distance_along(m.vertex_list(), n);
-
-    // cout << "initial # of levels = " << levels.size() << endl;
-    for (auto level : levels) {
-      DBG_ASSERT(level.size() > 0);
-
-      // cout << "??? z = " << level.front().vertex(0).z << endl;
-      // cout << "Distance along = " <<
-      // 	max_distance_along(level.front().vertices(), n) << endl;
-    }
-    // cout << "done levels" << endl;
-
-    feature_decomposition* decomp =
-      new (allocate<feature_decomposition>()) feature_decomposition();
-
-    decompose_volume(init_outline, levels, decomp, base_depth);
-
+  void check_normals(feature_decomposition* decomp, const point n) {
     auto check_normal = [n](const feature* f) {
       if (f != nullptr) {
 	DBG_ASSERT(f->depth() >= 0);
@@ -752,9 +728,41 @@ namespace gca {
     };
 
     traverse_bf(decomp, check_normal);
+  }
+  
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& stock,
+			      const triangular_mesh& m,
+			      const point n) {
+    labeled_polygon_3 init_outline = initial_outline(stock, n);
+
+    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
+    
+    double base_depth = min_distance_along(m.vertex_list(), n);
+
+    surface_levels levels = initial_surface_levels(m, n);
+
+    for (auto level : levels) {
+      DBG_ASSERT(level.size() > 0);
+    }
+
+    feature_decomposition* decomp =
+      new (allocate<feature_decomposition>()) feature_decomposition();
+
+    decompose_volume(init_outline, levels, decomp, base_depth);
+
+    check_normals(decomp, n);
 
     return decomp;
   }
+
+  // Uses the part itself as an outline
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& m,
+			      const point n) {
+    return build_feature_decomposition(m, m, n);
+  }
+
 
   vector<feature*> collect_features(feature_decomposition* f) {
     DBG_ASSERT(f != nullptr);
