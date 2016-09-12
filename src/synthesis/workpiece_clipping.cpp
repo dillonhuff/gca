@@ -2,9 +2,6 @@
 #include "geometry/extrusion.h"
 
 #include <boost/optional.hpp>
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
 
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
