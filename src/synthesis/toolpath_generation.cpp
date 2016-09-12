@@ -227,6 +227,25 @@ namespace gca {
   }
 
   std::vector<polyline>
+  flat_pocket::flat_level_with_holes(const tool& t,
+				     const double cut_depth) const {
+    vector<polyline> edges;
+    auto inter = interior_offset(boundary, t.radius());
+
+    for (auto i : inter) {
+      edges.push_back(to_polyline(i));
+    }
+
+    for (auto h : holes) {
+      auto outer = exterior_offset(h, t.radius());
+      DBG_ASSERT(outer.size() == 2);
+      edges.push_back(to_polyline(outer.back()));
+    }
+
+    return edges;
+  }
+
+  std::vector<polyline>
   flat_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     vector<polyline> face_template;
@@ -236,9 +255,7 @@ namespace gca {
       face_template =
 	face_level(inter, t, cut_depth);
     } else {
-      // TODO: Add code to handle 
-      DBG_ASSERT(false);
-      //      face_template = flat_level_with_holes();
+      face_template = flat_level_with_holes(t, cut_depth);
     }
 
     vector<double> depths =

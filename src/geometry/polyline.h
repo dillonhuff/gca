@@ -85,6 +85,7 @@ namespace gca {
 
   std::vector<polyline> project_lines(const std::vector<polyline>& lines,
 				      const double d);
+
 }
 
 #endif

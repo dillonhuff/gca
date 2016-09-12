@@ -191,7 +191,11 @@ namespace gca {
 		const oriented_polygon& p_boundary,
 		const std::vector<oriented_polygon>& p_holes,
 		const std::vector<tool>& p_tools);
-    
+
+    std::vector<polyline>
+    flat_level_with_holes(const tool& t,
+			  const double cut_depth) const;
+
     pocket_name pocket_type() const { return FLAT_POCKET; }
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
