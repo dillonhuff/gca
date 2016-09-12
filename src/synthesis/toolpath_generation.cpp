@@ -289,9 +289,16 @@ namespace gca {
 	     const tool& t) {
     if (lines.size() == 0) { return lines; }
 
+    vector<oriented_polygon> offset_holes;
+    for (auto h : holes) {
+      auto h_off = exterior_offset(h, t.radius());
+      DBG_ASSERT(h_off.size() == 2);
+      offset_holes.push_back(h_off.back());
+    }
+
     double z = lines.front().front().z;
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
-    boost_multipoly_2 hole_poly = to_boost_multipoly_2(holes);
+    boost_multipoly_2 hole_poly = to_boost_multipoly_2(offset_holes);
 
     boost_multilinestring_2 result;
     bg::difference(ml, hole_poly, result);
