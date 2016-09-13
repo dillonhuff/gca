@@ -289,7 +289,7 @@ namespace gca {
 
     bound_p.correct_winding_order(point(0, 0, 1));
 
-    // Really should do bounding box polygon
+    // TODO: Really should use bounding box polygon instead
     polygon_3 outer_bound =
       dilate(bound_p, 10*t.radius());
 
@@ -839,5 +839,5 @@ namespace gca {
     }
     return toolpaths;
   }
-  
+
 }
