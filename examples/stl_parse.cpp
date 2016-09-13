@@ -21,6 +21,8 @@ int main(int argc, char* argv[]) {
   auto mesh = make_mesh(box_triangles, 0.001);
 
   vice test_vice = current_setup(); //large_jaw_vice(15, point(0, 0, 0)); //current_setup();
+  test_vice = top_jaw_origin_vice(test_vice);
+
   std::vector<plate_height> parallel_plates{0.5};
   fixtures fixes(test_vice, parallel_plates);
 

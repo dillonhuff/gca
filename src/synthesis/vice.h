@@ -72,9 +72,11 @@ namespace gca {
 
     inline double x_max() const { return pos.x + x_length; }
     inline double y_max() const { return pos.y + y_length; }
+    inline double z_max() const { return pos.z + top_height; }
 
     inline double x_len() const { return x_max() - x_min(); }
     inline double y_len() const { return y_max() - y_min(); }
+    inline double z_len() const { return z_max() - z_min(); }
     
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
     inline double clamp_y_length() const { return clamp_width; }
@@ -85,7 +87,9 @@ namespace gca {
     { return pos.z + base_height + parallel_plate_height; }
     inline double top_z() const { return pos.z + top_height; }
 
-    //    inline point position() const { return pos; }
+    inline point position() const { return pos; }
+
+    inline void set_position(const point new_pos) { pos = new_pos; }
 
     inline double maximum_jaw_width() const { return max_jaw_width; }
 
@@ -116,6 +120,8 @@ namespace gca {
   box upper_clamp_box(const vice v);
 
   box lower_clamp_box(const vice v);
+
+  vice top_jaw_origin_vice(const vice& v);
 
 }
 

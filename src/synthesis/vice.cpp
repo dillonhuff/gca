@@ -2,6 +2,14 @@
 
 namespace gca {
 
+  vice top_jaw_origin_vice(const vice& v) {
+    vice origin_vice(v);
+    origin_vice.set_position(point(0.0 - v.x_len(),
+				   0.0 - v.y_len() + v.clamp_y_length(),
+				   0.0 - v.z_len()));
+    return origin_vice;
+  }
+
   vice emco_vice(const point loc) {
     return large_jaw_vice(2.0, loc);
   }
