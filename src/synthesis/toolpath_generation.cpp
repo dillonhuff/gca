@@ -282,6 +282,23 @@ namespace gca {
     return res;
   }
 
+  boost_multipoly_2
+  make_interior_bound(const oriented_polygon& bound,
+		      const tool& t) {
+    polygon_3 bound_p(bound.vertices());
+
+    bound_p.correct_winding_order(point(0, 0, 1));
+
+    // Really should do bounding box polygon
+    polygon_3 outer_bound =
+      dilate(bound_p, 10*t.radius());
+
+    polygon_3 inner_b = shrink(bound_p, t.radius());
+    polygon_3 inner_bound(outer_bound.vertices(), {inner_b.vertices()});
+
+    return {to_boost_poly_2(inner_bound)};
+  }
+
   std::vector<polyline>
   clip_lines(const std::vector<polyline>& lines,
 	     const oriented_polygon& bound,
@@ -300,8 +317,13 @@ namespace gca {
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
     boost_multipoly_2 hole_poly = to_boost_multipoly_2(offset_holes);
 
+    boost_multilinestring_2 hole_result;
+    bg::difference(ml, hole_poly, hole_result);
+
+    boost_multipoly_2 bound_poly = make_interior_bound(bound, t);
+
     boost_multilinestring_2 result;
-    bg::difference(ml, hole_poly, result);
+    bg::difference(hole_result, bound_poly, result);
     
     vector<polyline> clipped = to_polylines(result, z);
     

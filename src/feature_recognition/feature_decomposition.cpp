@@ -32,7 +32,7 @@ namespace gca {
       check_simplicity(h);
     }
   }
-  
+
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
   std::vector<point> project_points(const plane pl,
