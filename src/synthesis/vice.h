@@ -85,7 +85,7 @@ namespace gca {
     { return pos.z + base_height + parallel_plate_height; }
     inline double top_z() const { return pos.z + top_height; }
 
-    inline point position() const { return pos; }
+    //    inline point position() const { return pos; }
 
     inline double maximum_jaw_width() const { return max_jaw_width; }
 
