@@ -239,11 +239,8 @@ namespace gca {
 			    const point n) {
 
     const triangular_mesh& part_mesh = outline_of_contour.get_parent_mesh();
-    auto cont_region_inds =
-      const_orientation_regions(part_mesh);
 
-    vector<surface> const_orient_surfs =
-      inds_to_surfaces(cont_region_inds, outline_of_contour.get_parent_mesh());
+    vector<surface> const_orient_surfs = outer_surfaces(part_mesh);
 
     double total_area = merge_surfaces(const_orient_surfs).surface_area();
 

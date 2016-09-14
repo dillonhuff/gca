@@ -255,12 +255,12 @@ namespace gca {
 
     sort(begin(face_indices), end(face_indices));
 
-    vector<index_t> surf_face_inds = select_initial_faces(face_indices, part);
-    std::unordered_set<index_t> surface_face_inds(begin(surf_face_inds),
-						  end(surf_face_inds));
+    vector<index_t> surface_face_inds = select_initial_faces(face_indices, part);
+    // std::unordered_set<index_t> surface_face_inds(begin(surf_face_inds),
+    // 						  end(surf_face_inds));
 
-    //    vector<index_t> unchecked_face_inds = surface_face_inds;
-    unordered_set<index_t> unchecked_face_inds = surface_face_inds;
+    vector<index_t> unchecked_face_inds = surface_face_inds;
+    //    unordered_set<index_t> unchecked_face_inds = surface_face_inds;
     subtract(face_indices, surface_face_inds);
 
     while (unchecked_face_inds.size() > 0) {
