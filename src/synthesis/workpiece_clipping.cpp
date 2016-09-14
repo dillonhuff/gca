@@ -190,10 +190,9 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    
     auto pockets = feature_pockets(*decomp, s_t, tool_info);
 
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);    
   }
 
@@ -249,6 +248,7 @@ namespace gca {
     double total_area = merge_surfaces(const_orient_surfs).surface_area();
 
     cout << "START all_stable_orientations" << endl;
+    cout << "# of surfaces = " << const_orient_surfs.size() << endl;
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(const_orient_surfs, v, n);
     cout << "DONE all_stable_orientations" << endl;
@@ -329,6 +329,8 @@ namespace gca {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
     triangular_mesh aligned = align_workpiece(stable_surfaces, w);
 
+    // NOTE: Maybe I should just compute major directions from
+    // the aligned stock?
     boost::optional<contour_surface_decomposition> surfs =
       compute_contour_surfaces(part_mesh);
 

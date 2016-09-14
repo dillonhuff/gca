@@ -467,7 +467,7 @@ namespace gca {
   //   set_system_allocator(&a);
 
   //   vice test_vice = emco_vice(point(-1.8, -0.4, 3.3));
-  //   std::vector<plate_height> plates{0.15, 0.03};
+  //   std::vector<plate_height> plates{0.15, 0.03, 0.5};
   //   fixtures fixes(test_vice, plates);
 
   //   tool t1(0.35, 3.0, 4, HSS, FLAT_NOSE);

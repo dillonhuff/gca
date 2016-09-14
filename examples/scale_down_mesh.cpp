@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
   cout << "Bounding box = " << endl;
   cout << bounding << endl;
 
-  double max_dim = bounding.z_len();
+  double max_dim = bounding.y_len();
   double desired_dim = 0.9;
   double scale_factor = desired_dim / max_dim;
 
