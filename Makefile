@@ -1936,6 +1936,33 @@ src/process_planning/feature_to_pocket.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.s
 .PHONY : src/process_planning/feature_to_pocket.cpp.s
 
+src/process_planning/job_planning.o: src/process_planning/job_planning.cpp.o
+
+.PHONY : src/process_planning/job_planning.o
+
+# target to build an object file
+src/process_planning/job_planning.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.o
+.PHONY : src/process_planning/job_planning.cpp.o
+
+src/process_planning/job_planning.i: src/process_planning/job_planning.cpp.i
+
+.PHONY : src/process_planning/job_planning.i
+
+# target to preprocess a source file
+src/process_planning/job_planning.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.i
+.PHONY : src/process_planning/job_planning.cpp.i
+
+src/process_planning/job_planning.s: src/process_planning/job_planning.cpp.s
+
+.PHONY : src/process_planning/job_planning.s
+
+# target to generate assembly for a file
+src/process_planning/job_planning.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.s
+.PHONY : src/process_planning/job_planning.cpp.s
+
 src/process_planning/tool_access.o: src/process_planning/tool_access.cpp.o
 
 .PHONY : src/process_planning/tool_access.o
@@ -4109,6 +4136,9 @@ help:
 	@echo "... src/process_planning/feature_to_pocket.o"
 	@echo "... src/process_planning/feature_to_pocket.i"
 	@echo "... src/process_planning/feature_to_pocket.s"
+	@echo "... src/process_planning/job_planning.o"
+	@echo "... src/process_planning/job_planning.i"
+	@echo "... src/process_planning/job_planning.s"
 	@echo "... src/process_planning/tool_access.o"
 	@echo "... src/process_planning/tool_access.i"
 	@echo "... src/process_planning/tool_access.s"

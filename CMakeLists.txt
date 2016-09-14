@@ -114,6 +114,7 @@ SET(GCA_HEADERS
 	./src/process_planning/feature_to_pocket.h
 	./src/process_planning/feature_selection.h
 	./src/process_planning/axis_location.h
+	./src/process_planning/job_planning.h
 	./src/feature_recognition/feature_decomposition.h
 	./src/feature_recognition/visual_debug.h
 	./src/synthesis/operation.h
@@ -143,6 +144,7 @@ SET(GCA_CPPS
 	./src/process_planning/axis_location.cpp
 	./src/process_planning/feature_to_pocket.cpp
 	./src/process_planning/feature_selection.cpp
+	./src/process_planning/job_planning.cpp
 	./src/process_planning/tool_access.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp

@@ -30,7 +30,7 @@ namespace gca {
 		const fixtures& f) {
     vector<surface> surfs = outer_surfaces(aligned_workpiece);
 
-    assert(surfs.size() == 6);
+    DBG_ASSERT(surfs.size() == 6);
 
     vector<surface> ax_surfaces =
       take_basis(surfs,
@@ -51,7 +51,7 @@ namespace gca {
     for (auto n : norms) {
       auto sfs = outer_surfaces(current_stock);
 
-      assert(sfs.size() == 6);
+      DBG_ASSERT(sfs.size() == 6);
 
       auto orients = all_stable_orientations(sfs, v);
       clamp_orientation orient = find_orientation_by_normal(orients, n);
@@ -63,7 +63,7 @@ namespace gca {
       current_stock = clip_mesh(current_stock, clip_plane);
     }
 
-    assert(cut_setups.size() == 6);
+    DBG_ASSERT(cut_setups.size() == 6);
 
     return cut_setups;
   }
