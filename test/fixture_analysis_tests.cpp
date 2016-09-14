@@ -92,6 +92,23 @@ namespace gca {
       REQUIRE(p.fixtures()[1].pockets.size() == 3);
       REQUIRE(p.fixtures()[0].pockets.size() == 7);
     }
+
+
+    SECTION("Block with hole and side pocket") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BlockWithHoleAndSidePocket.stl", 0.0001);
+
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+      REQUIRE(p.fixtures().size() == 3);
+
+      for (auto f : p.fixtures()) {
+    	cout << "orientation = " << f.fix.orient.top_normal() << endl;
+      }
+
+      REQUIRE(p.fixtures()[0].pockets.size() == 3);
+      REQUIRE(p.fixtures()[1].pockets.size() == 1);
+      REQUIRE(p.fixtures()[2].pockets.size() == 1);
+    }
     
   }
 
