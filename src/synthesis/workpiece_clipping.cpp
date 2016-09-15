@@ -233,12 +233,9 @@ namespace gca {
 
   // TODO: Add code to generate jaws for base fixture
   boost::optional<fixture>
-  find_base_contour_fixture(const surface& outline_of_contour,
-			    const surface& top_of_contour,
+  find_base_contour_fixture(const triangular_mesh& part_mesh,
 			    const vice& v,
 			    const point n) {
-
-    const triangular_mesh& part_mesh = outline_of_contour.get_parent_mesh();
 
     vector<surface> const_orient_surfs = outer_surfaces(part_mesh);
 
@@ -345,7 +342,7 @@ namespace gca {
 	cout << "Has top fix in " << n << endl;
 
 	boost::optional<fixture> base_fix =
-	  find_base_contour_fixture(outline, top, (*top_fix).v, -1*n);
+	  find_base_contour_fixture(part_mesh, (*top_fix).v, -1*n);//outline, top, (*top_fix).v, -1*n);
 
 	if (base_fix) {
 	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix, fab_inputs.tools);

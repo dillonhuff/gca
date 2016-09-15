@@ -798,4 +798,10 @@ namespace gca {
     return pts;
   }
 
+  plane face_plane(const triangular_mesh& part,
+		   const point n) {
+    point p = max_point_in_dir(part, n);
+    return plane(-1*n, p);
+  }
+
 }

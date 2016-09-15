@@ -17,13 +17,6 @@ namespace gca {
     return workpiece(x_d, y_d, z_d, aligned_workpiece.stock_material);
   }
 
-  // TODO: Remove stock param
-  plane face_plane(const triangular_mesh& part,
-		   const point n) {
-    point p = max_point_in_dir(part, n);
-    return plane(-1*n, p);
-  }
-
   std::vector<fixture_setup>
   axis_clipping(const triangular_mesh& aligned_workpiece,
 		const triangular_mesh& part_mesh,

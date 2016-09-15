@@ -5,6 +5,7 @@
 #include <numeric>
 
 #include "geometry/box.h"
+#include "geometry/plane.h"
 #include "geometry/triangle.h"
 #include "geometry/trimesh.h"
 #include "utils/algorithm.h"
@@ -387,6 +388,9 @@ namespace gca {
   vertexes_on_surface(const std::vector<index_t>& s,
 		      const triangular_mesh& m);
 
+
+  plane face_plane(const triangular_mesh& part,
+		   const point n);
 
 }
 
