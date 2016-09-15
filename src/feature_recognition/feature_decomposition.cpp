@@ -465,6 +465,9 @@ namespace gca {
   }
 
   labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol) {
+    cout << "P normal = " << p.normal();
+    //    vtk_debug_polygon(p);
+    
     auto dr = exterior_offset(p.vertices(), tol);
 
     vector<vector<point>> dh;

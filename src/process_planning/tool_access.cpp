@@ -105,9 +105,9 @@ namespace gca {
       return false;
     }
 
-    //    auto fs = collect_features(decomp);
-    //    fs.push_back(&(*shank_region));
-    //vtk_debug_features(fs);
+    // auto fs = collect_features(decomp);
+    // fs.push_back(&(*shank_region));
+    // vtk_debug_features(fs);
 
     if (!feature_is_safe(*shank_region, decomp)) {
       cout << "Shank region is not safe" << endl;

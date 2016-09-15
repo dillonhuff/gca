@@ -12,6 +12,9 @@ namespace gca {
 
   typedef boost::shared_ptr<Polygon_2> PolygonPtr ;
   typedef std::vector<PolygonPtr> PolygonPtrVector ;
+  typedef CGAL::Straight_skeleton_2<K> Ss ;
+
+  typedef boost::shared_ptr<Ss> SsPtr ;  
 
   Polygon_2
   CGAL_polygon_for_oriented_polygon(const oriented_polygon& p) {
@@ -113,9 +116,27 @@ namespace gca {
     }
 
     DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
-    
+
+    cout << "Starting to compute offset skeleton" << endl;
+    SsPtr ss = CGAL::create_interior_straight_skeleton_2(out);
+    cout << "Done computing to offset skeleton" << endl;
+
+    if (!ss) {
+      cout << "straight skeleton is null" << endl;
+      for (auto pt : p.vertices()) {
+	cout << pt << endl;
+      }
+      vtk_debug_ring(p.vertices());
+      DBG_ASSERT(false);
+    } else {
+      cout << "Straight skeleton is not null" << endl;
+    }
+
+    cout << "Starting to compute the interior offset" << endl;
     PolygonPtrVector inner_offset_polygons =
-      CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
+      CGAL::create_offset_polygons_2<Polygon_2>(inc, *ss);
+      //  CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
+    cout << "Done computing interior offset" << endl;
 
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
@@ -196,7 +217,20 @@ namespace gca {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
     const rotation r_inv = inverse(r);
-    auto res = interior_offset(oriented_polygon(n, apply(r, pts)), tol);
+
+    cout << "# of points = " << pts.size() << endl;
+    cout << "ring normal = " << ring_normal(pts) << endl;
+    cout << "tol         = " << tol << endl;
+    //vtk_debug_ring(pts);
+
+    auto r_pts = apply(r, pts);
+
+    check_simplicity(r_pts);
+
+    //vtk_debug_ring(r_pts);
+    
+    auto res = interior_offset(oriented_polygon(n, r_pts), tol);
+
 
     vector<vector<point>> result_pts;
     for (auto rpoly : res) {
