@@ -20,8 +20,8 @@ namespace gca {
 		  const triangular_mesh& part_mesh,
 		  const point n);
 
-  std::vector<point>
-  possible_contour_normals(const triangular_mesh& part_mesh);
+  // std::vector<point>
+  // possible_contour_normals(const triangular_mesh& part_mesh);
 
   boost::optional<contour_surface_decomposition>
   compute_contour_surfaces(const triangular_mesh& part_mesh);

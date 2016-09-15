@@ -289,7 +289,6 @@ namespace gca {
     return clip_setups;
   }
 
-  
   clipping_plan
   base_fix_clip_plan(const workpiece& w,
 		     const triangular_mesh& aligned,
@@ -308,6 +307,29 @@ namespace gca {
     return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, w);
   }
 
+  boost::optional<std::pair<fixture, fixture> >
+  find_contour_fixtures(const triangular_mesh& aligned,
+			const triangular_mesh& part_mesh,
+			const fixtures& f,
+			const point n) {
+    boost::optional<fixture> top_fix =
+      find_top_contour_fixture(aligned, part_mesh, f, n);
+
+    if (top_fix) {
+      cout << "Has top fix in " << n << endl;
+
+      boost::optional<fixture> base_fix =
+	find_base_contour_fixture(part_mesh, (*top_fix).v, -1*n);
+
+      if (base_fix) {
+	return std::make_pair(*top_fix, *base_fix);
+      } 
+    }
+
+    return boost::none;
+  }
+
+
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& part_mesh,
 			  const fabrication_inputs& fab_inputs) {
@@ -323,32 +345,21 @@ namespace gca {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
     triangular_mesh aligned = align_workpiece(stable_surfaces, w);
 
-    // NOTE: Maybe I should just compute major directions from
-    // the aligned stock?
     boost::optional<contour_surface_decomposition> surfs =
       compute_contour_surfaces(part_mesh);
 
     if (surfs) {
       point n = surfs->n;
-      const surface& outline = surfs->outline;
-      const surface& top = surfs->top;
-      
       cout << "Has outline and flat top in " << n << endl;
 
-      boost::optional<fixture> top_fix =
-      	find_top_contour_fixture(aligned, part_mesh, f, n);
+      boost::optional<std::pair<fixture, fixture>> top_and_base =
+	find_contour_fixtures(aligned, part_mesh, f, n);
 
-      if (top_fix) {
-	cout << "Has top fix in " << n << endl;
+      if (top_and_base) {
+	fixture top_fix = top_and_base->first;
+	fixture base_fix = top_and_base->second;
 
-	boost::optional<fixture> base_fix =
-	  find_base_contour_fixture(part_mesh, (*top_fix).v, -1*n);//outline, top, (*top_fix).v, -1*n);
-
-	if (base_fix) {
-	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix, fab_inputs.tools);
-	} else {
-	  return custom_jaw_plan(w, aligned, part_mesh, *surfs, *top_fix, fab_inputs);
-	}
+	return base_fix_clip_plan(w, aligned, part_mesh, *surfs, top_fix, base_fix, fab_inputs.tools);
       }
     }
 
