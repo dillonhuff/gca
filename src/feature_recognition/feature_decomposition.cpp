@@ -300,16 +300,24 @@ namespace gca {
   horizontal_surfaces(const triangular_mesh& m, const point n) {
     auto inds = m.face_indexes();
 
-    // TODO: More robust way to find constant orientation regions?
+    auto horiz_inds =
+      select(inds, [m, n](const index_t i)
+	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1); });
+
+    vtk_debug_highlight_inds(horiz_inds, m);
+
+    subtract(inds, horiz_inds);
+
     vector<std::vector<index_t>> surfs =
       normal_delta_regions(inds, m, 3.0);
 
     auto virtual_surfaces =
       build_virtual_surfaces(m, surfs, n);
 
-    // TODO: Add virtual polygons for surfaces that are non horizontal and
-    // non vertical
-    filter_non_horizontal_surfaces_wrt_dir(surfs, m, n);
+    //    filter_non_horizontal_surfaces_wrt_dir(surfs, m, n);
+
+    // TODO: Does angle matter now? It shouldnt
+    surfs = normal_delta_regions(horiz_inds, m, 3.0);
 
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
 
