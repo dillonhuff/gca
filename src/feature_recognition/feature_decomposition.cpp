@@ -280,10 +280,17 @@ namespace gca {
 
   std::vector<labeled_polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
-			 const std::vector<std::vector<index_t>>& surfs,
+			 const std::vector<index_t>& indexes,
 			 const point n) {
-    auto not_vertical_or_horizontal =
-      not_vertical_or_horizontal_regions(m, surfs, n);
+    auto inds = indexes;
+    delete_if(inds, [m, n](const index_t i)
+	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1) ||
+		 angle_eps(n, m.face_orientation(i), 90.0, 0.1) ||
+		 angle_eps(n, m.face_orientation(i), 180.0, 0.1); });
+
+    
+    auto not_vertical_or_horizontal = normal_delta_regions(inds, m, 90.0);
+      //  not_vertical_or_horizontal_regions(m, surfs, n);
 
     cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
 
@@ -300,21 +307,22 @@ namespace gca {
   horizontal_surfaces(const triangular_mesh& m, const point n) {
     auto inds = m.face_indexes();
 
-    // TODO: More robust way to find constant orientation regions?
-    vector<std::vector<index_t>> surfs =
-      normal_delta_regions(inds, m, 0.0000001);
+    auto horiz_inds =
+      select(inds, [m, n](const index_t i)
+	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1); });
+
+    //vtk_debug_highlight_inds(horiz_inds, m);    
+
+    // TODO: Does angle matter now? It shouldnt
+    auto surfs = normal_delta_regions(horiz_inds, m, 3.0);
 
     auto virtual_surfaces =
-      build_virtual_surfaces(m, surfs, n);
-
-    // TODO: Add virtual polygons for surfaces that are non horizontal and
-    // non vertical
-    filter_non_horizontal_surfaces_wrt_dir(surfs, m, n);
+      build_virtual_surfaces(m, inds, n);
 
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
-    for (auto s : surfs) {
-      vtk_debug_highlight_inds(s, m);
-    }
+    // for (auto s : surfs) {
+    //   vtk_debug_highlight_inds(s, m);
+    // }
 
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
@@ -519,7 +527,15 @@ namespace gca {
 
     if (drs.size() == 0) { return boost::none; }
 
-    DBG_ASSERT(drs.size() == 1);
+    if (drs.size() != 1) {
+      vtk_debug_polygon(p);
+      for (auto r : drs) {
+    	vtk_debug_ring(r);
+      }
+
+      return boost::none;
+      //      DBG_ASSERT(drs.size() == 1);
+    }
 
     auto dr = drs.front();
     vector<vector<point>> dh;

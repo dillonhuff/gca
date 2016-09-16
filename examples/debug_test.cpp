@@ -2,80 +2,60 @@
 
 #include "catch.hpp"
 #include "feature_recognition/feature_decomposition.h"
-#include "feature_recognition/visual_debug.h"
-#include "synthesis/contour_planning.h"
+#include "process_planning/feature_to_pocket.h"
+#include "synthesis/millability.h"
+#include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 #include "utils/arena_allocator.h"
 
 namespace gca {
 
-  TEST_CASE("PSU Mount") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Pocketing") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+  //   double workpiece_depth = 1.0;
 
-    point n(-1, 0, 0);
-
-    auto inds = mesh.face_indexes();
-    auto matching_inds =
-      select(inds, [mesh, n](const index_t i) {
-	  return angle_eps(n, mesh.face_orientation(i), 0.0, 0.1);
-	});
-
-    vtk_debug_highlight_inds(matching_inds, mesh);
-
-    DBG_ASSERT(false);
+  //   DBG_ASSERT(false);
 
 
-    auto regions = normal_delta_regions(inds, mesh, 3.0);
+  //   t1.set_holder_diameter(2.5);
+  //   t1.set_holder_length(3.5);
 
-    cout << "# of regions = " << regions.size() << endl;
+  //   tool t2(0.1, 3.0, 4, HSS, FLAT_NOSE);
+  //   t2.set_cut_diameter(0.1);
+  //   t2.set_cut_length(0.6);
 
-    sort_gt(regions, [mesh](const vector<index_t>& inds) {
-	return surface(&mesh, inds).surface_area();
-      });
+  //   t2.set_shank_diameter(3.0 / 8.0);
+  //   t2.set_shank_length(0.3);
 
-    for (auto r : regions) {
-      cout << "region normal = " << normal(surface(&mesh, r)) << endl;
-      //      vtk_debug_highlight_inds(r, mesh);
-    }
-
-    filter_non_horizontal_surfaces_wrt_dir(regions, mesh, n);
-
-    for (auto r : regions) {
-      cout << "region normal = " << normal(surface(&mesh, r)) << endl;
-      vtk_debug_highlight_inds(r, mesh);
-    }
+  //   t2.set_holder_diameter(2.5);
+  //   t2.set_holder_length(3.5);
     
-    REQUIRE(regions.size() > 0);
+  //   vector<tool> tools{t1, t2};
 
-    cout << "# of horizontal regions = " << regions.size() << endl;
+  //   SECTION("Arm joint top") {
+  //     point n(0, -1, 0);
+      
+  //     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+  //     feature_decomposition* f = build_feature_decomposition(mesh, n);
+  //     tool_access_info tool_info = find_accessable_tools(f, tools);
+  //     vector<pocket> pockets = feature_pockets(*f, n, tool_info);
 
-    feature_decomposition* f =
-      build_feature_decomposition(mesh, n);
+  //     REQUIRE(pockets.size() == 8);
+  //   }
 
-    vtk_debug_feature_tree(f);
+  //   // TODO: Possible reintroduce this test when outline detection is improved
+  //   // SECTION("CylinderChimneySlot") {
+  //   //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderChimneySlot.stl", 0.001);
+  //   //   feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
+  //   //   vector<pocket> pockets = feature_pockets(*f);
+      
+  //   //   SECTION("4 pockets") {
+  //   // 	REQUIRE(pockets.size() == 4);
+  //   //   }
+  //   // }
 
-    REQUIRE(f->num_levels() == 3);
-
-    double current_min = 100000;
-    auto replace_min = [&current_min](feature* f) {
-      if (f != nullptr) {
-	double bz = f->base_distance_along_normal();
-	if (bz < current_min) {
-	  current_min = bz;
-	}
-      }
-    };
-    traverse_bf(f, replace_min);
-
-    double base_depth = min_distance_along(mesh.vertex_list(), n);
-
-    cout << "current min = " << current_min << endl;
-    cout << "base depth  = " << base_depth <<  endl;
-
-    REQUIRE(within_eps(current_min, base_depth, 0.0001));
-  }
+  // }
 
 }

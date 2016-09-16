@@ -118,17 +118,6 @@ namespace gca {
 
     point n(-1, 0, 0);
 
-    auto inds = mesh.face_indexes();
-    auto regions = normal_delta_regions(inds, mesh, 3.0);
-
-    cout << "# of regions = " << regions.size() << endl;
-
-    filter_non_horizontal_surfaces_wrt_dir(regions, mesh, n);
-
-    REQUIRE(regions.size() > 0);
-
-    cout << "# of horizontal regions = " << regions.size() << endl;
-
     feature_decomposition* f =
       build_feature_decomposition(mesh, n);
 
