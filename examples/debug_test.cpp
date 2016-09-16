@@ -3,7 +3,9 @@
 #include "catch.hpp"
 #include "feature_recognition/feature_decomposition.h"
 #include "process_planning/feature_to_pocket.h"
+#include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
+#include "synthesis/workpiece.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -37,11 +39,17 @@ namespace gca {
     
     vector<tool> tools{t1, t2};
 
+    workpiece w(3.0, 3.0, 3.0, ALUMINUM);
+    
     SECTION("Arm joint top") {
       point n(0, -1, 0);
       
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
-      feature_decomposition* f = build_feature_decomposition(mesh, n);
+
+      auto surfs = outer_surfaces(mesh);
+      triangular_mesh stock = align_workpiece(surfs, w);
+
+      feature_decomposition* f = build_feature_decomposition(stock, mesh, n);
       tool_access_info tool_info = find_accessable_tools(f, tools);
       vector<pocket> pockets = feature_pockets(*f, n, tool_info);
 
