@@ -79,6 +79,8 @@ namespace gca {
       
     }
 
+    // NOTE: Test failed after I modified feature decomposition to use
+    // triangle by triangle filtering. No idea why that led to the failure
     // SECTION("Arm joint top") {
     //   point n(0, -1, 0);
       
