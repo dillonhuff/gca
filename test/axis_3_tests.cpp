@@ -81,16 +81,16 @@ namespace gca {
 
     // NOTE: Test failed after I modified feature decomposition to use
     // triangle by triangle filtering. No idea why that led to the failure
-    // SECTION("Arm joint top") {
-    //   point n(0, -1, 0);
+    SECTION("Arm joint top") {
+      point n(0, -1, 0);
       
-    //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
-    //   feature_decomposition* f = build_feature_decomposition(mesh, n);
-    //   tool_access_info tool_info = find_accessable_tools(f, tools);
-    //   vector<pocket> pockets = feature_pockets(*f, n, tool_info);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Arm_Joint_Top.stl", 0.001);
+      feature_decomposition* f = build_feature_decomposition(mesh, n);
+      tool_access_info tool_info = find_accessable_tools(f, tools);
+      vector<pocket> pockets = feature_pockets(*f, n, tool_info);
 
-    //   REQUIRE(pockets.size() == 8);
-    // }
+      REQUIRE(pockets.size() == 8);
+    }
 
     // TODO: Possible reintroduce this test when outline detection is improved
     // SECTION("CylinderChimneySlot") {
