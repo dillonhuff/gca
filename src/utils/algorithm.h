@@ -517,12 +517,12 @@ namespace gca {
   }
 
   template<typename T, typename F>
-  void sort_lt(const std::vector<T>& e, F f) {
+  void sort_lt(std::vector<T>& e, F f) {
     std::sort(begin(e), end(e), [f](const T& l, const T& r) { return f(l) < f(r); });
   }
 
   template<typename T, typename F>
-  void sort_gt(const std::vector<T>& e, F f) {
+  void sort_gt(std::vector<T>& e, F f) {
     std::sort(begin(e), end(e), [f](const T& l, const T& r) { return f(l) > f(r); });
   }
   

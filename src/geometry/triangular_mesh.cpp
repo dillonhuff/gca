@@ -507,6 +507,48 @@ namespace gca {
     return z.t;
   }
 
+  template<typename S, typename F>
+  std::vector<index_t> normal_region(vector<index_t>& face_indices,
+				     const triangular_mesh& part,
+				     S select_initial_faces,
+				     F in_region) {
+    DBG_ASSERT(face_indices.size() > 0);
+
+    sort(begin(face_indices), end(face_indices));
+
+    vector<index_t> region = select_initial_faces(face_indices, part);
+
+    DBG_ASSERT(region.size() > 0);
+
+    index_t region_face = region.front();
+
+    vector<index_t> unchecked_face_inds = region;
+
+    subtract(face_indices, region);
+
+    while (unchecked_face_inds.size() > 0) {
+
+      auto next_face = unchecked_face_inds.back();
+      unchecked_face_inds.pop_back();
+
+      for (auto f : part.face_face_neighbors(next_face)) {
+
+	if (binary_search(begin(face_indices), end(face_indices), f) &&
+	    share_edge(next_face, f, part) &&
+	    in_region(region_face, f, part)) {
+	  remove(f, face_indices);
+	  region.push_back(f);
+	  unchecked_face_inds.push_back(f);
+	}
+	
+      }
+
+    }
+    
+
+    return region;
+  }
+  
   std::vector<std::vector<index_t>>
   normal_delta_regions(vector<index_t>& indices,
 		       const triangular_mesh& mesh,
@@ -518,8 +560,7 @@ namespace gca {
       return within_eps(angle_between(m.face_triangle(f).normal,
 				      m.face_triangle(i).normal),
 			0,
-			delta_degrees) &&
-      share_edge(f, i, m);
+			delta_degrees);
     };
 
     auto back_face_vec = [](const vector<index_t>& faces,
@@ -528,10 +569,10 @@ namespace gca {
     };
 
     while (indices.size() > 0) {
-      connected_regions.push_back(region(indices,
-					 mesh,
-					 back_face_vec,
-					 within_delta));
+      connected_regions.push_back(normal_region(indices,
+						mesh,
+						back_face_vec,
+						within_delta));
     }
     return connected_regions;
   }
@@ -712,7 +753,7 @@ namespace gca {
 					 const point n) {
     delete_if(delta_regions,
     	      [mesh, n](const vector<index_t>& surface)
-    	      { return !all_parallel_to(surface, mesh, n, 1.0); });
+    	      { return !all_parallel_to(surface, mesh, n, 3.0); });
   }
   
 

@@ -1,49 +1,81 @@
 #define CATCH_CONFIG_MAIN
 
 #include "catch.hpp"
-#include "synthesis/fixture_analysis.h"
-#include "utils/arena_allocator.h"
+#include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
+#include "synthesis/contour_planning.h"
 #include "system/parse_stl.h"
+#include "utils/arena_allocator.h"
 
 namespace gca {
 
-  TEST_CASE("Parallel plates") {
+  TEST_CASE("PSU Mount") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    // Change back to emco_vice
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
-    std::vector<plate_height> parallel_plates{0.5, 0.7};
-    fixtures fixes(test_vice, parallel_plates);
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-    tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.1);
-    t1.set_cut_length(0.4);
+    point n(-1, 0, 0);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.1);
+    auto inds = mesh.face_indexes();
+    auto matching_inds =
+      select(inds, [mesh, n](const index_t i) {
+	  return angle_eps(n, mesh.face_orientation(i), 0.0, 0.1);
+	});
 
-    t1.set_holder_diameter(2.0);
-    t1.set_holder_length(2.5);
-    
-    vector<tool> tools{t1};
-    workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
-    
-    SECTION("onshape PSU Mount") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+    vtk_debug_highlight_inds(matching_inds, mesh);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+    DBG_ASSERT(false);
 
-      REQUIRE(p.fixtures().size() == 2);
 
-      for (auto f : p.fixtures()) {
-	cout << "orientation = " << f.fix.orient.top_normal() << endl;
-      }
+    auto regions = normal_delta_regions(inds, mesh, 3.0);
 
-      REQUIRE(p.fixtures()[1].pockets.size() == 3);
-      REQUIRE(p.fixtures()[0].pockets.size() == 7);
+    cout << "# of regions = " << regions.size() << endl;
+
+    sort_gt(regions, [mesh](const vector<index_t>& inds) {
+	return surface(&mesh, inds).surface_area();
+      });
+
+    for (auto r : regions) {
+      cout << "region normal = " << normal(surface(&mesh, r)) << endl;
+      //      vtk_debug_highlight_inds(r, mesh);
+    }
+
+    filter_non_horizontal_surfaces_wrt_dir(regions, mesh, n);
+
+    for (auto r : regions) {
+      cout << "region normal = " << normal(surface(&mesh, r)) << endl;
+      vtk_debug_highlight_inds(r, mesh);
     }
     
+    REQUIRE(regions.size() > 0);
+
+    cout << "# of horizontal regions = " << regions.size() << endl;
+
+    feature_decomposition* f =
+      build_feature_decomposition(mesh, n);
+
+    vtk_debug_feature_tree(f);
+
+    REQUIRE(f->num_levels() == 3);
+
+    double current_min = 100000;
+    auto replace_min = [&current_min](feature* f) {
+      if (f != nullptr) {
+	double bz = f->base_distance_along_normal();
+	if (bz < current_min) {
+	  current_min = bz;
+	}
+      }
+    };
+    traverse_bf(f, replace_min);
+
+    double base_depth = min_distance_along(mesh.vertex_list(), n);
+
+    cout << "current min = " << current_min << endl;
+    cout << "base depth  = " << base_depth <<  endl;
+
+    REQUIRE(within_eps(current_min, base_depth, 0.0001));
   }
 
 }

@@ -302,7 +302,7 @@ namespace gca {
 
     // TODO: More robust way to find constant orientation regions?
     vector<std::vector<index_t>> surfs =
-      normal_delta_regions(inds, m, 3.0);
+      normal_delta_regions(inds, m, 0.0000001);
 
     auto virtual_surfaces =
       build_virtual_surfaces(m, surfs, n);
@@ -312,6 +312,9 @@ namespace gca {
     filter_non_horizontal_surfaces_wrt_dir(surfs, m, n);
 
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
+    for (auto s : surfs) {
+      vtk_debug_highlight_inds(s, m);
+    }
 
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
@@ -330,7 +333,10 @@ namespace gca {
 
       check_simplicity(boundary.vertices());
 
-      DBG_ASSERT(area(boundary) > 0.001);
+      if (!(area(boundary) > 0.001)) {
+	vtk_debug_highlight_inds(s, m);
+	DBG_ASSERT(area(boundary) > 0.001);
+      }
 
       auto holes = bounds;
 
