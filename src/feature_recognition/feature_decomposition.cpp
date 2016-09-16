@@ -516,15 +516,17 @@ namespace gca {
 		  const double tol) {
     auto drs = interior_offsets(p.vertices(), tol);
 
-    if (drs.size() != 1) { return boost::none; }
+    if (drs.size() == 0) { return boost::none; }
 
-    // if (drs.size() != 1) {
-    //   vtk_debug_polygon(p);
-    //   for (auto r : drs) {
-    // 	vtk_debug_ring(r);
-    //   }
-    //   DBG_ASSERT(drs.size() == 1);
-    // }
+    if (drs.size() != 1) {
+      vtk_debug_polygon(p);
+      for (auto r : drs) {
+    	vtk_debug_ring(r);
+      }
+
+      return boost::none;
+      //      DBG_ASSERT(drs.size() == 1);
+    }
 
     auto dr = drs.front();
     vector<vector<point>> dh;
