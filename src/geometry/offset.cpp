@@ -256,6 +256,7 @@ namespace gca {
       cout << "# of exterior offsets = " << res.size() << endl;
       cout << "tol = " << tol << endl;
 
+      cout << "# of points in ring = " << r_pts.size() << endl;
       cout << "vector<point> pts{" << endl;
       for (auto p : r_pts) {
 	cout << "point(" << p.x << ", " << p.y << ", " << p.z << ")" << ", " << endl;
