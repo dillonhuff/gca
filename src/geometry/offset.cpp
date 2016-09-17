@@ -156,13 +156,27 @@ namespace gca {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
     const rotation r_inv = inverse(r);
-    auto res = exterior_offset(oriented_polygon(n, apply(r, pts)), tol);
+    auto r_pts = apply(r, pts);
+
+    check_simplicity(r_pts);
+    
+    auto res = exterior_offset(oriented_polygon(n, r_pts), tol);
 
     if (res.size() != 2) {
       cout << "Wrong number of exterior offsets!" << endl;
       cout << "# of exterior offsets = " << res.size() << endl;
       cout << "tol = " << tol << endl;
-      vtk_debug_ring(pts);
+
+      cout << "vector<point> pts{" << endl;
+      for (auto p : r_pts) {
+	cout << "point(" << p.x << ", " << p.y << ", " << p.z << ")" << ", " << endl;
+      }
+      cout << "};" << endl;
+      
+      vtk_debug_ring(r_pts);
+      for (auto r : res) {
+	vtk_debug_ring(r.vertices());
+      }
       DBG_ASSERT(res.size() == 2);
     }
 
