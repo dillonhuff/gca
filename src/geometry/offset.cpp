@@ -194,7 +194,7 @@ namespace gca {
 	// TODO: Make this magic number tolerance an argument
 	if (sum.len() < 0.001) {
 	  cout << "Points " << p << " " << q << " " << s << endl;
-	  cout << "at index " << i << " form an antenna";
+	  cout << "at index " << i << " form an antenna with length = " << sum.len() << endl;;
 	  pts.erase(begin(pts) + i2);
 	  pts.erase(begin(pts) + i3);
 	  deleted_one = true;
