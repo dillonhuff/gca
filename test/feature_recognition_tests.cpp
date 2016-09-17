@@ -121,8 +121,6 @@ namespace gca {
     feature_decomposition* f =
       build_feature_decomposition(mesh, n);
 
-    vtk_debug_feature_tree(f);
-
     REQUIRE(f->num_levels() == 3);
 
     double current_min = 100000;

@@ -100,6 +100,8 @@ namespace gca {
 
     DBG_ASSERT(p.vertices().size() > 0);
 
+    check_simplicity(p);
+
     double z_va = p.vertices().front().z;
     Polygon_2 out;
     for (auto p : p.vertices()) {
@@ -173,17 +175,92 @@ namespace gca {
     }
   }
 
+  // TODO: Eventually move to ring
+  bool has_antenna(const std::vector<point>& ring) {
+
+    for (unsigned i = 0; i < ring.size(); i++) {
+      point p = ring[i];
+      point q = ring[(i + 1) % ring.size()];
+      point s = ring[(i + 2) % ring.size()];
+      point slope1 = q - p;
+      point slope2 = s - q;
+
+      point sum = slope1 + slope2;
+
+      // TODO: Make this magic number tolerance an argument
+      if (sum.len() < 0.001) {
+	cout << "Points " << p << " " << q << " " << s << endl;
+	cout << "at index " << i << " form an antenna";
+	return true;
+      }
+    }
+
+    return false;
+  }
+
+  void delete_antennas(std::vector<point>& pts) {
+    bool deleted_one = true;
+
+    while (deleted_one) {
+      deleted_one = false;
+      for (unsigned i = 0; i < pts.size(); i++) {
+	point p = pts[i];
+	unsigned i2 = (i + 1) % pts.size();
+	unsigned i3 = (i + 2) % pts.size();
+	point q = pts[i2];
+	point s = pts[i3];
+	point slope1 = q - p;
+	point slope2 = s - q;
+
+	point sum = slope1 + slope2;
+
+	// TODO: Make this magic number tolerance an argument
+	// TODO: Add some sort of relative magnitude test
+	if (sum.len() < 0.001) {
+	  cout << "Points " << p << " " << q << " " << s << endl;
+	  cout << "at index " << i << " form an antenna with length = " << sum.len() << endl;;
+	  pts.erase(begin(pts) + i2);
+	  pts.erase(begin(pts) + i3);
+	  deleted_one = true;
+	}
+      }
+      
+    }
+  }
+
   std::vector<point> exterior_offset(const std::vector<point>& pts, const double tol) {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
     const rotation r_inv = inverse(r);
-    auto res = exterior_offset(oriented_polygon(n, apply(r, pts)), tol);
+    auto r_pts = apply(r, pts);
+
+    delete_antennas(r_pts);
+
+    if (has_antenna(r_pts)) {
+      DBG_ASSERT(false);
+    }
+
+    check_simplicity(r_pts);
+    
+    auto res = exterior_offset(oriented_polygon(n, r_pts), tol);
 
     if (res.size() != 2) {
       cout << "Wrong number of exterior offsets!" << endl;
       cout << "# of exterior offsets = " << res.size() << endl;
       cout << "tol = " << tol << endl;
-      vtk_debug_ring(pts);
+
+      cout << "vector<point> pts{" << endl;
+      for (auto p : r_pts) {
+	cout << "point(" << p.x << ", " << p.y << ", " << p.z << ")" << ", " << endl;
+      }
+      cout << "};" << endl;
+
+
+      
+      vtk_debug_ring(r_pts);
+      for (auto r : res) {
+	vtk_debug_ring(r.vertices());
+      }
       DBG_ASSERT(res.size() == 2);
     }
 
