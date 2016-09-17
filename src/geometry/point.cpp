@@ -223,6 +223,33 @@ namespace gca {
     return num_duplicates == 0;
   }
 
+  void clean_colinear_edges(std::vector<point>& pts) {
+    if (pts.size() < 3) { return; }
+
+    bool found_colinear_edge = true;
+
+    while (found_colinear_edge) {
+      found_colinear_edge = false;
+
+      for (unsigned i = 0; i < pts.size(); i++) {
+	unsigned i1 = (i + 1) % pts.size();
+	unsigned i2 = (i + 2) % pts.size();
+
+	point p = pts[i];
+	point p1 = pts[i1];
+	point p2 = pts[i2];
+
+	point dir1 = (p1 - p).normalize();
+	point dir2 = (p2 - p1).normalize();
+
+	if (angle_eps(dir1, dir2, 0.0, 0.0000001)) {
+	  pts.erase(begin(pts) + i1);
+	  found_colinear_edge = true;
+	}
+      }
+    }
+  }
+
   std::vector<point> clean_vertices(const std::vector<point>& pts) {
     if (pts.size() < 3) { return pts; }
 
@@ -249,6 +276,8 @@ namespace gca {
       }
 
     }
+
+    clean_colinear_edges(rpts);
 
     return rpts;
   }

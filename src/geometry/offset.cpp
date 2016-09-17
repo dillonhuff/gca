@@ -125,9 +125,16 @@ namespace gca {
 
     if (!ss) {
       cout << "straight skeleton is null" << endl;
-      for (auto pt : p.vertices()) {
-	cout << pt << endl;
+      for (unsigned i = 0; i < p.vertices().size(); i++) {
+	point pt = p.vertices()[i];
+	unsigned i1 = (i + 1) % p.vertices().size();
+	point pt1 = p.vertices()[i1];
+
+	point dir = (pt1 - pt).normalize();
+	
+	cout << pt << "         with direction = " << dir << endl;
       }
+
       vtk_debug_ring(p.vertices());
       DBG_ASSERT(false);
     } else {
