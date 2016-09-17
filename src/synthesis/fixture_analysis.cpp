@@ -302,10 +302,15 @@ namespace gca {
       feature_decomposition* decomp = decomps[i];
       const tool_access_info& acc_info = access_info[i];
 
+      delete_nodes(decomp, [acc_info](feature* f) {
+	  return map_find(f, acc_info).size() == 0;
+	});
+      
       auto t = mating_transform(part_mesh, d.orient, d.v);
 
       triangular_mesh* m =
 	new (allocate<triangular_mesh>()) triangular_mesh(apply(t, part_mesh));
+
 
       vector<pocket> pockets = feature_pockets(*decomp, t, acc_info);
 

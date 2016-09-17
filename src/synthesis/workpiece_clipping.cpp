@@ -282,6 +282,14 @@ namespace gca {
     const auto& top_tool_info = features.access_info[0];
     const auto& base_tool_info = features.access_info[1];
 
+    delete_nodes(top_decomp, [top_tool_info](feature* f) {
+	return map_find(f, top_tool_info).size() == 0;
+      });
+
+    delete_nodes(base_decomp, [base_tool_info](feature* f) {
+	return map_find(f, base_tool_info).size() == 0;
+      });
+    
     std::vector<fixture_setup> clip_setups;
     clip_setups.push_back(clip_top_and_sides_transform(aligned, part_mesh, top_decomp, top_fix, top_tool_info));
     clip_setups.push_back(clip_base_transform(aligned, part_mesh, base_decomp, base_fix, base_tool_info));
