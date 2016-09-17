@@ -50,10 +50,13 @@ namespace gca {
       triangular_mesh stock = align_workpiece(surfs, w);
 
       feature_decomposition* f = build_feature_decomposition(stock, mesh, n);
+
+      REQUIRE(collect_features(f).size() == 9);
+
       tool_access_info tool_info = find_accessable_tools(f, tools);
       vector<pocket> pockets = feature_pockets(*f, n, tool_info);
 
-      REQUIRE(pockets.size() == 8);
+      REQUIRE(pockets.size() == collect_features(f).size());
     }
 
     // TODO: Possible reintroduce this test when outline detection is improved
