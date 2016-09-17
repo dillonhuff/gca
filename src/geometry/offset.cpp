@@ -192,6 +192,7 @@ namespace gca {
 	point sum = slope1 + slope2;
 
 	// TODO: Make this magic number tolerance an argument
+	// TODO: Add some sort of relative magnitude test
 	if (sum.len() < 0.001) {
 	  cout << "Points " << p << " " << q << " " << s << endl;
 	  cout << "at index " << i << " form an antenna with length = " << sum.len() << endl;;
