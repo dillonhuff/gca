@@ -164,7 +164,6 @@ namespace gca {
 
       point sum = slope1 + slope2;
 
-      cout << sum << endl;
       // TODO: Make this magic number tolerance an argument
       if (sum.len() < 0.001) {
 	cout << "Points " << p << " " << q << " " << s << endl;
@@ -192,7 +191,6 @@ namespace gca {
 
 	point sum = slope1 + slope2;
 
-	cout << sum << endl;
 	// TODO: Make this magic number tolerance an argument
 	if (sum.len() < 0.001) {
 	  cout << "Points " << p << " " << q << " " << s << endl;
