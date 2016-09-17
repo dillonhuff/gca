@@ -534,10 +534,8 @@ namespace gca {
       }
 
       return boost::none;
-      //      DBG_ASSERT(drs.size() == 1);
     }
 
-    auto dr = drs.front();
     vector<vector<point>> dh;
     for (auto h : p.holes()) {
       auto h_clean = clean_vertices(exterior_offset(h, tol));
@@ -546,6 +544,8 @@ namespace gca {
       }
     }
 
+    auto dr = drs.front();
+    
     auto dr_pts = clean_vertices(dr);
 
     if (dr_pts.size() >= 3) {

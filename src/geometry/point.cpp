@@ -236,12 +236,13 @@ namespace gca {
       for (unsigned i = 0; i < rpts.size(); i++) {
 
 	point p = rpts[i];
-	point pp1 = rpts[(i + 1) % rpts.size()];
+	unsigned i1 = (i + 1) % rpts.size();
+	point pp1 = rpts[i1];
 
 	if (components_within_eps(p, pp1, 0.001)) {
 
 	  found_duplicate = true;
-	  rpts.erase(begin(rpts) + i);
+	  rpts.erase(begin(rpts) + i1);
 	  break;
 
 	}
