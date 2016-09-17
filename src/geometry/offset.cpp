@@ -152,6 +152,33 @@ namespace gca {
     }
   }
 
+  // TODO: Eventually move to ring
+  bool has_antenna(const std::vector<point>& ring) {
+    cout << "Slopes" << endl;
+    vector<point> diffs;
+    for (unsigned i = 0; i < ring.size(); i++) {
+      point p = ring[i];
+      point q = ring[(i + 1) % ring.size()];
+      point slope = q - p;
+      diffs.push_back(slope);
+      cout << slope << endl;
+    }
+
+    cout << endl << endl << "Sums" << endl;
+    for (unsigned i = 0; i < diffs.size(); i++) {
+      point p = diffs[i];
+      point q = diffs[(i + 1) % diffs.size()];
+      point sum = p + q;
+      cout << sum << "                len = " << sum.len() << endl;
+
+      if (sum.len() < 0.00001) {
+	return true;
+      }
+    }
+
+    return false;
+  }
+
   std::vector<point> exterior_offset(const std::vector<point>& pts, const double tol) {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
@@ -172,6 +199,9 @@ namespace gca {
 	cout << "point(" << p.x << ", " << p.y << ", " << p.z << ")" << ", " << endl;
       }
       cout << "};" << endl;
+
+      has_antenna(r_pts);
+
       
       vtk_debug_ring(r_pts);
       for (auto r : res) {
