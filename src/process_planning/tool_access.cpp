@@ -9,11 +9,15 @@ namespace gca {
 					  const double diam,
 					  const double len,
 					  const double depth_offset) {
+    check_simplicity(f.base());
+
     point n = f.normal();
     boost::optional<labeled_polygon_3> a_region =
       shrink_optional(f.base(), t.radius());
 
     if (!a_region) { return boost::none; }
+
+    check_simplicity(*a_region);
     
     labeled_polygon_3 tool_region =
       dilate(shift(depth_offset*n, *a_region), diam / 2.0);
