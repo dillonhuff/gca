@@ -373,10 +373,12 @@ namespace gca {
       if (top_and_base) {
       	boost::optional<contour_surface_decomposition> surfs =
       	  contour_surface_decomposition_in_dir(part_mesh, n);
-	
-      	possible_contours.push_back({*surfs,
-	      top_and_base->second,
-	      top_and_base->first});
+
+	if (surfs) {
+	  possible_contours.push_back({*surfs,
+		top_and_base->second,
+		top_and_base->first});
+	}
       }
     }
 
