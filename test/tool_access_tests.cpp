@@ -3,6 +3,7 @@
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/tool_access.h"
+#include "synthesis/fixture_analysis.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -57,6 +58,39 @@ namespace gca {
     auto inner_hole = outer_hole->child(0);
 
     REQUIRE(tool_info[inner_hole->feature()].size() == 0);
+  }
+
+  TEST_CASE("Select features for Part 1 (1)") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.2334);
+    t3.set_cut_length(1.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+
+    
+    vector<tool> tools{t3};
+      
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
+
+    auto surfs = outer_surfaces(mesh);
+    workpiece w(4.0, 4.0, 4.0, ALUMINUM);
+    triangular_mesh stock = align_workpiece(surfs, w);
+    
+    point n(1, 0, 0);
+
+    feature_decomposition* f = build_feature_decomposition(stock, mesh, n);
+    tool_access_info inf = find_accessable_tools(f, tools);
+
+    for (auto feature_and_tools : inf) {
+      REQUIRE(feature_and_tools.second.size() > 0);
+    }
   }
 
 }
