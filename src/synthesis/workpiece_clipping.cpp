@@ -349,6 +349,54 @@ namespace gca {
     
   }
 
+  struct possible_contour {
+    contour_surface_decomposition decomp;
+    fixture base;
+    fixture top;
+  };
+
+  boost::optional<possible_contour>
+  find_contour(const triangular_mesh& stock,
+	       const triangular_mesh& part_mesh,
+	       const fixtures& f) {
+    vector<point> major_directions = surface_directions(stock);
+
+    DBG_ASSERT(major_directions.size() == 6);
+
+    vector<possible_contour> possible_contours;
+    for (point n : major_directions) {
+      cout << "Has outline and flat top in " << n << endl;
+
+      boost::optional<std::pair<fixture, fixture>> top_and_base =
+      	find_contour_fixtures(stock, part_mesh, f, n);
+
+      if (top_and_base) {
+      	boost::optional<contour_surface_decomposition> surfs =
+      	  contour_surface_decomposition_in_dir(part_mesh, n);
+	
+      	possible_contours.push_back({*surfs,
+	      top_and_base->second,
+	      top_and_base->first});
+      }
+    }
+
+    // vector<contour_surface_decomposition> decomps;
+    // for (auto top_and_base : possible_fixes) {
+    //   point n = top_and_base.first.orient.top_normal();
+
+    //   if (surfs) {
+    // 	decomps.push_back();
+    // 	auto top_fix = top_and_base.first;
+    // 	auto base_fix = top_and_base.second;
+    // 	return base_fix_clip_plan(w, aligned, part_mesh, *surfs, top_fix, base_fix, fab_inputs.tools);	
+    //   }
+
+
+    // }
+
+    return boost::none;
+  }
+
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& part_mesh,
 			  const fabrication_inputs& fab_inputs) {
@@ -364,38 +412,16 @@ namespace gca {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
     triangular_mesh aligned = align_workpiece(stable_surfaces, w);
 
-    vector<point> major_directions = surface_directions(aligned);
+    boost::optional<possible_contour> pc = find_contour(aligned, part_mesh, f);
 
-    DBG_ASSERT(major_directions.size() == 6);
-
-    vector<std::pair<fixture, fixture> > possible_fixes;
-
-    for (point n : major_directions) {
-      cout << "Has outline and flat top in " << n << endl;
-
-      boost::optional<std::pair<fixture, fixture>> top_and_base =
-	find_contour_fixtures(aligned, part_mesh, f, n);
-
-      if (top_and_base) {
-	possible_fixes.push_back(*top_and_base);
-      }
+    if (pc) {
+      auto top_fix = pc->top;
+      auto base_fix = pc->base;
+      return base_fix_clip_plan(w, aligned, part_mesh, pc->decomp, top_fix, base_fix, fab_inputs.tools);	
     }
 
-    for (auto top_and_base : possible_fixes) {
-      point n = top_and_base.first.orient.top_normal();
-      boost::optional<contour_surface_decomposition> surfs =
-	contour_surface_decomposition_in_dir(part_mesh, n);
-
-      if (surfs) {
-	auto top_fix = top_and_base.first;
-	auto base_fix = top_and_base.second;
-	return base_fix_clip_plan(w, aligned, part_mesh, *surfs, top_fix, base_fix, fab_inputs.tools);	
-      }
-
-
-    }
-      
     return boost::none;
+
   }
 
   clipping_plan
