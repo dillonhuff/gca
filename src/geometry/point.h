@@ -89,6 +89,14 @@ namespace gca {
   std::vector<point> clean_vertices(const std::vector<point>& pts);
 
   bool angle_eps(const point l, const point r, const double val, const double eps);
+
+  void clean_colinear_edges(std::vector<point>& pts,
+			    const double tol);
+
+  std::vector<point> clean_vertices_within_eps(const std::vector<point>& pts,
+					       const double distance_tol,
+					       const double linearity_tol);
+  
 }
 
 #endif

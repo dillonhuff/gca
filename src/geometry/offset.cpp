@@ -241,6 +241,8 @@ namespace gca {
     const rotation r_inv = inverse(r);
     auto r_pts = apply(r, pts);
 
+    r_pts = clean_vertices_within_eps(r_pts, 0.005, 0.0000001);
+
     delete_antennas(r_pts);
 
     if (has_antenna(r_pts)) {
@@ -248,6 +250,7 @@ namespace gca {
     }
 
     check_simplicity(r_pts);
+
     
     auto res = exterior_offset(oriented_polygon(n, r_pts), tol);
 

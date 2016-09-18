@@ -223,6 +223,7 @@ namespace gca {
     return num_duplicates == 0;
   }
 
+  
   void clean_colinear_edges(std::vector<point>& pts,
 			    const double tol) {
     if (pts.size() < 3) { return; }
@@ -251,7 +252,10 @@ namespace gca {
     }
   }
 
-  std::vector<point> clean_vertices(const std::vector<point>& pts) {
+  
+  std::vector<point> clean_vertices(const std::vector<point>& pts,
+				    const double distance_tol,
+				    const double linearity_tol) {
     if (pts.size() < 3) { return pts; }
 
     vector<point> rpts = pts;
@@ -267,7 +271,7 @@ namespace gca {
 	unsigned i1 = (i + 1) % rpts.size();
 	point pp1 = rpts[i1];
 
-	if (within_eps(p, pp1, 0.005)) {
+	if (components_within_eps(p, pp1, distance_tol)) {
 	  found_duplicate = true;
 	  rpts.erase(begin(rpts) + i1);
 	  break;
@@ -277,9 +281,46 @@ namespace gca {
 
     }
 
-    clean_colinear_edges(rpts, 0.0000001);
+    clean_colinear_edges(rpts, linearity_tol);
 
     return rpts;
+  }
+
+  std::vector<point> clean_vertices_within_eps(const std::vector<point>& pts,
+					       const double distance_tol,
+					       const double linearity_tol) {
+    if (pts.size() < 3) { return pts; }
+
+    vector<point> rpts = pts;
+
+    bool found_duplicate = true;
+    while (found_duplicate) {
+
+      found_duplicate = false;
+      
+      for (unsigned i = 0; i < rpts.size(); i++) {
+
+	point p = rpts[i];
+	unsigned i1 = (i + 1) % rpts.size();
+	point pp1 = rpts[i1];
+
+	if (within_eps(p, pp1, distance_tol)) {
+	  found_duplicate = true;
+	  rpts.erase(begin(rpts) + i1);
+	  break;
+
+	}
+      }
+
+    }
+
+    clean_colinear_edges(rpts, linearity_tol);
+
+    return rpts;
+  }
+  
+  std::vector<point> clean_vertices(const std::vector<point>& pts) {
+    return clean_vertices(pts, 0.001, 0.0000001);
   }
 
 }
