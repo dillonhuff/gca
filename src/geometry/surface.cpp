@@ -204,7 +204,7 @@ namespace gca {
     double normal_degrees_delta = 30.0;
 
     vector<vector<index_t>> delta_regions =
-      normal_delta_regions(inds, part, normal_degrees_delta);
+      normal_delta_regions_greedy(inds, part, normal_degrees_delta);
     vector<surface> surfaces;
     for (auto r : delta_regions) {
       surfaces.push_back(surface(&part, r));

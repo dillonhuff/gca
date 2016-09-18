@@ -392,6 +392,11 @@ namespace gca {
   plane face_plane(const triangular_mesh& part,
 		   const point n);
 
+  std::vector<std::vector<index_t>>
+  normal_delta_regions_greedy(vector<index_t>& indices,
+			      const triangular_mesh& mesh,
+			      double delta_degrees);
+
 }
 
 #endif

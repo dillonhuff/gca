@@ -410,6 +410,8 @@ namespace gca {
     boost::optional<possible_contour> pc = find_contour(aligned, part_mesh, f);
 
     if (pc) {
+      // TODO: Check if this reversal works due to a coding error or some other
+      // fixturing related issue
       auto top_fix = pc->base;
       auto base_fix = pc->top;
       return base_fix_clip_plan(w, aligned, part_mesh, pc->decomp, top_fix, base_fix, fab_inputs.tools);	

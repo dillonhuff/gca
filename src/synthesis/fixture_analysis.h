@@ -52,8 +52,8 @@ namespace gca {
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w);
 
-  std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
-				       const std::vector<surface>& stable_surfaces);
+  // std::vector<surface> surfaces_to_cut(const triangular_mesh& part_mesh,
+  // 				       const std::vector<surface>& stable_surfaces);
   std::vector<fixture_setup>
   orientations_to_cut(const triangular_mesh& part_mesh,
 		      const std::vector<surface>& surfs_to_cut,
