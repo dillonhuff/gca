@@ -88,8 +88,6 @@ namespace gca {
     feature_decomposition* f = build_feature_decomposition(stock, mesh, n);
     tool_access_info inf = find_accessable_tools(f, tools);
 
-    vtk_debug_feature_decomposition(f);
-
     unsigned num_unreachable_features = 0;
     for (auto feature_and_tools : inf) {
       if (feature_and_tools.second.size() == 0) {

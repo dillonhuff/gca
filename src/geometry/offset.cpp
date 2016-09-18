@@ -119,9 +119,9 @@ namespace gca {
 
     DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
 
-    cout << "Starting to compute offset skeleton" << endl;
+    //    cout << "Starting to compute offset skeleton" << endl;
     SsPtr ss = CGAL::create_interior_straight_skeleton_2(out);
-    cout << "Done computing to offset skeleton" << endl;
+    //    cout << "Done computing to offset skeleton" << endl;
 
     if (!ss) {
       cout << "straight skeleton is null" << endl;
@@ -137,15 +137,13 @@ namespace gca {
 
       vtk_debug_ring(p.vertices());
       DBG_ASSERT(false);
-    } else {
-      cout << "Straight skeleton is not null" << endl;
     }
 
-    cout << "Starting to compute the interior offset" << endl;
+    //    cout << "Starting to compute the interior offset" << endl;
     PolygonPtrVector inner_offset_polygons =
       CGAL::create_offset_polygons_2<Polygon_2>(inc, *ss);
       //  CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
-    cout << "Done computing interior offset" << endl;
+    //    cout << "Done computing interior offset" << endl;
 
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
