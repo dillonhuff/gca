@@ -267,7 +267,7 @@ namespace gca {
 	unsigned i1 = (i + 1) % rpts.size();
 	point pp1 = rpts[i1];
 
-	if (components_within_eps(p, pp1, 0.001)) {
+	if (within_eps(p, pp1, 0.005)) {
 	  found_duplicate = true;
 	  rpts.erase(begin(rpts) + i1);
 	  break;

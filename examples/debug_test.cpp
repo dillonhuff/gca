@@ -41,41 +41,6 @@ namespace gca {
 
     workpiece w(3.0, 3.0, 3.0, ALUMINUM);
 
-    SECTION("CylinderSquare") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CylinderSquare.stl", 0.001);
-
-      feature_decomposition* f = build_feature_decomposition(mesh, point(0, 0, 1));
-      tool_access_info tool_info = find_accessable_tools(f, tools);
-      vector<pocket> pockets = feature_pockets(*f, tool_info);
-
-      SECTION("Two pockets") {
-	REQUIRE(pockets.size() == 2);
-      }
-
-      SECTION("One pocket ends at 0.200001") {
-	REQUIRE(any_of(begin(pockets), end(pockets),
-		       [](const pocket& p) {
-			 return within_eps(p.get_end_depth(), 0.200001);
-		       }));
-      }
-
-      SECTION("No pockets more than 0.75 inches tall") {
-	REQUIRE(all_of(begin(pockets), end(pockets),
-		       [](const pocket& p) {
-			 return p.get_start_depth() - p.get_end_depth() < 0.75;
-		       }));
-      }
-
-      SECTION("First pocket has no holes") {
-      	REQUIRE(pockets.front().get_holes().size() == 0);
-      }
-
-      SECTION("Last pocket has one hole") {
-      	REQUIRE(pockets.back().get_holes().size() == 1);
-      }
-      
-    }
-
     SECTION("Arm joint top") {
       point n(0, -1, 0);
       
