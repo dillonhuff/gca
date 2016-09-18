@@ -80,7 +80,7 @@ namespace gca {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
 
     auto surfs = outer_surfaces(mesh);
-    workpiece w(4.0, 4.0, 4.0, ALUMINUM);
+    workpiece w(2.1, 2.1, 2.1, ALUMINUM);
     triangular_mesh stock = align_workpiece(surfs, w);
     
     point n(1, 0, 0);
@@ -88,9 +88,16 @@ namespace gca {
     feature_decomposition* f = build_feature_decomposition(stock, mesh, n);
     tool_access_info inf = find_accessable_tools(f, tools);
 
+    vtk_debug_feature_decomposition(f);
+
+    unsigned num_unreachable_features = 0;
     for (auto feature_and_tools : inf) {
-      REQUIRE(feature_and_tools.second.size() > 0);
+      if (feature_and_tools.second.size() == 0) {
+	num_unreachable_features++;
+      }
     }
+
+    REQUIRE(num_unreachable_features == 1);
   }
 
 }

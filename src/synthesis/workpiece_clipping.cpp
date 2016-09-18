@@ -375,9 +375,13 @@ namespace gca {
       	  contour_surface_decomposition_in_dir(part_mesh, n);
 
 	if (surfs) {
-	  possible_contours.push_back({*surfs,
-		top_and_base->second,
-		top_and_base->first});
+	  possible_contour c{*surfs,
+	      top_and_base->second,
+	      top_and_base->first};
+
+	  if (surfs->rest.size() == 0) { return c; }
+
+	  possible_contours.push_back(c);
 	}
       }
     }
@@ -394,22 +398,6 @@ namespace gca {
       });
 
     return contour_dir;
-
-    // vector<contour_surface_decomposition> decomps;
-    // for (auto top_and_base : possible_fixes) {
-    //   point n = top_and_base.first.orient.top_normal();
-
-    //   if (surfs) {
-    // 	decomps.push_back();
-    // 	auto top_fix = top_and_base.first;
-    // 	auto base_fix = top_and_base.second;
-    // 	return base_fix_clip_plan(w, aligned, part_mesh, *surfs, top_fix, base_fix, fab_inputs.tools);	
-    //   }
-
-
-    // }
-
-    //    return boost::none;
   }
 
   boost::optional<clipping_plan>
