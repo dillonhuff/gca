@@ -380,6 +380,19 @@ namespace gca {
       }
     }
 
+    if (possible_contours.size() == 0) { return boost::none; }
+
+    auto contour_dir = min_e(possible_contours, [](const possible_contour& c) {
+	auto& decomp = c.decomp;
+	double total_surface_area = 0.0;
+	for (auto s : decomp.rest) {
+	  total_surface_area += s.surface_area();
+	}
+	return total_surface_area;
+      });
+
+    return contour_dir;
+
     // vector<contour_surface_decomposition> decomps;
     // for (auto top_and_base : possible_fixes) {
     //   point n = top_and_base.first.orient.top_normal();
@@ -394,7 +407,7 @@ namespace gca {
 
     // }
 
-    return boost::none;
+    //    return boost::none;
   }
 
   boost::optional<clipping_plan>
