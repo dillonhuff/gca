@@ -223,7 +223,8 @@ namespace gca {
     return num_duplicates == 0;
   }
 
-  void clean_colinear_edges(std::vector<point>& pts) {
+  void clean_colinear_edges(std::vector<point>& pts,
+			    const double tol) {
     if (pts.size() < 3) { return; }
 
     bool found_colinear_edge = true;
@@ -242,7 +243,7 @@ namespace gca {
 	point dir1 = (p1 - p).normalize();
 	point dir2 = (p2 - p1).normalize();
 
-	if (angle_eps(dir1, dir2, 0.0, 0.0000001)) {
+	if (angle_eps(dir1, dir2, 0.0, tol)) { //0.0000001)) {
 	  pts.erase(begin(pts) + i1);
 	  found_colinear_edge = true;
 	}
@@ -276,7 +277,7 @@ namespace gca {
 
     }
 
-    clean_colinear_edges(rpts);
+    clean_colinear_edges(rpts, 0.0000001);
 
     return rpts;
   }
