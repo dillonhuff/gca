@@ -15,6 +15,7 @@ typedef CGAL::Exact_predicates_exact_constructions_kernel Kernel;
 typedef CGAL::Polyhedron_3<Kernel>         Polyhedron;
 typedef Polyhedron::HalfedgeDS             HalfedgeDS;
 typedef CGAL::Nef_polyhedron_3<Kernel>  Nef_polyhedron;
+typedef Nef_polyhedron::Plane_3 Plane_3;
 
 template <class HDS>
 class build_mesh : public CGAL::Modifier_base<HDS> {
@@ -93,6 +94,28 @@ int main() {
   } else {
     cout << "Negative space mesh is Not simple" << endl;
   }
+
+  plane top = face_plane(stock, point(0, 0, 1));
+  plane mid = top.slide(-0.05);
+
+  typedef Nef_polyhedron::Point_3 Point_3;
+  typedef Nef_polyhedron::Vector_3 Vector_3;
+
   
+  Plane_3 p(0.0, 0.0, 0.0, 0.0);
+
+  // Plane_3 p(Point_3(mid.pt().x, mid.pt().y, mid.pt().z),
+  // 	    Vector_3(mid.normal().x, mid.normal().y, mid.normal().z));
+
+  Nef_polyhedron slice(p);
+
+  auto sliced = negative_space - slice;
+
+  if (sliced.is_simple()) {
+    cout << "sliced mesh is Simple" << endl;
+  } else {
+    cout << "sliced mesh is Not simple" << endl;
+  }
+
   return 0;
 }
