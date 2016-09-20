@@ -137,9 +137,10 @@ namespace gca {
 
   std::vector<triangle_t>
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
-    vector<triangle_t> tris;
+    vector<triangle_t> tris(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
     cout << "Initial # of triangles = " << triangles.size() << endl;
+    unsigned num_added = 0;
     
     while (remaining_inds.size() > 0) {
 
@@ -148,25 +149,37 @@ namespace gca {
 	vector<triangle_t> sub_tris =
 	  select(tris, [next_t](const triangle_t t)
 		 { return share_edge(next_t, t); });
+
 	if (sub_tris.size() > 0) {
 	  triangle_t corrected = correct_orientation(next_t, sub_tris);
-	  tris.push_back(corrected);
+	  //	  tris.push_back(corrected);
+	  tris[ind] = corrected;
 	  remove(ind, remaining_inds);
+	  num_added++;
 	  break;
-	} if (tris.size() == 0) {
-	  tris.push_back(next_t);
+	}
+
+	if (num_added == 0) {
+	  //	  tris.push_back(next_t);
+	  tris[ind] = next_t;
 	  remove(ind, remaining_inds);
+	  num_added++;
 	  break;
 	}
       }
 
-      auto ccs =
-	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
-				{ return share_edge(l, r); });
-      DBG_ASSERT(ccs.size() == 1);
-      DBG_ASSERT(num_winding_order_errors(tris) == 0);
+      // auto ccs =
+      // 	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
+      // 				{ return share_edge(l, r); });
+      // DBG_ASSERT(ccs.size() == 1);
+      // DBG_ASSERT(num_winding_order_errors(tris) == 0);
     }
 
+    auto ccs =
+      connected_components_by(tris, [](const triangle_t l, const triangle_t r)
+			      { return share_edge(l, r); });
+    DBG_ASSERT(ccs.size() == 1);
+    
     DBG_ASSERT(num_winding_order_errors(tris) == 0);
     DBG_ASSERT(tris.size() == triangles.size());
     return tris;
@@ -252,6 +265,7 @@ namespace gca {
 			 const std::vector<point>& vertices,
 			 const std::vector<point>& face_orientations) {
     DBG_ASSERT(vertex_triangles.size() == face_orientations.size());
+
     for (unsigned i = 0; i < vertex_triangles.size(); i++) {
       auto t = vertex_triangles[i];
       point computed_normal =
@@ -260,6 +274,8 @@ namespace gca {
 
       point fi = (face_orientations[i]).normalize();
       if (!within_eps(fi, computed_normal, 0.001)) {
+	cout << "Computed normal = " << computed_normal << endl;
+	cout << "Listed normal   = " << fi << endl;
 	return false;
       }
     }
@@ -284,6 +300,7 @@ namespace gca {
     std::vector<point> vertices;
     std::vector<triangle_t> vertex_triangles =
       fill_vertex_triangles(triangles, vertices, tolerance);
+
     std::vector<point> face_orientations(triangles.size());
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });

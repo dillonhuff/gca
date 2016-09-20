@@ -1,4 +1,16 @@
+#include <vtkDelaunay2D.h>
+#include <vtkCellData.h>
+#include <vtkCellArray.h>
+#include <vtkLine.h>
+#include <vtkPolygon.h>
+#include <vtkSmartPointer.h>
+#include <vtkLinearExtrusionFilter.h>
+#include <vtkTriangle.h>
+#include <vtkTriangleFilter.h>
+
 #include "geometry/mesh_operations.h"
+#include "geometry/vtk_debug.h"
+#include "geometry/vtk_utils.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "utils/check.h"
@@ -21,9 +33,165 @@ namespace gca {
     return fixture_setup(m, f, pockets);
   }
 
+  vtkSmartPointer<vtkPolyData> lines_for_polygon(const polygon_3& poly) {
+    cout << "Getting lines" << endl;
+
+    DBG_ASSERT(poly.vertices().size() > 2);
+
+    // vtkSmartPointer<vtkPolyData> linesPolyData =
+    //   vtkSmartPointer<vtkPolyData>::New();
+ 
+    // // Create a vtkPoints container and store the points in it
+    // vtkSmartPointer<vtkPoints> pts =
+    //   vtkSmartPointer<vtkPoints>::New();
+    // std::vector<point> verts = poly.vertices();
+
+    // for (auto p : verts) {
+    //   cout << "Point" << endl;
+    //   pts->InsertNextPoint(p.x, p.y, p.z);
+    // }
+ 
+    // // Add the points to the polydata container
+    // linesPolyData->SetPoints(pts);
+
+    // cout << "Set points" << endl;
+ 
+    // vtkSmartPointer<vtkCellArray> lines =
+    //   vtkSmartPointer<vtkCellArray>::New();
+
+    // for (vtkIdType i = 0; i < linesPolyData->GetNumberOfPoints(); i++) { 
+    //   vtkSmartPointer<vtkLine> line0 =
+    // 	vtkSmartPointer<vtkLine>::New();
+    //   line0->GetPointIds()->SetId(0, i);
+    //   line0->GetPointIds()->SetId(1, (i + 1) % linesPolyData->GetNumberOfPoints());
+
+    //   lines->InsertNextCell(line0);
+    // }
+ 
+    // // Add the lines to the polydata container
+    // linesPolyData->SetLines(lines);
+
+    // Generate a 10 x 10 grid of points
+    vtkSmartPointer<vtkPoints> points =
+      vtkSmartPointer<vtkPoints>::New();
+    for(unsigned int x = 0; x < 10; x++)
+      {
+	for(unsigned int y = 0; y < 10; y++)
+	  {
+	    points->InsertNextPoint(x + vtkMath::Random(-.25, .25),
+				    y + vtkMath::Random(-.25,.25),
+				    0);
+	  }
+      }
+ 
+    vtkSmartPointer<vtkPolyData> aPolyData =
+      vtkSmartPointer<vtkPolyData>::New();
+    aPolyData->SetPoints(points);
+ 
+    // Create a cell array to store the polygon in
+    vtkSmartPointer<vtkCellArray> aCellArray =
+      vtkSmartPointer<vtkCellArray>::New();
+ 
+    // Define a polygonal hole with a clockwise polygon
+    vtkSmartPointer<vtkPolygon> aPolygon =
+      vtkSmartPointer<vtkPolygon>::New();
+ 
+    aPolygon->GetPointIds()->InsertNextId(22);
+    aPolygon->GetPointIds()->InsertNextId(23);
+    aPolygon->GetPointIds()->InsertNextId(24);
+    aPolygon->GetPointIds()->InsertNextId(25);
+    aPolygon->GetPointIds()->InsertNextId(35);
+    aPolygon->GetPointIds()->InsertNextId(45);
+    aPolygon->GetPointIds()->InsertNextId(44);
+    aPolygon->GetPointIds()->InsertNextId(43);
+    aPolygon->GetPointIds()->InsertNextId(42);
+    aPolygon->GetPointIds()->InsertNextId(32);
+ 
+    aCellArray->InsertNextCell(aPolygon);
+ 
+    // Create a polydata to store the boundary. The points must be the
+    // same as the points we will triangulate.
+    vtkSmartPointer<vtkPolyData> boundary =
+      vtkSmartPointer<vtkPolyData>::New();
+    boundary->SetPoints(aPolyData->GetPoints());
+    boundary->SetPolys(aCellArray); 
+
+    // Triangulate the grid points
+    vtkSmartPointer<vtkDelaunay2D> delaunay =
+      vtkSmartPointer<vtkDelaunay2D>::New();
+    delaunay->SetInputData(aPolyData);
+    delaunay->SetSourceData(boundary);
+    delaunay->Update();
+
+    auto act = polydata_actor(delaunay->GetOutput());
+
+    visualize_actors({act});
+
+    vtkSmartPointer<vtkPolyData> res = delaunay->GetOutput();
+    return res;
+  }
+
+  triangular_mesh feature_mesh(const feature& f) {
+    cout << "Getting lines" << endl;
+
+    polygon_3 base = f.base();
+    
+    //    auto line_polydata = lines_for_polygon(base);
+
+    vector<point> verts = base.vertices();
+    reverse(verts);
+    oriented_polygon p(base.normal(), verts);
+
+    auto pd = polydata_for_polygon(p);
+
+    vtkSmartPointer<vtkTriangleFilter> triangleFilter1 =
+      vtkSmartPointer<vtkTriangleFilter>::New();
+    triangleFilter1->SetInputData(pd);
+    triangleFilter1->Update();
+    
+    point n = f.normal();
+
+    cout << "Extruding" << endl;
+
+    vtkSmartPointer<vtkLinearExtrusionFilter> extrude = 
+      vtkSmartPointer<vtkLinearExtrusionFilter>::New();
+    extrude->SetInputData(triangleFilter1->GetOutput());
+    extrude->SetExtrusionTypeToNormalExtrusion();
+    extrude->CappingOn();
+    extrude->SetVector(n.x, n.y, n.z);
+    extrude->SetScaleFactor(f.depth());
+    extrude->Update();
+
+    cout << "Done extruding" << endl;
+ 
+    vtkSmartPointer<vtkTriangleFilter> triangleFilter =
+      vtkSmartPointer<vtkTriangleFilter>::New();
+    triangleFilter->SetInputConnection(extrude->GetOutputPort());
+    triangleFilter->Update();
+
+    auto res = trimesh_for_polydata(triangleFilter->GetOutput());
+
+    vtk_debug_mesh(res);
+
+    return res;
+  }
+
   triangular_mesh subtract_features(const triangular_mesh& m,
 				    feature_decomposition* features) {
-    DBG_ASSERT(false);
+    triangular_mesh subtracted = m;
+    triangular_mesh* sub_ptr = &subtracted;
+    auto subtract = [sub_ptr](feature* f) {
+      if (f != nullptr) {
+	triangular_mesh f_mesh = feature_mesh(*f);
+	*sub_ptr = boolean_difference(*sub_ptr, f_mesh);
+      }
+    };
+
+    traverse_bf(features, subtract);
+
+    vtk_debug_mesh(subtracted);
+
+    return subtracted;
   }
   
   std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
