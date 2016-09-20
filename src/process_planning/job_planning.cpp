@@ -12,18 +12,13 @@ namespace gca {
 
     DBG_ASSERT(surfs.size() == 6);
 
-    vector<surface> ax_surfaces =
-      take_basis(surfs,
-		 [](const surface& l, const surface& r)
-		 { return within_eps(angle_between(normal(l), normal(r)), 90, 2.0); },
-		 3);
-
     vector<point> norms;
-    for (auto ax : ax_surfaces) {
+    for (auto ax : surfs) {
       point n = ax.face_orientation(ax.front());
       norms.push_back(n);
-      norms.push_back(-1*n);
     }
+
+    DBG_ASSERT(norms.size() == 6);
 
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
@@ -35,16 +30,16 @@ namespace gca {
     vice v = f.get_vice();
     triangular_mesh current_stock = stock;
     vector<fixture_setup> cut_setups;
+
     for (auto& info : dir_info) {
       auto sfs = outer_surfaces(current_stock);
+      auto orients = all_stable_orientations(sfs, v);
 
-      DBG_ASSERT(sfs.size() == 6);
+      point n = normal(info.decomp);
+
+      clamp_orientation orient = find_orientation_by_normal(orients, n);
 
 
-      // auto orients = all_stable_orientations(sfs, v);
-      // clamp_orientation orient = find_orientation_by_normal(orients, n);
-
-      
 
       // // auto t = mating_transform(current_stock, orient, v);
       // // cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part), fixture(orient, v)));
