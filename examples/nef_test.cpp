@@ -1,3 +1,4 @@
+#include "synthesis/fixture_analysis.h"
 #include "system/parse_stl.h"
 
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
@@ -53,8 +54,11 @@ public:
 };
 
 int main() {
+  auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
 
-  auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);  
+  auto surfs = outer_surfaces(mesh);
+  workpiece w(3.0, 3.0, 3.0, ALUMINUM);
+  triangular_mesh stock = align_workpiece(surfs, w);
   
   build_mesh<HalfedgeDS> mesh_builder(mesh);
 
@@ -64,10 +68,31 @@ int main() {
   Nef_polyhedron N(P);
   
   if (N.is_simple()) {
-    cout << "Simple" << endl;
+    cout << "Part mesh is Simple" << endl;
   } else {
-    cout << "Not simple" << endl;
+    cout << "Part mesh is Not simple" << endl;
   }
 
+  build_mesh<HalfedgeDS> stock_mesh_builder(mesh);
+
+  Polyhedron S;
+  S.delegate(stock_mesh_builder);
+
+  Nef_polyhedron stock_nef(S);
+  
+  if (stock_nef.is_simple()) {
+    cout << "Stock mesh is Simple" << endl;
+  } else {
+    cout << "Stock mesh is Not simple" << endl;
+  }
+
+  Nef_polyhedron negative_space = stock_nef - N;
+
+  if (negative_space.is_simple()) {
+    cout << "Negative space mesh is Simple" << endl;
+  } else {
+    cout << "Negative space mesh is Not simple" << endl;
+  }
+  
   return 0;
 }
