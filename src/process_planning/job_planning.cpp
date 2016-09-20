@@ -1,9 +1,31 @@
 #include "geometry/mesh_operations.h"
+#include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "utils/check.h"
 
 namespace gca {
 
+  fixture_setup
+  create_setup(const homogeneous_transform& s_t,
+	       const triangular_mesh& wp_mesh,
+	       const triangular_mesh& part_mesh,
+	       feature_decomposition* decomp,
+	       const fixture& f,
+	       const tool_access_info& tool_info) {
+    auto aligned = apply(s_t, wp_mesh);
+    auto part = apply(s_t, part_mesh);
+
+    auto pockets = feature_pockets(*decomp, s_t, tool_info);
+
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+    return fixture_setup(m, f, pockets);
+  }
+
+  triangular_mesh subtract_features(const triangular_mesh& m,
+				    feature_decomposition* features) {
+    DBG_ASSERT(false);
+  }
+  
   std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
 				       const triangular_mesh& part,
 				       const fixtures& f,
@@ -34,15 +56,21 @@ namespace gca {
     for (auto& info : dir_info) {
       auto sfs = outer_surfaces(current_stock);
       auto orients = all_stable_orientations(sfs, v);
-
       point n = normal(info.decomp);
-
       clamp_orientation orient = find_orientation_by_normal(orients, n);
+      fixture fix(orient, v);
 
+      auto decomp = info.decomp;
+      auto& acc_info = info.tool_info;
 
+      delete_nodes(decomp, [acc_info](feature* f) {
+	  return map_find(f, acc_info).size() == 0;
+	});
 
-      // // auto t = mating_transform(current_stock, orient, v);
-      // // cut_setups.push_back(clip_base(apply(t, current_stock), apply(t, part), fixture(orient, v)));
+      auto t = mating_transform(current_stock, orient, v);
+      cut_setups.push_back(create_setup(t, current_stock, part, decomp, fix, info.tool_info));
+
+      current_stock = subtract_features(current_stock, decomp);
       
       // plane clip_plane = face_plane(part, n);
       // current_stock = clip_mesh(current_stock, clip_plane);
