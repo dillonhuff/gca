@@ -332,6 +332,19 @@ surface-test/fast:
 .PHONY : surface-test/fast
 
 #=============================================================================
+# Target rules for targets named nef-test
+
+# Build rule for target.
+nef-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 nef-test
+.PHONY : nef-test
+
+# fast build rule for target.
+nef-test/fast:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/build
+.PHONY : nef-test/fast
+
+#=============================================================================
 # Target rules for targets named geometry
 
 # Build rule for target.
@@ -585,6 +598,33 @@ examples/json_plan.s: examples/json_plan.cpp.s
 examples/json_plan.cpp.s:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/examples/json_plan.cpp.s
 .PHONY : examples/json_plan.cpp.s
+
+examples/nef_test.o: examples/nef_test.cpp.o
+
+.PHONY : examples/nef_test.o
+
+# target to build an object file
+examples/nef_test.cpp.o:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.o
+.PHONY : examples/nef_test.cpp.o
+
+examples/nef_test.i: examples/nef_test.cpp.i
+
+.PHONY : examples/nef_test.i
+
+# target to preprocess a source file
+examples/nef_test.cpp.i:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.i
+.PHONY : examples/nef_test.cpp.i
+
+examples/nef_test.s: examples/nef_test.cpp.s
+
+.PHONY : examples/nef_test.s
+
+# target to generate assembly for a file
+examples/nef_test.cpp.s:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.s
+.PHONY : examples/nef_test.cpp.s
 
 examples/plate_cutter.o: examples/plate_cutter.cpp.o
 
@@ -3959,6 +3999,7 @@ help:
 	@echo "... gca"
 	@echo "... gcode"
 	@echo "... surface-test"
+	@echo "... nef-test"
 	@echo "... geometry"
 	@echo "... stl-parse"
 	@echo "... utils"
@@ -3986,6 +4027,9 @@ help:
 	@echo "... examples/json_plan.o"
 	@echo "... examples/json_plan.i"
 	@echo "... examples/json_plan.s"
+	@echo "... examples/nef_test.o"
+	@echo "... examples/nef_test.i"
+	@echo "... examples/nef_test.s"
 	@echo "... examples/plate_cutter.o"
 	@echo "... examples/plate_cutter.i"
 	@echo "... examples/plate_cutter.s"

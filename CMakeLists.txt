@@ -253,6 +253,9 @@ target_link_libraries(scale-down-mesh geometry utils gcode gprocess gca)
 add_executable(debug-test examples/debug_test.cpp)
 target_link_libraries(debug-test geometry utils gcode gprocess gca)
 
+add_executable(nef-test examples/nef_test.cpp)
+target_link_libraries(nef-test geometry utils gcode gprocess gca)
+
 find_package( OpenCV REQUIRED )
 
 add_executable(engraving examples/engraving.cpp)
