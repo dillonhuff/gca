@@ -118,12 +118,17 @@ namespace gca {
     }
   }
 
-  std::vector<triangle> trilib_to_tris(struct triangulateio mid) {
+  std::vector<triangle> trilib_to_tris(const polygon_3& original,
+				       struct triangulateio mid) {
+    DBG_ASSERT(original.vertices().size() > 2);
+
+    double z = original.vertices().front().z;
+
     vector<point> point_vec;
     for (unsigned i = 0; i < mid.numberofpoints; i++) {
       REAL px = mid.pointlist[2*i];
       REAL py = mid.pointlist[2*i + 1];
-      point_vec.push_back(point(px, py, 0.0));
+      point_vec.push_back(point(px, py, z));
     }
 
     cout << "POINTS" << endl;
@@ -163,7 +168,7 @@ namespace gca {
     return tris;
   }
 
-  void set_points(struct triangulateio* in, const polygon_3& p) {
+  void set_points_and_segments(struct triangulateio* in, const polygon_3& p) {
     DBG_ASSERT(p.holes().size() == 0);
 
     in->numberofpoints = p.vertices().size(); //4;
@@ -181,6 +186,11 @@ namespace gca {
     for (unsigned i = 0; i < in->numberofpoints; i++) {
       in->pointmarkerlist[i] = 0;
     }
+
+    in->numberofsegments = 0;
+    in->numberofholes = 0;
+    in->numberofregions = 0;
+    in->regionlist = 0;
 
   }
 
@@ -211,12 +221,7 @@ namespace gca {
 
     /* Define input points. */
 
-    set_points(&in, p);
-
-    in.numberofsegments = 0;
-    in.numberofholes = 0;
-    in.numberofregions = 0;
-    in.regionlist = 0;
+    set_points_and_segments(&in, p);
 
     printf("Input point set:\n\n");
     report(&in, 1, 0, 0, 0, 0, 0);
@@ -237,7 +242,7 @@ namespace gca {
 
     /* Free all allocated arrays, including those allocated by Triangle. */
 
-    vector<triangle> tris = trilib_to_tris(mid);
+    vector<triangle> tris = trilib_to_tris(p, mid);
 
     free(in.pointlist);
     free(in.pointattributelist);

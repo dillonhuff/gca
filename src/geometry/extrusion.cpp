@@ -524,6 +524,11 @@ namespace gca {
       concat(side_tris, tris);
     }
 
+    cout << "SIDE TRIS" << endl;
+    for (auto t : side_tris) {
+      vtk_debug_triangles({t});
+    }
+
     return side_tris;
   }
 

@@ -10,8 +10,11 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    point extrude_vector(1, 0, 0);
-    std::vector<point> pts{point(0, 0, 0), point(0, 1, 0), point(0, 1, 1), point(0, 0, 1)};
+    point extrude_vector(0, 0, 1);
+    std::vector<point> pts{point(0, 0, 0),
+	point(0, 1, 0),
+	point(1, 1, 0),
+	point(1, 0, 0)};
     polygon_3 poly(pts);
 
     triangular_mesh m = extrude(poly, extrude_vector);
