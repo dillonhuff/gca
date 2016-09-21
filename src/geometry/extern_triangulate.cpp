@@ -179,10 +179,13 @@ namespace gca {
     in->pointattributelist = NULL;
 
     in->pointmarkerlist = (int *) malloc(in->numberofpoints * sizeof(int));
-    in->pointmarkerlist[0] = 0;
-    in->pointmarkerlist[1] = 0; //2;
-    in->pointmarkerlist[2] = 0;
-    in->pointmarkerlist[3] = 0;
+    for (unsigned i = 0; i < in->numberofpoints; i++) {
+      in->pointmarkerlist[i] = 0;
+    }
+    // in->pointmarkerlist[0] = 0;
+    // in->pointmarkerlist[1] = 0; //2;
+    // in->pointmarkerlist[2] = 0;
+    // in->pointmarkerlist[3] = 0;
   }
 
   void set_output(struct triangulateio* mid) {
