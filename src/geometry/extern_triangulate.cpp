@@ -119,13 +119,12 @@ namespace gca {
   }
   
   std::vector<triangle> triangulate_flat_3d(const polygon_3& p) {
-    struct triangulateio in, mid;
+    struct triangulateio in, mid, out, vorout;
 
     /* Define input points. */
 
-    in.numberofpoints = 8;
-    in.numberofpointattributes = 0;
-
+    in.numberofpoints = 4;
+    in.numberofpointattributes = 1;
     in.pointlist = (REAL *) malloc(in.numberofpoints * 2 * sizeof(REAL));
     in.pointlist[0] = 0.0;
     in.pointlist[1] = 0.0;
@@ -135,70 +134,27 @@ namespace gca {
     in.pointlist[5] = 10.0;
     in.pointlist[6] = 0.0;
     in.pointlist[7] = 10.0;
-
-    in.pointlist[8] = 0.1;
-    in.pointlist[9] = 0.1;
-    in.pointlist[10] = 0.9;
-    in.pointlist[11] = 0.1;
-    in.pointlist[12] = 0.9;
-    in.pointlist[13] = 9.0;
-    in.pointlist[14] = 0.1;
-    in.pointlist[15] = 9.0;
-  
-    in.pointattributelist = NULL;
-
+    in.pointattributelist = (REAL *) malloc(in.numberofpoints *
+					    in.numberofpointattributes *
+					    sizeof(REAL));
+    in.pointattributelist[0] = 0.0;
+    in.pointattributelist[1] = 1.0;
+    in.pointattributelist[2] = 11.0;
+    in.pointattributelist[3] = 10.0;
     in.pointmarkerlist = (int *) malloc(in.numberofpoints * sizeof(int));
     in.pointmarkerlist[0] = 0;
-    in.pointmarkerlist[1] = 0;
+    in.pointmarkerlist[1] = 2;
     in.pointmarkerlist[2] = 0;
     in.pointmarkerlist[3] = 0;
 
-    in.pointmarkerlist[4] = 0;
-    in.pointmarkerlist[5] = 0;
-    in.pointmarkerlist[6] = 0;
-    in.pointmarkerlist[7] = 0;
-
-    in.numberofsegments = 8;
-    /* Needed only if segments are output (-p or -c) and -P not used: */
-    in.segmentlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int))); //(int *) NULL;
-    in.segmentlist[0] = 0;
-    in.segmentlist[1] = 1;
-    in.segmentlist[2] = 1;
-    in.segmentlist[3] = 2;
-    in.segmentlist[4] = 2;
-    in.segmentlist[5] = 3;
-    in.segmentlist[6] = 3;
-    in.segmentlist[7] = 0;
-
-    in.segmentlist[8] = 0 + 4;
-    in.segmentlist[9] = 1 + 4;
-    in.segmentlist[10] = 1 + 4;
-    in.segmentlist[11] = 2 + 4;
-    in.segmentlist[12] = 2 + 4;
-    in.segmentlist[13] = 3 + 4;
-    in.segmentlist[14] = 3 + 4;
-    in.segmentlist[15] = 0 + 4;
-  
-    in.segmentmarkerlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int)));
-    in.segmentmarkerlist[0] = 0;
-    in.segmentmarkerlist[1] = 0;
-    in.segmentmarkerlist[2] = 0;
-    in.segmentmarkerlist[3] = 0;
-
-    in.segmentmarkerlist[4] = 0;
-    in.segmentmarkerlist[5] = 0;
-    in.segmentmarkerlist[6] = 0;
-    in.segmentmarkerlist[7] = 0;
-
-
-    // Need to add holes
+    in.numberofsegments = 0;
     in.numberofholes = 0;
-    in.numberofregions = 0; //1;
-    in.regionlist = NULL; // (REAL *) malloc(in.numberofregions * 4 * sizeof(REAL));
-    // in.regionlist[0] = 0.5;
-    // in.regionlist[1] = 5.0;
-    // in.regionlist[2] = 7.0;            /* Regional attribute (for whole mesh). */
-    // in.regionlist[3] = 0.1;          /* Area constraint that will not be used. */
+    in.numberofregions = 1;
+    in.regionlist = (REAL *) malloc(in.numberofregions * 4 * sizeof(REAL));
+    in.regionlist[0] = 0.5;
+    in.regionlist[1] = 5.0;
+    in.regionlist[2] = 7.0;            /* Regional attribute (for whole mesh). */
+    in.regionlist[3] = 0.1;          /* Area constraint that will not be used. */
 
     printf("Input point set:\n\n");
     report(&in, 1, 0, 0, 0, 0, 0);
@@ -214,11 +170,18 @@ namespace gca {
     /* Not needed if -E switch used or number of triangle attributes is zero: */
     mid.triangleattributelist = (REAL *) NULL;
     mid.neighborlist = (int *) NULL;         /* Needed only if -n switch used. */
-
+    /* Needed only if segments are output (-p or -c) and -P not used: */
+    mid.segmentlist = (int *) NULL;
     /* Needed only if segments are output (-p or -c) and -P and -B not used: */
     mid.segmentmarkerlist = (int *) NULL;
     mid.edgelist = (int *) NULL;             /* Needed only if -e switch used. */
     mid.edgemarkerlist = (int *) NULL;   /* Needed if -e used and -B not used. */
+
+    vorout.pointlist = (REAL *) NULL;        /* Needed only if -v switch used. */
+    /* Needed only if -v switch used and number of attributes is not zero: */
+    vorout.pointattributelist = (REAL *) NULL;
+    vorout.edgelist = (int *) NULL;          /* Needed only if -v switch used. */
+    vorout.normlist = (REAL *) NULL;         /* Needed only if -v switch used. */
 
     /* Triangulate the points.  Switches are chosen to read and write a  */
     /*   PSLG (p), preserve the convex hull (c), number everything from  */
@@ -226,54 +189,38 @@ namespace gca {
     /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
     /*   neighbor list (n).                                              */
 
-    char settings[] = "pzen";
-    triangulate(&(settings[0]), &in, &mid, NULL);
+    triangulate("pczAevn", &in, &mid, &vorout);
 
     printf("Initial triangulation:\n\n");
     report(&mid, 1, 1, 1, 1, 1, 0);
+    printf("Initial Voronoi diagram:\n\n");
+    report(&vorout, 0, 0, 0, 0, 1, 1);
 
-    cout << "mid.numberofcorners = " << mid.numberofcorners << endl;
+    /* Attach area constraints to the triangles in preparation for */
+    /*   refining the triangulation.                               */
 
-    vector<point> point_vec;
-    for (unsigned i = 0; i < mid.numberofpoints; i++) {
-      REAL px = mid.pointlist[2*i];
-      REAL py = mid.pointlist[2*i + 1];
-      point_vec.push_back(point(px, py, 0.0));
-    }
+    /* Needed only if -r and -a switches used: */
+    mid.trianglearealist = (REAL *) malloc(mid.numberoftriangles * sizeof(REAL));
+    mid.trianglearealist[0] = 3.0;
+    mid.trianglearealist[1] = 1.0;
 
-    cout << "POINTS" << endl;
-    for (auto p : point_vec) {
-      cout << p << endl;
-    }
-  
-    vector<triangle> tris;
-    for (unsigned i = 0; i < mid.numberoftriangles; i++) {
-      vector<point> pts;
-      for (unsigned j = 0; j < mid.numberofcorners; j++) {
-	auto ind = mid.trianglelist[i * mid.numberofcorners + j];
-	pts.push_back(point_vec[ind]);
-      }
+    /* Make necessary initializations so that Triangle can return a */
+    /*   triangulation in `out'.                                    */
 
-      DBG_ASSERT(pts.size() == 3);
+    out.pointlist = (REAL *) NULL;            /* Not needed if -N switch used. */
+    /* Not needed if -N switch used or number of attributes is zero: */
+    out.pointattributelist = (REAL *) NULL;
+    out.trianglelist = (int *) NULL;          /* Not needed if -E switch used. */
+    /* Not needed if -E switch used or number of triangle attributes is zero: */
+    out.triangleattributelist = (REAL *) NULL;
 
-      point v0 = pts[0];
-      point v1 = pts[1];
-      point v2 = pts[2];
-    
-      point q1 = v1 - v0;
-      point q2 = v2 - v0;
-      point norm = cross(q2, q1).normalize();
-      tris.push_back(triangle(norm, v0, v1, v2));
-    }
+    /* Refine the triangulation according to the attached */
+    /*   triangle area constraints.                       */
 
-    cout << "Number of triangles = " << tris.size() << endl;
-    for (auto t : tris) {
-      cout << t << endl;
-    }
+    triangulate("prazBP", &mid, &out, (struct triangulateio *) NULL);
 
-    auto pd = polydata_for_triangles(tris);
-    auto act = polydata_actor(pd);
-    visualize_actors({act});
+    printf("Refined triangulation:\n\n");
+    report(&out, 0, 1, 0, 0, 0, 0);
 
     /* Free all allocated arrays, including those allocated by Triangle. */
 
@@ -281,7 +228,6 @@ namespace gca {
     free(in.pointattributelist);
     free(in.pointmarkerlist);
     free(in.regionlist);
-
     free(mid.pointlist);
     free(mid.pointattributelist);
     free(mid.pointmarkerlist);
@@ -293,8 +239,17 @@ namespace gca {
     free(mid.segmentmarkerlist);
     free(mid.edgelist);
     free(mid.edgemarkerlist);
+    free(vorout.pointlist);
+    free(vorout.pointattributelist);
+    free(vorout.edgelist);
+    free(vorout.normlist);
+    free(out.pointlist);
+    free(out.pointattributelist);
+    free(out.trianglelist);
+    free(out.triangleattributelist);
 
-    DBG_ASSERT(false);
+    return {};
+
   }
 
 }
