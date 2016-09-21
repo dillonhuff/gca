@@ -127,7 +127,7 @@ int main() {
 
   /* Define input points. */
 
-  in.numberofpoints = 4;
+  in.numberofpoints = 8;
   in.numberofpointattributes = 0;
 
   in.pointlist = (REAL *) malloc(in.numberofpoints * 2 * sizeof(REAL));
@@ -140,15 +140,62 @@ int main() {
   in.pointlist[6] = 0.0;
   in.pointlist[7] = 10.0;
 
+  in.pointlist[8] = 0.1;
+  in.pointlist[9] = 0.1;
+  in.pointlist[10] = 0.9;
+  in.pointlist[11] = 0.1;
+  in.pointlist[12] = 0.9;
+  in.pointlist[13] = 9.0;
+  in.pointlist[14] = 0.1;
+  in.pointlist[15] = 9.0;
+  
   in.pointattributelist = NULL;
 
   in.pointmarkerlist = (int *) malloc(in.numberofpoints * sizeof(int));
   in.pointmarkerlist[0] = 0;
-  in.pointmarkerlist[1] = 1;
-  in.pointmarkerlist[2] = 2;
-  in.pointmarkerlist[3] = 3;
+  in.pointmarkerlist[1] = 0;
+  in.pointmarkerlist[2] = 0;
+  in.pointmarkerlist[3] = 0;
 
-  in.numberofsegments = 0;
+  in.pointmarkerlist[4] = 0;
+  in.pointmarkerlist[5] = 0;
+  in.pointmarkerlist[6] = 0;
+  in.pointmarkerlist[7] = 0;
+
+  in.numberofsegments = 8;
+  /* Needed only if segments are output (-p or -c) and -P not used: */
+  in.segmentlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int))); //(int *) NULL;
+  in.segmentlist[0] = 0;
+  in.segmentlist[1] = 1;
+  in.segmentlist[2] = 1;
+  in.segmentlist[3] = 2;
+  in.segmentlist[4] = 2;
+  in.segmentlist[5] = 3;
+  in.segmentlist[6] = 3;
+  in.segmentlist[7] = 0;
+
+  in.segmentlist[8] = 0 + 4;
+  in.segmentlist[9] = 1 + 4;
+  in.segmentlist[10] = 1 + 4;
+  in.segmentlist[11] = 2 + 4;
+  in.segmentlist[12] = 2 + 4;
+  in.segmentlist[13] = 3 + 4;
+  in.segmentlist[14] = 3 + 4;
+  in.segmentlist[15] = 0 + 4;
+  
+  in.segmentmarkerlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int)));
+  in.segmentmarkerlist[0] = 0;
+  in.segmentmarkerlist[1] = 0;
+  in.segmentmarkerlist[2] = 0;
+  in.segmentmarkerlist[3] = 0;
+
+  in.segmentmarkerlist[4] = 0;
+  in.segmentmarkerlist[5] = 0;
+  in.segmentmarkerlist[6] = 0;
+  in.segmentmarkerlist[7] = 0;
+
+
+  // Need to add holes
   in.numberofholes = 0;
   in.numberofregions = 0; //1;
   in.regionlist = NULL; // (REAL *) malloc(in.numberofregions * 4 * sizeof(REAL));
@@ -171,8 +218,7 @@ int main() {
   /* Not needed if -E switch used or number of triangle attributes is zero: */
   mid.triangleattributelist = (REAL *) NULL;
   mid.neighborlist = (int *) NULL;         /* Needed only if -n switch used. */
-  /* Needed only if segments are output (-p or -c) and -P not used: */
-  mid.segmentlist = (int *) NULL;
+
   /* Needed only if segments are output (-p or -c) and -P and -B not used: */
   mid.segmentmarkerlist = (int *) NULL;
   mid.edgelist = (int *) NULL;             /* Needed only if -e switch used. */
@@ -184,7 +230,7 @@ int main() {
   /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
   /*   neighbor list (n).                                              */
 
-  char settings[] = "pczen";
+  char settings[] = "pzen";
   triangulate(&(settings[0]), &in, &mid, NULL);
 
   printf("Initial triangulation:\n\n");
@@ -209,10 +255,6 @@ int main() {
     vector<point> pts;
     for (unsigned j = 0; j < mid.numberofcorners; j++) {
       auto ind = mid.trianglelist[i * mid.numberofcorners + j];
-      
-      // REAL px = mid.pointlist[ind];
-      // REAL py = mid.pointlist[ind + 1];
-      //      pts.push_back(point(px, py, 0.0));
       pts.push_back(point_vec[ind]);
     }
 

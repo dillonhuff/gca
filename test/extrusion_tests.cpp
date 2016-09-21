@@ -6,6 +6,10 @@
 
 namespace gca {
 
+  TEST_CASE("Unlayered extrusion") {
+    
+  }
+
   TEST_CASE("Layered extrusion") {
     arena_allocator a;
     set_system_allocator(&a);
