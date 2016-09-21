@@ -137,6 +137,8 @@ namespace gca {
 
   std::vector<triangle_t>
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
+    DBG_ASSERT(false);
+
     vector<triangle_t> tris(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
     cout << "Initial # of triangles = " << triangles.size() << endl;
