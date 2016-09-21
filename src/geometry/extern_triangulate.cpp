@@ -164,28 +164,33 @@ namespace gca {
   }
 
   void set_points(struct triangulateio* in, const polygon_3& p) {
-    in->numberofpoints = 4;
-    in->numberofpointattributes = 0; //1;
-    in->pointlist = (REAL *) malloc(in->numberofpoints * 2 * sizeof(REAL));
-    in->pointlist[0] = 0.0;
-    in->pointlist[1] = 0.0;
-    in->pointlist[2] = 1.0;
-    in->pointlist[3] = 0.0;
-    in->pointlist[4] = 1.0;
-    in->pointlist[5] = 10.0;
-    in->pointlist[6] = 0.0;
-    in->pointlist[7] = 10.0;
+    DBG_ASSERT(p.holes().size() == 0);
 
+    in->numberofpoints = p.vertices().size(); //4;
+    in->pointlist = (REAL *) malloc(in->numberofpoints * 2 * sizeof(REAL));
+    for (unsigned i = 0; i < p.vertices().size(); i++) {
+      point pi = p.vertices()[i];
+      in->pointlist[2*i] = pi.x;
+      in->pointlist[2*i + 1] = pi.y;
+    }
+
+    // in->pointlist[0] = 0.0;
+    // in->pointlist[1] = 0.0;
+    // in->pointlist[2] = 1.0;
+    // in->pointlist[3] = 0.0;
+    // in->pointlist[4] = 1.0;
+    // in->pointlist[5] = 10.0;
+    // in->pointlist[6] = 0.0;
+    // in->pointlist[7] = 10.0;
+
+    in->numberofpointattributes = 0;
     in->pointattributelist = NULL;
 
     in->pointmarkerlist = (int *) malloc(in->numberofpoints * sizeof(int));
     for (unsigned i = 0; i < in->numberofpoints; i++) {
       in->pointmarkerlist[i] = 0;
     }
-    // in->pointmarkerlist[0] = 0;
-    // in->pointmarkerlist[1] = 0; //2;
-    // in->pointmarkerlist[2] = 0;
-    // in->pointmarkerlist[3] = 0;
+
   }
 
   void set_output(struct triangulateio* mid) {
