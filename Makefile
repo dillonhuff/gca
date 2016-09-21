@@ -1449,6 +1449,33 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
+src/geometry/extern_triangulate.o: src/geometry/extern_triangulate.cpp.o
+
+.PHONY : src/geometry/extern_triangulate.o
+
+# target to build an object file
+src/geometry/extern_triangulate.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extern_triangulate.cpp.o
+.PHONY : src/geometry/extern_triangulate.cpp.o
+
+src/geometry/extern_triangulate.i: src/geometry/extern_triangulate.cpp.i
+
+.PHONY : src/geometry/extern_triangulate.i
+
+# target to preprocess a source file
+src/geometry/extern_triangulate.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extern_triangulate.cpp.i
+.PHONY : src/geometry/extern_triangulate.cpp.i
+
+src/geometry/extern_triangulate.s: src/geometry/extern_triangulate.cpp.s
+
+.PHONY : src/geometry/extern_triangulate.s
+
+# target to generate assembly for a file
+src/geometry/extern_triangulate.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extern_triangulate.cpp.s
+.PHONY : src/geometry/extern_triangulate.cpp.s
+
 src/geometry/extrusion.o: src/geometry/extrusion.cpp.o
 
 .PHONY : src/geometry/extrusion.o
@@ -4188,6 +4215,9 @@ help:
 	@echo "... src/geometry/box.o"
 	@echo "... src/geometry/box.i"
 	@echo "... src/geometry/box.s"
+	@echo "... src/geometry/extern_triangulate.o"
+	@echo "... src/geometry/extern_triangulate.i"
+	@echo "... src/geometry/extern_triangulate.s"
 	@echo "... src/geometry/extrusion.o"
 	@echo "... src/geometry/extrusion.i"
 	@echo "... src/geometry/extrusion.s"

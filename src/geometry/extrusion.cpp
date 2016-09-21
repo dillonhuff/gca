@@ -1,6 +1,7 @@
 #include "geometry/vtk_debug.h"
 #include <boost/optional.hpp>
 
+#include "geometry/extern_triangulate.h"
 #include "geometry/extrusion.h"
 #include "utils/relation.h"
 
@@ -325,155 +326,155 @@ namespace gca {
     return edges;
   }
 
-  std::vector<triangle> triangulate_flat_3d(const polygon_3& p) {
-    // TODO: Handle holes
-    DBG_ASSERT(p.holes().size() == 0);
-    DBG_ASSERT(p.vertices().size() > 2);
-    DBG_ASSERT(angle_eps(p.normal(), point(0, 0, 1), 0.0, 1.0));
+  // std::vector<triangle> triangulate_flat_3d(const polygon_3& p) {
+  //   // TODO: Handle holes
+  //   DBG_ASSERT(p.holes().size() == 0);
+  //   DBG_ASSERT(p.vertices().size() > 2);
+  //   DBG_ASSERT(angle_eps(p.normal(), point(0, 0, 1), 0.0, 1.0));
 
-    double z = p.vertices().front().z;
+  //   double z = p.vertices().front().z;
 
-    struct triangulateio in, mid;
+  //   struct triangulateio in, mid;
 
-    in.numberofpoints = p.vertices().size();
-    in.numberofpointattributes = 0;
+  //   in.numberofpoints = p.vertices().size();
+  //   in.numberofpointattributes = 0;
 
-    in.pointlist = (REAL *) malloc(in.numberofpoints * 2 * sizeof(REAL));
-    for (unsigned i = 0; i < p.vertices().size(); i++) {
-      in.pointlist[2*i] = p.vertices()[i].x;
-      in.pointlist[2*i + 1] = p.vertices()[i].y;
-    }
+  //   in.pointlist = (REAL *) malloc(in.numberofpoints * 2 * sizeof(REAL));
+  //   for (unsigned i = 0; i < p.vertices().size(); i++) {
+  //     in.pointlist[2*i] = p.vertices()[i].x;
+  //     in.pointlist[2*i + 1] = p.vertices()[i].y;
+  //   }
   
-    in.pointattributelist = NULL;
+  //   in.pointattributelist = NULL;
 
-    in.pointmarkerlist = (int *) malloc(in.numberofpoints * sizeof(int));
-    in.pointmarkerlist[0] = 0;
-    in.pointmarkerlist[1] = 0;
-    in.pointmarkerlist[2] = 0;
-    in.pointmarkerlist[3] = 0;
+  //   in.pointmarkerlist = (int *) malloc(in.numberofpoints * sizeof(int));
+  //   in.pointmarkerlist[0] = 0;
+  //   in.pointmarkerlist[1] = 0;
+  //   in.pointmarkerlist[2] = 0;
+  //   in.pointmarkerlist[3] = 0;
 
-    in.pointmarkerlist[4] = 0;
-    in.pointmarkerlist[5] = 0;
-    in.pointmarkerlist[6] = 0;
-    in.pointmarkerlist[7] = 0;
+  //   in.pointmarkerlist[4] = 0;
+  //   in.pointmarkerlist[5] = 0;
+  //   in.pointmarkerlist[6] = 0;
+  //   in.pointmarkerlist[7] = 0;
 
-    in.numberofsegments = p.vertices().size();
-    /* Needed only if segments are output (-p or -c) and -P not used: */
-    in.segmentlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int))); //(int *) NULL;
+  //   in.numberofsegments = p.vertices().size();
+  //   /* Needed only if segments are output (-p or -c) and -P not used: */
+  //   in.segmentlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int))); //(int *) NULL;
 
-    for (unsigned i = 0; i < p.vertices().size(); i++) {
-      in.segmentlist[2*i] = i;
-      in.segmentlist[2*i + 1] = (i + 1) % p.vertices().size();
-    }
+  //   for (unsigned i = 0; i < p.vertices().size(); i++) {
+  //     in.segmentlist[2*i] = i;
+  //     in.segmentlist[2*i + 1] = (i + 1) % p.vertices().size();
+  //   }
   
-    in.segmentmarkerlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int)));
+  //   in.segmentmarkerlist = static_cast<int*>(malloc(2*in.numberofsegments*sizeof(int)));
 
-    for (unsigned i = 0; i < in.numberofsegments; i++) {
-      in.segmentmarkerlist[i] = 0;
-    }
+  //   for (unsigned i = 0; i < in.numberofsegments; i++) {
+  //     in.segmentmarkerlist[i] = 0;
+  //   }
 
-    // Need to add holes
-    in.numberofholes = 0;
-    in.numberofregions = 0;
+  //   // Need to add holes
+  //   in.numberofholes = 0;
+  //   in.numberofregions = 0;
 
-    in.regionlist = NULL; // (REAL *) malloc(in.numberofregions * 4 * sizeof(REAL));
+  //   in.regionlist = NULL; // (REAL *) malloc(in.numberofregions * 4 * sizeof(REAL));
 
-    printf("Input point set:\n\n");
-    //report(&in, 1, 0, 0, 0, 0, 0);
+  //   printf("Input point set:\n\n");
+  //   //report(&in, 1, 0, 0, 0, 0, 0);
 
-    /* Make necessary initializations so that Triangle can return a */
-    /*   triangulation in `mid' and a voronoi diagram in `vorout'.  */
+  //   /* Make necessary initializations so that Triangle can return a */
+  //   /*   triangulation in `mid' and a voronoi diagram in `vorout'.  */
 
-    mid.pointlist = (REAL *) NULL;            /* Not needed if -N switch used. */
-    /* Not needed if -N switch used or number of point attributes is zero: */
-    mid.pointattributelist = (REAL *) NULL;
-    mid.pointmarkerlist = (int *) NULL; /* Not needed if -N or -B switch used. */
-    mid.trianglelist = (int *) NULL;          /* Not needed if -E switch used. */
-    /* Not needed if -E switch used or number of triangle attributes is zero: */
-    mid.triangleattributelist = (REAL *) NULL;
-    mid.neighborlist = (int *) NULL;         /* Needed only if -n switch used. */
+  //   mid.pointlist = (REAL *) NULL;            /* Not needed if -N switch used. */
+  //   /* Not needed if -N switch used or number of point attributes is zero: */
+  //   mid.pointattributelist = (REAL *) NULL;
+  //   mid.pointmarkerlist = (int *) NULL; /* Not needed if -N or -B switch used. */
+  //   mid.trianglelist = (int *) NULL;          /* Not needed if -E switch used. */
+  //   /* Not needed if -E switch used or number of triangle attributes is zero: */
+  //   mid.triangleattributelist = (REAL *) NULL;
+  //   mid.neighborlist = (int *) NULL;         /* Needed only if -n switch used. */
 
-    /* Needed only if segments are output (-p or -c) and -P and -B not used: */
-    mid.segmentmarkerlist = (int *) NULL;
-    mid.edgelist = (int *) NULL;             /* Needed only if -e switch used. */
-    mid.edgemarkerlist = (int *) NULL;   /* Needed if -e used and -B not used. */
+  //   /* Needed only if segments are output (-p or -c) and -P and -B not used: */
+  //   mid.segmentmarkerlist = (int *) NULL;
+  //   mid.edgelist = (int *) NULL;             /* Needed only if -e switch used. */
+  //   mid.edgemarkerlist = (int *) NULL;   /* Needed if -e used and -B not used. */
 
-    /* Triangulate the points.  Switches are chosen to read and write a  */
-    /*   PSLG (p), preserve the convex hull (c), number everything from  */
-    /*   zero (z), assign a regional attribute to each element (A), and  */
-    /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
-    /*   neighbor list (n).                                              */
+  //   /* Triangulate the points.  Switches are chosen to read and write a  */
+  //   /*   PSLG (p), preserve the convex hull (c), number everything from  */
+  //   /*   zero (z), assign a regional attribute to each element (A), and  */
+  //   /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
+  //   /*   neighbor list (n).                                              */
 
-    char settings[] = "pzen";
-    triangulate(&(settings[0]), &in, &mid, NULL);
+  //   char settings[] = "pzen";
+  //   triangulate(&(settings[0]), &in, &mid, NULL);
 
-    printf("Initial triangulation:\n\n");
-    //report(&mid, 1, 1, 1, 1, 1, 0);
+  //   printf("Initial triangulation:\n\n");
+  //   //report(&mid, 1, 1, 1, 1, 1, 0);
 
-    cout << "mid.numberofcorners = " << mid.numberofcorners << endl;
+  //   cout << "mid.numberofcorners = " << mid.numberofcorners << endl;
 
-    vector<point> point_vec;
-    for (unsigned i = 0; i < mid.numberofpoints; i++) {
-      REAL px = mid.pointlist[2*i];
-      REAL py = mid.pointlist[2*i + 1];
-      point_vec.push_back(point(px, py, 0.0));
-    }
+  //   vector<point> point_vec;
+  //   for (unsigned i = 0; i < mid.numberofpoints; i++) {
+  //     REAL px = mid.pointlist[2*i];
+  //     REAL py = mid.pointlist[2*i + 1];
+  //     point_vec.push_back(point(px, py, 0.0));
+  //   }
 
-    cout << "POINTS" << endl;
-    for (auto p : point_vec) {
-      cout << p << endl;
-    }
+  //   cout << "POINTS" << endl;
+  //   for (auto p : point_vec) {
+  //     cout << p << endl;
+  //   }
   
-    vector<triangle> tris;
-    for (unsigned i = 0; i < mid.numberoftriangles; i++) {
-      vector<point> pts;
-      for (unsigned j = 0; j < mid.numberofcorners; j++) {
-    	auto ind = mid.trianglelist[i * mid.numberofcorners + j];
-    	pts.push_back(point_vec[ind]);
-      }
+  //   vector<triangle> tris;
+  //   for (unsigned i = 0; i < mid.numberoftriangles; i++) {
+  //     vector<point> pts;
+  //     for (unsigned j = 0; j < mid.numberofcorners; j++) {
+  //   	auto ind = mid.trianglelist[i * mid.numberofcorners + j];
+  //   	pts.push_back(point_vec[ind]);
+  //     }
 
-      DBG_ASSERT(pts.size() == 3);
+  //     DBG_ASSERT(pts.size() == 3);
 
-      point v0 = pts[0];
-      point v1 = pts[1];
-      point v2 = pts[2];
+  //     point v0 = pts[0];
+  //     point v1 = pts[1];
+  //     point v2 = pts[2];
     
-      point q1 = v1 - v0;
-      point q2 = v2 - v0;
-      point norm = cross(q2, q1).normalize();
-      tris.push_back(triangle(norm, v0, v1, v2));
-    }
+  //     point q1 = v1 - v0;
+  //     point q2 = v2 - v0;
+  //     point norm = cross(q2, q1).normalize();
+  //     tris.push_back(triangle(norm, v0, v1, v2));
+  //   }
 
-    cout << "Number of triangles = " << tris.size() << endl;
-    for (auto t : tris) {
-      cout << t << endl;
-    }
+  //   cout << "Number of triangles = " << tris.size() << endl;
+  //   for (auto t : tris) {
+  //     cout << t << endl;
+  //   }
 
-    auto pd = polydata_for_triangles(tris);
-    auto act = polydata_actor(pd);
-    visualize_actors({act});
+  //   auto pd = polydata_for_triangles(tris);
+  //   auto act = polydata_actor(pd);
+  //   visualize_actors({act});
 
-    /* Free all allocated arrays, including those allocated by Triangle. */
+  //   /* Free all allocated arrays, including those allocated by Triangle. */
 
-    free(in.pointlist);
-    free(in.pointattributelist);
-    free(in.pointmarkerlist);
-    free(in.regionlist);
+  //   free(in.pointlist);
+  //   free(in.pointattributelist);
+  //   free(in.pointmarkerlist);
+  //   free(in.regionlist);
 
-    free(mid.pointlist);
-    free(mid.pointattributelist);
-    free(mid.pointmarkerlist);
-    free(mid.trianglelist);
-    free(mid.triangleattributelist);
-    free(mid.trianglearealist);
-    free(mid.neighborlist);
-    free(mid.segmentlist);
-    free(mid.segmentmarkerlist);
-    free(mid.edgelist);
-    free(mid.edgemarkerlist);
+  //   free(mid.pointlist);
+  //   free(mid.pointattributelist);
+  //   free(mid.pointmarkerlist);
+  //   free(mid.trianglelist);
+  //   free(mid.triangleattributelist);
+  //   free(mid.trianglearealist);
+  //   free(mid.neighborlist);
+  //   free(mid.segmentlist);
+  //   free(mid.segmentmarkerlist);
+  //   free(mid.edgelist);
+  //   free(mid.edgemarkerlist);
 
-    return tris;
-  }
+  //   return tris;
+  // }
 
   std::vector<triangle> triangulate(const polygon_3& p) {
     const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));

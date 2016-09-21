@@ -46,6 +46,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
 		  ./src/geometry/offset.cpp
 		  ./src/geometry/polygon_3.cpp
+		  ./src/geometry/extern_triangulate.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/extrusion.cpp
