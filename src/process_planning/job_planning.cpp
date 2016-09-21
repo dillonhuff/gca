@@ -8,6 +8,7 @@
 #include <vtkTriangle.h>
 #include <vtkTriangleFilter.h>
 
+#include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
@@ -134,13 +135,14 @@ namespace gca {
 
   // TODO: Dont just return bounding box
   triangular_mesh feature_mesh(const feature& f) {
-    vector<point> pts = f.base().vertices();
-    concat(pts, f.top().vertices());
+    return extrude(f.base(), f.depth()*f.normal());
+    // vector<point> pts = f.base().vertices();
+    // concat(pts, f.top().vertices());
 
-    box b = bound_positions(pts);
-    auto tris = box_triangles(b);
+    // box b = bound_positions(pts);
+    // auto tris = box_triangles(b);
     
-    return make_mesh(tris, 0.001);
+    // return make_mesh(tris, 0.001);
     // cout << "Getting lines" << endl;
 
     // polygon_3 base = f.base();
