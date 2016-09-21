@@ -180,7 +180,7 @@ namespace gca {
 
     in->pointmarkerlist = (int *) malloc(in->numberofpoints * sizeof(int));
     in->pointmarkerlist[0] = 0;
-    in->pointmarkerlist[1] = 2;
+    in->pointmarkerlist[1] = 0; //2;
     in->pointmarkerlist[2] = 0;
     in->pointmarkerlist[3] = 0;
   }
@@ -216,12 +216,8 @@ namespace gca {
 
     in.numberofsegments = 0;
     in.numberofholes = 0;
-    in.numberofregions = 0; //1;
-    in.regionlist = 0; //(REAL *) malloc(in.numberofregions * 4 * sizeof(REAL));
-    // in.regionlist[0] = 0.5;
-    // in.regionlist[1] = 5.0;
-    // in.regionlist[2] = 7.0;            /* Regional attribute (for whole mesh). */
-    // in.regionlist[3] = 0.1;          /* Area constraint that will not be used. */
+    in.numberofregions = 0;
+    in.regionlist = 0;
 
     printf("Input point set:\n\n");
     report(&in, 1, 0, 0, 0, 0, 0);
