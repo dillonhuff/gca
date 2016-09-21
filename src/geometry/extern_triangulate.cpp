@@ -119,7 +119,7 @@ namespace gca {
   }
   
   std::vector<triangle> triangulate_flat_3d(const polygon_3& p) {
-    struct triangulateio in, mid, out, vorout;
+    struct triangulateio in, mid;
 
     /* Define input points. */
 
@@ -160,7 +160,7 @@ namespace gca {
     report(&in, 1, 0, 0, 0, 0, 0);
 
     /* Make necessary initializations so that Triangle can return a */
-    /*   triangulation in `mid' and a voronoi diagram in `vorout'.  */
+    /*   triangulation in `mid' */
 
     mid.pointlist = (REAL *) NULL;            /* Not needed if -N switch used. */
     /* Not needed if -N switch used or number of point attributes is zero: */
@@ -177,50 +177,17 @@ namespace gca {
     mid.edgelist = (int *) NULL;             /* Needed only if -e switch used. */
     mid.edgemarkerlist = (int *) NULL;   /* Needed if -e used and -B not used. */
 
-    vorout.pointlist = (REAL *) NULL;        /* Needed only if -v switch used. */
-    /* Needed only if -v switch used and number of attributes is not zero: */
-    vorout.pointattributelist = (REAL *) NULL;
-    vorout.edgelist = (int *) NULL;          /* Needed only if -v switch used. */
-    vorout.normlist = (REAL *) NULL;         /* Needed only if -v switch used. */
-
     /* Triangulate the points.  Switches are chosen to read and write a  */
     /*   PSLG (p), preserve the convex hull (c), number everything from  */
     /*   zero (z), assign a regional attribute to each element (A), and  */
     /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
     /*   neighbor list (n).                                              */
 
-    triangulate("pczAevn", &in, &mid, &vorout);
+    char settings_2[] = "pczAen";
+    triangulate(&(settings_2[0]), &in, &mid, NULL);
 
     printf("Initial triangulation:\n\n");
     report(&mid, 1, 1, 1, 1, 1, 0);
-    printf("Initial Voronoi diagram:\n\n");
-    report(&vorout, 0, 0, 0, 0, 1, 1);
-
-    /* Attach area constraints to the triangles in preparation for */
-    /*   refining the triangulation.                               */
-
-    /* Needed only if -r and -a switches used: */
-    mid.trianglearealist = (REAL *) malloc(mid.numberoftriangles * sizeof(REAL));
-    mid.trianglearealist[0] = 3.0;
-    mid.trianglearealist[1] = 1.0;
-
-    /* Make necessary initializations so that Triangle can return a */
-    /*   triangulation in `out'.                                    */
-
-    out.pointlist = (REAL *) NULL;            /* Not needed if -N switch used. */
-    /* Not needed if -N switch used or number of attributes is zero: */
-    out.pointattributelist = (REAL *) NULL;
-    out.trianglelist = (int *) NULL;          /* Not needed if -E switch used. */
-    /* Not needed if -E switch used or number of triangle attributes is zero: */
-    out.triangleattributelist = (REAL *) NULL;
-
-    /* Refine the triangulation according to the attached */
-    /*   triangle area constraints.                       */
-
-    triangulate("prazBP", &mid, &out, (struct triangulateio *) NULL);
-
-    printf("Refined triangulation:\n\n");
-    report(&out, 0, 1, 0, 0, 0, 0);
 
     /* Free all allocated arrays, including those allocated by Triangle. */
 
@@ -228,25 +195,18 @@ namespace gca {
     free(in.pointattributelist);
     free(in.pointmarkerlist);
     free(in.regionlist);
+
     free(mid.pointlist);
     free(mid.pointattributelist);
     free(mid.pointmarkerlist);
     free(mid.trianglelist);
     free(mid.triangleattributelist);
-    free(mid.trianglearealist);
+
     free(mid.neighborlist);
     free(mid.segmentlist);
     free(mid.segmentmarkerlist);
     free(mid.edgelist);
     free(mid.edgemarkerlist);
-    free(vorout.pointlist);
-    free(vorout.pointattributelist);
-    free(vorout.edgelist);
-    free(vorout.normlist);
-    free(out.pointlist);
-    free(out.pointattributelist);
-    free(out.trianglelist);
-    free(out.triangleattributelist);
 
     return {};
 
