@@ -1,362 +1,157 @@
 #define CATCH_CONFIG_MAIN
 
 #include "catch.hpp"
-#include "synthesis/fixture_analysis.h"
-#include "utils/arena_allocator.h"
+#include "geometry/extrusion.h"
+#include "geometry/vtk_debug.h"
 #include "system/parse_stl.h"
+#include "utils/arena_allocator.h"
 
 namespace gca {
 
-  TEST_CASE("Parallel plates") {
+  TEST_CASE("Unlayered extrusion with no holes") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    // Change back to emco_vice
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
-    std::vector<plate_height> parallel_plates{0.5, 0.7};
-    fixtures fixes(test_vice, parallel_plates);
+    point extrude_vector(1, 0, 0);
+    std::vector<point> pts{point(0, 0, 0), point(0, 1, 0), point(0, 1, 1), point(0, 0, 1)};
+    polygon_3 poly(pts);
 
-    tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.1);
-    t1.set_cut_length(0.4);
+    triangular_mesh m = extrude(poly, extrude_vector);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.1);
-
-    t1.set_holder_diameter(2.0);
-    t1.set_holder_length(2.5);
-    
-    vector<tool> tools{t1};
-    workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
-    
-    SECTION("Clipped pill") {
-
-
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
-
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-      REQUIRE(p.fixtures().size() == 2);
-    }
-
-    SECTION("Round with thru holes") {
-      workpiece workpiece_dims(1.76, 1.76, 1.76, BRASS);
-
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/RoundEdges2Holes.stl", 0.001);
-
-      cout << "Starting round with thru holes" << endl;
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-      REQUIRE(p.fixtures().size() == 2);
-
-      cout << "Done with thru holes" << endl;
-
-    }
-
-    SECTION("onshape part 1 (1)") {
-      tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-      t3.set_cut_diameter(0.2334);
-      t3.set_cut_length(1.2);
-
-      t3.set_shank_diameter(0.5);
-      t3.set_shank_length(0.05);
-
-      t3.set_holder_diameter(2.5);
-      t3.set_holder_length(3.5);
-
-      vector<tool> tools{t1, t3};
-      
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
-
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-      REQUIRE(p.fixtures().size() == 2);
-
-      for (auto p : p.fixtures()[1].pockets) {
-	cout << p.pocket_type() << endl;
-      }
-
-      REQUIRE(p.fixtures()[1].pockets.size() == 1);
-      REQUIRE(p.fixtures()[0].pockets.size() == 3);
-    }
-
-    SECTION("onshape PSU Mount") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
-
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-      REQUIRE(p.fixtures().size() == 2);
-
-      for (auto f : p.fixtures()) {
-	cout << "orientation = " << f.fix.orient.top_normal() << endl;
-      }
-
-      REQUIRE(p.fixtures()[1].pockets.size() == 3);
-      REQUIRE(p.fixtures()[0].pockets.size() == 7);
-    }
-
-
-    SECTION("Block with hole and side pocket") {
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BlockWithHoleAndSidePocket.stl", 0.0001);
-
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-      REQUIRE(p.fixtures().size() == 3);
-
-      for (auto f : p.fixtures()) {
-    	cout << "orientation = " << f.fix.orient.top_normal() << endl;
-      }
-
-      REQUIRE(p.fixtures()[0].pockets.size() == 3);
-      REQUIRE(p.fixtures()[1].pockets.size() == 1);
-      REQUIRE(p.fixtures()[2].pockets.size() == 1);
+    vector<gca::edge> nm_edges = non_manifold_edges(m);
+    cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+    cout << "# of faces = " << m.face_indexes().size() << endl;
+    cout << "# of edges = " << m.edges().size() << endl;
+    cout << "Non manifold edges = " << endl;
+    for (auto e : nm_edges) {
+      cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
     }
     
+    REQUIRE(nm_edges.size() == 0);
+
+    REQUIRE(m.winding_order_is_consistent());
+
+    //vtk_debug_mesh(m);
+
+    REQUIRE(m.face_indexes().size() == 12);
+    REQUIRE(m.is_connected());
+
+    auto outer_surfs = outer_surfaces(m);
+
+    REQUIRE(outer_surfs.size() == 6);
+
   }
 
-  TEST_CASE("Tapered top and several slanted verticals") {
+  TEST_CASE("Layered extrusion") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = large_jaw_vice(4.0, point(1.2, -4.4, 3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+    SECTION("Extrude single layer box") {
+      point extrude_dir(1, 0, 0);
+      std::vector<point> pts{point(0, 0, 0), point(0, 1, 0), point(0, 1, 1), point(0, 0, 1)};
+      std::vector<index_poly> polys{{0, 1, 2, 3}};
+      std::vector<double> depths{3.4};
+      triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+      auto pd = polydata_for_trimesh(m);
+      debug_print_summary(pd);
+      debug_print_is_closed(pd);
+      debug_print_edge_summary(pd);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+      vector<gca::edge> nm_edges = non_manifold_edges(m);
+      cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+      cout << "# of faces = " << m.face_indexes().size() << endl;
+      cout << "# of edges = " << m.edges().size() << endl;
+      cout << "Non manifold edges = " << endl;
+      for (auto e : nm_edges) {
+	cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+      }
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
+      REQUIRE(nm_edges.size() == 0);
 
-    tool t2(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.05);
-    t2.set_cut_length(0.6);
+      REQUIRE(m.winding_order_is_consistent());
 
-    t2.set_shank_diameter(3.0 / 8.0);
-    t2.set_shank_length(0.3);
+      //vtk_debug_mesh(m);
 
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
-    
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(3.5, 3.0, 3.98, ALUMINUM);
+      REQUIRE(m.face_indexes().size() == 12);
+      REQUIRE(m.is_connected());
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
+      auto outer_surfs = outer_surfaces(m);
 
-    auto outer_surfs = outer_surfaces(mesh);
-
-    SECTION("14 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 14);
-    }
-
-    SECTION("9 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-      REQUIRE(p.fixtures().size() == 9);
-    }
-  }
-
-  TEST_CASE("Tapered extrude top and side") {
-    arena_allocator a;
-    set_system_allocator(&a);
-
-    vice test_vice = large_jaw_vice(3.5, point(-0.8, -4.4, -3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
-
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
-
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
-
-    tool t2(0.05, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.01);
-    t2.set_cut_length(10.0);
-
-    t2.set_shank_diameter(3.0 / 8.0);
-    t2.set_shank_length(0.3);
-
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
-    
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(2.5, 1.8, 2.3, BRASS);
-
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
-
-    auto outer_surfs = outer_surfaces(mesh);
-
-    SECTION("6 outer surfaces") {
       REQUIRE(outer_surfs.size() == 6);
     }
 
-    SECTION("8 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+    SECTION("Extrude 2 layer jaw") {
+      point extrude_dir(0, 1, 0);
 
-      REQUIRE(p.fixtures().size() == 8);
+      std::vector<point> pts{
+	point(0, 0, 0),
+	  point(0, 0, 10),
+	  point(10, 0, 10),
+	  point(10, 0, 9),
+	  point(7, 0, 7),
+	  point(10, 0, 5),
+	  point(10, 0, 0)};
 
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-  	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
+      std::vector<index_poly> polys{{0, 1, 2, 3, 4, 5, 6}, {0, 1, 2, 3, 5, 6}};
+      std::vector<double> depths{2.3, 3.6};
+
+      SECTION("Extrude in (0, 1, 0)") {
+	triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+	auto pd = polydata_for_trimesh(m);
+	debug_print_summary(pd);
+	debug_print_is_closed(pd);
+	debug_print_edge_summary(pd);
+
+	vector<gca::edge> nm_edges = non_manifold_edges(m);
+	cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+	cout << "# of faces = " << m.face_indexes().size() << endl;
+	cout << "# of edges = " << m.edges().size() << endl;
+	cout << "Non manifold edges = " << endl;
+	for (auto e : nm_edges) {
+	  cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+	}
+
+	REQUIRE(nm_edges.size() == 0);
+
+	REQUIRE(m.winding_order_is_consistent());
+
+
+	REQUIRE(m.is_connected());
+
+	auto surfs = outer_surfaces(m);
+	REQUIRE(surfs.size() == 6);
       }
-    }
-  }
 
-  TEST_CASE("Shape with outermost surfaces that are not part of any stable orientation") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    vice test_vice = large_jaw_vice(4.0, point(1.8, 4.2, 3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+      SECTION("Extrude in (0, -1, 0)") {
+	extrude_dir = point(0, -1, 0);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+	triangular_mesh m = extrude_layers(pts, polys, depths, extrude_dir);
+	auto pd = polydata_for_trimesh(m);
+	debug_print_summary(pd);
+	debug_print_is_closed(pd);
+	debug_print_edge_summary(pd);
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
-    
-    vector<tool> tools{t1};
-    workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL);
+	vector<gca::edge> nm_edges = non_manifold_edges(m);
+	cout << "# of vertices = " << m.vertex_indexes().size() << endl;
+	cout << "# of faces = " << m.face_indexes().size() << endl;
+	cout << "# of edges = " << m.edges().size() << endl;
+	cout << "Non manifold edges = " << endl;
+	for (auto e : nm_edges) {
+	  cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+	}
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/LittleHouse.stl", 0.001);
+	REQUIRE(nm_edges.size() == 0);
 
-    auto outer_surfs = outer_surfaces(mesh);
-    
-    SECTION("10 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 10);
-    }
+	REQUIRE(m.winding_order_is_consistent());
 
-    // Change back to 7 once optimization / feature
-    // recognition is done. 10 works, but is not efficient
-    SECTION("10 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 10);
+	REQUIRE(m.is_connected());
 
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
+	auto surfs = outer_surfaces(m);
+	REQUIRE(surfs.size() == 6);
       }
+
     }
+
   }
-
-  TEST_CASE("Tapered extrude top") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
-    fixtures fixes(test_vice);
-
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
-
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
-
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
-    
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.5);
-    t2.set_cut_length(0.3);
-
-    t2.set_shank_diameter(0.5);
-    t2.set_shank_length(0.5);
-
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
-    
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(2.5, 1.9, 2.3, ACETAL);
-
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudeTop.stl", 0.001);
-
-    auto outer_surfs = outer_surfaces(mesh);
-
-    SECTION("6 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 6);
-    }
-    
-    SECTION("7 setups, no duplicates") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-      REQUIRE(p.fixtures().size() == 7);
-
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-  	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
-      }
-    }
-  }
-
-  // NOTE: Currently only handling prismatic parts
-  // TEST_CASE("Complex rectangular part") {
-  //   arena_allocator a;
-  //   set_system_allocator(&a);
-  //   vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
-  //   fixtures fixes(test_vice);
-  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-  //   tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-  //   vector<tool> tools{t1, t2};
-  //   workpiece workpiece_dims(2.5, 1.9, 2.3, ALUMINUM);
-
-  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ComplexRectanglePart1.stl", 0.001);
-    
-  //   SECTION("10 setups") {
-  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-  //     REQUIRE(p.fixtures().size() == 10);
-
-  //     // No use of base plates
-  //     for (auto fixture : p.fixtures()) {
-  // 	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
-  //     }
-  //   }
-  // }
-
-  TEST_CASE("Box with thru hole") {
-    arena_allocator a;
-    set_system_allocator(&a);
-
-    vice test_vice = emco_vice(point(1.3, -4.4, 3.3));
-    std::vector<plate_height> plates{0.1, 0.3};
-    fixtures fixes(test_vice, plates);
-
-    workpiece workpiece_dims(2.0, 2.0, 3.98, ALUMINUM);
-
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
-
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
-
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
-    
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.5);
-    t2.set_cut_length(0.3);
-
-    t2.set_shank_diameter(0.5);
-    t2.set_shank_length(0.5);
-
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
-
-    vector<tool> tools{t1, t2};
-
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
-
-    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-
-    REQUIRE(p.fixtures().size() == 2);
-  }
-
 }

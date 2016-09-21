@@ -65,7 +65,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/vtk_utils.cpp)
 
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
-target_link_libraries(geometry utils ${CGAL_LIBRARIES})
+target_link_libraries(geometry utils ${CGAL_LIBRARIES} /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h
@@ -259,7 +259,9 @@ add_executable(nef-test examples/nef_test.cpp)
 target_link_libraries(nef-test geometry utils gcode gprocess gca)
 
 add_executable(tri-test examples/tri_test.cpp)
-target_link_libraries(tri-test geometry utils gcode gprocess gca /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
+target_link_libraries(tri-test geometry utils gcode gprocess gca)
+
+#/Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 find_package( OpenCV REQUIRED )
 

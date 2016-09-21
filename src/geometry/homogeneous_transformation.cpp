@@ -41,4 +41,5 @@ namespace gca {
       std::make_pair(rotation, displacement);
     return p;
   }
+
 }

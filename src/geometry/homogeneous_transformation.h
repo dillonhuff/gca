@@ -19,6 +19,7 @@ namespace gca {
 	      const plane ap, const plane bp, const plane cp);
 
   point apply(const homogeneous_transform& t, const point p);
+
 }
 
 #endif

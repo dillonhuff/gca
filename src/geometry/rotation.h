@@ -13,6 +13,8 @@ namespace gca {
   triangular_mesh apply(const rotation& r, const triangular_mesh& m);
 
   std::vector<point> apply(const rotation& r, const std::vector<point>& pts);
+
+  triangle apply(const rotation& r, const triangle tri);
 }
 
 #endif
