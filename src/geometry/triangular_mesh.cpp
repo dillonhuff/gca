@@ -112,19 +112,7 @@ namespace gca {
 	cout << "--- Conflicting triangle = " << tj << endl;
 	return corrected;
       }
-      // for (unsigned k = 0; k < 3; k++) {
-      // 	unsigned kp1 = (k + 1) % 3;
-      // 	unsigned kp2 = (k + 2) % 3;
-      // 	if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-      // 	  triangle_t corrected;
-      // 	  corrected.v[k] = ti.v[kp1];
-      // 	  corrected.v[kp1] = ti.v[k];
-      // 	  corrected.v[kp2] = ti.v[kp2];
-      // 	  cout << "--- Original triangle = " << ti << endl;
-      // 	  cout << "--- Corrected triangle = " << corrected << endl;
-      // 	  cout << "--- Conflicting triangle = " << tj << endl;
-      // 	  return corrected;
-      // 	}
+
     }
 
     return ti;

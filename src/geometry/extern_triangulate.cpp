@@ -169,16 +169,33 @@ namespace gca {
   }
 
   void set_points_and_segments(struct triangulateio* in, const polygon_3& p) {
-    DBG_ASSERT(p.holes().size() == 0);
+    in->numberofpoints = p.vertices().size();
 
-    in->numberofpoints = p.vertices().size(); //4;
-    in->pointlist = (REAL *) malloc(in->numberofpoints * 2 * sizeof(REAL));
-    for (unsigned i = 0; i < p.vertices().size(); i++) {
-      point pi = p.vertices()[i];
-      in->pointlist[2*i] = pi.x;
-      in->pointlist[2*i + 1] = pi.y;
+    for (auto h : p.holes()) {
+      in->numberofpoints += h.size();
     }
 
+    in->pointlist = (REAL *) malloc(in->numberofpoints * 2 * sizeof(REAL));
+    unsigned vert_ind = 0;
+
+    for (unsigned i = 0; i < p.vertices().size(); i++) {
+      point pi = p.vertices()[i];
+      in->pointlist[2*vert_ind] = pi.x;
+      in->pointlist[2*vert_ind + 1] = pi.y;
+
+      vert_ind++;
+    }
+
+    for (auto h : p.holes()) {
+      for (unsigned i = 0; i < h.size(); i++) {
+	point pi = h[i];
+	in->pointlist[2*vert_ind] = pi.x;
+	in->pointlist[2*vert_ind + 1] = pi.y;
+
+	vert_ind++;
+      }
+    }
+    
     in->numberofpointattributes = 0;
     in->pointattributelist = NULL;
 

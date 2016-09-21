@@ -508,13 +508,12 @@ namespace gca {
     return top;
   }
 
-  std::vector<triangle> build_sides(const polygon_3& poly, const point v) {
-    DBG_ASSERT(poly.holes().size() == 0);
-
+  std::vector<triangle> ring_sides(const std::vector<point>& poly, const point v) {
     vector<triangle> side_tris;
-    for (unsigned i = 0; i < poly.vertices().size(); i++) {
-      point p = poly.vertices()[i];
-      point q = poly.vertices()[(i + 1) % poly.vertices().size()];
+    
+    for (unsigned i = 0; i < poly.size(); i++) {
+      point p = poly[i];
+      point q = poly[(i + 1) % poly.size()];
 
       point r = p + v;
       point s = q + v;
@@ -524,17 +523,21 @@ namespace gca {
       concat(side_tris, tris);
     }
 
-    cout << "SIDE TRIS" << endl;
-    for (auto t : side_tris) {
-      vtk_debug_triangles({t});
+    return side_tris;
+  }
+
+  std::vector<triangle> build_sides(const polygon_3& poly, const point v) {
+    vector<triangle> side_tris;
+    concat(side_tris, ring_sides(poly.vertices(), v));
+
+    for (auto h : poly.holes()) {
+      concat(side_tris, ring_sides(h, v));
     }
 
     return side_tris;
   }
 
   triangular_mesh extrude(const polygon_3& p, const point v) {
-    DBG_ASSERT(p.holes().size() == 0);
-    
     std::vector<triangle> base = triangulate(p);
 
     std::vector<triangle> top = build_top(base, v);
