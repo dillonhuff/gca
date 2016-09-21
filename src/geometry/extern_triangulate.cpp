@@ -297,4 +297,4 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
-  }
+}
