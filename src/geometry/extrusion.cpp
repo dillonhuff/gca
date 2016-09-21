@@ -496,11 +496,35 @@ namespace gca {
 
   std::vector<triangle> build_top(const std::vector<triangle>& base_tris,
 				  const point v) {
-    DBG_ASSERT(false);
+    std::vector<triangle> top;
+    for (auto t : base_tris) {
+      triangle top_t = triangle(-1*t.normal,
+				v + t.v2,
+				v + t.v1,
+				v + t.v3);
+      top.push_back(top_t);
+    }
+
+    return top;
   }
 
-  std::vector<triangle> build_sides(const polygon_3& p, const point v) {
-    DBG_ASSERT(false);
+  std::vector<triangle> build_sides(const polygon_3& poly, const point v) {
+    DBG_ASSERT(poly.holes().size() == 0);
+
+    vector<triangle> side_tris;
+    for (unsigned i = 0; i < poly.vertices().size(); i++) {
+      point p = poly.vertices()[i];
+      point q = poly.vertices()[(i + 1) % poly.vertices().size()];
+
+      point r = p + v;
+      point s = q + v;
+
+      polygon_3 side_poly({p, q, s, r});
+      auto tris = triangulate(side_poly);
+      concat(side_tris, tris);
+    }
+
+    return side_tris;
   }
 
   triangular_mesh extrude(const polygon_3& p, const point v) {

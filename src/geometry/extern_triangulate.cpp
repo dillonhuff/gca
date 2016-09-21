@@ -117,7 +117,52 @@ namespace gca {
       printf("\n");
     }
   }
+
+  std::vector<triangle> trilib_to_tris(struct triangulateio mid) {
+    vector<point> point_vec;
+    for (unsigned i = 0; i < mid.numberofpoints; i++) {
+      REAL px = mid.pointlist[2*i];
+      REAL py = mid.pointlist[2*i + 1];
+      point_vec.push_back(point(px, py, 0.0));
+    }
+
+    cout << "POINTS" << endl;
+    for (auto p : point_vec) {
+      cout << p << endl;
+    }
   
+    vector<triangle> tris;
+    for (unsigned i = 0; i < mid.numberoftriangles; i++) {
+      vector<point> pts;
+      for (unsigned j = 0; j < mid.numberofcorners; j++) {
+	auto ind = mid.trianglelist[i * mid.numberofcorners + j];
+	pts.push_back(point_vec[ind]);
+      }
+
+      DBG_ASSERT(pts.size() == 3);
+
+      point v0 = pts[0];
+      point v1 = pts[1];
+      point v2 = pts[2];
+    
+      point q1 = v1 - v0;
+      point q2 = v2 - v0;
+      point norm = cross(q2, q1).normalize();
+      tris.push_back(triangle(norm, v0, v1, v2));
+    }
+
+    cout << "Number of triangles = " << tris.size() << endl;
+    for (auto t : tris) {
+      cout << t << endl;
+    }
+
+    auto pd = polydata_for_triangles(tris);
+    auto act = polydata_actor(pd);
+    visualize_actors({act});
+
+    return tris;
+  }
+
   std::vector<triangle> triangulate_flat_3d(const polygon_3& p) {
     struct triangulateio in, mid;
 
@@ -191,6 +236,8 @@ namespace gca {
 
     /* Free all allocated arrays, including those allocated by Triangle. */
 
+    vector<triangle> tris = trilib_to_tris(mid);
+
     free(in.pointlist);
     free(in.pointattributelist);
     free(in.pointmarkerlist);
@@ -208,7 +255,7 @@ namespace gca {
     free(mid.edgelist);
     free(mid.edgemarkerlist);
 
-    return {};
+    return tris;
 
   }
 
