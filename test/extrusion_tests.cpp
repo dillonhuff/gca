@@ -25,7 +25,7 @@ namespace gca {
     cout << "# of edges = " << m.edges().size() << endl;
     cout << "Non manifold edges = " << endl;
     for (auto e : nm_edges) {
-      cout << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
+      cout << e << " of adjacent triangles: " << m.edge_face_neighbors(e).size() << endl;
     }
     
     REQUIRE(nm_edges.size() == 0);

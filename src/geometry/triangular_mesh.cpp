@@ -137,9 +137,7 @@ namespace gca {
 
   std::vector<triangle_t>
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
-    DBG_ASSERT(false);
-
-    vector<triangle_t> tris(triangles.size());
+    vector<triangle_t> tris; //(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
     cout << "Initial # of triangles = " << triangles.size() << endl;
     unsigned num_added = 0;
@@ -154,16 +152,16 @@ namespace gca {
 
 	if (sub_tris.size() > 0) {
 	  triangle_t corrected = correct_orientation(next_t, sub_tris);
-	  //	  tris.push_back(corrected);
-	  tris[ind] = corrected;
+	  tris.push_back(corrected);
+	  //	  tris[ind] = corrected;
 	  remove(ind, remaining_inds);
 	  num_added++;
 	  break;
 	}
 
 	if (num_added == 0) {
-	  //	  tris.push_back(next_t);
-	  tris[ind] = next_t;
+	  tris.push_back(next_t);
+	  //tris[ind] = next_t;
 	  remove(ind, remaining_inds);
 	  num_added++;
 	  break;
@@ -211,6 +209,7 @@ namespace gca {
 			double tolerance) {
     auto vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+
     int wind_errs = num_winding_order_errors(vertex_triangles);
     if (wind_errs > 0) {
       cout << "Num winding errors = " << wind_errs << endl;
@@ -311,7 +310,13 @@ namespace gca {
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
 
-    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
+    cout << "VERTEX TRIANGLES" << endl;
+    for (auto t : vertex_triangles) {
+      cout << "TRIANGLE" << endl;
+      cout << t.v[0] << " , " << t.v[1] << " , " << t.v[2] << endl;
+    }
+
+    //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
     
     std::vector<edge_t> edges;
     unordered_edges_from_triangles(vertex_triangles.size(),
