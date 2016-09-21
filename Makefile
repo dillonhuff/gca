@@ -163,6 +163,19 @@ scale-down-mesh/fast:
 .PHONY : scale-down-mesh/fast
 
 #=============================================================================
+# Target rules for targets named check-contours
+
+# Build rule for target.
+check-contours: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 check-contours
+.PHONY : check-contours
+
+# fast build rule for target.
+check-contours/fast:
+	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/build
+.PHONY : check-contours/fast
+
+#=============================================================================
 # Target rules for targets named vtk-mass
 
 # Build rule for target.
@@ -215,19 +228,6 @@ camaster-test/fast:
 .PHONY : camaster-test/fast
 
 #=============================================================================
-# Target rules for targets named check-contours
-
-# Build rule for target.
-check-contours: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 check-contours
-.PHONY : check-contours
-
-# fast build rule for target.
-check-contours/fast:
-	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/build
-.PHONY : check-contours/fast
-
-#=============================================================================
 # Target rules for targets named json-mesh
 
 # Build rule for target.
@@ -239,6 +239,19 @@ json-mesh: cmake_check_build_system
 json-mesh/fast:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/build
 .PHONY : json-mesh/fast
+
+#=============================================================================
+# Target rules for targets named tri-test
+
+# Build rule for target.
+tri-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tri-test
+.PHONY : tri-test
+
+# fast build rule for target.
+tri-test/fast:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/build
+.PHONY : tri-test/fast
 
 #=============================================================================
 # Target rules for targets named plate-cutter
@@ -265,6 +278,19 @@ all-tests: cmake_check_build_system
 all-tests/fast:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/build
 .PHONY : all-tests/fast
+
+#=============================================================================
+# Target rules for targets named gcode
+
+# Build rule for target.
+gcode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gcode
+.PHONY : gcode
+
+# fast build rule for target.
+gcode/fast:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
+.PHONY : gcode/fast
 
 #=============================================================================
 # Target rules for targets named gprocess
@@ -304,19 +330,6 @@ gca: cmake_check_build_system
 gca/fast:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/build
 .PHONY : gca/fast
-
-#=============================================================================
-# Target rules for targets named gcode
-
-# Build rule for target.
-gcode: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gcode
-.PHONY : gcode
-
-# fast build rule for target.
-gcode/fast:
-	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
-.PHONY : gcode/fast
 
 #=============================================================================
 # Target rules for targets named surface-test
@@ -733,6 +746,33 @@ examples/surface_test.s: examples/surface_test.cpp.s
 examples/surface_test.cpp.s:
 	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/examples/surface_test.cpp.s
 .PHONY : examples/surface_test.cpp.s
+
+examples/tri_test.o: examples/tri_test.cpp.o
+
+.PHONY : examples/tri_test.o
+
+# target to build an object file
+examples/tri_test.cpp.o:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.o
+.PHONY : examples/tri_test.cpp.o
+
+examples/tri_test.i: examples/tri_test.cpp.i
+
+.PHONY : examples/tri_test.i
+
+# target to preprocess a source file
+examples/tri_test.cpp.i:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.i
+.PHONY : examples/tri_test.cpp.i
+
+examples/tri_test.s: examples/tri_test.cpp.s
+
+.PHONY : examples/tri_test.s
+
+# target to generate assembly for a file
+examples/tri_test.cpp.s:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.s
+.PHONY : examples/tri_test.cpp.s
 
 examples/ublas.o: examples/ublas.cpp.o
 
@@ -3980,24 +4020,25 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... edit_cache"
 	@echo "... AddCell"
 	@echo "... engraving"
-	@echo "... edit_cache"
 	@echo "... debug-test"
 	@echo "... scale-down-mesh"
+	@echo "... check-contours"
 	@echo "... vtk-mass"
 	@echo "... ublas"
 	@echo "... json-plan"
 	@echo "... camaster-test"
-	@echo "... check-contours"
 	@echo "... json-mesh"
+	@echo "... tri-test"
 	@echo "... plate-cutter"
 	@echo "... all-tests"
+	@echo "... gcode"
 	@echo "... rebuild_cache"
 	@echo "... gprocess"
 	@echo "... feature-decomp"
 	@echo "... gca"
-	@echo "... gcode"
 	@echo "... surface-test"
 	@echo "... nef-test"
 	@echo "... geometry"
@@ -4042,6 +4083,9 @@ help:
 	@echo "... examples/surface_test.o"
 	@echo "... examples/surface_test.i"
 	@echo "... examples/surface_test.s"
+	@echo "... examples/tri_test.o"
+	@echo "... examples/tri_test.i"
+	@echo "... examples/tri_test.s"
 	@echo "... examples/ublas.o"
 	@echo "... examples/ublas.i"
 	@echo "... examples/ublas.s"

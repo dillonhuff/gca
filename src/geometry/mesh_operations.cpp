@@ -80,7 +80,50 @@ namespace gca {
 
   triangular_mesh nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
     DBG_ASSERT(p.is_simple());
-    DBG_ASSERT(false);
+
+    Polyhedron poly;
+    p.convert_to_polyhedron(poly);
+
+    for (auto it = poly.points_begin(); it != poly.points_end(); it++) {
+      cout << *it << endl;
+    }
+
+    vector<triangle> tris;
+    for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
+      auto fc = *it;
+      cout << fc.is_triangle() << endl;
+
+      auto he = fc.facet_begin();
+      auto end = fc.facet_begin();
+      vector<point> pts;
+      CGAL_For_all(he, end) {
+	auto h = *he;
+	auto v = h.vertex();
+	auto r = (*v).point();
+	
+	point res_pt(CGAL::to_double(r.x()),
+		     CGAL::to_double(r.y()),
+		     CGAL::to_double(r.z()));
+
+	pts.push_back(res_pt);
+	//	cout << r << endl;
+	//cout << *v << endl;
+	//cout << he->vertex() << endl;
+      }
+
+      DBG_ASSERT(pts.size() == 3);
+
+      point v0 = pts[0];
+      point v1 = pts[1];
+      point v2 = pts[2];
+
+      point q1 = v1 - v0;
+      point q2 = v2 - v0;
+      point norm = cross(q2, q1).normalize();
+      tris.push_back(triangle(norm, v0, v1, v2));
+    }
+
+    return make_mesh(tris, 0.0001);
   }
 
   Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m) {

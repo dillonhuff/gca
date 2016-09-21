@@ -29,7 +29,6 @@ namespace gca {
     return box(0, x_len, 0, y_len, 0, z_len);
   }
 
-  // TODO: Dont just make a box
   triangular_mesh stock_mesh(const workpiece& w) {
     box b = workpiece_box(w);
     auto tris = box_triangles(b);

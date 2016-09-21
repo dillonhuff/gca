@@ -13,6 +13,7 @@
 #include "geometry/vtk_utils.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
+#include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
 namespace gca {
@@ -131,49 +132,57 @@ namespace gca {
     return res;
   }
 
+  // TODO: Dont just return bounding box
   triangular_mesh feature_mesh(const feature& f) {
-    cout << "Getting lines" << endl;
+    vector<point> pts = f.base().vertices();
+    concat(pts, f.top().vertices());
 
-    polygon_3 base = f.base();
+    box b = bound_positions(pts);
+    auto tris = box_triangles(b);
     
-    //    auto line_polydata = lines_for_polygon(base);
+    return make_mesh(tris, 0.001);
+    // cout << "Getting lines" << endl;
 
-    vector<point> verts = base.vertices();
-    reverse(verts);
-    oriented_polygon p(base.normal(), verts);
-
-    auto pd = polydata_for_polygon(p);
-
-    vtkSmartPointer<vtkTriangleFilter> triangleFilter1 =
-      vtkSmartPointer<vtkTriangleFilter>::New();
-    triangleFilter1->SetInputData(pd);
-    triangleFilter1->Update();
+    // polygon_3 base = f.base();
     
-    point n = f.normal();
+    // //    auto line_polydata = lines_for_polygon(base);
 
-    cout << "Extruding" << endl;
+    // vector<point> verts = base.vertices();
+    // reverse(verts);
+    // oriented_polygon p(base.normal(), verts);
 
-    vtkSmartPointer<vtkLinearExtrusionFilter> extrude = 
-      vtkSmartPointer<vtkLinearExtrusionFilter>::New();
-    extrude->SetInputData(triangleFilter1->GetOutput());
-    extrude->SetExtrusionTypeToNormalExtrusion();
-    extrude->CappingOn();
-    extrude->SetVector(n.x, n.y, n.z);
-    extrude->SetScaleFactor(f.depth());
-    extrude->Update();
+    // auto pd = polydata_for_polygon(p);
 
-    cout << "Done extruding" << endl;
+    // vtkSmartPointer<vtkTriangleFilter> triangleFilter1 =
+    //   vtkSmartPointer<vtkTriangleFilter>::New();
+    // triangleFilter1->SetInputData(pd);
+    // triangleFilter1->Update();
+    
+    // point n = f.normal();
+
+    // cout << "Extruding" << endl;
+
+    // vtkSmartPointer<vtkLinearExtrusionFilter> extrude = 
+    //   vtkSmartPointer<vtkLinearExtrusionFilter>::New();
+    // extrude->SetInputData(triangleFilter1->GetOutput());
+    // extrude->SetExtrusionTypeToNormalExtrusion();
+    // extrude->CappingOn();
+    // extrude->SetVector(n.x, n.y, n.z);
+    // extrude->SetScaleFactor(f.depth());
+    // extrude->Update();
+
+    // cout << "Done extruding" << endl;
  
-    vtkSmartPointer<vtkTriangleFilter> triangleFilter =
-      vtkSmartPointer<vtkTriangleFilter>::New();
-    triangleFilter->SetInputConnection(extrude->GetOutputPort());
-    triangleFilter->Update();
+    // vtkSmartPointer<vtkTriangleFilter> triangleFilter =
+    //   vtkSmartPointer<vtkTriangleFilter>::New();
+    // triangleFilter->SetInputConnection(extrude->GetOutputPort());
+    // triangleFilter->Update();
 
-    auto res = trimesh_for_polydata(triangleFilter->GetOutput());
+    // auto res = trimesh_for_polydata(triangleFilter->GetOutput());
 
-    vtk_debug_mesh(res);
+    // vtk_debug_mesh(res);
 
-    return res;
+    // return res;
   }
 
   triangular_mesh subtract_features(const triangular_mesh& m,
@@ -184,6 +193,7 @@ namespace gca {
       if (f != nullptr) {
 	triangular_mesh f_mesh = feature_mesh(*f);
 	*sub_ptr = boolean_difference(*sub_ptr, f_mesh);
+	vtk_debug_mesh(*sub_ptr);
       }
     };
 
