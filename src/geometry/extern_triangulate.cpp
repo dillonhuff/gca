@@ -168,6 +168,14 @@ namespace gca {
     return tris;
   }
 
+  vector<std::pair<int, int> > ring_segments(const std::vector<point>& pts) {
+    vector<std::pair<int, int> > segs;
+    for (unsigned i = 0; i < pts.size(); i++) {
+      segs.push_back(make_pair(i, (i + 1) % pts.size() ));
+    }
+    return segs;
+  }
+  
   void set_points_and_segments(struct triangulateio* in, const polygon_3& p) {
     in->numberofpoints = p.vertices().size();
 
@@ -204,8 +212,50 @@ namespace gca {
       in->pointmarkerlist[i] = 0;
     }
 
-    in->numberofsegments = 0;
-    in->numberofholes = 0;
+    in->numberofsegments = p.vertices().size();
+    for (auto h : p.holes()) {
+      in->numberofsegments += h.size();
+    }
+
+    vector<unsigned> buffer_offsets;
+    vector<vector<std::pair<int, int> > > segments;
+
+    buffer_offsets.push_back(0);
+    segments.push_back(ring_segments(p.vertices()));
+
+    for (auto h : p.holes()) {
+      buffer_offsets.push_back(buffer_offsets.back() + h.size());
+      segments.push_back(ring_segments(h));
+    }
+
+    in->segmentlist =
+      static_cast<int*>(malloc(in->numberofsegments*sizeof(int)*2));
+
+    unsigned seg_num = 0;
+    for (unsigned i = 0; i < segments.size(); i++) {
+      auto seg_group = segments[i];
+      auto offset = buffer_offsets[i];
+      for (unsigned j = 0; j < seg_group.size(); j++) {
+	in->segmentlist[2*seg_num] = offset + seg_group[j].first;
+	in->segmentlist[2*seg_num + 1] = offset + seg_group[j].second;
+	seg_num++;
+      }
+    }
+
+    DBG_ASSERT(seg_num == in->numberofsegments);
+
+    in->numberofholes = p.holes().size();
+
+    in->holelist =
+      static_cast<REAL*>(malloc(in->numberofholes*sizeof(REAL)*2));
+
+    // TODO: Actually use interior point computation
+    for (unsigned i = 0; i < in->numberofholes; i++) {
+      point pt = centroid(p.holes()[i]);
+      in->holelist[2*i] = pt.x;
+      in->holelist[2*i + 1] = pt.y;
+    }
+
     in->numberofregions = 0;
     in->regionlist = 0;
 

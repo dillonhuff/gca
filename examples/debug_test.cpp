@@ -45,7 +45,6 @@ namespace gca {
 
     //vtk_debug_mesh(m);
 
-    REQUIRE(m.face_indexes().size() == 12);
     REQUIRE(m.is_connected());
 
     auto outer_surfs = outer_surfaces(m);

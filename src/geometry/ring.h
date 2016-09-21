@@ -54,6 +54,16 @@ namespace gca {
 
     DBG_ASSERT(within_eps(new_theta, 0, tol));
   }
+
+  template<typename Ring>
+  point centroid(const Ring& r) {
+    point centroid(0, 0, 0);
+    for (auto p : r) {
+      centroid = centroid + p;
+    }
+
+    return (1.0 / r.size()) * centroid;
+  }
   
 }
 
