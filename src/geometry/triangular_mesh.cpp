@@ -83,25 +83,48 @@ namespace gca {
     return num_eq > 1;
   }
 
+  bool winding_conflict(const triangle_t ti, const triangle_t tj) {
+    for (unsigned l = 0; l < 3; l++) {
+      unsigned lp1 = (l + 1) % 3;
+      for (unsigned k = 0; k < 3; k++) {
+	unsigned kp1 = (k + 1) % 3;
+	if (ti.v[k] == tj.v[l] && ti.v[kp1] == tj.v[lp1]) {
+	  return true;
+	}
+      }
+    }
+    return false;
+  }
+
   triangle_t
   correct_orientation(const triangle_t to_correct,
 		      const std::vector<triangle_t>& others) {
     auto ti = to_correct;
     for (auto tj : others) {
-      for (unsigned k = 0; k < 3; k++) {
-	unsigned kp1 = (k + 1) % 3;
-	unsigned kp2 = (k + 2) % 3;
-	if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-	  triangle_t corrected;
-	  corrected.v[k] = ti.v[kp1];
-	  corrected.v[kp1] = ti.v[k];
-	  corrected.v[kp2] = ti.v[kp2];
-	  cout << "--- Original triangle = " << ti << endl;
-	  cout << "--- Corrected triangle = " << corrected << endl;
-	  cout << "--- Conflicting triangle = " << tj << endl;
-	  return corrected;
-	}
+      if (winding_conflict(ti, tj)) {
+	triangle_t corrected;
+	corrected.v[0] = ti.v[1];
+	corrected.v[1] = ti.v[0];
+	corrected.v[2] = ti.v[2];
+
+	cout << "--- Original triangle = " << ti << endl;
+	cout << "--- Corrected triangle = " << corrected << endl;
+	cout << "--- Conflicting triangle = " << tj << endl;
+	return corrected;
       }
+      // for (unsigned k = 0; k < 3; k++) {
+      // 	unsigned kp1 = (k + 1) % 3;
+      // 	unsigned kp2 = (k + 2) % 3;
+      // 	if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
+      // 	  triangle_t corrected;
+      // 	  corrected.v[k] = ti.v[kp1];
+      // 	  corrected.v[kp1] = ti.v[k];
+      // 	  corrected.v[kp2] = ti.v[kp2];
+      // 	  cout << "--- Original triangle = " << ti << endl;
+      // 	  cout << "--- Corrected triangle = " << corrected << endl;
+      // 	  cout << "--- Conflicting triangle = " << tj << endl;
+      // 	  return corrected;
+      // 	}
     }
 
     return ti;
@@ -121,18 +144,13 @@ namespace gca {
 	  auto ti = triangles[i];
 	  auto tj = triangles[j];
 
-	  for (unsigned l = 0; l < 3; l++) {
-	    unsigned lp1 = (l + 1) % 3;
-	    for (unsigned k = 0; k < 3; k++) {
-	      unsigned kp1 = (k + 1) % 3;
-	      if (ti.v[k] == tj.v[l] && ti.v[kp1] == tj.v[lp1]) {
-		cout << "Winding order error: i = " << i << ", j = " << j << endl;
-		cout << "--- " << ti << endl;
-		cout << "--- " << tj << endl;
-		num_errs++;
-	      }
-	    }
+	  if (winding_conflict(ti, tj)) {
+	    cout << "Winding order error: i = " << i << ", j = " << j << endl;
+	    cout << "--- " << ti << endl;
+	    cout << "--- " << tj << endl;
+	    num_errs++;
 	  }
+
 	  
 	}
       }
