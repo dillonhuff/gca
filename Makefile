@@ -1692,6 +1692,33 @@ src/geometry/polygon.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon.cpp.s
 .PHONY : src/geometry/polygon.cpp.s
 
+src/geometry/polygon_3.o: src/geometry/polygon_3.cpp.o
+
+.PHONY : src/geometry/polygon_3.o
+
+# target to build an object file
+src/geometry/polygon_3.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon_3.cpp.o
+.PHONY : src/geometry/polygon_3.cpp.o
+
+src/geometry/polygon_3.i: src/geometry/polygon_3.cpp.i
+
+.PHONY : src/geometry/polygon_3.i
+
+# target to preprocess a source file
+src/geometry/polygon_3.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon_3.cpp.i
+.PHONY : src/geometry/polygon_3.cpp.i
+
+src/geometry/polygon_3.s: src/geometry/polygon_3.cpp.s
+
+.PHONY : src/geometry/polygon_3.s
+
+# target to generate assembly for a file
+src/geometry/polygon_3.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon_3.cpp.s
+.PHONY : src/geometry/polygon_3.cpp.s
+
 src/geometry/polyline.o: src/geometry/polyline.cpp.o
 
 .PHONY : src/geometry/polyline.o
@@ -4188,6 +4215,9 @@ help:
 	@echo "... src/geometry/polygon.o"
 	@echo "... src/geometry/polygon.i"
 	@echo "... src/geometry/polygon.s"
+	@echo "... src/geometry/polygon_3.o"
+	@echo "... src/geometry/polygon_3.i"
+	@echo "... src/geometry/polygon_3.s"
 	@echo "... src/geometry/polyline.o"
 	@echo "... src/geometry/polyline.i"
 	@echo "... src/geometry/polyline.s"

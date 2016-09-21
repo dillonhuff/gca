@@ -312,5 +312,8 @@ namespace gca {
     
     return edges;
   }
-  
+
+  triangular_mesh extrude(const polygon_3& p, const point v) {
+    DBG_ASSERT(false);
+  }
 }

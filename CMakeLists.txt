@@ -29,6 +29,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 		     ./src/geometry/point.h
 		     ./src/geometry/plane.h
 		     ./src/geometry/offset.h
+		     ./src/geometry/polygon_3.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/extrusion.h
 	    ./src/geometry/spline_sampling.h
@@ -44,6 +45,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
 		  ./src/geometry/offset.cpp
+		  ./src/geometry/polygon_3.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/extrusion.cpp
