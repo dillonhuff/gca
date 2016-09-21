@@ -120,15 +120,20 @@ namespace gca {
 	if (i != j) {
 	  auto ti = triangles[i];
 	  auto tj = triangles[j];
-	  for (unsigned k = 0; k < 3; k++) {
-	    unsigned kp1 = (k + 1) % 3;
-	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-	      cout << "Winding order error: i = " << i << ", j = " << j << endl;
-	      cout << "--- " << ti << endl;
-	      cout << "--- " << tj << endl;
-	      num_errs++;
+
+	  for (unsigned l = 0; l < 3; l++) {
+	    unsigned lp1 = (l + 1) % 3;
+	    for (unsigned k = 0; k < 3; k++) {
+	      unsigned kp1 = (k + 1) % 3;
+	      if (ti.v[k] == tj.v[l] && ti.v[kp1] == tj.v[lp1]) {
+		cout << "Winding order error: i = " << i << ", j = " << j << endl;
+		cout << "--- " << ti << endl;
+		cout << "--- " << tj << endl;
+		num_errs++;
+	      }
 	    }
 	  }
+	  
 	}
       }
     }
