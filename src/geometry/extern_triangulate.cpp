@@ -164,6 +164,29 @@ namespace gca {
     return tris;
   }
 
+  point interior_point(const std::vector<point>& pts) {
+    polygon_3 hole_poly(pts);
+    auto bp = to_boost_poly_2(hole_poly);
+
+    for (unsigned i = 0; i < pts.size(); i++) {
+      unsigned i1 = (i + 1) % pts.size();
+      unsigned i2 = (i + 2) % pts.size();
+
+      point pi0 = pts[i];
+      point pi1 = pts[i1];
+      point pi2 = pts[i2];
+
+      point mid = pi2 - pi0;
+
+      
+      auto pt_2 = bg::model::d2::point_xy<double>(mid.x, mid.y);
+      if (bg::within(pt_2, bp)) { return mid; }
+
+    }
+
+    DBG_ASSERT(false);
+  }
+
   vector<std::pair<int, int> > ring_segments(const std::vector<point>& pts) {
     vector<std::pair<int, int> > segs;
     for (unsigned i = 0; i < pts.size(); i++) {
@@ -247,7 +270,14 @@ namespace gca {
 
     // TODO: Actually use interior point computation
     for (unsigned i = 0; i < in->numberofholes; i++) {
-      point pt = centroid(p.holes()[i]);
+      point pt = interior_point(p.holes()[i]);
+
+      polygon_3 hole_poly(p.holes()[i]);
+      auto bp = to_boost_poly_2(hole_poly);
+      auto pt_2 = bg::model::d2::point_xy<double>(pt.x, pt.y);
+
+      DBG_ASSERT(bg::within(pt_2, bp));
+
       in->holelist[2*i] = pt.x;
       in->holelist[2*i + 1] = pt.y;
     }

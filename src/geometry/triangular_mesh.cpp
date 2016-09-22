@@ -147,9 +147,9 @@ namespace gca {
   }
 
   std::vector<triangle_t>
-  fix_winding_order_errors(const std::vector<triangle_t>& all_tris) {
+  fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
     auto initial_comps =
-      connected_components_by_elems(all_tris, [](const triangle_t l, const triangle_t r)
+      connected_components_by_elems(triangles, [](const triangle_t l, const triangle_t r)
 				    { return share_edge(l, r); });
 
     cout << "# of comps = " << initial_comps.size() << endl;
@@ -157,9 +157,7 @@ namespace gca {
       cout << c.size() << endl;
     }
 
-    auto triangles = max_e(initial_comps, [](const std::vector<triangle_t>& tris)
-			   { return tris.size(); });
-
+    DBG_ASSERT(initial_comps.size() == 1);
 
     vector<triangle_t> tris; //(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
@@ -307,8 +305,7 @@ namespace gca {
   all_normals_consistent(const std::vector<triangle_t>& vertex_triangles,
 			 const std::vector<point>& vertices,
 			 const std::vector<point>& face_orientations) {
-    // TODO: Reintroduce later
-    //DBG_ASSERT(vertex_triangles.size() == face_orientations.size());
+    DBG_ASSERT(vertex_triangles.size() == face_orientations.size());
 
     for (unsigned i = 0; i < vertex_triangles.size(); i++) {
       auto t = vertex_triangles[i];

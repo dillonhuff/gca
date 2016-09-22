@@ -548,6 +548,8 @@ namespace gca {
     cout << "# of triangles in sides = " << sides.size() << endl;
     concat(base, sides);
 
+    vtk_debug_triangles(base);
+
     return make_mesh(base, 0.0001);
   }
 }
