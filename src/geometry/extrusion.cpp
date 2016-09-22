@@ -541,13 +541,11 @@ namespace gca {
     std::vector<triangle> base = triangulate(p);
 
     std::vector<triangle> top = build_top(base, v);
-    vtk_debug_triangles(top);
 
     concat(base, top);
 
     std::vector<triangle> sides = build_sides(p, v);
     cout << "# of triangles in sides = " << sides.size() << endl;
-    vtk_debug_triangles(sides);
     concat(base, sides);
 
     return make_mesh(base, 0.0001);

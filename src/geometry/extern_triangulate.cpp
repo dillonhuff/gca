@@ -161,10 +161,6 @@ namespace gca {
       cout << t << endl;
     }
 
-    auto pd = polydata_for_triangles(tris);
-    auto act = polydata_actor(pd);
-    visualize_actors({act});
-
     return tris;
   }
 

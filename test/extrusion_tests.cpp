@@ -32,8 +32,6 @@ namespace gca {
 
     REQUIRE(m.winding_order_is_consistent());
 
-    //vtk_debug_mesh(m);
-
     REQUIRE(m.face_indexes().size() == 12);
     REQUIRE(m.is_connected());
 
@@ -78,9 +76,6 @@ namespace gca {
 
     REQUIRE(m.winding_order_is_consistent());
 
-    //vtk_debug_mesh(m);
-
-    REQUIRE(m.face_indexes().size() == 12);
     REQUIRE(m.is_connected());
 
     auto outer_surfs = outer_surfaces(m);
@@ -116,8 +111,6 @@ namespace gca {
       REQUIRE(nm_edges.size() == 0);
 
       REQUIRE(m.winding_order_is_consistent());
-
-      //vtk_debug_mesh(m);
 
       REQUIRE(m.face_indexes().size() == 12);
       REQUIRE(m.is_connected());

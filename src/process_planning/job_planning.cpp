@@ -194,7 +194,10 @@ namespace gca {
     auto subtract = [sub_ptr](feature* f) {
       if (f != nullptr) {
 	triangular_mesh f_mesh = feature_mesh(*f);
+	cout << "FEATURE MESH" << endl;
+	vtk_debug_mesh(f_mesh);
 	*sub_ptr = boolean_difference(*sub_ptr, f_mesh);
+	cout << "RESULT" << endl;
 	vtk_debug_mesh(*sub_ptr);
       }
     };

@@ -321,12 +321,6 @@ namespace gca {
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
 
-    cout << "VERTEX TRIANGLES" << endl;
-    for (auto t : vertex_triangles) {
-      cout << "TRIANGLE" << endl;
-      cout << t.v[0] << " , " << t.v[1] << " , " << t.v[2] << endl;
-    }
-
     //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
     
     std::vector<edge_t> edges;
