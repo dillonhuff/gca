@@ -29,7 +29,6 @@ namespace gca {
     return box(0, x_len, 0, y_len, 0, z_len);
   }
 
-  // TODO: Dont just make a box
   triangular_mesh stock_mesh(const workpiece& w) {
     box b = workpiece_box(w);
     auto tris = box_triangles(b);
@@ -233,12 +232,9 @@ namespace gca {
 
   // TODO: Add code to generate jaws for base fixture
   boost::optional<fixture>
-  find_base_contour_fixture(const surface& outline_of_contour,
-			    const surface& top_of_contour,
+  find_base_contour_fixture(const triangular_mesh& part_mesh,
 			    const vice& v,
 			    const point n) {
-
-    const triangular_mesh& part_mesh = outline_of_contour.get_parent_mesh();
 
     vector<surface> const_orient_surfs = outer_surfaces(part_mesh);
 
@@ -292,7 +288,6 @@ namespace gca {
     return clip_setups;
   }
 
-  
   clipping_plan
   base_fix_clip_plan(const workpiece& w,
 		     const triangular_mesh& aligned,
@@ -311,6 +306,91 @@ namespace gca {
     return clipping_plan(clipped_surfs, surfs_to_cut, clip_setups, w);
   }
 
+  boost::optional<std::pair<fixture, fixture> >
+  find_contour_fixtures(const triangular_mesh& aligned,
+			const triangular_mesh& part_mesh,
+			const fixtures& f,
+			const point n) {
+    boost::optional<fixture> top_fix =
+      find_top_contour_fixture(aligned, part_mesh, f, n);
+
+    if (top_fix) {
+      cout << "Has top fix in " << n << endl;
+
+      boost::optional<fixture> base_fix =
+	find_base_contour_fixture(part_mesh, (*top_fix).v, -1*n);
+
+      if (base_fix) {
+	return std::make_pair(*top_fix, *base_fix);
+      } 
+    }
+
+    return boost::none;
+  }
+
+  std::vector<point> surface_directions(const triangular_mesh& m) {
+    auto surfs = const_orientation_regions(m);
+
+    vector<point> dirs;
+    for (auto s : surfs) {
+      dirs.push_back(normal(surface(&m, s)));
+    }
+
+    return dirs;
+    
+  }
+
+  struct possible_contour {
+    contour_surface_decomposition decomp;
+    fixture base;
+    fixture top;
+  };
+
+  boost::optional<possible_contour>
+  find_contour(const triangular_mesh& stock,
+	       const triangular_mesh& part_mesh,
+	       const fixtures& f) {
+    vector<point> major_directions = surface_directions(stock);
+
+    DBG_ASSERT(major_directions.size() == 6);
+
+    vector<possible_contour> possible_contours;
+    for (point n : major_directions) {
+      cout << "Has outline and flat top in " << n << endl;
+
+      boost::optional<std::pair<fixture, fixture>> top_and_base =
+      	find_contour_fixtures(stock, part_mesh, f, n);
+
+      if (top_and_base) {
+      	boost::optional<contour_surface_decomposition> surfs =
+      	  contour_surface_decomposition_in_dir(part_mesh, n);
+
+	if (surfs) {
+	  possible_contour c{*surfs,
+	      top_and_base->second,
+	      top_and_base->first};
+
+	  if (surfs->rest.size() == 0) { return c; }
+
+	  possible_contours.push_back(c);
+	}
+      }
+    }
+
+    if (possible_contours.size() == 0) { return boost::none; }
+
+    auto contour_dir = min_e(possible_contours, [](const possible_contour& c) {
+	auto& decomp = c.decomp;
+	double total_surface_area = 0.0;
+	for (auto s : decomp.rest) {
+	  total_surface_area += s.surface_area();
+	}
+	return total_surface_area;
+      });
+
+    return contour_dir;
+  }
+
   boost::optional<clipping_plan>
   parallel_plate_clipping(const triangular_mesh& part_mesh,
 			  const fabrication_inputs& fab_inputs) {
@@ -326,36 +406,18 @@ namespace gca {
     vector<surface> stable_surfaces = outer_surfaces(part_mesh);
     triangular_mesh aligned = align_workpiece(stable_surfaces, w);
 
-    // NOTE: Maybe I should just compute major directions from
-    // the aligned stock?
-    boost::optional<contour_surface_decomposition> surfs =
-      compute_contour_surfaces(part_mesh);
+    boost::optional<possible_contour> pc = find_contour(aligned, part_mesh, f);
 
-    if (surfs) {
-      point n = surfs->n;
-      const surface& outline = surfs->outline;
-      const surface& top = surfs->top;
-      
-      cout << "Has outline and flat top in " << n << endl;
-
-      boost::optional<fixture> top_fix =
-      	find_top_contour_fixture(aligned, part_mesh, f, n);
-
-      if (top_fix) {
-	cout << "Has top fix in " << n << endl;
-
-	boost::optional<fixture> base_fix =
-	  find_base_contour_fixture(outline, top, (*top_fix).v, -1*n);
-
-	if (base_fix) {
-	  return base_fix_clip_plan(w, aligned, part_mesh, *surfs, *top_fix, *base_fix, fab_inputs.tools);
-	} else {
-	  return custom_jaw_plan(w, aligned, part_mesh, *surfs, *top_fix, fab_inputs);
-	}
-      }
+    if (pc) {
+      // TODO: Check if this reversal works due to a coding error or some other
+      // fixturing related issue
+      auto top_fix = pc->base;
+      auto base_fix = pc->top;
+      return base_fix_clip_plan(w, aligned, part_mesh, pc->decomp, top_fix, base_fix, fab_inputs.tools);	
     }
 
     return boost::none;
+
   }
 
   clipping_plan

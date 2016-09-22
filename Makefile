@@ -163,6 +163,19 @@ scale-down-mesh/fast:
 .PHONY : scale-down-mesh/fast
 
 #=============================================================================
+# Target rules for targets named check-contours
+
+# Build rule for target.
+check-contours: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 check-contours
+.PHONY : check-contours
+
+# fast build rule for target.
+check-contours/fast:
+	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/build
+.PHONY : check-contours/fast
+
+#=============================================================================
 # Target rules for targets named vtk-mass
 
 # Build rule for target.
@@ -215,19 +228,6 @@ camaster-test/fast:
 .PHONY : camaster-test/fast
 
 #=============================================================================
-# Target rules for targets named check-contours
-
-# Build rule for target.
-check-contours: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 check-contours
-.PHONY : check-contours
-
-# fast build rule for target.
-check-contours/fast:
-	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/build
-.PHONY : check-contours/fast
-
-#=============================================================================
 # Target rules for targets named json-mesh
 
 # Build rule for target.
@@ -239,6 +239,19 @@ json-mesh: cmake_check_build_system
 json-mesh/fast:
 	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/build
 .PHONY : json-mesh/fast
+
+#=============================================================================
+# Target rules for targets named tri-test
+
+# Build rule for target.
+tri-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tri-test
+.PHONY : tri-test
+
+# fast build rule for target.
+tri-test/fast:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/build
+.PHONY : tri-test/fast
 
 #=============================================================================
 # Target rules for targets named plate-cutter
@@ -265,6 +278,19 @@ all-tests: cmake_check_build_system
 all-tests/fast:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/build
 .PHONY : all-tests/fast
+
+#=============================================================================
+# Target rules for targets named gcode
+
+# Build rule for target.
+gcode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gcode
+.PHONY : gcode
+
+# fast build rule for target.
+gcode/fast:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
+.PHONY : gcode/fast
 
 #=============================================================================
 # Target rules for targets named gprocess
@@ -306,19 +332,6 @@ gca/fast:
 .PHONY : gca/fast
 
 #=============================================================================
-# Target rules for targets named gcode
-
-# Build rule for target.
-gcode: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gcode
-.PHONY : gcode
-
-# fast build rule for target.
-gcode/fast:
-	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
-.PHONY : gcode/fast
-
-#=============================================================================
 # Target rules for targets named surface-test
 
 # Build rule for target.
@@ -330,6 +343,19 @@ surface-test: cmake_check_build_system
 surface-test/fast:
 	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/build
 .PHONY : surface-test/fast
+
+#=============================================================================
+# Target rules for targets named nef-test
+
+# Build rule for target.
+nef-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 nef-test
+.PHONY : nef-test
+
+# fast build rule for target.
+nef-test/fast:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/build
+.PHONY : nef-test/fast
 
 #=============================================================================
 # Target rules for targets named geometry
@@ -586,6 +612,33 @@ examples/json_plan.cpp.s:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/examples/json_plan.cpp.s
 .PHONY : examples/json_plan.cpp.s
 
+examples/nef_test.o: examples/nef_test.cpp.o
+
+.PHONY : examples/nef_test.o
+
+# target to build an object file
+examples/nef_test.cpp.o:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.o
+.PHONY : examples/nef_test.cpp.o
+
+examples/nef_test.i: examples/nef_test.cpp.i
+
+.PHONY : examples/nef_test.i
+
+# target to preprocess a source file
+examples/nef_test.cpp.i:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.i
+.PHONY : examples/nef_test.cpp.i
+
+examples/nef_test.s: examples/nef_test.cpp.s
+
+.PHONY : examples/nef_test.s
+
+# target to generate assembly for a file
+examples/nef_test.cpp.s:
+	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.s
+.PHONY : examples/nef_test.cpp.s
+
 examples/plate_cutter.o: examples/plate_cutter.cpp.o
 
 .PHONY : examples/plate_cutter.o
@@ -693,6 +746,33 @@ examples/surface_test.s: examples/surface_test.cpp.s
 examples/surface_test.cpp.s:
 	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/examples/surface_test.cpp.s
 .PHONY : examples/surface_test.cpp.s
+
+examples/tri_test.o: examples/tri_test.cpp.o
+
+.PHONY : examples/tri_test.o
+
+# target to build an object file
+examples/tri_test.cpp.o:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.o
+.PHONY : examples/tri_test.cpp.o
+
+examples/tri_test.i: examples/tri_test.cpp.i
+
+.PHONY : examples/tri_test.i
+
+# target to preprocess a source file
+examples/tri_test.cpp.i:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.i
+.PHONY : examples/tri_test.cpp.i
+
+examples/tri_test.s: examples/tri_test.cpp.s
+
+.PHONY : examples/tri_test.s
+
+# target to generate assembly for a file
+examples/tri_test.cpp.s:
+	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.s
+.PHONY : examples/tri_test.cpp.s
 
 examples/ublas.o: examples/ublas.cpp.o
 
@@ -1369,6 +1449,33 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
+src/geometry/extern_triangulate.o: src/geometry/extern_triangulate.cpp.o
+
+.PHONY : src/geometry/extern_triangulate.o
+
+# target to build an object file
+src/geometry/extern_triangulate.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extern_triangulate.cpp.o
+.PHONY : src/geometry/extern_triangulate.cpp.o
+
+src/geometry/extern_triangulate.i: src/geometry/extern_triangulate.cpp.i
+
+.PHONY : src/geometry/extern_triangulate.i
+
+# target to preprocess a source file
+src/geometry/extern_triangulate.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extern_triangulate.cpp.i
+.PHONY : src/geometry/extern_triangulate.cpp.i
+
+src/geometry/extern_triangulate.s: src/geometry/extern_triangulate.cpp.s
+
+.PHONY : src/geometry/extern_triangulate.s
+
+# target to generate assembly for a file
+src/geometry/extern_triangulate.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/extern_triangulate.cpp.s
+.PHONY : src/geometry/extern_triangulate.cpp.s
+
 src/geometry/extrusion.o: src/geometry/extrusion.cpp.o
 
 .PHONY : src/geometry/extrusion.o
@@ -1611,6 +1718,33 @@ src/geometry/polygon.s: src/geometry/polygon.cpp.s
 src/geometry/polygon.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon.cpp.s
 .PHONY : src/geometry/polygon.cpp.s
+
+src/geometry/polygon_3.o: src/geometry/polygon_3.cpp.o
+
+.PHONY : src/geometry/polygon_3.o
+
+# target to build an object file
+src/geometry/polygon_3.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon_3.cpp.o
+.PHONY : src/geometry/polygon_3.cpp.o
+
+src/geometry/polygon_3.i: src/geometry/polygon_3.cpp.i
+
+.PHONY : src/geometry/polygon_3.i
+
+# target to preprocess a source file
+src/geometry/polygon_3.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon_3.cpp.i
+.PHONY : src/geometry/polygon_3.cpp.i
+
+src/geometry/polygon_3.s: src/geometry/polygon_3.cpp.s
+
+.PHONY : src/geometry/polygon_3.s
+
+# target to generate assembly for a file
+src/geometry/polygon_3.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/polygon_3.cpp.s
+.PHONY : src/geometry/polygon_3.cpp.s
 
 src/geometry/polyline.o: src/geometry/polyline.cpp.o
 
@@ -1935,6 +2069,33 @@ src/process_planning/feature_to_pocket.s: src/process_planning/feature_to_pocket
 src/process_planning/feature_to_pocket.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.s
 .PHONY : src/process_planning/feature_to_pocket.cpp.s
+
+src/process_planning/job_planning.o: src/process_planning/job_planning.cpp.o
+
+.PHONY : src/process_planning/job_planning.o
+
+# target to build an object file
+src/process_planning/job_planning.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.o
+.PHONY : src/process_planning/job_planning.cpp.o
+
+src/process_planning/job_planning.i: src/process_planning/job_planning.cpp.i
+
+.PHONY : src/process_planning/job_planning.i
+
+# target to preprocess a source file
+src/process_planning/job_planning.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.i
+.PHONY : src/process_planning/job_planning.cpp.i
+
+src/process_planning/job_planning.s: src/process_planning/job_planning.cpp.s
+
+.PHONY : src/process_planning/job_planning.s
+
+# target to generate assembly for a file
+src/process_planning/job_planning.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.s
+.PHONY : src/process_planning/job_planning.cpp.s
 
 src/process_planning/tool_access.o: src/process_planning/tool_access.cpp.o
 
@@ -3913,25 +4074,27 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... edit_cache"
 	@echo "... AddCell"
 	@echo "... engraving"
-	@echo "... edit_cache"
 	@echo "... debug-test"
 	@echo "... scale-down-mesh"
+	@echo "... check-contours"
 	@echo "... vtk-mass"
 	@echo "... ublas"
 	@echo "... json-plan"
 	@echo "... camaster-test"
-	@echo "... check-contours"
 	@echo "... json-mesh"
+	@echo "... tri-test"
 	@echo "... plate-cutter"
 	@echo "... all-tests"
+	@echo "... gcode"
 	@echo "... rebuild_cache"
 	@echo "... gprocess"
 	@echo "... feature-decomp"
 	@echo "... gca"
-	@echo "... gcode"
 	@echo "... surface-test"
+	@echo "... nef-test"
 	@echo "... geometry"
 	@echo "... stl-parse"
 	@echo "... utils"
@@ -3959,6 +4122,9 @@ help:
 	@echo "... examples/json_plan.o"
 	@echo "... examples/json_plan.i"
 	@echo "... examples/json_plan.s"
+	@echo "... examples/nef_test.o"
+	@echo "... examples/nef_test.i"
+	@echo "... examples/nef_test.s"
 	@echo "... examples/plate_cutter.o"
 	@echo "... examples/plate_cutter.i"
 	@echo "... examples/plate_cutter.s"
@@ -3971,6 +4137,9 @@ help:
 	@echo "... examples/surface_test.o"
 	@echo "... examples/surface_test.i"
 	@echo "... examples/surface_test.s"
+	@echo "... examples/tri_test.o"
+	@echo "... examples/tri_test.i"
+	@echo "... examples/tri_test.s"
 	@echo "... examples/ublas.o"
 	@echo "... examples/ublas.i"
 	@echo "... examples/ublas.s"
@@ -4046,6 +4215,9 @@ help:
 	@echo "... src/geometry/box.o"
 	@echo "... src/geometry/box.i"
 	@echo "... src/geometry/box.s"
+	@echo "... src/geometry/extern_triangulate.o"
+	@echo "... src/geometry/extern_triangulate.i"
+	@echo "... src/geometry/extern_triangulate.s"
 	@echo "... src/geometry/extrusion.o"
 	@echo "... src/geometry/extrusion.i"
 	@echo "... src/geometry/extrusion.s"
@@ -4073,6 +4245,9 @@ help:
 	@echo "... src/geometry/polygon.o"
 	@echo "... src/geometry/polygon.i"
 	@echo "... src/geometry/polygon.s"
+	@echo "... src/geometry/polygon_3.o"
+	@echo "... src/geometry/polygon_3.i"
+	@echo "... src/geometry/polygon_3.s"
 	@echo "... src/geometry/polyline.o"
 	@echo "... src/geometry/polyline.i"
 	@echo "... src/geometry/polyline.s"
@@ -4109,6 +4284,9 @@ help:
 	@echo "... src/process_planning/feature_to_pocket.o"
 	@echo "... src/process_planning/feature_to_pocket.i"
 	@echo "... src/process_planning/feature_to_pocket.s"
+	@echo "... src/process_planning/job_planning.o"
+	@echo "... src/process_planning/job_planning.i"
+	@echo "... src/process_planning/job_planning.s"
 	@echo "... src/process_planning/tool_access.o"
 	@echo "... src/process_planning/tool_access.i"
 	@echo "... src/process_planning/tool_access.s"

@@ -20,12 +20,124 @@
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
 
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+#include <CGAL/Nef_polyhedron_3.h>
+
+#include <CGAL/IO/Nef_polyhedron_iostream_3.h>
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Polyhedron_incremental_builder_3.h>
+
 #include "geometry/mesh_operations.h"
 #include "geometry/surface.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 
 namespace gca {
+
+  typedef CGAL::Exact_predicates_exact_constructions_kernel Kernel;
+  typedef CGAL::Polyhedron_3<Kernel>         Polyhedron;
+  typedef Polyhedron::HalfedgeDS             HalfedgeDS;
+  typedef CGAL::Nef_polyhedron_3<Kernel>  Nef_polyhedron;
+  typedef Nef_polyhedron::Plane_3 Plane_3;
+
+  template <class HDS>
+  class build_mesh : public CGAL::Modifier_base<HDS> {
+  public:
+    const triangular_mesh& m;
+    build_mesh(const triangular_mesh& p_m) : m(p_m) {}
+  
+    void operator()( HDS& hds) {
+      // Postcondition: hds is a valid polyhedral surface.
+      CGAL::Polyhedron_incremental_builder_3<HDS> B( hds, true);
+
+      unsigned num_verts = m.vertex_indexes().size();
+      unsigned num_faces = m.face_indexes().size();
+
+      B.begin_surface( num_verts, num_faces, 6*num_faces);
+
+      typedef typename HDS::Vertex   Vertex;
+      typedef typename Vertex::Point Point;
+
+      for (auto i : m.vertex_indexes()) {
+	point p = m.vertex(i);
+	B.add_vertex(Point(p.x, p.y, p.z));
+      }
+
+      for (auto i : m.face_indexes()) {
+	triangle_t t = m.triangle_vertices(i);
+	B.begin_facet();
+	B.add_vertex_to_facet(t.v[0]);
+	B.add_vertex_to_facet(t.v[1]);
+	B.add_vertex_to_facet(t.v[2]);
+	B.end_facet();
+      }
+
+      B.end_surface();
+
+    }
+  };
+
+  triangular_mesh nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
+    DBG_ASSERT(p.is_simple());
+
+    Polyhedron poly;
+    p.convert_to_polyhedron(poly);
+
+    for (auto it = poly.points_begin(); it != poly.points_end(); it++) {
+      cout << *it << endl;
+    }
+
+    vector<triangle> tris;
+    for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
+      auto fc = *it;
+      cout << fc.is_triangle() << endl;
+
+      auto he = fc.facet_begin();
+      auto end = fc.facet_begin();
+      vector<point> pts;
+      CGAL_For_all(he, end) {
+	auto h = *he;
+	auto v = h.vertex();
+	auto r = (*v).point();
+	
+	point res_pt(CGAL::to_double(r.x()),
+		     CGAL::to_double(r.y()),
+		     CGAL::to_double(r.z()));
+
+	pts.push_back(res_pt);
+	//	cout << r << endl;
+	//cout << *v << endl;
+	//cout << he->vertex() << endl;
+      }
+
+      DBG_ASSERT(pts.size() == 3);
+
+      point v0 = pts[0];
+      point v1 = pts[1];
+      point v2 = pts[2];
+
+      point q1 = v1 - v0;
+      point q2 = v2 - v0;
+      point norm = cross(q2, q1).normalize();
+      tris.push_back(triangle(norm, v0, v1, v2));
+    }
+
+    return make_mesh(tris, 0.0001);
+  }
+
+  Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m) {
+    build_mesh<HalfedgeDS> mesh_builder(m);
+
+    Polyhedron P;
+    P.delegate(mesh_builder);
+
+    Nef_polyhedron N(P);
+
+    DBG_ASSERT(N.is_simple());
+
+    return N;
+  }
   
   boost::optional<std::vector<point>>
   merge_center(const std::vector<point>& l, const std::vector<point>& r) {
@@ -263,51 +375,14 @@ namespace gca {
 
   triangular_mesh
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b) {
-    auto a_poly = polydata_for_trimesh(a);
+    auto a_nef = trimesh_to_nef_polyhedron(a);
+    auto b_nef = trimesh_to_nef_polyhedron(b);
+    auto res = a_nef - b_nef;
 
-    vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
-      vtkSmartPointer<vtkPolyDataNormals>::New();
-    normalGenerator->SetInputData(a_poly);
-    normalGenerator->SetSplitting(0);
-    normalGenerator->ComputePointNormalsOn();
-    normalGenerator->ComputeCellNormalsOn();
-    normalGenerator->Update();
-
-    a_poly = normalGenerator->GetOutput();
-
-
-    auto b_poly = polydata_for_trimesh(b);
-    vtkSmartPointer<vtkPolyDataNormals> normalGenerator2 =
-      vtkSmartPointer<vtkPolyDataNormals>::New();
-    normalGenerator2->SetInputData(b_poly);
-    normalGenerator2->SetSplitting(0);
-    normalGenerator2->ComputePointNormalsOn();
-    normalGenerator2->ComputeCellNormalsOn();
-    normalGenerator2->Update();
-
-    b_poly = normalGenerator2->GetOutput();
-
-    vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
-      vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
-    booleanOperation->SetOperationToDifference();
-    booleanOperation->SetInputData( 0, a_poly );
-    booleanOperation->SetInputData( 1, b_poly );
-    booleanOperation->Update();
-
-    vtkPolyData* res_poly = booleanOperation->GetOutput();
-    debug_print_summary(res_poly);
-    debug_print_is_closed(res_poly);
-    debug_print_edge_summary(res_poly);
-    auto rp = vtkSmartPointer<vtkPolyData>::New();
-    rp->DeepCopy(res_poly);
-    auto actor = polydata_actor(rp);
-    visualize_actors({actor});
-    
-
-    triangular_mesh result = trimesh_for_polydata(res_poly);
-    return result;
+    return nef_polyhedron_to_trimesh(res);
   }
 
+  // TODO: Delete? Not sure this is ever used
   void write_mesh_as_stl(const triangular_mesh& m,
 			 const std::string& file_name) {
     auto mesh_data = polydata_for_trimesh(m);

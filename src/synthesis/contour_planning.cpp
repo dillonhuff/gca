@@ -85,12 +85,6 @@ namespace gca {
     return boost::none;
   }
 
-  // TODO: Actually implement with surface sorting
-  std::vector<point>
-  possible_contour_normals(const triangular_mesh& part_mesh) {
-    return {{0, 0, 1}, {0, 1, 0}};
-  }
-
   std::vector<std::vector<gca::edge>>
   connected_boundary_edge_sets(const surface& s) {
     std::vector<gca::edge> bound_edges = boundary_edges(s);

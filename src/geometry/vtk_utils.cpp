@@ -5,7 +5,6 @@
 #include <vtkPolygon.h>
 #include <vtkTriangle.h>
 #include <vtkTriangleFilter.h>
-
 #include "geometry/vtk_utils.h"
 
 namespace gca {

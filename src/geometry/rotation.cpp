@@ -122,5 +122,15 @@ namespace gca {
     }
     return rpts;
   }
-  
+
+  point apply(const rotation& r, const point p) {
+    return times_3(r, p);
+  }
+
+  triangle apply(const rotation& r, const triangle tri) {
+    return triangle(apply(r, tri.normal),
+		    apply(r, tri.v1),
+		    apply(r, tri.v2),
+		    apply(r, tri.v3));
+  }
 }

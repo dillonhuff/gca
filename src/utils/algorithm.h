@@ -515,6 +515,16 @@ namespace gca {
   T max_e(const std::vector<T>& e) {
     return *max_element(begin(e), end(e), [](const T& l, const T& r) { return l < r; });
   }
+
+  template<typename T, typename F>
+  void sort_lt(std::vector<T>& e, F f) {
+    std::sort(begin(e), end(e), [f](const T& l, const T& r) { return f(l) < f(r); });
+  }
+
+  template<typename T, typename F>
+  void sort_gt(std::vector<T>& e, F f) {
+    std::sort(begin(e), end(e), [f](const T& l, const T& r) { return f(l) > f(r); });
+  }
   
 }
 

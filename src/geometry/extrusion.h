@@ -1,6 +1,7 @@
 #ifndef GCA_EXTRUSION_H
 #define GCA_EXTRUSION_H
 
+#include "geometry/polygon_3.h"
 #include "geometry/vtk_utils.h"
 
 namespace gca {
@@ -37,7 +38,8 @@ namespace gca {
   oriented_polygon_for_index_polyline(const std::vector<point>& pts,
 				      const index_poly& p,
 				      const point n);
-  
+
+  triangular_mesh extrude(const polygon_3& p, const point v);
 }
 
 #endif

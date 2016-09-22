@@ -1,6 +1,7 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "geometry/vtk_debug.h"
 #include "process_planning/feature_to_pocket.h"
+#include "process_planning/job_planning.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
@@ -301,10 +302,15 @@ namespace gca {
       feature_decomposition* decomp = decomps[i];
       const tool_access_info& acc_info = access_info[i];
 
+      delete_nodes(decomp, [acc_info](feature* f) {
+	  return map_find(f, acc_info).size() == 0;
+	});
+      
       auto t = mating_transform(part_mesh, d.orient, d.v);
 
       triangular_mesh* m =
 	new (allocate<triangular_mesh>()) triangular_mesh(apply(t, part_mesh));
+
 
       vector<pocket> pockets = feature_pockets(*decomp, t, acc_info);
 
@@ -321,6 +327,17 @@ namespace gca {
 
     DBG_ASSERT(wps.size() > 0);
 
+    //   workpiece w = wps.front();
+
+    //   vector<surface> stable_surfaces = outer_surfaces(part_mesh);
+    //   triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
+
+    //   vector<fixture_setup> setups =
+    //     plan_jobs(wp_mesh, part_mesh, f, tools);
+
+    //   return fixture_plan(part_mesh, setups, {}, w);
+    // }
+
     clipping_plan wp_setups =
       workpiece_clipping_programs(wps, part_mesh, tools, f);
 
@@ -328,7 +345,7 @@ namespace gca {
 
     auto num_setups = setups.size();
 
-    for (unsigned i = 0; i < setups.size(); i++) { //auto s : setups) {
+    for (unsigned i = 0; i < setups.size(); i++) {
       cout << "setup # " << i << " has " << setups[i].pockets.size() << " pockets" << endl;
     }
 
@@ -344,9 +361,9 @@ namespace gca {
     }
 
     return fixture_plan(part_mesh,
-			setups,
-			wp_setups.custom_fixtures(),
-			wp_setups.stock());
+    			setups,
+    			wp_setups.custom_fixtures(),
+    			wp_setups.stock());
   }
 
 }

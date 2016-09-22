@@ -141,5 +141,5 @@ namespace gca {
 
     REQUIRE(within_eps(current_min, base_depth, 0.0001));
   }
-  
+
 }

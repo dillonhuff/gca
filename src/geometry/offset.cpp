@@ -12,6 +12,9 @@ namespace gca {
 
   typedef boost::shared_ptr<Polygon_2> PolygonPtr ;
   typedef std::vector<PolygonPtr> PolygonPtrVector ;
+  typedef CGAL::Straight_skeleton_2<K> Ss ;
+
+  typedef boost::shared_ptr<Ss> SsPtr ;  
 
   Polygon_2
   CGAL_polygon_for_oriented_polygon(const oriented_polygon& p) {
@@ -97,6 +100,8 @@ namespace gca {
 
     DBG_ASSERT(p.vertices().size() > 0);
 
+    check_simplicity(p);
+
     double z_va = p.vertices().front().z;
     Polygon_2 out;
     for (auto p : p.vertices()) {
@@ -113,9 +118,32 @@ namespace gca {
     }
 
     DBG_ASSERT(out.orientation() == CGAL::COUNTERCLOCKWISE);
-    
+
+    //    cout << "Starting to compute offset skeleton" << endl;
+    SsPtr ss = CGAL::create_interior_straight_skeleton_2(out);
+    //    cout << "Done computing to offset skeleton" << endl;
+
+    if (!ss) {
+      cout << "straight skeleton is null" << endl;
+      for (unsigned i = 0; i < p.vertices().size(); i++) {
+	point pt = p.vertices()[i];
+	unsigned i1 = (i + 1) % p.vertices().size();
+	point pt1 = p.vertices()[i1];
+
+	point dir = (pt1 - pt).normalize();
+	
+	cout << pt << "         with direction = " << dir << endl;
+      }
+
+      vtk_debug_ring(p.vertices());
+      DBG_ASSERT(false);
+    }
+
+    //    cout << "Starting to compute the interior offset" << endl;
     PolygonPtrVector inner_offset_polygons =
-      CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
+      CGAL::create_offset_polygons_2<Polygon_2>(inc, *ss);
+      //  CGAL::create_interior_skeleton_and_offset_polygons_2(inc, out);
+    //    cout << "Done computing interior offset" << endl;
 
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
@@ -211,6 +239,8 @@ namespace gca {
     const rotation r_inv = inverse(r);
     auto r_pts = apply(r, pts);
 
+    r_pts = clean_vertices_within_eps(r_pts, 0.005, 0.0000001);
+
     delete_antennas(r_pts);
 
     if (has_antenna(r_pts)) {
@@ -218,6 +248,7 @@ namespace gca {
     }
 
     check_simplicity(r_pts);
+
     
     auto res = exterior_offset(oriented_polygon(n, r_pts), tol);
 
@@ -226,6 +257,7 @@ namespace gca {
       cout << "# of exterior offsets = " << res.size() << endl;
       cout << "tol = " << tol << endl;
 
+      cout << "# of points in ring = " << r_pts.size() << endl;
       cout << "vector<point> pts{" << endl;
       for (auto p : r_pts) {
 	cout << "point(" << p.x << ", " << p.y << ", " << p.z << ")" << ", " << endl;
@@ -271,7 +303,20 @@ namespace gca {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
     const rotation r_inv = inverse(r);
-    auto res = interior_offset(oriented_polygon(n, apply(r, pts)), tol);
+
+    cout << "# of points = " << pts.size() << endl;
+    cout << "ring normal = " << ring_normal(pts) << endl;
+    cout << "tol         = " << tol << endl;
+    //vtk_debug_ring(pts);
+
+    auto r_pts = apply(r, pts);
+
+    check_simplicity(r_pts);
+
+    //vtk_debug_ring(r_pts);
+    
+    auto res = interior_offset(oriented_polygon(n, r_pts), tol);
+
 
     vector<vector<point>> result_pts;
     for (auto rpoly : res) {

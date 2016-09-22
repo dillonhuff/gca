@@ -83,25 +83,36 @@ namespace gca {
     return num_eq > 1;
   }
 
+  bool winding_conflict(const triangle_t ti, const triangle_t tj) {
+    for (unsigned l = 0; l < 3; l++) {
+      unsigned lp1 = (l + 1) % 3;
+      for (unsigned k = 0; k < 3; k++) {
+	unsigned kp1 = (k + 1) % 3;
+	if (ti.v[k] == tj.v[l] && ti.v[kp1] == tj.v[lp1]) {
+	  return true;
+	}
+      }
+    }
+    return false;
+  }
+
   triangle_t
   correct_orientation(const triangle_t to_correct,
 		      const std::vector<triangle_t>& others) {
     auto ti = to_correct;
     for (auto tj : others) {
-      for (unsigned k = 0; k < 3; k++) {
-	unsigned kp1 = (k + 1) % 3;
-	unsigned kp2 = (k + 2) % 3;
-	if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-	  triangle_t corrected;
-	  corrected.v[k] = ti.v[kp1];
-	  corrected.v[kp1] = ti.v[k];
-	  corrected.v[kp2] = ti.v[kp2];
-	  cout << "--- Original triangle = " << ti << endl;
-	  cout << "--- Corrected triangle = " << corrected << endl;
-	  cout << "--- Conflicting triangle = " << tj << endl;
-	  return corrected;
-	}
+      if (winding_conflict(ti, tj)) {
+	triangle_t corrected;
+	corrected.v[0] = ti.v[1];
+	corrected.v[1] = ti.v[0];
+	corrected.v[2] = ti.v[2];
+
+	cout << "--- Original triangle = " << ti << endl;
+	cout << "--- Corrected triangle = " << corrected << endl;
+	cout << "--- Conflicting triangle = " << tj << endl;
+	return corrected;
       }
+
     }
 
     return ti;
@@ -120,15 +131,15 @@ namespace gca {
 	if (i != j) {
 	  auto ti = triangles[i];
 	  auto tj = triangles[j];
-	  for (unsigned k = 0; k < 3; k++) {
-	    unsigned kp1 = (k + 1) % 3;
-	    if (ti.v[k] == tj.v[k] && ti.v[kp1] == tj.v[kp1]) {
-	      cout << "Winding order error: i = " << i << ", j = " << j << endl;
-	      cout << "--- " << ti << endl;
-	      cout << "--- " << tj << endl;
-	      num_errs++;
-	    }
+
+	  if (winding_conflict(ti, tj)) {
+	    cout << "Winding order error: i = " << i << ", j = " << j << endl;
+	    cout << "--- " << ti << endl;
+	    cout << "--- " << tj << endl;
+	    num_errs++;
 	  }
+
+	  
 	}
       }
     }
@@ -137,9 +148,10 @@ namespace gca {
 
   std::vector<triangle_t>
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
-    vector<triangle_t> tris;
+    vector<triangle_t> tris; //(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
     cout << "Initial # of triangles = " << triangles.size() << endl;
+    unsigned num_added = 0;
     
     while (remaining_inds.size() > 0) {
 
@@ -148,30 +160,56 @@ namespace gca {
 	vector<triangle_t> sub_tris =
 	  select(tris, [next_t](const triangle_t t)
 		 { return share_edge(next_t, t); });
+
 	if (sub_tris.size() > 0) {
 	  triangle_t corrected = correct_orientation(next_t, sub_tris);
 	  tris.push_back(corrected);
+	  //	  tris[ind] = corrected;
 	  remove(ind, remaining_inds);
+	  num_added++;
 	  break;
-	} if (tris.size() == 0) {
+	}
+
+	if (num_added == 0) {
 	  tris.push_back(next_t);
+	  //tris[ind] = next_t;
 	  remove(ind, remaining_inds);
+	  num_added++;
 	  break;
 	}
       }
 
-      auto ccs =
-	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
-				{ return share_edge(l, r); });
-      DBG_ASSERT(ccs.size() == 1);
-      DBG_ASSERT(num_winding_order_errors(tris) == 0);
+      // auto ccs =
+      // 	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
+      // 				{ return share_edge(l, r); });
+      // DBG_ASSERT(ccs.size() == 1);
+      // DBG_ASSERT(num_winding_order_errors(tris) == 0);
     }
 
+    auto ccs =
+      connected_components_by(tris, [](const triangle_t l, const triangle_t r)
+			      { return share_edge(l, r); });
+    DBG_ASSERT(ccs.size() == 1);
+    
     DBG_ASSERT(num_winding_order_errors(tris) == 0);
     DBG_ASSERT(tris.size() == triangles.size());
     return tris;
   }
-  
+
+  bool degenerate(const triangle_t t) {
+    for (unsigned i = 0; i < 3; i++) {
+      for (unsigned j = 0; j < 3; j++) {
+	if (i != j) {
+	  if (t.v[i] == t.v[j]) {
+	    return true;
+	  }
+	}
+      }
+    }
+
+    return false;
+  }
+
   std::vector<triangle_t>
   fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
 					 std::vector<point>& vertices,
@@ -187,6 +225,10 @@ namespace gca {
       tr.v[2] = v3i;
       vertex_triangles.push_back(tr);
     }
+
+    DBG_ASSERT(all_of(begin(vertex_triangles), end(vertex_triangles),
+		      [] (const triangle_t t) { return !degenerate(t); }));
+
     return vertex_triangles;
   }
 
@@ -196,6 +238,7 @@ namespace gca {
 			double tolerance) {
     auto vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+
     int wind_errs = num_winding_order_errors(vertex_triangles);
     if (wind_errs > 0) {
       cout << "Num winding errors = " << wind_errs << endl;
@@ -252,6 +295,7 @@ namespace gca {
 			 const std::vector<point>& vertices,
 			 const std::vector<point>& face_orientations) {
     DBG_ASSERT(vertex_triangles.size() == face_orientations.size());
+
     for (unsigned i = 0; i < vertex_triangles.size(); i++) {
       auto t = vertex_triangles[i];
       point computed_normal =
@@ -260,6 +304,8 @@ namespace gca {
 
       point fi = (face_orientations[i]).normalize();
       if (!within_eps(fi, computed_normal, 0.001)) {
+	cout << "Computed normal = " << computed_normal << endl;
+	cout << "Listed normal   = " << fi << endl;
 	return false;
       }
     }
@@ -284,6 +330,7 @@ namespace gca {
     std::vector<point> vertices;
     std::vector<triangle_t> vertex_triangles =
       fill_vertex_triangles(triangles, vertices, tolerance);
+
     std::vector<point> face_orientations(triangles.size());
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });
@@ -292,7 +339,7 @@ namespace gca {
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
 
-    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
+    //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
     
     std::vector<edge_t> edges;
     unordered_edges_from_triangles(vertex_triangles.size(),
@@ -507,6 +554,48 @@ namespace gca {
     return z.t;
   }
 
+  template<typename S, typename F>
+  std::vector<index_t> normal_region(vector<index_t>& face_indices,
+				     const triangular_mesh& part,
+				     S select_initial_faces,
+				     F in_region) {
+    DBG_ASSERT(face_indices.size() > 0);
+
+    sort(begin(face_indices), end(face_indices));
+
+    vector<index_t> region = select_initial_faces(face_indices, part);
+
+    DBG_ASSERT(region.size() > 0);
+
+    index_t region_face = region.front();
+
+    vector<index_t> unchecked_face_inds = region;
+
+    subtract(face_indices, region);
+
+    while (unchecked_face_inds.size() > 0) {
+
+      auto next_face = unchecked_face_inds.back();
+      unchecked_face_inds.pop_back();
+
+      for (auto f : part.face_face_neighbors(next_face)) {
+
+	if (binary_search(begin(face_indices), end(face_indices), f) &&
+	    share_edge(next_face, f, part) &&
+	    in_region(region_face, f, part)) {
+	  remove(f, face_indices);
+	  region.push_back(f);
+	  unchecked_face_inds.push_back(f);
+	}
+	
+      }
+
+    }
+    
+
+    return region;
+  }
+  
   std::vector<std::vector<index_t>>
   normal_delta_regions(vector<index_t>& indices,
 		       const triangular_mesh& mesh,
@@ -518,8 +607,35 @@ namespace gca {
       return within_eps(angle_between(m.face_triangle(f).normal,
 				      m.face_triangle(i).normal),
 			0,
-			delta_degrees) &&
-      share_edge(f, i, m);
+			delta_degrees);
+    };
+
+    auto back_face_vec = [](const vector<index_t>& faces,
+			    const triangular_mesh& mesh) {
+      return vector<index_t>{faces.back()};
+    };
+
+    while (indices.size() > 0) {
+      connected_regions.push_back(normal_region(indices,
+						mesh,
+						back_face_vec,
+						within_delta));
+    }
+    return connected_regions;
+  }
+
+  std::vector<std::vector<index_t>>
+  normal_delta_regions_greedy(vector<index_t>& indices,
+			      const triangular_mesh& mesh,
+			      double delta_degrees) {
+    vector<vector<index_t>> connected_regions;
+    auto within_delta = [delta_degrees](const index_t f,
+					const index_t i,
+					const triangular_mesh& m) {
+      return within_eps(angle_between(m.face_triangle(f).normal,
+				      m.face_triangle(i).normal),
+			0,
+			delta_degrees);
     };
 
     auto back_face_vec = [](const vector<index_t>& faces,
@@ -535,7 +651,7 @@ namespace gca {
     }
     return connected_regions;
   }
-
+  
   bool share_edge(const index_t l,
 		  const index_t r,
 		  const triangular_mesh& part) {
@@ -712,7 +828,7 @@ namespace gca {
 					 const point n) {
     delete_if(delta_regions,
     	      [mesh, n](const vector<index_t>& surface)
-    	      { return !all_parallel_to(surface, mesh, n, 1.0); });
+    	      { return !all_parallel_to(surface, mesh, n, 3.0); });
   }
   
 
@@ -797,5 +913,12 @@ namespace gca {
     
     return pts;
   }
+
+  plane face_plane(const triangular_mesh& part,
+		   const point n) {
+    point p = max_point_in_dir(part, n);
+    return plane(-1*n, p);
+  }
+
 
 }

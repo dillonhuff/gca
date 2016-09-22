@@ -29,6 +29,7 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 		     ./src/geometry/point.h
 		     ./src/geometry/plane.h
 		     ./src/geometry/offset.h
+		     ./src/geometry/polygon_3.h
 	    ./src/geometry/b_spline.h
 	    ./src/geometry/extrusion.h
 	    ./src/geometry/spline_sampling.h
@@ -44,6 +45,8 @@ SET(GEOMETRY_HEADERS ./src/geometry/line.h
 SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 		  ./src/geometry/surface.cpp
 		  ./src/geometry/offset.cpp
+		  ./src/geometry/polygon_3.cpp
+		  ./src/geometry/extern_triangulate.cpp
 	 ./src/geometry/arc.cpp
 	 ./src/geometry/box.cpp
 	 ./src/geometry/extrusion.cpp
@@ -63,7 +66,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/vtk_utils.cpp)
 
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
-target_link_libraries(geometry utils ${CGAL_LIBRARIES})
+target_link_libraries(geometry utils ${CGAL_LIBRARIES} /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h
@@ -114,6 +117,7 @@ SET(GCA_HEADERS
 	./src/process_planning/feature_to_pocket.h
 	./src/process_planning/feature_selection.h
 	./src/process_planning/axis_location.h
+	./src/process_planning/job_planning.h
 	./src/feature_recognition/feature_decomposition.h
 	./src/feature_recognition/visual_debug.h
 	./src/synthesis/operation.h
@@ -143,6 +147,7 @@ SET(GCA_CPPS
 	./src/process_planning/axis_location.cpp
 	./src/process_planning/feature_to_pocket.cpp
 	./src/process_planning/feature_selection.cpp
+	./src/process_planning/job_planning.cpp
 	./src/process_planning/tool_access.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/jaw_cutout.cpp
@@ -250,6 +255,14 @@ target_link_libraries(scale-down-mesh geometry utils gcode gprocess gca)
 
 add_executable(debug-test examples/debug_test.cpp)
 target_link_libraries(debug-test geometry utils gcode gprocess gca)
+
+add_executable(nef-test examples/nef_test.cpp)
+target_link_libraries(nef-test geometry utils gcode gprocess gca)
+
+add_executable(tri-test examples/tri_test.cpp)
+target_link_libraries(tri-test geometry utils gcode gprocess gca)
+
+#/Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 find_package( OpenCV REQUIRED )
 
