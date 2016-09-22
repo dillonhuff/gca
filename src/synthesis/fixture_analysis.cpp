@@ -335,13 +335,10 @@ namespace gca {
     return fixture_plan(part_mesh, setups, {}, w);
   }
 
-  fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
+  fixture_plan surface_based_planning(const triangular_mesh& part_mesh,
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const std::vector<workpiece>& wps) {
-
-    DBG_ASSERT(wps.size() > 0);
-
     clipping_plan wp_setups =
       workpiece_clipping_programs(wps, part_mesh, tools, f);
 
@@ -368,6 +365,16 @@ namespace gca {
     			setups,
     			wp_setups.custom_fixtures(),
     			wp_setups.stock());
+  }
+
+  fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
+				 const fixtures& f,
+				 const vector<tool>& tools,
+				 const std::vector<workpiece>& wps) {
+
+    DBG_ASSERT(wps.size() > 0);
+
+    return surface_based_planning(part_mesh, f, tools, wps);
   }
 
 }

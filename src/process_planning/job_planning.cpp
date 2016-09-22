@@ -37,7 +37,7 @@ namespace gca {
 
   // TODO: Dont just return bounding box
   triangular_mesh feature_mesh(const feature& f) {
-    auto m = extrude(f.base(), f.depth()*f.normal());
+    auto m = extrude(f.base(), (1.01*f.depth())*f.normal());
 
     DBG_ASSERT(m.is_connected());
 
@@ -46,22 +46,18 @@ namespace gca {
 
   triangular_mesh subtract_features(const triangular_mesh& m,
 				    feature_decomposition* features) {
-    triangular_mesh subtracted = m;
-    triangular_mesh* sub_ptr = &subtracted;
-    auto subtract = [sub_ptr](feature* f) {
-      if (f != nullptr) {
-	triangular_mesh f_mesh = feature_mesh(*f);
-	cout << "FEATURE MESH" << endl;
-	//vtk_debug_mesh(f_mesh);
-	*sub_ptr = boolean_difference(*sub_ptr, f_mesh);
-	cout << "RESULT" << endl;
-	//vtk_debug_mesh(*sub_ptr);
-      }
-    };
+    auto fs = collect_features(features);
+    cout << "Got all features" << endl;
+    std::vector<triangular_mesh> meshes;
+    for (auto f : fs) {
+      meshes.push_back(feature_mesh(*f));
+    }
 
-    traverse_bf(features, subtract);
+    cout << "Got all meshes" << endl;
 
-    //vtk_debug_mesh(subtracted);
+    auto subtracted = boolean_difference(m, meshes);
+
+    vtk_debug_mesh(subtracted);
 
     return subtracted;
   }

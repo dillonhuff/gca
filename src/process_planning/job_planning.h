@@ -16,4 +16,7 @@ namespace gca {
 				       const fixtures& f,
 				       const std::vector<tool>& tools);
 
+  triangular_mesh subtract_features(const triangular_mesh& m,
+				    feature_decomposition* features);
+  
 }

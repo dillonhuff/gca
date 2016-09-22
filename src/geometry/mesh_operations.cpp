@@ -382,6 +382,18 @@ namespace gca {
     return nef_polyhedron_to_trimesh(res);
   }
 
+  triangular_mesh
+  boolean_difference(const triangular_mesh& a,
+		     const std::vector<triangular_mesh>& bs) {
+    auto res = trimesh_to_nef_polyhedron(a);
+    for (auto b : bs) {
+      res = res - trimesh_to_nef_polyhedron(b);
+    }
+
+    return nef_polyhedron_to_trimesh(res);
+  }
+  
+
   // TODO: Delete? Not sure this is ever used
   void write_mesh_as_stl(const triangular_mesh& m,
 			 const std::string& file_name) {

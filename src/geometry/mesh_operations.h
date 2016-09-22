@@ -16,6 +16,10 @@ namespace gca {
   triangular_mesh
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b);
 
+  triangular_mesh
+  boolean_difference(const triangular_mesh& a,
+		     const std::vector<triangular_mesh>& bs);
+  
   void write_mesh_as_stl(const triangular_mesh& m,
 			 const std::string& file_name);
 
