@@ -257,6 +257,13 @@ namespace gca {
       for (unsigned j = 0; j < seg_group.size(); j++) {
 	in->segmentlist[2*seg_num] = offset + seg_group[j].first;
 	in->segmentlist[2*seg_num + 1] = offset + seg_group[j].second;
+
+	DBG_ASSERT(in->segmentlist[2*seg_num] >= 0);
+	DBG_ASSERT(in->segmentlist[2*seg_num + 1] >= 0);
+
+	DBG_ASSERT(in->segmentlist[2*seg_num] < in->numberofpoints);
+	DBG_ASSERT(in->segmentlist[2*seg_num + 1] < in->numberofpoints);
+	
 	seg_num++;
       }
     }
@@ -332,6 +339,8 @@ namespace gca {
 
     printf("Initial triangulation:\n\n");
     report(&mid, 1, 1, 1, 1, 1, 0);
+
+    DBG_ASSERT(mid.numberoftriangles > 0);
 
     /* Free all allocated arrays, including those allocated by Triangle. */
 
