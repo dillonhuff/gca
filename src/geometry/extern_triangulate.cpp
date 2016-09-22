@@ -242,14 +242,17 @@ namespace gca {
     buffer_offsets.push_back(0);
     segments.push_back(ring_segments(p.vertices()));
 
+    auto last_size = p.vertices().size();
     for (auto h : p.holes()) {
-      buffer_offsets.push_back(buffer_offsets.back() + h.size());
+      buffer_offsets.push_back(buffer_offsets.back() + last_size); //h.size());
       segments.push_back(ring_segments(h));
+      last_size = h.size();
     }
 
     in->segmentlist =
       static_cast<int*>(malloc(in->numberofsegments*sizeof(int)*2));
 
+    cout << "# of points = " << in->numberofpoints << endl;
     unsigned seg_num = 0;
     for (unsigned i = 0; i < segments.size(); i++) {
       auto seg_group = segments[i];
@@ -261,6 +264,9 @@ namespace gca {
 	DBG_ASSERT(in->segmentlist[2*seg_num] >= 0);
 	DBG_ASSERT(in->segmentlist[2*seg_num + 1] >= 0);
 
+	cout << "segment " << seg_num << " start : " << in->segmentlist[2*seg_num] << endl;
+	cout << "segment " << seg_num << " end: " << in->segmentlist[2*seg_num + 1] << endl;
+	
 	DBG_ASSERT(in->segmentlist[2*seg_num] < in->numberofpoints);
 	DBG_ASSERT(in->segmentlist[2*seg_num + 1] < in->numberofpoints);
 	
