@@ -221,6 +221,20 @@ namespace gca {
     return false;
   }
 
+  void check_degenerate_triangles(const std::vector<triangle_t>& tris,
+				  const std::vector<point>& verts) {
+    unsigned num_degenerate_triangles = 0;
+    for (auto t : tris) {
+      if (degenerate(t)) {
+	cout << "triangle " << t << " is degenerate" << endl;
+	cout << verts[t.v[0]] << " , " << verts[t.v[1]] << " , " << verts[t.v[2]] << endl;
+	num_degenerate_triangles++;
+      }
+    }
+
+    DBG_ASSERT(num_degenerate_triangles == 0);
+  }
+
   std::vector<triangle_t>
   fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
 					 std::vector<point>& vertices,
@@ -236,9 +250,6 @@ namespace gca {
       tr.v[2] = v3i;
       vertex_triangles.push_back(tr);
     }
-
-    DBG_ASSERT(all_of(begin(vertex_triangles), end(vertex_triangles),
-		      [] (const triangle_t t) { return !degenerate(t); }));
 
     return vertex_triangles;
   }
@@ -335,21 +346,16 @@ namespace gca {
     }
     return tris;
   }
-  
-  triangular_mesh make_mesh(const std::vector<triangle>& triangles,
-			    double tolerance) {
-    std::vector<point> vertices;
-    std::vector<triangle_t> vertex_triangles =
-      fill_vertex_triangles(triangles, vertices, tolerance);
 
-    std::vector<point> face_orientations(triangles.size());
-    transform(begin(triangles), end(triangles), begin(face_orientations),
-	      [](const triangle t) { return t.normal; });
-
+  triangular_mesh
+  correct_winding_and_build(std::vector<triangle_t>& vertex_triangles,
+			    const std::vector<point>& vertices,
+			    const std::vector<point>& face_orientations) {
     if (!all_normals_consistent(vertex_triangles, vertices, face_orientations)) {
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
 
+    // TODO: Create more versatile normal checks
     //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
     
     std::vector<edge_t> edges;
@@ -358,11 +364,26 @@ namespace gca {
 				   edges);
     trimesh_t mesh;
     mesh.build(vertices.size(),
-	       triangles.size(),
+	       vertex_triangles.size(),
 	       &vertex_triangles[0],
 	       edges.size(),
 	       &edges[0]);
     return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
+  }  
+
+  triangular_mesh make_mesh(const std::vector<triangle>& triangles,
+			    double tolerance) {
+    std::vector<point> vertices;
+    std::vector<triangle_t> vertex_triangles =
+      fill_vertex_triangles(triangles, vertices, tolerance);
+
+    check_degenerate_triangles(vertex_triangles, vertices);
+
+    std::vector<point> face_orientations(triangles.size());
+    transform(begin(triangles), end(triangles), begin(face_orientations),
+	      [](const triangle t) { return t.normal; });
+
+    return correct_winding_and_build(vertex_triangles, vertices, face_orientations);
   }
 
   double sign(point p1, point p2, point p3) {

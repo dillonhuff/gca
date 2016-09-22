@@ -123,7 +123,9 @@ namespace gca {
       tris.push_back(triangle(norm, v0, v1, v2));
     }
 
-    return make_mesh(tris, 0.0001);
+    vtk_debug_triangles(tris);
+
+    return make_mesh(tris, 1e-20); //0.00000001);
   }
 
   Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m) {

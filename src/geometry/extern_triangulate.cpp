@@ -244,7 +244,7 @@ namespace gca {
 
     auto last_size = p.vertices().size();
     for (auto h : p.holes()) {
-      buffer_offsets.push_back(buffer_offsets.back() + last_size); //h.size());
+      buffer_offsets.push_back(buffer_offsets.back() + last_size);
       segments.push_back(ring_segments(h));
       last_size = h.size();
     }
