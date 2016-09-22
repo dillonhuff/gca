@@ -380,52 +380,9 @@ namespace gca {
     auto res = a_nef - b_nef;
 
     return nef_polyhedron_to_trimesh(res);
-
-    // auto a_poly = polydata_for_trimesh(a);
-
-    // vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
-    //   vtkSmartPointer<vtkPolyDataNormals>::New();
-    // normalGenerator->SetInputData(a_poly);
-    // normalGenerator->SetSplitting(0);
-    // normalGenerator->ComputePointNormalsOn();
-    // normalGenerator->ComputeCellNormalsOn();
-    // normalGenerator->Update();
-
-    // a_poly = normalGenerator->GetOutput();
-
-
-    // auto b_poly = polydata_for_trimesh(b);
-    // vtkSmartPointer<vtkPolyDataNormals> normalGenerator2 =
-    //   vtkSmartPointer<vtkPolyDataNormals>::New();
-    // normalGenerator2->SetInputData(b_poly);
-    // normalGenerator2->SetSplitting(0);
-    // normalGenerator2->ComputePointNormalsOn();
-    // normalGenerator2->ComputeCellNormalsOn();
-    // normalGenerator2->Update();
-
-    // b_poly = normalGenerator2->GetOutput();
-
-    // vtkSmartPointer<vtkBooleanOperationPolyDataFilter> booleanOperation =
-    //   vtkSmartPointer<vtkBooleanOperationPolyDataFilter>::New();
-    // booleanOperation->SetOperationToDifference();
-    // booleanOperation->SetInputData( 0, a_poly );
-    // booleanOperation->SetInputData( 1, b_poly );
-    // booleanOperation->Update();
-
-    // vtkPolyData* res_poly = booleanOperation->GetOutput();
-    // debug_print_summary(res_poly);
-    // debug_print_is_closed(res_poly);
-    // debug_print_edge_summary(res_poly);
-    // auto rp = vtkSmartPointer<vtkPolyData>::New();
-    // rp->DeepCopy(res_poly);
-    // auto actor = polydata_actor(rp);
-    // visualize_actors({actor});
-    
-
-    // triangular_mesh result = trimesh_for_polydata(res_poly);
-    // return result;
   }
 
+  // TODO: Delete? Not sure this is ever used
   void write_mesh_as_stl(const triangular_mesh& m,
 			 const std::string& file_name) {
     auto mesh_data = polydata_for_trimesh(m);

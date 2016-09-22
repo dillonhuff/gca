@@ -40,8 +40,6 @@ namespace gca {
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
     
     SECTION("Clipped pill") {
-
-
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});

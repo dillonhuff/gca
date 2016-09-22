@@ -195,7 +195,21 @@ namespace gca {
     DBG_ASSERT(tris.size() == triangles.size());
     return tris;
   }
-  
+
+  bool degenerate(const triangle_t t) {
+    for (unsigned i = 0; i < 3; i++) {
+      for (unsigned j = 0; j < 3; j++) {
+	if (i != j) {
+	  if (t.v[i] == t.v[j]) {
+	    return true;
+	  }
+	}
+      }
+    }
+
+    return false;
+  }
+
   std::vector<triangle_t>
   fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
 					 std::vector<point>& vertices,
@@ -211,6 +225,10 @@ namespace gca {
       tr.v[2] = v3i;
       vertex_triangles.push_back(tr);
     }
+
+    DBG_ASSERT(all_of(begin(vertex_triangles), end(vertex_triangles),
+		      [] (const triangle_t t) { return !degenerate(t); }));
+
     return vertex_triangles;
   }
 
