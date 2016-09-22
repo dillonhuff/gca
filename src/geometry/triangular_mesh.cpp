@@ -221,6 +221,30 @@ namespace gca {
     return false;
   }
 
+  void
+  delete_degenerate_triangles(std::vector<triangle_t>& tris,
+			      const std::vector<point>& verts,
+			      std::vector<point>& normals) {
+    vector<unsigned> inds_to_remove;
+    bool removed = true;
+
+    while (removed) {
+      removed = false;
+
+      for (unsigned i = 0; i < tris.size(); i++) {
+	if (degenerate(tris[i])) {
+	  tris.erase(begin(tris) + i);
+	  normals.erase(begin(normals) + i);
+	  removed = true;
+	  break;
+	}
+      }
+
+    }
+
+    cout << "Deleted " << inds_to_remove.size() << " degenerate triangles" << endl;
+  }
+
   void check_degenerate_triangles(const std::vector<triangle_t>& tris,
 				  const std::vector<point>& verts) {
     unsigned num_degenerate_triangles = 0;
@@ -368,21 +392,42 @@ namespace gca {
 	       &vertex_triangles[0],
 	       edges.size(),
 	       &edges[0]);
+
     return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
   }  
 
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance) {
     std::vector<point> vertices;
-    std::vector<triangle_t> vertex_triangles =
-      fill_vertex_triangles(triangles, vertices, tolerance);
 
-    check_degenerate_triangles(vertex_triangles, vertices);
+    auto vertex_triangles =
+      fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+
+    // std::vector<triangle_t> vertex_triangles =
+    //   fill_vertex_triangles(triangles, vertices, tolerance);
 
     std::vector<point> face_orientations(triangles.size());
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });
 
+    delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
+    check_degenerate_triangles(vertex_triangles, vertices);
+
+    int wind_errs = num_winding_order_errors(vertex_triangles);
+    if (wind_errs > 0) {
+
+      cout << "Num winding errors = " << wind_errs << endl;
+
+      auto fixed_triangles = fix_winding_order_errors(vertex_triangles);
+      int new_wind_errs = num_winding_order_errors(fixed_triangles);
+
+      cout << "Num winding errors after fixing = " << new_wind_errs << endl;
+
+      DBG_ASSERT(new_wind_errs == 0);
+
+      vertex_triangles = fixed_triangles;
+    }
+    
     return correct_winding_and_build(vertex_triangles, vertices, face_orientations);
   }
 

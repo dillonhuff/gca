@@ -330,7 +330,7 @@ namespace gca {
     set_points_and_segments(&in, p);
 
     printf("Input point set:\n\n");
-    report(&in, 1, 0, 0, 0, 0, 0);
+    //report(&in, 1, 0, 0, 0, 0, 0);
 
     set_output(&mid);
 
@@ -344,7 +344,7 @@ namespace gca {
     triangulate(&(settings_2[0]), &in, &mid, NULL);
 
     printf("Initial triangulation:\n\n");
-    report(&mid, 1, 1, 1, 1, 1, 0);
+    //report(&mid, 1, 1, 1, 1, 1, 0);
 
     DBG_ASSERT(mid.numberoftriangles > 0);
 
