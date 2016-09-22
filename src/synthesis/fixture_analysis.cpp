@@ -320,23 +320,27 @@ namespace gca {
     return rest;
   }
 
+  fixture_plan nef_based_planning(const triangular_mesh& part_mesh,
+				  const fixtures& f,
+				  const vector<tool>& tools,
+				  const std::vector<workpiece>& wps) {
+    workpiece w = wps.front();
+
+    vector<surface> stable_surfaces = outer_surfaces(part_mesh);
+    triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
+
+    vector<fixture_setup> setups =
+      plan_jobs(wp_mesh, part_mesh, f, tools);
+
+    return fixture_plan(part_mesh, setups, {}, w);
+  }
+
   fixture_plan make_fixture_plan(const triangular_mesh& part_mesh,
 				 const fixtures& f,
 				 const vector<tool>& tools,
 				 const std::vector<workpiece>& wps) {
 
     DBG_ASSERT(wps.size() > 0);
-
-    //   workpiece w = wps.front();
-
-    //   vector<surface> stable_surfaces = outer_surfaces(part_mesh);
-    //   triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
-
-    //   vector<fixture_setup> setups =
-    //     plan_jobs(wp_mesh, part_mesh, f, tools);
-
-    //   return fixture_plan(part_mesh, setups, {}, w);
-    // }
 
     clipping_plan wp_setups =
       workpiece_clipping_programs(wps, part_mesh, tools, f);
