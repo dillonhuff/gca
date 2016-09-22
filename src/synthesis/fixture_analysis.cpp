@@ -327,43 +327,43 @@ namespace gca {
 
     DBG_ASSERT(wps.size() > 0);
 
-    workpiece w = wps.front();
+    //   workpiece w = wps.front();
 
-    vector<surface> stable_surfaces = outer_surfaces(part_mesh);
-    triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
+    //   vector<surface> stable_surfaces = outer_surfaces(part_mesh);
+    //   triangular_mesh wp_mesh = align_workpiece(stable_surfaces, w);
 
-    vector<fixture_setup> setups =
-      plan_jobs(wp_mesh, part_mesh, f, tools);
+    //   vector<fixture_setup> setups =
+    //     plan_jobs(wp_mesh, part_mesh, f, tools);
 
-    return fixture_plan(part_mesh, setups, {}, w);
+    //   return fixture_plan(part_mesh, setups, {}, w);
+    // }
+
+    clipping_plan wp_setups =
+      workpiece_clipping_programs(wps, part_mesh, tools, f);
+
+    vector<fixture_setup> setups = wp_setups.fixtures;
+
+    auto num_setups = setups.size();
+
+    for (unsigned i = 0; i < setups.size(); i++) {
+      cout << "setup # " << i << " has " << setups[i].pockets.size() << " pockets" << endl;
+    }
+
+    DBG_ASSERT(num_setups == 6 || num_setups == 2 || num_setups == 3);
+
+    const vector<surface>& stable_surfaces =
+      wp_setups.stable_surfaces();
+    auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
+
+    if (surfs_to_cut.size() > 0) {
+      auto rest = plan_fixtures(part_mesh, stable_surfaces, surfs_to_cut, f, tools);
+      concat(setups, rest);
+    }
+
+    return fixture_plan(part_mesh,
+    			setups,
+    			wp_setups.custom_fixtures(),
+    			wp_setups.stock());
   }
-
-  //   clipping_plan wp_setups =
-  //     workpiece_clipping_programs(wps, part_mesh, tools, f);
-
-  //   vector<fixture_setup> setups = wp_setups.fixtures;
-
-  //   auto num_setups = setups.size();
-
-  //   for (unsigned i = 0; i < setups.size(); i++) {
-  //     cout << "setup # " << i << " has " << setups[i].pockets.size() << " pockets" << endl;
-  //   }
-
-  //   DBG_ASSERT(num_setups == 6 || num_setups == 2 || num_setups == 3);
-
-  //   const vector<surface>& stable_surfaces =
-  //     wp_setups.stable_surfaces();
-  //   auto surfs_to_cut = wp_setups.surfaces_left_to_cut();
-
-  //   if (surfs_to_cut.size() > 0) {
-  //     auto rest = plan_fixtures(part_mesh, stable_surfaces, surfs_to_cut, f, tools);
-  //     concat(setups, rest);
-  //   }
-
-  //   return fixture_plan(part_mesh,
-  //   			setups,
-  //   			wp_setups.custom_fixtures(),
-  //   			wp_setups.stock());
-  // }
 
 }
