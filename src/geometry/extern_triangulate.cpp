@@ -169,20 +169,24 @@ namespace gca {
     auto bp = to_boost_poly_2(hole_poly);
 
     for (unsigned i = 0; i < pts.size(); i++) {
-      unsigned i1 = (i + 1) % pts.size();
-      unsigned i2 = (i + 2) % pts.size();
 
-      point pi0 = pts[i];
-      point pi1 = pts[i1];
-      point pi2 = pts[i2];
+      for (unsigned j = 2; j < pts.size() - 1; j++) {
+	unsigned i2 = (i + j) % pts.size();
 
-      point mid = pi2 - pi0;
+	point pi0 = pts[i];
+
+	point pi2 = pts[i2];
+
+	point mid = (1.0 / 2.0) * (pi2 + pi0);
 
       
-      auto pt_2 = bg::model::d2::point_xy<double>(mid.x, mid.y);
-      if (bg::within(pt_2, bp)) { return mid; }
+	auto pt_2 = bg::model::d2::point_xy<double>(mid.x, mid.y);
+	if (bg::within(pt_2, bp)) { return mid; }
+      }
 
     }
+
+    vtk_debug_ring(pts);
 
     DBG_ASSERT(false);
   }
