@@ -53,7 +53,7 @@ namespace gca {
       mate_planes(mesh_base, mesh_left, free_plane,
 		  vice_base, vice_top_jaw, vice_right_bound);
 
-    assert(rev);
+    DBG_ASSERT(rev);
     return *rev;
   }
 
@@ -82,11 +82,11 @@ namespace gca {
     vector<clamp_orientation> orients =
       all_clamp_orientations(surfaces);
 
-    assert(orients.size() > 0);
+    DBG_ASSERT(orients.size() > 0);
 
     filter_stub_orientations(orients, v);
 
-    assert(orients.size() > 0);
+    DBG_ASSERT(orients.size() > 0);
     
     return orients;
   }
@@ -261,7 +261,7 @@ namespace gca {
   surfaces_millable_from(const clamp_orientation& orient,
 			 const std::vector<surface*>& surfaces_left,
 			 const vice& v) {
-    assert(surfaces_left.size() > 0);
+    DBG_ASSERT(surfaces_left.size() > 0);
     const triangular_mesh& part = surfaces_left.front()->get_parent_mesh();
 
     std::vector<index_t> millable =
@@ -288,7 +288,7 @@ namespace gca {
     auto r = find_if(begin(orients), end(orients),
 		     [n](const clamp_orientation& s)
 		     { return within_eps(angle_between(s.top_normal(), n), 0, 1.0); });
-    assert(r != end(orients));
+    DBG_ASSERT(r != end(orients));
     return *r;
   }
 

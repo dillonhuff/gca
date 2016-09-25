@@ -46,7 +46,9 @@ namespace gca {
   triangular_mesh subtract_features(const triangular_mesh& m,
 				    feature_decomposition* features) {
     auto fs = collect_features(features);
+
     cout << "Got all features" << endl;
+
     std::vector<triangular_mesh> meshes;
     for (auto f : fs) {
       meshes.push_back(feature_mesh(*f));
