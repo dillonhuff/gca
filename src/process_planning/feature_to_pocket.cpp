@@ -17,11 +17,15 @@ namespace gca {
 
     labeled_polygon_3 base = f.base();
     point n = base.normal();
-    double theta = angle_between(n, point(0, 0, 1));
-    // cout << "base normal = " << n << endl;
-    // cout << "theta       = " << theta << endl;
-    
-    DBG_ASSERT(within_eps(theta, 0.0, 0.3));
+
+    if (!angle_eps(n, point(0, 0, 1), 0.0, 0.3)) {
+      double theta = angle_between(n, point(0, 0, 1));
+      cout << "base normal    = " << n << endl;
+      cout << "desired normal = " << point(0, 0, 1) << endl;
+      cout << "theta          = " << theta << endl;
+      
+      DBG_ASSERT(within_eps(theta, 0.0, 0.3));
+    }
 
     oriented_polygon ob = to_oriented_polygon(base);
 

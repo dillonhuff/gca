@@ -48,14 +48,13 @@ namespace gca {
 
   triangular_mesh
   mesh_for_polys(const std::vector<oriented_polygon>& polys) {
-    //vtk_debug_polygons(polys);
     cout << "# of polygons = " << polys.size() << endl;
+
     std::vector<triangle> tris;
     for (auto p : polys) {
-      //vtk_debug_polygon(p);
       concat(tris, vtk_triangulate_poly(p));
     }
-    //vtk_debug_triangles(tris);
+
     return make_mesh(tris, 0.01);
   }
 
@@ -547,8 +546,6 @@ namespace gca {
     std::vector<triangle> sides = build_sides(p, v);
     cout << "# of triangles in sides = " << sides.size() << endl;
     concat(base, sides);
-
-    vtk_debug_triangles(base);
 
     return make_mesh(base, 0.0001);
   }

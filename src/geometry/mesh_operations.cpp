@@ -123,7 +123,7 @@ namespace gca {
       tris.push_back(triangle(norm, v0, v1, v2));
     }
 
-    vtk_debug_triangles(tris);
+    //vtk_debug_triangles(tris);
 
     return make_mesh(tris, 1e-20); //0.00000001);
   }

@@ -178,7 +178,6 @@ namespace gca {
 	point pi2 = pts[i2];
 
 	point mid = (1.0 / 2.0) * (pi2 + pi0);
-
       
 	auto pt_2 = bg::model::d2::point_xy<double>(mid.x, mid.y);
 	if (bg::within(pt_2, bp)) { return mid; }

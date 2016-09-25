@@ -35,7 +35,6 @@ namespace gca {
     return fixture_setup(m, f, pockets);
   }
 
-  // TODO: Dont just return bounding box
   triangular_mesh feature_mesh(const feature& f) {
     auto m = extrude(f.base(), (1.01*f.depth())*f.normal());
 
@@ -57,7 +56,7 @@ namespace gca {
 
     auto subtracted = boolean_difference(m, meshes);
 
-    vtk_debug_mesh(subtracted);
+    //vtk_debug_mesh(subtracted);
 
     return subtracted;
   }
@@ -107,9 +106,7 @@ namespace gca {
       cut_setups.push_back(create_setup(t, current_stock, part, decomp, fix, info.tool_info));
 
       current_stock = subtract_features(current_stock, decomp);
-      
-      // plane clip_plane = face_plane(part, n);
-      // current_stock = clip_mesh(current_stock, clip_plane);
+
     }
 
     return cut_setups;
