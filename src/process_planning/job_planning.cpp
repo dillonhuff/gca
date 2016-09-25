@@ -29,7 +29,7 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    auto pockets = feature_pockets(*decomp, s_t, tool_info);
+    vector<pocket> pockets = {}; //feature_pockets(*decomp, s_t, tool_info);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
@@ -56,6 +56,11 @@ namespace gca {
 
     cout << "Got all meshes" << endl;
 
+    // auto viz = meshes;
+    // viz.push_back(m);
+    // vtk_debug_meshes(viz);
+    // vtk_debug_meshes(meshes);
+
     auto subtracted = boolean_difference(m, meshes);
 
     //vtk_debug_mesh(subtracted);
@@ -67,6 +72,8 @@ namespace gca {
 				       const triangular_mesh& part,
 				       const fixtures& f,
 				       const std::vector<tool>& tools) {
+    double part_volume = volume(part);
+
     vector<surface> surfs = outer_surfaces(stock);
 
     DBG_ASSERT(surfs.size() == 6);
@@ -90,26 +97,47 @@ namespace gca {
     triangular_mesh current_stock = stock;
     vector<fixture_setup> cut_setups;
 
+    vtk_debug_mesh(current_stock);
+
     for (auto& info : dir_info) {
       auto sfs = outer_surfaces(current_stock);
       auto orients = all_stable_orientations(sfs, v);
       point n = normal(info.decomp);
-      clamp_orientation orient = find_orientation_by_normal(orients, n);
-      fixture fix(orient, v);
+      auto maybe_orient =
+	find_orientation_by_normal_optional(orients, n);
 
-      auto decomp = info.decomp;
-      auto& acc_info = info.tool_info;
+      if (maybe_orient) {
 
-      delete_nodes(decomp, [acc_info](feature* f) {
-	  return map_find(f, acc_info).size() == 0;
-	});
+	auto orient = *maybe_orient;
+	fixture fix(orient, v);
 
-      auto t = mating_transform(current_stock, orient, v);
-      cut_setups.push_back(create_setup(t, current_stock, part, decomp, fix, info.tool_info));
+	auto decomp = info.decomp;
+	auto& acc_info = info.tool_info;
 
-      current_stock = subtract_features(current_stock, decomp);
+	delete_nodes(decomp, [acc_info](feature* f) {
+	    return map_find(f, acc_info).size() == 0;
+	  });
 
+	auto t = mating_transform(current_stock, orient, v);
+	cut_setups.push_back(create_setup(t, current_stock, part, decomp, fix, info.tool_info));
+
+	current_stock = subtract_features(current_stock, decomp);
+
+	double stock_volume = volume(current_stock);
+	double volume_ratio = part_volume / stock_volume;
+	
+	cout << "Part volume  = " << part_volume << endl;
+	cout << "Stock volume = " << stock_volume << endl;
+	cout << "part / stock = " << volume_ratio << endl;
+
+	vtk_debug_mesh(current_stock);
+
+	if (volume_ratio > 0.999) { break; }
+
+      }
     }
+
+    vtk_debug_mesh(current_stock);
 
     return cut_setups;
   }

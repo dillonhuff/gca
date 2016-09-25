@@ -23,6 +23,8 @@ namespace gca {
   void write_mesh_as_stl(const triangular_mesh& m,
 			 const std::string& file_name);
 
+  double volume(const triangular_mesh& m);
+
 }
 
 #endif

@@ -153,6 +153,15 @@ namespace gca {
     visualize_actors(actors);
   }
 
+  void vtk_debug_meshes(const std::vector<triangular_mesh>& meshes) {
+    std::vector<vtkSmartPointer<vtkActor>> actors;
+    for (auto m : meshes) {
+      auto p = polydata_for_trimesh(m);
+      actors.push_back(polydata_actor(p));
+    }
+    visualize_actors(actors);
+  }
+  
   void vtk_debug_highlight_inds(const surface& surf) {
     vtk_debug_highlight_inds(surf.index_list(), surf.get_parent_mesh());
   }

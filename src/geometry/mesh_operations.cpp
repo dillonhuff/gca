@@ -1,3 +1,4 @@
+#include <vtkMassProperties.h>
 #include <vtkSTLWriter.h>
 #include <vtkImplicitDataSet.h>
 #include <vtkBooleanOperationPolyDataFilter.h>
@@ -387,9 +388,24 @@ namespace gca {
   triangular_mesh
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
-    auto res = trimesh_to_nef_polyhedron(a);
+    Nef_polyhedron res = trimesh_to_nef_polyhedron(a);
+
     for (auto b : bs) {
-      res = res - trimesh_to_nef_polyhedron(b);
+      Nef_polyhedron b_nef = trimesh_to_nef_polyhedron(b);
+      bool b_is_empty = b_nef == Nef_polyhedron::EMPTY;
+
+      cout << "b empty ? " << b_is_empty << endl;
+
+      cout << "Made b_nef" << endl;
+
+      Nef_polyhedron inter_nef = res.intersection(b_nef);
+
+      cout << "Got intersection" << endl;
+
+      bool do_intersect = inter_nef == Nef_polyhedron::EMPTY;
+
+      cout << "Intersection is empty ? " << do_intersect << endl;
+      res = res - b_nef;
     }
 
     return nef_polyhedron_to_trimesh(res);
@@ -406,6 +422,19 @@ namespace gca {
     stlWriter->SetFileName(file_name.c_str());
     stlWriter->SetInputData(mesh_data);
     stlWriter->Write();
+  }
+
+  double volume(const triangular_mesh& m) {
+    auto input1 = polydata_for_trimesh(m);
+    
+    vtkSmartPointer<vtkMassProperties> mass =
+      vtkMassProperties::New();
+    mass->SetInputData(input1);
+    mass->Update();
+
+    double m_volume = mass->GetVolume();
+
+    return m_volume;
   }
 
 }

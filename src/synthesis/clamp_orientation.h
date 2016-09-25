@@ -148,6 +148,10 @@ namespace gca {
 					  const vice& v,
 					  const point n);
 
+  boost::optional<clamp_orientation>
+  find_orientation_by_normal_optional(const std::vector<clamp_orientation>& orients,
+				      const point n);
+  
 }
 
 #endif

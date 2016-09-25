@@ -282,13 +282,27 @@ namespace gca {
     return mill_surfaces;
   }
 
-  clamp_orientation
-  find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
-			     const point n) {
+  boost::optional<clamp_orientation>
+  find_orientation_by_normal_optional(const std::vector<clamp_orientation>& orients,
+				      const point n) {
     auto r = find_if(begin(orients), end(orients),
 		     [n](const clamp_orientation& s)
 		     { return within_eps(angle_between(s.top_normal(), n), 0, 1.0); });
-    DBG_ASSERT(r != end(orients));
+
+    if (r != end(orients)) {
+      return *r;
+    } else {
+      return boost::none;
+    }
+  }
+
+  clamp_orientation
+  find_orientation_by_normal(const std::vector<clamp_orientation>& orients,
+			     const point n) {
+    auto r = find_orientation_by_normal_optional(orients, n);
+
+    DBG_ASSERT(r);
+
     return *r;
   }
 

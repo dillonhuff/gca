@@ -398,10 +398,16 @@ namespace gca {
 
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance) {
+    cout << "# of triangles = " << triangles.size() << endl;
+
+    DBG_ASSERT(triangles.size() > 0);
+
     std::vector<point> vertices;
 
     auto vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+
+    DBG_ASSERT(vertex_triangles.size() > 0);
 
     // std::vector<triangle_t> vertex_triangles =
     //   fill_vertex_triangles(triangles, vertices, tolerance);
