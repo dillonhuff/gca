@@ -100,23 +100,11 @@ namespace gca {
     return next_elem;
   }
 
-  std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
-				       const triangular_mesh& part,
-				       const fixtures& f,
-				       const std::vector<tool>& tools) {
-    double part_volume = volume(part);
-
-    vector<surface> surfs = outer_surfaces(stock);
-
-    DBG_ASSERT(surfs.size() == 6);
-
-    vector<point> norms;
-    for (auto ax : surfs) {
-      point n = ax.face_orientation(ax.front());
-      norms.push_back(n);
-    }
-
-    DBG_ASSERT(norms.size() == 6);
+  std::vector<direction_process_info>
+  initial_decompositions(const triangular_mesh& stock,
+			 const triangular_mesh& part,
+			 const std::vector<tool>& tools,
+			 const std::vector<point>& norms) {
 
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
@@ -124,10 +112,6 @@ namespace gca {
       tool_access_info info = find_accessable_tools(decomp, tools);
       dir_info.push_back({decomp, info});
     }
-
-    vice v = f.get_vice();
-    triangular_mesh current_stock = stock;
-    vector<fixture_setup> cut_setups;
 
     for (auto info : dir_info) {
       feature_decomposition* decomp = info.decomp;
@@ -137,12 +121,31 @@ namespace gca {
 	});
     }
 
+    return dir_info;
+  }
+  
+  std::vector<fixture_setup>
+  select_jobs_and_features(const triangular_mesh& stock,
+			   const triangular_mesh& part,
+			   const fixtures& f,
+			   const std::vector<tool>& tools,
+			   const std::vector<point>& norms) {
+
+    vector<direction_process_info> dir_info =
+      initial_decompositions(stock, part, tools, norms);
+
+    vice v = f.get_vice();
+    triangular_mesh current_stock = stock;
+    vector<fixture_setup> cut_setups;
+
+    double part_volume = volume(part);
+
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info);
+      point n = normal(info.decomp);
 
       auto sfs = outer_surfaces(current_stock);
       auto orients = all_stable_orientations(sfs, v);
-      point n = normal(info.decomp);
       auto maybe_orient =
 	find_orientation_by_normal_optional(orients, n);
 
@@ -190,6 +193,26 @@ namespace gca {
     }
 
     return cut_setups;
+  }
+
+  std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
+				       const triangular_mesh& part,
+				       const fixtures& f,
+				       const std::vector<tool>& tools) {
+    vector<surface> surfs = outer_surfaces(stock);
+
+    DBG_ASSERT(surfs.size() == 6);
+
+    vector<point> norms;
+    for (auto ax : surfs) {
+      point n = ax.face_orientation(ax.front());
+      norms.push_back(n);
+    }
+
+    DBG_ASSERT(norms.size() == 6);
+
+
+    return select_jobs_and_features(stock, part, f, tools, norms);
   }
   
 }

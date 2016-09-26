@@ -85,14 +85,9 @@ namespace gca {
     Polyhedron poly;
     p.convert_to_polyhedron(poly);
 
-    for (auto it = poly.points_begin(); it != poly.points_end(); it++) {
-      cout << *it << endl;
-    }
-
     vector<triangle> tris;
     for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
       auto fc = *it;
-      cout << fc.is_triangle() << endl;
 
       auto he = fc.facet_begin();
       auto end = fc.facet_begin();
@@ -107,9 +102,6 @@ namespace gca {
 		     CGAL::to_double(r.z()));
 
 	pts.push_back(res_pt);
-	//	cout << r << endl;
-	//cout << *v << endl;
-	//cout << he->vertex() << endl;
       }
 
       DBG_ASSERT(pts.size() == 3);
@@ -124,9 +116,7 @@ namespace gca {
       tris.push_back(triangle(norm, v0, v1, v2));
     }
 
-    //vtk_debug_triangles(tris);
-
-    return make_mesh(tris, 1e-20); //0.00000001);
+    return make_mesh(tris, 1e-20);
   }
 
   Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m) {

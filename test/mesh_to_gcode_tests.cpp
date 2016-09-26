@@ -161,7 +161,17 @@ namespace gca {
     t2.set_holder_diameter(2.5);
     t2.set_holder_length(3.5);
 
-    std::vector<tool> tools{t1, t2};
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.2334);
+    t3.set_cut_length(2.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+    
+    std::vector<tool> tools{t1, t2, t3};
 
     vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
     std::vector<plate_height> parallel_plates{0.1, 0.3, 0.5};
