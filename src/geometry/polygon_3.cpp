@@ -8,13 +8,22 @@ namespace gca {
   polygon_3::polygon_3(const std::vector<point> vertices,
 		       const std::vector<std::vector<point>> hole_verts) :
     outer_ring(vertices),
-    inner_rings(hole_verts) {
+    inner_rings{} {
     // There is an occasional test failure here in simple box
     if (!(outer_ring.size() >= 3)) {
       cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
       vtk_debug_ring(outer_ring);
 
       DBG_ASSERT(outer_ring.size() >= 3);
+    }
+
+    for (auto h : hole_verts) {
+      
+      if (!(h.size() >= 3)) {
+	cout << "ERROR: Inner ring size = " << h.size() << endl;
+      } else {
+	inner_rings.push_back(h);
+      }
     }
   }
 

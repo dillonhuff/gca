@@ -29,14 +29,14 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    vector<pocket> pockets = {}; //feature_pockets(*decomp, s_t, tool_info);
+    vector<pocket> pockets = feature_pockets(*decomp, s_t, tool_info);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
   }
 
   triangular_mesh feature_mesh(const feature& f) {
-    auto m = extrude(f.base(), (1.01*f.depth())*f.normal());
+    auto m = extrude(f.base(), (1.0001 + f.depth())*f.normal());
 
     DBG_ASSERT(m.is_connected());
 
@@ -56,14 +56,7 @@ namespace gca {
 
     cout << "Got all meshes" << endl;
 
-    // auto viz = meshes;
-    // viz.push_back(m);
-    // vtk_debug_meshes(viz);
-    // vtk_debug_meshes(meshes);
-
     auto subtracted = boolean_difference(m, meshes);
-
-    //vtk_debug_mesh(subtracted);
 
     return subtracted;
   }

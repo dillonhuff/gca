@@ -95,7 +95,6 @@ namespace gca {
   planar_polygon_union(const std::vector<labeled_polygon_3>& polys) {
     if (polys.size() == 0) { return {}; }
 
-    // vtk_debug_polygon(p);
     //vtk_debug_polygons(polys);
 
     double level_z =
