@@ -267,8 +267,8 @@ namespace gca {
 	DBG_ASSERT(in->segmentlist[2*seg_num] >= 0);
 	DBG_ASSERT(in->segmentlist[2*seg_num + 1] >= 0);
 
-	cout << "segment " << seg_num << " start : " << in->segmentlist[2*seg_num] << endl;
-	cout << "segment " << seg_num << " end: " << in->segmentlist[2*seg_num + 1] << endl;
+	// cout << "segment " << seg_num << " start : " << in->segmentlist[2*seg_num] << endl;
+	// cout << "segment " << seg_num << " end: " << in->segmentlist[2*seg_num + 1] << endl;
 	
 	DBG_ASSERT(in->segmentlist[2*seg_num] < in->numberofpoints);
 	DBG_ASSERT(in->segmentlist[2*seg_num + 1] < in->numberofpoints);
