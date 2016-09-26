@@ -131,10 +131,10 @@ namespace gca {
       point_vec.push_back(point(px, py, z));
     }
 
-    cout << "POINTS" << endl;
-    for (auto p : point_vec) {
-      cout << p << endl;
-    }
+    // cout << "POINTS" << endl;
+    // for (auto p : point_vec) {
+    //   cout << p << endl;
+    // }
   
     vector<triangle> tris;
     for (unsigned i = 0; i < mid.numberoftriangles; i++) {
@@ -156,10 +156,10 @@ namespace gca {
       tris.push_back(triangle(norm, v0, v1, v2));
     }
 
-    cout << "Number of triangles = " << tris.size() << endl;
-    for (auto t : tris) {
-      cout << t << endl;
-    }
+    // cout << "Number of triangles = " << tris.size() << endl;
+    // for (auto t : tris) {
+    //   cout << t << endl;
+    // }
 
     return tris;
   }

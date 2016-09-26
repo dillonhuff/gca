@@ -90,7 +90,7 @@ namespace gca {
     triangular_mesh current_stock = stock;
     vector<fixture_setup> cut_setups;
 
-    vtk_debug_mesh(current_stock);
+    //vtk_debug_mesh(current_stock);
 
     for (auto& info : dir_info) {
       auto sfs = outer_surfaces(current_stock);
@@ -123,14 +123,14 @@ namespace gca {
 	cout << "Stock volume = " << stock_volume << endl;
 	cout << "part / stock = " << volume_ratio << endl;
 
-	vtk_debug_mesh(current_stock);
+	//vtk_debug_mesh(current_stock);
 
 	if (volume_ratio > 0.999) { break; }
 
       }
     }
 
-    vtk_debug_mesh(current_stock);
+    //vtk_debug_mesh(current_stock);
 
     return cut_setups;
   }

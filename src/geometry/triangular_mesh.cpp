@@ -250,8 +250,8 @@ namespace gca {
     unsigned num_degenerate_triangles = 0;
     for (auto t : tris) {
       if (degenerate(t)) {
-	cout << "triangle " << t << " is degenerate" << endl;
-	cout << verts[t.v[0]] << " , " << verts[t.v[1]] << " , " << verts[t.v[2]] << endl;
+	// cout << "triangle " << t << " is degenerate" << endl;
+	// cout << verts[t.v[0]] << " , " << verts[t.v[1]] << " , " << verts[t.v[2]] << endl;
 	num_degenerate_triangles++;
       }
     }
