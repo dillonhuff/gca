@@ -44,7 +44,7 @@ namespace gca {
 
     if (base_dilation > 0.0) {
       auto dilated_base = dilate(f.base(), base_dilation);
-      //   dilated_base = shift(shift_vec, dilated_base);
+      dilated_base = shift(shift_vec, dilated_base);
     
       auto m = extrude(dilated_base, (base_extension + f.depth())*f.normal());
 
@@ -53,8 +53,8 @@ namespace gca {
       return m;
 
     } else {
-      //      auto base = shift(shift_vec, f.base());
-      auto base = f.base(); //shift(shift_vec, f.base());
+      auto base = shift(shift_vec, f.base());
+      //      auto base = f.base(); //shift(shift_vec, f.base());
 
       auto m = extrude(base, (base_extension + f.depth())*f.normal());
 
