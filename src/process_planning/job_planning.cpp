@@ -108,7 +108,7 @@ namespace gca {
 
     //	TODO: Refine these tolerances, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.00, 0.05, 0.0);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.0);
     
     return volume_info{vol, mesh, dilated_mesh};
   }
