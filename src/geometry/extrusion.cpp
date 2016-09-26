@@ -371,14 +371,18 @@ namespace gca {
       point n1 = ring_normal(side_triangle_1);
       triangle t1(n1,
 		  side_triangle_1[0],
-		  side_triangle_1[0],
-		  side_triangle_1[0]);
+		  side_triangle_1[1],
+		  side_triangle_1[2]);
 
       vector<point> side_triangle_2{r, q, s};
       point n2 = ring_normal(side_triangle_2);
+      triangle t2(n2,
+		  side_triangle_2[0],
+		  side_triangle_2[1],
+		  side_triangle_2[2]);
       
       //      polygon_3 side_poly({p, q, s, r});
-      auto tris = {t1, t2}; //triangulate(side_poly);
+      vector<triangle> tris{t1, t2}; // = triangulate(side_poly);
       concat(side_tris, tris);
     }
 
