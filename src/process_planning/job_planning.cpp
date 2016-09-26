@@ -180,7 +180,8 @@ namespace gca {
     cout << "Stock volume = " << stock_volume << endl;
     cout << "part / stock = " << volume_ratio << endl;
 
-    if (volume_ratio <= 0.999) {
+    // TODO: Tighten this tolerance once edge features are supportedo
+    if (volume_ratio <= 0.99) {
 
       vtk_debug_mesh(part);
       vtk_debug_mesh(current_stock);
