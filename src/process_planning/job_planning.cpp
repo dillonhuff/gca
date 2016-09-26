@@ -12,6 +12,7 @@
 #include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
+#include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "synthesis/workpiece_clipping.h"
@@ -134,14 +135,14 @@ namespace gca {
       cout << "Old volume = " << inf.volume << endl;
       cout << "New volume = " << new_volume << endl;
 
-      return volume_info{new_volume, *res};
+      return volume_info{new_volume, *res, inf.dilated_mesh};
 
     } else {
 
       cout << "Old volume = " << inf.volume << endl;
       cout << "New volume = " << 0.0 << endl;
 
-      return volume_info{0.0, boost::none};
+      return volume_info{0.0, boost::none, inf.dilated_mesh};
     }
 
   }
@@ -351,6 +352,17 @@ namespace gca {
 	
 	auto t = mating_transform(current_stock, orient, v);
 	auto features = collect_non_empty_features(decomp, volume_inf);
+
+	for (auto f : features) {
+	  auto vol_data = map_find(f, volume_inf);
+	  cout << "delta volume = " << vol_data.volume << endl;
+	  vtk_debug_feature(*f);
+	  if (vol_data.mesh) {
+	    vtk_debug_mesh(*vol_data.mesh);
+	  }
+	}
+	vtk_debug_features(features);
+
 	cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
 	auto stock_res = subtract_features(current_stock, decomp);
