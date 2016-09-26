@@ -159,6 +159,8 @@ namespace gca {
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
       if (f_info.mesh) {
+	// TODO: Refine these tolerances, it may not matter but
+	// best to be safe
 	triangular_mesh feat_mesh = feature_mesh(*f, 0.05, 0.1);
 	to_subtract.push_back(feat_mesh);
       }
