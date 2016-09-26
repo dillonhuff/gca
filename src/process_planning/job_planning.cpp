@@ -70,25 +70,72 @@ namespace gca {
     return base_area * f.depth();
   }
 
-  double volume(feature_decomposition* f) {
+  struct volume_info {
+    double volume;
+    boost::optional<triangular_mesh> mesh;
+  };
+
+  typedef std::unordered_map<feature*, volume_info> volume_info_map;
+
+  volume_info initial_volume_info(const feature& f) {
+    triangular_mesh mesh = feature_mesh(f);
+    double vol = volume(mesh);
+
+    return volume_info{vol, mesh};
+  }
+
+  volume_info_map
+  initial_volume_info(const std::vector<direction_process_info>& dir_info) {
+    volume_info_map m;
+
+    for (auto d : dir_info) {
+      auto decomp = d.decomp;
+      for (feature* f : collect_features(decomp)) {
+	m[f] = initial_volume_info(*f);
+      }
+    }
+
+    return m;
+  }
+
+  void
+  clip_volumes(const feature_decomposition* decomp,
+	       volume_info_map& volume_inf) {
+    vector<triangular_mesh> to_subtract;
+    for (auto f : collect_features(decomp)) {
+    }
+    for (auto info_pair : volume_info) {
+      
+    }
+  }
+
+  double volume(feature* f, const volume_info_map& vol_info) {
+    volume_info inf = map_find(f, vol_info);
+
+    return inf.volume;
+  }
+
+  double volume(feature_decomposition* f, const volume_info_map& vol_info) {
     auto feats = collect_features(f);
 
     double vol = 0.0;
     for (auto ft : feats) {
-      vol += volume(*ft);
+      vol += volume(ft, vol_info);
     }
 
     return vol;
   }
 
   direction_process_info
-  select_next_dir(std::vector<direction_process_info>& dir_info) {
+  select_next_dir(std::vector<direction_process_info>& dir_info,
+		  const volume_info_map& vol_info) {
     DBG_ASSERT(dir_info.size() > 0);
 
     auto next = max_element(begin(dir_info), end(dir_info),
-			    [](const direction_process_info& l,
-			       const direction_process_info& r) {
-			      return volume(l.decomp) < volume(r.decomp);
+			    [vol_info](const direction_process_info& l,
+				       const direction_process_info& r) {
+			      return volume(l.decomp, vol_info) <
+			      volume(r.decomp, vol_info);
 			    });
 
     DBG_ASSERT(next != end(dir_info));
@@ -134,6 +181,8 @@ namespace gca {
     vector<direction_process_info> dir_info =
       initial_decompositions(stock, part, tools, norms);
 
+    volume_info_map volume_inf = initial_volume_info(dir_info);
+
     vice v = f.get_vice();
     triangular_mesh current_stock = stock;
     vector<fixture_setup> cut_setups;
@@ -141,7 +190,7 @@ namespace gca {
     double part_volume = volume(part);
 
     while (dir_info.size() > 0) {
-      direction_process_info info = select_next_dir(dir_info);
+      direction_process_info info = select_next_dir(dir_info, volume_inf);
       point n = normal(info.decomp);
 
       auto sfs = outer_surfaces(current_stock);
@@ -150,6 +199,7 @@ namespace gca {
 	find_orientation_by_normal_optional(orients, n);
 
       if (maybe_orient) {
+	clip_volumes(info, volume_inf);
 
 	auto orient = *maybe_orient;
 	fixture fix(orient, v);
