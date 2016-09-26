@@ -37,28 +37,22 @@ namespace gca {
 
   triangular_mesh feature_mesh(const feature& f,
 			       const double base_dilation,
-			       const double base_extension) {
-    if (base_dilation > 0) {
-      auto dilated_base = dilate(f.base(), base_dilation);
+			       const double base_extension,
+			       const double top_extension) {
+    auto dilated_base = dilate(f.base(), base_dilation);
+    //    point shift_vec = (top_extension)*dilated_base.normal();
 
-      auto m = extrude(dilated_base, (1.0 + base_extension + f.depth())*f.normal());
+    //    dilated_base = shift(shift_vec, dilated_base);
+    
+    auto m = extrude(dilated_base, (1.0 + base_extension + f.depth())*f.normal());
 
-      DBG_ASSERT(m.is_connected());
+    DBG_ASSERT(m.is_connected());
 
-      return m;
-
-    } else {
-      auto m = extrude(f.base(), (1.0 + base_extension + f.depth())*f.normal());
-
-      DBG_ASSERT(m.is_connected());
-
-      return m;
-
-    }
+    return m;
   }
 
   triangular_mesh feature_mesh(const feature& f) {
-    return feature_mesh(f, 0.0, 0.0001); 
+    return feature_mesh(f, 0.0, 0.0001, 0.0000); 
     // auto m = extrude(f.base(), (1.0001 + f.depth())*f.normal());
 
     // DBG_ASSERT(m.is_connected());
@@ -107,7 +101,7 @@ namespace gca {
 
     //	TODO: Refine these tolerances, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.1);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.00, 0.0005, 0.0);
     
     return volume_info{vol, mesh, dilated_mesh};
   }
@@ -293,6 +287,18 @@ namespace gca {
 
     return dir_info;
   }
+
+  std::vector<feature*>
+  collect_non_empty_features(feature_decomposition* decomp,
+			     const volume_info_map& vol_info) {
+    std::vector<feature*> fs = collect_features(decomp);
+
+    delete_if(fs, [vol_info](feature* feat) {
+	return map_find(feat, vol_info).volume < 0.00001;
+      });
+
+    return fs;
+  }
   
   std::vector<fixture_setup>
   select_jobs_and_features(const triangular_mesh& stock,
@@ -333,7 +339,7 @@ namespace gca {
 	clip_volumes(decomp, volume_inf);
 	
 	auto t = mating_transform(current_stock, orient, v);
-	auto features = collect_features(decomp);
+	auto features = collect_non_empty_features(decomp, volume_inf);
 	cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
 	auto stock_res = subtract_features(current_stock, decomp);
