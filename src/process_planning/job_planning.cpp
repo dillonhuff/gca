@@ -44,18 +44,19 @@ namespace gca {
 
     if (base_dilation > 0.0) {
       auto dilated_base = dilate(f.base(), base_dilation);
-      dilated_base = shift(shift_vec, dilated_base);
+      //   dilated_base = shift(shift_vec, dilated_base);
     
-      auto m = extrude(dilated_base, (1.0 + base_extension + f.depth())*f.normal());
+      auto m = extrude(dilated_base, (base_extension + f.depth())*f.normal());
 
       DBG_ASSERT(m.is_connected());
 
       return m;
 
     } else {
-      auto base = shift(shift_vec, f.base());
+      //      auto base = shift(shift_vec, f.base());
+      auto base = f.base(); //shift(shift_vec, f.base());
 
-      auto m = extrude(base, (1.0 + base_extension + f.depth())*f.normal());
+      auto m = extrude(base, (base_extension + f.depth())*f.normal());
 
       DBG_ASSERT(m.is_connected());
 
@@ -330,6 +331,8 @@ namespace gca {
 
     double part_volume = volume(part);
 
+    vector<feature*> all_features{};
+
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 	//select_next_dir(dir_info, current_stock);
@@ -356,12 +359,18 @@ namespace gca {
 	for (auto f : features) {
 	  auto vol_data = map_find(f, volume_inf);
 	  cout << "delta volume = " << vol_data.volume << endl;
+
 	  vtk_debug_feature(*f);
+
+	  //	  vtk_debug_mesh(vol_data.dilated_mesh);
+
 	  if (vol_data.mesh) {
 	    vtk_debug_mesh(*vol_data.mesh);
 	  }
+
 	}
 	vtk_debug_features(features);
+	concat(all_features, features);
 
 	cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
@@ -391,6 +400,8 @@ namespace gca {
     cout << "Part volume  = " << part_volume << endl;
     cout << "Stock volume = " << stock_volume << endl;
     cout << "part / stock = " << volume_ratio << endl;
+
+    vtk_debug_features(all_features);    
 
     // TODO: Tighten this tolerance once edge features are supportedo
     if (volume_ratio <= 0.99) {
