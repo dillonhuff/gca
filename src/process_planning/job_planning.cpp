@@ -39,16 +39,23 @@ namespace gca {
 			       const double base_dilation,
 			       const double base_extension,
 			       const double top_extension) {
-    auto dilated_base = dilate(f.base(), base_dilation);
-    //    point shift_vec = (top_extension)*dilated_base.normal();
-
-    //    dilated_base = shift(shift_vec, dilated_base);
+    if (base_dilation > 0.0) {
+      auto dilated_base = dilate(f.base(), base_dilation);
     
-    auto m = extrude(dilated_base, (1.0 + base_extension + f.depth())*f.normal());
+      auto m = extrude(dilated_base, (1.0 + base_extension + f.depth())*f.normal());
 
-    DBG_ASSERT(m.is_connected());
+      DBG_ASSERT(m.is_connected());
 
-    return m;
+      return m;
+
+    } else {
+
+      auto m = extrude(f.base(), (1.0 + base_extension + f.depth())*f.normal());
+
+      DBG_ASSERT(m.is_connected());
+
+      return m;
+    }
   }
 
   triangular_mesh feature_mesh(const feature& f) {
@@ -101,7 +108,7 @@ namespace gca {
 
     //	TODO: Refine these tolerances, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.00, 0.0005, 0.0);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.00, 0.05, 0.0);
     
     return volume_info{vol, mesh, dilated_mesh};
   }
