@@ -374,7 +374,7 @@ namespace gca {
 
     DBG_ASSERT(wps.size() > 0);
 
-    return nef_based_planning(part_mesh, f, tools, wps);
+    return surface_based_planning(part_mesh, f, tools, wps);
   }
 
 }
