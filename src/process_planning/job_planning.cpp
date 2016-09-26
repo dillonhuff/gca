@@ -23,13 +23,13 @@ namespace gca {
   create_setup(const homogeneous_transform& s_t,
 	       const triangular_mesh& wp_mesh,
 	       const triangular_mesh& part_mesh,
-	       feature_decomposition* decomp,
+	       const std::vector<feature*>& features,
 	       const fixture& f,
 	       const tool_access_info& tool_info) {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
-    vector<pocket> pockets = feature_pockets(*decomp, s_t, tool_info);
+    vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
@@ -158,7 +158,8 @@ namespace gca {
 	auto& acc_info = info.tool_info;
 
 	auto t = mating_transform(current_stock, orient, v);
-	cut_setups.push_back(create_setup(t, current_stock, part, decomp, fix, info.tool_info));
+	auto features = collect_features(decomp);
+	cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
 	current_stock = subtract_features(current_stock, decomp);
 

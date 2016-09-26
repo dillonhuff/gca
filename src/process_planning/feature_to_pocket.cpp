@@ -43,6 +43,35 @@ namespace gca {
   }
 
   std::vector<pocket>
+  feature_pockets(const std::vector<feature*>& features,
+		  const tool_access_info& tool_info) {
+
+    vector<pocket> pockets;
+    for (auto f : features) {
+      vector<tool> tools = map_find(f, tool_info);
+      concat(pockets, pockets_for_feature(*f, tools));
+    }
+    
+    return pockets;
+  }
+
+  std::vector<pocket>
+  feature_pockets(const std::vector<feature*>& features,
+		  const homogeneous_transform& t,
+		  const tool_access_info& tool_info) {
+
+    vector<pocket> pockets;
+    for (auto f : features) {
+      vector<tool> tools = map_find(f, tool_info);
+      concat(pockets, pockets_for_feature(f->apply(t), tools));
+    }
+    
+    return pockets;
+
+  }
+
+  
+  std::vector<pocket>
   feature_pockets(feature_decomposition& r,
 		  const tool_access_info& tool_info) {
 
@@ -52,13 +81,7 @@ namespace gca {
     auto face_feature_node = r.child(0);
     vector<feature*> features = collect_features(&r);
 
-    vector<pocket> pockets;
-    for (auto f : features) {
-      vector<tool> tools = map_find(f, tool_info);
-      concat(pockets, pockets_for_feature(*f, tools));
-    }
-    
-    return pockets;
+    return feature_pockets(features, tool_info);
   }
 
   std::vector<pocket>
