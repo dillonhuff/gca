@@ -5,49 +5,50 @@
 
 namespace gca {
 
-  TEST_CASE("Parallel plates") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // NOTE: This duplicate of a test in mesh_to_gcode is too expensive to keep around
+  // TEST_CASE("Parallel plates") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    // Change back to emco_vice
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
-    std::vector<plate_height> parallel_plates{0.5, 0.7};
-    fixtures fixes(test_vice, parallel_plates);
+  //   // Change back to emco_vice
+  //   vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+  //   std::vector<plate_height> parallel_plates{0.5, 0.7};
+  //   fixtures fixes(test_vice, parallel_plates);
 
-    tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.1);
-    t1.set_cut_length(0.4);
+  //   tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
+  //   t1.set_cut_diameter(0.1);
+  //   t1.set_cut_length(0.4);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.1);
+  //   t1.set_shank_diameter(3.0 / 8.0);
+  //   t1.set_shank_length(0.1);
 
-    t1.set_holder_diameter(2.0);
-    t1.set_holder_length(2.5);
+  //   t1.set_holder_diameter(2.0);
+  //   t1.set_holder_length(2.5);
 
-    tool t2(0.12, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.12);
-    t2.set_cut_length(1.2);
+  //   tool t2(0.12, 3.0, 4, HSS, FLAT_NOSE);
+  //   t2.set_cut_diameter(0.12);
+  //   t2.set_cut_length(1.2);
 
-    t2.set_shank_diameter(0.1);
-    t2.set_shank_length(2.5);
+  //   t2.set_shank_diameter(0.1);
+  //   t2.set_shank_length(0.5);
 
-    t2.set_holder_diameter(2.0);
-    t2.set_holder_length(2.5);
+  //   t2.set_holder_diameter(2.0);
+  //   t2.set_holder_length(2.5);
     
-    vector<tool> tools{t1, t2};
+  //   vector<tool> tools{t1, t2};
 
-    workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
+  //   workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
     
-    SECTION("Clipped pill") {
+  //   SECTION("Clipped pill") {
 
 
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
+  //     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ClippedPill.stl", 0.001);
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 2);
-    }
-  }
+  //     REQUIRE(p.fixtures().size() == 2);
+  //   }
+  // }
 
   TEST_CASE("More parallel plates") {
     arena_allocator a;
@@ -149,186 +150,188 @@ namespace gca {
     
   }
 
-  TEST_CASE("Tapered top and several slanted verticals") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TODO: Refocusing on real parts, not the contrived forms I created
+  // in autocad at the start of the project
+  // TEST_CASE("Tapered top and several slanted verticals") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    vice test_vice = large_jaw_vice(4.0, point(1.2, -4.4, 3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+  //   vice test_vice = large_jaw_vice(4.0, point(1.2, -4.4, 3.3));
+  //   fixtures fixes(test_vice);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   t1.set_cut_diameter(0.25);
+  //   t1.set_cut_length(0.6);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+  //   t1.set_shank_diameter(3.0 / 8.0);
+  //   t1.set_shank_length(0.3);
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
+  //   t1.set_holder_diameter(2.5);
+  //   t1.set_holder_length(3.5);
 
-    tool t2(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.05);
-    t2.set_cut_length(0.6);
+  //   tool t2(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   t2.set_cut_diameter(0.05);
+  //   t2.set_cut_length(0.6);
 
-    t2.set_shank_diameter(3.0 / 8.0);
-    t2.set_shank_length(0.3);
+  //   t2.set_shank_diameter(3.0 / 8.0);
+  //   t2.set_shank_length(0.3);
 
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
+  //   t2.set_holder_diameter(2.5);
+  //   t2.set_holder_length(3.5);
     
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(3.5, 3.0, 3.98, ALUMINUM);
+  //   vector<tool> tools{t1, t2};
+  //   workpiece workpiece_dims(3.5, 3.0, 3.98, ALUMINUM);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedTopSeveralVerticals.stl", 0.001);
 
-    auto outer_surfs = outer_surfaces(mesh);
+  //   auto outer_surfs = outer_surfaces(mesh);
 
-    SECTION("14 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 14);
-    }
+  //   SECTION("14 outer surfaces") {
+  //     REQUIRE(outer_surfs.size() == 14);
+  //   }
 
-    SECTION("9 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-      REQUIRE(p.fixtures().size() == 9);
-    }
-  }
+  //   SECTION("9 setups") {
+  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //     REQUIRE(p.fixtures().size() == 9);
+  //   }
+  // }
 
-  TEST_CASE("Tapered extrude top and side") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Tapered extrude top and side") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    vice test_vice = large_jaw_vice(3.5, point(-0.8, -4.4, -3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+  //   vice test_vice = large_jaw_vice(3.5, point(-0.8, -4.4, -3.3));
+  //   fixtures fixes(test_vice);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   t1.set_cut_diameter(0.25);
+  //   t1.set_cut_length(0.6);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+  //   t1.set_shank_diameter(3.0 / 8.0);
+  //   t1.set_shank_length(0.3);
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
+  //   t1.set_holder_diameter(2.5);
+  //   t1.set_holder_length(3.5);
 
-    tool t2(0.05, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.01);
-    t2.set_cut_length(10.0);
+  //   tool t2(0.05, 3.0, 4, HSS, FLAT_NOSE);
+  //   t2.set_cut_diameter(0.01);
+  //   t2.set_cut_length(10.0);
 
-    t2.set_shank_diameter(3.0 / 8.0);
-    t2.set_shank_length(0.3);
+  //   t2.set_shank_diameter(3.0 / 8.0);
+  //   t2.set_shank_length(0.3);
 
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
+  //   t2.set_holder_diameter(2.5);
+  //   t2.set_holder_length(3.5);
     
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(2.5, 1.8, 2.3, BRASS);
+  //   vector<tool> tools{t1, t2};
+  //   workpiece workpiece_dims(2.5, 1.8, 2.3, BRASS);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudedTopSide.stl", 0.001);
 
-    auto outer_surfs = outer_surfaces(mesh);
+  //   auto outer_surfs = outer_surfaces(mesh);
 
-    SECTION("6 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 6);
-    }
+  //   SECTION("6 outer surfaces") {
+  //     REQUIRE(outer_surfs.size() == 6);
+  //   }
 
-    SECTION("8 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   SECTION("8 setups") {
+  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 8);
+  //     REQUIRE(p.fixtures().size() == 8);
 
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-  	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
-      }
-    }
-  }
+  //     // No use of base plates
+  //     for (auto fixture : p.fixtures()) {
+  // 	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
+  //     }
+  //   }
+  // }
 
-  TEST_CASE("Shape with outermost surfaces that are not part of any stable orientation") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    vice test_vice = large_jaw_vice(4.0, point(1.8, 4.2, 3.3));
-    fixtures fixes(test_vice);
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+  // TEST_CASE("Shape with outermost surfaces that are not part of any stable orientation") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
+  //   vice test_vice = large_jaw_vice(4.0, point(1.8, 4.2, 3.3));
+  //   fixtures fixes(test_vice);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   t1.set_cut_diameter(0.25);
+  //   t1.set_cut_length(0.6);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+  //   t1.set_shank_diameter(3.0 / 8.0);
+  //   t1.set_shank_length(0.3);
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
+  //   t1.set_holder_diameter(2.5);
+  //   t1.set_holder_length(3.5);
     
-    vector<tool> tools{t1};
-    workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL);
+  //   vector<tool> tools{t1};
+  //   workpiece workpiece_dims(3.0, 3.0, 3.0, ACETAL);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/LittleHouse.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/LittleHouse.stl", 0.001);
 
-    auto outer_surfs = outer_surfaces(mesh);
+  //   auto outer_surfs = outer_surfaces(mesh);
     
-    SECTION("10 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 10);
-    }
+  //   SECTION("10 outer surfaces") {
+  //     REQUIRE(outer_surfs.size() == 10);
+  //   }
 
-    // Change back to 7 once optimization / feature
-    // recognition is done. 10 works, but is not efficient
-    SECTION("10 setups") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   // Change back to 7 once optimization / feature
+  //   // recognition is done. 10 works, but is not efficient
+  //   SECTION("10 setups") {
+  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 10);
+  //     REQUIRE(p.fixtures().size() == 10);
 
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
-      }
-    }
-  }
+  //     // No use of base plates
+  //     for (auto fixture : p.fixtures()) {
+  // 	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
+  //     }
+  //   }
+  // }
 
-  TEST_CASE("Tapered extrude top") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
-    fixtures fixes(test_vice);
+  // TEST_CASE("Tapered extrude top") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
+  //   vice test_vice = large_jaw_vice(3.0, point(-0.8, -4.4, -3.3));
+  //   fixtures fixes(test_vice);
 
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(0.25);
-    t1.set_cut_length(0.6);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   t1.set_cut_diameter(0.25);
+  //   t1.set_cut_length(0.6);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.3);
+  //   t1.set_shank_diameter(3.0 / 8.0);
+  //   t1.set_shank_length(0.3);
 
-    t1.set_holder_diameter(2.5);
-    t1.set_holder_length(3.5);
+  //   t1.set_holder_diameter(2.5);
+  //   t1.set_holder_length(3.5);
     
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(0.5);
-    t2.set_cut_length(0.3);
+  //   tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+  //   t2.set_cut_diameter(0.5);
+  //   t2.set_cut_length(0.3);
 
-    t2.set_shank_diameter(0.5);
-    t2.set_shank_length(0.5);
+  //   t2.set_shank_diameter(0.5);
+  //   t2.set_shank_length(0.5);
 
-    t2.set_holder_diameter(2.5);
-    t2.set_holder_length(3.5);
+  //   t2.set_holder_diameter(2.5);
+  //   t2.set_holder_length(3.5);
     
-    vector<tool> tools{t1, t2};
-    workpiece workpiece_dims(2.5, 1.9, 2.3, ACETAL);
+  //   vector<tool> tools{t1, t2};
+  //   workpiece workpiece_dims(2.5, 1.9, 2.3, ACETAL);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudeTop.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/TaperedExtrudeTop.stl", 0.001);
 
-    auto outer_surfs = outer_surfaces(mesh);
+  //   auto outer_surfs = outer_surfaces(mesh);
 
-    SECTION("6 outer surfaces") {
-      REQUIRE(outer_surfs.size() == 6);
-    }
+  //   SECTION("6 outer surfaces") {
+  //     REQUIRE(outer_surfs.size() == 6);
+  //   }
     
-    SECTION("7 setups, no duplicates") {
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   SECTION("7 setups, no duplicates") {
+  //     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 7);
+  //     REQUIRE(p.fixtures().size() == 7);
 
-      // No use of base plates
-      for (auto fixture : p.fixtures()) {
-  	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
-      }
-    }
-  }
+  //     // No use of base plates
+  //     for (auto fixture : p.fixtures()) {
+  // 	REQUIRE(!(fixture.fix.v.has_parallel_plate()));
+  //     }
+  //   }
+  // }
 
   // NOTE: Currently only handling prismatic parts
   // TEST_CASE("Complex rectangular part") {

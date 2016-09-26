@@ -131,7 +131,7 @@ namespace gca {
 
   Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m) {
     cout << "Converting to nef" << endl;
-    vtk_debug_mesh(m);
+    //vtk_debug_mesh(m);
 
     build_mesh<HalfedgeDS> mesh_builder(m);
 
