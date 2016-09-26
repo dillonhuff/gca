@@ -79,8 +79,10 @@ namespace gca {
     }
   };
 
-  triangular_mesh nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
-    DBG_ASSERT(p.is_simple());
+  boost::optional<triangular_mesh>
+  nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
+    //    DBG_ASSERT(p.is_simple());
+    if (!p.is_simple()) { return boost::none; }
 
     Polyhedron poly;
     p.convert_to_polyhedron(poly);
@@ -115,6 +117,8 @@ namespace gca {
       point norm = cross(q2, q1).normalize();
       tris.push_back(triangle(norm, v0, v1, v2));
     }
+
+    if (tris.size() == 0) { return boost::none; }
 
     return make_mesh(tris, 1e-20);
   }
@@ -369,7 +373,7 @@ namespace gca {
     return final_mesh;
   }
 
-  triangular_mesh
+  boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b) {
     auto a_nef = trimesh_to_nef_polyhedron(a);
     auto b_nef = trimesh_to_nef_polyhedron(b);
@@ -378,7 +382,7 @@ namespace gca {
     return nef_polyhedron_to_trimesh(res);
   }
 
-  triangular_mesh
+  boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
     Nef_polyhedron res = trimesh_to_nef_polyhedron(a);

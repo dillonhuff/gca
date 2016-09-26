@@ -1,4 +1,5 @@
 #include "geometry/triangular_mesh.h"
+#include "geometry/vtk_debug.h"
 #include "utils/algorithm.h"
 
 namespace gca {
@@ -148,16 +149,6 @@ namespace gca {
 
   std::vector<triangle_t>
   fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
-    auto initial_comps =
-      connected_components_by_elems(triangles, [](const triangle_t l, const triangle_t r)
-				    { return share_edge(l, r); });
-
-    cout << "# of comps = " << initial_comps.size() << endl;
-    for (auto c : initial_comps) {
-      cout << c.size() << endl;
-    }
-
-    DBG_ASSERT(initial_comps.size() == 1);
 
     vector<triangle_t> tris; //(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
@@ -394,7 +385,25 @@ namespace gca {
 	       &edges[0]);
 
     return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
-  }  
+  }
+
+  void
+  check_components(const std::vector<triangle_t>& vertex_triangles,
+		   const std::vector<triangle>& triangles) {
+    auto initial_comps =
+      connected_components_by_elems(vertex_triangles, [](const triangle_t l, const triangle_t r)
+				    { return share_edge(l, r); });
+
+    cout << "# of comps = " << initial_comps.size() << endl;
+    for (auto c : initial_comps) {
+      cout << c.size() << endl;
+    }
+
+    if (initial_comps.size() > 1) {
+      vtk_debug_triangles(triangles);
+      DBG_ASSERT(initial_comps.size() == 1);
+    }
+  }
 
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance) {
@@ -409,15 +418,14 @@ namespace gca {
 
     DBG_ASSERT(vertex_triangles.size() > 0);
 
-    // std::vector<triangle_t> vertex_triangles =
-    //   fill_vertex_triangles(triangles, vertices, tolerance);
-
     std::vector<point> face_orientations(triangles.size());
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });
 
     delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
     check_degenerate_triangles(vertex_triangles, vertices);
+    check_components(vertex_triangles, triangles);
+
 
     int wind_errs = num_winding_order_errors(vertex_triangles);
     if (wind_errs > 0) {

@@ -39,9 +39,11 @@ int main() {
   feature_decomposition* f = build_feature_decomposition(stock, mesh, n);
   tool_access_info inf = find_accessable_tools(f, tools);
 
-  auto res = subtract_features(stock, f);
+  //  auto res = subtract_features(stock, f);
 
-  vtk_debug_mesh(res);
+  //  DBG_ASSERT(res);
+
+  //  vtk_debug_mesh(*res);
 }
 
 

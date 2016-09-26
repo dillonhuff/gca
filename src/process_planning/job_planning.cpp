@@ -43,8 +43,8 @@ namespace gca {
     return m;
   }
 
-  triangular_mesh subtract_features(const triangular_mesh& m,
-				    feature_decomposition* features) {
+  boost::optional<triangular_mesh> subtract_features(const triangular_mesh& m,
+						     feature_decomposition* features) {
     auto fs = collect_features(features);
 
     cout << "Got all features" << endl;
@@ -84,6 +84,35 @@ namespace gca {
     return volume_info{vol, mesh};
   }
 
+  volume_info
+  update_volume_info(const volume_info& inf,
+		     const std::vector<triangular_mesh>& to_subtract) {
+    if (!inf.mesh) {
+      DBG_ASSERT(inf.volume == 0.0);
+      return inf;
+    }
+
+    boost::optional<triangular_mesh> res =
+      boolean_difference((*inf.mesh), to_subtract);
+
+    if (res) {
+      double new_volume = volume(*res);
+
+      cout << "Old volume = " << inf.volume << endl;
+      cout << "New volume = " << new_volume << endl;
+
+      return volume_info{new_volume, *res};
+
+    } else {
+
+      cout << "Old volume = " << inf.volume << endl;
+      cout << "New volume = " << 0.0 << endl;
+
+      return volume_info{0.0, boost::none};
+    }
+
+  }
+
   volume_info_map
   initial_volume_info(const std::vector<direction_process_info>& dir_info) {
     volume_info_map m;
@@ -99,13 +128,26 @@ namespace gca {
   }
 
   void
-  clip_volumes(const feature_decomposition* decomp,
+  clip_volumes(feature_decomposition* decomp,
 	       volume_info_map& volume_inf) {
+    vector<feature*> feats_to_sub = collect_features(decomp);
+
     vector<triangular_mesh> to_subtract;
-    for (auto f : collect_features(decomp)) {
+    for (auto f : feats_to_sub) {
+      volume_info f_info = map_find(f, volume_inf);
+      if (f_info.mesh) {
+	to_subtract.push_back(*(f_info.mesh));
+      }
     }
-    for (auto info_pair : volume_info) {
-      
+
+    for (auto& info_pair : volume_inf) {
+      feature* f = info_pair.first;
+
+      // Do not subtract the selected decomposition, those
+      // features are being removed anyway
+      if (!elem(f, feats_to_sub)) {
+	volume_inf[f] = update_volume_info(info_pair.second, to_subtract);
+      }
     }
   }
 
@@ -199,19 +241,23 @@ namespace gca {
 	find_orientation_by_normal_optional(orients, n);
 
       if (maybe_orient) {
-	clip_volumes(info, volume_inf);
-
 	auto orient = *maybe_orient;
 	fixture fix(orient, v);
 
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
+	//clip_volumes(decomp, volume_inf);
+	
 	auto t = mating_transform(current_stock, orient, v);
 	auto features = collect_features(decomp);
 	cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
-	current_stock = subtract_features(current_stock, decomp);
+	auto stock_res = subtract_features(current_stock, decomp);
+
+	DBG_ASSERT(stock_res);
+
+	current_stock = *stock_res;
 
 	double stock_volume = volume(current_stock);
 	double volume_ratio = part_volume / stock_volume;
