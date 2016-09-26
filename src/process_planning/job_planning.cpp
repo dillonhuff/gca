@@ -96,6 +96,7 @@ namespace gca {
   struct volume_info {
     double volume;
     boost::optional<triangular_mesh> mesh;
+    triangular_mesh dilated_mesh;
   };
 
   typedef std::unordered_map<feature*, volume_info> volume_info_map;
@@ -104,7 +105,11 @@ namespace gca {
     triangular_mesh mesh = feature_mesh(f);
     double vol = volume(mesh);
 
-    return volume_info{vol, mesh};
+    //	TODO: Refine these tolerances, it may not matter but
+    //	best to be safe
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.1);
+    
+    return volume_info{vol, mesh, dilated_mesh};
   }
 
   volume_info
@@ -158,11 +163,9 @@ namespace gca {
     vector<triangular_mesh> to_subtract;
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
+      // If the volume still exists
       if (f_info.mesh) {
-	// TODO: Refine these tolerances, it may not matter but
-	// best to be safe
-	triangular_mesh feat_mesh = feature_mesh(*f, 0.05, 0.1);
-	to_subtract.push_back(feat_mesh);
+	to_subtract.push_back(f_info.dilated_mesh); //feat_mesh);
       }
     }
 
