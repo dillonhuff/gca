@@ -173,7 +173,20 @@ namespace gca {
       }
     }
 
-    //vtk_debug_mesh(current_stock);
+    double stock_volume = volume(current_stock);
+    double volume_ratio = part_volume / stock_volume;
+	
+    cout << "Part volume  = " << part_volume << endl;
+    cout << "Stock volume = " << stock_volume << endl;
+    cout << "part / stock = " << volume_ratio << endl;
+
+    if (volume_ratio <= 0.999) {
+
+      vtk_debug_mesh(part);
+      vtk_debug_mesh(current_stock);
+
+      DBG_ASSERT(false);
+    }
 
     return cut_setups;
   }
