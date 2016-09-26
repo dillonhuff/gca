@@ -35,14 +35,37 @@ namespace gca {
     return fixture_setup(m, f, pockets);
   }
 
-  triangular_mesh feature_mesh(const feature& f) {
-    auto m = extrude(f.base(), (1.0001 + f.depth())*f.normal());
+  triangular_mesh feature_mesh(const feature& f,
+			       const double base_dilation,
+			       const double base_extension) {
+    if (base_dilation > 0) {
+      auto dilated_base = dilate(f.base(), base_dilation);
 
-    DBG_ASSERT(m.is_connected());
+      auto m = extrude(dilated_base, (1.0 + base_extension + f.depth())*f.normal());
 
-    return m;
+      DBG_ASSERT(m.is_connected());
+
+      return m;
+
+    } else {
+      auto m = extrude(f.base(), (1.0 + base_extension + f.depth())*f.normal());
+
+      DBG_ASSERT(m.is_connected());
+
+      return m;
+
+    }
   }
 
+  triangular_mesh feature_mesh(const feature& f) {
+    return feature_mesh(f, 0.0, 0.0001); 
+    // auto m = extrude(f.base(), (1.0001 + f.depth())*f.normal());
+
+    // DBG_ASSERT(m.is_connected());
+
+    // return m;
+  }
+  
   boost::optional<triangular_mesh> subtract_features(const triangular_mesh& m,
 						     feature_decomposition* features) {
     auto fs = collect_features(features);
@@ -136,7 +159,8 @@ namespace gca {
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
       if (f_info.mesh) {
-	to_subtract.push_back(*(f_info.mesh));
+	triangular_mesh feat_mesh = feature_mesh(*f, 0.0002, 0.01);
+	to_subtract.push_back(feat_mesh);
       }
     }
 
@@ -189,6 +213,58 @@ namespace gca {
     return next_elem;
   }
 
+  double volume(feature_decomposition* f,
+		const triangular_mesh& m) {
+    auto feats = collect_features(f);
+
+    triangular_mesh mesh = m;
+
+    double vol = 0.0;
+    for (auto ft : feats) {
+      triangular_mesh fm = feature_mesh(*ft);
+
+      vtk_debug_mesh(mesh);
+      vtk_debug_mesh(fm);
+
+      boost::optional<triangular_mesh> inter =
+	boolean_intersection(fm, mesh);
+
+      if (inter) {
+	vol += volume(*inter);
+	auto m_res = boolean_difference(mesh, *inter);
+
+	if (!m_res) {
+	  return vol;
+	} else {
+	  mesh = *m_res;
+	}
+      }
+    }
+
+    return vol;
+  }
+  
+  direction_process_info
+  select_next_dir(std::vector<direction_process_info>& dir_info,
+		  const triangular_mesh& stock) {
+    DBG_ASSERT(dir_info.size() > 0);
+
+    auto next = max_element(begin(dir_info), end(dir_info),
+			    [stock](const direction_process_info& l,
+				       const direction_process_info& r) {
+			      return volume(l.decomp, stock) <
+			      volume(r.decomp, stock);
+			    });
+
+    DBG_ASSERT(next != end(dir_info));
+
+    direction_process_info next_elem = *next;
+
+    dir_info.erase(next);
+
+    return next_elem;
+  }
+  
   std::vector<direction_process_info>
   initial_decompositions(const triangular_mesh& stock,
 			 const triangular_mesh& part,
@@ -233,6 +309,8 @@ namespace gca {
 
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
+	//select_next_dir(dir_info, current_stock);
+	//select_next_dir(dir_info, volume_inf);
       point n = normal(info.decomp);
 
       auto sfs = outer_surfaces(current_stock);
@@ -247,7 +325,7 @@ namespace gca {
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
-	//clip_volumes(decomp, volume_inf);
+	clip_volumes(decomp, volume_inf);
 	
 	auto t = mating_transform(current_stock, orient, v);
 	auto features = collect_features(decomp);

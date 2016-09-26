@@ -19,6 +19,9 @@ namespace gca {
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b);
 
   boost::optional<triangular_mesh>
+  boolean_intersection(const triangular_mesh& a, const triangular_mesh& b);
+  
+  boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs);
   

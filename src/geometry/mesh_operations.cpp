@@ -383,6 +383,15 @@ namespace gca {
   }
 
   boost::optional<triangular_mesh>
+  boolean_intersection(const triangular_mesh& a, const triangular_mesh& b) {
+    auto a_nef = trimesh_to_nef_polyhedron(a);
+    auto b_nef = trimesh_to_nef_polyhedron(b);
+    auto res = a_nef.intersection(b_nef);
+
+    return nef_polyhedron_to_trimesh(res);
+  }
+  
+  boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
     Nef_polyhedron res = trimesh_to_nef_polyhedron(a);
