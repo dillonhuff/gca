@@ -159,7 +159,7 @@ namespace gca {
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
       if (f_info.mesh) {
-	triangular_mesh feat_mesh = feature_mesh(*f, 0.0002, 0.01);
+	triangular_mesh feat_mesh = feature_mesh(*f, 0.05, 0.1);
 	to_subtract.push_back(feat_mesh);
       }
     }
