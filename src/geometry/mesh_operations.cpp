@@ -452,11 +452,16 @@ namespace gca {
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
     Nef_polyhedron res = trimesh_to_nef_polyhedron(a);
-
+    box a_box = a.bounding_box();
+    
     for (auto b : bs) {
-      Nef_polyhedron b_nef = trimesh_to_nef_polyhedron(b);
+      box b_box = b.bounding_box();
 
-      res = res - b_nef;
+      if (overlap(a_box, b_box)) {
+	Nef_polyhedron b_nef = trimesh_to_nef_polyhedron(b);
+
+	res = res - b_nef;
+      }
     }
 
     auto result_meshes = nef_polyhedron_to_trimeshes(res);

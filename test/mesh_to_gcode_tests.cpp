@@ -218,9 +218,7 @@ namespace gca {
 
     SECTION("Produces only workpiece clipping programs") {
       REQUIRE(result_plan.steps().size() == 2);
-    }
 
-    SECTION("Workpiece clipping programs actually contain code") {
       sanity_check_toolpaths(result_plan);
     }
     

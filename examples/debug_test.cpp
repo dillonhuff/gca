@@ -43,7 +43,7 @@ namespace gca {
     t2.set_holder_length(3.5);
 
     tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-    t3.set_cut_diameter(0.2334);
+    t3.set_cut_diameter(0.1); //0.2334);
     t3.set_cut_length(2.2);
 
     t3.set_shank_diameter(0.5);
@@ -66,9 +66,7 @@ namespace gca {
 
     SECTION("Produces only workpiece clipping programs") {
       REQUIRE(result_plan.steps().size() == 2);
-    }
 
-    SECTION("Workpiece clipping programs actually contain code") {
       sanity_check_toolpaths(result_plan);
     }
     
