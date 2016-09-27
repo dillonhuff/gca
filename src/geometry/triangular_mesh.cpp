@@ -349,15 +349,20 @@ namespace gca {
     return true;
   }
 
+  triangle_t flip_winding_order(const triangle_t& t) {
+    triangle_t f;
+    f.v[0] = t.v[1];
+    f.v[1] = t.v[0];
+    f.v[2] = t.v[2];
+
+    return f;
+  }
+
   std::vector<triangle_t>
   flip_winding_orders(const std::vector<triangle_t>& vertex_triangles) {
     vector<triangle_t> tris;
     for (auto t : vertex_triangles) {
-      triangle_t f;
-      f.v[0] = t.v[1];
-      f.v[1] = t.v[0];
-      f.v[2] = t.v[2];
-      tris.push_back(f);
+      tris.push_back(flip_winding_order(t));
     }
     return tris;
   }
