@@ -468,7 +468,6 @@ namespace gca {
 
     return result_meshes;
   }
-  
 
   // TODO: Delete? Not sure this is ever used
   void write_mesh_as_stl(const triangular_mesh& m,
