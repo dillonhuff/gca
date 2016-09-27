@@ -349,11 +349,25 @@ namespace gca {
     return true;
   }
 
-  triangle_t flip_winding_order(const triangle_t& t) {
-    triangle_t f;
-    f.v[0] = t.v[1];
-    f.v[1] = t.v[0];
-    f.v[2] = t.v[2];
+  
+  index_t get_vertex(const triangle_t& t, const index_t i) {
+    return t.v[i];
+  }
+
+  void set_vertex(triangle_t& t, const index_t i, const index_t j) {
+    t.v[i] = j;
+  }
+  
+  template<typename Triangle>
+  Triangle flip_winding_order(const Triangle& t) {
+    Triangle f;
+    set_vertex(f, 0, get_vertex(t, 1));
+    set_vertex(f, 1, get_vertex(t, 0));
+    set_vertex(f, 2, get_vertex(t, 2));
+    
+    // f.v[0] = t.v[1];
+    // f.v[1] = t.v[0];
+    // f.v[2] = t.v[2];
 
     return f;
   }
