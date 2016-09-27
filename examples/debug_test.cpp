@@ -30,32 +30,24 @@ namespace gca {
 
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
 
-    SECTION("onshape part 1 (1)") {
-      tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-      t3.set_cut_diameter(0.2334);
-      t3.set_cut_length(1.2);
-
-      t3.set_shank_diameter(0.5);
-      t3.set_shank_length(0.05);
-
-      t3.set_holder_diameter(2.5);
-      t3.set_holder_length(3.5);
-
-      vector<tool> tools{t1, t3};
-      
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
+    //    NOTE: This branch cannot yet handle volume tracking situations
+    //    like this one
+    SECTION("Block with hole and side pocket") {
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BlockWithHoleAndSidePocket.stl", 0.0001);
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      REQUIRE(p.fixtures().size() == 2);
+      REQUIRE(p.fixtures().size() == 3);
 
-      for (auto p : p.fixtures()[1].pockets) {
-	cout << p.pocket_type() << endl;
+      for (auto f : p.fixtures()) {
+    	cout << "orientation = " << f.fix.orient.top_normal() << endl;
       }
 
-      REQUIRE(p.fixtures()[1].pockets.size() == 1);
       REQUIRE(p.fixtures()[0].pockets.size() == 3);
+      REQUIRE(p.fixtures()[1].pockets.size() == 1);
+      REQUIRE(p.fixtures()[2].pockets.size() == 1);
     }
+    
   }
 
 }
