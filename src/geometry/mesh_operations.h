@@ -30,6 +30,10 @@ namespace gca {
 
   double volume(const triangular_mesh& m);
 
+  std::vector<triangular_mesh>
+  boolean_difference(const std::vector<triangular_mesh>& as,
+		     const std::vector<triangular_mesh>& bs);
+
 }
 
 #endif

@@ -123,6 +123,49 @@ namespace gca {
     return make_mesh(tris, 1e-20);
   }
 
+  std::vector<triangular_mesh>
+  nef_polyhedron_to_trimeshes(const Nef_polyhedron& p) {
+    if (!p.is_simple()) { {}; }
+
+    Polyhedron poly;
+    p.convert_to_polyhedron(poly);
+
+    vector<triangle> tris;
+    for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
+      auto fc = *it;
+
+      auto he = fc.facet_begin();
+      auto end = fc.facet_begin();
+      vector<point> pts;
+      CGAL_For_all(he, end) {
+	auto h = *he;
+	auto v = h.vertex();
+	auto r = (*v).point();
+	
+	point res_pt(CGAL::to_double(r.x()),
+		     CGAL::to_double(r.y()),
+		     CGAL::to_double(r.z()));
+
+	pts.push_back(res_pt);
+      }
+
+      DBG_ASSERT(pts.size() == 3);
+
+      point v0 = pts[0];
+      point v1 = pts[1];
+      point v2 = pts[2];
+
+      point q1 = v1 - v0;
+      point q2 = v2 - v0;
+      point norm = cross(q2, q1).normalize();
+      tris.push_back(triangle(norm, v0, v1, v2));
+    }
+
+    if (tris.size() == 0) { return {}; }
+
+    return make_meshes(tris, 1e-20);
+  }
+  
   Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m) {
     cout << "Converting to nef" << endl;
     //vtk_debug_mesh(m);
@@ -135,6 +178,8 @@ namespace gca {
     Nef_polyhedron N(P);
 
     DBG_ASSERT(N.is_simple());
+
+    cout << "Done converting to nef" << endl;
 
     return N;
   }
@@ -392,6 +437,18 @@ namespace gca {
   }
 
   std::vector<triangular_mesh>
+  boolean_difference(const std::vector<triangular_mesh>& as,
+		     const std::vector<triangular_mesh>& bs) {
+    vector<triangular_mesh> res;
+
+    for (auto a : as) {
+      concat(res, boolean_difference(a, bs));
+    }
+
+    return res;
+  }
+  
+  std::vector<triangular_mesh>
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
     Nef_polyhedron res = trimesh_to_nef_polyhedron(a);
@@ -402,11 +459,9 @@ namespace gca {
       res = res - b_nef;
     }
 
-    auto result_mesh = nef_polyhedron_to_trimesh(res);
+    auto result_meshes = nef_polyhedron_to_trimeshes(res);
 
-    if (result_mesh) { return {*result_mesh}; }
-
-    return {};
+    return result_meshes;
   }
   
 

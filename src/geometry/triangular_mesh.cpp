@@ -421,6 +421,47 @@ namespace gca {
     }
   }
 
+  std::vector<triangular_mesh>
+  make_meshes(const std::vector<triangle>& triangles,
+	      double tolerance) {
+    cout << "# of triangles = " << triangles.size() << endl;
+
+    DBG_ASSERT(triangles.size() > 0);
+
+    std::vector<point> vertices;
+
+    auto vertex_triangles =
+      fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+
+    DBG_ASSERT(vertex_triangles.size() > 0);
+
+    auto initial_comps =
+      connected_components_by(vertex_triangles, [](const triangle_t l, const triangle_t r)
+			      { return share_edge(l, r); });
+
+    vector<vector<triangle>> mesh_tris;
+    for (auto c : initial_comps) {
+      vector<triangle> comp_tris;
+
+      for (auto i : c) {
+	comp_tris.push_back(triangles[i]);
+      }
+
+      mesh_tris.push_back(comp_tris);
+    }
+
+    DBG_ASSERT(mesh_tris.size() == initial_comps.size());
+
+    vector<triangular_mesh> meshes;
+    for (auto tris : mesh_tris) {
+      meshes.push_back(make_mesh(tris, tolerance));
+    }
+
+    DBG_ASSERT(meshes.size() == initial_comps.size());
+
+    return meshes;
+  }
+  
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance) {
     cout << "# of triangles = " << triangles.size() << endl;

@@ -96,7 +96,7 @@ namespace gca {
 
   struct volume_info {
     double volume;
-    boost::optional<triangular_mesh> mesh;
+    std::vector<triangular_mesh> meshes;
     triangular_mesh dilated_mesh;
   };
 
@@ -110,37 +110,42 @@ namespace gca {
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
     
-    return volume_info{vol, mesh, dilated_mesh};
+    return volume_info{vol, {mesh}, dilated_mesh};
   }
 
   volume_info
   update_volume_info(const volume_info& inf,
 		     const std::vector<triangular_mesh>& to_subtract) {
-    if (!inf.mesh) {
+    if (inf.meshes.size() == 0) {
+
       DBG_ASSERT(inf.volume == 0.0);
+
       return inf;
     }
 
     std::vector<triangular_mesh> res =
-      boolean_difference((*inf.mesh), to_subtract);
+      boolean_difference(inf.meshes, to_subtract);
 
 
-    if (res.size() == 1) {
-      auto res_mesh = res.front();
-      double new_volume = volume(res_mesh);
+    // TODO: Delete the else clause?
+    if (res.size() > 0) {
+
+      double new_volume = 0.0;
+      for (auto& m : res) {
+	new_volume += volume(m);
+      }
 
       cout << "Old volume = " << inf.volume << endl;
       cout << "New volume = " << new_volume << endl;
 
-      return volume_info{new_volume, res_mesh, inf.dilated_mesh};
+      return volume_info{new_volume, res, inf.dilated_mesh};
 
-      // TODO: Correctly handle res.size() > 0
     } else {
 
       cout << "Old volume = " << inf.volume << endl;
       cout << "New volume = " << 0.0 << endl;
 
-      return volume_info{0.0, boost::none, inf.dilated_mesh};
+      return volume_info{0.0, {}, inf.dilated_mesh};
     }
 
   }
@@ -167,9 +172,10 @@ namespace gca {
     vector<triangular_mesh> to_subtract;
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
+
       // If the volume still exists
-      if (f_info.mesh) {
-	to_subtract.push_back(f_info.dilated_mesh); //feat_mesh);
+      if (f_info.meshes.size() > 0) {
+	to_subtract.push_back(f_info.dilated_mesh);
       }
     }
 

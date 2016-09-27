@@ -204,6 +204,10 @@ namespace gca {
   triangular_mesh make_mesh(const std::vector<triangle>& triangles,
 			    double tolerance);
 
+  std::vector<triangular_mesh>
+  make_meshes(const std::vector<triangle>& triangles,
+	      double tolerance);
+  
   
   // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
   bool is_outer_surface(const std::vector<index_t>& s, const triangular_mesh& part);
