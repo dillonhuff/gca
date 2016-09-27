@@ -54,7 +54,6 @@ namespace gca {
 
     } else {
       auto base = shift(shift_vec, f.base());
-      //      auto base = f.base(); //shift(shift_vec, f.base());
 
       auto m = extrude(base, (base_extension + f.depth())*f.normal());
 
@@ -66,11 +65,6 @@ namespace gca {
 
   triangular_mesh feature_mesh(const feature& f) {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
-    // auto m = extrude(f.base(), (1.0001 + f.depth())*f.normal());
-
-    // DBG_ASSERT(m.is_connected());
-
-    // return m;
   }
   
   boost::optional<triangular_mesh> subtract_features(const triangular_mesh& m,
