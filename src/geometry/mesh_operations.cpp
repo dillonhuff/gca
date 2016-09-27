@@ -390,8 +390,8 @@ namespace gca {
 
     return nef_polyhedron_to_trimesh(res);
   }
-  
-  boost::optional<triangular_mesh>
+
+  std::vector<triangular_mesh>
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
     Nef_polyhedron res = trimesh_to_nef_polyhedron(a);
@@ -402,7 +402,11 @@ namespace gca {
       res = res - b_nef;
     }
 
-    return nef_polyhedron_to_trimesh(res);
+    auto result_mesh = nef_polyhedron_to_trimesh(res);
+
+    if (result_mesh) { return {*result_mesh}; }
+
+    return {};
   }
   
 

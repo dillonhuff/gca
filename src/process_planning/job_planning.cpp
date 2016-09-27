@@ -67,8 +67,8 @@ namespace gca {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
   
-  boost::optional<triangular_mesh> subtract_features(const triangular_mesh& m,
-						     feature_decomposition* features) {
+  std::vector<triangular_mesh> subtract_features(const triangular_mesh& m,
+						 feature_decomposition* features) {
     auto fs = collect_features(features);
 
     cout << "Got all features" << endl;
@@ -121,17 +121,20 @@ namespace gca {
       return inf;
     }
 
-    boost::optional<triangular_mesh> res =
+    std::vector<triangular_mesh> res =
       boolean_difference((*inf.mesh), to_subtract);
 
-    if (res) {
-      double new_volume = volume(*res);
+
+    if (res.size() == 1) {
+      auto res_mesh = res.front();
+      double new_volume = volume(res_mesh);
 
       cout << "Old volume = " << inf.volume << endl;
       cout << "New volume = " << new_volume << endl;
 
-      return volume_info{new_volume, *res, inf.dilated_mesh};
+      return volume_info{new_volume, res_mesh, inf.dilated_mesh};
 
+      // TODO: Correctly handle res.size() > 0
     } else {
 
       cout << "Old volume = " << inf.volume << endl;
@@ -370,9 +373,9 @@ namespace gca {
 
 	auto stock_res = subtract_features(current_stock, decomp);
 
-	DBG_ASSERT(stock_res);
+	DBG_ASSERT(stock_res.size() == 1);
 
-	current_stock = *stock_res;
+	current_stock = stock_res.front();
 
 	double stock_volume = volume(current_stock);
 	double volume_ratio = part_volume / stock_volume;
