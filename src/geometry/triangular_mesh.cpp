@@ -84,17 +84,41 @@ namespace gca {
     return num_eq > 1;
   }
 
-  bool winding_conflict(const triangle_t ti, const triangle_t tj) {
+  template<typename Triangle>
+  bool winding_conflict(const Triangle ti, const Triangle tj) {
     for (unsigned l = 0; l < 3; l++) {
       unsigned lp1 = (l + 1) % 3;
       for (unsigned k = 0; k < 3; k++) {
 	unsigned kp1 = (k + 1) % 3;
-	if (ti.v[k] == tj.v[l] && ti.v[kp1] == tj.v[lp1]) {
+
+	if (get_vertex(ti, k) == get_vertex(tj, l) &&
+	    get_vertex(ti, kp1) == get_vertex(tj, lp1)) {
 	  return true;
 	}
+
       }
     }
     return false;
+  }
+
+  template<typename Triangle>
+  Triangle flip_winding_order(const Triangle& t) {
+    Triangle f;
+    set_vertex(f, 0, get_vertex(t, 1));
+    set_vertex(f, 1, get_vertex(t, 0));
+    set_vertex(f, 2, get_vertex(t, 2));
+    
+    return f;
+  }
+
+  template<typename Triangle>
+  std::vector<Triangle>
+  flip_winding_orders(const std::vector<Triangle>& vertex_triangles) {
+    vector<Triangle> tris;
+    for (auto t : vertex_triangles) {
+      tris.push_back(flip_winding_order(t));
+    }
+    return tris;
   }
 
   triangle_t
@@ -166,7 +190,7 @@ namespace gca {
 	if (sub_tris.size() > 0) {
 	  triangle_t corrected = correct_orientation(next_t, sub_tris);
 	  tris.push_back(corrected);
-	  //	  tris[ind] = corrected;
+
 	  remove(ind, remaining_inds);
 	  num_added++;
 	  break;
@@ -174,18 +198,13 @@ namespace gca {
 
 	if (num_added == 0) {
 	  tris.push_back(next_t);
-	  //tris[ind] = next_t;
+
 	  remove(ind, remaining_inds);
 	  num_added++;
 	  break;
 	}
       }
 
-      // auto ccs =
-      // 	connected_components_by(tris, [](const triangle_t l, const triangle_t r)
-      // 				{ return share_edge(l, r); });
-      // DBG_ASSERT(ccs.size() == 1);
-      // DBG_ASSERT(num_winding_order_errors(tris) == 0);
     }
 
     auto ccs =
@@ -195,6 +214,7 @@ namespace gca {
     
     DBG_ASSERT(num_winding_order_errors(tris) == 0);
     DBG_ASSERT(tris.size() == triangles.size());
+
     return tris;
   }
 
@@ -358,29 +378,6 @@ namespace gca {
     t.v[i] = j;
   }
   
-  template<typename Triangle>
-  Triangle flip_winding_order(const Triangle& t) {
-    Triangle f;
-    set_vertex(f, 0, get_vertex(t, 1));
-    set_vertex(f, 1, get_vertex(t, 0));
-    set_vertex(f, 2, get_vertex(t, 2));
-    
-    // f.v[0] = t.v[1];
-    // f.v[1] = t.v[0];
-    // f.v[2] = t.v[2];
-
-    return f;
-  }
-
-  std::vector<triangle_t>
-  flip_winding_orders(const std::vector<triangle_t>& vertex_triangles) {
-    vector<triangle_t> tris;
-    for (auto t : vertex_triangles) {
-      tris.push_back(flip_winding_order(t));
-    }
-    return tris;
-  }
-
   triangular_mesh
   correct_winding_and_build(std::vector<triangle_t>& vertex_triangles,
 			    const std::vector<point>& vertices,
