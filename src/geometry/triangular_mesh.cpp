@@ -121,16 +121,14 @@ namespace gca {
     return tris;
   }
 
-  triangle_t
-  correct_orientation(const triangle_t to_correct,
-		      const std::vector<triangle_t>& others) {
+  template<typename Triangle>
+  Triangle
+  correct_orientation(const Triangle to_correct,
+		      const std::vector<Triangle>& others) {
     auto ti = to_correct;
     for (auto tj : others) {
       if (winding_conflict(ti, tj)) {
-	triangle_t corrected;
-	corrected.v[0] = ti.v[1];
-	corrected.v[1] = ti.v[0];
-	corrected.v[2] = ti.v[2];
+	Triangle corrected = flip_winding_order(ti);
 
 	cout << "--- Original triangle = " << ti << endl;
 	cout << "--- Corrected triangle = " << corrected << endl;
@@ -148,8 +146,9 @@ namespace gca {
     return out;
   }
 
+  template<typename Triangle>
   int
-  num_winding_order_errors(const std::vector<triangle_t>& triangles) {
+  num_winding_order_errors(const std::vector<Triangle>& triangles) {
     int num_errs = 0;
     for (unsigned i = 0; i < triangles.size(); i++) {
       for (unsigned j = i; j < triangles.size(); j++) {
@@ -171,8 +170,9 @@ namespace gca {
     return num_errs;
   }
 
-  std::vector<triangle_t>
-  fix_winding_order_errors(const std::vector<triangle_t>& triangles) {
+  template<typename Triangle>
+  std::vector<Triangle>
+  fix_winding_order_errors(const std::vector<Triangle>& triangles) {
 
     vector<triangle_t> tris; //(triangles.size());
     vector<unsigned> remaining_inds = inds(triangles);
