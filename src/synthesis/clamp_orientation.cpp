@@ -76,14 +76,33 @@ namespace gca {
     return all_stable_orientations(surfs, v);
   }
 
+  struct oriented_box {
+    point base;
+    std::vector<point> sides;
+  };
+
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const std::vector<surface>& surfaces,
+  all_stable_orientations_box(const triangular_mesh& part,
 			      const vice& v,
 			      const point n) {
+
+    auto outer_surfs = outer_surfaces(part);
     auto locating_surfaces =
-      select(surfaces, [n](const surface& s)
+      select(outer_surfs, [n](const surface& s)
 	     { return angle_eps(normal(s), n, 180.0, 0.5); });
 
+    if (locating_surfaces.size() == 0) { return {}; }
+
+    point neg_n = -1*n;
+
+    vector<surface> cregions =
+      inds_to_surfaces(const_orientation_regions(part), part);
+
+    DBG_ASSERT(false);
+    for (unsigned i = 0; i < cregions.size(); i++) {
+      //      for (unsigned j = 0; j < 
+    }
+    
     DBG_ASSERT(false);
   }
   
