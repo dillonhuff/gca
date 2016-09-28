@@ -362,12 +362,10 @@ namespace gca {
 
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
-	//select_next_dir(dir_info, current_stock);
-	//select_next_dir(dir_info, volume_inf);
-      point n = normal(info.decomp);
 
+      point n = normal(info.decomp);
       auto sfs = outer_surfaces(current_stock);
-      auto orients = all_stable_orientations(sfs, v);
+      auto orients = all_stable_orientations_box(sfs, v, n);
       auto maybe_orient =
 	find_orientation_by_normal_optional(orients, n);
 

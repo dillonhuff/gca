@@ -115,6 +115,11 @@ namespace gca {
 			  const vice& v);
 
   std::vector<clamp_orientation>
+  all_stable_orientations_box(const std::vector<surface>& surfaces,
+			      const vice& v,
+			      const point n);
+  
+  std::vector<clamp_orientation>
   all_stable_orientations(const std::vector<const surface*>& surfaces,
 			  const vice& v);
 

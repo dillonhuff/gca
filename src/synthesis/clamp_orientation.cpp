@@ -74,7 +74,19 @@ namespace gca {
       surfs.push_back(s);
     }
     return all_stable_orientations(surfs, v);
-  }  
+  }
+
+  std::vector<clamp_orientation>
+  all_stable_orientations_box(const std::vector<surface>& surfaces,
+			      const vice& v,
+			      const point n) {
+    auto locating_surfaces =
+      select(surfaces, [n](const surface& s)
+	     { return angle_eps(normal(s), n, 180.0, 0.5); });
+
+    DBG_ASSERT(false);
+  }
+  
 
   std::vector<clamp_orientation>
   all_viable_clamp_orientations(const std::vector<const surface*>& surfaces,
