@@ -222,7 +222,7 @@ namespace gca {
 
       sanity_check_toolpaths(result_plan);
     }
-    
+
   }
 
   TEST_CASE("Outer surfaces") {

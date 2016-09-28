@@ -68,14 +68,15 @@ namespace gca {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
   
-  std::vector<triangular_mesh> subtract_features(const triangular_mesh& m,
-						 feature_decomposition* features) {
-    auto fs = collect_features(features);
+  std::vector<triangular_mesh>
+  subtract_features(const triangular_mesh& m,
+		    const std::vector<feature*>& features) {
+    //    auto fs = collect_features(features);
 
     cout << "Got all features" << endl;
 
     std::vector<triangular_mesh> meshes;
-    for (auto f : fs) {
+    for (auto f : features) {
       meshes.push_back(feature_mesh(*f));
     }
 
@@ -321,12 +322,20 @@ namespace gca {
   }
 
   std::vector<feature*>
-  collect_non_empty_features(feature_decomposition* decomp,
-			     const volume_info_map& vol_info) {
+  collect_viable_features(feature_decomposition* decomp,
+			  const volume_info_map& vol_info,
+			  const fixture& fix) {
     std::vector<feature*> fs = collect_features(decomp);
 
     delete_if(fs, [vol_info](feature* feat) {
 	return map_find(feat, vol_info).volume < 0.00001;
+      });
+
+    auto unreachable_feats =
+      unreachable_features(fs, fix);
+
+    delete_if(fs, [&unreachable_feats](feature *f) {
+	return elem(f, unreachable_feats);
       });
 
     return fs;
@@ -373,41 +382,42 @@ namespace gca {
 	clip_volumes(decomp, volume_inf);
 	
 	auto t = mating_transform(current_stock, orient, v);
-	auto features = collect_non_empty_features(decomp, volume_inf);
+	auto features = collect_viable_features(decomp, volume_inf, fix);
 
-	// for (auto f : features) {
-	//   auto vol_data = map_find(f, volume_inf);
-	//   cout << "delta volume = " << vol_data.volume << endl;
+	if (features.size() > 0) {
+	  // for (auto f : features) {
+	  //   auto vol_data = map_find(f, volume_inf);
+	  //   cout << "delta volume = " << vol_data.volume << endl;
 
-	//   vtk_debug_feature(*f);
+	  //   vtk_debug_feature(*f);
 
-	//   //	  vtk_debug_mesh(vol_data.dilated_mesh);
+	  //   //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	//   vtk_debug_meshes(vol_data.meshes);
+	  //   vtk_debug_meshes(vol_data.meshes);
 
-	// }
-	// vtk_debug_features(features);
-	// concat(all_features, features);
+	  // }
+	  // vtk_debug_features(features);
+	  // concat(all_features, features);
 
-	cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
+	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
-	auto stock_res = subtract_features(current_stock, decomp);
+	  auto stock_res = subtract_features(current_stock, features);
 
-	DBG_ASSERT(stock_res.size() == 1);
+	  DBG_ASSERT(stock_res.size() == 1);
 
-	current_stock = stock_res.front();
+	  current_stock = stock_res.front();
 
-	double stock_volume = volume(current_stock);
-	double volume_ratio = part_volume / stock_volume;
+	  double stock_volume = volume(current_stock);
+	  double volume_ratio = part_volume / stock_volume;
 	
-	cout << "Part volume  = " << part_volume << endl;
-	cout << "Stock volume = " << stock_volume << endl;
-	cout << "part / stock = " << volume_ratio << endl;
+	  cout << "Part volume  = " << part_volume << endl;
+	  cout << "Stock volume = " << stock_volume << endl;
+	  cout << "part / stock = " << volume_ratio << endl;
 
-	//vtk_debug_mesh(current_stock);
+	  //vtk_debug_mesh(current_stock);
 
-	if (volume_ratio > 0.999) { break; }
-
+	  if (volume_ratio > 0.999) { break; }
+	}
       }
     }
 

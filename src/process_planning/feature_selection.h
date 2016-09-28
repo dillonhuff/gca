@@ -30,5 +30,9 @@ namespace gca {
   std::vector<feature_decomposition*>
   clip_top_and_bottom_features(feature_decomposition* top_decomp,
 			       feature_decomposition* base_decomp);
+
+  std::vector<feature*>
+  unreachable_features(const std::vector<feature*> features,
+		       const fixture& fix);
   
 }
