@@ -418,7 +418,7 @@ namespace gca {
     cout << "Stock volume = " << stock_volume << endl;
     cout << "part / stock = " << volume_ratio << endl;
 
-    vtk_debug_features(all_features);    
+    //vtk_debug_features(all_features);
 
     // TODO: Tighten this tolerance once edge features are supportedo
     if (volume_ratio <= 0.99) {
