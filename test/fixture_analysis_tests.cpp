@@ -42,7 +42,7 @@ namespace gca {
 
     }
 
-    SECTION("onshape part 1 (1)") {
+    SECTION("onshape part 1 (2)") {
       tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
       t3.set_cut_diameter(0.2334);
       t3.set_cut_length(1.2);
@@ -55,7 +55,7 @@ namespace gca {
 
       vector<tool> tools{t1, t3};
       
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(1).stl", 0.0001);
+      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.0001);
 
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
