@@ -130,9 +130,6 @@ namespace gca {
       if (winding_conflict(ti, tj)) {
 	Triangle corrected = flip_winding_order(ti);
 
-	// cout << "--- Original triangle = " << ti << endl;
-	// cout << "--- Corrected triangle = " << corrected << endl;
-	// cout << "--- Conflicting triangle = " << tj << endl;
 	return corrected;
       }
 
@@ -157,9 +154,6 @@ namespace gca {
 	  auto tj = triangles[j];
 
 	  if (winding_conflict(ti, tj)) {
-	    // cout << "Winding order error: i = " << i << ", j = " << j << endl;
-	    // cout << "--- " << ti << endl;
-	    // cout << "--- " << tj << endl;
 	    num_errs++;
 	  }
 
@@ -174,7 +168,7 @@ namespace gca {
   std::vector<Triangle>
   fix_winding_order_errors(const std::vector<Triangle>& triangles) {
 
-    vector<triangle_t> tris; //(triangles.size());
+    vector<triangle_t> tris;
     vector<unsigned> remaining_inds = inds(triangles);
     cout << "Initial # of triangles = " << triangles.size() << endl;
     unsigned num_added = 0;

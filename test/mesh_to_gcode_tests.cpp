@@ -216,8 +216,9 @@ namespace gca {
 
     auto result_plan = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
-    SECTION("Produces only workpiece clipping programs") {
-      REQUIRE(result_plan.steps().size() == 2);
+    // TODO: Get this down to 2 setups using better volume removal analysis
+    SECTION("3 setups") {
+      REQUIRE(result_plan.steps().size() == 3);
 
       sanity_check_toolpaths(result_plan);
     }
