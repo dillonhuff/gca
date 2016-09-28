@@ -13,6 +13,7 @@
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/visual_debug.h"
+#include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "synthesis/workpiece_clipping.h"
@@ -279,7 +280,20 @@ namespace gca {
 
     return next_elem;
   }
-  
+
+  void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs) {
+    for (unsigned i = 0; i < dirs.size(); i++) {
+      for (unsigned j = i + 1; j < dirs.size(); j++) {
+	feature_decomposition* l = dirs[i].decomp;
+	feature_decomposition* r = dirs[j].decomp;
+
+	if (angle_eps(normal(l), normal(r), 180.0, 0.5)) {
+	  clip_top_and_bottom_features(l, r);
+	}
+      }
+    }
+  }
+
   std::vector<direction_process_info>
   initial_decompositions(const triangular_mesh& stock,
 			 const triangular_mesh& part,
@@ -300,6 +314,8 @@ namespace gca {
 	  return map_find(f, acc_info).size() == 0;
 	});
     }
+
+    clip_top_and_bottom_pairs(dir_info);
 
     return dir_info;
   }
