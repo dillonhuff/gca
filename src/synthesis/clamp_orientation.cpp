@@ -77,11 +77,6 @@ namespace gca {
     return all_stable_orientations(surfs, v);
   }
 
-  struct oriented_box {
-    point base;
-    std::vector<point> sides;
-  };
-
   std::vector<clamp_orientation>
   all_stable_orientations_box(const triangular_mesh& part,
 			      const vice& v,
@@ -91,7 +86,6 @@ namespace gca {
     auto cut_part = clip_mesh(part, vice_top_plane);
 
     vector<surface> cregions = outer_surfaces(cut_part);
-    //      inds_to_surfaces(const_orientation_regions(cut_part), cut_part);
 
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(cregions, v, n);
