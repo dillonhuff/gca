@@ -170,13 +170,21 @@ namespace gca {
     if (!(result_polys.size() == 1)) {
 
       vector<polygon_3> dilated_ts;
-      for (auto t : ts) {
-	dilated_ts.push_back(dilate(t, 0.000001));
+      for (auto t : result_polys) {
+	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
+	delete_antennas(r_pts);
+	if (r_pts.size() >= 3) {
+	  dilated_ts.push_back(dilate(t, 0.000001));
+	}
       }
 
       auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
 
       if (res_polys_try_dilated.size() != 1) {
+
+	vtk_debug_polygons(ts);
+
+	vtk_debug_polygons(result_polys);
 
 	vtk_debug_highlight_inds(s, m);
       
@@ -395,7 +403,11 @@ namespace gca {
     cout << "P normal = " << p.normal() << endl;
     //    vtk_debug_polygon(p);
 
+    cout << "STARTING FIRST EXTERIOR OFFSET CALL IN DILATE" << endl;
+    
     auto dr = exterior_offset(clean_vertices(p.vertices()), tol);
+
+    cout << "FINISHED FIRST EXTERIOR OFFSET CALL IN DILATE" << endl;
 
     vector<vector<point>> dh;
     for (auto h : p.holes()) {
@@ -633,6 +645,9 @@ namespace gca {
 
     if (!(current_depth >= next_depth)) {
       cout << "Direction = " << current_level.normal() << endl;
+      cout << "current_depth = " << current_depth << endl;
+      cout << "next_depth    = " << next_depth << endl;
+	
       
       vtk_debug_polygon(current_level);
       for (auto p : *r_polys) {
