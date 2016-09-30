@@ -206,12 +206,17 @@ int main(int argc, char* argv[]) {
   auto file = argv[1];
   auto stl_triangles = gca::parse_stl(file).triangles;
   auto mesh = make_mesh(stl_triangles, 0.0001);
-  assert(mesh.is_connected());
+
+  DBG_ASSERT(mesh.is_connected());
+  
+  box bounding = mesh.bounding_box();
+
+  cout << "Bounding box = " << endl;
+  cout << bounding << endl;
 
   auto to_render = mesh;
 
   auto poly_data = polydata_for_trimesh(to_render);
-  //color_polydata_by_millability(poly_data, to_render);
   auto poly_actor = polydata_actor(poly_data);
 
   vector<vtkSmartPointer<vtkActor>> actors{poly_actor};

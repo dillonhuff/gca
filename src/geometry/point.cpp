@@ -323,4 +323,62 @@ namespace gca {
     return clean_vertices(pts, 0.001, 0.0000001);
   }
 
+  // TODO: Eventually move to ring
+  bool has_antenna(const std::vector<point>& ring) {
+
+    for (unsigned i = 0; i < ring.size(); i++) {
+      point p = ring[i];
+      point q = ring[(i + 1) % ring.size()];
+      point s = ring[(i + 2) % ring.size()];
+      point slope1 = q - p;
+      point slope2 = s - q;
+
+      point sum = slope1 + slope2;
+
+      // TODO: Make this magic number tolerance an argument
+      if (sum.len() < 0.001) {
+	cout << "Points " << p << " " << q << " " << s << endl;
+	cout << "at index " << i << " form an antenna";
+	return true;
+      }
+    }
+
+    return false;
+  }
+
+  void delete_antennas(std::vector<point>& pts) {
+    bool deleted_one = true;
+
+    while (deleted_one) {
+      deleted_one = false;
+      for (unsigned i = 0; i < pts.size(); i++) {
+	point p = pts[i];
+	unsigned i2 = (i + 1) % pts.size();
+	unsigned i3 = (i + 2) % pts.size();
+	point q = pts[i2];
+	point s = pts[i3];
+	point slope1 = q - p;
+	point slope2 = s - q;
+
+	point sum = slope1 + slope2;
+
+	// TODO: Make this magic number tolerance an argument
+	// TODO: Add some sort of relative magnitude test
+	if (sum.len() < 0.001) {
+	  cout << "Points " << p << " " << q << " " << s << endl;
+	  cout << "at index " << i << " form an antenna with length = " << sum.len() << endl;;
+	  if (i3 > i2) {
+	    pts.erase(begin(pts) + i2);
+	    pts.erase(begin(pts) + i2);
+	  } else {
+	    pts.erase(begin(pts) + i2);
+	    pts.erase(begin(pts) + i3);
+	  }
+	  deleted_one = true;
+	}
+      }
+      
+    }
+  }
+
 }

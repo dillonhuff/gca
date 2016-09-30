@@ -9,6 +9,9 @@ namespace gca {
 		       const std::vector<std::vector<point>> hole_verts) :
     outer_ring(vertices),
     inner_rings{} {
+
+    delete_antennas(outer_ring);
+
     // There is an occasional test failure here in simple box
     if (!(outer_ring.size() >= 3)) {
       cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;

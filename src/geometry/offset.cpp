@@ -180,60 +180,8 @@ namespace gca {
     }
   }
 
-  // TODO: Eventually move to ring
-  bool has_antenna(const std::vector<point>& ring) {
-
-    for (unsigned i = 0; i < ring.size(); i++) {
-      point p = ring[i];
-      point q = ring[(i + 1) % ring.size()];
-      point s = ring[(i + 2) % ring.size()];
-      point slope1 = q - p;
-      point slope2 = s - q;
-
-      point sum = slope1 + slope2;
-
-      // TODO: Make this magic number tolerance an argument
-      if (sum.len() < 0.001) {
-	cout << "Points " << p << " " << q << " " << s << endl;
-	cout << "at index " << i << " form an antenna";
-	return true;
-      }
-    }
-
-    return false;
-  }
-
-  void delete_antennas(std::vector<point>& pts) {
-    bool deleted_one = true;
-
-    while (deleted_one) {
-      deleted_one = false;
-      for (unsigned i = 0; i < pts.size(); i++) {
-	point p = pts[i];
-	unsigned i2 = (i + 1) % pts.size();
-	unsigned i3 = (i + 2) % pts.size();
-	point q = pts[i2];
-	point s = pts[i3];
-	point slope1 = q - p;
-	point slope2 = s - q;
-
-	point sum = slope1 + slope2;
-
-	// TODO: Make this magic number tolerance an argument
-	// TODO: Add some sort of relative magnitude test
-	if (sum.len() < 0.001) {
-	  cout << "Points " << p << " " << q << " " << s << endl;
-	  cout << "at index " << i << " form an antenna with length = " << sum.len() << endl;;
-	  pts.erase(begin(pts) + i2);
-	  pts.erase(begin(pts) + i3);
-	  deleted_one = true;
-	}
-      }
-      
-    }
-  }
-
-  std::vector<point> exterior_offset(const std::vector<point>& pts, const double tol) {
+  std::vector<point> exterior_offset(const std::vector<point>& pts,
+				     const double tol) {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
     const rotation r_inv = inverse(r);
@@ -241,7 +189,15 @@ namespace gca {
 
     r_pts = clean_vertices_within_eps(r_pts, 0.005, 0.0000001);
 
+    auto old_rpts = r_pts;
+
     delete_antennas(r_pts);
+
+    if (r_pts.size() < 3) {
+      vtk_debug_ring(old_rpts);
+
+      DBG_ASSERT(false);
+    }
 
     if (has_antenna(r_pts)) {
       DBG_ASSERT(false);

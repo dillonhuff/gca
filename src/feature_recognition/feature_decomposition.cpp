@@ -164,16 +164,28 @@ namespace gca {
 
     //vtk_debug_highlight_inds(s, m);
     
-    std::vector<labeled_polygon_3> result_polys =
+    std::vector<polygon_3> result_polys =
       planar_polygon_union(ts);
 
     if (!(result_polys.size() == 1)) {
 
-      vtk_debug_highlight_inds(s, m);
+      vector<polygon_3> dilated_ts;
+      for (auto t : ts) {
+	dilated_ts.push_back(dilate(t, 0.000001));
+      }
+
+      auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
+
+      if (res_polys_try_dilated.size() != 1) {
+
+	vtk_debug_highlight_inds(s, m);
       
-      vtk_debug_polygons(result_polys);
+	vtk_debug_polygons(res_polys_try_dilated);
       
-      DBG_ASSERT(result_polys.size() == 1);
+	DBG_ASSERT(result_polys.size() == 1);
+      }
+
+      return res_polys_try_dilated.front();
     }
 
     return result_polys.front();
@@ -242,10 +254,10 @@ namespace gca {
 
       check_simplicity(boundary.vertices());
 
-      if (!(area(boundary) > 0.001)) {
-	vtk_debug_highlight_inds(s, m);
-	DBG_ASSERT(area(boundary) > 0.001);
-      }
+      // if (!(area(boundary) > 0.001)) {
+      // 	vtk_debug_highlight_inds(s, m);
+      // 	DBG_ASSERT(area(boundary) > 0.001);
+      // }
 
       auto holes = bounds;
 
@@ -382,12 +394,12 @@ namespace gca {
   labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol) {
     cout << "P normal = " << p.normal() << endl;
     //    vtk_debug_polygon(p);
-    
-    auto dr = exterior_offset(p.vertices(), tol);
+
+    auto dr = exterior_offset(clean_vertices(p.vertices()), tol);
 
     vector<vector<point>> dh;
     for (auto h : p.holes()) {
-      auto offs = interior_offsets(h, tol);
+      auto offs = interior_offsets(clean_vertices(h), tol);
       for (auto off : offs) {
 	dh.push_back(clean_vertices(off));
       }
@@ -430,10 +442,14 @@ namespace gca {
 
     if (drs.size() != 1) {
       vtk_debug_polygon(p);
+
+      cout << "# of interior offsets = " << drs.size() << endl;
+
       for (auto r : drs) {
     	vtk_debug_ring(r);
       }
 
+      //      DBG_ASSERT(false);
       return boost::none;
     }
 

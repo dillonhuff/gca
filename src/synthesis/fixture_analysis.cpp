@@ -91,13 +91,22 @@ namespace gca {
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
     DBG_ASSERT(part_surfaces.size() > 0);
-    
+
     const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
+
+    cout << "# of part surfaces = " << part_surfaces.size() << endl;
+    
+    // for (auto s : part_surfaces) {
+    //   vtk_debug_highlight_inds(s);
+    // }
 
     vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
 
     auto mesh = stock_mesh(w);
     vector<surface> sfs = outer_surfaces(mesh);
+
+    DBG_ASSERT(sfs.size() > 0);
+
     vector<plane> basis = set_right_handed(max_area_basis(sfs));
 
     DBG_ASSERT(basis.size() == 3 && basis.size() == part_planes.size());
@@ -108,12 +117,14 @@ namespace gca {
     for (unsigned i = 0; i < basis.size(); i++) {
       double stock_diam = diameter(basis[i].normal(), mesh);
       double part_diam = diameter(part_planes[i].normal(), part);
+
       if (!(stock_diam > part_diam)) {
 	cout << "stock_diam > part_diam" << endl;
 	cout << "stock_diam = " << stock_diam << endl;
 	cout << "part_diam  = " << part_diam << endl;
 	DBG_ASSERT(stock_diam > part_diam);
       }
+
       double margin = (stock_diam - part_diam) / 2.0;
       offset_basis.push_back(basis[i].flip().slide(margin));
     }
@@ -336,9 +347,9 @@ namespace gca {
   }
 
   fixture_plan surface_based_planning(const triangular_mesh& part_mesh,
-				 const fixtures& f,
-				 const vector<tool>& tools,
-				 const std::vector<workpiece>& wps) {
+				      const fixtures& f,
+				      const vector<tool>& tools,
+				      const std::vector<workpiece>& wps) {
     clipping_plan wp_setups =
       workpiece_clipping_programs(wps, part_mesh, tools, f);
 

@@ -549,6 +549,7 @@ namespace gca {
   // NOTE: Assumes all triangles of s are coplanar, e.g. same normal
   bool is_outer_surface(const vector<index_t>& s, const triangular_mesh& part) {
     DBG_ASSERT(s.size() > 0);
+
     triangle plane_rep = part.face_triangle(s.front());
     point v1 = plane_rep.v1;
     point n = plane_rep.normal.normalize();
@@ -566,11 +567,11 @@ namespace gca {
 	point p = part.vertex(i);
 	double sgn = n.dot(p) + d; // - v1);
 	// TODO: Eliminate ad hoc tolerance
-	if (sgn > 0.01) {
+	if (sgn > 0.0001) {
 	  all_neg = false;
 	}
 	// TODO: Eliminate ad hoc tolerance
-	if (sgn < 0.01) {
+	if (sgn < 0.0001) {
 	  all_pos = false;
 	}
 	if (!all_neg && !all_pos) { return false; }

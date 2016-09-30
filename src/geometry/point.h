@@ -96,7 +96,11 @@ namespace gca {
   std::vector<point> clean_vertices_within_eps(const std::vector<point>& pts,
 					       const double distance_tol,
 					       const double linearity_tol);
-  
+
+  void delete_antennas(std::vector<point>& pts);
+
+  bool has_antenna(const std::vector<point>& ring);
+
 }
 
 #endif

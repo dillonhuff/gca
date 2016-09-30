@@ -455,7 +455,6 @@ namespace gca {
 
     DBG_ASSERT(norms.size() == 6);
 
-
     return select_jobs_and_features(stock, part, f, tools, norms);
   }
   

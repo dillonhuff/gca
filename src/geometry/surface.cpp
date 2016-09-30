@@ -56,16 +56,21 @@ namespace gca {
     auto const_orient_face_indices = const_orientation_regions(part);
     vector<surface> surfaces;
     for (auto f : const_orient_face_indices) {
-      assert(f.size() > 0);
+
+      //vtk_debug_highlight_inds(f, part);
+
+      DBG_ASSERT(f.size() > 0);
+
       if (is_outer_surface(f, part)) {
 	surfaces.push_back(surface(&part, f));
       }
     }
+
     return surfaces;
   }
 
   surface merge_surfaces(const std::vector<surface>& surfaces) {
-    assert(surfaces.size() > 0);
+    DBG_ASSERT(surfaces.size() > 0);
     vector<index_t> inds;
     for (auto s : surfaces) {
       concat(inds, s.index_list());
@@ -92,7 +97,7 @@ namespace gca {
     std::vector<surface> sfs;
     for (auto group : groups) {
       vector<surface> sg = select_indexes(surfs, group);
-      assert(sg.size() == group.size());
+      DBG_ASSERT(sg.size() == group.size());
       sfs.push_back(merge_surfaces(sg));
     }
     return sfs;
@@ -352,7 +357,7 @@ namespace gca {
     auto r = find_if(begin(surfs), end(surfs),
 		     [n](const surface& s)
 		     { return within_eps(angle_between(normal(s), n), 0, 1.0); });
-    assert(r != end(surfs));
+    DBG_ASSERT(r != end(surfs));
     return *r;
   }
 

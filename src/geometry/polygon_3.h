@@ -28,6 +28,7 @@ namespace gca {
   public:
     polygon_3(const std::vector<point> vertices) :
       outer_ring(vertices) {
+      delete_antennas(outer_ring);
       DBG_ASSERT(outer_ring.size() >= 3);
     }
 
