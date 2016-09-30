@@ -316,6 +316,12 @@ namespace gca {
 
     vtkSmartPointer<vtkPolyData> input_mesh_data =
       polydata_for_trimesh(m);
+
+    auto act = plane_actor(clipPlane);
+    auto pdact = polydata_actor(input_mesh_data);
+
+    visualize_actors({pdact, act});
+    
     
     vtkSmartPointer<vtkPolyDataNormals> normalGenerator =
       vtkSmartPointer<vtkPolyDataNormals>::New();

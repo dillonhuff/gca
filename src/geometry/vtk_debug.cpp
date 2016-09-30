@@ -7,7 +7,6 @@
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkClipPolyData.h>
-#include <vtkPlaneSource.h>
 #include <vtkProperty.h>
 #include <vtkCellArray.h>
 #include <vtkPolyDataNormals.h>

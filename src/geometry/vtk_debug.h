@@ -2,7 +2,9 @@
 #define GCA_VTK_DEBUG_H
 
 #include <vtkActor.h>
+#include <vtkPlane.h>
 #include <vtkPolyData.h>
+#include <vtkPlaneSource.h>
 #include <vtkSmartPointer.h>
 
 #include "geometry/rigid_arrangement.h"
@@ -41,6 +43,8 @@ namespace gca {
   void vtk_debug(const triangular_mesh& m, const plane pl);
 
   void vtk_debug_ring(const std::vector<point>& pts);
+
+  vtkSmartPointer<vtkActor> plane_actor(vtkSmartPointer<vtkPlane> pl);
   
 }
 

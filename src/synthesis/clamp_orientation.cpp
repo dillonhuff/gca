@@ -1,3 +1,4 @@
+#include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/millability.h"
@@ -86,24 +87,27 @@ namespace gca {
 			      const vice& v,
 			      const point n) {
 
-    auto outer_surfs = outer_surfaces(part);
-    auto locating_surfaces =
-      select(outer_surfs, [n](const surface& s)
-	     { return angle_eps(normal(s), n, 180.0, 0.5); });
+    // auto outer_surfs = outer_surfaces(part);
+    // auto locating_surfaces =
+    //   select(outer_surfs, [n](const surface& s)
+    // 	     { return angle_eps(normal(s), n, 180.0, 0.5); });
 
-    if (locating_surfaces.size() == 0) { return {}; }
+    // if (locating_surfaces.size() == 0) { return {}; }
 
-    point neg_n = -1*n;
+    // const surface& s = locating_surfaces.front();
+    
+    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n; //s.vertex(s.front()) + v.jaw_height()*n;
+    plane vice_top_plane(-1*n, vice_pl_pt);
+    auto cut_part = clip_mesh(part, vice_top_plane);
 
     vector<surface> cregions =
-      inds_to_surfaces(const_orientation_regions(part), part);
+      inds_to_surfaces(const_orientation_regions(cut_part), cut_part);
 
-    DBG_ASSERT(false);
-    for (unsigned i = 0; i < cregions.size(); i++) {
-      //      for (unsigned j = 0; j < 
-    }
+    std::vector<clamp_orientation> orients =
+      all_stable_orientations_with_top_normal(cregions, v, n);
+
+    return orients;
     
-    DBG_ASSERT(false);
   }
   
 
