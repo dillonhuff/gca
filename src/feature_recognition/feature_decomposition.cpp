@@ -647,13 +647,12 @@ namespace gca {
       cout << "Direction = " << current_level.normal() << endl;
       cout << "current_depth = " << current_depth << endl;
       cout << "next_depth    = " << next_depth << endl;
-	
       
       vtk_debug_polygon(current_level);
       for (auto p : *r_polys) {
 	vtk_debug_polygon(p);
-	
       }
+
       DBG_ASSERT(false);
     }
 
