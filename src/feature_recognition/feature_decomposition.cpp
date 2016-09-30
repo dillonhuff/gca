@@ -732,9 +732,6 @@ namespace gca {
       }
     }
 
-    feature_decomposition* decomp =
-      new (allocate<feature_decomposition>()) feature_decomposition();
-
     double current_depth =
       max_distance_along(init_outline.vertices(), init_outline.normal());
 
@@ -747,10 +744,15 @@ namespace gca {
 
       cout << "Current depth = " << current_depth << endl;
       cout << "Next depth    = " << next_depth << endl;
+
+      vtk_debug_polygons({init_outline, levels.back().front()});
     
       DBG_ASSERT(current_depth >= next_depth);
     }
-    
+
+    feature_decomposition* decomp =
+      new (allocate<feature_decomposition>()) feature_decomposition();
+
     decompose_volume(init_outline, levels, decomp, base_depth);
 
     check_normals(decomp, n);
