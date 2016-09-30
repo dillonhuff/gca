@@ -182,10 +182,15 @@ namespace gca {
 
   std::vector<point> exterior_offset(const std::vector<point>& pts,
 				     const double tol) {
+
+    DBG_ASSERT(pts.size() > 2);
+    
     point n(0, 0, 1);
     const rotation r = rotate_from_to(ring_normal(pts), n);
     const rotation r_inv = inverse(r);
     auto r_pts = apply(r, pts);
+
+    auto original_rpts = r_pts;
 
     r_pts = clean_vertices_within_eps(r_pts, 0.005, 0.0000001);
 
@@ -194,7 +199,17 @@ namespace gca {
     delete_antennas(r_pts);
 
     if (r_pts.size() < 3) {
+      cout << "Before cleaning" << endl;
+      cout << "# of points = " << pts.size() << endl;
+
+      vtk_debug_ring(pts);
+
+      cout << "After cleaning" << endl;
+      cout << "# of points = " << old_rpts.size() << endl;
+
       vtk_debug_ring(old_rpts);
+
+      cout << "# of points after deleting antennas = " << r_pts.size() << endl;
 
       DBG_ASSERT(false);
     }

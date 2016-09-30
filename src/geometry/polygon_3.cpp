@@ -10,6 +10,7 @@ namespace gca {
     outer_ring(vertices),
     inner_rings{} {
 
+    outer_ring = clean_vertices(outer_ring);
     delete_antennas(outer_ring);
 
     // There is an occasional test failure here in simple box
@@ -21,11 +22,14 @@ namespace gca {
     }
 
     for (auto h : hole_verts) {
-      
-      if (!(h.size() >= 3)) {
+
+      auto new_h = clean_vertices(h);
+      delete_antennas(new_h);
+
+      if (!(new_h.size() >= 3)) {
 	cout << "ERROR: Inner ring size = " << h.size() << endl;
       } else {
-	inner_rings.push_back(h);
+	inner_rings.push_back(new_h);
       }
     }
   }

@@ -441,13 +441,13 @@ namespace gca {
     if (drs.size() == 0) { return boost::none; }
 
     if (drs.size() != 1) {
-      vtk_debug_polygon(p);
+      //      vtk_debug_polygon(p);
 
       cout << "# of interior offsets = " << drs.size() << endl;
 
-      for (auto r : drs) {
-    	vtk_debug_ring(r);
-      }
+      // for (auto r : drs) {
+      // 	vtk_debug_ring(r);
+      // }
 
       //      DBG_ASSERT(false);
       return boost::none;
