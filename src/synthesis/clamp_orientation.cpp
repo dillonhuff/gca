@@ -86,17 +86,7 @@ namespace gca {
   all_stable_orientations_box(const triangular_mesh& part,
 			      const vice& v,
 			      const point n) {
-
-    // auto outer_surfs = outer_surfaces(part);
-    // auto locating_surfaces =
-    //   select(outer_surfs, [n](const surface& s)
-    // 	     { return angle_eps(normal(s), n, 180.0, 0.5); });
-
-    // if (locating_surfaces.size() == 0) { return {}; }
-
-    // const surface& s = locating_surfaces.front();
-    
-    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n; //s.vertex(s.front()) + v.jaw_height()*n;
+    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
     plane vice_top_plane(-1*n, vice_pl_pt);
     auto cut_part = clip_mesh(part, vice_top_plane);
 
