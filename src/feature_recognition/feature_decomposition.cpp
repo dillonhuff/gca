@@ -592,9 +592,9 @@ namespace gca {
     double current_depth =
       max_distance_along(current_level.vertices(), current_level.normal());
 
-    // cout << "current normal = " << current_level.normal() << endl;
-    // cout << "current depth  = " << current_depth << endl;
-    // cout << "base depth     = " << base_depth << endl;
+    cout << "current normal = " << current_level.normal() << endl;
+    cout << "current depth  = " << current_depth << endl;
+    cout << "base depth     = " << base_depth << endl;
 
     DBG_ASSERT(current_depth >= base_depth);
     
@@ -693,18 +693,64 @@ namespace gca {
     labeled_polygon_3 init_outline = initial_outline(stock, n);
 
     DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
-    
+
     double base_depth = min_distance_along(m.vertex_list(), n);
 
     surface_levels levels = initial_surface_levels(m, n);
 
     for (auto level : levels) {
+      
       DBG_ASSERT(level.size() > 0);
+
+      cout << "LEVEL" << endl;
+      for (auto l : level) {
+	double current_depth =
+	  max_distance_along(l.vertices(),
+			     l.normal());
+	cout << "----- Current depth = " << current_depth << endl;
+      }
+
+    }
+
+    if (levels.size() > 0) {
+      for (unsigned i = 0; i < levels.size() - 1; i++) {
+    	auto& current = levels[i + 1];
+    	auto& next = levels[i];
+
+    	double current_depth =
+    	  max_distance_along(current.front().vertices(),
+    			     current.front().normal());
+
+    	double next_depth =
+    	  max_distance_along(next.front().vertices(),
+    			     next.front().normal());
+
+    	cout << "Current depth = " << current_depth << endl;
+    	cout << "Next depth    = " << next_depth << endl;
+
+    	DBG_ASSERT(current_depth >= next_depth);
+      }
     }
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
 
+    double current_depth =
+      max_distance_along(init_outline.vertices(), init_outline.normal());
+
+    cout << "current depth  = " << current_depth << endl;
+
+    if (levels.size() > 0) {
+      double next_depth =
+	max_distance_along(levels.back().front().vertices(),
+			   levels.back().front().normal());
+
+      cout << "Current depth = " << current_depth << endl;
+      cout << "Next depth    = " << next_depth << endl;
+    
+      DBG_ASSERT(current_depth >= next_depth);
+    }
+    
     decompose_volume(init_outline, levels, decomp, base_depth);
 
     check_normals(decomp, n);
