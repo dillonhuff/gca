@@ -90,8 +90,8 @@ namespace gca {
     plane vice_top_plane(-1*n, vice_pl_pt);
     auto cut_part = clip_mesh(part, vice_top_plane);
 
-    vector<surface> cregions =
-      inds_to_surfaces(const_orientation_regions(cut_part), cut_part);
+    vector<surface> cregions = outer_surfaces(cut_part);
+    //      inds_to_surfaces(const_orientation_regions(cut_part), cut_part);
 
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(cregions, v, n);
