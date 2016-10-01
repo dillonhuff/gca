@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "catch.hpp"
+#include "feature_recognition/feature_decomposition.h"
 #include "synthesis/fixture_analysis.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
@@ -41,9 +42,22 @@ namespace gca {
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - SSTray.stl", 0.001);
 
-    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+    SECTION("Feature decomposition in (0, 0, 1)") {
+      vector<surface> stable_surfaces = outer_surfaces(mesh);
+      triangular_mesh wp_mesh = align_workpiece(stable_surfaces,
+						workpiece_dims);
 
-    REQUIRE(p.fixtures().size() == 2);
+      auto fd = build_feature_decomposition(wp_mesh, mesh, point(0, 0, 1));
+
+      REQUIRE(fd);
+    }
+
+    SECTION("Make fixture plan") {
+
+      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+      REQUIRE(p.fixtures().size() == 2);
+    }
   }
 
 }

@@ -659,14 +659,12 @@ namespace gca {
 
     	DBG_ASSERT(current_depth >= next_depth);
       }
-    }
 
-    double current_depth =
-      max_distance_along(init_outline.vertices(), init_outline.normal());
+      double current_depth =
+	max_distance_along(init_outline.vertices(), init_outline.normal());
 
-    cout << "current depth  = " << current_depth << endl;
+      cout << "current depth  = " << current_depth << endl;
 
-    if (levels.size() > 0) {
       double next_depth =
 	max_distance_along(levels.back().front().vertices(),
 			   levels.back().front().normal());
