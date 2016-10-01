@@ -1,4 +1,5 @@
 #include "feature_recognition/feature_decomposition.h"
+#include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
@@ -134,7 +135,14 @@ namespace gca {
 
     DBG_ASSERT(t);
 
-    return apply(*t, mesh);
+    triangular_mesh aligned_wp = apply(*t, mesh);
+
+    vector<triangular_mesh> to_sub{aligned_wp};
+    vector<triangular_mesh> res = boolean_difference(part, to_sub);
+
+    DBG_ASSERT(res.size() == 0);
+
+    return aligned_wp;
   }
 
   std::vector<fixture>
