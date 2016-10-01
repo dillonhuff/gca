@@ -84,5 +84,17 @@ namespace gca {
 
   std::vector<point> project_points(const plane pl,
 				    const std::vector<point>& pts);
+
+  boost_poly_2 rotate_to_2D(const labeled_polygon_3& p);
+
+  double area(const polygon_3& p);
+
+  std::vector<labeled_polygon_3>
+  planar_polygon_union(const std::vector<labeled_polygon_3>& polys);
+
+  labeled_polygon_3
+  convex_hull_2D(const std::vector<point>& pts,
+		 const point n,
+		 const double z_level);
   
 }

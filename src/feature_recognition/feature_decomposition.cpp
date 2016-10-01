@@ -15,32 +15,6 @@ namespace gca {
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
   labeled_polygon_3
-  convex_hull_2D(const std::vector<point>& pts,
-		 const point n,
-		 const double z_level) {
-    const rotation r = rotate_from_to(n, point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-    
-    auto rotated_pts = apply(r, pts);
-
-    boost_multipoint_2 mp;
-    for (auto p : rotated_pts) {
-      boost::geometry::append(mp, boost::geometry::model::d2::point_xy<double>(p.x, p.y));
-    }
-
-    boost_multipoint_2 res;
-    boost::geometry::convex_hull(mp, res);
-
-    vector<point> res_pts;
-    for (auto p : res) {
-      point pz(p.x(), p.y(), z_level);
-      res_pts.push_back(times_3(r_inv, pz));
-    }
-
-    return labeled_polygon_3(clean_vertices(res_pts));
-  }
-
-  labeled_polygon_3
   convex_hull_2D(const triangular_mesh& m,
 		 const point n) {
     double z_level = max_distance_along(m.vertex_list(), n);
@@ -90,51 +64,6 @@ namespace gca {
 
     return connect_regions(vz, m);
   }  
-
-  std::vector<labeled_polygon_3>
-  planar_polygon_union(const std::vector<labeled_polygon_3>& polys) {
-    if (polys.size() == 0) { return {}; }
-
-    //vtk_debug_polygons(polys);
-
-    double level_z =
-      max_distance_along(polys.front().vertices(), polys.front().normal());
-    point n = polys.front().normal();
-
-    cout << "n = " << n << endl;
-    
-    const rotation r = rotate_from_to(n, point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-
-    cout << "# polys to union = " << polys.size() << endl;
-
-    boost_multipoly_2 result;
-    result.push_back(to_boost_poly_2(apply(r, polys.front())));
-
-    for (unsigned i = 1; i < polys.size(); i++) {
-      auto& s = polys[i];
-
-      auto bp = to_boost_poly_2(apply(r, s));
-      boost_multipoly_2 r_tmp = result;
-      boost::geometry::clear(result);
-      boost::geometry::union_(r_tmp, bp, result);
-    }
-
-    cout << "# polys in result = " << result.size() << endl;
-
-    std::vector<labeled_polygon_3> res;
-    for (auto r : result) {
-      labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
-
-      check_simplicity(lp);
-
-      lp.correct_winding_order(polys.front().normal());
-      res.push_back(lp);
-    }
-
-    return res;
-    
-  }
 
   labeled_polygon_3
   virtual_surface_for_surface(const std::vector<index_t>& s,
@@ -745,7 +674,7 @@ namespace gca {
       cout << "Current depth = " << current_depth << endl;
       cout << "Next depth    = " << next_depth << endl;
 
-      vtk_debug_polygons({init_outline, levels.back().front()});
+      //vtk_debug_polygons({init_outline, levels.back().front()});
     
       DBG_ASSERT(current_depth >= next_depth);
     }
@@ -816,9 +745,9 @@ namespace gca {
     return out;
   }
   
-  bool tangent(const std::pair<double, double> r1,
-	       const std::pair<double, double> r2,
-	       const double tol) {
+  bool adjacent(const std::pair<double, double> r1,
+		const std::pair<double, double> r2,
+		const double tol) {
     if ((r1.first < r1.second) &&
 	(r2.first < r2.second)) {
       if (within_eps(r1.second, r2.first, tol)) { return true; }
@@ -847,7 +776,7 @@ namespace gca {
 
 	// Do not include features that just border the feature
 	// in the containing range
-	if (!tangent(f_range, contained_range, 0.001)) {
+	if (!adjacent(f_range, contained_range, 0.001)) {
 	  container.push_back(f);
 	}
       }
@@ -959,14 +888,8 @@ namespace gca {
     return nullptr;
   }
 
-  boost_poly_2 rotate_to_2D_polygon(const labeled_polygon_3& p) {
-    const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
-    return to_boost_poly_2(apply(r, p));
-  }
-
   double base_area(const feature& f) {
-    boost_poly_2 bp = rotate_to_2D_polygon(f.base());
-    return boost::geometry::area(bp);
+    return area(f.base());
   }
 
 }
