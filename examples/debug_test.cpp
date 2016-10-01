@@ -47,7 +47,7 @@ namespace gca {
     SECTION("Align workpiece around part") {
       vector<surface> stable_surfaces = outer_surfaces(mesh);
 
-      vtk_debug_highlight_inds(stable_surfaces);
+      // vtk_debug_highlight_inds(stable_surfaces);
       
       triangular_mesh wp_mesh = align_workpiece(stable_surfaces,
 						workpiece_dims);

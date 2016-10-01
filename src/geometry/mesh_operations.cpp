@@ -81,7 +81,7 @@ namespace gca {
 
   boost::optional<triangular_mesh>
   nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
-    //    DBG_ASSERT(p.is_simple());
+    //    DBG_DBG_ASSERT(p.is_simple());
     if (!p.is_simple()) { return boost::none; }
 
     Polyhedron poly;
@@ -391,7 +391,7 @@ namespace gca {
 
     pdata = normalGenerator2->GetOutput();
 
-    assert(is_closed(pdata));
+    DBG_ASSERT(is_closed(pdata));
 
     double target =
       1.0 - (static_cast<double>(pdata->GetNumberOfPolys()) - 12.0) / 12.0;
@@ -414,12 +414,12 @@ namespace gca {
 
     pdata = normalGenerator3->GetOutput();
 
-    assert(is_closed(pdata));
-    assert(has_cell_normals(pdata));
+    DBG_ASSERT(is_closed(pdata));
+    DBG_ASSERT(has_cell_normals(pdata));
 
     triangular_mesh final_mesh = trimesh_for_polydata(pdata);
 
-    assert(final_mesh.is_connected());
+    DBG_ASSERT(final_mesh.is_connected());
 
     return final_mesh;
   }

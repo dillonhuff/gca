@@ -59,6 +59,8 @@ namespace gca {
 
     vector<plane> planes;
     for (auto s : basis) {
+      cout << "surface normal = " << normal(s) << endl;
+      //vtk_debug_highlight_inds(s);
       planes.push_back(plane(normal(s), s.face_triangle(s.front()).v1));
     }
 
@@ -96,7 +98,7 @@ namespace gca {
     const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
 
     cout << "# of part surfaces = " << part_surfaces.size() << endl;
-    
+
     // for (auto s : part_surfaces) {
     //   vtk_debug_highlight_inds(s);
     // }
@@ -113,11 +115,19 @@ namespace gca {
     DBG_ASSERT(basis.size() == 3 && basis.size() == part_planes.size());
     DBG_ASSERT(right_handed(basis));
     DBG_ASSERT(right_handed(part_planes));
+
+    cout << "BASIS" << endl;
+    for (auto b : basis) {
+      cout << b.normal() << endl;
+    }
     
     vector<plane> offset_basis;
     for (unsigned i = 0; i < basis.size(); i++) {
       double stock_diam = diameter(basis[i].normal(), mesh);
       double part_diam = diameter(part_planes[i].normal(), part);
+
+      cout << "stock diam = " << stock_diam << endl;
+      cout << "part diam  = " << part_diam << endl;
 
       if (!(stock_diam > part_diam)) {
 	cout << "stock_diam > part_diam" << endl;
@@ -127,6 +137,9 @@ namespace gca {
       }
 
       double margin = (stock_diam - part_diam) / 2.0;
+
+      cout << "margin = " << margin << endl;
+
       offset_basis.push_back(basis[i].flip().slide(margin));
     }
 
@@ -136,6 +149,8 @@ namespace gca {
     DBG_ASSERT(t);
 
     triangular_mesh aligned_wp = apply(*t, mesh);
+
+    //vtk_debug_meshes({aligned_wp, part});
 
     vector<triangular_mesh> to_sub{aligned_wp};
     vector<triangular_mesh> res = boolean_difference(part, to_sub);

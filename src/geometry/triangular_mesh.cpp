@@ -146,6 +146,7 @@ namespace gca {
   template<typename Triangle>
   int
   num_winding_order_errors(const std::vector<Triangle>& triangles) {
+    cout << "WINDING ORDER ERRORS" << endl;
     int num_errs = 0;
     for (unsigned i = 0; i < triangles.size(); i++) {
       for (unsigned j = i; j < triangles.size(); j++) {
@@ -154,6 +155,8 @@ namespace gca {
 	  auto tj = triangles[j];
 
 	  if (winding_conflict(ti, tj)) {
+	    cout << "Ti = " << ti << endl;
+	    cout << "Tj = " << tj << endl;
 	    num_errs++;
 	  }
 
@@ -205,7 +208,13 @@ namespace gca {
       connected_components_by(tris, [](const triangle_t l, const triangle_t r)
 			      { return share_edge(l, r); });
     DBG_ASSERT(ccs.size() == 1);
-    
+
+    auto num_errs_after_correction = num_winding_order_errors(tris);
+    if (num_errs_after_correction != 0) {
+      cout << "ERROR: " << num_errs_after_correction << " winding errors still exist" << endl;
+      DBG_ASSERT(num_errs_after_correction == 0);
+    }
+
     DBG_ASSERT(num_winding_order_errors(tris) == 0);
     DBG_ASSERT(tris.size() == triangles.size());
 
@@ -354,15 +363,15 @@ namespace gca {
 	      vertices[t.v[2]] - vertices[t.v[0]]).normalize();
 
       point fi = (face_orientations[i]).normalize();
-      if (!within_eps(fi, computed_normal, 0.001)) {
+      if (!angle_eps(fi, computed_normal, 0.0, 0.5)) {
 	cout << "Computed normal = " << computed_normal << endl;
 	cout << "Listed normal   = " << fi << endl;
+
 	return false;
       }
     }
     return true;
   }
-
   
   index_t get_vertex(const triangle_t& t, const index_t i) {
     return t.v[i];
@@ -376,7 +385,9 @@ namespace gca {
   correct_winding_and_build(std::vector<triangle_t>& vertex_triangles,
 			    const std::vector<point>& vertices,
 			    const std::vector<point>& face_orientations) {
+    cout << "Correcting order and building" << endl;
     if (!all_normals_consistent(vertex_triangles, vertices, face_orientations)) {
+      cout << "Flipped winding order!" << endl;
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
 

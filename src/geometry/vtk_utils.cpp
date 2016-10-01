@@ -5,6 +5,8 @@
 #include <vtkPolygon.h>
 #include <vtkTriangle.h>
 #include <vtkTriangleFilter.h>
+
+#include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 
 namespace gca {
@@ -26,8 +28,8 @@ namespace gca {
   }
 
   triangle vtkCell_to_triangle(vtkCell* c) {
-    assert(c->GetCellType() == VTK_TRIANGLE);
-    assert(c->GetNumberOfPoints() == 3);
+    DBG_ASSERT(c->GetCellType() == VTK_TRIANGLE);
+    DBG_ASSERT(c->GetNumberOfPoints() == 3);
 
     vtkTriangle* tri = dynamic_cast<vtkTriangle*>(c);
     double p0[3];
@@ -208,8 +210,13 @@ namespace gca {
   triangular_mesh
   trimesh_for_polydata(vtkPolyData* in_polydata) {
     auto tris = polydata_to_triangle_list(in_polydata);
+
+    vtk_debug_triangles(tris);
+
     triangular_mesh m = make_mesh(tris, 0.00001);
-    assert(m.is_connected());
+
+    DBG_ASSERT(m.is_connected());
+
     return m;
   }
 
@@ -227,7 +234,7 @@ namespace gca {
     for (int i = 0; i < p.vertices().size(); i++) {
       if (!(pl->GetPointIds())) {
 	cout << "No point ids in pl!" << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
       pl->GetPointIds()->SetId(i, i);
     }
