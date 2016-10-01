@@ -2,6 +2,8 @@
 
 #include "catch.hpp"
 #include "feature_recognition/feature_decomposition.h"
+#include "geometry/mesh_operations.h"
+#include "geometry/vtk_debug.h"
 #include "synthesis/fixture_analysis.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
@@ -41,6 +43,27 @@ namespace gca {
     vector<tool> tools{t1, t2};
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - SSTray.stl", 0.001);
+
+    SECTION("Align workpiece around part") {
+      vector<surface> stable_surfaces = outer_surfaces(mesh);
+
+      vtk_debug_highlight_inds(stable_surfaces);
+      
+      triangular_mesh wp_mesh = align_workpiece(stable_surfaces,
+						workpiece_dims);
+
+      vector<triangular_mesh> to_sub{wp_mesh};
+      vector<triangular_mesh> res = boolean_difference(mesh, to_sub);
+
+      vector<triangular_mesh> to_sub_next{mesh};
+      vector<triangular_mesh> res_sub = boolean_difference(wp_mesh, to_sub_next);
+
+      // for (auto m : res_sub) {
+      // 	vtk_debug_mesh(m);
+      // }
+      
+      REQUIRE(res.size() == 0);
+    }
 
     SECTION("Feature decomposition in (0, 0, 1)") {
       vector<surface> stable_surfaces = outer_surfaces(mesh);

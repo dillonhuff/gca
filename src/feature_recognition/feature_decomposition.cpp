@@ -672,6 +672,19 @@ namespace gca {
       cout << "Current depth = " << current_depth << endl;
       cout << "Next depth    = " << next_depth << endl;
 
+      auto part_data = polydata_for_trimesh(m);
+      auto part_act = polydata_actor(part_data);
+
+      auto stock_data = polydata_for_trimesh(stock);
+      auto stock_act = polydata_actor(stock_data);
+      
+      auto ring_data = polydata_for_ring(init_outline.vertices());
+      auto ring_act = polydata_actor(ring_data);
+
+      auto f_data = polydata_for_ring(levels.back().front().vertices());
+      auto f_act = polydata_actor(ring_data);
+      
+      visualize_actors({part_act, stock_act, ring_act, f_act});
       //vtk_debug_polygons({init_outline, levels.back().front()});
     
       DBG_ASSERT(current_depth >= next_depth);
