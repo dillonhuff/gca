@@ -146,7 +146,6 @@ namespace gca {
   template<typename Triangle>
   int
   num_winding_order_errors(const std::vector<Triangle>& triangles) {
-    cout << "WINDING ORDER ERRORS" << endl;
     int num_errs = 0;
     for (unsigned i = 0; i < triangles.size(); i++) {
       for (unsigned j = i; j < triangles.size(); j++) {
@@ -155,11 +154,8 @@ namespace gca {
 	  auto tj = triangles[j];
 
 	  if (winding_conflict(ti, tj)) {
-	    cout << "Ti = " << ti << endl;
-	    cout << "Tj = " << tj << endl;
 	    num_errs++;
 	  }
-
 	  
 	}
       }
