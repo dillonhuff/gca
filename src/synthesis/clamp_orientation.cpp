@@ -1,4 +1,6 @@
+#include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
+#include "geometry/polygon_3.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/millability.h"
@@ -81,9 +83,22 @@ namespace gca {
   all_stable_orientations_box(const triangular_mesh& part,
 			      const vice& v,
 			      const point n) {
+    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
+
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
     plane vice_top_plane(-1*n, vice_pl_pt);
-    auto cut_part = clip_mesh(part, vice_top_plane);
+
+    polygon_3 p = project_onto(vice_top_plane, hull);
+    polygon_3 plane_approx = dilate(p, 2000.0);
+
+    triangular_mesh m = extrude(plane_approx, 2000.0*n);
+
+    vector<triangular_mesh> subs{m};
+    auto cut_parts = boolean_difference(part, subs);
+
+    DBG_ASSERT(cut_parts.size() == 1);
+
+    auto& cut_part = cut_parts.front();
 
     vector<surface> cregions = outer_surfaces(cut_part);
 

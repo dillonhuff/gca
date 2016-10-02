@@ -306,11 +306,19 @@ namespace gca {
     return polys;
   }
 
+  triangular_mesh
+  clip_mesh_exact(const triangular_mesh& m,
+		  const plane pl) {
+    plane box_pl = pl.flip();
+
+    point p1 = pl.pt();
+
+  }
+  
   // TOOD: Simplify this atrocity of a function
   triangular_mesh
   clip_mesh(const triangular_mesh& m,
-	    const plane pl)
-  {
+	    const plane pl) {
 
     auto clipPlane = vtk_plane(pl);
 
@@ -343,7 +351,15 @@ namespace gca {
     
     vtkPolyData* m_data = clipper->GetOutput();
 
+    cout << "PRE CAPPING EDGES" << endl;
+    debug_print_edge_summary(m_data);
+    auto m_data_act = polydata_actor(m_data);
+    visualize_actors({m_data_act});
+
     vector<triangle> main_tris = polydata_to_triangle_list(m_data);
+
+    auto main_mesh = make_mesh(main_tris, 0.001);
+    vtk_debug_mesh(main_mesh);
 
     // Now extract clipped edges
     vtkSmartPointer<vtkFeatureEdges> boundaryEdges =
@@ -390,6 +406,8 @@ namespace gca {
     normalGenerator2->Update();
 
     pdata = normalGenerator2->GetOutput();
+
+    debug_print_edge_summary(pdata);
 
     DBG_ASSERT(is_closed(pdata));
 

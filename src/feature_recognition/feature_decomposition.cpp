@@ -330,13 +330,8 @@ namespace gca {
 
   labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol) {
     cout << "P normal = " << p.normal() << endl;
-    //    vtk_debug_polygon(p);
-
-    cout << "STARTING FIRST EXTERIOR OFFSET CALL IN DILATE" << endl;
     
     auto dr = exterior_offset(clean_vertices(p.vertices()), tol);
-
-    cout << "FINISHED FIRST EXTERIOR OFFSET CALL IN DILATE" << endl;
 
     vector<vector<point>> dh;
     for (auto h : p.holes()) {

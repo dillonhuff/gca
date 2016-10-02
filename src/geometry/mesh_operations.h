@@ -15,6 +15,11 @@ namespace gca {
   triangular_mesh
   clip_mesh(const triangular_mesh& m, const plane pl);
 
+  triangular_mesh
+  clip_mesh_exact(const triangular_mesh& m,
+		  const plane pl);
+
+
   boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b);
 
