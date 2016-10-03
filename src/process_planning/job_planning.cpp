@@ -362,7 +362,9 @@ namespace gca {
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
+      cout << "In loop getting current stock" << endl;
       auto current_stock = nef_to_single_trimesh(stock_nef);
+      cout << "In loop got current stock" << endl;
       
       point n = normal(info.decomp);
       auto orients = all_stable_orientations_box(stock_nef, v, n);
@@ -382,37 +384,23 @@ namespace gca {
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
-	  // for (auto f : features) {
-	  //   auto vol_data = map_find(f, volume_inf);
-	  //   cout << "delta volume = " << vol_data.volume << endl;
+	  for (auto f : features) {
+	    auto vol_data = map_find(f, volume_inf);
+	    cout << "delta volume = " << vol_data.volume << endl;
 
-	  //   vtk_debug_feature(*f);
+	    vtk_debug_feature(*f);
 
-	  //   //	  vtk_debug_mesh(vol_data.dilated_mesh);
+	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	  //   vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
+	    vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
 
-	  // }
-	  // vtk_debug_features(features);
-	  // concat(all_features, features);
+	  }
+	  vtk_debug_features(features);
+	  concat(all_features, features);
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
 	  stock_nef = subtract_features(stock_nef, features);
-
-	  // if (stock_res.size() != 1) {
-	  //   cout << "stock_res.size() == " << stock_res.size() << endl;
-
-	  //   vtk_debug_features(features);
-
-	  //   for (auto stock_r : stock_res) {
-	  //     vtk_debug_mesh(stock_r);
-	  //   }
-
-	  //   DBG_ASSERT(stock_res.size() == 1);
-	  // }
-
-	  //current_stock = stock_res.front();
 
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;
@@ -421,14 +409,16 @@ namespace gca {
 	  cout << "Stock volume = " << stock_volume << endl;
 	  cout << "part / stock = " << volume_ratio << endl;
 
-	  //vtk_debug_mesh(current_stock);
+	  vtk_debug_mesh(current_stock);
 
 	  if (volume_ratio > 0.999) { break; }
 	}
       }
     }
 
+    cout << "Done with loop getting current stock" << endl;
     auto current_stock = nef_to_single_trimesh(stock_nef);
+    cout << "Done with loop got current stock" << endl;
 
     double stock_volume = volume(current_stock);
     double volume_ratio = part_volume / stock_volume;

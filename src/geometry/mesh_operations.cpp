@@ -519,7 +519,13 @@ namespace gca {
   triangular_mesh nef_to_single_trimesh(const Nef_polyhedron& nef) {
     auto meshes = nef_polyhedron_to_trimeshes(nef);
 
-    DBG_ASSERT(meshes.size() == 1);
+    if (meshes.size() != 1) {
+      cout << "# of meshes = " << meshes.size() << endl;
+      for (auto m : meshes) {
+	vtk_debug_mesh(m);
+      }
+      DBG_ASSERT(meshes.size() == 1);
+    }
 
     return meshes.front();
   }
