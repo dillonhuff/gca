@@ -117,7 +117,7 @@ namespace gca {
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
     
-    return volume_info{vol, trimesh_to_nef_polyhedron(dilated_mesh), dilated_mesh};
+    return volume_info{vol, trimesh_to_nef_polyhedron(mesh), dilated_mesh};
   }
 
   volume_info
