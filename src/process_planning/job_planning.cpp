@@ -77,9 +77,13 @@ namespace gca {
     auto res = m;
     for (auto f : features) {
 
-      Nef_polyhedron f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
+      Nef_polyhedron f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 1.0, 0.0001));
 
-      res = res - f_nef;
+      for (auto it = f_nef.volumes_begin(); it != f_nef.volumes_end(); it++) {
+	cout << "VOLUME" << endl;
+      }
+
+      res = (res - f_nef).regularization();
       
     }
 
@@ -385,19 +389,19 @@ namespace gca {
 
 	if (features.size() > 0) {
 
-	  // for (auto f : features) {
-	  //   auto vol_data = map_find(f, volume_inf);
-	  //   cout << "delta volume = " << vol_data.volume << endl;
+	  for (auto f : features) {
+	    auto vol_data = map_find(f, volume_inf);
+	    cout << "delta volume = " << vol_data.volume << endl;
 
-	  //   vtk_debug_feature(*f);
+	    vtk_debug_feature(*f);
 
-	  //   //	  vtk_debug_mesh(vol_data.dilated_mesh);
+	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	  //   vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
+	    vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
 
-	  // }
-	  // vtk_debug_features(features);
-	  // concat(all_features, features);
+	  }
+	  vtk_debug_features(features);
+	  concat(all_features, features);
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
@@ -411,9 +415,9 @@ namespace gca {
 	  cout << "Stock volume = " << stock_volume << endl;
 	  cout << "part / stock = " << volume_ratio << endl;
 
-	  //vtk_debug_mesh(current_stock);
+	  vtk_debug_mesh(current_stock);
 
-	  if (volume_ratio > 0.999) { break; }
+	  //if (volume_ratio > 0.999) { break; }
 	}
       }
     }
@@ -429,7 +433,7 @@ namespace gca {
     cout << "Stock volume = " << stock_volume << endl;
     cout << "part / stock = " << volume_ratio << endl;
 
-    //vtk_debug_features(all_features);
+    vtk_debug_features(all_features);
 
     // TODO: Tighten this tolerance once edge features are supported
     if (volume_ratio <= 0.99) {

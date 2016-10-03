@@ -85,8 +85,6 @@ namespace gca {
     }
 
 
-    //    NOTE: This branch cannot yet handle volume tracking situations
-    //    like this one
     SECTION("Block with hole and side pocket") {
       auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BlockWithHoleAndSidePocket.stl", 0.0001);
 

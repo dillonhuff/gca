@@ -175,7 +175,7 @@ namespace gca {
 
     cout << "Done converting to nef" << endl;
 
-    return N;
+    return N.regularization();
   }
   
   boost::optional<std::vector<point>>
@@ -524,6 +524,10 @@ namespace gca {
       for (auto m : meshes) {
 	vtk_debug_mesh(m);
       }
+
+      cout << "All meshes" << endl;
+      vtk_debug_meshes(meshes);
+
       DBG_ASSERT(meshes.size() == 1);
     }
 
