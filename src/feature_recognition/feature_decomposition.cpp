@@ -561,6 +561,9 @@ namespace gca {
 
     auto result_polys = *r_polys;
 
+    //cout << "Subtraction result" << endl;
+    //vtk_debug_polygons(result_polys);
+
     // Add a new feature for the current level
     // and recursively build decompositions for each new level
     // produced by the subtraction
@@ -633,6 +636,8 @@ namespace gca {
 			     l.normal());
 	cout << "----- Current depth = " << current_depth << endl;
       }
+
+      //vtk_debug_polygons(level);
 
     }
 

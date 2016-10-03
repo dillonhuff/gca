@@ -280,19 +280,6 @@ all-tests/fast:
 .PHONY : all-tests/fast
 
 #=============================================================================
-# Target rules for targets named gcode
-
-# Build rule for target.
-gcode: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gcode
-.PHONY : gcode
-
-# fast build rule for target.
-gcode/fast:
-	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
-.PHONY : gcode/fast
-
-#=============================================================================
 # Target rules for targets named gprocess
 
 # Build rule for target.
@@ -332,6 +319,19 @@ gca/fast:
 .PHONY : gca/fast
 
 #=============================================================================
+# Target rules for targets named gcode
+
+# Build rule for target.
+gcode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gcode
+.PHONY : gcode
+
+# fast build rule for target.
+gcode/fast:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
+.PHONY : gcode/fast
+
+#=============================================================================
 # Target rules for targets named surface-test
 
 # Build rule for target.
@@ -343,6 +343,19 @@ surface-test: cmake_check_build_system
 surface-test/fast:
 	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/build
 .PHONY : surface-test/fast
+
+#=============================================================================
+# Target rules for targets named manufacture
+
+# Build rule for target.
+manufacture: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 manufacture
+.PHONY : manufacture
+
+# fast build rule for target.
+manufacture/fast:
+	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/build
+.PHONY : manufacture/fast
 
 #=============================================================================
 # Target rules for targets named nef-test
@@ -611,6 +624,33 @@ examples/json_plan.s: examples/json_plan.cpp.s
 examples/json_plan.cpp.s:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/examples/json_plan.cpp.s
 .PHONY : examples/json_plan.cpp.s
+
+examples/manufacture.o: examples/manufacture.cpp.o
+
+.PHONY : examples/manufacture.o
+
+# target to build an object file
+examples/manufacture.cpp.o:
+	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/examples/manufacture.cpp.o
+.PHONY : examples/manufacture.cpp.o
+
+examples/manufacture.i: examples/manufacture.cpp.i
+
+.PHONY : examples/manufacture.i
+
+# target to preprocess a source file
+examples/manufacture.cpp.i:
+	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/examples/manufacture.cpp.i
+.PHONY : examples/manufacture.cpp.i
+
+examples/manufacture.s: examples/manufacture.cpp.s
+
+.PHONY : examples/manufacture.s
+
+# target to generate assembly for a file
+examples/manufacture.cpp.s:
+	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/examples/manufacture.cpp.s
+.PHONY : examples/manufacture.cpp.s
 
 examples/nef_test.o: examples/nef_test.cpp.o
 
@@ -4088,12 +4128,13 @@ help:
 	@echo "... tri-test"
 	@echo "... plate-cutter"
 	@echo "... all-tests"
-	@echo "... gcode"
-	@echo "... rebuild_cache"
 	@echo "... gprocess"
 	@echo "... feature-decomp"
 	@echo "... gca"
+	@echo "... rebuild_cache"
+	@echo "... gcode"
 	@echo "... surface-test"
+	@echo "... manufacture"
 	@echo "... nef-test"
 	@echo "... geometry"
 	@echo "... stl-parse"
@@ -4122,6 +4163,9 @@ help:
 	@echo "... examples/json_plan.o"
 	@echo "... examples/json_plan.i"
 	@echo "... examples/json_plan.s"
+	@echo "... examples/manufacture.o"
+	@echo "... examples/manufacture.i"
+	@echo "... examples/manufacture.s"
 	@echo "... examples/nef_test.o"
 	@echo "... examples/nef_test.i"
 	@echo "... examples/nef_test.s"

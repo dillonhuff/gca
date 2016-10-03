@@ -2,6 +2,7 @@
 
 #include "catch.hpp"
 #include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/fixture_analysis.h"
@@ -40,10 +41,36 @@ namespace gca {
     t2.set_holder_diameter(2.5);
     t2.set_holder_length(3.5);
 
-    vector<tool> tools{t1, t2};
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.12);
+    t3.set_cut_length(1.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3};
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/Part Studio 1 - SSTray.stl", 0.001);
 
+    SECTION("Feature decomposition in (0, 1, 0)") {
+      vector<surface> stable_surfaces = outer_surfaces(mesh);
+      triangular_mesh wp_mesh = align_workpiece(stable_surfaces,
+						workpiece_dims);
+
+      auto fd = build_feature_decomposition(wp_mesh, mesh, point(0, 1, 0));
+
+      // for (auto f : collect_features(fd)) {
+      // 	vtk_debug_feature(*f);
+      // }
+
+      // vtk_debug_feature_decomposition(fd);
+
+      REQUIRE(fd);
+    }
+    
     SECTION("Align workpiece around part") {
       vector<surface> stable_surfaces = outer_surfaces(mesh);
 

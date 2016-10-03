@@ -236,11 +236,17 @@ namespace gca {
       cout << "};" << endl;
 
 
-      
+
       vtk_debug_ring(r_pts);
       for (auto r : res) {
 	vtk_debug_ring(r.vertices());
       }
+
+      cout << "res" << endl;
+      for (auto res_p : res) {
+	vtk_debug_polygon(res_p);
+      }
+
       DBG_ASSERT(res.size() == 2);
     }
 
