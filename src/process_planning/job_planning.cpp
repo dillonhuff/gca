@@ -73,23 +73,17 @@ namespace gca {
   Nef_polyhedron
   subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features) {
-    //    std::vector<triangular_mesh> meshes;
+
     auto res = m;
     for (auto f : features) {
-      //      meshes.push_back(feature_mesh(*f)); //, 0.000001, 0.0001, 0.0001));
 
-      auto f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f));
+      auto f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
 
       res = res - f_nef;
       
     }
 
     return res;
-
-    //auto subtracted = boolean_difference(m, meshes);
-
-    //return subtracted;
-
     
   }
 
@@ -102,7 +96,7 @@ namespace gca {
     return base_area * f.depth();
   }
 
-  struct volume_info {
+ struct volume_info {
     double volume;
     std::vector<triangular_mesh> meshes;
     triangular_mesh dilated_mesh;
@@ -400,23 +394,23 @@ namespace gca {
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
-	  // for (auto f : features) {
-	  //   auto vol_data = map_find(f, volume_inf);
-	  //   cout << "delta volume = " << vol_data.volume << endl;
+	  for (auto f : features) {
+	    auto vol_data = map_find(f, volume_inf);
+	    cout << "delta volume = " << vol_data.volume << endl;
 
-	  //   vtk_debug_feature(*f);
+	    vtk_debug_feature(*f);
 
-	  //   //	  vtk_debug_mesh(vol_data.dilated_mesh);
+	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	  //   vtk_debug_meshes(vol_data.meshes);
+	    vtk_debug_meshes(vol_data.meshes);
 
-	  // }
-	  // vtk_debug_features(features);
-	  // concat(all_features, features);
+	  }
+	  vtk_debug_features(features);
+	  concat(all_features, features);
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
-	  auto stock_res = subtract_features(stock_nef, features);
+	  stock_nef = subtract_features(stock_nef, features);
 
 	  // if (stock_res.size() != 1) {
 	  //   cout << "stock_res.size() == " << stock_res.size() << endl;
