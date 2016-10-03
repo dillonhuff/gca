@@ -183,6 +183,59 @@ namespace gca {
 
     return N;
   }
+
+  struct exact_mesh_cache::impl {
+    Nef_polyhedron nef;
+
+    impl(const triangular_mesh& m) {
+      nef = trimesh_to_nef_polyhedron(m);
+    }
+
+    impl(const exact_mesh_cache::impl* i) {
+      nef = i->nef;
+    }
+    
+    void subtract(const triangular_mesh& m) {
+      auto m_nef = trimesh_to_nef_polyhedron(m);
+      nef = nef - m_nef;
+    }
+
+    std::vector<triangular_mesh> get_double_mesh() const {
+      return nef_polyhedron_to_trimeshes(nef);
+    }
+
+    exact_mesh_cache::impl* copy() const {
+      auto meshes = get_double_mesh();
+
+      DBG_ASSERT(meshes.size() == 1);
+
+      exact_mesh_cache::impl* cpy =
+	new exact_mesh_cache::impl(meshes.front());
+
+      return cpy;
+    }
+
+  };
+
+  exact_mesh_cache::exact_mesh_cache(const triangular_mesh& m) {
+    implementation = new impl(m);
+  }
+
+  exact_mesh_cache::exact_mesh_cache(const exact_mesh_cache& c) {
+    implementation = new impl(implementation->copy());
+  }
+  
+  void exact_mesh_cache::subtract(const triangular_mesh& m) {
+    implementation->subtract(m);
+  }
+
+  std::vector<triangular_mesh> exact_mesh_cache::get_double_mesh() const {
+    return implementation->get_double_mesh();
+  }
+  
+  exact_mesh_cache::~exact_mesh_cache() {
+    delete implementation;
+  }
   
   boost::optional<std::vector<point>>
   merge_center(const std::vector<point>& l, const std::vector<point>& r) {

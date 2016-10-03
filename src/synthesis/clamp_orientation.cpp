@@ -1,5 +1,4 @@
 #include "geometry/extrusion.h"
-#include "geometry/mesh_operations.h"
 #include "geometry/polygon_3.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/clamp_orientation.h"
@@ -80,11 +79,18 @@ namespace gca {
   }
 
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const triangular_mesh& part,
+  all_stable_orientations_box(const exact_mesh_cache& part_cache,
 			      const vice& v,
 			      const point n) {
-    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
 
+    auto cur_meshes = part_cache.get_double_mesh();
+
+    DBG_ASSERT(cur_meshes.size() == 1);
+
+    const auto& part = cur_meshes.front();
+
+    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
+    
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
     plane vice_top_plane(-1*n, vice_pl_pt);
 
@@ -105,13 +111,18 @@ namespace gca {
     cout << "Clipper and clippee" << endl;
     vtk_debug_meshes({part, m});
     
-    vector<triangular_mesh> subs{m};
-    auto cut_parts = boolean_difference(part, subs);
+    // vector<triangular_mesh> subs{m};
+    // auto cut_parts = boolean_difference(part, subs);
+
+    exact_mesh_cache clip_cache = part_cache;
+    clip_cache.subtract(m);
+
+    auto cut_parts = clip_cache.get_double_mesh();
 
     DBG_ASSERT(cut_parts.size() == 1);
 
-    auto& cut_part = cut_parts.front();
-
+    const auto& cut_part = cut_parts.front();
+    
     cout << "Result of clipping" << endl;
     vtk_debug_mesh(cut_part);
 

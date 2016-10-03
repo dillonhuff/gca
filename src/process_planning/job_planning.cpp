@@ -74,7 +74,7 @@ namespace gca {
 		    const std::vector<feature*>& features) {
     std::vector<triangular_mesh> meshes;
     for (auto f : features) {
-      meshes.push_back(feature_mesh(*f)); //, 0.000001, 0.0001, 0.0001));
+      meshes.push_back(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
     }
 
     auto subtracted = boolean_difference(m, meshes);
@@ -82,6 +82,16 @@ namespace gca {
     return subtracted;
   }
 
+  void
+  subtract_features(exact_mesh_cache& mesh_cache,
+		    const std::vector<feature*>& features) {
+
+    for (auto f : features) {
+      mesh_cache.subtract(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
+    }
+
+  }
+  
   double volume(const feature& f) {
     const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
     auto bp = to_boost_poly_2(apply(r, f.base()));
@@ -358,7 +368,9 @@ namespace gca {
 
     vice v(v_pre, max_plate);
 
-    triangular_mesh current_stock = stock;
+    //triangular_mesh current_stock = stock;
+    exact_mesh_cache current_stock_cache(stock);
+
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
@@ -368,8 +380,15 @@ namespace gca {
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
+      auto cur_meshes = current_stock_cache.get_double_mesh();
+
+      DBG_ASSERT(cur_meshes.size() == 1);
+
+      const auto& current_stock = cur_meshes.front();
+
       point n = normal(info.decomp);
-      auto orients = all_stable_orientations_box(current_stock, v, n);
+      auto orients =
+	all_stable_orientations_box(current_stock_cache, v, n);
       auto maybe_orient =
 	find_orientation_by_normal_optional(orients, n);
 
@@ -402,21 +421,24 @@ namespace gca {
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
-	  auto stock_res = subtract_features(current_stock, features);
+	  subtract_features(current_stock_cache, features);
+	  
+	  //auto stock_res = subtract_features(current_stock_cache, features);
 
-	  if (stock_res.size() != 1) {
-	    cout << "stock_res.size() == " << stock_res.size() << endl;
 
-	    vtk_debug_features(features);
+	  // if (stock_res.size() != 1) {
+	  //   cout << "stock_res.size() == " << stock_res.size() << endl;
 
-	    for (auto stock_r : stock_res) {
-	      vtk_debug_mesh(stock_r);
-	    }
+	  //   vtk_debug_features(features);
 
-	    DBG_ASSERT(stock_res.size() == 1);
-	  }
+	  //   for (auto stock_r : stock_res) {
+	  //     vtk_debug_mesh(stock_r);
+	  //   }
 
-	  current_stock = stock_res.front();
+	  //   DBG_ASSERT(stock_res.size() == 1);
+	  // }
+
+	  //	  current_stock_cache = stock_res.front();
 
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;
@@ -431,6 +453,12 @@ namespace gca {
 	}
       }
     }
+
+    auto cur_meshes = current_stock_cache.get_double_mesh();
+
+    DBG_ASSERT(cur_meshes.size() == 1);
+
+    const auto& current_stock = cur_meshes.front();
 
     double stock_volume = volume(current_stock);
     double volume_ratio = part_volume / stock_volume;

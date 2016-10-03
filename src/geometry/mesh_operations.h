@@ -8,6 +8,30 @@
 
 namespace gca {
 
+  class exact_mesh_cache {
+  public:
+
+    exact_mesh_cache(const triangular_mesh& m);
+
+    exact_mesh_cache(const exact_mesh_cache& x);
+
+    exact_mesh_cache(exact_mesh_cache&&) noexcept = default;
+
+    exact_mesh_cache& operator=(const exact_mesh_cache& x)
+    { exact_mesh_cache tmp(x); *this = move(tmp); return *this; }
+
+    exact_mesh_cache& operator=(exact_mesh_cache&&) noexcept = default;
+    
+    ~exact_mesh_cache();
+
+    std::vector<triangular_mesh> get_double_mesh() const;
+    void subtract(const triangular_mesh& m);
+
+  private:
+    struct impl;
+    impl* implementation;
+  };
+
   std::vector<oriented_polygon>
   mesh_cross_section(const triangular_mesh& m,
 		     const plane p);
