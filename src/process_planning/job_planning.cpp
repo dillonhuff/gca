@@ -69,17 +69,28 @@ namespace gca {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
   
-  std::vector<triangular_mesh>
-  subtract_features(const triangular_mesh& m,
+  //  std::vector<triangular_mesh>
+  Nef_polyhedron
+  subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features) {
-    std::vector<triangular_mesh> meshes;
+    //    std::vector<triangular_mesh> meshes;
+    auto res = m;
     for (auto f : features) {
-      meshes.push_back(feature_mesh(*f)); //, 0.000001, 0.0001, 0.0001));
+      //      meshes.push_back(feature_mesh(*f)); //, 0.000001, 0.0001, 0.0001));
+
+      auto f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f));
+
+      res = res - f_nef;
+      
     }
 
-    auto subtracted = boolean_difference(m, meshes);
+    return res;
 
-    return subtracted;
+    //auto subtracted = boolean_difference(m, meshes);
+
+    //return subtracted;
+
+    
   }
 
   double volume(const feature& f) {
@@ -358,7 +369,8 @@ namespace gca {
 
     vice v(v_pre, max_plate);
 
-    triangular_mesh current_stock = stock;
+    //triangular_mesh current_stock = stock;
+    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
@@ -368,8 +380,10 @@ namespace gca {
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
+      auto current_stock = nef_to_single_trimesh(stock_nef);
+      
       point n = normal(info.decomp);
-      auto orients = all_stable_orientations_box(current_stock, v, n);
+      auto orients = all_stable_orientations_box(stock_nef, v, n);
       auto maybe_orient =
 	find_orientation_by_normal_optional(orients, n);
 
@@ -386,37 +400,37 @@ namespace gca {
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
-	  for (auto f : features) {
-	    auto vol_data = map_find(f, volume_inf);
-	    cout << "delta volume = " << vol_data.volume << endl;
+	  // for (auto f : features) {
+	  //   auto vol_data = map_find(f, volume_inf);
+	  //   cout << "delta volume = " << vol_data.volume << endl;
 
-	    vtk_debug_feature(*f);
+	  //   vtk_debug_feature(*f);
 
-	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
+	  //   //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	    vtk_debug_meshes(vol_data.meshes);
+	  //   vtk_debug_meshes(vol_data.meshes);
 
-	  }
-	  vtk_debug_features(features);
-	  concat(all_features, features);
+	  // }
+	  // vtk_debug_features(features);
+	  // concat(all_features, features);
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
-	  auto stock_res = subtract_features(current_stock, features);
+	  auto stock_res = subtract_features(stock_nef, features);
 
-	  if (stock_res.size() != 1) {
-	    cout << "stock_res.size() == " << stock_res.size() << endl;
+	  // if (stock_res.size() != 1) {
+	  //   cout << "stock_res.size() == " << stock_res.size() << endl;
 
-	    vtk_debug_features(features);
+	  //   vtk_debug_features(features);
 
-	    for (auto stock_r : stock_res) {
-	      vtk_debug_mesh(stock_r);
-	    }
+	  //   for (auto stock_r : stock_res) {
+	  //     vtk_debug_mesh(stock_r);
+	  //   }
 
-	    DBG_ASSERT(stock_res.size() == 1);
-	  }
+	  //   DBG_ASSERT(stock_res.size() == 1);
+	  // }
 
-	  current_stock = stock_res.front();
+	  //current_stock = stock_res.front();
 
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;
@@ -431,6 +445,8 @@ namespace gca {
 	}
       }
     }
+
+    auto current_stock = nef_to_single_trimesh(stock_nef);
 
     double stock_volume = volume(current_stock);
     double volume_ratio = part_volume / stock_volume;

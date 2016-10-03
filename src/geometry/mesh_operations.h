@@ -51,6 +51,8 @@ namespace gca {
 
   triangular_mesh nef_to_single_trimesh(const Nef_polyhedron& nef);
 
+  Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m);
+
 }
 
 #endif

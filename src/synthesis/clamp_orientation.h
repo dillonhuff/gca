@@ -2,6 +2,7 @@
 #define GCA_CLAMP_ORIENTATION_H
 
 #include "geometry/homogeneous_transformation.h"
+#include "geometry/mesh_operations.h"
 #include "geometry/surface.h"
 #include "synthesis/vice.h"
 
@@ -115,7 +116,7 @@ namespace gca {
 			  const vice& v);
 
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const triangular_mesh& part,
+  all_stable_orientations_box(const Nef_polyhedron& part,
 			      const vice& v,
 			      const point n);
   

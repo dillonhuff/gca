@@ -1,5 +1,4 @@
 #include "geometry/extrusion.h"
-#include "geometry/mesh_operations.h"
 #include "geometry/polygon_3.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/clamp_orientation.h"
@@ -80,9 +79,10 @@ namespace gca {
   }
 
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const triangular_mesh& part,
+  all_stable_orientations_box(const Nef_polyhedron& part_nef,
 			      const vice& v,
 			      const point n) {
+    auto part = nef_to_single_trimesh(part_nef);
     polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
 
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
@@ -105,12 +105,15 @@ namespace gca {
     cout << "Clipper and clippee" << endl;
     vtk_debug_meshes({part, m});
     
-    vector<triangular_mesh> subs{m};
-    auto cut_parts = boolean_difference(part, subs);
+    //    vector<triangular_mesh> subs{m};
+    //    auto cut_parts = boolean_difference(part, subs);
 
-    DBG_ASSERT(cut_parts.size() == 1);
+    auto clip_nef = trimesh_to_nef_polyhedron(m);
+    auto cut_parts_nef = part_nef - clip_nef;
 
-    auto& cut_part = cut_parts.front();
+    //    DBG_ASSERT(cut_parts.size() == 1);
+
+    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
 
     cout << "Result of clipping" << endl;
     vtk_debug_mesh(cut_part);
