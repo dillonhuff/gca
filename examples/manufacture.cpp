@@ -65,27 +65,46 @@ namespace gca {
     vector<tool> tools{t1, t2, t3, t4};
 
     vector<string> fails{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(13).stl"};
+      // Winding issue?
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(13).stl",
 
+	// Subtraction leaves shards?
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
+
+	// Clamp orientation failure?
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl",
+
+	// Needs better feature decomposition choices
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
+
+	// Needs better feature decomposition as well. Can be cut with
+	// different settings, but that is not ideal
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
+
+	// Another clamp orientation failure?
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl",
+
+	// 2 Problems, 1. The code tries to contour in the wrong direction
+	// 2. the subtraction of the resulting contour leaves an shaving
+	// on the edge similar to part 1(29)
+	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
+	
+	};
+    
     vector<string> too_large{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl"};
-
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
+	
     vector<string> passes{
       "test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl"};
-
-    vector<string> part_paths{
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
-	"Ytest/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl",
-	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl"};
+
+    vector<string> part_paths{
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
 	};
       
     

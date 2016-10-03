@@ -70,3 +70,6 @@ camaster-test
 debug-test
 nef-test
 tri-test
+manufacture
+*.txt
+/test/stl-files/1InchCircleWith2NestedThruHoles.stl

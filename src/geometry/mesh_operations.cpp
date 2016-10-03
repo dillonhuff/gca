@@ -313,6 +313,7 @@ namespace gca {
 
     point p1 = pl.pt();
 
+    DBG_ASSERT(false);
   }
   
   // TOOD: Simplify this atrocity of a function
@@ -475,7 +476,10 @@ namespace gca {
   std::vector<triangular_mesh>
   boolean_difference(const triangular_mesh& a,
 		     const std::vector<triangular_mesh>& bs) {
+    cout << "Converting a" << endl;
     Nef_polyhedron res = trimesh_to_nef_polyhedron(a);
+    cout << "Done converting a" << endl;
+
     box a_box = a.bounding_box();
     
     for (auto b : bs) {

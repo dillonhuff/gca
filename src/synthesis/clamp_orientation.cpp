@@ -88,17 +88,32 @@ namespace gca {
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
     plane vice_top_plane(-1*n, vice_pl_pt);
 
+    double big = 2000.0;
+
     polygon_3 p = project_onto(vice_top_plane, hull);
-    polygon_3 plane_approx = dilate(p, 2000.0);
+    polygon_3 plane_approx = dilate(p, big);
 
-    triangular_mesh m = extrude(plane_approx, 2000.0*n);
+    triangular_mesh m = extrude(plane_approx, big*n);
 
+
+    cout << "To be clipped" << endl;
+    vtk_debug_mesh(part);
+
+    cout << "To clip with" << endl;
+    vtk_debug_mesh(m);
+
+    cout << "Clipper and clippee" << endl;
+    vtk_debug_meshes({part, m});
+    
     vector<triangular_mesh> subs{m};
     auto cut_parts = boolean_difference(part, subs);
 
     DBG_ASSERT(cut_parts.size() == 1);
 
     auto& cut_part = cut_parts.front();
+
+    cout << "Result of clipping" << endl;
+    vtk_debug_mesh(cut_part);
 
     vector<surface> cregions = outer_surfaces(cut_part);
 

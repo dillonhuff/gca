@@ -74,7 +74,7 @@ namespace gca {
 		    const std::vector<feature*>& features) {
     std::vector<triangular_mesh> meshes;
     for (auto f : features) {
-      meshes.push_back(feature_mesh(*f));
+      meshes.push_back(feature_mesh(*f)); //, 0.000001, 0.0001, 0.0001));
     }
 
     auto subtracted = boolean_difference(m, meshes);
@@ -369,7 +369,6 @@ namespace gca {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
       point n = normal(info.decomp);
-      //      auto sfs = outer_surfaces(current_stock);
       auto orients = all_stable_orientations_box(current_stock, v, n);
       auto maybe_orient =
 	find_orientation_by_normal_optional(orients, n);
