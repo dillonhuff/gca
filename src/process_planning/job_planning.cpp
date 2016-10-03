@@ -77,7 +77,7 @@ namespace gca {
     auto res = m;
     for (auto f : features) {
 
-      auto f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
+      Nef_polyhedron f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
 
       res = res - f_nef;
       
@@ -96,9 +96,11 @@ namespace gca {
     return base_area * f.depth();
   }
 
- struct volume_info {
+  struct volume_info {
     double volume;
-    std::vector<triangular_mesh> meshes;
+
+    Nef_polyhedron remaining_volume;
+
     triangular_mesh dilated_mesh;
   };
 
@@ -115,43 +117,29 @@ namespace gca {
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
     
-    return volume_info{vol, {mesh}, dilated_mesh};
+    return volume_info{vol, trimesh_to_nef_polyhedron(dilated_mesh), dilated_mesh};
   }
 
   volume_info
   update_volume_info(const volume_info& inf,
 		     const std::vector<triangular_mesh>& to_subtract) {
-    if (inf.meshes.size() == 0) {
+    if (inf.volume == 0.0) { return inf; }
 
-      DBG_ASSERT(inf.volume == 0.0);
-
-      return inf;
+    auto res = inf.remaining_volume;
+    for (auto s : to_subtract) {
+      res = res - trimesh_to_nef_polyhedron(s);
     }
 
-    std::vector<triangular_mesh> res =
-      boolean_difference(inf.meshes, to_subtract);
-
-
-    // TODO: Delete the else clause?
-    if (res.size() > 0) {
-
-      double new_volume = 0.0;
-      for (auto& m : res) {
-	new_volume += volume(m);
-      }
-
-      cout << "Old volume = " << inf.volume << endl;
-      cout << "New volume = " << new_volume << endl;
-
-      return volume_info{new_volume, res, inf.dilated_mesh};
-
-    } else {
-
-      cout << "Old volume = " << inf.volume << endl;
-      cout << "New volume = " << 0.0 << endl;
-
-      return volume_info{0.0, {}, inf.dilated_mesh};
+    double new_volume = 0.0;
+    for (auto& m : nef_polyhedron_to_trimeshes(res)) {
+      new_volume += volume(m);
     }
+
+    cout << "Old volume = " << inf.volume << endl;
+    cout << "New volume = " << new_volume << endl;
+
+    return volume_info{new_volume, res, inf.dilated_mesh};
+
 
   }
 
@@ -179,7 +167,7 @@ namespace gca {
       volume_info f_info = map_find(f, volume_inf);
 
       // If the volume still exists
-      if (f_info.meshes.size() > 0) {
+      if (f_info.volume > 0.0) {
 	to_subtract.push_back(f_info.dilated_mesh);
       }
     }
@@ -402,7 +390,7 @@ namespace gca {
 
 	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	    vtk_debug_meshes(vol_data.meshes);
+	    vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
 
 	  }
 	  vtk_debug_features(features);

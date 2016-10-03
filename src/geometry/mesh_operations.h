@@ -29,6 +29,8 @@ namespace gca {
   clip_mesh_exact(const triangular_mesh& m,
 		  const plane pl);
 
+  std::vector<triangular_mesh>
+  nef_polyhedron_to_trimeshes(const Nef_polyhedron& p);
 
   boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b);
