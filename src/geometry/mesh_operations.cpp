@@ -36,12 +36,6 @@
 
 namespace gca {
 
-  typedef CGAL::Exact_predicates_exact_constructions_kernel Kernel;
-  typedef CGAL::Polyhedron_3<Kernel>         Polyhedron;
-  typedef Polyhedron::HalfedgeDS             HalfedgeDS;
-  typedef CGAL::Nef_polyhedron_3<Kernel>  Nef_polyhedron;
-  typedef Nef_polyhedron::Plane_3 Plane_3;
-
   template <class HDS>
   class build_mesh : public CGAL::Modifier_base<HDS> {
   public:
@@ -522,4 +516,11 @@ namespace gca {
     return m_volume;
   }
 
+  triangular_mesh nef_to_single_trimesh(const Nef_polyhedron& nef) {
+    auto meshes = nef_polyhedron_to_trimeshes(nef);
+
+    DBG_ASSERT(meshes.size() == 1);
+
+    return meshes.front();
+  }
 }
