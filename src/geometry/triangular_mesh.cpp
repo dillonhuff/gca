@@ -437,11 +437,11 @@ namespace gca {
 	point p = part.vertex(i);
 	double sgn = n.dot(p) + d; // - v1);
 	// TODO: Eliminate ad hoc tolerance
-	if (sgn > 0.0001) {
+	if (sgn > 0.000001) {
 	  all_neg = false;
 	}
 	// TODO: Eliminate ad hoc tolerance
-	if (sgn < 0.0001) {
+	if (sgn < 0.000001) {
 	  all_pos = false;
 	}
 	if (!all_neg && !all_pos) { return false; }

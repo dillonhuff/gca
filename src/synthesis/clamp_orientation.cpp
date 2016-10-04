@@ -96,17 +96,17 @@ namespace gca {
     triangular_mesh m = extrude(plane_approx, big*n);
 
 
-    //cout << "To be clipped" << endl;
-    //vtk_debug_mesh(part);
+    cout << "To be clipped" << endl;
+    vtk_debug_mesh(part);
 
-    //cout << "To clip with" << endl;
-    //vtk_debug_mesh(m);
+    cout << "To clip with" << endl;
+    vtk_debug_mesh(m);
 
-    //cout << "Clipper and clippee" << endl;
-    //vtk_debug_meshes({part, m});
+    cout << "Clipper and clippee" << endl;
+    vtk_debug_meshes({part, m});
     
-    //    vector<triangular_mesh> subs{m};
-    //    auto cut_parts = boolean_difference(part, subs);
+    vector<triangular_mesh> subs{m};
+    auto cut_parts = boolean_difference(part, subs);
 
     auto clip_nef = trimesh_to_nef_polyhedron(m);
     auto cut_parts_nef = part_nef - clip_nef;
@@ -115,13 +115,18 @@ namespace gca {
 
     auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
 
-    // cout << "Result of clipping" << endl;
-    // vtk_debug_mesh(cut_part);
+    cout << "Result of clipping" << endl;
+    vtk_debug_mesh(cut_part);
 
     vector<surface> cregions = outer_surfaces(cut_part);
 
+    cout << "# of const orientation regions = " << cregions.size() << endl;
+    vtk_debug_highlight_inds(cregions);
+
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(cregions, v, n);
+
+    cout << "# of orients for cregions = " << orients.size() << endl;
 
     return orients;
     

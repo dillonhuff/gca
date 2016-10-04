@@ -19,6 +19,8 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
+#define VIZ_DBG
+
 namespace gca {
 
   fixture_setup
@@ -380,16 +382,26 @@ namespace gca {
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
+      cout << "Trying direction " << normal(info.decomp) << endl;
+
       cout << "In loop getting current stock" << endl;
       auto current_stock = nef_to_single_trimesh(stock_nef);
       cout << "In loop got current stock" << endl;
       
       point n = normal(info.decomp);
       auto orients = all_stable_orientations_box(stock_nef, v, n);
+      cout << "# of orients in " << n << " = " << orients.size() << endl;
       auto maybe_orient =
 	find_orientation_by_normal_optional(orients, n);
 
+#ifdef VIZ_DBG
+      vtk_debug_feature_decomposition(info.decomp);
+#endif
+
       if (maybe_orient) {
+
+	cout << "Found fixture in " << n << endl;
+
 	auto orient = *maybe_orient;
 	fixture fix(orient, v);
 
@@ -402,6 +414,8 @@ namespace gca {
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
+
+	  cout << "Found features in " << n << endl;
 
 #ifdef VIZ_DBG
 	  for (auto f : features) {
