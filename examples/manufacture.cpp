@@ -54,7 +54,7 @@ namespace gca {
     // Ridiculous tool used to test feasability
     tool t4{0.2334, 3.94, 4, HSS, FLAT_NOSE};
     t4.set_cut_diameter(0.05);
-    t4.set_cut_length(1.5);
+    t4.set_cut_length(3.5);
 
     t4.set_shank_diameter(0.5);
     t4.set_shank_length(0.05);
@@ -107,7 +107,7 @@ namespace gca {
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
 	};
 
-    for (auto part_path : passes) { //part_paths) {
+    for (auto part_path : part_paths) {
       cout << "Part path: " << part_path << endl;
 
       auto mesh = parse_stl(part_path, 0.001);
