@@ -403,6 +403,7 @@ namespace gca {
 
 	if (features.size() > 0) {
 
+#ifdef VIZ_DBG
 	  for (auto f : features) {
 	    auto vol_data = map_find(f, volume_inf);
 	    cout << "delta volume = " << vol_data.volume << endl;
@@ -416,6 +417,7 @@ namespace gca {
 	  }
 	  vtk_debug_features(features);
 	  concat(all_features, features);
+#endif
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
@@ -429,8 +431,9 @@ namespace gca {
 	  cout << "Stock volume = " << stock_volume << endl;
 	  cout << "part / stock = " << volume_ratio << endl;
 
+#ifdef VIZ_DBG
 	  vtk_debug_mesh(current_stock);
-
+#endif
 	  if (volume_ratio > 0.999) { break; }
 	}
       }
@@ -447,7 +450,9 @@ namespace gca {
     cout << "Stock volume = " << stock_volume << endl;
     cout << "part / stock = " << volume_ratio << endl;
 
+#ifdef VIZ_DBG
     vtk_debug_features(all_features);
+#endif
 
     // TODO: Tighten this tolerance once edge features are supported
     if (volume_ratio <= 0.99) {
