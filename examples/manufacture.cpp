@@ -107,7 +107,7 @@ namespace gca {
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
 	};
 
-    for (auto part_path : passes) { //part_paths) {
+    for (auto part_path : part_paths) {
       cout << "Part path: " << part_path << endl;
 
       auto mesh = parse_stl(part_path, 0.001);

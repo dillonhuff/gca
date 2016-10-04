@@ -163,7 +163,13 @@ namespace gca {
 
   void
   clip_volumes(feature_decomposition* decomp,
-	       volume_info_map& volume_inf) {
+	       volume_info_map& volume_inf,
+	       const std::vector<direction_process_info>& dir_info) {
+    vector<feature*> feats_left;
+    for (auto d : dir_info) {
+      concat(feats_left, collect_features(d.decomp));
+    }
+
     vector<feature*> feats_to_sub = collect_features(decomp);
 
     vector<triangular_mesh> to_subtract;
@@ -181,7 +187,7 @@ namespace gca {
 
       // Do not subtract the selected decomposition, those
       // features are being removed anyway
-      if (!elem(f, feats_to_sub)) {
+      if (elem(f, feats_left) && !elem(f, feats_to_sub)) {
 	volume_inf[f] = update_volume_info(info_pair.second, to_subtract);
       }
     }
@@ -382,7 +388,7 @@ namespace gca {
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
-	clip_volumes(decomp, volume_inf);
+	clip_volumes(decomp, volume_inf, dir_info);
 	
 	auto t = mating_transform(current_stock, orient, v);
 	auto features = collect_viable_features(decomp, volume_inf, fix);
