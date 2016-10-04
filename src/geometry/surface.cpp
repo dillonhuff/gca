@@ -53,15 +53,27 @@ namespace gca {
   }
 
   std::vector<surface> outer_surfaces(const triangular_mesh& part) {
+    //    cout << "# of triangles in the part = " << part.face_indexes().size() << endl;
+
     auto const_orient_face_indices = const_orientation_regions(part);
     vector<surface> surfaces;
+
+    //    cout << "# of const orientation regions = " << const_orient_face_indices.size() << endl;
     for (auto f : const_orient_face_indices) {
+      surface s(&part, f);
+
+      // cout << "Region normal            = " << normal(s) << endl;
+      // cout << "# of triangles in region = " << s.index_list().size() << endl;
 
       //vtk_debug_highlight_inds(f, part);
 
       DBG_ASSERT(f.size() > 0);
 
-      if (is_outer_surface(f, part)) {
+      bool is_outer = is_outer_surface(f, part);
+
+      //      cout << "Is outer                 = " << is_outer << endl;
+
+      if (is_outer) {
 	surfaces.push_back(surface(&part, f));
       }
     }

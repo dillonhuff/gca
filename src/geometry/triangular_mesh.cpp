@@ -423,9 +423,13 @@ namespace gca {
     triangle plane_rep = part.face_triangle(s.front());
     point v1 = plane_rep.v1;
     point n = plane_rep.normal.normalize();
+
+    plane pl(n, v1);
+
     bool all_neg = true;
     bool all_pos = true;
-    double d = -(v1.dot(n));
+
+    // double d = -(v1.dot(n));
 
     vector<index_t> s_inds = s;
     sort(begin(s_inds), end(s_inds));
@@ -433,17 +437,33 @@ namespace gca {
     vector<index_t> s_vertices = vertex_indexes_for_faces(s, part);
 
     for (auto i : inds(part.vertex_list())) {
+
       if (!binary_search(begin(s_vertices), end(s_vertices), i)) {
+
 	point p = part.vertex(i);
-	double sgn = n.dot(p) + d; // - v1);
-	// TODO: Eliminate ad hoc tolerance
-	if (sgn > 0.000001) {
+	double signed_dist = signed_distance(pl, p);
+
+	if (signed_dist > 0.0001) {
+	  //cout << "point " << p << " has signed distance = " << signed_dist << endl;
+
 	  all_neg = false;
-	}
-	// TODO: Eliminate ad hoc tolerance
-	if (sgn < 0.000001) {
+	} else if (signed_dist < -0.0001) {
+	  //cout << "point " << p << " has signed distance = " << signed_dist << endl;
+
 	  all_pos = false;
 	}
+
+	//double sgn = n.dot(p) + d; // - v1);
+
+	// // TODO: Eliminate ad hoc tolerance
+	// if (sgn > 0.00001) {
+	//   all_neg = false;
+	// }
+	// // TODO: Eliminate ad hoc tolerance
+	// if (sgn < 0.00001) {
+	//   all_pos = false;
+	// }
+
 	if (!all_neg && !all_pos) { return false; }
       }
     }

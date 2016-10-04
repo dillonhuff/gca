@@ -19,7 +19,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -375,7 +375,9 @@ namespace gca {
       concat(init_features, collect_features(d.decomp));
     }
 
+#ifdef VIZ_DBG
     vtk_debug_features(init_features);
+#endif
 
     vector<feature*> all_features{};
 
