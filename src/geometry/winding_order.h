@@ -3,6 +3,20 @@
 namespace gca {
 
   template<typename Triangle>
+  bool
+  share_edge(const Triangle tl,
+	     const Triangle tr) {
+    int num_eq = 0;
+    for (unsigned i = 0; i < 3; i++) {
+      for (unsigned j = 0; j < 3; j++) {
+	num_eq += (get_vertex(tl, i) == get_vertex(tr, j)) ? 1 : 0;
+      }
+    }
+    return num_eq > 1;
+  }
+
+  
+  template<typename Triangle>
   bool winding_conflict(const Triangle ti, const Triangle tj) {
     for (unsigned l = 0; l < 3; l++) {
       unsigned lp1 = (l + 1) % 3;
@@ -74,6 +88,61 @@ namespace gca {
       }
     }
     return num_errs;
+  }
+
+  // TODO: Remove use of utils/algorithm
+  template<typename Triangle>
+  std::vector<Triangle>
+  fix_winding_order_errors(const std::vector<Triangle>& triangles) {
+
+    vector<Triangle> tris;
+    vector<unsigned> remaining_inds = inds(triangles);
+    cout << "Initial # of triangles = " << triangles.size() << endl;
+    unsigned num_added = 0;
+    
+    while (remaining_inds.size() > 0) {
+
+      for (auto ind : remaining_inds) {
+	Triangle next_t = triangles[ind];
+	vector<Triangle> sub_tris =
+	  select(tris, [next_t](const Triangle t)
+		 { return share_edge(next_t, t); });
+
+	if (sub_tris.size() > 0) {
+	  Triangle corrected = correct_orientation(next_t, sub_tris);
+	  tris.push_back(corrected);
+
+	  remove(ind, remaining_inds);
+	  num_added++;
+	  break;
+	}
+
+	if (num_added == 0) {
+	  tris.push_back(next_t);
+
+	  remove(ind, remaining_inds);
+	  num_added++;
+	  break;
+	}
+      }
+
+    }
+
+    auto ccs =
+      connected_components_by(tris, [](const Triangle l, const Triangle r)
+			      { return share_edge(l, r); });
+    DBG_ASSERT(ccs.size() == 1);
+
+    auto num_errs_after_correction = num_winding_order_errors(tris);
+    if (num_errs_after_correction != 0) {
+      cout << "ERROR: " << num_errs_after_correction << " winding errors still exist" << endl;
+      DBG_ASSERT(num_errs_after_correction == 0);
+    }
+
+    DBG_ASSERT(num_winding_order_errors(tris) == 0);
+    DBG_ASSERT(tris.size() == triangles.size());
+
+    return tris;
   }
 
   

@@ -40,7 +40,9 @@ namespace gca {
       auto tl = vertex_face_neighbors(e.l);
       auto tr = vertex_face_neighbors(e.r);
       auto tris = intersection(tl, tr);
+
       DBG_ASSERT(tris.size() == 2);
+
       triangle_t t1 = triangle_vertices(tris[0]);
       triangle_t t2 = triangle_vertices(tris[1]);
       index_t t1l = vertex_index_of(e.l, t1);
@@ -73,75 +75,9 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
-  bool
-  share_edge(const triangle_t tl,
-	     const triangle_t tr) {
-    int num_eq = 0;
-    for (unsigned i = 0; i < 3; i++) {
-      for (unsigned j = 0; j < 3; j++) {
-	num_eq += (tl.v[i] == tr.v[j]) ? 1 : 0;
-      }
-    }
-    return num_eq > 1;
-  }
-
   std::ostream& operator<<(std::ostream& out, const triangle_t t) {
     out << "< " << t.v[0] << ", " << t.v[1] << ", " << t.v[2] << " >";
     return out;
-  }
-
-  template<typename Triangle>
-  std::vector<Triangle>
-  fix_winding_order_errors(const std::vector<Triangle>& triangles) {
-
-    vector<triangle_t> tris;
-    vector<unsigned> remaining_inds = inds(triangles);
-    cout << "Initial # of triangles = " << triangles.size() << endl;
-    unsigned num_added = 0;
-    
-    while (remaining_inds.size() > 0) {
-
-      for (auto ind : remaining_inds) {
-	triangle_t next_t = triangles[ind];
-	vector<triangle_t> sub_tris =
-	  select(tris, [next_t](const triangle_t t)
-		 { return share_edge(next_t, t); });
-
-	if (sub_tris.size() > 0) {
-	  triangle_t corrected = correct_orientation(next_t, sub_tris);
-	  tris.push_back(corrected);
-
-	  remove(ind, remaining_inds);
-	  num_added++;
-	  break;
-	}
-
-	if (num_added == 0) {
-	  tris.push_back(next_t);
-
-	  remove(ind, remaining_inds);
-	  num_added++;
-	  break;
-	}
-      }
-
-    }
-
-    auto ccs =
-      connected_components_by(tris, [](const triangle_t l, const triangle_t r)
-			      { return share_edge(l, r); });
-    DBG_ASSERT(ccs.size() == 1);
-
-    auto num_errs_after_correction = num_winding_order_errors(tris);
-    if (num_errs_after_correction != 0) {
-      cout << "ERROR: " << num_errs_after_correction << " winding errors still exist" << endl;
-      DBG_ASSERT(num_errs_after_correction == 0);
-    }
-
-    DBG_ASSERT(num_winding_order_errors(tris) == 0);
-    DBG_ASSERT(tris.size() == triangles.size());
-
-    return tris;
   }
 
   bool degenerate(const triangle_t t) {
