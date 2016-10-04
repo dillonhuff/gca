@@ -105,9 +105,6 @@ namespace gca {
     // cout << "Clipper and clippee" << endl;
     // vtk_debug_meshes({part, m});
     
-    vector<triangular_mesh> subs{m};
-    auto cut_parts = boolean_difference(part, subs);
-
     auto clip_nef = trimesh_to_nef_polyhedron(m);
     auto cut_parts_nef = part_nef - clip_nef;
 
@@ -116,6 +113,8 @@ namespace gca {
     auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
 
     // cout << "Result of clipping" << endl;
+    // vector<triangular_mesh> subs{m};
+    // auto cut_parts = boolean_difference(part, subs);
     // vtk_debug_mesh(cut_part);
 
     vector<surface> cregions = outer_surfaces(cut_part);
