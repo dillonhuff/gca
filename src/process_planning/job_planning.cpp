@@ -285,7 +285,8 @@ namespace gca {
     return next_elem;
   }
 
-  void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs) {
+  void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
+				 const std::vector<tool>& tools) {
     for (unsigned i = 0; i < dirs.size(); i++) {
       feature_decomposition* l = dirs[i].decomp;
 
@@ -298,11 +299,10 @@ namespace gca {
 	  found_opposite = true;
 
 	  clip_leaves(l, r);
+	  clip_leaves(r, l);
 
 	  dirs[i].tool_info = find_accessable_tools(l, tools);
 	  dirs[j].tool_info = find_accessable_tools(r, tools);
-
-	  clip_top_and_bottom_features(l, r);
 
 	  break;
 	}
@@ -311,14 +311,31 @@ namespace gca {
     }
 
     for (unsigned i = 0; i < dirs.size(); i++) {
-
+      auto decomp = dirs[i].decomp;
       auto& acc_info = dirs[i].tool_info;
 
-      delete_leaves(l, [acc_info](feature* f) {
+      delete_leaves(decomp, [acc_info](feature* f) {
       	  return map_find(f, acc_info).size() == 0;
       	});
 
     }
+
+    for (unsigned i = 0; i < dirs.size(); i++) {
+      feature_decomposition* l = dirs[i].decomp;
+
+      for (unsigned j = i + 1; j < dirs.size(); j++) {
+	feature_decomposition* r = dirs[j].decomp;
+
+	if (angle_eps(normal(l), normal(r), 180.0, 0.5)) {
+
+	  clip_top_and_bottom_features(l, r);
+
+	  break;
+	}
+
+      }
+    }
+    
   }
 
   void
@@ -350,7 +367,7 @@ namespace gca {
       delete_inaccessable_non_leaf_nodes(decomp, acc_info);
     }
 
-    clip_top_and_bottom_pairs(dir_info);
+    clip_top_and_bottom_pairs(dir_info, tools);
 
     return dir_info;
   }

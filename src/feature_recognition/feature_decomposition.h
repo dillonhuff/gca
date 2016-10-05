@@ -118,6 +118,10 @@ namespace gca {
     void delete_child(const unsigned i)
     { children.erase(begin(children) + i); }
 
+    void set_feature(class feature* f) {
+      feat = f;
+    }
+
     unsigned num_children() const { return children.size(); }
 
     feature_decomposition* child(unsigned i) const {
@@ -153,7 +157,7 @@ namespace gca {
 
     while (deleted_one) {
       deleted_one = false;
-      
+
       for (unsigned i = 0; i < tree->num_children(); i++) {
 	T* next = tree->child(i);
 	if (next->num_children() == 0 && should_delete(node_value(next))) {
