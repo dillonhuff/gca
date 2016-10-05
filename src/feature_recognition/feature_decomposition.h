@@ -189,7 +189,7 @@ namespace gca {
     }
 
     for (unsigned i = 0; i < tree->num_children(); i++) {
-      delete_leaves(tree->child(i), should_delete);
+      delete_internal_nodes(tree->child(i), should_delete);
     }
   }
   

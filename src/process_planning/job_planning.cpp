@@ -19,7 +19,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-//#define VIZ_DBG
+#define VIZ_DBG
 
 namespace gca {
 
@@ -297,20 +297,27 @@ namespace gca {
 	if (angle_eps(normal(l), normal(r), 180.0, 0.5)) {
 	  found_opposite = true;
 
+	  clip_leaves(l, r);
+
+	  dirs[i].tool_info = find_accessable_tools(l, tools);
+	  dirs[j].tool_info = find_accessable_tools(r, tools);
+
 	  clip_top_and_bottom_features(l, r);
 
 	  break;
 	}
 
       }
+    }
 
-      if (!found_opposite) {
-	auto& acc_info = dirs[i].tool_info;
+    for (unsigned i = 0; i < dirs.size(); i++) {
 
-	delete_leaves(decomp, [acc_info](feature* f) {
-	    return map_find(f, acc_info).size() == 0;
-	  });
-      }
+      auto& acc_info = dirs[i].tool_info;
+
+      delete_leaves(l, [acc_info](feature* f) {
+      	  return map_find(f, acc_info).size() == 0;
+      	});
+
     }
   }
 
