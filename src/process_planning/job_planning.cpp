@@ -19,7 +19,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -287,15 +287,40 @@ namespace gca {
 
   void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs) {
     for (unsigned i = 0; i < dirs.size(); i++) {
+      feature_decomposition* l = dirs[i].decomp;
+
+      bool found_opposite = false;
+
       for (unsigned j = i + 1; j < dirs.size(); j++) {
-	feature_decomposition* l = dirs[i].decomp;
 	feature_decomposition* r = dirs[j].decomp;
 
 	if (angle_eps(normal(l), normal(r), 180.0, 0.5)) {
+	  found_opposite = true;
+
 	  clip_top_and_bottom_features(l, r);
+
+	  break;
 	}
+
+      }
+
+      if (!found_opposite) {
+	auto& acc_info = dirs[i].tool_info;
+
+	delete_leaves(decomp, [acc_info](feature* f) {
+	    return map_find(f, acc_info).size() == 0;
+	  });
       }
     }
+  }
+
+  void
+  delete_inaccessable_non_leaf_nodes(feature_decomposition* decomp,
+				     const tool_access_info& acc_info) {
+
+    delete_internal_nodes(decomp, [acc_info](feature* f) {
+	return map_find(f, acc_info).size() == 0;
+      });
   }
 
   std::vector<direction_process_info>
@@ -314,10 +339,8 @@ namespace gca {
     for (auto info : dir_info) {
       feature_decomposition* decomp = info.decomp;
       tool_access_info& acc_info = info.tool_info;
-      delete_nodes(decomp, [acc_info](feature* f) {
-	  return map_find(f, acc_info).size() == 0;
-	});
 
+      delete_inaccessable_non_leaf_nodes(decomp, acc_info);
     }
 
     clip_top_and_bottom_pairs(dir_info);

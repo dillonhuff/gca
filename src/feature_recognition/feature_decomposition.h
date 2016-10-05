@@ -171,6 +171,29 @@ namespace gca {
   }
 
   template<typename T, typename F>
+  void delete_internal_nodes(T* tree, F should_delete) {
+    bool deleted_one = true;
+
+    while (deleted_one) {
+      deleted_one = false;
+      
+      for (unsigned i = 0; i < tree->num_children(); i++) {
+	T* next = tree->child(i);
+	if (next->num_children() != 0 && should_delete(node_value(next))) {
+	  tree->delete_child(i);
+	  deleted_one = true;
+	  break;
+	}
+      }
+
+    }
+
+    for (unsigned i = 0; i < tree->num_children(); i++) {
+      delete_leaves(tree->child(i), should_delete);
+    }
+  }
+  
+  template<typename T, typename F>
   void delete_nodes(T* tree, F should_delete) {
     bool deleted_one = true;
 

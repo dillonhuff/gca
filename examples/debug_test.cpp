@@ -83,6 +83,10 @@ namespace gca {
       fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
       cout << "Number of steps = " << p.fixtures().size() << endl;
+
+      // Tentative number just to check the thru hole cutting
+      DBG_ASSERT(p.fixtures().size() == 3);
+
     }
   }
 
