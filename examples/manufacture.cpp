@@ -53,8 +53,8 @@ namespace gca {
 
     // Ridiculous tool used to test feasability
     tool t4{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-    t4.set_cut_diameter(0.05);
-    t4.set_cut_length(1.5);
+    t4.set_cut_diameter(0.5);
+    t4.set_cut_length(2.2);
 
     t4.set_shank_diameter(0.5);
     t4.set_shank_length(0.05);
@@ -96,15 +96,15 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 	
     vector<string> passes{
-      "test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl"};
 
-    vector<string> part_paths{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
+    vector<string> part_paths {
+      	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
 	};
 
     for (auto part_path : passes) { //part_paths) {
