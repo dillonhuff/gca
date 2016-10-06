@@ -291,57 +291,57 @@ namespace gca {
     return next_elem;
   }
 
-  double volume(feature_decomposition* f,
-		const triangular_mesh& m) {
-    auto feats = collect_features(f);
+  // double volume(feature_decomposition* f,
+  // 		const triangular_mesh& m) {
+  //   auto feats = collect_features(f);
 
-    triangular_mesh mesh = m;
+  //   triangular_mesh mesh = m;
 
-    double vol = 0.0;
-    for (auto ft : feats) {
-      triangular_mesh fm = feature_mesh(*ft);
+  //   double vol = 0.0;
+  //   for (auto ft : feats) {
+  //     triangular_mesh fm = feature_mesh(*ft);
 
-      vtk_debug_mesh(mesh);
-      vtk_debug_mesh(fm);
+  //     vtk_debug_mesh(mesh);
+  //     vtk_debug_mesh(fm);
 
-      boost::optional<triangular_mesh> inter =
-	boolean_intersection(fm, mesh);
+  //     boost::optional<triangular_mesh> inter =
+  // 	boolean_intersection(fm, mesh);
 
-      if (inter) {
-	vol += volume(*inter);
-	auto m_res = boolean_difference(mesh, *inter);
+  //     if (inter) {
+  // 	vol += volume(*inter);
+  // 	auto m_res = boolean_difference(mesh, *inter);
 
-	if (!m_res) {
-	  return vol;
-	} else {
-	  mesh = *m_res;
-	}
-      }
-    }
+  // 	if (!m_res) {
+  // 	  return vol;
+  // 	} else {
+  // 	  mesh = *m_res;
+  // 	}
+  //     }
+  //   }
 
-    return vol;
-  }
+  //   return vol;
+  // }
   
-  direction_process_info
-  select_next_dir(std::vector<direction_process_info>& dir_info,
-		  const triangular_mesh& stock) {
-    DBG_ASSERT(dir_info.size() > 0);
+  // direction_process_info
+  // select_next_dir(std::vector<direction_process_info>& dir_info,
+  // 		  const triangular_mesh& stock) {
+  //   DBG_ASSERT(dir_info.size() > 0);
 
-    auto next = max_element(begin(dir_info), end(dir_info),
-			    [stock](const direction_process_info& l,
-				       const direction_process_info& r) {
-			      return volume(l.decomp, stock) <
-			      volume(r.decomp, stock);
-			    });
+  //   auto next = max_element(begin(dir_info), end(dir_info),
+  // 			    [stock](const direction_process_info& l,
+  // 				       const direction_process_info& r) {
+  // 			      return volume(l.decomp, stock) <
+  // 			      volume(r.decomp, stock);
+  // 			    });
 
-    DBG_ASSERT(next != end(dir_info));
+  //   DBG_ASSERT(next != end(dir_info));
 
-    direction_process_info next_elem = *next;
+  //   direction_process_info next_elem = *next;
 
-    dir_info.erase(next);
+  //   dir_info.erase(next);
 
-    return next_elem;
-  }
+  //   return next_elem;
+  // }
 
   void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
 				 const std::vector<tool>& tools) {
