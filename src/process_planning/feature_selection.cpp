@@ -247,9 +247,9 @@ namespace gca {
     auto r_pr = to_boost_poly_2(apply(rot, r_p));
 
     cout << "CONTAINER" << endl;
-    vtk_debug_feature(container);
+    //vtk_debug_feature(container);
     cout << "TARGET" << endl;
-    vtk_debug_feature(target);
+    //vtk_debug_feature(target);
     
     if (!bg::within(r_pr, l_pr)) {
       return false;
@@ -306,8 +306,8 @@ namespace gca {
     if (res != end(r)) {
 
       cout << "REPLACED FEATURE" << endl;
-      vtk_debug_feature(*(f->feature()));
-      vtk_debug_feature(*(res->second));
+      //vtk_debug_feature(*(f->feature()));
+      //vtk_debug_feature(*(res->second));
       
       f->set_feature(res->second);
     }
