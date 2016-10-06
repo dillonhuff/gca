@@ -44,7 +44,7 @@ namespace gca {
     t2.set_holder_length(3.5);
 
     tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-    t3.set_cut_diameter(0.12);
+    t3.set_cut_diameter(0.05);
     t3.set_cut_length(1.2);
 
     t3.set_shank_diameter(0.5);
@@ -54,9 +54,9 @@ namespace gca {
     t3.set_holder_length(3.5);
 
     // Ridiculous tool used to test feasability
-    tool t4{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-    t4.set_cut_diameter(0.05);
-    t4.set_cut_length(1.2);
+    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.5);
+    t4.set_cut_length(2.2);
 
     t4.set_shank_diameter(0.5);
     t4.set_shank_length(0.05);

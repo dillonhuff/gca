@@ -132,9 +132,9 @@ namespace gca {
     vector<feature*> to_cut;
     for (auto chain : chains) {
       cout << "CHAIN" << endl;
-      for (auto fset : chain) {
-      	//vtk_debug_features(fset);
-      }
+      // for (auto fset : chain) {
+      // 	//vtk_debug_features(fset);
+      // }
       concat(to_cut, chain.back());
     }
 
@@ -162,9 +162,6 @@ namespace gca {
       pick_features_to_cut(cmap, contained);
 
     cout << "# of features to cut = " << features_to_cut.size() << endl;
-    // for (auto f : features_to_cut) {
-    //   vtk_debug_feature(*f);
-    // }
 
     subtract(contained, features_to_cut);
 
@@ -249,8 +246,11 @@ namespace gca {
     auto l_pr = to_boost_poly_2(apply(rot, l_p));
     auto r_pr = to_boost_poly_2(apply(rot, r_p));
 
-    //vtk_debug_features({&container, &target});
-
+    cout << "CONTAINER" << endl;
+    vtk_debug_feature(container);
+    cout << "TARGET" << endl;
+    vtk_debug_feature(target);
+    
     if (!bg::within(r_pr, l_pr)) {
       return false;
     }
@@ -308,7 +308,7 @@ namespace gca {
       cout << "REPLACED FEATURE" << endl;
       vtk_debug_feature(*(f->feature()));
       vtk_debug_feature(*(res->second));
-
+      
       f->set_feature(res->second);
     }
 
@@ -327,6 +327,12 @@ namespace gca {
       DBG_ASSERT(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0));
     }
 
+    cout << "CLIPPING LEAVES" << endl;
+    cout << "TARGET DECOMP" << endl;
+    //vtk_debug_feature_decomposition(target_decomp);
+    cout << "CONTAINER DECOMP" << endl;
+    //vtk_debug_feature_decomposition(container_decomp);
+
     unordered_map<feature*, feature*> clipped_features;
 
     for (auto target : collect_leaf_features(target_decomp)) {
@@ -338,15 +344,17 @@ namespace gca {
 	if (contains_lower_portion(*container, clipped)) {
 	  cout << "CLIPPING FEATURE" << endl;
 	  clipped = clip_lower_portion(*container, clipped);
-	  bool clipped_some = true;
+	  clipped_some = true;
 	}
       }
 
       if (clipped_some) {
+	cout << "Adding clipped feature to clipped_features" << endl;
 	clipped_features[target] = new (allocate<feature>()) feature(clipped);
       }
     }
 
+    cout << "# of feature to replace = " << clipped_features.size() << endl;
     replace_features(target_decomp, clipped_features);
   }
 
