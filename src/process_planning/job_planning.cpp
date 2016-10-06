@@ -230,7 +230,8 @@ namespace gca {
 
       if (!(angle_eps(d1, d2, 0.0, 3.0) ||
 	    angle_eps(d1, d2, 90.0, 3.0) ||
-	    angle_eps(d1, d2, -90.0, 3.0))) {
+	    angle_eps(d1, d2, -90.0, 3.0) ||
+	    angle_eps(d1, d2, 180.0, 3.0))) {
 	count++;
       }
     }
@@ -253,6 +254,52 @@ namespace gca {
     return curve_count(f.base());
   }
 
+  bool is_outer(const feature& f, const polygon_3& stock_bound) {
+    const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
+    polygon_3 base_p = f.base().vertices();
+    auto base_poly = to_boost_poly_2(apply(r, base_p));
+    auto stock_poly = to_boost_poly_2(apply(r, stock_bound));
+
+    boost_multipoly_2 sym_diff;
+
+    bg::sym_difference(base_poly, stock_poly, sym_diff);
+    if (bg::area(sym_diff) < 0.001) {
+
+#ifdef VIZ_DBG      
+      cout << "OUTER FEATURE" << endl;
+      vtk_debug_feature(f);
+#endif
+
+      return true;
+    }
+
+    return false;
+  }
+
+  int outer_curve_count(feature_decomposition* f) {
+    DBG_ASSERT(f->num_children() == 1);
+
+    int count = 0;
+
+    cout << "Checking for outer features in " << normal(f) << endl;
+
+#ifdef VIZ_DBG
+    vtk_debug_feature_decomposition(f);
+#endif
+    
+    feature_decomposition* top = f->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+
+    for (auto feat : collect_features(f)) {
+      if (is_outer(*feat, stock_polygon)) {
+	count += curve_count(*feat);
+      }
+    }
+
+    return count;
+  }
+
   int curve_count(feature_decomposition* f) {
     int count = 0;
 
@@ -263,85 +310,69 @@ namespace gca {
     return count;
   }
 
+  boost::optional<direction_process_info>
+  find_outer_curve(std::vector<direction_process_info>& dir_info) {
+    int curve_max = 0;
+    unsigned max_index = 0;
+    boost::optional<direction_process_info> outer_curve = boost::none;
+
+    for (unsigned i = 0; i < dir_info.size(); i++) {
+      auto dir = dir_info[i];
+      auto decomp = dir.decomp;
+
+      int outer_max = outer_curve_count(decomp);
+
+      if (outer_max > curve_max) {
+	outer_curve = dir;
+	max_index = i;
+	curve_max = outer_max;
+      }
+    }
+
+    if (curve_max > 0) {
+      direction_process_info next_elem = dir_info[max_index];
+
+      cout << "Max curve count is " << curve_max << " in " << normal(next_elem.decomp) << endl;
+      cout << "Max index is " << max_index << endl;
+
+      dir_info.erase(begin(dir_info) + max_index);
+
+      return next_elem;
+    }
+
+    return boost::none;
+  }
+
   direction_process_info
   select_next_dir(std::vector<direction_process_info>& dir_info,
 		  const volume_info_map& vol_info) {
     DBG_ASSERT(dir_info.size() > 0);
 
-    // auto next = max_element(begin(dir_info), end(dir_info),
-    // 			    [vol_info](const direction_process_info& l,
-    // 				       const direction_process_info& r) {
-    // 			      return volume(l.decomp, vol_info) <
-    // 			      volume(r.decomp, vol_info);
-    // 			    });
+    auto outer_curve = find_outer_curve(dir_info);
 
-    // DBG_ASSERT(next != end(dir_info));
+    if (outer_curve) {
+      return *outer_curve;
+    }
 
-    auto next =
-      max_element(begin(dir_info), end(dir_info),
-		  [](const direction_process_info& l,
-		     const direction_process_info& r) {
-		    return curve_count(l.decomp) < curve_count(r.decomp);
-		  });
+    cout << "No relevant outer curve" << endl;
+
+    auto next = max_element(begin(dir_info), end(dir_info),
+    			    [vol_info](const direction_process_info& l,
+    				       const direction_process_info& r) {
+    			      return volume(l.decomp, vol_info) <
+    			      volume(r.decomp, vol_info);
+    			    });
+
+    DBG_ASSERT(next != end(dir_info));
 
     direction_process_info next_elem = *next;
-    
+
     dir_info.erase(next);
+
+    cout << "Selected direction " << normal(next_elem.decomp) << endl;
 
     return next_elem;
   }
-
-  // double volume(feature_decomposition* f,
-  // 		const triangular_mesh& m) {
-  //   auto feats = collect_features(f);
-
-  //   triangular_mesh mesh = m;
-
-  //   double vol = 0.0;
-  //   for (auto ft : feats) {
-  //     triangular_mesh fm = feature_mesh(*ft);
-
-  //     vtk_debug_mesh(mesh);
-  //     vtk_debug_mesh(fm);
-
-  //     boost::optional<triangular_mesh> inter =
-  // 	boolean_intersection(fm, mesh);
-
-  //     if (inter) {
-  // 	vol += volume(*inter);
-  // 	auto m_res = boolean_difference(mesh, *inter);
-
-  // 	if (!m_res) {
-  // 	  return vol;
-  // 	} else {
-  // 	  mesh = *m_res;
-  // 	}
-  //     }
-  //   }
-
-  //   return vol;
-  // }
-  
-  // direction_process_info
-  // select_next_dir(std::vector<direction_process_info>& dir_info,
-  // 		  const triangular_mesh& stock) {
-  //   DBG_ASSERT(dir_info.size() > 0);
-
-  //   auto next = max_element(begin(dir_info), end(dir_info),
-  // 			    [stock](const direction_process_info& l,
-  // 				       const direction_process_info& r) {
-  // 			      return volume(l.decomp, stock) <
-  // 			      volume(r.decomp, stock);
-  // 			    });
-
-  //   DBG_ASSERT(next != end(dir_info));
-
-  //   direction_process_info next_elem = *next;
-
-  //   dir_info.erase(next);
-
-  //   return next_elem;
-  // }
 
   void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
 				 const std::vector<tool>& tools) {
