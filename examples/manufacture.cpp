@@ -68,9 +68,6 @@ namespace gca {
       // Winding issue?
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(13).stl",
 
-	// Subtraction leaves shards?, now passes with longer tool
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",
-
 	// Clamp orientation failure?
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl",
 
@@ -85,7 +82,7 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl",
 
 	// 2 Problems, 1. The code tries to contour in the wrong direction
-	// 2. the subtraction of the resulting contour leaves an shaving
+	// 2. the subtraction of the resulting contour leaves a shaving
 	// on the edge similar to part 1(29)
 	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
 	

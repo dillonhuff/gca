@@ -19,7 +19,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-//#define VIZ_DBG
+#define VIZ_DBG
 
 namespace gca {
 
@@ -212,22 +212,80 @@ namespace gca {
     return vol;
   }
 
+
+  int curve_count(const std::vector<point>& ring) {
+    int count = 0;
+
+    unsigned num_pts = ring.size();
+    for (unsigned i = 0; i < num_pts; i++) {
+      unsigned prev = (i + (num_pts - 1)) % num_pts;
+      unsigned next = (i + 1) % num_pts;
+
+      point prev_pt = ring[prev];
+      point current_pt = ring[i];
+      point next_pt = ring[next];
+
+      point d1 = current_pt - prev_pt;
+      point d2 = next_pt - current_pt;
+
+      if (!(angle_eps(d1, d2, 0.0, 3.0) ||
+	    angle_eps(d1, d2, 90.0, 3.0) ||
+	    angle_eps(d1, d2, -90.0, 3.0))) {
+	count++;
+      }
+    }
+
+    return count;
+  }
+
+  int curve_count(const polygon_3& f) {
+    int count = 0;
+    count += curve_count(f.vertices());
+
+    for (auto& h : f.holes()) {
+      count += curve_count(h);
+    }
+
+    return count;
+  }
+
+  int curve_count(const feature& f) {
+    return curve_count(f.base());
+  }
+
+  int curve_count(feature_decomposition* f) {
+    int count = 0;
+
+    for (auto feat : collect_features(f)) {
+      count += curve_count(*feat);
+    }
+
+    return count;
+  }
+
   direction_process_info
   select_next_dir(std::vector<direction_process_info>& dir_info,
 		  const volume_info_map& vol_info) {
     DBG_ASSERT(dir_info.size() > 0);
 
-    auto next = max_element(begin(dir_info), end(dir_info),
-			    [vol_info](const direction_process_info& l,
-				       const direction_process_info& r) {
-			      return volume(l.decomp, vol_info) <
-			      volume(r.decomp, vol_info);
-			    });
+    // auto next = max_element(begin(dir_info), end(dir_info),
+    // 			    [vol_info](const direction_process_info& l,
+    // 				       const direction_process_info& r) {
+    // 			      return volume(l.decomp, vol_info) <
+    // 			      volume(r.decomp, vol_info);
+    // 			    });
 
-    DBG_ASSERT(next != end(dir_info));
+    // DBG_ASSERT(next != end(dir_info));
+
+    auto next =
+      max_element(begin(dir_info), end(dir_info),
+		  [](const direction_process_info& l,
+		     const direction_process_info& r) {
+		    return curve_count(l.decomp) < curve_count(r.decomp);
+		  });
 
     direction_process_info next_elem = *next;
-
+    
     dir_info.erase(next);
 
     return next_elem;
