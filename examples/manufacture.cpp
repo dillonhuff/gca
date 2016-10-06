@@ -71,21 +71,9 @@ namespace gca {
 	// Clamp orientation failure?
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl",
 
-	// Needs better feature decomposition choices
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
-
-	// Needs better feature decomposition as well. Can be cut with
-	// different settings, but that is not ideal
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
-
 	// Another clamp orientation failure?
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl",
 
-	// 2 Problems, 1. The code tries to contour in the wrong direction
-	// 2. the subtraction of the resulting contour leaves a shaving
-	// on the edge similar to part 1(29)
-	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
-	
 	};
     
     vector<string> too_large{
@@ -93,6 +81,9 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 	
     vector<string> passes{
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
+	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",      
       "test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
