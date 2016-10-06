@@ -96,18 +96,18 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 	
     vector<string> passes{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+      "test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl"};
 
     vector<string> part_paths {
-      	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
 	};
 
-    for (auto part_path : passes) { //part_paths) {
+    for (auto part_path : part_paths) {
       cout << "Part path: " << part_path << endl;
 
       auto mesh = parse_stl(part_path, 0.001);
