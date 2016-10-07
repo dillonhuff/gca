@@ -13,7 +13,11 @@ namespace gca {
     concat(triangles, box_triangles(main));
     concat(triangles, box_triangles(upper_clamp));
     concat(triangles, box_triangles(lower_clamp));
-    return polydata_for_triangles(triangles);
+
+    auto vice_pd = polydata_for_triangles(triangles);
+    color_polydata(vice_pd, 0, 200, 0);
+
+    return vice_pd;
   }
   
   void visual_debug(const fabrication_setup& setup) {

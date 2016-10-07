@@ -118,14 +118,20 @@ namespace gca {
     // vtk_debug_mesh(cut_part);
 
     vector<surface> cregions = outer_surfaces(cut_part);
+    sort(begin(cregions), end(cregions),
+	 [](const surface& l, const surface& r)
+	 { return l.surface_area() < r.surface_area(); });
+    reverse(begin(cregions), end(cregions));
 
-    // cout << "# of const orientation regions = " << cregions.size() << endl;
-    // vtk_debug_highlight_inds(cregions);
+    cout << "# of const orientation regions = " << cregions.size() << endl;
+    for (auto cregion : cregions) {
+      vtk_debug_highlight_inds(cregion);
+    }
 
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(cregions, v, n);
 
-    //    cout << "# of orients for cregions = " << orients.size() << endl;
+    cout << "# of orients for cregions = " << orients.size() << endl;
 
     return orients;
     

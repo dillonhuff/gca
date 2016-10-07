@@ -529,18 +529,22 @@ namespace gca {
       point n = normal(info.decomp);
       auto orients = all_stable_orientations_box(stock_nef, v, n);
       cout << "# of orients in " << n << " = " << orients.size() << endl;
-      auto maybe_orient =
-	find_orientation_by_normal_optional(orients, n);
+
+      // auto maybe_orient =
+      // 	find_orientation_by_normal_optional(orients, n);
 
 #ifdef VIZ_DBG
       vtk_debug_feature_decomposition(info.decomp);
 #endif
 
-      if (maybe_orient) {
+      if (orients.size() > 0) {
 
 	cout << "Found fixture in " << n << endl;
 
-	auto orient = *maybe_orient;
+	//	auto orient = *maybe_orient;
+	auto orient = max_e(orients, [current_stock](const clamp_orientation& c)
+			    { return c.contact_area(current_stock); });
+      
 	fixture fix(orient, v);
 
 	auto decomp = info.decomp;
