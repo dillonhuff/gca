@@ -11,8 +11,7 @@ namespace gca {
     vector<index_t> inds_along;
     for (auto i : part.face_indexes()) {
       triangle t = part.face_triangle(i);
-      // if (within_eps(t.normal, p.normal(), 0.001)) {
-      // 	if (within_eps(p.normal().dot(p.pt() - t.v1), 0, 0.001)) {
+
       if (angle_eps(t.normal, p.normal(), 0.0, 0.001)) {
 	if (within_eps(p.normal().dot(p.pt() - t.v1), 0.0, 0.001)) {
 
