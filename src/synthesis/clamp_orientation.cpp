@@ -11,8 +11,10 @@ namespace gca {
     vector<index_t> inds_along;
     for (auto i : part.face_indexes()) {
       triangle t = part.face_triangle(i);
-      if (within_eps(t.normal, p.normal(), 0.001)) {
-	if (within_eps(p.normal().dot(p.pt() - t.v1), 0, 0.001)) {
+
+      if (angle_eps(t.normal, p.normal(), 0.0, 0.001)) {
+	if (within_eps(p.normal().dot(p.pt() - t.v1), 0.0, 0.001)) {
+
 	  inds_along.push_back(i);
 	}
       }
@@ -22,8 +24,8 @@ namespace gca {
 
   double clamp_orientation::contact_area(const triangular_mesh& m) const {
     surface l = contact_surface(left_plane(), m);
-    surface r = contact_surface(left_plane(), m);
-    surface b = contact_surface(right_plane(), m);
+    surface r = contact_surface(right_plane(), m);
+    surface b = contact_surface(base_plane(), m);
     return l.surface_area() + r.surface_area() + b.surface_area();
   }
 
@@ -79,18 +81,12 @@ namespace gca {
   }
 
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const exact_mesh_cache& part_cache,
+  all_stable_orientations_box(const Nef_polyhedron& part_nef,
 			      const vice& v,
 			      const point n) {
-
-    auto cur_meshes = part_cache.get_double_mesh();
-
-    DBG_ASSERT(cur_meshes.size() == 1);
-
-    const auto& part = cur_meshes.front();
-
+    auto part = nef_to_single_trimesh(part_nef);
     polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
-    
+
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
     plane vice_top_plane(-1*n, vice_pl_pt);
 
@@ -102,34 +98,42 @@ namespace gca {
     triangular_mesh m = extrude(plane_approx, big*n);
 
 
-    cout << "To be clipped" << endl;
-    vtk_debug_mesh(part);
+    // cout << "To be clipped" << endl;
+    // vtk_debug_mesh(part);
 
-    cout << "To clip with" << endl;
-    vtk_debug_mesh(m);
+    // cout << "To clip with" << endl;
+    // vtk_debug_mesh(m);
 
-    cout << "Clipper and clippee" << endl;
-    vtk_debug_meshes({part, m});
+    // cout << "Clipper and clippee" << endl;
+    // vtk_debug_meshes({part, m});
     
+    auto clip_nef = trimesh_to_nef_polyhedron(m);
+    auto cut_parts_nef = part_nef - clip_nef;
+
+    //    DBG_ASSERT(cut_parts.size() == 1);
+
+    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
+
+    // cout << "Result of clipping" << endl;
     // vector<triangular_mesh> subs{m};
     // auto cut_parts = boolean_difference(part, subs);
-
-    exact_mesh_cache clip_cache = part_cache;
-    clip_cache.subtract(m);
-
-    auto cut_parts = clip_cache.get_double_mesh();
-
-    DBG_ASSERT(cut_parts.size() == 1);
-
-    const auto& cut_part = cut_parts.front();
-    
-    cout << "Result of clipping" << endl;
-    vtk_debug_mesh(cut_part);
+    // vtk_debug_mesh(cut_part);
 
     vector<surface> cregions = outer_surfaces(cut_part);
+    sort(begin(cregions), end(cregions),
+	 [](const surface& l, const surface& r)
+	 { return l.surface_area() < r.surface_area(); });
+    reverse(begin(cregions), end(cregions));
+
+    cout << "# of const orientation regions = " << cregions.size() << endl;
+    // for (auto cregion : cregions) {
+    //   vtk_debug_highlight_inds(cregion);
+    // }
 
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(cregions, v, n);
+
+    cout << "# of orients for cregions = " << orients.size() << endl;
 
     return orients;
     

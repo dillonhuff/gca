@@ -34,5 +34,8 @@ namespace gca {
   std::vector<feature*>
   unreachable_features(const std::vector<feature*> features,
 		       const fixture& fix);
+
+  void clip_leaves(feature_decomposition* top_decomp,
+		   feature_decomposition* base_decomp);
   
 }

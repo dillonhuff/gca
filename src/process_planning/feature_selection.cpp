@@ -132,9 +132,9 @@ namespace gca {
     vector<feature*> to_cut;
     for (auto chain : chains) {
       cout << "CHAIN" << endl;
-      for (auto fset : chain) {
-      	//vtk_debug_features(fset);
-      }
+      // for (auto fset : chain) {
+      // 	//vtk_debug_features(fset);
+      // }
       concat(to_cut, chain.back());
     }
 
@@ -162,9 +162,6 @@ namespace gca {
       pick_features_to_cut(cmap, contained);
 
     cout << "# of features to cut = " << features_to_cut.size() << endl;
-    // for (auto f : features_to_cut) {
-    //   vtk_debug_feature(*f);
-    // }
 
     subtract(contained, features_to_cut);
 
@@ -191,6 +188,7 @@ namespace gca {
   duplicate_features(feature_decomposition* target_decomp,
 		     feature_decomposition* container_decomp) {
     if (!(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0))) {
+
       vtk_debug_features(collect_features(target_decomp));
       vtk_debug_features(collect_features(container_decomp));
       DBG_ASSERT(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0));
@@ -226,6 +224,138 @@ namespace gca {
     }
 
     return duplicates;
+  }
+
+  std::vector<feature*> collect_internal_features(feature_decomposition* f) {
+    auto all = collect_features(f);
+    auto leaves = collect_leaf_features(f);
+
+    subtract(all, leaves);
+
+    return all;
+  }
+
+  bool contains_lower_portion(const feature& container,
+			      const feature& target) {
+
+    auto l_p = container.base();
+    auto r_p = target.base();
+
+    const rotation rot = rotate_from_to(l_p.normal(), point(0, 0, 1));
+
+    auto l_pr = to_boost_poly_2(apply(rot, l_p));
+    auto r_pr = to_boost_poly_2(apply(rot, r_p));
+
+    cout << "CONTAINER" << endl;
+    //vtk_debug_feature(container);
+    cout << "TARGET" << endl;
+    //vtk_debug_feature(target);
+    
+    if (!bg::within(r_pr, l_pr)) {
+      return false;
+    }
+
+    point n = container.normal();
+    pair<double, double> container_range = container.range_along(n);
+    pair<double, double> target_range = target.range_along(n);
+
+    double adjusted_target_end = target_range.second - 0.00001;
+
+    if (adjusted_target_end > container_range.first) {
+
+      cout << "Target end range = " << adjusted_target_end << endl;
+      cout << "Container start  = " << container_range.first << endl;
+
+      return true;
+    }
+
+    return false;
+
+  }
+
+  feature clip_lower_portion(const feature& container,
+			     const feature& target) {
+
+    point n = container.normal();
+    pair<double, double> container_range = container.range_along(n);
+    pair<double, double> target_range = target.range_along(n);
+
+    double shift_val = target_range.second - container_range.first;
+
+    if (!(shift_val > 0.0)) {
+      cout << "Shift value = " << shift_val << endl;
+
+      vtk_debug_feature(container);
+      vtk_debug_feature(target);
+
+      DBG_ASSERT(shift_val > 0.0);
+    }
+
+    point shift_vec = (-1*shift_val)*n;
+
+    polygon_3 new_target_base = shift(shift_vec, target.base());
+    double new_target_depth = target.depth() - shift_val;
+
+    return feature(new_target_depth, new_target_base);
+  }
+
+  void replace_features(feature_decomposition* f,
+			const std::unordered_map<feature*, feature*>& r) {
+
+    auto res = r.find(f->feature());
+    if (res != end(r)) {
+
+      cout << "REPLACED FEATURE" << endl;
+      //vtk_debug_feature(*(f->feature()));
+      //vtk_debug_feature(*(res->second));
+      
+      f->set_feature(res->second);
+    }
+
+    for (unsigned i = 0; i < f->num_children(); i++) {
+      replace_features(f->child(i), r);
+    }
+  }
+
+  void
+  clip_leaves(feature_decomposition* target_decomp,
+	      feature_decomposition* container_decomp) {
+    if (!(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0))) {
+
+      vtk_debug_features(collect_features(target_decomp));
+      vtk_debug_features(collect_features(container_decomp));
+      DBG_ASSERT(angle_eps(normal(target_decomp), normal(container_decomp), 180.0, 1.0));
+    }
+
+    cout << "CLIPPING LEAVES" << endl;
+    cout << "TARGET DECOMP" << endl;
+    //vtk_debug_feature_decomposition(target_decomp);
+    cout << "CONTAINER DECOMP" << endl;
+    //vtk_debug_feature_decomposition(container_decomp);
+
+    unordered_map<feature*, feature*> clipped_features;
+
+    for (auto target : collect_leaf_features(target_decomp)) {
+
+      feature clipped(*target);
+
+      bool clipped_some = false;
+      for (auto container : collect_internal_features(container_decomp)) {
+	if (contains_lower_portion(*container, clipped)) {
+	  cout << "CLIPPING FEATURE" << endl;
+	  clipped = clip_lower_portion(*container, clipped);
+	  clipped_some = true;
+	}
+      }
+
+      if (clipped_some) {
+	cout << "Adding clipped feature to clipped_features" << endl;
+	clipped_features[target] = new (allocate<feature>()) feature(clipped);
+      }
+    }
+
+    cout << "# of feature to replace = " << clipped_features.size() << endl;
+    replace_features(target_decomp, clipped_features);
   }
 
   std::vector<feature_decomposition*>

@@ -3,35 +3,21 @@
 
 #include <boost/optional.hpp>
 
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Polyhedron_3.h>
+#include <CGAL/Nef_polyhedron_3.h>
+
 #include "geometry/plane.h"
 #include "geometry/triangular_mesh.h"
 
 namespace gca {
 
-  class exact_mesh_cache {
-  public:
-
-    exact_mesh_cache(const triangular_mesh& m);
-
-    exact_mesh_cache(const exact_mesh_cache& x);
-
-    exact_mesh_cache(exact_mesh_cache&&) noexcept = default;
-
-    exact_mesh_cache& operator=(const exact_mesh_cache& x)
-    { exact_mesh_cache tmp(x); *this = move(tmp); return *this; }
-
-    exact_mesh_cache& operator=(exact_mesh_cache&&) noexcept = default;
-    
-    ~exact_mesh_cache();
-
-    std::vector<triangular_mesh> get_double_mesh() const;
-    void subtract(const triangular_mesh& m);
-
-  private:
-    struct impl;
-    impl* implementation;
-  };
-
+  typedef CGAL::Exact_predicates_exact_constructions_kernel Kernel;
+  typedef CGAL::Polyhedron_3<Kernel>         Polyhedron;
+  typedef Polyhedron::HalfedgeDS             HalfedgeDS;
+  typedef CGAL::Nef_polyhedron_3<Kernel>  Nef_polyhedron;
+  typedef Nef_polyhedron::Plane_3 Plane_3;
+  
   std::vector<oriented_polygon>
   mesh_cross_section(const triangular_mesh& m,
 		     const plane p);
@@ -43,6 +29,8 @@ namespace gca {
   clip_mesh_exact(const triangular_mesh& m,
 		  const plane pl);
 
+  std::vector<triangular_mesh>
+  nef_polyhedron_to_trimeshes(const Nef_polyhedron& p);
 
   boost::optional<triangular_mesh>
   boolean_difference(const triangular_mesh& a, const triangular_mesh& b);
@@ -62,6 +50,10 @@ namespace gca {
   std::vector<triangular_mesh>
   boolean_difference(const std::vector<triangular_mesh>& as,
 		     const std::vector<triangular_mesh>& bs);
+
+  triangular_mesh nef_to_single_trimesh(const Nef_polyhedron& nef);
+
+  Nef_polyhedron trimesh_to_nef_polyhedron(const triangular_mesh& m);
 
 }
 

@@ -244,7 +244,8 @@ namespace gca {
 	point dir1 = (p1 - p).normalize();
 	point dir2 = (p2 - p1).normalize();
 
-	if (angle_eps(dir1, dir2, 0.0, tol)) { //0.0000001)) {
+	if (angle_eps(dir1, dir2, 0.0, tol) ||
+	    angle_eps(dir1, dir2, 180.0, tol)) { //0.0000001)) {
 	  pts.erase(begin(pts) + i1);
 	  found_colinear_edge = true;
 	}

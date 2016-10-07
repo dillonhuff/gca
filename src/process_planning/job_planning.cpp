@@ -19,6 +19,8 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
+//#define VIZ_DBG
+
 namespace gca {
 
   fixture_setup
@@ -69,29 +71,27 @@ namespace gca {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
   
-  std::vector<triangular_mesh>
-  subtract_features(const triangular_mesh& m,
-		    const std::vector<feature*>& features) {
-    std::vector<triangular_mesh> meshes;
-    for (auto f : features) {
-      meshes.push_back(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
-    }
-
-    auto subtracted = boolean_difference(m, meshes);
-
-    return subtracted;
-  }
-
-  void
-  subtract_features(exact_mesh_cache& mesh_cache,
+  //  std::vector<triangular_mesh>
+  Nef_polyhedron
+  subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features) {
 
+    auto res = m;
     for (auto f : features) {
-      mesh_cache.subtract(feature_mesh(*f, 0.000001, 0.0001, 0.0001));
+      Nef_polyhedron f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 1.0, 0.0001));
+
+      for (auto it = f_nef.volumes_begin(); it != f_nef.volumes_end(); it++) {
+	cout << "VOLUME" << endl;
+      }
+
+      res = (res - f_nef).regularization();
+      
     }
 
+    return res;
+    
   }
-  
+
   double volume(const feature& f) {
     const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
     auto bp = to_boost_poly_2(apply(r, f.base()));
@@ -103,7 +103,9 @@ namespace gca {
 
   struct volume_info {
     double volume;
-    std::vector<triangular_mesh> meshes;
+
+    Nef_polyhedron remaining_volume;
+
     triangular_mesh dilated_mesh;
   };
 
@@ -120,43 +122,29 @@ namespace gca {
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
     
-    return volume_info{vol, {mesh}, dilated_mesh};
+    return volume_info{vol, trimesh_to_nef_polyhedron(mesh), dilated_mesh};
   }
 
   volume_info
   update_volume_info(const volume_info& inf,
 		     const std::vector<triangular_mesh>& to_subtract) {
-    if (inf.meshes.size() == 0) {
+    if (inf.volume == 0.0) { return inf; }
 
-      DBG_ASSERT(inf.volume == 0.0);
-
-      return inf;
+    auto res = inf.remaining_volume;
+    for (auto s : to_subtract) {
+      res = res - trimesh_to_nef_polyhedron(s);
     }
 
-    std::vector<triangular_mesh> res =
-      boolean_difference(inf.meshes, to_subtract);
-
-
-    // TODO: Delete the else clause?
-    if (res.size() > 0) {
-
-      double new_volume = 0.0;
-      for (auto& m : res) {
-	new_volume += volume(m);
-      }
-
-      cout << "Old volume = " << inf.volume << endl;
-      cout << "New volume = " << new_volume << endl;
-
-      return volume_info{new_volume, res, inf.dilated_mesh};
-
-    } else {
-
-      cout << "Old volume = " << inf.volume << endl;
-      cout << "New volume = " << 0.0 << endl;
-
-      return volume_info{0.0, {}, inf.dilated_mesh};
+    double new_volume = 0.0;
+    for (auto& m : nef_polyhedron_to_trimeshes(res)) {
+      new_volume += volume(m);
     }
+
+    cout << "Old volume = " << inf.volume << endl;
+    cout << "New volume = " << new_volume << endl;
+
+    return volume_info{new_volume, res, inf.dilated_mesh};
+
 
   }
 
@@ -176,7 +164,13 @@ namespace gca {
 
   void
   clip_volumes(feature_decomposition* decomp,
-	       volume_info_map& volume_inf) {
+	       volume_info_map& volume_inf,
+	       const std::vector<direction_process_info>& dir_info) {
+    vector<feature*> feats_left;
+    for (auto d : dir_info) {
+      concat(feats_left, collect_features(d.decomp));
+    }
+
     vector<feature*> feats_to_sub = collect_features(decomp);
 
     vector<triangular_mesh> to_subtract;
@@ -184,7 +178,7 @@ namespace gca {
       volume_info f_info = map_find(f, volume_inf);
 
       // If the volume still exists
-      if (f_info.meshes.size() > 0) {
+      if (f_info.volume > 0.0) {
 	to_subtract.push_back(f_info.dilated_mesh);
       }
     }
@@ -194,7 +188,7 @@ namespace gca {
 
       // Do not subtract the selected decomposition, those
       // features are being removed anyway
-      if (!elem(f, feats_to_sub)) {
+      if (elem(f, feats_left) && !elem(f, feats_to_sub)) {
 	volume_inf[f] = update_volume_info(info_pair.second, to_subtract);
       }
     }
@@ -217,69 +211,156 @@ namespace gca {
     return vol;
   }
 
+
+  int curve_count(const std::vector<point>& ring) {
+    int count = 0;
+
+    unsigned num_pts = ring.size();
+    for (unsigned i = 0; i < num_pts; i++) {
+      unsigned prev = (i + (num_pts - 1)) % num_pts;
+      unsigned next = (i + 1) % num_pts;
+
+      point prev_pt = ring[prev];
+      point current_pt = ring[i];
+      point next_pt = ring[next];
+
+      point d1 = current_pt - prev_pt;
+      point d2 = next_pt - current_pt;
+
+      if (!(angle_eps(d1, d2, 0.0, 3.0) ||
+	    angle_eps(d1, d2, 90.0, 3.0) ||
+	    angle_eps(d1, d2, -90.0, 3.0) ||
+	    angle_eps(d1, d2, 180.0, 3.0))) {
+	count++;
+      }
+    }
+
+    return count;
+  }
+
+  int curve_count(const polygon_3& f) {
+    int count = 0;
+    count += curve_count(f.vertices());
+
+    for (auto& h : f.holes()) {
+      count += curve_count(h);
+    }
+
+    return count;
+  }
+
+  int curve_count(const feature& f) {
+    return curve_count(f.base());
+  }
+
+  bool is_outer(const feature& f, const polygon_3& stock_bound) {
+    const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
+    polygon_3 base_p = f.base().vertices();
+    auto base_poly = to_boost_poly_2(apply(r, base_p));
+    auto stock_poly = to_boost_poly_2(apply(r, stock_bound));
+
+    boost_multipoly_2 sym_diff;
+
+    bg::sym_difference(base_poly, stock_poly, sym_diff);
+    if (bg::area(sym_diff) < 0.001) {
+
+#ifdef VIZ_DBG      
+      cout << "OUTER FEATURE" << endl;
+      vtk_debug_feature(f);
+#endif
+
+      return true;
+    }
+
+    return false;
+  }
+
+  int outer_curve_count(feature_decomposition* f) {
+    DBG_ASSERT(f->num_children() == 1);
+
+    int count = 0;
+
+    cout << "Checking for outer features in " << normal(f) << endl;
+
+#ifdef VIZ_DBG
+    vtk_debug_feature_decomposition(f);
+#endif
+    
+    feature_decomposition* top = f->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+
+    for (auto feat : collect_features(f)) {
+      if (is_outer(*feat, stock_polygon)) {
+	count += curve_count(*feat);
+      }
+    }
+
+    return count;
+  }
+
+  int curve_count(feature_decomposition* f) {
+    int count = 0;
+
+    for (auto feat : collect_features(f)) {
+      count += curve_count(*feat);
+    }
+
+    return count;
+  }
+
+  boost::optional<direction_process_info>
+  find_outer_curve(std::vector<direction_process_info>& dir_info) {
+    int curve_max = 0;
+    unsigned max_index = 0;
+    boost::optional<direction_process_info> outer_curve = boost::none;
+
+    for (unsigned i = 0; i < dir_info.size(); i++) {
+      auto dir = dir_info[i];
+      auto decomp = dir.decomp;
+
+      int outer_max = outer_curve_count(decomp);
+
+      if (outer_max > curve_max) {
+	outer_curve = dir;
+	max_index = i;
+	curve_max = outer_max;
+      }
+    }
+
+    if (curve_max > 0) {
+      direction_process_info next_elem = dir_info[max_index];
+
+      cout << "Max curve count is " << curve_max << " in " << normal(next_elem.decomp) << endl;
+      cout << "Max index is " << max_index << endl;
+
+      dir_info.erase(begin(dir_info) + max_index);
+
+      return next_elem;
+    }
+
+    return boost::none;
+  }
+
   direction_process_info
   select_next_dir(std::vector<direction_process_info>& dir_info,
 		  const volume_info_map& vol_info) {
     DBG_ASSERT(dir_info.size() > 0);
 
-    auto next = max_element(begin(dir_info), end(dir_info),
-			    [vol_info](const direction_process_info& l,
-				       const direction_process_info& r) {
-			      return volume(l.decomp, vol_info) <
-			      volume(r.decomp, vol_info);
-			    });
+    auto outer_curve = find_outer_curve(dir_info);
 
-    DBG_ASSERT(next != end(dir_info));
-
-    direction_process_info next_elem = *next;
-
-    dir_info.erase(next);
-
-    return next_elem;
-  }
-
-  double volume(feature_decomposition* f,
-		const triangular_mesh& m) {
-    auto feats = collect_features(f);
-
-    triangular_mesh mesh = m;
-
-    double vol = 0.0;
-    for (auto ft : feats) {
-      triangular_mesh fm = feature_mesh(*ft);
-
-      vtk_debug_mesh(mesh);
-      vtk_debug_mesh(fm);
-
-      boost::optional<triangular_mesh> inter =
-	boolean_intersection(fm, mesh);
-
-      if (inter) {
-	vol += volume(*inter);
-	auto m_res = boolean_difference(mesh, *inter);
-
-	if (!m_res) {
-	  return vol;
-	} else {
-	  mesh = *m_res;
-	}
-      }
+    if (outer_curve) {
+      return *outer_curve;
     }
 
-    return vol;
-  }
-  
-  direction_process_info
-  select_next_dir(std::vector<direction_process_info>& dir_info,
-		  const triangular_mesh& stock) {
-    DBG_ASSERT(dir_info.size() > 0);
+    cout << "No relevant outer curve" << endl;
 
     auto next = max_element(begin(dir_info), end(dir_info),
-			    [stock](const direction_process_info& l,
-				       const direction_process_info& r) {
-			      return volume(l.decomp, stock) <
-			      volume(r.decomp, stock);
-			    });
+    			    [vol_info](const direction_process_info& l,
+    				       const direction_process_info& r) {
+    			      return volume(l.decomp, vol_info) <
+    			      volume(r.decomp, vol_info);
+    			    });
 
     DBG_ASSERT(next != end(dir_info));
 
@@ -287,20 +368,71 @@ namespace gca {
 
     dir_info.erase(next);
 
+    cout << "Selected direction " << normal(next_elem.decomp) << endl;
+
     return next_elem;
   }
 
-  void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs) {
+  void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
+				 const std::vector<tool>& tools) {
     for (unsigned i = 0; i < dirs.size(); i++) {
+      feature_decomposition* l = dirs[i].decomp;
+
+      bool found_opposite = false;
+
       for (unsigned j = i + 1; j < dirs.size(); j++) {
-	feature_decomposition* l = dirs[i].decomp;
 	feature_decomposition* r = dirs[j].decomp;
 
 	if (angle_eps(normal(l), normal(r), 180.0, 0.5)) {
-	  clip_top_and_bottom_features(l, r);
+	  found_opposite = true;
+
+	  clip_leaves(l, r);
+	  clip_leaves(r, l);
+
+	  dirs[i].tool_info = find_accessable_tools(l, tools);
+	  dirs[j].tool_info = find_accessable_tools(r, tools);
+
+	  break;
 	}
+
       }
     }
+
+    for (unsigned i = 0; i < dirs.size(); i++) {
+      auto decomp = dirs[i].decomp;
+      auto& acc_info = dirs[i].tool_info;
+
+      delete_leaves(decomp, [acc_info](feature* f) {
+      	  return map_find(f, acc_info).size() == 0;
+      	});
+
+    }
+
+    for (unsigned i = 0; i < dirs.size(); i++) {
+      feature_decomposition* l = dirs[i].decomp;
+
+      for (unsigned j = i + 1; j < dirs.size(); j++) {
+	feature_decomposition* r = dirs[j].decomp;
+
+	if (angle_eps(normal(l), normal(r), 180.0, 0.5)) {
+
+	  clip_top_and_bottom_features(l, r);
+
+	  break;
+	}
+
+      }
+    }
+    
+  }
+
+  void
+  delete_inaccessable_non_leaf_nodes(feature_decomposition* decomp,
+				     const tool_access_info& acc_info) {
+
+    delete_internal_nodes(decomp, [acc_info](feature* f) {
+	return map_find(f, acc_info).size() == 0;
+      });
   }
 
   std::vector<direction_process_info>
@@ -319,13 +451,11 @@ namespace gca {
     for (auto info : dir_info) {
       feature_decomposition* decomp = info.decomp;
       tool_access_info& acc_info = info.tool_info;
-      delete_nodes(decomp, [acc_info](feature* f) {
-	  return map_find(f, acc_info).size() == 0;
-	});
 
+      delete_inaccessable_non_leaf_nodes(decomp, acc_info);
     }
 
-    clip_top_and_bottom_pairs(dir_info);
+    clip_top_and_bottom_pairs(dir_info, tools);
 
     return dir_info;
   }
@@ -369,42 +499,66 @@ namespace gca {
     vice v(v_pre, max_plate);
 
     //triangular_mesh current_stock = stock;
-    exact_mesh_cache current_stock_cache(stock);
-
+    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
+
+    vector<feature*> init_features;
+    cout << "# of directions = " << dir_info.size() << endl;
+    for (auto d : dir_info) {
+      concat(init_features, collect_features(d.decomp));
+    }
+
+#ifdef VIZ_DBG
+    vtk_debug_features(init_features);
+#endif
 
     vector<feature*> all_features{};
 
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
-      auto cur_meshes = current_stock_cache.get_double_mesh();
+      cout << "Trying direction " << normal(info.decomp) << endl;
 
-      DBG_ASSERT(cur_meshes.size() == 1);
-
-      const auto& current_stock = cur_meshes.front();
-
+      cout << "In loop getting current stock" << endl;
+      auto current_stock = nef_to_single_trimesh(stock_nef);
+      cout << "In loop got current stock" << endl;
+      
       point n = normal(info.decomp);
-      auto orients =
-	all_stable_orientations_box(current_stock_cache, v, n);
-      auto maybe_orient =
-	find_orientation_by_normal_optional(orients, n);
+      auto orients = all_stable_orientations_box(stock_nef, v, n);
+      cout << "# of orients in " << n << " = " << orients.size() << endl;
 
-      if (maybe_orient) {
-	auto orient = *maybe_orient;
+      // auto maybe_orient =
+      // 	find_orientation_by_normal_optional(orients, n);
+
+#ifdef VIZ_DBG
+      vtk_debug_feature_decomposition(info.decomp);
+#endif
+
+      if (orients.size() > 0) {
+
+	cout << "Found fixture in " << n << endl;
+
+	//	auto orient = *maybe_orient;
+	auto orient = max_e(orients, [current_stock](const clamp_orientation& c)
+			    { return c.contact_area(current_stock); });
+      
 	fixture fix(orient, v);
 
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
-	clip_volumes(decomp, volume_inf);
+	clip_volumes(decomp, volume_inf, dir_info);
 	
 	auto t = mating_transform(current_stock, orient, v);
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
+
+	  cout << "Found features in " << n << endl;
+
+#ifdef VIZ_DBG
 	  for (auto f : features) {
 	    auto vol_data = map_find(f, volume_inf);
 	    cout << "delta volume = " << vol_data.volume << endl;
@@ -413,32 +567,14 @@ namespace gca {
 
 	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
-	    vtk_debug_meshes(vol_data.meshes);
+	    vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
 
 	  }
 	  vtk_debug_features(features);
 	  concat(all_features, features);
+#endif
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
-
-	  subtract_features(current_stock_cache, features);
-	  
-	  //auto stock_res = subtract_features(current_stock_cache, features);
-
-
-	  // if (stock_res.size() != 1) {
-	  //   cout << "stock_res.size() == " << stock_res.size() << endl;
-
-	  //   vtk_debug_features(features);
-
-	  //   for (auto stock_r : stock_res) {
-	  //     vtk_debug_mesh(stock_r);
-	  //   }
-
-	  //   DBG_ASSERT(stock_res.size() == 1);
-	  // }
-
-	  //	  current_stock_cache = stock_res.front();
 
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;
@@ -447,18 +583,17 @@ namespace gca {
 	  cout << "Stock volume = " << stock_volume << endl;
 	  cout << "part / stock = " << volume_ratio << endl;
 
+#ifdef VIZ_DBG
 	  vtk_debug_mesh(current_stock);
-
+#endif
 	  if (volume_ratio > 0.999) { break; }
 	}
       }
     }
 
-    auto cur_meshes = current_stock_cache.get_double_mesh();
-
-    DBG_ASSERT(cur_meshes.size() == 1);
-
-    const auto& current_stock = cur_meshes.front();
+    cout << "Done with loop getting current stock" << endl;
+    auto current_stock = nef_to_single_trimesh(stock_nef);
+    cout << "Done with loop got current stock" << endl;
 
     double stock_volume = volume(current_stock);
     double volume_ratio = part_volume / stock_volume;
@@ -467,7 +602,9 @@ namespace gca {
     cout << "Stock volume = " << stock_volume << endl;
     cout << "part / stock = " << volume_ratio << endl;
 
+#ifdef VIZ_DBG
     vtk_debug_features(all_features);
+#endif
 
     // TODO: Tighten this tolerance once edge features are supported
     if (volume_ratio <= 0.99) {

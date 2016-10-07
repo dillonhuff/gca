@@ -866,7 +866,7 @@ namespace gca {
 
     return sub.size() > 0;
   }
-  
+ 
 
   bool same_base(const feature& l, const feature& r, const double tol) {
     auto l_p = l.base();

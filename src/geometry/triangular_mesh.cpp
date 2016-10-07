@@ -1,5 +1,6 @@
 #include "geometry/triangular_mesh.h"
 #include "geometry/vtk_debug.h"
+#include "geometry/winding_order.h"
 #include "utils/algorithm.h"
 
 namespace gca {
@@ -39,7 +40,9 @@ namespace gca {
       auto tl = vertex_face_neighbors(e.l);
       auto tr = vertex_face_neighbors(e.r);
       auto tris = intersection(tl, tr);
+
       DBG_ASSERT(tris.size() == 2);
+
       triangle_t t1 = triangle_vertices(tris[0]);
       triangle_t t2 = triangle_vertices(tris[1]);
       index_t t1l = vertex_index_of(e.l, t1);
@@ -72,149 +75,9 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
-  bool
-  share_edge(const triangle_t tl,
-	     const triangle_t tr) {
-    int num_eq = 0;
-    for (unsigned i = 0; i < 3; i++) {
-      for (unsigned j = 0; j < 3; j++) {
-	num_eq += (tl.v[i] == tr.v[j]) ? 1 : 0;
-      }
-    }
-    return num_eq > 1;
-  }
-
-  template<typename Triangle>
-  bool winding_conflict(const Triangle ti, const Triangle tj) {
-    for (unsigned l = 0; l < 3; l++) {
-      unsigned lp1 = (l + 1) % 3;
-      for (unsigned k = 0; k < 3; k++) {
-	unsigned kp1 = (k + 1) % 3;
-
-	if (get_vertex(ti, k) == get_vertex(tj, l) &&
-	    get_vertex(ti, kp1) == get_vertex(tj, lp1)) {
-	  return true;
-	}
-
-      }
-    }
-    return false;
-  }
-
-  template<typename Triangle>
-  Triangle flip_winding_order(const Triangle& t) {
-    Triangle f;
-    set_vertex(f, 0, get_vertex(t, 1));
-    set_vertex(f, 1, get_vertex(t, 0));
-    set_vertex(f, 2, get_vertex(t, 2));
-    
-    return f;
-  }
-
-  template<typename Triangle>
-  std::vector<Triangle>
-  flip_winding_orders(const std::vector<Triangle>& vertex_triangles) {
-    vector<Triangle> tris;
-    for (auto t : vertex_triangles) {
-      tris.push_back(flip_winding_order(t));
-    }
-    return tris;
-  }
-
-  template<typename Triangle>
-  Triangle
-  correct_orientation(const Triangle to_correct,
-		      const std::vector<Triangle>& others) {
-    auto ti = to_correct;
-    for (auto tj : others) {
-      if (winding_conflict(ti, tj)) {
-	Triangle corrected = flip_winding_order(ti);
-
-	return corrected;
-      }
-
-    }
-
-    return ti;
-  }
-
   std::ostream& operator<<(std::ostream& out, const triangle_t t) {
     out << "< " << t.v[0] << ", " << t.v[1] << ", " << t.v[2] << " >";
     return out;
-  }
-
-  template<typename Triangle>
-  int
-  num_winding_order_errors(const std::vector<Triangle>& triangles) {
-    int num_errs = 0;
-    for (unsigned i = 0; i < triangles.size(); i++) {
-      for (unsigned j = i; j < triangles.size(); j++) {
-	if (i != j) {
-	  auto ti = triangles[i];
-	  auto tj = triangles[j];
-
-	  if (winding_conflict(ti, tj)) {
-	    num_errs++;
-	  }
-	  
-	}
-      }
-    }
-    return num_errs;
-  }
-
-  template<typename Triangle>
-  std::vector<Triangle>
-  fix_winding_order_errors(const std::vector<Triangle>& triangles) {
-
-    vector<triangle_t> tris;
-    vector<unsigned> remaining_inds = inds(triangles);
-    cout << "Initial # of triangles = " << triangles.size() << endl;
-    unsigned num_added = 0;
-    
-    while (remaining_inds.size() > 0) {
-
-      for (auto ind : remaining_inds) {
-	triangle_t next_t = triangles[ind];
-	vector<triangle_t> sub_tris =
-	  select(tris, [next_t](const triangle_t t)
-		 { return share_edge(next_t, t); });
-
-	if (sub_tris.size() > 0) {
-	  triangle_t corrected = correct_orientation(next_t, sub_tris);
-	  tris.push_back(corrected);
-
-	  remove(ind, remaining_inds);
-	  num_added++;
-	  break;
-	}
-
-	if (num_added == 0) {
-	  tris.push_back(next_t);
-
-	  remove(ind, remaining_inds);
-	  num_added++;
-	  break;
-	}
-      }
-
-    }
-
-    auto ccs =
-      connected_components_by(tris, [](const triangle_t l, const triangle_t r)
-			      { return share_edge(l, r); });
-    DBG_ASSERT(ccs.size() == 1);
-
-    auto num_errs_after_correction = num_winding_order_errors(tris);
-    if (num_errs_after_correction != 0) {
-      cout << "ERROR: " << num_errs_after_correction << " winding errors still exist" << endl;
-      DBG_ASSERT(num_errs_after_correction == 0);
-    }
-
-    DBG_ASSERT(num_winding_order_errors(tris) == 0);
-    DBG_ASSERT(tris.size() == triangles.size());
-
-    return tris;
   }
 
   bool degenerate(const triangle_t t) {
@@ -560,9 +423,13 @@ namespace gca {
     triangle plane_rep = part.face_triangle(s.front());
     point v1 = plane_rep.v1;
     point n = plane_rep.normal.normalize();
+
+    plane pl(n, v1);
+
     bool all_neg = true;
     bool all_pos = true;
-    double d = -(v1.dot(n));
+
+    // double d = -(v1.dot(n));
 
     vector<index_t> s_inds = s;
     sort(begin(s_inds), end(s_inds));
@@ -570,17 +437,33 @@ namespace gca {
     vector<index_t> s_vertices = vertex_indexes_for_faces(s, part);
 
     for (auto i : inds(part.vertex_list())) {
+
       if (!binary_search(begin(s_vertices), end(s_vertices), i)) {
+
 	point p = part.vertex(i);
-	double sgn = n.dot(p) + d; // - v1);
-	// TODO: Eliminate ad hoc tolerance
-	if (sgn > 0.0001) {
+	double signed_dist = signed_distance(pl, p);
+
+	if (signed_dist > 0.0001) {
+	  //cout << "point " << p << " has signed distance = " << signed_dist << endl;
+
 	  all_neg = false;
-	}
-	// TODO: Eliminate ad hoc tolerance
-	if (sgn < 0.0001) {
+	} else if (signed_dist < -0.0001) {
+	  //cout << "point " << p << " has signed distance = " << signed_dist << endl;
+
 	  all_pos = false;
 	}
+
+	//double sgn = n.dot(p) + d; // - v1);
+
+	// // TODO: Eliminate ad hoc tolerance
+	// if (sgn > 0.00001) {
+	//   all_neg = false;
+	// }
+	// // TODO: Eliminate ad hoc tolerance
+	// if (sgn < 0.00001) {
+	//   all_pos = false;
+	// }
+
 	if (!all_neg && !all_pos) { return false; }
       }
     }

@@ -216,9 +216,8 @@ namespace gca {
 
     auto result_plan = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
-    // TODO: Get this down to 2 setups using better volume removal analysis
-    SECTION("3 setups") {
-      REQUIRE(result_plan.steps().size() == 3);
+    SECTION("2 setups") {
+      REQUIRE(result_plan.steps().size() == 2);
 
       sanity_check_toolpaths(result_plan);
     }
