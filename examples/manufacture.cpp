@@ -6,6 +6,8 @@
 #include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/fixture_analysis.h"
+#include "synthesis/mesh_to_gcode.h"
+#include "synthesis/visual_debug.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -117,9 +119,14 @@ namespace gca {
       cout << bounding << endl;
 
       //      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
-      fabrication_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+      fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
       cout << "Number of steps = " << p.steps().size() << endl; //p.fixtures().size() << endl;
+
+      for (auto step : p.steps()) {
+	visual_debug(step);
+      }
+      
     }
   }
 
