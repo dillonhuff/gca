@@ -15,11 +15,11 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = large_jaw_vice(10, point(1.3, -4.4, 3.3));
+    vice test_vice = large_jaw_vice(5, point(1.3, -4.4, 3.3));
     std::vector<plate_height> plates{0.1, 0.3, 0.7};
     fixtures fixes(test_vice, plates);
 
-    workpiece workpiece_dims(5.0, 5.0, 5.0, ALUMINUM); //2.0, 2.0, 3.98, ALUMINUM);
+    workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM); //2.0, 2.0, 3.98, ALUMINUM);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.25);
@@ -92,8 +92,19 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl"};
 
-    vector<string> part_paths {
-	};
+    vector<string> part_paths {};
+
+    for (auto part_path : passes) {
+      cout << "Part path: " << part_path << endl;
+
+      auto mesh = parse_stl(part_path, 0.001);
+
+      box bounding = mesh.bounding_box();
+
+      cout << "X length = " << bounding.x_len() << endl;
+      cout << "Y length = " << bounding.y_len() << endl;
+      cout << "Z length = " << bounding.z_len() << endl;
+    }
 
     for (auto part_path : passes) { //part_paths) {
       cout << "Part path: " << part_path << endl;
@@ -105,9 +116,10 @@ namespace gca {
       cout << "Bounding box = " << endl;
       cout << bounding << endl;
 
-      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+      //      fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+      fabrication_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-      cout << "Number of steps = " << p.fixtures().size() << endl;
+      cout << "Number of steps = " << p.steps().size() << endl; //p.fixtures().size() << endl;
     }
   }
 
