@@ -480,7 +480,30 @@ namespace gca {
 
     return fs;
   }
-  
+
+  boost::optional<fixture>
+  find_next_fixture(Nef_polyhedron& stock_nef,
+		    const triangular_mesh& current_stock,
+		    const point n,
+		    const vice& v) {
+
+    auto orients = all_stable_orientations_box(stock_nef, v, n);
+    cout << "# of orients in " << n << " = " << orients.size() << endl;
+
+    if (orients.size() > 0) {
+      auto orient = max_e(orients, [current_stock](const clamp_orientation& c)
+			  { return c.contact_area(current_stock); });
+
+      cout << "Found fixture in " << n << endl;
+    
+      fixture fix(orient, v);
+
+      return fix;
+    }
+
+    return boost::none;
+  }
+
   std::vector<fixture_setup>
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
@@ -505,13 +528,13 @@ namespace gca {
 
     double part_volume = volume(part);
 
+#ifdef VIZ_DBG
     vector<feature*> init_features;
     cout << "# of directions = " << dir_info.size() << endl;
     for (auto d : dir_info) {
       concat(init_features, collect_features(d.decomp));
     }
 
-#ifdef VIZ_DBG
     vtk_debug_features(init_features);
 #endif
 
@@ -525,34 +548,24 @@ namespace gca {
       cout << "In loop getting current stock" << endl;
       auto current_stock = nef_to_single_trimesh(stock_nef);
       cout << "In loop got current stock" << endl;
-      
-      point n = normal(info.decomp);
-      auto orients = all_stable_orientations_box(stock_nef, v, n);
-      cout << "# of orients in " << n << " = " << orients.size() << endl;
 
-      // auto maybe_orient =
-      // 	find_orientation_by_normal_optional(orients, n);
+      point n = normal(info.decomp);
+      boost::optional<fixture> maybe_fix =
+	find_next_fixture(stock_nef, current_stock, n, v);
 
 #ifdef VIZ_DBG
       vtk_debug_feature_decomposition(info.decomp);
 #endif
 
-      if (orients.size() > 0) {
-
-	cout << "Found fixture in " << n << endl;
-
-	//	auto orient = *maybe_orient;
-	auto orient = max_e(orients, [current_stock](const clamp_orientation& c)
-			    { return c.contact_area(current_stock); });
-      
-	fixture fix(orient, v);
+      if (maybe_fix) {
+	fixture fix = *maybe_fix;
 
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
 	clip_volumes(decomp, volume_inf, dir_info);
 	
-	auto t = mating_transform(current_stock, orient, v);
+	auto t = mating_transform(current_stock, fix.orient, fix.v);
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
@@ -565,8 +578,6 @@ namespace gca {
 	    cout << "delta volume = " << vol_data.volume << endl;
 
 	    vtk_debug_feature(*f);
-
-	    //	  vtk_debug_mesh(vol_data.dilated_mesh);
 
 	    vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
 
