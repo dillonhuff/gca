@@ -200,7 +200,7 @@ namespace gca {
       DBG_ASSERT(viable.size() > 0);
     }
 
-    tool t = min_e(viable, [](const tool& l) { return l.diameter(); });
+    tool t = max_e(viable, [](const tool& l) { return l.diameter(); });
 
     return t;
   }

@@ -55,8 +55,7 @@ namespace gca {
     t3.set_holder_diameter(2.5);
     t3.set_holder_length(3.5);
 
-    // Ridiculous tool used to test feasability
-    tool t4{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    tool t4{0.5, 3.94, 4, HSS, FLAT_NOSE};
     t4.set_cut_diameter(0.5);
     t4.set_cut_length(2.2);
 
