@@ -57,10 +57,10 @@ namespace gca {
 
     tool t4{0.5, 3.94, 4, HSS, FLAT_NOSE};
     t4.set_cut_diameter(0.5);
-    t4.set_cut_length(2.2);
+    t4.set_cut_length(2.5);
 
     t4.set_shank_diameter(0.5);
-    t4.set_shank_length(0.05);
+    t4.set_shank_length(0.5);
 
     t4.set_holder_diameter(2.5);
     t4.set_holder_length(3.5);
@@ -84,13 +84,13 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 
     vector<string> passes{
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
 	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",      
 	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl"};
@@ -124,9 +124,9 @@ namespace gca {
 
       cout << "Number of steps = " << p.steps().size() << endl;
 
-      for (auto step : p.steps()) {
-	visual_debug(step);
-      }
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
       
     }
   }
