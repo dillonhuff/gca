@@ -481,11 +481,76 @@ namespace gca {
     return fs;
   }
 
+  boost::optional<double>
+  select_parallel_plate(feature_decomposition* decomp,
+			const triangular_mesh& current_stock,
+			const fixtures& f) {
+
+    DBG_ASSERT(decomp->num_children() == 1);
+
+    feature_decomposition* top = decomp->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+    
+    point n = normal(decomp);
+
+    // TODO: Should really make this max double value
+    double min_outer_depth = 1e25;
+
+    for (auto feat : collect_features(decomp)) {
+      if (is_outer(*feat, stock_polygon)) {
+	double feat_min = feat->min_distance_along(n);
+
+	if (feat_min < min_outer_depth) {
+	  min_outer_depth = feat_min;
+	}
+
+      }
+    }
+
+    
+    vice v_pre = f.get_vice();
+    double part_min = min_in_dir(current_stock, n);
+
+    // TODO: Make this a parameter rather than a magic number?
+    double safe_margin = 0.05;
+
+    if (min_outer_depth > (part_min + v_pre.jaw_height() + safe_margin)) {
+      return boost::none;
+    }
+
+    vector<double> heights = f.parallel_plates();
+    sort(begin(heights), end(heights));
+
+    for (auto height : heights) {
+      vice test_v(v_pre, height);
+
+      if (min_outer_depth > (part_min + test_v.jaw_height() + safe_margin)) {
+	return height;
+      }
+      
+    }
+    
+    double max_plate = max_e(f.parallel_plates(), [](const plate_height p)
+			     { return p; });
+
+    return max_plate;
+  }
+
   boost::optional<fixture>
-  find_next_fixture(Nef_polyhedron& stock_nef,
+  find_next_fixture(feature_decomposition* decomp,
+		    Nef_polyhedron& stock_nef,
 		    const triangular_mesh& current_stock,
 		    const point n,
-		    const vice& v) {
+		    const fixtures& f) {
+
+    boost::optional<double> par_plate =
+      select_parallel_plate(decomp, current_stock, f);
+
+    vice v = f.get_vice();
+    if (par_plate) {
+      v = vice(f.get_vice(), *par_plate);
+    }
 
     auto orients = all_stable_orientations_box(stock_nef, v, n);
     cout << "# of orients in " << n << " = " << orients.size() << endl;
@@ -516,12 +581,6 @@ namespace gca {
 
     volume_info_map volume_inf = initial_volume_info(dir_info);
 
-    vice v_pre = f.get_vice();
-    double max_plate = max_e(f.parallel_plates(), [](const plate_height p)
-			     { return p; });
-
-    vice v(v_pre, max_plate);
-
     //triangular_mesh current_stock = stock;
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     vector<fixture_setup> cut_setups;
@@ -550,8 +609,9 @@ namespace gca {
       cout << "In loop got current stock" << endl;
 
       point n = normal(info.decomp);
+
       boost::optional<fixture> maybe_fix =
-	find_next_fixture(stock_nef, current_stock, n, v);
+	find_next_fixture(info.decomp, stock_nef, current_stock, n, f);
 
 #ifdef VIZ_DBG
       vtk_debug_feature_decomposition(info.decomp);
