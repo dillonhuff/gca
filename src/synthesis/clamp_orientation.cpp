@@ -11,8 +11,11 @@ namespace gca {
     vector<index_t> inds_along;
     for (auto i : part.face_indexes()) {
       triangle t = part.face_triangle(i);
-      if (within_eps(t.normal, p.normal(), 0.001)) {
-	if (within_eps(p.normal().dot(p.pt() - t.v1), 0, 0.001)) {
+      // if (within_eps(t.normal, p.normal(), 0.001)) {
+      // 	if (within_eps(p.normal().dot(p.pt() - t.v1), 0, 0.001)) {
+      if (angle_eps(t.normal, p.normal(), 0.0, 0.001)) {
+	if (within_eps(p.normal().dot(p.pt() - t.v1), 0.0, 0.001)) {
+
 	  inds_along.push_back(i);
 	}
       }
@@ -22,8 +25,8 @@ namespace gca {
 
   double clamp_orientation::contact_area(const triangular_mesh& m) const {
     surface l = contact_surface(left_plane(), m);
-    surface r = contact_surface(left_plane(), m);
-    surface b = contact_surface(right_plane(), m);
+    surface r = contact_surface(right_plane(), m);
+    surface b = contact_surface(base_plane(), m);
     return l.surface_area() + r.surface_area() + b.surface_area();
   }
 
@@ -124,9 +127,9 @@ namespace gca {
     reverse(begin(cregions), end(cregions));
 
     cout << "# of const orientation regions = " << cregions.size() << endl;
-    for (auto cregion : cregions) {
-      vtk_debug_highlight_inds(cregion);
-    }
+    // for (auto cregion : cregions) {
+    //   vtk_debug_highlight_inds(cregion);
+    // }
 
     std::vector<clamp_orientation> orients =
       all_stable_orientations_with_top_normal(cregions, v, n);
