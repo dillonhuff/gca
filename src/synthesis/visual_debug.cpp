@@ -78,7 +78,34 @@ namespace gca {
 
     return vice_pd;
   }
-  
+
+  class color {
+  protected:
+    unsigned r, g, b;
+
+  public:
+    color(unsigned p_r, unsigned p_g, unsigned p_b) :
+      r(p_r), g(p_g), b(p_b) {}
+
+    unsigned red() const { return r; }
+    unsigned green() const { return r; }
+    unsigned blue() const { return b; }
+  };
+
+  color random_color(const color mix) {
+    unsigned red = rand() % 256;
+    unsigned green = rand() % 256;
+    unsigned blue = rand() % 256;
+
+    // mix the color
+    red = (red + mix.red()) / 2;
+    green = (green + mix.green()) / 2;
+    blue = (blue + mix.blue()) / 2;
+
+    color color(red, green, blue);
+    return color;    
+  }
+
   void visual_debug(const fabrication_setup& setup) {
     auto vice_pd = polydata_for_vice(setup.v);
     auto vice_actor = polydata_actor(vice_pd);
@@ -98,9 +125,12 @@ namespace gca {
       }
     }
 
+    color white(255, 255, 255);
+
     for (auto& tp : setup.toolpaths()) {
       auto tp_polydata = polydata_for_toolpath(tp);
-      color_polydata(tp_polydata, 128, 0, 128);
+      color tp_color = random_color(white);
+      color_polydata(tp_polydata, tp_color.red(), tp_color.green(), tp_color.blue());
 
       actors.push_back(polydata_actor(tp_polydata));
     }
