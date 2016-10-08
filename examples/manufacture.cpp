@@ -124,9 +124,9 @@ namespace gca {
 
       cout << "Number of steps = " << p.steps().size() << endl;
 
-      // for (auto step : p.steps()) {
-      // 	visual_debug(step);
-      // }
+      for (auto step : p.steps()) {
+      	visual_debug(step);
+      }
       
     }
   }
