@@ -30,8 +30,8 @@ namespace gca {
 
     pocket_name pocket_type() const { return self_->pocket_type(); }
 
-    tool select_tool(const std::vector<tool>& tools) const
-    { return self_->select_tool(tools); }
+    // tool select_tool(const std::vector<tool>& tools) const
+    // { return self_->select_tool(tools); }
 
     const vector<oriented_polygon>& get_holes() const
     { return self_->get_holes(); }
@@ -56,7 +56,7 @@ namespace gca {
   private:
     struct concept_t {
       virtual ~concept_t() = default;
-      virtual tool select_tool(const std::vector<tool>& tools) const = 0;
+      //virtual tool select_tool(const std::vector<tool>& tools) const = 0;
       virtual pocket_name pocket_type() const = 0;
       virtual toolpath make_toolpath(const material& stock_material,
 				     const double safe_z,
@@ -74,13 +74,18 @@ namespace gca {
     struct model : concept_t {
       model(T x) : data_(move(x)) {}
       pocket_name pocket_type() const { return data_.pocket_type(); }
-      tool select_tool(const std::vector<tool>& tools) const
-      { return data_.select_tool(tools); }
+
+      // tool select_tool(const std::vector<tool>& tools) const
+      // { return data_.select_tool(tools); }
+
       virtual concept_t* copy_() const { return new model<T>(*this); }
+
       const vector<oriented_polygon>& get_holes() const
       { return data_.get_holes(); }
+
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
       { return data_.toolpath_lines(t, cut_depth); }
+
       bool above_base(const point p) const { return data_.above_base(p); }
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }
