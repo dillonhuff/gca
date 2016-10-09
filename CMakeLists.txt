@@ -133,6 +133,7 @@ SET(GCA_HEADERS
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
 	    ./src/synthesis/millability.h
+	    ./src/synthesis/tool.h
 	    ./src/synthesis/vice.h
 	    ./src/synthesis/tool.h
 	    ./src/synthesis/workpiece.h
@@ -167,6 +168,7 @@ SET(GCA_CPPS
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
+	 ./src/synthesis/tool.cpp
 	 ./src/synthesis/vice.cpp
 	 ./src/synthesis/visual_debug.cpp
 	 ./src/system/settings.cpp

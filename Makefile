@@ -2650,6 +2650,33 @@ src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
 
+src/synthesis/tool.o: src/synthesis/tool.cpp.o
+
+.PHONY : src/synthesis/tool.o
+
+# target to build an object file
+src/synthesis/tool.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.o
+.PHONY : src/synthesis/tool.cpp.o
+
+src/synthesis/tool.i: src/synthesis/tool.cpp.i
+
+.PHONY : src/synthesis/tool.i
+
+# target to preprocess a source file
+src/synthesis/tool.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.i
+.PHONY : src/synthesis/tool.cpp.i
+
+src/synthesis/tool.s: src/synthesis/tool.cpp.s
+
+.PHONY : src/synthesis/tool.s
+
+# target to generate assembly for a file
+src/synthesis/tool.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.s
+.PHONY : src/synthesis/tool.cpp.s
+
 src/synthesis/toolpath_generation.o: src/synthesis/toolpath_generation.cpp.o
 
 .PHONY : src/synthesis/toolpath_generation.o
@@ -4388,6 +4415,9 @@ help:
 	@echo "... src/synthesis/shapes_to_toolpaths.o"
 	@echo "... src/synthesis/shapes_to_toolpaths.i"
 	@echo "... src/synthesis/shapes_to_toolpaths.s"
+	@echo "... src/synthesis/tool.o"
+	@echo "... src/synthesis/tool.i"
+	@echo "... src/synthesis/tool.s"
 	@echo "... src/synthesis/toolpath_generation.o"
 	@echo "... src/synthesis/toolpath_generation.i"
 	@echo "... src/synthesis/toolpath_generation.s"

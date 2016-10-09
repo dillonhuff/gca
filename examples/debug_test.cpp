@@ -76,6 +76,18 @@ namespace gca {
     REQUIRE(collect_features(f).size() == 3);
     REQUIRE(f->num_levels() == 4);
 
+    tool_access_info tool_info = find_accessable_tools(f, tools);
+
+    REQUIRE(tool_info.size() == f->num_features());
+
+    feature* base = f->child(0)->child(0)->child(0)->feature();
+
+    cout << "TOOLS USABLE FOR BOTTOM" << endl;
+    for (auto t : tool_info[base]) {
+      cout << t << endl;
+    }
+
+    REQUIRE(tool_info[base].size() == 1);
     
   }
   
