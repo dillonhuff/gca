@@ -179,15 +179,30 @@ namespace gca {
       assert(l.num_points() > 0);
     }
 
-    point shift_vector = point(0, 0, tp.t.length());
     vector<polyline> reflected_lines = reflect_y(tp.lines);
 
     cut_params params;
     params.target_machine = EMCO_F1;
-    params.safe_height = tp.safe_z_before_tlc; // + tp.t.length();
+    params.safe_height = tp.safe_z_before_tlc;
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, g10_TLC_prefix(tp));
+    concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    return blks;
+  }
+
+  std::vector<block> emco_f1_code_no_TLC(const toolpath& tp) {
+    for (auto l : tp.lines) {
+      assert(l.num_points() > 0);
+    }
+
+    vector<polyline> reflected_lines = reflect_y(tp.lines);
+
+    cut_params params;
+    params.target_machine = EMCO_F1;
+    params.safe_height = tp.safe_z_before_tlc;
+
+    vector<block> blks = comment_prefix(tp, params);
     concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }

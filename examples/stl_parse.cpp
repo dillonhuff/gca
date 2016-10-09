@@ -20,33 +20,33 @@ int main(int argc, char* argv[]) {
   auto box_triangles = parse_stl(argv[1]).triangles;
   auto mesh = make_mesh(box_triangles, 0.001);
 
-  vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
-  std::vector<plate_height> parallel_plates{0.5, 0.7};
-  fixtures fixes(test_vice, parallel_plates);
+  // vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+  // std::vector<plate_height> parallel_plates{0.5, 0.7};
+  // fixtures fixes(test_vice, parallel_plates);
 
-  tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
-  t1.set_cut_diameter(0.1);
-  t1.set_cut_length(0.4);
+  // tool t1(0.1, 3.0, 4, HSS, FLAT_NOSE);
+  // t1.set_cut_diameter(0.1);
+  // t1.set_cut_length(0.4);
 
-  t1.set_shank_diameter(3.0 / 8.0);
-  t1.set_shank_length(0.1);
+  // t1.set_shank_diameter(3.0 / 8.0);
+  // t1.set_shank_length(0.1);
 
-  t1.set_holder_diameter(2.0);
-  t1.set_holder_length(2.5);
+  // t1.set_holder_diameter(2.0);
+  // t1.set_holder_length(2.5);
 
-  tool t2(0.12, 3.0, 4, HSS, FLAT_NOSE);
-  t2.set_cut_diameter(0.12);
-  t2.set_cut_length(1.2);
+  // tool t2(0.12, 3.0, 4, HSS, FLAT_NOSE);
+  // t2.set_cut_diameter(0.12);
+  // t2.set_cut_length(1.2);
 
-  t2.set_shank_diameter(0.1);
-  t2.set_shank_length(0.5);
+  // t2.set_shank_diameter(0.1);
+  // t2.set_shank_length(0.5);
 
-  t2.set_holder_diameter(2.0);
-  t2.set_holder_length(2.5);
+  // t2.set_holder_diameter(2.0);
+  // t2.set_holder_length(2.5);
     
-  vector<tool> tools{t1, t2};
+  // vector<tool> tools{t1, t2};
 
-  workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
+  // workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
   
   // vice test_vice = current_setup(); //large_jaw_vice(15, point(0, 0, 0)); //current_setup();
   // test_vice = top_jaw_origin_vice(test_vice);
@@ -87,17 +87,64 @@ int main(int argc, char* argv[]) {
 
   // workpiece workpiece_dims(2, 2, 2.7, ALUMINUM);
 
+  vice test_v = large_jaw_vice(5, point(1.3, -4.4, 3.3));
+  vice test_vice = top_jaw_origin_vice(test_v);
+
+  std::vector<plate_height> plates{0.1, 0.3, 0.7};
+  fixtures fixes(test_vice, plates);
+
+  workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+
+  tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  t1.set_cut_diameter(0.25);
+  t1.set_cut_length(0.6);
+
+  t1.set_shank_diameter(3.0 / 8.0);
+  t1.set_shank_length(0.3);
+
+  t1.set_holder_diameter(2.5);
+  t1.set_holder_length(3.5);
+    
+  tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+  t2.set_cut_diameter(0.5);
+  t2.set_cut_length(0.3);
+
+  t2.set_shank_diameter(0.5);
+  t2.set_shank_length(0.5);
+
+  t2.set_holder_diameter(2.5);
+  t2.set_holder_length(3.5);
+
+  tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+  t3.set_cut_diameter(0.12);
+  t3.set_cut_length(1.2);
+
+  t3.set_shank_diameter(0.5);
+  t3.set_shank_length(0.05);
+
+  t3.set_holder_diameter(2.5);
+  t3.set_holder_length(3.5);
+
+  tool t4{0.5, 3.94, 4, HSS, FLAT_NOSE};
+  t4.set_cut_diameter(0.5);
+  t4.set_cut_length(2.5);
+
+  t4.set_shank_diameter(0.5);
+  t4.set_shank_length(0.5);
+
+  t4.set_holder_diameter(2.5);
+  t4.set_holder_length(3.5);
+    
+  vector<tool> tools{t1, t2, t3, t4};
+  
   fabrication_plan plan =
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
   for (auto step : plan.steps()) {
+    cout << "# of toolpaths = " << step.toolpaths().size() << endl;
     visual_debug(step);
   }
 
-  cout << "Custom fixtures" << endl;
-  for (auto fix_plan : plan.custom_fixtures()) {
-    print_programs(*fix_plan);
-  }
-  print_programs(plan);
+  print_programs_no_TLC(plan);
 }
 

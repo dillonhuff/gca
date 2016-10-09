@@ -31,8 +31,9 @@ namespace gca {
 				    const std::vector<tool>& tools,
 				    const workpiece& w);
 
-  void print_programs(const fabrication_plan& fix_plan);
+  void print_programs(const fabrication_plan& fab_plan);
 
+  void print_programs_no_TLC(const fabrication_plan& fab_plan);
 }
 
 #endif
