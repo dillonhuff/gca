@@ -389,23 +389,32 @@ namespace gca {
       return boost::none;
     }
 
-    vector<vector<point>> dh;
+    auto dr = drs.front();
+    auto dr_pts = clean_vertices(dr);
+
+    vector<polygon_3> new_holes;
     for (auto h : p.holes()) {
       auto h_clean = clean_vertices(exterior_offset(h, tol));
       if (h_clean.size() >= 3) {
-	dh.push_back(h_clean);
+	new_holes.push_back(polygon_3(h_clean));
       }
     }
 
-    auto dr = drs.front();
-    
-    auto dr_pts = clean_vertices(dr);
+    vector<polygon_3> result_holes = planar_polygon_union(new_holes);
 
+    const rotation r = rotated_from_to(p.normal(), point(0, 0, 1));
+    boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, polygon_3(dr_pts))));
+
+    vector<vector<point>> dh;
+    for (auto h : result_holes) {
+      dh.push_back(h.vertices());
+    }
+    
     if (dr_pts.size() >= 3) {
       labeled_polygon_3 poly(dr_pts, dh);
       return poly;
     }
-    
+
     return boost::none;
   }
   
