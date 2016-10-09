@@ -402,8 +402,13 @@ namespace gca {
 
     vector<polygon_3> result_holes = planar_polygon_union(new_holes);
 
-    const rotation r = rotated_from_to(p.normal(), point(0, 0, 1));
+    const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
     boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, polygon_3(dr_pts))));
+
+    boost_multipoly_2 union_of_holes = planar_union_boost(new_holes);
+    if (bg::within(new_exterior_p, union_of_holes)) {
+      return boost::none;
+    }
 
     vector<vector<point>> dh;
     for (auto h : result_holes) {

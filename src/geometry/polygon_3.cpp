@@ -129,6 +129,41 @@ namespace gca {
     return bg::area(td);
   }
 
+  boost_multipoly_2
+  planar_union_boost(const std::vector<polygon_3>& polys) {
+    if (polys.size() == 0) { return {}; }
+
+    //vtk_debug_polygons(polys);
+
+    double level_z =
+      max_distance_along(polys.front().vertices(), polys.front().normal());
+    point n = polys.front().normal();
+
+    cout << "n = " << n << endl;
+    
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    cout << "# polys to union = " << polys.size() << endl;
+
+    boost_multipoly_2 result;
+    result.push_back(to_boost_poly_2(apply(r, polys.front())));
+
+    for (unsigned i = 1; i < polys.size(); i++) {
+      auto& s = polys[i];
+
+      auto bp = to_boost_poly_2(apply(r, s));
+      boost_multipoly_2 r_tmp = result;
+      boost::geometry::clear(result);
+      boost::geometry::union_(r_tmp, bp, result);
+    }
+
+    cout << "# polys in result = " << result.size() << endl;
+
+    return result;
+  }
+
+  // TODO: Use planar_union_boost as starting point here?
   std::vector<labeled_polygon_3>
   planar_polygon_union(const std::vector<labeled_polygon_3>& polys) {
     if (polys.size() == 0) { return {}; }

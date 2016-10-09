@@ -89,10 +89,13 @@ namespace gca {
 
   double area(const polygon_3& p);
 
-  std::vector<labeled_polygon_3>
-  planar_polygon_union(const std::vector<labeled_polygon_3>& polys);
+  std::vector<polygon_3>
+  planar_polygon_union(const std::vector<polygon_3>& polys);
 
-  labeled_polygon_3
+  boost_multipoly_2
+  planar_union_boost(const std::vector<polygon_3>& polys);
+  
+  polygon_3
   convex_hull_2D(const std::vector<point>& pts,
 		 const point n,
 		 const double z_level);
