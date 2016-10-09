@@ -229,7 +229,6 @@ namespace gca {
 
     cout << "Number of steps = " << p.fixtures().size() << endl;
 
-    // Tentative number just to check the thru hole cutting
     REQUIRE(p.fixtures().size() == 3);
 
   }
