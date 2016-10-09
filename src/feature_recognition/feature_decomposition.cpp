@@ -372,6 +372,10 @@ namespace gca {
   boost::optional<labeled_polygon_3>
   shrink_optional(const labeled_polygon_3& p,
 		  const double tol) {
+
+    double level_z =
+      max_distance_along(p.vertices(), p.normal());
+    
     auto drs = interior_offsets(p.vertices(), tol);
 
     if (drs.size() == 0) { return boost::none; }
@@ -403,12 +407,29 @@ namespace gca {
     //    vector<polygon_3> result_holes = planar_polygon_union(new_holes);
 
     const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
     boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, polygon_3(dr_pts))));
 
     boost_multipoly_2 union_of_holes = planar_union_boost(new_holes);
 
     boost_multipoly_2 shrunk_res;
     bg::difference(new_exterior_p, union_of_holes, shrunk_res);
+
+    std::vector<polygon_3> res;
+    for (auto r : shrunk_res) {
+      polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+
+      check_simplicity(lp);
+
+      lp.correct_winding_order(p.normal());
+      res.push_back(lp);
+    }
+
+    if (res.size() != 1) { return boost::none; }
+
+    return res.front();
+    
     
     // if (bg::within(new_exterior_p, union_of_holes)) {
     //   return boost::none;
