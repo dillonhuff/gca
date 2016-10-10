@@ -651,9 +651,9 @@ namespace gca {
     double stock_volume = volume(current_stock);
     double volume_ratio = part_volume / stock_volume;
 	
-    cout << "Part volume  = " << part_volume << endl;
-    cout << "Stock volume = " << stock_volume << endl;
-    cout << "part / stock = " << volume_ratio << endl;
+    cout << "Part volume              = " << part_volume << endl;
+    cout << "Final stock volume       = " << stock_volume << endl;
+    cout << "Final part / stock       = " << volume_ratio << endl;
 
 #ifdef VIZ_DBG
     vtk_debug_features(all_features);

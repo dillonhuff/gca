@@ -173,7 +173,7 @@ namespace gca {
     set_system_allocator(&a);
 
     // Change back to emco_vice
-    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0)); //large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
     std::vector<plate_height> parallel_plates{0.5, 0.7};
     fixtures fixes(test_vice, parallel_plates);
 
@@ -196,7 +196,7 @@ namespace gca {
 
     t2.set_holder_diameter(2.0);
     t2.set_holder_length(2.5);
-    
+
     vector<tool> tools{t1, t2};
 
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
