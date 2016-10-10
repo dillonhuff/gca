@@ -13,12 +13,6 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_v = large_jaw_vice(5, point(1.3, -4.4, 3.3));
-    vice test_vice = top_jaw_origin_vice(test_v);
-
-    std::vector<plate_height> plates{0.1, 0.3, 0.7};
-    fixtures fixes(test_vice, plates);
-
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.25);
     t1.set_cut_length(0.6);

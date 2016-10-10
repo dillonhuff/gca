@@ -10,7 +10,8 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = large_jaw_vice(4.5, point(-0.8, -4.4, -3.3));
+    vice test_vice = custom_jaw_vice(4.5, 1.5, 8.1, point(0.0, 0.0, 0.0));
+
     std::vector<plate_height> parallel_plates{0.5, 0.7};
     fixtures fixes(test_vice, parallel_plates);
     

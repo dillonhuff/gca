@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 
   // workpiece workpiece_dims(2, 2, 2.7, ALUMINUM);
 
-  vice test_v = large_jaw_vice(5, point(1.3, -4.4, 3.3));
+  vice test_v = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
   vice test_vice = top_jaw_origin_vice(test_v);
 
   std::vector<plate_height> plates{0.1, 0.3, 0.7};
