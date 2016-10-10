@@ -515,6 +515,45 @@ namespace gca {
     return max_plate;
   }
 
+  clamp_orientation
+  find_part_zero(const Nef_polyhedron& part_nef,
+		 const vice& v,
+		 const point n) {
+    auto part = nef_to_single_trimesh(part_nef);
+    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
+
+    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
+    plane vice_top_plane(-1*n, vice_pl_pt);
+
+    double big = 2000.0;
+
+    polygon_3 p = project_onto(vice_top_plane, hull);
+    polygon_3 plane_approx = dilate(p, big);
+
+    triangular_mesh m = extrude(plane_approx, big*n);
+    
+    auto clip_nef = trimesh_to_nef_polyhedron(m);
+    auto cut_parts_nef = part_nef - clip_nef;
+
+    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
+
+    vector<surface> cregions = outer_surfaces(cut_part);
+    sort(begin(cregions), end(cregions),
+	 [](const surface& l, const surface& r)
+	 { return l.surface_area() < r.surface_area(); });
+    reverse(begin(cregions), end(cregions));
+
+    std::vector<clamp_orientation> orients =
+      all_stable_orientations_with_top_normal(cregions, v, n);
+
+    DBG_ASSERT(orients.size() > 0);
+
+    auto orient = max_e(orients, [part](const clamp_orientation& c)
+			{ return c.contact_area(part); });
+    
+    return orient;
+  }
+
   boost::optional<fixture>
   find_next_fixture(feature_decomposition* decomp,
 		    Nef_polyhedron& stock_nef,
@@ -538,8 +577,10 @@ namespace gca {
 			  { return c.contact_area(current_stock); });
 
       cout << "Found fixture in " << n << endl;
+
+      clamp_orientation part_zero = find_part_zero(stock_nef, v, -1*n);
     
-      fixture fix(orient, v);
+      fixture fix(orient, v, part_zero);
 
       return fix;
     }

@@ -8,12 +8,33 @@
 
 namespace gca {
 
-  struct fixture {
+  class fixture {
+  protected:
+    boost::optional<clamp_orientation> zero_planes;
+
+  public:
     clamp_orientation orient;
     vice v;
     fixture(const clamp_orientation& p_orient,
 	    const vice& p_v)
-      : orient(p_orient), v(p_v) {}
+      : zero_planes(boost::none), orient(p_orient), v(p_v) {}
+
+    fixture(const clamp_orientation& p_orient,
+	    const vice& p_v,
+	    const clamp_orientation& p_zero_planes)
+      : zero_planes(p_zero_planes), orient(p_orient), v(p_v) {}
+
+    bool has_part_zero() const {
+      if (zero_planes) { return true; }
+      return false;
+    }
+
+    clamp_orientation get_zero_planes() const {
+      DBG_ASSERT(zero_planes);
+
+      return *zero_planes;
+    }
+    
   };
 
   class fixture_setup {
