@@ -160,7 +160,7 @@ namespace gca {
     t3.set_holder_length(3.5);
     
     vector<tool> tools{t1, t2, t3};
-    workpiece workpiece_dims(1.51, 1.51, 2.0, ACETAL);
+    workpiece workpiece_dims(1.75, 2.0, 2.0, ACETAL);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
     auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
