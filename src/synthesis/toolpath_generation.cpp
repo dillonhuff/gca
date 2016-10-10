@@ -187,22 +187,57 @@ namespace gca {
     holes = bound_and_holes.second;
   }
 
-  tool
-  flat_pocket::select_tool(const std::vector<tool>& tools) const {
-    double bound_area = area(boundary);
-
-    vector<tool> viable =
-      select(tools, [bound_area](const tool& t)
-	     { return t.cross_section_area() < bound_area; });
-
-    if (viable.size() == 0) {
-      vtk_debug_polygon(boundary);
-      DBG_ASSERT(viable.size() > 0);
+  polygon_3 flat_pocket::base() const {
+    vector<vector<point>> hs;
+    for (auto h : get_holes()) {
+      hs.push_back(h.vertices());
     }
 
-    tool t = min_e(viable, [](const tool& l) { return l.diameter(); });
+    return polygon_3(get_boundary().vertices(), hs);
+  }
 
-    return t;
+  tool
+  flat_pocket::select_tool(const std::vector<tool>& tools) const {
+    vector<tool> to_check = tools;
+    sort_gt(to_check, [](const tool& t) { return t.diameter(); });
+
+    polygon_3 base_poly = base();
+
+    for (auto& t : to_check) {
+      auto offset_base_maybe = shrink_optional(base_poly, t.radius());
+
+      if (offset_base_maybe) {
+	polygon_3 offset_base = *offset_base_maybe;
+
+	if (offset_base.holes().size() == base_poly.holes().size()) {
+
+	  cout << "Chosen tool: " << endl;
+	  cout << t << endl;
+	  cout << "Cut area    = " << area(offset_base) << endl;
+	  cout << "Pocket area = " << area(base_poly) << endl;
+
+	  return t;
+	}
+      }
+    }
+
+    cout << "ERROR: No viable tools" << endl;
+    DBG_ASSERT(false);
+
+    // double bound_area = area(boundary);
+
+    // vector<tool> viable =
+    //   select(tools, [bound_area](const tool& t)
+    // 	     { return t.cross_section_area() < bound_area; });
+
+    // if (viable.size() == 0) {
+    //   vtk_debug_polygon(boundary);
+    //   DBG_ASSERT(viable.size() > 0);
+    // }
+
+    // tool t = min_e(viable, [](const tool& l) { return l.diameter(); });
+
+    // return t;
   }
 
   std::vector<polyline>

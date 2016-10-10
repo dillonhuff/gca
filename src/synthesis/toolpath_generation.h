@@ -5,6 +5,7 @@
 
 #include "geometry/box.h"
 #include "geometry/polygon.h"
+#include "geometry/polygon_3.h"
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
@@ -196,6 +197,8 @@ namespace gca {
 		const oriented_polygon& p_boundary,
 		const std::vector<oriented_polygon>& p_holes,
 		const std::vector<tool>& p_tools);
+
+    polygon_3 base() const;
 
     std::vector<polyline>
     flat_level_with_holes(const tool& t) const;
