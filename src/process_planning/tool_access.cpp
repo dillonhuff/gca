@@ -4,11 +4,11 @@
 
 namespace gca {
 
-  boost::optional<feature> access_feature(const feature& f,
-					  const tool& t,
-					  const double diam,
-					  const double len,
-					  const double depth_offset) {
+  boost::optional<feature> build_access_feature(const feature& f,
+						const tool& t,
+						const double diam,
+						const double len,
+						const double depth_offset) {
     check_simplicity(f.base());
 
     point n = f.normal();
@@ -18,7 +18,7 @@ namespace gca {
     if (!a_region) { return boost::none; }
 
     check_simplicity(*a_region);
-    
+
     labeled_polygon_3 tool_region =
       dilate(shift(depth_offset*n, *a_region), diam / 2.0);
 
@@ -30,6 +30,39 @@ namespace gca {
     return feature(len, tool_region);
   }
 
+  boost::optional<feature> access_feature(const feature& f,
+					  feature_decomposition* decomp,
+					  const tool& t,
+					  const double diam,
+					  const double len,
+					  const double depth_offset) {
+    DBG_ASSERT(decomp->num_children() == 1);
+    
+    feature_decomposition* top = decomp->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+
+    if (is_outer(f, stock_polygon)) {
+      polygon_3 safe_envelope_outline =
+	dilate(top->feature()->base(), 3.0);
+
+      point pt = f.base().vertices().front();
+      point n = f.normal();
+      plane pl(n, pt);
+
+      polygon_3 projected_outline = project_onto(pl, safe_envelope_outline);
+      polygon_3 dummy_base(projected_outline.vertices(), f.base().holes());
+
+      feature open_feature(f.depth(), dummy_base);
+
+      //vtk_debug_feature(open_feature);
+
+      return build_access_feature(open_feature, t, diam, len, depth_offset);
+    }
+
+    return build_access_feature(f, t, diam, len, depth_offset);
+  }
+
   bool feature_is_safe(const feature& f, feature_decomposition* decomp) {
     DBG_ASSERT(decomp != nullptr);
 
@@ -37,7 +70,7 @@ namespace gca {
 
     // TODO: Eventually make this a parameter, not just a builtin
     labeled_polygon_3 safe_envelope_outline =
-      dilate(top_feature->feature()->base(), 4.0);
+      dilate(top_feature->feature()->base(), 20.0);
     labeled_polygon_3 safe_envelope(safe_envelope_outline.vertices(), {top_feature->feature()->base().vertices()});
 
     point n = top_feature->feature()->normal();
@@ -101,7 +134,7 @@ namespace gca {
     }
 
     boost::optional<feature> shank_region = 
-      access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
+      access_feature(f, decomp, t, t.shank_diameter(), t.shank_length(), t.cut_length());
 
     if (!shank_region) {
       cout << "Degenerate shank region!" << endl;
@@ -114,7 +147,7 @@ namespace gca {
     }
 
     boost::optional<feature> holder_region =
-      access_feature(f, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
+      access_feature(f, decomp, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
 
     if (!holder_region) { return false; }
 

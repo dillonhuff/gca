@@ -1,4 +1,3 @@
-
 #include "catch.hpp"
 #include "synthesis/fixture_analysis.h"
 #include "utils/arena_allocator.h"
@@ -167,7 +166,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_vice = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0)); //large_jaw_vice(6, point(1.3, -4.4, 3.3));
+    vice test_vice = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
     std::vector<plate_height> plates{0.1, 0.3, 0.7};
     fixtures fixes(test_vice, plates);
 

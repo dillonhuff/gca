@@ -254,28 +254,6 @@ namespace gca {
     return curve_count(f.base());
   }
 
-  bool is_outer(const feature& f, const polygon_3& stock_bound) {
-    const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
-    polygon_3 base_p = f.base().vertices();
-    auto base_poly = to_boost_poly_2(apply(r, base_p));
-    auto stock_poly = to_boost_poly_2(apply(r, stock_bound));
-
-    boost_multipoly_2 sym_diff;
-
-    bg::sym_difference(base_poly, stock_poly, sym_diff);
-    if (bg::area(sym_diff) < 0.001) {
-
-#ifdef VIZ_DBG      
-      cout << "OUTER FEATURE" << endl;
-      vtk_debug_feature(f);
-#endif
-
-      return true;
-    }
-
-    return false;
-  }
-
   int outer_curve_count(feature_decomposition* f) {
     DBG_ASSERT(f->num_children() == 1);
 

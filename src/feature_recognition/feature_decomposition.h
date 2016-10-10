@@ -296,5 +296,8 @@ namespace gca {
 			      const point n);
 
 
+  bool is_outer(const feature& f, const polygon_3& stock_bound);
+
 }
+
 #endif
