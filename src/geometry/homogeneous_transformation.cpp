@@ -4,6 +4,11 @@
 
 namespace gca {
 
+  homogeneous_transform
+  apply(const point d, const homogeneous_transform& t) {
+    return std::make_pair(t.first, t.second + to_vector(d));
+  }
+  
   point apply(const homogeneous_transform& t, const point p) {
     return times_3(t.first, p) + from_vector(t.second);
   }

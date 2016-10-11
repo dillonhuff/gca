@@ -23,20 +23,85 @@
 
 namespace gca {
 
+  ublas::matrix<double> plane_matrix(const clamp_orientation& clamp_orient) {
+    point base_n = clamp_orient.bottom_normal();
+    point left_n = clamp_orient.left_normal();
+    point right_n = clamp_orient.right_normal();
+
+    ublas::matrix<double> p_mat(3, 3);
+    p_mat(0, 0) = base_n.x;
+    p_mat(0, 1) = base_n.y;
+    p_mat(0, 2) = base_n.z;
+
+    p_mat(1, 0) = left_n.x;
+    p_mat(1, 1) = left_n.y;
+    p_mat(1, 2) = left_n.z;
+
+    p_mat(2, 0) = right_n.x;
+    p_mat(2, 1) = right_n.y;
+    p_mat(2, 2) = right_n.z;
+
+    return p_mat;
+  }
+
+  ublas::vector<double> plane_d_vector(const clamp_orientation& clamp_orient) {
+    ublas::vector<double> d_vec(3);
+    d_vec(0) = clamp_orient.base_plane().d();
+    d_vec(1) = clamp_orient.left_plane().d();
+    d_vec(2) = clamp_orient.right_plane().d();
+
+    return d_vec;
+  }
+  
+  point part_zero_position(const fixture& f) {
+    DBG_ASSERT(f.has_part_zero());
+
+    clamp_orientation clamp_orient = f.get_zero_planes();
+
+    const ublas::matrix<double> plane_mat = plane_matrix(clamp_orient);
+    ublas::vector<double> plane_d_vec = -1*plane_d_vector(clamp_orient);
+
+    const ublas::matrix<double> p_inv = inverse(plane_mat);
+    return from_vector(prod(p_inv, plane_d_vec));
+  }
+
+  fixture shift_vice(const point p, const fixture& f) {
+    fixture shifted = f;
+    shifted.v.set_position(f.v.position() + p);
+
+    return shifted;
+  }
+
   fixture_setup
-  create_setup(const homogeneous_transform& s_t,
+  create_setup(const homogeneous_transform& s_t_no_zero,
 	       const triangular_mesh& wp_mesh,
 	       const triangular_mesh& part_mesh,
 	       const std::vector<feature*>& features,
 	       const fixture& f,
 	       const tool_access_info& tool_info) {
+    DBG_ASSERT(f.has_part_zero());
+
+    point pp = part_zero_position(f);
+    point p = apply(s_t_no_zero, pp);
+
+    point neg_p = -1*p;
+
+    const homogeneous_transform s_t = apply(neg_p, s_t_no_zero);
+
+    DBG_ASSERT(within_eps(apply(s_t, pp).len(), 0.0, 0.0001));
+
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
 
+
+    // NOTE: How should the fixtures part zero be adjusted to deal with
+    // the shift?
+    fixture adjusted_f = shift_vice(neg_p, f);
+
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, f, pockets);
+    return fixture_setup(m, adjusted_f, pockets);
   }
 
   triangular_mesh feature_mesh(const feature& f,

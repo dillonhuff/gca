@@ -23,6 +23,8 @@ namespace gca {
     inline plane flip() const { return plane(-1*normal(), pt()); }
     inline plane slide(const double d) const
     { return plane(normal(), pt() + d*normal()); }
+
+    inline double d() const { return -1*dot(normal(), pt()); }
   };
 
   boost::optional<point>
