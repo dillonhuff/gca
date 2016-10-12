@@ -12,6 +12,7 @@ namespace gca {
   protected:
     labeled_polygon_3 base_poly;
     double dp;
+    bool closed;
     
   public:
     feature(const double p_depth,
@@ -84,6 +85,8 @@ namespace gca {
 
       return feature(dp, rotated_base);
     }
+
+    bool is_closed() const { return closed; }
 
     feature apply(const homogeneous_transform& t) const {
       labeled_polygon_3 rotated_base = gca::apply(t, base_poly);

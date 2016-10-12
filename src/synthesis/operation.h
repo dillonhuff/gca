@@ -9,6 +9,7 @@ namespace gca {
     FREEFORM_POCKET,
     FACE_POCKET,
     CONTOUR_POCKET,
+    CONTOUR,
     FLAT_POCKET,
     TRACE_POCKET
   };

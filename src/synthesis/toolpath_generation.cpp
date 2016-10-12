@@ -887,4 +887,25 @@ namespace gca {
     return toolpaths;
   }
 
+  std::vector<polyline>
+  contour::flat_level_with_holes(const tool& t) const {
+    DBG_ASSERT(false);
+  }
+
+  tool contour::select_tool(const std::vector<tool>& tools) const {
+    DBG_ASSERT(false);
+  }
+
+  std::vector<polyline>
+  contour::toolpath_lines(const tool& t, const double cut_depth) const {
+    DBG_ASSERT(false);
+  }
+
+  toolpath
+  contour::make_toolpath(const material& stock_material,
+			 const double safe_z,
+			 const std::vector<tool>& tools) const {
+    DBG_ASSERT(false);
+  }
+  
 }

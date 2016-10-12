@@ -39,7 +39,11 @@ namespace gca {
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();
 
-    return {flat_pocket(top_z, base_z, ob, holes, tools)};
+    if (f.is_closed()) {
+      return {flat_pocket(top_z, base_z, ob, holes, tools)};
+    } else {
+      return {contour(top_z, base_z, ob, holes, tools)};
+    }
   }
 
   std::vector<pocket>

@@ -225,6 +225,47 @@ namespace gca {
     { return p.z > get_end_depth(); }      
 
   };
+
+  struct contour {
+  private:
+    polygon_3 bp;
+
+    double start_depth;
+    double end_depth;
+
+    std::vector<tool> possible_tools;
+
+  public:
+    contour(double p_start_depth,
+	    double p_end_depth,
+	    const polygon_3& p_bp,
+	    const std::vector<tool>& p_tools) :
+      start_depth(p_start_depth),
+      end_depth(p_end_depth),
+      bp(p_bp),
+      possible_tools(p_tools) {}
+
+    polygon_3 base() const { return bp; }
+
+    std::vector<polyline>
+    flat_level_with_holes(const tool& t) const;
+
+    pocket_name pocket_type() const { return CONTOUR; }
+    tool select_tool(const std::vector<tool>& tools) const;
+    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
+
+    toolpath make_toolpath(const material& stock_material,
+			   const double safe_z,
+			   const std::vector<tool>& tools) const;
+    
+    inline double get_start_depth() const { return start_depth; }
+
+    inline double get_end_depth() const { return end_depth; }
+
+    bool above_base(const point p) const
+    { return p.z > get_end_depth(); }      
+
+  };
   
   class contour_pocket {
   protected:
