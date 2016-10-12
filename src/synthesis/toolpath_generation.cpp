@@ -876,12 +876,6 @@ namespace gca {
   contour::flat_level_with_holes(const tool& t) const {
     vector<polyline> edges = zig_lines(get_boundary(), get_holes(), t);
 
-    auto inter = interior_offset(get_boundary(), t.radius());
-
-    for (auto i : inter) {
-      edges.push_back(to_polyline(i));
-    }
-
     // TODO: Proper polygon merging
     for (auto h : get_holes()) {
       auto outer = exterior_offset(h, t.radius());
