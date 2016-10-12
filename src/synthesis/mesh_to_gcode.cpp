@@ -17,7 +17,7 @@ namespace gca {
   std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
 					 const std::vector<tool>& tools,
 					 const material& stock_material) {
-    assert(tools.size() > 0);
+    DBG_ASSERT(tools.size() > 0);
 
     vector<toolpath> toolpaths =
       mill_pockets(pockets, tools, stock_material);

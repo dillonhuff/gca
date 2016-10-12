@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include "feature_recognition/feature_decomposition.h"
+#include "feature_recognition/visual_debug.h"
 #include "gcode/cut.h"
 #include "gcode/linear_cut.h"
 #include "geometry/mesh_operations.h"
@@ -222,6 +223,15 @@ namespace gca {
     }
 
     cout << "ERROR: No viable tools" << endl;
+    cout << "Tools considered: " << endl;
+    for (auto t : tools) 
+      {
+	cout << t << endl;
+      }
+    
+    
+    vtk_debug_polygon(base_poly);
+
     DBG_ASSERT(false);
 
     // double bound_area = area(boundary);
@@ -873,6 +883,7 @@ namespace gca {
       toolpath tp = pocket.make_toolpath(stock_material, safe_z, tools);
       toolpaths.push_back(tp);
     }
+
     return toolpaths;
   }
 
