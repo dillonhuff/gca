@@ -27,7 +27,7 @@ namespace gca {
     cout << "region normal = " << tool_region.normal() << endl;
     check_simplicity(tool_region);
     
-    return feature(len, tool_region);
+    return feature(f.is_closed(), len, tool_region);
   }
 
   boost::optional<feature> access_feature(const feature& f,
@@ -53,7 +53,7 @@ namespace gca {
       polygon_3 projected_outline = project_onto(pl, safe_envelope_outline);
       polygon_3 dummy_base(projected_outline.vertices(), f.base().holes());
 
-      feature open_feature(f.depth(), dummy_base);
+      feature open_feature(false, f.depth(), dummy_base);
 
       //vtk_debug_feature(open_feature);
 

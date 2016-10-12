@@ -572,7 +572,7 @@ namespace gca {
 
       labeled_polygon_3 shifted = project_onto(base_pl, current_level);
 
-      feature* f = new (allocate<feature>()) feature(feature_depth, shifted);
+      feature* f = new (allocate<feature>()) feature(true, feature_depth, shifted);
       feature_decomposition* child =
     	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
@@ -629,7 +629,7 @@ namespace gca {
 
     labeled_polygon_3 shifted = project_onto(base_pl, current_level);
     
-    feature* f = new (allocate<feature>()) feature(feature_depth, shifted);
+    feature* f = new (allocate<feature>()) feature(true, feature_depth, shifted);
     feature_decomposition* child =
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);
@@ -651,7 +651,26 @@ namespace gca {
 
     traverse_bf(decomp, check_normal);
   }
-  
+
+  void
+  set_open_features(feature_decomposition* decomp) {
+    DBG_ASSERT(decomp->num_children() == 1);
+
+    feature_decomposition* top = decomp->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+
+    auto set_open = [stock_polygon](feature* f) {
+      if (f != nullptr) {
+	if (is_outer(*f, stock_polygon)) {
+	  f->set_closed(false);
+	}
+      }
+    };
+
+    traverse_bf(decomp, set_open);
+  }
+
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& stock,
 			      const triangular_mesh& m,
@@ -675,8 +694,6 @@ namespace gca {
 			     l.normal());
 	cout << "----- Current depth = " << current_depth << endl;
       }
-
-      //vtk_debug_polygons(level);
 
     }
 
@@ -711,21 +728,6 @@ namespace gca {
       cout << "Current depth = " << current_depth << endl;
       cout << "Next depth    = " << next_depth << endl;
 
-      // auto part_data = polydata_for_trimesh(m);
-      // auto part_act = polydata_actor(part_data);
-
-      // auto stock_data = polydata_for_trimesh(stock);
-      // auto stock_act = polydata_actor(stock_data);
-      
-      // auto ring_data = polydata_for_ring(init_outline.vertices());
-      // auto ring_act = polydata_actor(ring_data);
-
-      // auto f_data = polydata_for_ring(levels.back().front().vertices());
-      // auto f_act = polydata_actor(ring_data);
-      
-      //visualize_actors({part_act, stock_act, ring_act, f_act});
-      //vtk_debug_polygons({init_outline, levels.back().front()});
-    
       DBG_ASSERT(current_depth >= next_depth);
     }
 
@@ -735,6 +737,8 @@ namespace gca {
     decompose_volume(init_outline, levels, decomp, base_depth);
 
     check_normals(decomp, n);
+
+    set_open_features(decomp);
 
     return decomp;
   }

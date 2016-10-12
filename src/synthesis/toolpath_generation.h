@@ -34,6 +34,7 @@ namespace gca {
     // tool select_tool(const std::vector<tool>& tools) const
     // { return self_->select_tool(tools); }
 
+    // Are get holes and the base related methods still needed?
     const vector<oriented_polygon>& get_holes() const
     { return self_->get_holes(); }
 
@@ -247,6 +248,12 @@ namespace gca {
 
     polygon_3 base() const { return bp; }
 
+    inline const vector<oriented_polygon>& get_holes() const
+    { DBG_ASSERT(false); }
+
+    inline const oriented_polygon& get_boundary() const
+    { DBG_ASSERT(false); }
+    
     std::vector<polyline>
     flat_level_with_holes(const tool& t) const;
 

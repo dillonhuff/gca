@@ -296,7 +296,7 @@ namespace gca {
     polygon_3 new_target_base = shift(shift_vec, target.base());
     double new_target_depth = target.depth() - shift_val;
 
-    return feature(new_target_depth, new_target_base);
+    return feature(target.is_closed(), new_target_depth, new_target_base);
   }
 
   void replace_features(feature_decomposition* f,

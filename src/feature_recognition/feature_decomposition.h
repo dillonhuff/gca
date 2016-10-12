@@ -10,14 +10,15 @@ namespace gca {
 
   class feature {
   protected:
+    bool closed;
     labeled_polygon_3 base_poly;
     double dp;
-    bool closed;
     
   public:
-    feature(const double p_depth,
+    feature(const bool p_closed,
+	    const double p_depth,
 	    const labeled_polygon_3& p_base) :
-      base_poly(p_base), dp(p_depth) {
+      closed(p_closed), base_poly(p_base), dp(p_depth) {
       DBG_ASSERT(depth() >= 0);
     }
 
@@ -83,16 +84,18 @@ namespace gca {
       labeled_polygon_3 rotated_base = gca::apply(r, base_poly);
       rotated_base.correct_winding_order(times_3(r, base_poly.normal()));
 
-      return feature(dp, rotated_base);
+      return feature(is_closed(), dp, rotated_base);
     }
 
     bool is_closed() const { return closed; }
+
+    void set_closed(const bool cl) { closed = cl; }
 
     feature apply(const homogeneous_transform& t) const {
       labeled_polygon_3 rotated_base = gca::apply(t, base_poly);
       rotated_base.correct_winding_order(times_3(t.first, base_poly.normal()));
 
-      return feature(dp, rotated_base);
+      return feature(is_closed(), dp, rotated_base);
     }
 
     point normal() const { return base_poly.normal(); }

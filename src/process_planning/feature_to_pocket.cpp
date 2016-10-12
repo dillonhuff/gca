@@ -42,7 +42,7 @@ namespace gca {
     if (f.is_closed()) {
       return {flat_pocket(top_z, base_z, ob, holes, tools)};
     } else {
-      return {contour(top_z, base_z, ob, holes, tools)};
+      return {contour(top_z, base_z, base, tools)};
     }
   }
 
