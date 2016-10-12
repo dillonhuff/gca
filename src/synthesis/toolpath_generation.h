@@ -35,8 +35,8 @@ namespace gca {
     // { return self_->select_tool(tools); }
 
     // Are get holes and the base related methods still needed?
-    const vector<oriented_polygon>& get_holes() const
-    { return self_->get_holes(); }
+    // const vector<oriented_polygon>& get_holes() const
+    // { return self_->get_holes(); }
 
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
     { return self_->toolpath_lines(t, cut_depth); }
@@ -64,7 +64,7 @@ namespace gca {
 				     const double safe_z,
 				     const std::vector<tool>& tools) const = 0;
 
-      virtual const vector<oriented_polygon>& get_holes() const = 0;
+      //virtual const vector<oriented_polygon>& get_holes() const = 0;
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
       virtual bool above_base(const point p) const = 0;
@@ -82,8 +82,8 @@ namespace gca {
 
       virtual concept_t* copy_() const { return new model<T>(*this); }
 
-      const vector<oriented_polygon>& get_holes() const
-      { return data_.get_holes(); }
+      // const vector<oriented_polygon>& get_holes() const
+      // { return data_.get_holes(); }
 
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
       { return data_.toolpath_lines(t, cut_depth); }
@@ -246,13 +246,20 @@ namespace gca {
       bp(p_bp),
       possible_tools(p_tools) {}
 
-    polygon_3 base() const { return bp; }
+    const polygon_3& base() const { return bp; }
 
-    inline const vector<oriented_polygon>& get_holes() const
-    { DBG_ASSERT(false); }
+    vector<oriented_polygon> get_holes() const {
+      vector<oriented_polygon> hs;
+      for (auto h : base().holes()) {
+	hs.push_back(oriented_polygon(base().normal(), h));
+      }
 
-    inline const oriented_polygon& get_boundary() const
-    { DBG_ASSERT(false); }
+      return hs;
+    }
+
+    oriented_polygon get_boundary() const {
+      return oriented_polygon(base().normal(), base().vertices());
+    }
     
     std::vector<polyline>
     flat_level_with_holes(const tool& t) const;

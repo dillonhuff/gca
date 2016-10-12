@@ -234,20 +234,6 @@ namespace gca {
 
     DBG_ASSERT(false);
 
-    // double bound_area = area(boundary);
-
-    // vector<tool> viable =
-    //   select(tools, [bound_area](const tool& t)
-    // 	     { return t.cross_section_area() < bound_area; });
-
-    // if (viable.size() == 0) {
-    //   vtk_debug_polygon(boundary);
-    //   DBG_ASSERT(viable.size() > 0);
-    // }
-
-    // tool t = min_e(viable, [](const tool& l) { return l.diameter(); });
-
-    // return t;
   }
 
   std::vector<polyline>
@@ -889,23 +875,98 @@ namespace gca {
 
   std::vector<polyline>
   contour::flat_level_with_holes(const tool& t) const {
-    DBG_ASSERT(false);
+    vector<polyline> edges = zig_lines(get_boundary(), get_holes(), t);
+
+    auto inter = interior_offset(get_boundary(), t.radius());
+
+    for (auto i : inter) {
+      edges.push_back(to_polyline(i));
+    }
+
+    // TODO: Proper polygon merging
+    for (auto h : get_holes()) {
+      auto outer = exterior_offset(h, t.radius());
+      DBG_ASSERT(outer.size() == 2);
+      edges.push_back(to_polyline(outer.back()));
+    }
+    
+    return edges;
   }
 
   tool contour::select_tool(const std::vector<tool>& tools) const {
+    vector<tool> to_check = tools;
+    sort_gt(to_check, [](const tool& t) { return t.diameter(); });
+
+    polygon_3 base_poly = base();
+
+    for (auto& t : to_check) {
+      auto offset_base_maybe = shrink_optional(base_poly, t.radius());
+
+      if (offset_base_maybe) {
+	polygon_3 offset_base = *offset_base_maybe;
+
+	if (offset_base.holes().size() == base_poly.holes().size()) {
+
+	  cout << "Chosen tool: " << endl;
+	  cout << t << endl;
+	  cout << "Cut area    = " << area(offset_base) << endl;
+	  cout << "Pocket area = " << area(base_poly) << endl;
+
+	  return t;
+	}
+      }
+    }
+
+    cout << "ERROR: No viable tools" << endl;
+    cout << "Tools considered: " << endl;
+    for (auto t : tools) 
+      {
+	cout << t << endl;
+      }
+    
+    
+    vtk_debug_polygon(base_poly);
+
     DBG_ASSERT(false);
   }
 
   std::vector<polyline>
   contour::toolpath_lines(const tool& t, const double cut_depth) const {
-    DBG_ASSERT(false);
+    vector<polyline> face_template;
+
+    if (get_holes().size() == 0) {
+      auto inter = project(get_boundary(), get_end_depth());
+
+      face_template =
+	face_level(inter, t, cut_depth);
+    } else {
+      face_template = flat_level_with_holes(t);
+    }
+
+    vector<double> depths =
+      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
   }
 
   toolpath
   contour::make_toolpath(const material& stock_material,
 			 const double safe_z,
 			 const std::vector<tool>& tools) const {
-    DBG_ASSERT(false);
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
+
+    tool t = select_tool(possible_tools);
+    auto params = calculate_cut_params(t, stock_material);
+
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
   
 }

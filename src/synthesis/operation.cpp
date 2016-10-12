@@ -11,6 +11,9 @@ namespace gca {
     case FACE_POCKET:
       out << "FACE_POCKET";
       break;
+    case CONTOUR:
+      out << "CONTOUR";
+      break;
     case CONTOUR_POCKET:
       out << "CONTOUR_POCKET";
       break;
