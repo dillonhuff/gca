@@ -2,6 +2,7 @@
 
 #include "catch.hpp"
 #include "synthesis/fixture_analysis.h"
+#include "synthesis/mesh_to_gcode.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -68,11 +69,11 @@ namespace gca {
     cout << "Bounding box = " << endl;
     cout << bounding << endl;
 
-    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+    fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
-    cout << "Number of steps = " << p.fixtures().size() << endl;
+    cout << "Number of steps = " << p.steps().size() << endl;
 
-    REQUIRE(p.fixtures().size() == 3);
+    REQUIRE(p.steps().size() == 3);
 
   }
   
