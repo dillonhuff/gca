@@ -224,10 +224,9 @@ namespace gca {
 
     cout << "ERROR: No viable tools" << endl;
     cout << "Tools considered: " << endl;
-    for (auto t : tools) 
-      {
-	cout << t << endl;
-      }
+    for (auto t : tools) {
+      cout << t << endl;
+    }
     
     
     vtk_debug_polygon(base_poly);
@@ -899,30 +898,46 @@ namespace gca {
 
     polygon_3 base_poly = base();
 
+    if (base_poly.holes().size() == 0) {
+      return to_check.front();
+    }
+
+    vector<polygon_3> hole_polys;
+    for (auto h : base_poly.holes()) {
+      hole_polys.push_back(polygon_3(h));
+    }
+
+    for (auto h : hole_polys) {
+      cout << "Hole normal = " << h.normal() << endl;
+      cout << "# of points = " << h.vertices().size() << endl;
+    }
+
     for (auto& t : to_check) {
-      auto offset_base_maybe = shrink_optional(base_poly, t.radius());
 
-      if (offset_base_maybe) {
-	polygon_3 offset_base = *offset_base_maybe;
+      vector<polygon_3> offset_hs;
+      for (auto h : base_poly.holes()) {
+	offset_hs.push_back(polygon_3(exterior_offset(h, t.radius())));
+      }
 
-	if (offset_base.holes().size() == base_poly.holes().size()) {
+      cout << "Front normal = " << offset_hs.front().normal() << endl;
+      
+      vector<polygon_3> offset_holes = planar_polygon_union(offset_hs);
 
-	  cout << "Chosen tool: " << endl;
-	  cout << t << endl;
-	  cout << "Cut area    = " << area(offset_base) << endl;
-	  cout << "Pocket area = " << area(base_poly) << endl;
+      if (offset_holes.size() == hole_polys.size()) {
 
-	  return t;
-	}
+	cout << "Chosen tool: " << endl;
+	cout << t << endl;
+	cout << "Pocket area = " << area(base_poly) << endl;
+
+	return t;
       }
     }
 
     cout << "ERROR: No viable tools" << endl;
     cout << "Tools considered: " << endl;
-    for (auto t : tools) 
-      {
-	cout << t << endl;
-      }
+    for (auto t : tools) {
+      cout << t << endl;
+    }
     
     
     vtk_debug_polygon(base_poly);
