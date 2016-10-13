@@ -4,18 +4,18 @@
 
 namespace gca {
 
-  boost::optional<feature> build_access_feature(const feature& f,
-						const tool& t,
-						const double diam,
-						const double len,
-						const double depth_offset) {
+  std::vector<feature> build_access_features(const feature& f,
+					     const tool& t,
+					     const double diam,
+					     const double len,
+					     const double depth_offset) {
     check_simplicity(f.base());
 
     point n = f.normal();
     boost::optional<labeled_polygon_3> a_region =
       shrink_optional(f.base(), t.radius());
 
-    if (!a_region) { return boost::none; }
+    if (!a_region) { return {}; }
 
     check_simplicity(*a_region);
 
@@ -27,15 +27,15 @@ namespace gca {
     cout << "region normal = " << tool_region.normal() << endl;
     check_simplicity(tool_region);
     
-    return feature(f.is_closed(), len, tool_region);
+    return {feature(f.is_closed(), len, tool_region)};
   }
 
-  boost::optional<feature> access_feature(const feature& f,
-					  feature_decomposition* decomp,
-					  const tool& t,
-					  const double diam,
-					  const double len,
-					  const double depth_offset) {
+  std::vector<feature> access_features(const feature& f,
+				       feature_decomposition* decomp,
+				       const tool& t,
+				       const double diam,
+				       const double len,
+				       const double depth_offset) {
     DBG_ASSERT(decomp->num_children() == 1);
     
     feature_decomposition* top = decomp->child(0);
@@ -57,10 +57,10 @@ namespace gca {
 
       //vtk_debug_feature(open_feature);
 
-      return build_access_feature(open_feature, t, diam, len, depth_offset);
+      return build_access_features(open_feature, t, diam, len, depth_offset);
     }
 
-    return build_access_feature(f, t, diam, len, depth_offset);
+    return build_access_features(f, t, diam, len, depth_offset);
   }
 
   bool feature_is_safe(const feature& f, feature_decomposition* decomp) {
@@ -133,27 +133,31 @@ namespace gca {
 	  (t.cut_diameter() <= t.shank_diameter())) { return false; }
     }
 
-    boost::optional<feature> shank_region = 
-      access_feature(f, decomp, t, t.shank_diameter(), t.shank_length(), t.cut_length());
+    vector<feature> shank_regions = 
+      access_features(f, decomp, t, t.shank_diameter(), t.shank_length(), t.cut_length());
 
-    if (!shank_region) {
+    if (shank_regions.size() == 0) {
       cout << "Degenerate shank region!" << endl;
       return false;
     }
 
-    if (!feature_is_safe(*shank_region, decomp)) {
-      cout << "Shank region is not safe" << endl;
-      return false;
+    for (auto shank_region : shank_regions) {
+      if (!feature_is_safe(shank_region, decomp)) {
+	cout << "Shank region is not safe" << endl;
+	return false;
+      }
     }
 
-    boost::optional<feature> holder_region =
-      access_feature(f, decomp, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
+    vector<feature> holder_regions =
+      access_features(f, decomp, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
 
-    if (!holder_region) { return false; }
+    if (holder_regions.size() == 0) { return false; }
 
-    if (!feature_is_safe(*holder_region, decomp)) {
-      cout << "Holder region is not safe" << endl;
-      return false;
+    for (auto holder_region : holder_regions) {
+      if (!feature_is_safe(holder_region, decomp)) {
+	cout << "Holder region is not safe" << endl;
+	return false;
+      }
     }
 
     return true;
