@@ -1,10 +1,12 @@
 #include <cassert>
 
+#include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/ring.h"
 #include "geometry/rotation.h"
 
 #include <CGAL/create_offset_polygons_2.h>
+#include <CGAL/create_offset_polygons_from_polygon_with_holes_2.h>
 
 #include "geometry/vtk_debug.h"
 
@@ -14,6 +16,10 @@ namespace gca {
   typedef std::vector<PolygonPtr> PolygonPtrVector ;
   typedef CGAL::Straight_skeleton_2<K> Ss ;
 
+  typedef CGAL::Polygon_with_holes_2<K> PolygonWithHoles ;
+  typedef boost::shared_ptr<PolygonWithHoles> PolygonWithHolesPtr ;
+  typedef std::vector<PolygonWithHolesPtr> PolygonWithHolesPtrVector;
+  
   typedef boost::shared_ptr<Ss> SsPtr ;  
 
   Polygon_2
@@ -311,9 +317,84 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
+  void set_orientation(Polygon_2& to_offset) {
+    if (!(to_offset.is_simple())) {
+      DBG_ASSERT(false);
+    }
+      
+    
+    if (to_offset.orientation() == CGAL::CLOCKWISE) {
+      to_offset.reverse_orientation();
+    }
+
+    DBG_ASSERT(to_offset.orientation() == CGAL::COUNTERCLOCKWISE);
+    
+  }
+
+  std::vector<polygon_3> interior_offsets_flat(const polygon_3& poly,
+					       const double d) {
+
+    DBG_ASSERT(angle_eps(poly.normal(), point(0, 0, 1), 0.0, 1.0));
+    DBG_ASSERT(poly.vertices().size() >= 3);
+
+    vtk_debug_polygon(poly);
+    
+    Polygon_2 outer;
+    for (auto p : poly.vertices()) {
+      outer.push_back(Point(p.x, p.y));
+    }
+
+    set_orientation(outer);
+
+    PolygonWithHoles to_offset( outer );
+
+    for (auto h : poly.holes()) {
+      Polygon_2 hole;
+
+      for (auto pt : h) {
+	hole.push_back( Point(pt.x, pt.y) );
+      }
+
+      set_orientation(hole);
+      to_offset.add_hole( hole );
+    }
+
+    PolygonWithHolesPtrVector offset_poly_with_holes =
+      CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);
+
+    
+  }
+  
+  std::vector<polygon_3> interior_offsets(const polygon_3& poly,
+					  const double d) {
+    point n(0, 0, 1);
+    const rotation r = rotate_from_to(poly.normal(), n);
+    const rotation r_inv = inverse(r);
+
+    polygon_3 r_poly = apply(r, poly);
+
+    check_simplicity(r_poly);
+
+    auto res = interior_offsets_flat(r_poly, d);
+
+    // NOTE: Need to add z value adjustment?
+    vector<polygon_3> result_pts;
+    for (auto res_poly : res) {
+      auto rpts = apply(r_inv, res_poly);
+
+      result_pts.push_back(rpts);
+    }
+
+    return result_pts;
+  }
+
   std::vector<polygon_3> interior_offset(const std::vector<polygon_3>& polys,
 					 const double d) {
-    DBG_ASSERT(false);
+    vector<polygon_3> inter_offsets;
+    for (auto poly : polys) {
+      concat(inter_offsets, interior_offsets(poly, d));
+    }
+    return inter_offsets;
   }
   
 }
