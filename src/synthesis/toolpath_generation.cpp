@@ -901,11 +901,6 @@ namespace gca {
       hole_polys.push_back(polygon_3(h));
     }
 
-    for (auto h : hole_polys) {
-      cout << "Hole normal = " << h.normal() << endl;
-      cout << "# of points = " << h.vertices().size() << endl;
-    }
-
     for (auto& t : to_check) {
 
       vector<polygon_3> offset_hs;
@@ -913,8 +908,6 @@ namespace gca {
 	offset_hs.push_back(polygon_3(exterior_offset(h, t.radius())));
       }
 
-      cout << "Front normal = " << offset_hs.front().normal() << endl;
-      
       vector<polygon_3> offset_holes = planar_polygon_union(offset_hs);
 
       if (offset_holes.size() == hole_polys.size()) {
@@ -932,7 +925,6 @@ namespace gca {
     for (auto t : tools) {
       cout << t << endl;
     }
-    
     
     vtk_debug_polygon(base_poly);
 

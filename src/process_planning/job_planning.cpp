@@ -16,6 +16,7 @@
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
+#include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
@@ -582,41 +583,71 @@ namespace gca {
 
   clamp_orientation
   find_part_zero(const Nef_polyhedron& part_nef,
+		 const clamp_orientation& orient,
 		 const vice& v,
 		 const point n) {
     auto part = nef_to_single_trimesh(part_nef);
-    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
 
-    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
-    plane vice_top_plane(-1*n, vice_pl_pt);
+    // polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
 
-    double big = 2000.0;
+    // point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
+    // plane vice_top_plane(-1*n, vice_pl_pt);
 
-    polygon_3 p = project_onto(vice_top_plane, hull);
-    polygon_3 plane_approx = dilate(p, big);
+    // double big = 2000.0;
 
-    triangular_mesh m = extrude(plane_approx, big*n);
+    // polygon_3 p = project_onto(vice_top_plane, hull);
+    // polygon_3 plane_approx = dilate(p, big);
+
+    // triangular_mesh m = extrude(plane_approx, big*n);
     
-    auto clip_nef = trimesh_to_nef_polyhedron(m);
-    auto cut_parts_nef = part_nef - clip_nef;
+    // auto clip_nef = trimesh_to_nef_polyhedron(m);
+    // auto cut_parts_nef = part_nef - clip_nef;
 
-    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
+    // auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
 
-    vector<surface> cregions = outer_surfaces(cut_part);
-    sort(begin(cregions), end(cregions),
-	 [](const surface& l, const surface& r)
-	 { return l.surface_area() < r.surface_area(); });
-    reverse(begin(cregions), end(cregions));
+    // vector<surface> cregions = outer_surfaces(cut_part);
+    // sort(begin(cregions), end(cregions),
+    // 	 [](const surface& l, const surface& r)
+    // 	 { return l.surface_area() < r.surface_area(); });
+    // reverse(begin(cregions), end(cregions));
 
-    std::vector<clamp_orientation> orients =
-      all_stable_orientations_with_top_normal(cregions, v, n);
 
-    DBG_ASSERT(orients.size() > 0);
+    // std::vector<clamp_orientation> orients =
+    //   all_stable_orientations_with_top_normal(cregions, v, n);
 
-    auto orient = max_e(orients, [part](const clamp_orientation& c)
-			{ return c.contact_area(part); });
-    
-    return orient;
+    // DBG_ASSERT(orients.size() > 0);
+
+    // auto orient = max_e(orients, [part](const clamp_orientation& c)
+    // 			{ return c.contact_area(part); });
+
+    vector<surface> initial_regions =
+      inds_to_surfaces(const_orientation_regions(part), part);
+
+    // vector<unsigned> millable_from =
+    //   surfaces_millable_from(orient, ptrs(initial_regions), v);
+
+    // vector<surface> cregions;
+    // for (auto ind : millable_from) {
+    //   cregions.push_back(initial_regions[ind]);
+    // }
+
+    vtk_debug_highlight_inds(initial_regions);
+
+    vector<surface> cregions =
+      surfaces_visible_from(initial_regions, n);
+
+    vtk_debug_highlight_inds(cregions);
+
+    DBG_ASSERT(cregions.size() > 2);
+
+    std::vector<surface> ortho =
+      take_basis(cregions, [](const surface& l, const surface& r) {
+    	  return angle_eps(normal(l), normal(r), 90.0, 1.0);
+    	},
+    	3);
+
+    clamp_orientation zero_planes(&(ortho[0]), &(ortho[1]), &(ortho[2]));
+    return zero_planes;
   }
 
   boost::optional<fixture>
@@ -643,7 +674,13 @@ namespace gca {
 
       cout << "Found fixture in " << n << endl;
 
-      clamp_orientation part_zero = find_part_zero(stock_nef, v, -1*n);
+      clamp_orientation part_zero = find_part_zero(stock_nef, orient, v, -1*n);
+      cout << "Part zero" << endl;
+      auto l_act = plane_actor(vtk_plane(part_zero.left_plane()));
+      auto r_act = plane_actor(vtk_plane(part_zero.right_plane()));
+      auto b_act = plane_actor(vtk_plane(part_zero.base_plane()));
+      auto cs_act = polydata_actor(polydata_for_trimesh(current_stock));
+      visualize_actors({l_act, r_act, b_act, cs_act});
     
       fixture fix(orient, v, part_zero);
 

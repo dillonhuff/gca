@@ -244,7 +244,7 @@ namespace gca {
 
     vector<string> passes{
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
