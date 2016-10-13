@@ -41,7 +41,20 @@ namespace gca {
 
     return out;
   }
-  
+
+  vector<point>
+  ring_for_CGAL_polygon(const Polygon_2& off_p,
+			const double z) {
+    vector<point> res_pts;
+    for (auto it = CGAL::CGAL_SS_i::vertices_begin(off_p);
+	 it != CGAL::CGAL_SS_i::vertices_end(off_p); ++it) {
+      Point vert = *it;
+      res_pts.push_back(point(vert.x(), vert.y(), z));
+    }
+
+    return res_pts;
+  }  
+
   oriented_polygon
   oriented_polygon_for_CGAL_polygon(const Polygon_2& off_p,
 				    const double z,
@@ -337,8 +350,8 @@ namespace gca {
     DBG_ASSERT(angle_eps(poly.normal(), point(0, 0, 1), 0.0, 1.0));
     DBG_ASSERT(poly.vertices().size() >= 3);
 
-    vtk_debug_polygon(poly);
-    
+    double z_level = poly.vertices().front().z;
+
     Polygon_2 outer;
     for (auto p : poly.vertices()) {
       outer.push_back(Point(p.x, p.y));
@@ -362,7 +375,23 @@ namespace gca {
     PolygonWithHolesPtrVector offset_poly_with_holes =
       CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);
 
-    
+    vector<polygon_3> result_polys;
+
+    for (PolygonWithHolesPtr& p : offset_poly_with_holes) {
+      PolygonWithHoles& pg = *p;
+      Polygon_2 outer = pg.outer_boundary();
+      vector<point> outer_pts = ring_for_CGAL_polygon(outer, z_level);
+
+      vector<vector<point>> holes;
+      for (auto it = pg.holes_begin(); it != pg.holes_end(); ++it) {
+	Polygon_2& cgal_hole = *it;
+	holes.push_back(ring_for_CGAL_polygon(cgal_hole, z_level));
+      }
+
+      result_polys.push_back(polygon_3(outer_pts, holes));
+    }
+
+    return result_polys;
   }
   
   std::vector<polygon_3> interior_offsets(const polygon_3& poly,
