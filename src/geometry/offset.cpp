@@ -22,6 +22,20 @@ namespace gca {
   
   typedef boost::shared_ptr<Ss> SsPtr ;  
 
+  void set_orientation(Polygon_2& to_offset) {
+    if (!(to_offset.is_simple())) {
+      DBG_ASSERT(false);
+    }
+      
+    
+    if (to_offset.orientation() == CGAL::CLOCKWISE) {
+      to_offset.reverse_orientation();
+    }
+
+    DBG_ASSERT(to_offset.orientation() == CGAL::COUNTERCLOCKWISE);
+    
+  }
+
   Polygon_2
   CGAL_polygon_for_oriented_polygon(const oriented_polygon& p) {
     Polygon_2 out;
@@ -325,23 +339,79 @@ namespace gca {
   }
   
 
-  std::vector<polygon_3> exterior_offset(const std::vector<polygon_3>& polys,
-					 const double d) {
+  polygon_3 exterior_offset_flat(const polygon_3& poly,
+				 const double d) {
+    DBG_ASSERT(angle_eps(poly.normal(), point(0, 0, 1), 0.0, 1.0));
+    DBG_ASSERT(poly.vertices().size() >= 3);
+
+    double z_level = poly.vertices().front().z;
+
+    Polygon_2 outer;
+    for (auto p : poly.vertices()) {
+      outer.push_back(Point(p.x, p.y));
+    }
+
+    set_orientation(outer);
+
+    PolygonWithHoles to_offset( outer );
+
+    for (auto h : poly.holes()) {
+      Polygon_2 hole;
+
+      for (auto pt : h) {
+	hole.push_back( Point(pt.x, pt.y) );
+      }
+
+      set_orientation(hole);
+      to_offset.add_hole( hole );
+    }
+
+    PolygonWithHolesPtrVector offset_poly_with_holes =
+      CGAL::create_exterior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);
+
     DBG_ASSERT(false);
+    // vector<polygon_3> result_polys;
+
+    // for (PolygonWithHolesPtr& p : offset_poly_with_holes) {
+    //   PolygonWithHoles& pg = *p;
+    //   Polygon_2 outer = pg.outer_boundary();
+    //   vector<point> outer_pts = ring_for_CGAL_polygon(outer, z_level);
+
+    //   vector<vector<point>> holes;
+    //   for (auto it = pg.holes_begin(); it != pg.holes_end(); ++it) {
+    // 	Polygon_2& cgal_hole = *it;
+    // 	holes.push_back(ring_for_CGAL_polygon(cgal_hole, z_level));
+    //   }
+
+    //   result_polys.push_back(polygon_3(outer_pts, holes));
+    // }
+
+    // return result_polys;
   }
 
-  void set_orientation(Polygon_2& to_offset) {
-    if (!(to_offset.is_simple())) {
-      DBG_ASSERT(false);
-    }
-      
-    
-    if (to_offset.orientation() == CGAL::CLOCKWISE) {
-      to_offset.reverse_orientation();
+  polygon_3 exterior_offset(const polygon_3& poly,
+			    const double d) {
+    point n(0, 0, 1);
+    const rotation r = rotate_from_to(poly.normal(), n);
+    const rotation r_inv = inverse(r);
+
+    polygon_3 r_poly = apply(r, poly);
+
+    check_simplicity(r_poly);
+
+    polygon_3 res = exterior_offset_flat(r_poly, d);
+
+    return res;
+  }
+  
+  std::vector<polygon_3> exterior_offset(const std::vector<polygon_3>& polys,
+					 const double d) {
+    vector<polygon_3> exter_offsets;
+    for (auto poly : polys) {
+      exter_offsets.push_back(exterior_offset(poly, d));
     }
 
-    DBG_ASSERT(to_offset.orientation() == CGAL::COUNTERCLOCKWISE);
-    
+    return planar_polygon_union(exter_offsets);
   }
 
   std::vector<polygon_3> interior_offsets_flat(const polygon_3& poly,
