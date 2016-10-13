@@ -306,4 +306,14 @@ namespace gca {
   }
   
 
+  std::vector<polygon_3> exterior_offset(const std::vector<polygon_3>& polys,
+					 const double d) {
+    DBG_ASSERT(false);
+  }
+
+  std::vector<polygon_3> interior_offset(const std::vector<polygon_3>& polys,
+					 const double d) {
+    DBG_ASSERT(false);
+  }
+  
 }

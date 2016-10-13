@@ -357,6 +357,15 @@ namespace gca {
     return shifted;
   }
 
+  std::vector<polygon_3> shift(const point p,
+			       const std::vector<polygon_3>& polys) {
+    vector<polygon_3> shifted;
+    for (auto& poly : polys) {
+      shifted.push_back(shift(p, poly));
+    }
+    return shifted;
+  }
+
   labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol) {
     auto dr = interior_offset(p.vertices(), tol);
 

@@ -304,6 +304,10 @@ namespace gca {
 
   bool is_outer(const feature& f, const polygon_3& stock_bound);
 
+  // TODO: Should be moved to polygon_3
+  std::vector<polygon_3> shift(const point p,
+			       const std::vector<polygon_3>& polys);
+
 }
 
 #endif

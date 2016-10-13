@@ -1,4 +1,5 @@
 #include "feature_recognition/visual_debug.h"
+#include "geometry/offset.h"
 #include "process_planning/tool_access.h"
 #include "utils/check.h"
 
@@ -11,23 +12,39 @@ namespace gca {
 					     const double depth_offset) {
     check_simplicity(f.base());
 
+    // boost::optional<labeled_polygon_3> a_region =
+    //   shrink_optional(f.base(), t.radius());
+
+    // if (!a_region) { return {}; }
+
+    vector<polygon_3> a_regions = interior_offset({f.base()}, t.radius());
+
+    if (a_regions.size() == 0) { return {}; }
+
+    for (auto& a_region : a_regions) {
+      check_simplicity(a_region);
+    }
+
     point n = f.normal();
-    boost::optional<labeled_polygon_3> a_region =
-      shrink_optional(f.base(), t.radius());
 
-    if (!a_region) { return {}; }
-
-    check_simplicity(*a_region);
-
-    labeled_polygon_3 tool_region =
-      dilate(shift(depth_offset*n, *a_region), diam / 2.0);
+    vector<polygon_3> tool_regions =
+      exterior_offset(shift(depth_offset*n, a_regions), diam / 2.0);
 
     //vtk_debug_polygon(tool_region);
 
-    cout << "region normal = " << tool_region.normal() << endl;
-    check_simplicity(tool_region);
-    
-    return {feature(f.is_closed(), len, tool_region)};
+    for (auto& tool_region : tool_regions) {
+      cout << "region normal = " << tool_region.normal() << endl;
+      check_simplicity(tool_region);
+    }
+
+    // TODO: Correct this open closed issue
+    vector<feature> access_features;
+    for (auto tool_region : tool_regions) {
+      access_features.push_back(feature(f.is_closed(), len, tool_region));
+    }
+
+    return access_features;
+    //    return {feature(f.is_closed(), len, tool_region)};
   }
 
   std::vector<feature> access_features(const feature& f,

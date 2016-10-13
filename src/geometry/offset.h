@@ -7,6 +7,7 @@
 #include <CGAL/Polygon_2.h>
 
 #include "geometry/polygon.h"
+#include "geometry/polygon_3.h"
 #include "utils/check.h"
 
 namespace gca {
@@ -37,6 +38,11 @@ namespace gca {
   std::vector<std::vector<point>>
   interior_offsets(const std::vector<point>& pts,
 		   const double tol);
+
+  std::vector<polygon_3> exterior_offset(const std::vector<polygon_3>& polys,
+					 const double d);
+  std::vector<polygon_3> interior_offset(const std::vector<polygon_3>& polys,
+					 const double d);
 
 }
 
