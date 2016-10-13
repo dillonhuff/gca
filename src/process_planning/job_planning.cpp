@@ -74,22 +74,22 @@ namespace gca {
   }
 
   fixture_setup
-  create_setup(const homogeneous_transform& s_t_no_zero,
+  create_setup(const homogeneous_transform& s_t, //s_t_no_zero,
 	       const triangular_mesh& wp_mesh,
 	       const triangular_mesh& part_mesh,
 	       const std::vector<feature*>& features,
 	       const fixture& f,
 	       const tool_access_info& tool_info) {
-    DBG_ASSERT(f.has_part_zero());
+    // DBG_ASSERT(f.has_part_zero());
 
-    point pp = part_zero_position(f);
-    point p = apply(s_t_no_zero, pp);
+    // point pp = part_zero_position(f);
+    // point p = apply(s_t_no_zero, pp);
 
-    point neg_p = -1*p;
+    // point neg_p = -1*p;
 
-    const homogeneous_transform s_t = apply(neg_p, s_t_no_zero);
+    // const homogeneous_transform s_t = apply(neg_p, s_t_no_zero);
 
-    DBG_ASSERT(within_eps(apply(s_t, pp).len(), 0.0, 0.0001));
+    // DBG_ASSERT(within_eps(apply(s_t, pp).len(), 0.0, 0.0001));
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
@@ -99,10 +99,10 @@ namespace gca {
 
     // NOTE: How should the fixtures part zero be adjusted to deal with
     // the shift?
-    fixture adjusted_f = shift_vice(neg_p, f);
+    //    fixture adjusted_f = shift_vice(neg_p, f);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    return fixture_setup(m, adjusted_f, pockets);
+    return fixture_setup(m, f, pockets);
   }
 
   triangular_mesh feature_mesh(const feature& f,
@@ -620,8 +620,8 @@ namespace gca {
     // auto orient = max_e(orients, [part](const clamp_orientation& c)
     // 			{ return c.contact_area(part); });
 
-    vector<surface> initial_regions =
-      inds_to_surfaces(const_orientation_regions(part), part);
+    // vector<surface> initial_regions =
+    //   inds_to_surfaces(const_orientation_regions(part), part);
 
     // vector<unsigned> millable_from =
     //   surfaces_millable_from(orient, ptrs(initial_regions), v);
@@ -631,10 +631,12 @@ namespace gca {
     //   cregions.push_back(initial_regions[ind]);
     // }
 
-    vtk_debug_highlight_inds(initial_regions);
+    //    vtk_debug_highlight_inds(initial_regions);
 
-    vector<surface> cregions =
-      surfaces_visible_from(initial_regions, n);
+    // vector<surface> cregions =
+    //   surfaces_visible_from(initial_regions, n);
+
+    vector<surface> cregions = outer_surfaces(part);
 
     vtk_debug_highlight_inds(cregions);
 
@@ -674,15 +676,15 @@ namespace gca {
 
       cout << "Found fixture in " << n << endl;
 
-      clamp_orientation part_zero = find_part_zero(stock_nef, orient, v, -1*n);
-      cout << "Part zero" << endl;
-      auto l_act = plane_actor(vtk_plane(part_zero.left_plane()));
-      auto r_act = plane_actor(vtk_plane(part_zero.right_plane()));
-      auto b_act = plane_actor(vtk_plane(part_zero.base_plane()));
-      auto cs_act = polydata_actor(polydata_for_trimesh(current_stock));
-      visualize_actors({l_act, r_act, b_act, cs_act});
+      // clamp_orientation part_zero = find_part_zero(stock_nef, orient, v, -1*n);
+      // cout << "Part zero" << endl;
+      // auto l_act = plane_actor(vtk_plane(part_zero.left_plane()));
+      // auto r_act = plane_actor(vtk_plane(part_zero.right_plane()));
+      // auto b_act = plane_actor(vtk_plane(part_zero.base_plane()));
+      // auto cs_act = polydata_actor(polydata_for_trimesh(current_stock));
+      // visualize_actors({l_act, r_act, b_act, cs_act});
     
-      fixture fix(orient, v, part_zero);
+      fixture fix(orient, v); //, part_zero);
 
       return fix;
     }
