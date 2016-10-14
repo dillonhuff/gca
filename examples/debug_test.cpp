@@ -18,7 +18,7 @@
 #include "system/parse_stl.h"
 
 namespace gca {
-  
+
   TEST_CASE("Single Shot Tray") {
     arena_allocator a;
     set_system_allocator(&a);

@@ -259,7 +259,7 @@ namespace gca {
 
     tool t2(0.12, 3.0, 4, HSS, FLAT_NOSE);
     t2.set_cut_diameter(0.12);
-    t2.set_cut_length(1.2);
+    t2.set_cut_length(1.3);
 
     t2.set_shank_diameter(0.1);
     t2.set_shank_length(0.5);

@@ -338,14 +338,11 @@ namespace gca {
 
     vector<oriented_polygon> offset_holes;
     for (auto h : holes) {
-      polygon_3 to_offset(h.vertices());
-      vector<polygon_3> h_off = exterior_offset({to_offset}, t.radius());
+      vector<oriented_polygon> h_off = exterior_offset(h, t.radius());
 
-      //      DBG_ASSERT(h_off.size() == 2);
+      DBG_ASSERT(h_off.size() == 2);
 
-      for (auto off_h : h_off) {
-	offset_holes.push_back(h_off.back());
-      }
+      offset_holes.push_back(h_off.back());
     }
 
     double z = lines.front().front().z;
