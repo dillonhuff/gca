@@ -19,7 +19,7 @@
 
 namespace gca {
 
-  TEST_CASE("Single Shot Tray") {
+  TEST_CASE("Part 1 (24)") {
     arena_allocator a;
     set_system_allocator(&a);
 
