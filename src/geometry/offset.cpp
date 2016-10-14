@@ -67,7 +67,13 @@ namespace gca {
     }
 
     return res_pts;
-  }  
+  }
+
+  boost_poly_2 CGAL_polygon_for_boost_poly(const Polygon_2& poly) {
+    double z_level = 0;
+    vector<point> pts = ring_for_CGAL_polygon(poly, z_level);
+    return to_boost_poly_2(pts);
+  }
 
   oriented_polygon
   oriented_polygon_for_CGAL_polygon(const Polygon_2& off_p,
@@ -463,6 +469,81 @@ namespace gca {
     return planar_polygon_union(exter_offsets);
   }
 
+  bool
+  add_to_existing_polys_as_hole(const polygon_3& next,
+				std::vector<polygon_3>& polygons) {
+    if (polygons.size() == 0) { return false; }
+
+    boost_poly_2 next_boost_p = to_boost_poly_2(next);
+
+    int max_ind = -1;
+    double outer_area_max = -1.0;
+    for (unsigned i = 0; i < polygons.size(); i++) {
+      const auto& current_poly = polygons[i];
+      boost_poly_2 current_boost_p = to_boost_poly_2(current_poly);
+      double outer_area = area(polygon_3(current_poly.vertices()));
+      cout << "outer area = " << outer_area << endl;
+
+      if (bg::within(next_boost_p, current_boost_p) && outer_area > outer_area_max) {
+	outer_area_max = outer_area;
+	max_ind = i;
+	cout << "set max_ind = " << max_ind << endl;
+      }
+    }
+
+    if (max_ind >= 0) {
+      auto& current_poly = polygons[max_ind];
+      unsigned old_num_holes = current_poly.holes().size();
+      current_poly.add_hole(next.vertices());
+
+      unsigned new_num_holes = polygons[max_ind].holes().size();
+
+      DBG_ASSERT(new_num_holes == (old_num_holes + 1));
+
+      cout << "ADDED TO POLYGON AS HOLE" << endl;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  std::vector<polygon_3>
+  arrange_rings(const std::vector<std::vector<point>>& rings) {
+    cout << "# of rings before arranging = " << rings.size() << endl;
+    if (rings.size() == 0) { return {}; }
+
+    vector<polygon_3> ring_polys;
+    for (auto r : rings) {
+      ring_polys.push_back(r);
+    }
+
+    vector<polygon_3> polygons;
+    while (ring_polys.size() > 0) {
+      auto next_poly =
+	max_element(begin(ring_polys), end(ring_polys),
+		    [](const polygon_3& l, const polygon_3& r) {
+		      return area(l) < area(r);
+		    });
+
+      DBG_ASSERT(next_poly != end(ring_polys));
+
+      polygon_3 next_p = *next_poly;
+
+      ring_polys.erase(next_poly);
+
+      bool is_hole = add_to_existing_polys_as_hole(next_p, polygons);
+
+      if (!is_hole) {
+	polygons.push_back(next_p);
+      }
+    }
+
+    cout << "# of polygons after arranging = " << polygons.size() << endl;
+
+    return polygons;
+  }
+
   std::vector<polygon_3> interior_offsets_flat(const polygon_3& poly,
 					       const double d) {
 
@@ -491,26 +572,34 @@ namespace gca {
       to_offset.add_hole( hole );
     }
 
-    PolygonWithHolesPtrVector offset_poly_with_holes =
-      CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);
+    PolygonPtrVector offset_poly_with_holes =
+      CGAL::create_interior_skeleton_and_offset_polygons_2(d, to_offset); //_with_holes_2(d, to_offset);
 
-    vector<polygon_3> result_polys;
+    vector<vector<point>> pts;
 
-    for (PolygonWithHolesPtr& p : offset_poly_with_holes) {
-      PolygonWithHoles& pg = *p;
-      Polygon_2 outer = pg.outer_boundary();
-      vector<point> outer_pts = ring_for_CGAL_polygon(outer, z_level);
-
-      vector<vector<point>> holes;
-      for (auto it = pg.holes_begin(); it != pg.holes_end(); ++it) {
-	Polygon_2& cgal_hole = *it;
-	holes.push_back(ring_for_CGAL_polygon(cgal_hole, z_level));
-      }
-
-      result_polys.push_back(polygon_3(outer_pts, holes));
+    for (PolygonPtr& p : offset_poly_with_holes) {
+      pts.push_back(ring_for_CGAL_polygon(*p, z_level));
     }
 
+    vector<polygon_3> result_polys = arrange_rings(pts);
+
     return result_polys;
+
+    // for (PolygonWithHolesPtr& p : offset_poly_with_holes) {
+    //   PolygonWithHoles& pg = *p;
+    //   Polygon_2 outer = pg.outer_boundary();
+    //   vector<point> outer_pts = ring_for_CGAL_polygon(outer, z_level);
+
+    //   vector<vector<point>> holes;
+    //   for (auto it = pg.holes_begin(); it != pg.holes_end(); ++it) {
+    // 	Polygon_2& cgal_hole = *it;
+    // 	holes.push_back(ring_for_CGAL_polygon(cgal_hole, z_level));
+    //   }
+
+    //   result_polys.push_back(polygon_3(outer_pts, holes));
+    // }
+
+    // return result_polys;
   }
   
   std::vector<polygon_3> interior_offsets(const polygon_3& poly,

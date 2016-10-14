@@ -38,6 +38,10 @@ namespace gca {
     polygon_3(const std::vector<point> vertices,
 		      const std::vector<std::vector<point>> hole_verts);
 
+    void add_hole(const std::vector<point>& hole) {
+      inner_rings.push_back(hole);
+    }
+
     point normal() const {
       return ring_normal(outer_ring);
     }
