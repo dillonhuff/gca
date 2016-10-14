@@ -392,6 +392,7 @@ namespace gca {
 
     if (!(ext_offset.size() == 1)) {
       cout << "OFFSETTING POLYGON BY " << d << endl;
+      cout << "ext_offset.size() = " << ext_offset.size() << endl;
       vtk_debug_polygon(poly);
 
       cout << "OFFSET RESULTS" << endl;

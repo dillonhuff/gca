@@ -12,12 +12,19 @@ namespace gca {
 					     const double depth_offset) {
     check_simplicity(f.base());
 
+    cout << "Checking access feature" << endl;
+    vtk_debug_feature(f);
+
     // boost::optional<labeled_polygon_3> a_region =
     //   shrink_optional(f.base(), t.radius());
 
     // if (!a_region) { return {}; }
 
     vector<polygon_3> a_regions = interior_offset({f.base()}, t.radius());
+
+    cout << "Interior offset by " << t.radius() << endl;
+    cout << "# of polygons = " << a_regions.size() << endl;
+    vtk_debug_polygons(a_regions);
 
     if (a_regions.size() == 0) { return {}; }
 
