@@ -219,6 +219,48 @@ namespace gca {
     }
   }
 
+  vector<point> clean_ring_for_offsetting(const std::vector<point>& ring) {
+    vector<point> r_pts = clean_vertices_within_eps(ring, 0.005, 0.0000001);
+
+    auto old_rpts = r_pts;
+
+    delete_antennas(r_pts);
+
+    if (r_pts.size() < 3) {
+      cout << "Before cleaning" << endl;
+      cout << "# of points = " << ring.size() << endl;
+
+      vtk_debug_ring(ring);
+
+      cout << "After cleaning" << endl;
+      cout << "# of points = " << old_rpts.size() << endl;
+
+      vtk_debug_ring(old_rpts);
+
+      cout << "# of points after deleting antennas = " << r_pts.size() << endl;
+
+      DBG_ASSERT(false);
+    }
+
+    if (has_antenna(r_pts)) {
+      DBG_ASSERT(false);
+    }
+
+    check_simplicity(r_pts);
+
+    return r_pts;
+  }
+
+  polygon_3 clean_polygon_for_offsetting(const polygon_3& poly) {
+    vector<point> cleaned_outer = clean_ring_for_offsetting(poly.vertices());
+    vector<vector<point>> cleaned_holes;
+    for (auto h : poly.holes()) {
+      cleaned_holes.push_back(clean_ring_for_offsetting(h));
+    }
+
+    return polygon_3(cleaned_outer, cleaned_holes);
+  }
+
   std::vector<point> exterior_offset(const std::vector<point>& pts,
 				     const double tol) {
 
@@ -366,6 +408,16 @@ namespace gca {
 
     offset_poly_with_holes.erase(begin(offset_poly_with_holes));
 
+    vector<vector<point>> pts;
+
+    for (PolygonPtr& p : offset_poly_with_holes) {
+      pts.push_back(ring_for_CGAL_polygon(*p, z_level));
+    }
+
+    vector<polygon_3> result_polys = arrange_rings(pts);
+
+    return result_polys;
+    
     // NOTE: Assumes the 2nd polygon returned by CGAL is always the exteriormost
     // ring of the exterior offset after the containing rectangle
     vector<point> outer_ring =
