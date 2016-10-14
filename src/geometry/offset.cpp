@@ -390,7 +390,20 @@ namespace gca {
     boost_multipoly_2 ext_offset;
     bg::difference(outer_poly, holes_to_subtract, ext_offset);
 
-    DBG_ASSERT(ext_offset.size() == 1);
+    if (!(ext_offset.size() == 1)) {
+      cout << "OFFSETTING POLYGON BY " << d << endl;
+      vtk_debug_polygon(poly);
+
+      cout << "OFFSET RESULTS" << endl;
+      for (auto r : offset_poly_with_holes) {
+	vector<point> outer_ring =
+	  ring_for_CGAL_polygon(*r, z_level);
+	vtk_debug_ring(outer_ring);
+
+      }
+
+      DBG_ASSERT(ext_offset.size() == 1);
+    }
 
     polygon_3 exterior_poly = to_polygon_3(z_level, ext_offset.front());
 
