@@ -99,5 +99,8 @@ namespace gca {
   convex_hull_2D(const std::vector<point>& pts,
 		 const point n,
 		 const double z_level);
-  
+
+  polygon_3
+  to_polygon_3(const double z, const boost_poly_2& p);
+
 }

@@ -365,6 +365,8 @@ namespace gca {
     vector<point> outer_ring =
       ring_for_CGAL_polygon(*(offset_poly_with_holes.front()), z_level);
 
+    boost_poly_2 outer_poly = to_boost_poly_2(outer_ring);
+
     boost_multipoly_2 holes_to_subtract;
     for (auto h : poly.holes()) {
       polygon_3 hole_polygon(h);
@@ -385,11 +387,20 @@ namespace gca {
       holes_to_subtract.push_back(to_boost_poly_2(h_ring));
     }
 
+    boost_multipoly_2 ext_offset;
+    bg::difference(outer_poly, holes_to_subtract, ext_offset);
+
+    DBG_ASSERT(ext_offset.size() == 1);
+
+    polygon_3 exterior_poly = to_polygon_3(z_level, ext_offset.front());
+
+    return exterior_poly;
+    
     // TODO: Convert result of outer exterior offset into a boost polygon,
     // do interior offsets of holes, convert results to boost polygons and
     // then subtract them from original result
 
-    DBG_ASSERT(false);
+    //DBG_ASSERT(false);
 
     // vector<polygon_3> result_polys;
 
@@ -422,7 +433,10 @@ namespace gca {
 
     polygon_3 res = exterior_offset_flat(r_poly, d);
 
-    return res;
+    polygon_3 final_res = apply(r_inv, res);
+    final_res.correct_winding_order(poly.normal());
+
+    return final_res;
   }
   
   std::vector<polygon_3> exterior_offset(const std::vector<polygon_3>& polys,
@@ -501,6 +515,7 @@ namespace gca {
     vector<polygon_3> result_pts;
     for (auto res_poly : res) {
       auto rpts = apply(r_inv, res_poly);
+      rpts.correct_winding_order(poly.normal());
 
       result_pts.push_back(rpts);
     }

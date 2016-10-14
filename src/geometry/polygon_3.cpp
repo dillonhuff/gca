@@ -94,6 +94,27 @@ namespace gca {
     return pr;
   }
 
+  polygon_3
+  to_polygon_3(const double z, const boost_poly_2& p) {
+    vector<point> vertices;
+    for (auto p2d : boost::geometry::exterior_ring(p)) {
+      point pt(p2d.get<0>(), p2d.get<1>(), z);
+      vertices.push_back(pt);
+    }
+
+    vector<vector<point>> holes;
+    for (auto ir : boost::geometry::interior_rings(p)) {
+      vector<point> hole_verts;
+      for (auto p2d : ir) {
+	point pt(p2d.get<0>(), p2d.get<1>(), z);
+	hole_verts.push_back(pt);
+      }
+      holes.push_back(clean_vertices(hole_verts));
+    }
+    return labeled_polygon_3(clean_vertices(vertices), holes);
+
+  }
+  
   labeled_polygon_3
   to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
     vector<point> vertices;

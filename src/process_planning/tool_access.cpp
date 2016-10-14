@@ -92,7 +92,11 @@ namespace gca {
 
     point n = top_feature->feature()->normal();
 
-    DBG_ASSERT(angle_eps(n, f.normal(), 0.0, 1.0));
+    if (!(angle_eps(n, f.normal(), 0.0, 1.0))) {
+      cout << "n          = " << n << endl;
+      cout << "f.normal() = " << f.normal() << endl;
+      DBG_ASSERT(angle_eps(n, f.normal(), 0.0, 1.0));
+    }
 
     auto f_range = f.range_along(n);
     auto top_range = top_feature->feature()->range_along(n);
