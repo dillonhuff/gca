@@ -353,34 +353,41 @@ namespace gca {
 
     set_orientation(outer);
 
-    PolygonWithHoles to_offset( outer );
-
-    for (auto h : poly.holes()) {
-      Polygon_2 hole;
-
-      for (auto pt : h) {
-	hole.push_back( Point(pt.x, pt.y) );
-      }
-
-      set_orientation(hole);
-      to_offset.add_hole( hole );
-    }
-
-    //create_exterior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);    
-
-    auto offk = CGAL::Exact_predicates_inexact_constructions_kernel();
-
-    //PolygonWithHolesPtrVector offset_poly_with_holes =
-
     PolygonPtrVector offset_poly_with_holes =
-      create_exterior_skeleton_and_offset_polygons_2(d, outer); //, offk);
+      create_exterior_skeleton_and_offset_polygons_2(d, outer);
 
     DBG_ASSERT(offset_poly_with_holes.size() > 1);
 
     offset_poly_with_holes.erase(begin(offset_poly_with_holes));
 
+    // NOTE: Assumes the 2nd polygon returned by CGAL is always the exteriormost
+    // ring of the exterior offset after the containing rectangle
     vector<point> outer_ring =
       ring_for_CGAL_polygon(*(offset_poly_with_holes.front()), z_level);
+
+    boost_multipoly_2 holes_to_subtract;
+    for (auto h : poly.holes()) {
+      polygon_3 hole_polygon(h);
+      vector<polygon_3> hole_interior_offsets =
+	interior_offset({hole_polygon}, d);
+
+      for (polygon_3& hole_poly : hole_interior_offsets) {
+	DBG_ASSERT(hole_poly.holes().size() == 0);
+
+	holes_to_subtract.push_back(to_boost_poly_2(hole_poly));
+      }
+    }
+
+    for (unsigned i = 1; i < offset_poly_with_holes.size(); i++) {
+      vector<point> h_ring =
+	ring_for_CGAL_polygon(*(offset_poly_with_holes[i]), z_level);
+
+      holes_to_subtract.push_back(to_boost_poly_2(h_ring));
+    }
+
+    // TODO: Convert result of outer exterior offset into a boost polygon,
+    // do interior offsets of holes, convert results to boost polygons and
+    // then subtract them from original result
 
     DBG_ASSERT(false);
 
