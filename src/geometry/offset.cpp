@@ -366,10 +366,24 @@ namespace gca {
       to_offset.add_hole( hole );
     }
 
-    PolygonWithHolesPtrVector offset_poly_with_holes =
-      CGAL::create_exterior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);
+    //create_exterior_skeleton_and_offset_polygons_with_holes_2(d, to_offset);    
+
+    auto offk = CGAL::Exact_predicates_inexact_constructions_kernel();
+
+    //PolygonWithHolesPtrVector offset_poly_with_holes =
+
+    PolygonPtrVector offset_poly_with_holes =
+      create_exterior_skeleton_and_offset_polygons_2(d, outer); //, offk);
+
+    DBG_ASSERT(offset_poly_with_holes.size() > 1);
+
+    offset_poly_with_holes.erase(begin(offset_poly_with_holes));
+
+    vector<point> outer_ring =
+      ring_for_CGAL_polygon(*(offset_poly_with_holes.front()), z_level);
 
     DBG_ASSERT(false);
+
     // vector<polygon_3> result_polys;
 
     // for (PolygonWithHolesPtr& p : offset_poly_with_holes) {
