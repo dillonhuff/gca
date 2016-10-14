@@ -313,10 +313,9 @@ namespace gca {
   }
 
   boost_multipoly_2
-  make_interior_bound(const oriented_polygon& bound,
+  make_interior_bound(const polygon_3& bound,
 		      const tool& t) {
-    polygon_3 bound_p(bound.vertices());
-
+    auto bound_p = bound;
     bound_p.correct_winding_order(point(0, 0, 1));
 
     // TODO: Really should use bounding box polygon instead
@@ -331,7 +330,7 @@ namespace gca {
 
   std::vector<polyline>
   clip_lines(const std::vector<polyline>& lines,
-	     const oriented_polygon& bound,
+	     const polygon_3& bound,
 	     const std::vector<oriented_polygon>& holes,
 	     const tool& t) {
     if (lines.size() == 0) { return lines; }
@@ -383,7 +382,7 @@ namespace gca {
 
     cout << "# of lines = " << lines.size() << endl;
 
-    lines = clip_lines(lines, bound, holes, t);
+    lines = clip_lines(lines, polygon_3(bound.vertices()), holes, t);
     return lines;
   }
 
