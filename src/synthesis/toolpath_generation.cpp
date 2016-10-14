@@ -294,6 +294,15 @@ namespace gca {
     return res;
   }
 
+  boost_multipoly_2
+  to_boost_multipoly_2(const std::vector<polygon_3>& lines) {
+    boost_multipoly_2 res;
+    for (auto& pl : lines) {
+      res.push_back(to_boost_poly_2(pl));
+    }
+    return res;
+  }
+  
   polyline to_polyline(const boost_linestring_2& l,
 		       const double z) {
     vector<point> pts;
@@ -335,14 +344,22 @@ namespace gca {
 	     const tool& t) {
     if (lines.size() == 0) { return lines; }
 
-    vector<oriented_polygon> offset_holes;
+    //    vector<oriented_polygon> offset_holes;
+    vector<polygon_3> hole_polys;
     for (auto h : holes) {
-      vector<oriented_polygon> h_off = exterior_offset(h, t.radius());
-
-      DBG_ASSERT(h_off.size() == 2);
-
-      offset_holes.push_back(h_off.back());
+      hole_polys.push_back(polygon_3(h.vertices()));
     }
+
+    vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
+
+    // for (auto h : holes) {
+    //   //      offset_holes.push_back();
+    //   //      vector<oriented_polygon> h_off = exterior_offset(h, t.radius());
+
+    //   DBG_ASSERT(h_off.size() == 2);
+
+    //   offset_holes.push_back(h_off.back());
+    // }
 
     double z = lines.front().front().z;
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
@@ -877,12 +894,28 @@ namespace gca {
   contour::flat_level_with_holes(const tool& t) const {
     vector<polyline> edges = zig_lines(get_boundary(), get_holes(), t);
 
-    // TODO: Proper polygon merging
+    vector<polygon_3> hole_polys;
     for (auto h : get_holes()) {
-      auto outer = exterior_offset(h, t.radius());
-      DBG_ASSERT(outer.size() == 2);
-      edges.push_back(to_polyline(outer.back()));
+      hole_polys.push_back(polygon_3(h.vertices()));
     }
+
+    vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
+
+    for (auto& offset_hole : offset_holes) {
+      edges.push_back(to_polyline(oriented_polygon(point(0, 0, 1), offset_hole.vertices())));
+      for (auto& hole_in_offset_hole : offset_hole.holes()) {
+	edges.push_back(to_polyline(oriented_polygon(point(0, 0, 1), hole_in_offset_hole)));
+      }
+    }
+
+    // TODO: Proper polygon merging
+    // for (auto h : get_holes()) {
+    //   auto outer = exterior_offset(h, t.radius());
+
+    //   DBG_ASSERT(outer.size() == 2);
+
+    //   edges.push_back(to_polyline(outer.back()));
+    // }
     
     return edges;
   }
