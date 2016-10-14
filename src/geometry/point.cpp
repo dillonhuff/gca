@@ -2,7 +2,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "point.h"
+#include "geometry/point.h"
+#include "utils/check.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ namespace gca {
   double safe_acos(double v) {
     if (within_eps(v, -1)) { return M_PI; }
     if (within_eps(v, 1)) { return 0.0; }
-    assert(-1 <= v && v <= 1);
+    DBG_ASSERT(-1 <= v && v <= 1);
     return acos(v);
   }
   
@@ -34,7 +35,7 @@ namespace gca {
 
   point point::normalize() const {
     double l = len();
-    assert(!within_eps(l, 0.0));
+    DBG_ASSERT(!within_eps(l, 0.0));
     return point(x / l, y / l, z / l);
   }
 
@@ -135,7 +136,7 @@ namespace gca {
   }
 
   point max_along(const std::vector<point>& pts, const point normal) {
-    assert(pts.size() > 0);
+    DBG_ASSERT(pts.size() > 0);
     auto max_e = max_element(begin(pts), end(pts),
 			     [normal](const point l, const point r)
 			     { return signed_distance_along(l, normal) <
@@ -144,7 +145,7 @@ namespace gca {
   }
 
   point min_along(const std::vector<point>& pts, const point normal) {
-    assert(pts.size() > 0);
+    DBG_ASSERT(pts.size() > 0);
     auto min_e = min_element(begin(pts), end(pts),
 			     [normal](const point l, const point r)
 			     { return signed_distance_along(l, normal) <
@@ -153,7 +154,7 @@ namespace gca {
   }
   
   double max_distance_along(const std::vector<point>& pts, const point normal) {
-    assert(pts.size() > 0);
+    DBG_ASSERT(pts.size() > 0);
     vector<double> face_projections(pts.size());
     transform(begin(pts), end(pts),
 	      begin(face_projections),
@@ -348,9 +349,13 @@ namespace gca {
   }
 
   void delete_antennas(std::vector<point>& pts) {
+    DBG_ASSERT(pts.size() >= 3);
+
     bool deleted_one = true;
 
     while (deleted_one) {
+      DBG_ASSERT(pts.size() >= 3);
+
       deleted_one = false;
       for (unsigned i = 0; i < pts.size(); i++) {
 	point p = pts[i];
@@ -368,6 +373,7 @@ namespace gca {
 	if (sum.len() < 0.001) {
 	  cout << "Points " << p << " " << q << " " << s << endl;
 	  cout << "at index " << i << " form an antenna with length = " << sum.len() << endl;;
+	  cout << "in ring of size " << pts.size() << endl;
 	  if (i3 > i2) {
 	    pts.erase(begin(pts) + i2);
 	    pts.erase(begin(pts) + i2);
