@@ -36,6 +36,81 @@ namespace gca {
     
   }
 
+  bool
+  add_to_existing_polys_as_hole(const polygon_3& next,
+				std::vector<polygon_3>& polygons) {
+    if (polygons.size() == 0) { return false; }
+
+    boost_poly_2 next_boost_p = to_boost_poly_2(next);
+
+    int max_ind = -1;
+    double outer_area_max = -1.0;
+    for (unsigned i = 0; i < polygons.size(); i++) {
+      const auto& current_poly = polygons[i];
+      boost_poly_2 current_boost_p = to_boost_poly_2(current_poly);
+      double outer_area = area(polygon_3(current_poly.vertices()));
+      cout << "outer area = " << outer_area << endl;
+
+      if (bg::within(next_boost_p, current_boost_p) && outer_area > outer_area_max) {
+	outer_area_max = outer_area;
+	max_ind = i;
+	cout << "set max_ind = " << max_ind << endl;
+      }
+    }
+
+    if (max_ind >= 0) {
+      auto& current_poly = polygons[max_ind];
+      unsigned old_num_holes = current_poly.holes().size();
+      current_poly.add_hole(next.vertices());
+
+      unsigned new_num_holes = polygons[max_ind].holes().size();
+
+      DBG_ASSERT(new_num_holes == (old_num_holes + 1));
+
+      cout << "ADDED TO POLYGON AS HOLE" << endl;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  std::vector<polygon_3>
+  arrange_rings(const std::vector<std::vector<point>>& rings) {
+    cout << "# of rings before arranging = " << rings.size() << endl;
+    if (rings.size() == 0) { return {}; }
+
+    vector<polygon_3> ring_polys;
+    for (auto r : rings) {
+      ring_polys.push_back(r);
+    }
+
+    vector<polygon_3> polygons;
+    while (ring_polys.size() > 0) {
+      auto next_poly =
+	max_element(begin(ring_polys), end(ring_polys),
+		    [](const polygon_3& l, const polygon_3& r) {
+		      return area(l) < area(r);
+		    });
+
+      DBG_ASSERT(next_poly != end(ring_polys));
+
+      polygon_3 next_p = *next_poly;
+
+      ring_polys.erase(next_poly);
+
+      bool is_hole = add_to_existing_polys_as_hole(next_p, polygons);
+
+      if (!is_hole) {
+	polygons.push_back(next_p);
+      }
+    }
+
+    cout << "# of polygons after arranging = " << polygons.size() << endl;
+
+    return polygons;
+  }
+
   Polygon_2
   CGAL_polygon_for_oriented_polygon(const oriented_polygon& p) {
     Polygon_2 out;
@@ -416,14 +491,16 @@ namespace gca {
 
     vector<polygon_3> result_polys = arrange_rings(pts);
 
-    return result_polys;
-    
-    // NOTE: Assumes the 2nd polygon returned by CGAL is always the exteriormost
-    // ring of the exterior offset after the containing rectangle
-    vector<point> outer_ring =
-      ring_for_CGAL_polygon(*(offset_poly_with_holes.front()), z_level);
+    DBG_ASSERT(result_polys.size() == 1);
 
-    boost_poly_2 outer_poly = to_boost_poly_2(outer_ring);
+    polygon_3 result_poly = result_polys.front();
+
+    // // NOTE: Assumes the 2nd polygon returned by CGAL is always the exteriormost
+    // // ring of the exterior offset after the containing rectangle
+    // vector<point> outer_ring =
+    //   ring_for_CGAL_polygon(*(offset_poly_with_holes.front()), z_level);
+
+    boost_poly_2 outer_poly = to_boost_poly_2(result_poly);
 
     boost_multipoly_2 holes_to_subtract;
     for (auto h : poly.holes()) {
@@ -438,12 +515,12 @@ namespace gca {
       }
     }
 
-    for (unsigned i = 1; i < offset_poly_with_holes.size(); i++) {
-      vector<point> h_ring =
-	ring_for_CGAL_polygon(*(offset_poly_with_holes[i]), z_level);
+    // for (unsigned i = 1; i < offset_poly_with_holes.size(); i++) {
+    //   vector<point> h_ring =
+    // 	ring_for_CGAL_polygon(*(offset_poly_with_holes[i]), z_level);
 
-      holes_to_subtract.push_back(to_boost_poly_2(h_ring));
-    }
+    //   holes_to_subtract.push_back(to_boost_poly_2(h_ring));
+    // }
 
     boost_multipoly_2 ext_offset;
     bg::difference(outer_poly, holes_to_subtract, ext_offset);
@@ -519,81 +596,6 @@ namespace gca {
     }
 
     return planar_polygon_union(exter_offsets);
-  }
-
-  bool
-  add_to_existing_polys_as_hole(const polygon_3& next,
-				std::vector<polygon_3>& polygons) {
-    if (polygons.size() == 0) { return false; }
-
-    boost_poly_2 next_boost_p = to_boost_poly_2(next);
-
-    int max_ind = -1;
-    double outer_area_max = -1.0;
-    for (unsigned i = 0; i < polygons.size(); i++) {
-      const auto& current_poly = polygons[i];
-      boost_poly_2 current_boost_p = to_boost_poly_2(current_poly);
-      double outer_area = area(polygon_3(current_poly.vertices()));
-      cout << "outer area = " << outer_area << endl;
-
-      if (bg::within(next_boost_p, current_boost_p) && outer_area > outer_area_max) {
-	outer_area_max = outer_area;
-	max_ind = i;
-	cout << "set max_ind = " << max_ind << endl;
-      }
-    }
-
-    if (max_ind >= 0) {
-      auto& current_poly = polygons[max_ind];
-      unsigned old_num_holes = current_poly.holes().size();
-      current_poly.add_hole(next.vertices());
-
-      unsigned new_num_holes = polygons[max_ind].holes().size();
-
-      DBG_ASSERT(new_num_holes == (old_num_holes + 1));
-
-      cout << "ADDED TO POLYGON AS HOLE" << endl;
-
-      return true;
-    }
-
-    return false;
-  }
-
-  std::vector<polygon_3>
-  arrange_rings(const std::vector<std::vector<point>>& rings) {
-    cout << "# of rings before arranging = " << rings.size() << endl;
-    if (rings.size() == 0) { return {}; }
-
-    vector<polygon_3> ring_polys;
-    for (auto r : rings) {
-      ring_polys.push_back(r);
-    }
-
-    vector<polygon_3> polygons;
-    while (ring_polys.size() > 0) {
-      auto next_poly =
-	max_element(begin(ring_polys), end(ring_polys),
-		    [](const polygon_3& l, const polygon_3& r) {
-		      return area(l) < area(r);
-		    });
-
-      DBG_ASSERT(next_poly != end(ring_polys));
-
-      polygon_3 next_p = *next_poly;
-
-      ring_polys.erase(next_poly);
-
-      bool is_hole = add_to_existing_polys_as_hole(next_p, polygons);
-
-      if (!is_hole) {
-	polygons.push_back(next_p);
-      }
-    }
-
-    cout << "# of polygons after arranging = " << polygons.size() << endl;
-
-    return polygons;
   }
 
   std::vector<polygon_3> interior_offsets_flat(const polygon_3& poly,

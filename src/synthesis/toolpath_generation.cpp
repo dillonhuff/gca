@@ -338,9 +338,14 @@ namespace gca {
 
     vector<oriented_polygon> offset_holes;
     for (auto h : holes) {
-      auto h_off = exterior_offset(h, t.radius());
-      DBG_ASSERT(h_off.size() == 2);
-      offset_holes.push_back(h_off.back());
+      polygon_3 to_offset(h.vertices());
+      vector<polygon_3> h_off = exterior_offset({to_offset}, t.radius());
+
+      //      DBG_ASSERT(h_off.size() == 2);
+
+      for (auto off_h : h_off) {
+	offset_holes.push_back(h_off.back());
+      }
     }
 
     double z = lines.front().front().z;
@@ -354,9 +359,9 @@ namespace gca {
 
     boost_multilinestring_2 result;
     bg::difference(hole_result, bound_poly, result);
-    
+
     vector<polyline> clipped = to_polylines(result, z);
-    
+
     return clipped;
   }
 
@@ -903,12 +908,12 @@ namespace gca {
 
     for (auto& t : to_check) {
 
-      vector<polygon_3> offset_hs;
-      for (auto h : base_poly.holes()) {
-	offset_hs.push_back(polygon_3(exterior_offset(h, t.radius())));
-      }
+      vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
 
-      vector<polygon_3> offset_holes = planar_polygon_union(offset_hs);
+      // for (auto h : base_poly.holes()) {
+      // 	offset_hs.push_back(polygon_3(exterior_offset(h, t.radius())));
+      // }
+      //      vector<polygon_3> offset_holes = planar_polygon_union(offset_hs);
 
       if (offset_holes.size() == hole_polys.size()) {
 
