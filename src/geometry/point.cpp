@@ -252,11 +252,11 @@ namespace gca {
 	point raw_dir1 = p1 - p;
 	point raw_dir2 = p2 - p1;
 
-	if (within_eps(raw_dir1.len(), 0.0)) {
-	  pts.erase(begin(pts) + i1);
-	  found_colinear_edge = true;
-	  break;
-	}
+	// if (within_eps(raw_dir1.len(), 0.0)) {
+	//   pts.erase(begin(pts) + i1);
+	//   found_colinear_edge = true;
+	//   break;
+	// }
 
 	// NOTE: This is the site of the normalization bug
 	point dir1 = raw_dir1.normalize();

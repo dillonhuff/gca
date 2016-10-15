@@ -1,3 +1,4 @@
+#include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/polygon_3.h"
 #include "geometry/vtk_debug.h"
@@ -24,7 +25,9 @@ namespace gca {
     for (auto h : hole_verts) {
 
       auto new_h = clean_vertices(h);
+      cout << "NEW_H delete start" << endl;
       delete_antennas(new_h);
+      cout << "END NEW_H delete start" << endl;
 
       if (!(new_h.size() >= 3)) {
 	cout << "ERROR: Inner ring size = " << h.size() << endl;
@@ -32,6 +35,19 @@ namespace gca {
 	inner_rings.push_back(new_h);
       }
     }
+  }
+
+  std::vector<point>
+  clean_for_conversion_to_polygon_3(const std::vector<point>& vertices) {
+    auto outer_ring = vertices;
+
+    outer_ring = clean_vertices(outer_ring);
+
+    if (outer_ring.size() < 3) { return outer_ring; }
+
+    delete_antennas(outer_ring);
+
+    return outer_ring;
   }
 
   void check_simplicity(const labeled_polygon_3& p) {
@@ -135,6 +151,37 @@ namespace gca {
     return labeled_polygon_3(clean_vertices(vertices), holes);
   }
 
+  boost::optional<polygon_3>
+  to_labeled_polygon_3_maybe(const rotation& r,
+			     const double z,
+			     const boost_poly_2& p) {
+    vector<point> vertices;
+    for (auto p2d : boost::geometry::exterior_ring(p)) {
+      point pt(p2d.get<0>(), p2d.get<1>(), z);
+      vertices.push_back(times_3(r, pt));
+    }
+
+    vertices = clean_for_conversion_to_polygon_3(vertices);
+
+    if (vertices.size() < 3) { return boost::none; }
+
+    vector<vector<point>> holes;
+    for (auto ir : boost::geometry::interior_rings(p)) {
+      vector<point> hole_verts;
+      for (auto p2d : ir) {
+	point pt(p2d.get<0>(), p2d.get<1>(), z);
+	hole_verts.push_back(times_3(r, pt));
+      }
+
+      hole_verts = clean_for_conversion_to_polygon_3(hole_verts);
+      if (hole_verts.size() >= 3) {
+	holes.push_back(hole_verts);
+      }
+    }
+
+    return labeled_polygon_3(vertices, holes);
+  }
+
   // TODO: Version of this code that can handle holes?
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
     return oriented_polygon(p.normal(), p.vertices());
@@ -218,12 +265,15 @@ namespace gca {
 
     std::vector<labeled_polygon_3> res;
     for (auto& r : result) {
-      labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+      boost::optional<polygon_3> lp =
+	to_labeled_polygon_3_maybe(r_inv, level_z, r);
 
-      check_simplicity(lp);
+      if (lp) {
+	check_simplicity(*lp);
 
-      lp.correct_winding_order(polys.front().normal());
-      res.push_back(lp);
+	(*lp).correct_winding_order(polys.front().normal());
+	res.push_back(*lp);
+      }
     }
 
     return res;
