@@ -25,9 +25,7 @@ namespace gca {
     for (auto h : hole_verts) {
 
       auto new_h = clean_vertices(h);
-      cout << "NEW_H delete start" << endl;
       delete_antennas(new_h);
-      cout << "END NEW_H delete start" << endl;
 
       if (!(new_h.size() >= 3)) {
 	cout << "ERROR: Inner ring size = " << h.size() << endl;
