@@ -35,8 +35,14 @@ namespace gca {
 
   point point::normalize() const {
     double l = len();
-    DBG_ASSERT(!within_eps(l, 0.0));
-    return point(x / l, y / l, z / l);
+
+    //    DBG_ASSERT(!within_eps(l, 0.0));
+
+    if (!within_eps(l, 0.0)) {
+      return point(x / l, y / l, z / l);
+    }
+
+    return point(0.0, 0.0, 0.0);
   }
 
   
@@ -232,6 +238,7 @@ namespace gca {
     bool found_colinear_edge = true;
 
     while (found_colinear_edge) {
+
       found_colinear_edge = false;
 
       for (unsigned i = 0; i < pts.size(); i++) {
@@ -242,13 +249,27 @@ namespace gca {
 	point p1 = pts[i1];
 	point p2 = pts[i2];
 
-	point dir1 = (p1 - p).normalize();
-	point dir2 = (p2 - p1).normalize();
+	point raw_dir1 = p1 - p;
+	point raw_dir2 = p2 - p1;
 
-	if (angle_eps(dir1, dir2, 0.0, tol) ||
-	    angle_eps(dir1, dir2, 180.0, tol)) { //0.0000001)) {
+	if (within_eps(raw_dir1.len(), 0.0)) {
 	  pts.erase(begin(pts) + i1);
 	  found_colinear_edge = true;
+	  break;
+	}
+
+	// NOTE: This is the site of the normalization bug
+	point dir1 = raw_dir1.normalize();
+	point dir2 = raw_dir2.normalize();
+
+	// point dir1 = (p1 - p).normalize();
+	// point dir2 = (p2 - p1).normalize();
+
+	if (angle_eps(dir1, dir2, 0.0, tol) ||
+	    angle_eps(dir1, dir2, 180.0, tol)) {
+	  pts.erase(begin(pts) + i1);
+	  found_colinear_edge = true;
+	  break;
 	}
       }
     }

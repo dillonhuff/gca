@@ -217,7 +217,7 @@ namespace gca {
     cout << "# polys in result = " << result.size() << endl;
 
     std::vector<labeled_polygon_3> res;
-    for (auto r : result) {
+    for (auto& r : result) {
       labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
 
       check_simplicity(lp);

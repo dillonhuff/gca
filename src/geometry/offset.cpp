@@ -297,6 +297,8 @@ namespace gca {
   vector<point> clean_ring_for_offsetting_no_fail(const std::vector<point>& ring) {
     vector<point> r_pts = clean_vertices_within_eps(ring, 0.005, 0.0000001);
 
+    if (r_pts.size() < 3) { return r_pts; }
+
     delete_antennas(r_pts);
 
     return r_pts;
@@ -304,6 +306,8 @@ namespace gca {
   
   vector<point> clean_ring_for_offsetting(const std::vector<point>& ring) {
     vector<point> r_pts = clean_vertices_within_eps(ring, 0.005, 0.0000001);
+
+    if (r_pts.size() < 3) { return r_pts; }
 
     auto old_rpts = r_pts;
 
