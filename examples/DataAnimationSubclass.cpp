@@ -22,7 +22,12 @@
 #include <vtkSelection.h>
 #include <vtkExtractSelection.h>
 #include <vtkObjectFactory.h>
- 
+
+#include "geometry/vtk_utils.h"
+#include "system/parse_stl.h"
+
+using namespace gca;
+
 // Catch mouse events
 class MouseInteractorStyle : public vtkInteractorStyleTrackballCamera
 {
@@ -35,8 +40,7 @@ class MouseInteractorStyle : public vtkInteractorStyleTrackballCamera
     selectedActor = vtkSmartPointer<vtkActor>::New();
   }
  
-    virtual void OnLeftButtonDown()
-    {
+  virtual void OnLeftButtonDown() {
       // Get the location of the click (in window coordinates)
       int* pos = this->GetInteractor()->GetEventPosition();
  
@@ -50,8 +54,7 @@ class MouseInteractorStyle : public vtkInteractorStyleTrackballCamera
       double* worldPosition = picker->GetPickPosition();
       std::cout << "Cell id is: " << picker->GetCellId() << std::endl;
  
-      if(picker->GetCellId() != -1)
-        {
+      if(picker->GetCellId() != -1) {
  
         std::cout << "Pick position is: " << worldPosition[0] << " " << worldPosition[1]
                   << " " << worldPosition[2] << endl;
@@ -107,10 +110,12 @@ class MouseInteractorStyle : public vtkInteractorStyleTrackballCamera
  
         this->Interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(selectedActor);
  
-        }
+      } else {
+	cout << "Do something else?" << endl;
+      }
       // Forward events
       vtkInteractorStyleTrackballCamera::OnLeftButtonDown();
-    }
+  }
  
     vtkSmartPointer<vtkPolyData> Data;
     vtkSmartPointer<vtkDataSetMapper> selectedMapper;
@@ -120,20 +125,24 @@ class MouseInteractorStyle : public vtkInteractorStyleTrackballCamera
  
 vtkStandardNewMacro(MouseInteractorStyle);
  
-int main (int, char *[])
-{
-  vtkSmartPointer<vtkPlaneSource> planeSource =
-    vtkSmartPointer<vtkPlaneSource>::New();
-  planeSource->Update();
+int main(int, char *[]) {
+  
+  // vtkSmartPointer<vtkPlaneSource> planeSource =
+  //   vtkSmartPointer<vtkPlaneSource>::New();
+  // planeSource->Update();
  
-  vtkSmartPointer<vtkTriangleFilter> triangleFilter =
-    vtkSmartPointer<vtkTriangleFilter>::New();
-  triangleFilter->SetInputConnection(planeSource->GetOutputPort());
-  triangleFilter->Update();
+  // vtkSmartPointer<vtkTriangleFilter> triangleFilter =
+  //   vtkSmartPointer<vtkTriangleFilter>::New();
+  // triangleFilter->SetInputConnection(planeSource->GetOutputPort());
+  // triangleFilter->Update();
+
+  triangular_mesh m = parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.0001);
+
+  auto pd = polydata_for_trimesh(m);
  
   vtkSmartPointer<vtkPolyDataMapper> mapper =
     vtkSmartPointer<vtkPolyDataMapper>::New();
-  mapper->SetInputConnection(triangleFilter->GetOutputPort());
+  mapper->SetInputData(pd); //triangleFilter->GetOutputPort());
  
   vtkSmartPointer<vtkActor> actor =
     vtkSmartPointer<vtkActor>::New();
@@ -155,7 +164,7 @@ int main (int, char *[])
   vtkSmartPointer<MouseInteractorStyle> style =
     vtkSmartPointer<MouseInteractorStyle>::New();
   style->SetDefaultRenderer(renderer);
-  style->Data = triangleFilter->GetOutput();
+  style->Data = pd; //triangleFilter->GetOutput();
  
   renderWindowInteractor->SetInteractorStyle(style);
  
