@@ -24,7 +24,7 @@ namespace gca {
     std::vector<plate_height> plates{0.1, 0.3, 0.7};
     fixtures fixes(test_vice, plates);
 
-    workpiece workpiece_dims(5.0, 5.0, 5.0, ALUMINUM);
+    workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.25);

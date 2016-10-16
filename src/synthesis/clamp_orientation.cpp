@@ -61,6 +61,50 @@ namespace gca {
     return *rev;
   }
 
+  homogeneous_transform balanced_mating_transform(const triangular_mesh& m,
+						  const clamp_orientation& orient,
+						  const vice& v) {
+    plane vice_base = v.base_plane();
+    plane vice_top_jaw = v.top_jaw_plane();
+    plane vice_right_bound = v.right_bound_plane();
+    
+    plane mesh_base = orient.base_plane();
+    plane mesh_left = orient.left_plane();
+
+    // TODO: Check that the coordinate system is right handed?
+    point free_axis = cross(mesh_base.normal(), mesh_left.normal());
+
+    // TODO: Eventually filter the points being chosen by whether
+    // they will lie below the plane of the vice
+    point min_pt = min_point_in_dir(m, free_axis);
+    point max_pt = max_point_in_dir(m, free_axis);
+
+    double min_dist = min_in_dir(m, free_axis);
+    double max_dist = max_in_dir(m, free_axis);
+    double v_x = v.x_len();
+
+    point balanced_pt = min_pt + v_x*free_axis - ((v_x - (max_dist - min_dist)) / 2.0)*free_axis; // - (v_x - (max_dist - min_dist) / 2.0)*free_axis;
+
+    plane free_plane(free_axis, balanced_pt);
+
+    boost::optional<homogeneous_transform> t =
+      mate_planes(mesh_base, mesh_left, free_plane,
+		  vice_base, vice_top_jaw, vice_right_bound);
+    if (t) {
+      return *t;
+    }
+    
+    free_axis = -1*free_axis;
+    free_plane = plane(free_axis, max_point_in_dir(m, free_axis));
+
+    boost::optional<homogeneous_transform> rev =
+      mate_planes(mesh_base, mesh_left, free_plane,
+		  vice_base, vice_top_jaw, vice_right_bound);
+
+    DBG_ASSERT(rev);
+    return *rev;
+  }
+  
   triangular_mesh
   oriented_part_mesh(const triangular_mesh& m,
 		     const clamp_orientation& orient,

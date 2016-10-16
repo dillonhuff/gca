@@ -683,7 +683,7 @@ namespace gca {
       // auto b_act = plane_actor(vtk_plane(part_zero.base_plane()));
       // auto cs_act = polydata_actor(polydata_for_trimesh(current_stock));
       // visualize_actors({l_act, r_act, b_act, cs_act});
-    
+
       fixture fix(orient, v); //, part_zero);
 
       return fix;
@@ -748,7 +748,8 @@ namespace gca {
 
 	clip_volumes(decomp, volume_inf, dir_info);
 	
-	auto t = mating_transform(current_stock, fix.orient, fix.v);
+	homogeneous_transform t =
+	  balanced_mating_transform(current_stock, fix.orient, fix.v);
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	if (features.size() > 0) {
