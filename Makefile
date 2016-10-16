@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named interact-test
+
+# Build rule for target.
+interact-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 interact-test
+.PHONY : interact-test
+
+# fast build rule for target.
+interact-test/fast:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/build
+.PHONY : interact-test/fast
+
+#=============================================================================
 # Target rules for targets named AddCell
 
 # Build rule for target.
@@ -435,6 +448,33 @@ examples/AddCell.s: examples/AddCell.cpp.s
 examples/AddCell.cpp.s:
 	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/examples/AddCell.cpp.s
 .PHONY : examples/AddCell.cpp.s
+
+examples/DataAnimationSubclass.o: examples/DataAnimationSubclass.cpp.o
+
+.PHONY : examples/DataAnimationSubclass.o
+
+# target to build an object file
+examples/DataAnimationSubclass.cpp.o:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.o
+.PHONY : examples/DataAnimationSubclass.cpp.o
+
+examples/DataAnimationSubclass.i: examples/DataAnimationSubclass.cpp.i
+
+.PHONY : examples/DataAnimationSubclass.i
+
+# target to preprocess a source file
+examples/DataAnimationSubclass.cpp.i:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.i
+.PHONY : examples/DataAnimationSubclass.cpp.i
+
+examples/DataAnimationSubclass.s: examples/DataAnimationSubclass.cpp.s
+
+.PHONY : examples/DataAnimationSubclass.s
+
+# target to generate assembly for a file
+examples/DataAnimationSubclass.cpp.s:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.s
+.PHONY : examples/DataAnimationSubclass.cpp.s
 
 examples/camaster_test.o: examples/camaster_test.cpp.o
 
@@ -4142,6 +4182,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... interact-test"
 	@echo "... AddCell"
 	@echo "... engraving"
 	@echo "... debug-test"
@@ -4169,6 +4210,9 @@ help:
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
 	@echo "... examples/AddCell.s"
+	@echo "... examples/DataAnimationSubclass.o"
+	@echo "... examples/DataAnimationSubclass.i"
+	@echo "... examples/DataAnimationSubclass.s"
 	@echo "... examples/camaster_test.o"
 	@echo "... examples/camaster_test.i"
 	@echo "... examples/camaster_test.s"

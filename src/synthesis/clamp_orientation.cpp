@@ -83,7 +83,8 @@ namespace gca {
     double max_dist = max_in_dir(m, free_axis);
     double v_x = v.x_len();
 
-    point balanced_pt = min_pt + v_x*free_axis - ((v_x - (max_dist - min_dist)) / 2.0)*free_axis; // - (v_x - (max_dist - min_dist) / 2.0)*free_axis;
+    point balanced_pt =
+      min_pt + v_x*free_axis - ((v_x - (max_dist - min_dist)) / 2.0)*free_axis;
 
     plane free_plane(free_axis, balanced_pt);
 
