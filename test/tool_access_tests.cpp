@@ -56,7 +56,13 @@ namespace gca {
     vector<tool> tools{t1, t2, t3, t4};
     workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
 
-    auto mesh = parse_stl("test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl", 0.001);
+    auto mesh = parse_stl("test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.001);
+
+    box bb = mesh.bounding_box();
+    cout << "Bounding box" << endl;
+    cout << "X LEN = " << bb.x_len() << endl;
+    cout << "Y LEN = " << bb.y_len() << endl;
+    cout << "Z LEN = " << bb.z_len() << endl;
 
     point n(0, 0, 1);
 
@@ -79,7 +85,7 @@ namespace gca {
       cout << t << endl;
     }
 
-    REQUIRE(tool_info[base].size() == 3);
+    REQUIRE(tool_info[base].size() == 2);
     
   }
   
