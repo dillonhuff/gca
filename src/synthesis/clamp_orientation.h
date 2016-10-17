@@ -161,7 +161,8 @@ namespace gca {
   homogeneous_transform balanced_mating_transform(const triangular_mesh& m,
 						  const clamp_orientation& orient,
 						  const vice& v);
-  
+
+  point part_zero_position(const clamp_orientation& clamp_orient);
 }
 
 #endif

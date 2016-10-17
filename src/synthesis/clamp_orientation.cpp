@@ -453,4 +453,42 @@ namespace gca {
     return top_orients.front();
   }
 
+  ublas::matrix<double> plane_matrix(const clamp_orientation& clamp_orient) {
+    point base_n = clamp_orient.bottom_normal();
+    point left_n = clamp_orient.left_normal();
+    point right_n = clamp_orient.right_normal();
+
+    ublas::matrix<double> p_mat(3, 3);
+    p_mat(0, 0) = base_n.x;
+    p_mat(0, 1) = base_n.y;
+    p_mat(0, 2) = base_n.z;
+
+    p_mat(1, 0) = left_n.x;
+    p_mat(1, 1) = left_n.y;
+    p_mat(1, 2) = left_n.z;
+
+    p_mat(2, 0) = right_n.x;
+    p_mat(2, 1) = right_n.y;
+    p_mat(2, 2) = right_n.z;
+
+    return p_mat;
+  }
+
+  ublas::vector<double> plane_d_vector(const clamp_orientation& clamp_orient) {
+    ublas::vector<double> d_vec(3);
+    d_vec(0) = clamp_orient.base_plane().d();
+    d_vec(1) = clamp_orient.left_plane().d();
+    d_vec(2) = clamp_orient.right_plane().d();
+
+    return d_vec;
+  }
+
+  point part_zero_position(const clamp_orientation& clamp_orient) {  
+    const ublas::matrix<double> plane_mat = plane_matrix(clamp_orient);
+    ublas::vector<double> plane_d_vec = -1*plane_d_vector(clamp_orient);
+
+    const ublas::matrix<double> p_inv = inverse(plane_mat);
+    return from_vector(prod(p_inv, plane_d_vec));
+  }
+
 }

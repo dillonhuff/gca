@@ -26,6 +26,7 @@
 #include <vtkObjectFactory.h>
 
 #include "geometry/vtk_utils.h"
+#include "synthesis/clamp_orientation.h"
 #include "system/parse_stl.h"
 
 using namespace gca;
@@ -63,8 +64,13 @@ public:
   }
 
   void add_plane(vtkCellPicker& picker) {
-    num_planes_selected++;
+    auto cell_id = picker.GetCellId();
+    vtkCell* c = Data->GetCell(cell_id);
+    triangle t = vtkCell_to_triangle(c);
+
+    plane_list[num_planes_selected] = plane(normal(t), t.v1);
     
+    num_planes_selected++;
   }
  
   virtual void OnLeftButtonDown() {
@@ -177,7 +183,6 @@ int main(int, char *[]) {
   style->SetDefaultRenderer(renderer);
   style->Data = pd;
 
-  plane zero_planes[3];
   style->num_planes_selected = 0;
   
   renderWindowInteractor->SetInteractorStyle(style);
@@ -189,6 +194,13 @@ int main(int, char *[]) {
  
   renderWindow->Render();
   renderWindowInteractor->Start();
+
+  cout << "# of planes selected = " << style->num_planes_selected << endl;
+  clamp_orientation orient(style->plane_list[0],
+			   style->plane_list[1],
+			   style->plane_list[2]);
+
+  cout << "Part zero position = " << part_zero_position(orient) << endl;
 
   return EXIT_SUCCESS;
 }

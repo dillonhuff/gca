@@ -69,6 +69,8 @@ namespace gca {
 
   double max_z(const triangle t);
 
+  point normal(const triangle t);
+
 }
 
 #endif

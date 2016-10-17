@@ -10,6 +10,8 @@
 
 namespace gca {
 
+  triangle vtkCell_to_triangle(vtkCell* c);
+
   std::vector<triangle>
   polydata_to_triangle_list(vtkPolyData* in_polydata);
   
