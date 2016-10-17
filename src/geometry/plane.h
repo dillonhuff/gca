@@ -17,6 +17,8 @@ namespace gca {
     plane(const point p_n, const point p_p)
       : norm(p_n.normalize()), p(p_p) {}
 
+    plane() : norm(0, 0, 1), p(0, 0, 0) {}
+    
     inline point normal() const { return norm; }
     inline point pt() const { return p; }
 
