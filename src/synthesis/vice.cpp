@@ -99,4 +99,11 @@ namespace gca {
 	       v.base_z(), v.top_z());
   }
 
+  vice shift(const point s, const vice& v) {
+    vice shifted = v;
+
+    shifted.set_position(v.position() + s);
+
+    return shifted;
+  }
 }

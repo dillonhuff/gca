@@ -401,6 +401,8 @@ namespace gca {
 			      const triangular_mesh& mesh,
 			      double delta_degrees);
 
+  triangular_mesh shift(const point s, const triangular_mesh& m);
+
 }
 
 #endif

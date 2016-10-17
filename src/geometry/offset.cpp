@@ -276,7 +276,19 @@ namespace gca {
   }
 
   void check_simplicity(const std::vector<point>& rpts) {
-    const gca::rotation r = rotate_from_to(ring_normal(rpts), point(0, 0, 1));
+    point norm = ring_normal(rpts);
+
+    if (within_eps(norm.len(), 0.0, 0.0000001)) {
+      cout << "Error: Degenerate ring!" << endl;
+      cout << "# of points in ring = " << rpts.size() << endl;
+      for (auto pt : rpts) {
+	cout << pt << endl;
+      }
+      vtk_debug_ring(rpts);
+      DBG_ASSERT(false);
+    }
+
+    const gca::rotation r = rotate_from_to(norm, point(0, 0, 1));
     auto pts = apply(r, rpts);
 
     if (!(no_duplicate_points(pts, 0.0001))) {

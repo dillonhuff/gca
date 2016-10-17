@@ -104,6 +104,8 @@ namespace gca {
 		       const double y_length,
 		       const point loc);
 
+  vice shift(const point s, const vice& v);
+
 }
 
 #endif

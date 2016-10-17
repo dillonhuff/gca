@@ -27,6 +27,7 @@
 
 #include "geometry/vtk_utils.h"
 #include "synthesis/clamp_orientation.h"
+#include "synthesis/gcode_generation.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
@@ -197,7 +198,7 @@ point gui_select_part_zero(const fabrication_setup& setup) {
 
   vtkSmartPointer<vtkCallbackCommand> keypressCallback = 
     vtkSmartPointer<vtkCallbackCommand>::New();
-  keypressCallback->SetCallback ( KeypressCallbackFunction );  
+  keypressCallback->SetCallback( KeypressCallbackFunction );
 
   vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
     vtkSmartPointer<vtkRenderWindowInteractor>::New();
@@ -232,6 +233,43 @@ point gui_select_part_zero(const fabrication_setup& setup) {
   point part_zero = part_zero_position(orient);
 
   return part_zero;
+}
+
+toolpath shift(const point s, const toolpath& tp) {
+  toolpath shifted_toolpath = tp;
+  shifted_toolpath.lines = shift_lines(shifted_toolpath.lines, s);
+  return shifted_toolpath;
+}
+
+std::vector<toolpath> shift(const point s,
+			    const std::vector<toolpath>& toolpaths) {
+  vector<toolpath> shifted_toolpaths;
+  for (auto& toolpath : toolpaths) {
+    shifted_toolpaths.push_back(shift(s, toolpath));
+  }
+  return shifted_toolpaths;
+}
+
+rigid_arrangement shift(const point s, const rigid_arrangement& a) {
+  rigid_arrangement shifted_a;
+
+  for (auto n : a.mesh_names()) {
+    shifted_a.insert(n, shift(s, a.mesh(n)));
+    shifted_a.set_metadata(n, a.metadata(n));
+
+  }
+
+  return shifted_a;
+
+}
+
+fabrication_setup shift(const point s,
+			const fabrication_setup& setup) {
+  rigid_arrangement shifted_setup = shift(s, setup.arrangement());
+  vice shifted_vice = shift(s, setup.v);
+  vector<toolpath> shifted_toolpaths = shift(s, setup.toolpaths());
+
+  return fabrication_setup(shifted_setup, shifted_vice, shifted_toolpaths);
 }
 
 int main(int, char *[]) {
@@ -294,8 +332,23 @@ int main(int, char *[]) {
   fabrication_plan p =
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
+  cout << "Programs" << endl;
+
+  cout.setf(ios::fixed, ios::floatfield);
+  cout.setf(ios::showpoint);
+
   for (auto& step : p.steps()) {
-    cout << "Part zero position = " << gui_select_part_zero(step) << endl;
+    point zero_pos = gui_select_part_zero(step);
+    cout << "Part zero position = " << zero_pos << endl;
+
+    fabrication_setup shifted_setup = shift(-1*zero_pos, step);
+    visual_debug(shifted_setup);
+
+    cout << "Program for setup" << endl;
+    auto program = shifted_setup.gcode_for_toolpaths(emco_f1_code_no_TLC);
+    cout << program.name << endl;
+    cout << program.blocks << endl;
+    
   }
 
   return EXIT_SUCCESS;

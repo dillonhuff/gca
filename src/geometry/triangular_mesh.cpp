@@ -953,5 +953,9 @@ namespace gca {
     return plane(-1*n, p);
   }
 
+  triangular_mesh shift(const point s, const triangular_mesh& m) {
+    auto shift_pt = [s](const point p) { return p + s; };
+    return m.apply_to_vertices(shift_pt);
+  }
 
 }
