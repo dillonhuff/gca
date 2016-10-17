@@ -84,10 +84,24 @@ namespace gca {
     cout << "Bounding box = " << endl;
     cout << bounding << endl;
 
-    fabrication_plan p =
-      make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+    SECTION("Feature recognition in (-0.707107, 0.707107, 2.16977e-14)") {
+      point n(-0.707107, 0.707107, 2.16977e-14);
 
-    REQUIRE(p.steps().size() == 8);
+      vector<surface> stable_surfaces = outer_surfaces(mesh);
+      triangular_mesh stock = align_workpiece(stable_surfaces, workpiece_dims);
+      
+      feature_decomposition* f =
+	build_feature_decomposition(stock, mesh, n);
+
+      REQUIRE(f->num_features() == 3);
+    }
+
+    SECTION("Full fabrication plan") {
+      fabrication_plan p =
+	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+
+      REQUIRE(p.steps().size() == 8);
+    }
   }
   
   // TEST_CASE("Part 1 (24)") {
