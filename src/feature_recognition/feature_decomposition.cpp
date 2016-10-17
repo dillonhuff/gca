@@ -70,6 +70,8 @@ namespace gca {
 			      const triangular_mesh& m,
 			      const point n) {
     DBG_ASSERT(s.size() > 0);
+
+    //vtk_debug_highlight_inds(s, m);
     
     auto raw_pts = vertexes_on_surface(s, m);
     point max_pt = max_along(raw_pts, n);
@@ -92,7 +94,8 @@ namespace gca {
     }
 
     //vtk_debug_highlight_inds(s, m);
-    
+
+    cout << "Trying planar union for the first time" << endl;
     std::vector<polygon_3> result_polys =
       planar_polygon_union(ts);
 
@@ -107,7 +110,21 @@ namespace gca {
 	}
       }
 
+      cout << "Trying dilated planar union" << endl;
+      cout << "Original surface" << endl;
+      vtk_debug_highlight_inds(s, m);
+
+      cout << "Original polygons that were unioned" << endl;
+      vtk_debug_polygons(ts);
+
+      cout << "Result of original union" << endl;
+      vtk_debug_polygons(result_polys);
+      
+      cout << "Dilated polygons to try" << endl;
+      vtk_debug_polygons(dilated_ts);
+
       auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
+      cout << "Done with dilated planar union" << endl;
 
       if (res_polys_try_dilated.size() != 1) {
 
