@@ -65,7 +65,12 @@ public:
 
   void add_plane(vtkCellPicker& picker) {
     auto cell_id = picker.GetCellId();
-    vtkCell* c = Data->GetCell(cell_id);
+    auto picked_actor = picker.GetActor();
+    auto picked_mapper = picked_actor->GetMapper();
+    vtkPolyData* picked_data =
+      static_cast<vtkPolyData*>(picked_mapper->GetInput());
+
+    vtkCell* c = picked_data->GetCell(cell_id);
     triangle t = vtkCell_to_triangle(c);
 
     plane_list[num_planes_selected] = plane(normal(t), t.v1);
