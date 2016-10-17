@@ -27,6 +27,7 @@
 
 #include "geometry/vtk_utils.h"
 #include "synthesis/clamp_orientation.h"
+#include "synthesis/mesh_to_gcode.h"
 #include "system/parse_stl.h"
 
 using namespace gca;
@@ -150,22 +151,19 @@ public:
 };
  
 vtkStandardNewMacro(MouseInteractorStyle);
- 
-int main(int, char *[]) {
 
-  triangular_mesh m = parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.0001);
+point gui_select_part_zero(const rigid_arrangement& arrangement) {
+  auto pd = polydata_for_trimesh(arrangement.mesh("part"));
 
-  auto pd = polydata_for_trimesh(m);
- 
   vtkSmartPointer<vtkPolyDataMapper> mapper =
     vtkSmartPointer<vtkPolyDataMapper>::New();
   mapper->SetInputData(pd);
- 
+
   vtkSmartPointer<vtkActor> actor =
     vtkSmartPointer<vtkActor>::New();
   actor->GetProperty()->SetColor(0.5, 0.5, 0.5); //green
   actor->SetMapper(mapper);
- 
+
   vtkSmartPointer<vtkRenderer> renderer =
     vtkSmartPointer<vtkRenderer>::New();
   vtkSmartPointer<vtkRenderWindow> renderWindow =
@@ -205,7 +203,74 @@ int main(int, char *[]) {
 			   style->plane_list[1],
 			   style->plane_list[2]);
 
-  cout << "Part zero position = " << part_zero_position(orient) << endl;
+  point part_zero = part_zero_position(orient);
+
+  return part_zero;
+}
+
+int main(int, char *[]) {
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  vice test_v = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
+  vice test_vice = top_jaw_origin_vice(test_v);
+    
+  std::vector<plate_height> plates{0.1, 0.3, 0.7};
+  fixtures fixes(test_vice, plates);
+
+  workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+
+  tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  t1.set_cut_diameter(0.25);
+  t1.set_cut_length(0.6);
+
+  t1.set_shank_diameter(3.0 / 8.0);
+  t1.set_shank_length(0.3);
+
+  t1.set_holder_diameter(2.5);
+  t1.set_holder_length(3.5);
+    
+  tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+  t2.set_cut_diameter(0.5);
+  t2.set_cut_length(0.3);
+
+  t2.set_shank_diameter(0.5);
+  t2.set_shank_length(0.5);
+
+  t2.set_holder_diameter(2.5);
+  t2.set_holder_length(3.5);
+
+  tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+  t3.set_cut_diameter(0.12);
+  t3.set_cut_length(1.2);
+
+  t3.set_shank_diameter(0.5);
+  t3.set_shank_length(0.05);
+
+  t3.set_holder_diameter(2.5);
+  t3.set_holder_length(3.5);
+
+  tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+  t4.set_cut_diameter(1.5);
+  t4.set_cut_length(2.2);
+
+  t4.set_shank_diameter(0.5);
+  t4.set_shank_length(0.05);
+
+  t4.set_holder_diameter(2.5);
+  t4.set_holder_length(3.5);
+    
+  vector<tool> tools{t1, t2, t3, t4};
+  
+  triangular_mesh mesh =
+    parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.0001);
+
+  fabrication_plan p =
+    make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+
+  for (auto& step : p.steps()) {
+    cout << "Part zero position = " << gui_select_part_zero(step.arrangement()) << endl;
+  }
 
   return EXIT_SUCCESS;
 }
