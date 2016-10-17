@@ -186,16 +186,6 @@ fab_setup_actors(const fabrication_setup& setup) {
 }
 
 point gui_select_part_zero(const fabrication_setup& setup) {
-  // auto pd = polydata_for_trimesh(arrangement.mesh("part"));
-
-  // vtkSmartPointer<vtkPolyDataMapper> mapper =
-  //   vtkSmartPointer<vtkPolyDataMapper>::New();
-  // mapper->SetInputData(pd);
-
-  // vtkSmartPointer<vtkActor> actor =
-  //   vtkSmartPointer<vtkActor>::New();
-  // actor->GetProperty()->SetColor(0.5, 0.5, 0.5);
-  // actor->SetMapper(mapper);
 
   auto actors = fab_setup_actors(setup);
 
@@ -224,13 +214,12 @@ point gui_select_part_zero(const fabrication_setup& setup) {
   
   renderWindowInteractor->SetInteractorStyle(style);
  
-  //renderer->AddActor(actor);
   for (auto& actor : actors) {
     renderer->AddActor(actor);
   }
   renderer->ResetCamera();
  
-  renderer->SetBackground(1, 1, 1); // Blue
+  renderer->SetBackground(1, 1, 1); // White
  
   renderWindow->Render();
   renderWindowInteractor->Start();
