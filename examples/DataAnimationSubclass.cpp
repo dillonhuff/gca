@@ -55,7 +55,7 @@ public:
   int num_planes_selected;
   plane plane_list[3];
 
-  vtkSmartPointer<vtkPolyData> Data;
+  //  vtkSmartPointer<vtkPolyData> Data;
   vtkSmartPointer<vtkDataSetMapper> selectedMapper;
   vtkSmartPointer<vtkActor> selectedActor;
   
@@ -64,12 +64,20 @@ public:
     selectedActor = vtkSmartPointer<vtkActor>::New();
   }
 
-  void add_plane(vtkCellPicker& picker) {
-    auto cell_id = picker.GetCellId();
+  vtkPolyData* selected_polydata(vtkCellPicker& picker) {
     auto picked_actor = picker.GetActor();
     auto picked_mapper = picked_actor->GetMapper();
     vtkPolyData* picked_data =
       static_cast<vtkPolyData*>(picked_mapper->GetInput());
+
+    return picked_data;
+  }
+
+  void add_plane(vtkCellPicker& picker) {
+    auto cell_id = picker.GetCellId();
+    auto picked_actor = picker.GetActor();
+    auto picked_mapper = picked_actor->GetMapper();
+    vtkPolyData* picked_data = selected_polydata(picker);
 
     vtkCell* c = picked_data->GetCell(cell_id);
     triangle t = vtkCell_to_triangle(c);
@@ -119,7 +127,7 @@ public:
  
       vtkSmartPointer<vtkExtractSelection> extractSelection =
 	vtkSmartPointer<vtkExtractSelection>::New();
-      extractSelection->SetInputData(0, this->Data);
+      extractSelection->SetInputData(0, this->selected_polydata(*picker)); //this->Data);
       extractSelection->SetInputData(1, selection);
       extractSelection->Update();
  
@@ -184,7 +192,7 @@ point gui_select_part_zero(const rigid_arrangement& arrangement) {
   vtkSmartPointer<MouseInteractorStyle> style =
     vtkSmartPointer<MouseInteractorStyle>::New();
   style->SetDefaultRenderer(renderer);
-  style->Data = pd;
+  //  style->Data = pd;
 
   style->num_planes_selected = 0;
   
