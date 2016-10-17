@@ -79,19 +79,6 @@ namespace gca {
     return vice_pd;
   }
 
-  class color {
-  protected:
-    unsigned r, g, b;
-
-  public:
-    color(unsigned p_r, unsigned p_g, unsigned p_b) :
-      r(p_r), g(p_g), b(p_b) {}
-
-    unsigned red() const { return r; }
-    unsigned green() const { return r; }
-    unsigned blue() const { return b; }
-  };
-
   color random_color(const color mix) {
     unsigned red = rand() % 256;
     unsigned green = rand() % 256;

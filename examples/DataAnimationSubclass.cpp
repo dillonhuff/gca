@@ -28,6 +28,7 @@
 #include "geometry/vtk_utils.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/mesh_to_gcode.h"
+#include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
 
 using namespace gca;
@@ -55,7 +56,6 @@ public:
   int num_planes_selected;
   plane plane_list[3];
 
-  //  vtkSmartPointer<vtkPolyData> Data;
   vtkSmartPointer<vtkDataSetMapper> selectedMapper;
   vtkSmartPointer<vtkActor> selectedActor;
   
@@ -127,7 +127,7 @@ public:
  
       vtkSmartPointer<vtkExtractSelection> extractSelection =
 	vtkSmartPointer<vtkExtractSelection>::New();
-      extractSelection->SetInputData(0, this->selected_polydata(*picker)); //this->Data);
+      extractSelection->SetInputData(0, this->selected_polydata(*picker));
       extractSelection->SetInputData(1, selection);
       extractSelection->Update();
  
@@ -147,7 +147,7 @@ public:
       selectedActor->GetProperty()->EdgeVisibilityOn();
       selectedActor->GetProperty()->SetEdgeColor(1,0,0);
       selectedActor->GetProperty()->SetLineWidth(3);
- 
+
       this->Interactor->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(selectedActor);
 
     }
@@ -160,17 +160,44 @@ public:
  
 vtkStandardNewMacro(MouseInteractorStyle);
 
-point gui_select_part_zero(const rigid_arrangement& arrangement) {
-  auto pd = polydata_for_trimesh(arrangement.mesh("part"));
+std::vector<vtkSmartPointer<vtkActor>>
+fab_setup_actors(const fabrication_setup& setup) {
+  auto vice_pd = polydata_for_vice(setup.v);
+  auto vice_actor = polydata_actor(vice_pd);
 
-  vtkSmartPointer<vtkPolyDataMapper> mapper =
-    vtkSmartPointer<vtkPolyDataMapper>::New();
-  mapper->SetInputData(pd);
+  vector<vtkSmartPointer<vtkActor>> actors{vice_actor};
+  auto a = setup.arrangement();
+  for (auto n : a.mesh_names()) {
+    if (a.metadata(n).display_during_debugging) {
+      auto other_pd = polydata_for_trimesh(a.mesh(n));
+      auto other_actor = polydata_actor(other_pd);
 
-  vtkSmartPointer<vtkActor> actor =
-    vtkSmartPointer<vtkActor>::New();
-  actor->GetProperty()->SetColor(0.5, 0.5, 0.5); //green
-  actor->SetMapper(mapper);
+      if (n == "part") {
+	other_actor->GetProperty()->SetOpacity(1.0);
+      }
+	
+      actors.push_back(other_actor);
+    }
+  }
+
+  cout << "# of actors = " << actors.size() << endl;
+
+  return actors;
+}
+
+point gui_select_part_zero(const fabrication_setup& setup) {
+  // auto pd = polydata_for_trimesh(arrangement.mesh("part"));
+
+  // vtkSmartPointer<vtkPolyDataMapper> mapper =
+  //   vtkSmartPointer<vtkPolyDataMapper>::New();
+  // mapper->SetInputData(pd);
+
+  // vtkSmartPointer<vtkActor> actor =
+  //   vtkSmartPointer<vtkActor>::New();
+  // actor->GetProperty()->SetColor(0.5, 0.5, 0.5);
+  // actor->SetMapper(mapper);
+
+  auto actors = fab_setup_actors(setup);
 
   vtkSmartPointer<vtkRenderer> renderer =
     vtkSmartPointer<vtkRenderer>::New();
@@ -192,13 +219,15 @@ point gui_select_part_zero(const rigid_arrangement& arrangement) {
   vtkSmartPointer<MouseInteractorStyle> style =
     vtkSmartPointer<MouseInteractorStyle>::New();
   style->SetDefaultRenderer(renderer);
-  //  style->Data = pd;
 
   style->num_planes_selected = 0;
   
   renderWindowInteractor->SetInteractorStyle(style);
  
-  renderer->AddActor(actor);
+  //renderer->AddActor(actor);
+  for (auto& actor : actors) {
+    renderer->AddActor(actor);
+  }
   renderer->ResetCamera();
  
   renderer->SetBackground(1, 1, 1); // Blue
@@ -277,7 +306,7 @@ int main(int, char *[]) {
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
   for (auto& step : p.steps()) {
-    cout << "Part zero position = " << gui_select_part_zero(step.arrangement()) << endl;
+    cout << "Part zero position = " << gui_select_part_zero(step) << endl;
   }
 
   return EXIT_SUCCESS;
