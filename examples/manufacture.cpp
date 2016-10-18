@@ -140,16 +140,16 @@ namespace gca {
       cout << "Bounding box = " << endl;
       cout << bounding << endl;
 
-      vtk_debug_mesh(mesh);
+      // vtk_debug_mesh(mesh);
 
       fabrication_plan p =
 	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
       cout << "Number of steps = " << p.steps().size() << endl;
 
-      for (auto step : p.steps()) {
-      	visual_debug(step);
-      }
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
       
     }
   }
