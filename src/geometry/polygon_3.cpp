@@ -102,7 +102,6 @@ namespace gca {
       }
     }
 
-    // TODO: Add holes
     boost::geometry::correct(pr);
     
     return pr;
@@ -230,8 +229,8 @@ namespace gca {
   }
 
   // TODO: Use planar_union_boost as starting point here?
-  std::vector<labeled_polygon_3>
-  planar_polygon_union(const std::vector<labeled_polygon_3>& polys) {
+  std::vector<polygon_3>
+  planar_polygon_union(const std::vector<polygon_3>& polys) {
     if (polys.size() == 0) { return {}; }
 
     //vtk_debug_polygons(polys);
@@ -240,7 +239,11 @@ namespace gca {
       max_distance_along(polys.front().vertices(), polys.front().normal());
     point n = polys.front().normal();
 
+    cout << "In planar union" << endl;
     cout << "n = " << n << endl;
+    for (auto p : polys) {
+      cout << "normal = " << p.normal() << endl;
+    }
     
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
@@ -260,8 +263,9 @@ namespace gca {
     }
 
     cout << "# polys in result = " << result.size() << endl;
+    
 
-    std::vector<labeled_polygon_3> res;
+    std::vector<polygon_3> res;
     for (auto& r : result) {
       boost::optional<polygon_3> lp =
 	to_labeled_polygon_3_maybe(r_inv, level_z, r);
@@ -273,6 +277,8 @@ namespace gca {
 	res.push_back(*lp);
       }
     }
+
+    cout << "# of polygon_3 in final output = " << res.size() << endl;
 
     return res;
     

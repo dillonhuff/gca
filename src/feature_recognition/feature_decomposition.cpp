@@ -1,3 +1,5 @@
+#include <random>
+
 #include <boost/numeric/ublas/io.hpp>
 
 #include "feature_recognition/feature_decomposition.h"
@@ -63,7 +65,17 @@ namespace gca {
     if (vz.size() == 0) { return {}; }
 
     return connect_regions(vz, m);
-  }  
+  }
+
+  point random_point(std::mt19937& gen, const double tol) {
+    std::uniform_real_distribution<> dis(-tol, tol);
+
+    double r_x = dis(gen);
+    double r_y = dis(gen);
+    double r_z = dis(gen);
+
+    return point(r_x, r_y, r_z);
+  }
 
   labeled_polygon_3
   virtual_surface_for_surface(const std::vector<index_t>& s,
@@ -98,17 +110,18 @@ namespace gca {
     cout << "Trying planar union for the first time" << endl;
     std::vector<polygon_3> result_polys =
       planar_polygon_union(ts);
+    cout << "Done with planar union for the first time" << endl;
 
     if (!(result_polys.size() == 1)) {
 
-      vector<polygon_3> dilated_ts;
-      for (auto t : result_polys) {
-	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
-	delete_antennas(r_pts);
-	if (r_pts.size() >= 3) {
-	  dilated_ts.push_back(dilate(t, 0.000001));
-	}
-      }
+      // vector<polygon_3> dilated_ts;
+      // for (auto t : result_polys) {
+      // 	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
+      // 	delete_antennas(r_pts);
+      // 	if (r_pts.size() >= 3) {
+      // 	  dilated_ts.push_back(dilate(t, 0.000001));
+      // 	}
+      // }
 
       cout << "Trying dilated planar union" << endl;
       cout << "Original surface" << endl;
@@ -120,11 +133,26 @@ namespace gca {
       cout << "Result of original union" << endl;
       vtk_debug_polygons(result_polys);
       
-      cout << "Dilated polygons to try" << endl;
-      vtk_debug_polygons(dilated_ts);
+      // cout << "Dilated polygons to try" << endl;
+      // vtk_debug_polygons(dilated_ts);
 
-      auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
+      //auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
       cout << "Done with dilated planar union" << endl;
+      vector<polygon_3> perturbed;
+    
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      
+      for (auto t : ts) {
+	point perturb = random_point(gen, 0.00001);
+	perturbed.push_back(shift(perturb, t));
+      }
+
+      cout << "Perturbed polygons to try" << endl;
+      vtk_debug_polygons(perturbed);
+      
+      auto res_polys_try_dilated = planar_polygon_union(perturbed);
+      vtk_debug_polygons(res_polys_try_dilated);
 
       if (res_polys_try_dilated.size() != 1) {
 
@@ -145,6 +173,8 @@ namespace gca {
     return result_polys.front();
   }
 
+  // TODO: Remove indexes parameter?
+  // NOTE: This code is a complete mess, clean up?
   std::vector<labeled_polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<index_t>& indexes,
@@ -155,9 +185,10 @@ namespace gca {
 		 angle_eps(n, m.face_orientation(i), 90.0, 0.1) ||
 		 angle_eps(n, m.face_orientation(i), 180.0, 0.1); });
 
-    
-    auto not_vertical_or_horizontal = normal_delta_regions(inds, m, 90.0);
-      //  not_vertical_or_horizontal_regions(m, surfs, n);
+
+    auto surfs = const_orientation_regions(m);
+    auto not_vertical_or_horizontal = //normal_delta_regions(inds, m, 90.0);
+      not_vertical_or_horizontal_regions(m, surfs, n);
 
     cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
 
@@ -702,6 +733,8 @@ namespace gca {
 			      const triangular_mesh& m,
 			      const point n) {
     labeled_polygon_3 init_outline = initial_outline(stock, n);
+
+    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
 
     DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
 

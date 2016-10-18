@@ -84,8 +84,8 @@ namespace gca {
     cout << "Bounding box = " << endl;
     cout << bounding << endl;
 
-    SECTION("Feature recognition in (-0.707107, 0.707107, 2.16977e-14)") {
-      point n(-0.707107, 0.707107, 2.16977e-14);
+    SECTION("Feature recognition in (-0.707107, 0.707107, 0.0)") {
+      point n(-0.707107, 0.707107, 0.0);
 
       vector<surface> stable_surfaces = outer_surfaces(mesh);
       triangular_mesh stock = align_workpiece(stable_surfaces, workpiece_dims);
@@ -93,7 +93,11 @@ namespace gca {
       feature_decomposition* f =
 	build_feature_decomposition(stock, mesh, n);
 
+      vtk_debug_feature_decomposition(f);
+
       REQUIRE(f->num_features() == 3);
+
+      cout << "DONE WITH FEATURE RECOGNITION IN " << n << endl;
     }
 
     SECTION("Full fabrication plan") {
