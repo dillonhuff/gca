@@ -275,6 +275,10 @@ namespace gca {
 
   feature clip_lower_portion(const feature& container,
 			     const feature& target) {
+    cout << "Container" << endl;
+    vtk_debug_feature(container);
+    cout << "Target" << endl;
+    vtk_debug_feature(target);
 
     point n = container.normal();
     pair<double, double> container_range = container.range_along(n);
@@ -295,6 +299,8 @@ namespace gca {
 
     polygon_3 new_target_base = shift(shift_vec, target.base());
     double new_target_depth = target.depth() - shift_val;
+
+    DBG_ASSERT(new_target_depth >= 0.0);
 
     return feature(target.is_closed(), new_target_depth, new_target_base);
   }

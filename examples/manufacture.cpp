@@ -93,15 +93,23 @@ namespace gca {
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 
+      //      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
+    //	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",          
+
     vector<string> passes{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
+      // FAILING
+      "test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
+	  
+      	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+
+	// Passing
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
-	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",      
-	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+
 	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl"};
 
