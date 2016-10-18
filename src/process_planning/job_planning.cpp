@@ -21,7 +21,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-//#define VIZ_DBG
+#define VIZ_DBG
 
 namespace gca {
 
@@ -823,6 +823,8 @@ namespace gca {
       concat(all_millable_faces, millable_faces(next_norm, part));
       sort_unique(all_millable_faces);
     }
+
+    cout << "# of cut directions to consider = " << norms.size() << endl;
 
     return norms;
   }
