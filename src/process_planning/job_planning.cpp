@@ -13,6 +13,7 @@
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/visual_debug.h"
+#include "process_planning/axis_location.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
@@ -783,6 +784,14 @@ namespace gca {
     return cut_setups;
   }
 
+  point select_next_cut_dir(const std::vector<index_t>& millable_faces,
+			    const triangular_mesh& part) {
+    std::vector<index_t> inds = part.face_indexes();
+    subtract(inds, millable_faces);
+
+    return part_axis(inds, part);
+  }
+
   std::vector<point> select_cut_directions(const triangular_mesh& stock,
 					   const triangular_mesh& part,
 					   const fixtures& f,
@@ -806,10 +815,14 @@ namespace gca {
 
     all_millable_faces = sort_unique(all_millable_faces);
 
-    DBG_ASSERT(all_millable_faces.size() == part.face_indexes().size());
+    DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());    
 
-    // TODO: Insert code to check if there are any uncut triangles.
-    // If so add more directions in the style of surface based planning
+    while (all_millable_faces.size() < part.face_indexes().size()) {
+      point next_norm = select_next_cut_dir(all_millable_faces, part);
+      norms.push_back(next_norm);
+      concat(all_millable_faces, millable_faces(next_norm, part));
+      sort_unique(all_millable_faces);
+    }
 
     return norms;
   }

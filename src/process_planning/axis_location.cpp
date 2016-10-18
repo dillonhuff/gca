@@ -71,4 +71,68 @@ namespace gca {
     // return normal(regions[d]);
   }
 
+  point part_axis(const std::vector<index_t>& viable_inds,
+		  const triangular_mesh& part) {
+    cout << "Part axis " << endl;
+
+    auto vinds = viable_inds;
+    auto const_regions = normal_delta_regions(vinds, part, 1.0);
+    vector<surface> regions = inds_to_surfaces(const_regions, part);
+
+    unordered_map<surface*, double> ortho_areas;
+    unordered_map<surface*, unsigned> horizontal_counts;
+    for (surface& r : regions) {
+      ortho_areas[&r] = 0.0;
+      horizontal_counts[&r] = 0;
+    }
+
+    for (surface& ri : regions) {
+      point ni = normal(ri);
+      for (surface& rj : regions) {
+	if (rj.parallel_to(ni, 1.0)) {
+	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
+
+	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
+	  horizontal_counts[&ri] = horizontal_counts[&ri] + 1;
+	}
+	
+	if (rj.orthogonal_to(ni, 1.0) ||
+	    rj.antiparallel_to(ni, 1.0)) {
+	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
+
+	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
+	}
+
+      }
+    }
+
+    auto max_region =
+      max_element(begin(ortho_areas),
+		  end(ortho_areas),
+		  [](const std::pair<surface*, double>& l,
+		     const std::pair<surface*, double>& r) {
+		    return l.second < r.second;
+		  });
+
+    cout << "Max area = " << max_region->second << endl;
+
+    point n = normal(*(max_region->first));
+
+    point neg_n = -1*n;
+
+    unsigned horizontal_count = horizontal_counts[max_region->first];
+    
+    for (auto& r : regions) {
+      if (angle_eps(normal(r), neg_n, 0.0, 1.0)) {
+	unsigned neg_horizontal_count = horizontal_counts[&r];
+	if (neg_horizontal_count > horizontal_count) {
+	  return neg_n;
+	}
+      }
+    }
+
+    return n;
+
+  }
+  
 }
