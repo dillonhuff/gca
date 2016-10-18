@@ -5,7 +5,6 @@
 
 namespace gca {
 
-  // TODO: Deal with the polygon holes issue
   std::vector<pocket> pockets_for_feature(const feature& f,
 					  const std::vector<tool>& tools) {
 

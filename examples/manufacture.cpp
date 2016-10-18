@@ -97,14 +97,14 @@ namespace gca {
     //	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",          
 
     vector<string> passes{
-      // FAILING
-      "test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+
+	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
 	  
       	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
 
 	// Passing
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
@@ -139,6 +139,8 @@ namespace gca {
 
       cout << "Bounding box = " << endl;
       cout << bounding << endl;
+
+      vtk_debug_mesh(mesh);
 
       fabrication_plan p =
 	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});

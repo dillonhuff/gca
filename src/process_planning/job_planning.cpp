@@ -783,10 +783,10 @@ namespace gca {
     return cut_setups;
   }
 
-  std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
-				       const triangular_mesh& part,
-				       const fixtures& f,
-				       const std::vector<tool>& tools) {
+  std::vector<point> select_cut_directions(const triangular_mesh& stock,
+					   const triangular_mesh& part,
+					   const fixtures& f,
+					   const std::vector<tool>& tools) {
     vector<surface> surfs = outer_surfaces(stock);
 
     DBG_ASSERT(surfs.size() == 6);
@@ -798,6 +798,27 @@ namespace gca {
     }
 
     DBG_ASSERT(norms.size() == 6);
+
+    vector<index_t> all_millable_faces;
+    for (auto n : norms) {
+      concat(all_millable_faces, millable_faces(n, part));
+    }
+
+    all_millable_faces = sort_unique(all_millable_faces);
+
+    DBG_ASSERT(all_millable_faces.size() == part.face_indexes().size());
+
+    // TODO: Insert code to check if there are any uncut triangles.
+    // If so add more directions in the style of surface based planning
+
+    return norms;
+  }
+  
+  std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
+				       const triangular_mesh& part,
+				       const fixtures& f,
+				       const std::vector<tool>& tools) {
+    vector<point> norms = select_cut_directions(stock, part, f, tools);
 
     return select_jobs_and_features(stock, part, f, tools, norms);
   }
