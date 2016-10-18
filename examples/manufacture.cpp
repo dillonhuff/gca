@@ -126,6 +126,8 @@ namespace gca {
       cout << "X length = " << bounding.x_len() << endl;
       cout << "Y length = " << bounding.y_len() << endl;
       cout << "Z length = " << bounding.z_len() << endl;
+
+      //vtk_debug_mesh(mesh);
     }
 
     for (auto part_path : passes) { //part_paths) {

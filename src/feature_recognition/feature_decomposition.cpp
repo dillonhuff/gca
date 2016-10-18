@@ -44,9 +44,9 @@ namespace gca {
 				     const point n) {
     auto not_vert_or_horiz =
       select(surfs, [n, m](const std::vector<index_t>& s) {
-	  return !all_parallel_to(s, m, n, 3.0) &&
-	  !all_orthogonal_to(s, m, n, 3.0) &&
-	  !all_antiparallel_to(s, m, n, 3.0);
+	  return !all_parallel_to(s, m, n, 0.05) &&
+	  !all_orthogonal_to(s, m, n, 0.05) &&
+	  !all_antiparallel_to(s, m, n, 0.05);
 	});
 
     // Cull backfaces

@@ -275,10 +275,10 @@ namespace gca {
 
   feature clip_lower_portion(const feature& container,
 			     const feature& target) {
-    cout << "Container" << endl;
-    vtk_debug_feature(container);
-    cout << "Target" << endl;
-    vtk_debug_feature(target);
+    //cout << "Container" << endl;
+    //vtk_debug_feature(container);
+    //cout << "Target" << endl;
+    //vtk_debug_feature(target);
 
     point n = container.normal();
     pair<double, double> container_range = container.range_along(n);
