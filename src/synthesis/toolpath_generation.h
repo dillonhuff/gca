@@ -31,18 +31,11 @@ namespace gca {
 
     pocket_name pocket_type() const { return self_->pocket_type(); }
 
-    // tool select_tool(const std::vector<tool>& tools) const
-    // { return self_->select_tool(tools); }
-
-    // Are get holes and the base related methods still needed?
-    // const vector<oriented_polygon>& get_holes() const
-    // { return self_->get_holes(); }
-
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
     { return self_->toolpath_lines(t, cut_depth); }
 
-    bool above_base(const point p) const
-    { return self_->above_base(p); }
+    // bool above_base(const point p) const
+    // { return self_->above_base(p); }
 
     double get_end_depth() const
     { return self_->get_end_depth(); }
@@ -58,13 +51,12 @@ namespace gca {
   private:
     struct concept_t {
       virtual ~concept_t() = default;
-      //virtual tool select_tool(const std::vector<tool>& tools) const = 0;
+
       virtual pocket_name pocket_type() const = 0;
       virtual toolpath make_toolpath(const material& stock_material,
 				     const double safe_z,
 				     const std::vector<tool>& tools) const = 0;
 
-      //virtual const vector<oriented_polygon>& get_holes() const = 0;
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
       virtual bool above_base(const point p) const = 0;
@@ -77,13 +69,7 @@ namespace gca {
       model(T x) : data_(move(x)) {}
       pocket_name pocket_type() const { return data_.pocket_type(); }
 
-      // tool select_tool(const std::vector<tool>& tools) const
-      // { return data_.select_tool(tools); }
-
       virtual concept_t* copy_() const { return new model<T>(*this); }
-
-      // const vector<oriented_polygon>& get_holes() const
-      // { return data_.get_holes(); }
 
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
       { return data_.toolpath_lines(t, cut_depth); }
