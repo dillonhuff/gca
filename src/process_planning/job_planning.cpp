@@ -1,13 +1,3 @@
-#include <vtkDelaunay2D.h>
-#include <vtkCellData.h>
-#include <vtkCellArray.h>
-#include <vtkLine.h>
-#include <vtkPolygon.h>
-#include <vtkSmartPointer.h>
-#include <vtkLinearExtrusionFilter.h>
-#include <vtkTriangle.h>
-#include <vtkTriangleFilter.h>
-
 #include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
@@ -17,7 +7,6 @@
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
-#include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
@@ -784,51 +773,6 @@ namespace gca {
     return cut_setups;
   }
 
-  point select_next_cut_dir(const std::vector<index_t>& millable_faces,
-			    const triangular_mesh& part) {
-    std::vector<index_t> inds = part.face_indexes();
-    subtract(inds, millable_faces);
-
-    return part_axis(inds, part);
-  }
-
-  std::vector<point> select_cut_directions(const triangular_mesh& stock,
-					   const triangular_mesh& part,
-					   const fixtures& f,
-					   const std::vector<tool>& tools) {
-    vector<surface> surfs = outer_surfaces(stock);
-
-    DBG_ASSERT(surfs.size() == 6);
-
-    vector<point> norms;
-    for (auto ax : surfs) {
-      point n = ax.face_orientation(ax.front());
-      norms.push_back(n);
-    }
-
-    DBG_ASSERT(norms.size() == 6);
-
-    vector<index_t> all_millable_faces;
-    for (auto n : norms) {
-      concat(all_millable_faces, millable_faces(n, part));
-    }
-
-    all_millable_faces = sort_unique(all_millable_faces);
-
-    DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());    
-
-    while (all_millable_faces.size() < part.face_indexes().size()) {
-      point next_norm = select_next_cut_dir(all_millable_faces, part);
-      norms.push_back(next_norm);
-      concat(all_millable_faces, millable_faces(next_norm, part));
-      sort_unique(all_millable_faces);
-    }
-
-    cout << "# of cut directions to consider = " << norms.size() << endl;
-
-    return norms;
-  }
-  
   std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
 				       const triangular_mesh& part,
 				       const fixtures& f,

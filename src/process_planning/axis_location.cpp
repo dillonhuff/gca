@@ -2,6 +2,8 @@
 
 #include "geometry/surface.h"
 #include "process_planning/axis_location.h"
+#include "synthesis/millability.h"
+#include "synthesis/visual_debug.h"
 #include "utils/check.h"
 
 namespace gca {
@@ -134,5 +136,72 @@ namespace gca {
     return n;
 
   }
-  
+
+
+  point select_next_cut_dir(const std::vector<index_t>& millable_faces,
+			    const triangular_mesh& part) {
+    std::vector<index_t> inds = part.face_indexes();
+    subtract(inds, millable_faces);
+
+    return part_axis(inds, part);
+  }
+
+  std::vector<index_t>
+  prismatic_millable_faces(const point n,
+			   const triangular_mesh& part) {
+    vector<index_t> all_millable_faces = millable_faces(n, part);
+
+    // Just use parallel to or orthogonal_to functions?
+    vector<index_t> vert_or_horiz =
+      select(all_millable_faces, [n, part](const index_t& s) {
+	  return all_parallel_to({s}, part, n, 1.0) ||
+	  all_orthogonal_to({s}, part, n, 1.0);
+	});
+
+    return vert_or_horiz;
+  }
+
+  std::vector<point> select_cut_directions(const triangular_mesh& stock,
+					   const triangular_mesh& part,
+					   const fixtures& f,
+					   const std::vector<tool>& tools) {
+    vector<surface> surfs = outer_surfaces(stock);
+
+    DBG_ASSERT(surfs.size() == 6);
+
+    vector<point> norms;
+    for (auto ax : surfs) {
+      point n = ax.face_orientation(ax.front());
+      norms.push_back(n);
+    }
+
+    DBG_ASSERT(norms.size() == 6);
+
+    vector<index_t> all_millable_faces;
+    for (auto n : norms) {
+      concat(all_millable_faces, prismatic_millable_faces(n, part));
+    }
+
+    all_millable_faces = sort_unique(all_millable_faces);
+
+    DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
+
+    vtk_debug_highlight_inds(all_millable_faces, part);
+
+    while (all_millable_faces.size() < part.face_indexes().size()) {
+      point next_norm = select_next_cut_dir(all_millable_faces, part);
+
+      cout << "next_norm = " << next_norm << endl;
+      norms.push_back(next_norm);
+
+      concat(all_millable_faces, prismatic_millable_faces(next_norm, part));
+      all_millable_faces = sort_unique(all_millable_faces);
+
+      DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
+    }
+
+    cout << "# of cut directions to consider = " << norms.size() << endl;
+
+    return norms;
+  }
 }
