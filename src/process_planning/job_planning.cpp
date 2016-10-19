@@ -10,7 +10,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-//#define VIZ_DBG
+#define VIZ_DBG
 
 namespace gca {
 
@@ -293,9 +293,12 @@ namespace gca {
 
     for (auto feat : collect_features(f)) {
       if (is_outer(*feat, stock_polygon)) {
+	cout << "Found outer feature in " << normal(f) << endl;
 	count += curve_count(*feat);
       }
     }
+
+    cout << "Final curve count for " << normal(f) << " = " << count << endl;
 
     return count;
   }
@@ -346,16 +349,25 @@ namespace gca {
   direction_process_info
   select_next_dir(std::vector<direction_process_info>& dir_info,
 		  const volume_info_map& vol_info) {
+    cout << "Selecting next direction" << endl;
+    cout << "Candidates" << endl;
+    for (auto d : dir_info) {
+      cout << normal(d.decomp) << " with volume " << volume(d.decomp, vol_info) << endl;
+    }
+
     DBG_ASSERT(dir_info.size() > 0);
 
     auto outer_curve = find_outer_curve(dir_info);
 
     if (outer_curve) {
+      cout << "Found outer curve" << endl;
+      cout << "Selected direction " << normal(outer_curve->decomp) << endl;
       return *outer_curve;
     }
 
     cout << "No relevant outer curve" << endl;
 
+    
     auto next = max_element(begin(dir_info), end(dir_info),
     			    [vol_info](const direction_process_info& l,
     				       const direction_process_info& r) {
@@ -370,6 +382,7 @@ namespace gca {
     dir_info.erase(next);
 
     cout << "Selected direction " << normal(next_elem.decomp) << endl;
+    cout << "Volume of direction = " << volume(next_elem.decomp, vol_info) << endl;
 
     return next_elem;
   }

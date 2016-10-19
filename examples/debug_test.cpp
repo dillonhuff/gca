@@ -93,7 +93,7 @@ namespace gca {
       feature_decomposition* f =
 	build_feature_decomposition(stock, mesh, n);
 
-      vtk_debug_feature_decomposition(f);
+      //vtk_debug_feature_decomposition(f);
 
       REQUIRE(f->num_features() == 3);
 
