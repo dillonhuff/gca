@@ -241,9 +241,11 @@ namespace gca {
 	     const double cut_depth) {
 
     vector<polyline> polys;
+    polys.push_back(to_polyline(inter));
+
     double r = t.radius();
     auto last_polygon = inter;
-    auto i = interior_offset(inter, r);
+    vector<oriented_polygon> i = interior_offset(inter, r);
 
     while ((i.size() == 1) && contains(last_polygon, i.front())) {
 
@@ -427,14 +429,14 @@ namespace gca {
   flat_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     vector<polyline> face_template;
-    if (holes.size() == 0) {
-      auto inter = project(boundary, get_end_depth());
+    // if (holes.size() == 0) {
+    //   auto inter = project(boundary, get_end_depth());
 
-      face_template =
-	face_level(inter, t, cut_depth);
-    } else {
-      face_template = flat_level_with_holes(t);
-    }
+    //   face_template =
+    // 	face_level(inter, t, cut_depth);
+    // } else {
+    face_template = flat_level_with_holes(t);
+    //    }
 
     vector<double> depths =
       cut_depths(get_start_depth(), get_end_depth(), cut_depth);
