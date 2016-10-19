@@ -134,18 +134,21 @@ namespace gca {
 
   typedef std::unordered_map<feature*, volume_info> volume_info_map;
 
-  volume_info initial_volume_info(const feature& f) {
+  volume_info initial_volume_info(const feature& f,
+				  const Nef_polyhedron& stock_nef) {
     triangular_mesh mesh = feature_mesh(f);
+    auto feature_nef = trimesh_to_nef_polyhedron(mesh);
+    feature_nef = stock_nef.intersection(feature_nef);
 
     cout << "Got undilated feature mesh" << endl;
 
-    double vol = volume(mesh);
+    double vol = volume(nef_to_single_trimesh(feature_nef));
 
     //	TODO: Refine these tolerances, it may not matter but
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
     
-    return volume_info{vol, trimesh_to_nef_polyhedron(mesh), dilated_mesh};
+    return volume_info{vol, feature_nef, dilated_mesh};
   }
 
   volume_info
@@ -172,13 +175,14 @@ namespace gca {
   }
 
   volume_info_map
-  initial_volume_info(const std::vector<direction_process_info>& dir_info) {
+  initial_volume_info(const std::vector<direction_process_info>& dir_info,
+		      const Nef_polyhedron& stock_nef) {
     volume_info_map m;
 
     for (auto d : dir_info) {
       auto decomp = d.decomp;
       for (feature* f : collect_features(decomp)) {
-	m[f] = initial_volume_info(*f);
+	m[f] = initial_volume_info(*f, stock_nef);
       }
     }
 
@@ -671,10 +675,10 @@ namespace gca {
     vector<direction_process_info> dir_info =
       initial_decompositions(stock, part, tools, norms);
 
-    volume_info_map volume_inf = initial_volume_info(dir_info);
-
-    //triangular_mesh current_stock = stock;
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+
+    volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
+
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
