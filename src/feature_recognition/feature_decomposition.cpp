@@ -32,7 +32,7 @@ namespace gca {
       convex_hull_2D(pts, pl.normal(), max_distance_along(pts, pl.normal()));
 
     check_simplicity(p);
-      
+
     p.correct_winding_order(pl.normal());
 
     return p.vertices();

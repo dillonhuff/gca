@@ -186,7 +186,7 @@ namespace gca {
 
     DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
 
-    vtk_debug_highlight_inds(all_millable_faces, part);
+    //vtk_debug_highlight_inds(all_millable_faces, part);
 
     while (all_millable_faces.size() < part.face_indexes().size()) {
       point next_norm = select_next_cut_dir(all_millable_faces, part);
