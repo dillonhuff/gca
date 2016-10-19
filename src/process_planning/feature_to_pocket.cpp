@@ -41,6 +41,12 @@ namespace gca {
     if (f.is_closed()) {
       return {flat_pocket(top_z, base_z, ob, holes, tools)};
     } else {
+      DBG_ASSERT(!f.is_closed());
+
+      if (holes.size() == 0) {
+	return {face_pocket(top_z, base_z, ob, tools)};
+      }
+
       return {contour(top_z, base_z, base, tools)};
     }
   }

@@ -79,7 +79,7 @@ namespace gca {
       min_e(outlines, [](const oriented_polygon& p)
 	    { return min_z(p); });
 
-    return face_pocket(work_height, part_height, outl);
+    return face_pocket(work_height, part_height, outl, {});
   }
   
   pocket face_down(const triangular_mesh& stock,
@@ -106,7 +106,7 @@ namespace gca {
 
     DBG_ASSERT(outlines.size() == 2);
 
-    return face_pocket(work_height, part_height, outl);
+    return face_pocket(work_height, part_height, outl, {});
   }
 
 

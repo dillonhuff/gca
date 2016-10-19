@@ -472,17 +472,6 @@ namespace gca {
     }
     return lines;
   }
-  
-  pocket box_pocket(const box b) {
-    point p1(b.x_min, b.y_min, b.z_min);
-    point p2(b.x_min, b.y_max, b.z_min);
-    point p3(b.x_max, b.y_max, b.z_min);
-    point p4(b.x_max, b.y_min, b.z_min);
-
-    vector<point> verts{p1, p2, p3, p4};
-    oriented_polygon base(point(0, 0, 1), verts);
-    return face_pocket(b.z_max, b.z_min, base);
-  }
 
   vector<polyline> deepen_polyline(const vector<double>& depths, const polyline& p) {
     vector<polyline> ps;
@@ -718,6 +707,7 @@ namespace gca {
   std::vector<polyline>
   contour_pocket::toolpath_lines(const tool& t,
 				 const double cut_depth) const {
+
     auto i_off = interior_offset(exterior, t.radius());
     DBG_ASSERT(i_off.size() == 1);
     auto o = project(i_off.front(), get_end_depth());
@@ -731,7 +721,7 @@ namespace gca {
       concat(lines, project_lines(level_template, depth));
     }
     return lines;
-    //    return { to_polyline(project(interior, get_end_depth())) };
+
   }
 
   // TODO: Use tile vertical?

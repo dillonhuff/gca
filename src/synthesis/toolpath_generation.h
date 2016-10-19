@@ -34,9 +34,6 @@ namespace gca {
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
     { return self_->toolpath_lines(t, cut_depth); }
 
-    // bool above_base(const point p) const
-    // { return self_->above_base(p); }
-
     double get_end_depth() const
     { return self_->get_end_depth(); }
 
@@ -59,7 +56,7 @@ namespace gca {
 
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
-      virtual bool above_base(const point p) const = 0;
+
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const = 0;
       virtual concept_t* copy_() const = 0;
     };
@@ -74,7 +71,6 @@ namespace gca {
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
       { return data_.toolpath_lines(t, cut_depth); }
 
-      bool above_base(const point p) const { return data_.above_base(p); }
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }
 
@@ -306,12 +302,15 @@ namespace gca {
     double start_depth;
     double end_depth;
     oriented_polygon base;
+    std::vector<tool> possible_tools;
 
   public:
     face_pocket(const double p_start_depth,
 		const double p_end_depth,
-		const oriented_polygon& p_base)
-      : start_depth(p_start_depth), end_depth(p_end_depth), base(p_base) {}
+		const oriented_polygon& p_base,
+		const std::vector<tool>& p_possible_tools)
+      : start_depth(p_start_depth), end_depth(p_end_depth), base(p_base),
+	possible_tools(p_possible_tools){}
 
     const vector<oriented_polygon>& get_holes() const
     { DBG_ASSERT(false); }
@@ -369,8 +368,6 @@ namespace gca {
     toolpath_lines(const tool& t, const double cut_depth) const;
   };
   
-  pocket box_pocket(const box b);
-
   std::vector<polyline> deepen_polyline(const std::vector<double>& depths,
 					const polyline& p);
 
