@@ -10,7 +10,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -30,32 +30,17 @@ namespace gca {
   }
 
   fixture_setup
-  create_setup(const homogeneous_transform& s_t, //s_t_no_zero,
+  create_setup(const homogeneous_transform& s_t,
 	       const triangular_mesh& wp_mesh,
 	       const triangular_mesh& part_mesh,
 	       const std::vector<feature*>& features,
 	       const fixture& f,
 	       const tool_access_info& tool_info) {
-    // DBG_ASSERT(f.has_part_zero());
-
-    // point pp = part_zero_position(f);
-    // point p = apply(s_t_no_zero, pp);
-
-    // point neg_p = -1*p;
-
-    // const homogeneous_transform s_t = apply(neg_p, s_t_no_zero);
-
-    // DBG_ASSERT(within_eps(apply(s_t, pp).len(), 0.0, 0.0001));
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
-
-
-    // NOTE: How should the fixtures part zero be adjusted to deal with
-    // the shift?
-    //    fixture adjusted_f = shift_vice(neg_p, f);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
