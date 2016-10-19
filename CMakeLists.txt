@@ -126,6 +126,7 @@ SET(GCA_HEADERS
 	./src/synthesis/jaw_cutout.h
 	./src/synthesis/clipping_plan.h
 	./src/synthesis/gcode_generation.h
+	./src/synthesis/operation_name.h
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
@@ -155,6 +156,7 @@ SET(GCA_CPPS
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
+	./src/synthesis/operation_name.cpp
 	./src/synthesis/operation.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp

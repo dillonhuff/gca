@@ -2582,6 +2582,33 @@ src/synthesis/operation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation.cpp.s
 .PHONY : src/synthesis/operation.cpp.s
 
+src/synthesis/operation_name.o: src/synthesis/operation_name.cpp.o
+
+.PHONY : src/synthesis/operation_name.o
+
+# target to build an object file
+src/synthesis/operation_name.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.o
+.PHONY : src/synthesis/operation_name.cpp.o
+
+src/synthesis/operation_name.i: src/synthesis/operation_name.cpp.i
+
+.PHONY : src/synthesis/operation_name.i
+
+# target to preprocess a source file
+src/synthesis/operation_name.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.i
+.PHONY : src/synthesis/operation_name.cpp.i
+
+src/synthesis/operation_name.s: src/synthesis/operation_name.cpp.s
+
+.PHONY : src/synthesis/operation_name.s
+
+# target to generate assembly for a file
+src/synthesis/operation_name.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.s
+.PHONY : src/synthesis/operation_name.cpp.s
+
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -4447,6 +4474,9 @@ help:
 	@echo "... src/synthesis/operation.o"
 	@echo "... src/synthesis/operation.i"
 	@echo "... src/synthesis/operation.s"
+	@echo "... src/synthesis/operation_name.o"
+	@echo "... src/synthesis/operation_name.i"
+	@echo "... src/synthesis/operation_name.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"

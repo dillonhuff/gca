@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "geometry/polyline.h"
-#include "synthesis/operation.h"
+#include "synthesis/operation_name.h"
 #include "synthesis/tool.h"
 
 namespace gca {
