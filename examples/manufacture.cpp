@@ -56,15 +56,6 @@ namespace gca {
     t3.set_holder_diameter(2.5);
     t3.set_holder_length(3.5);
 
-    // tool t4{0.5, 3.94, 4, HSS, FLAT_NOSE};
-    // t4.set_cut_diameter(0.5);
-    // t4.set_cut_length(2.5);
-
-    // t4.set_shank_diameter(0.5);
-    // t4.set_shank_length(0.05);
-
-    // t4.set_holder_diameter(2.5);
-    // t4.set_holder_length(3.5);
     tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
     t4.set_cut_diameter(1.5);
     t4.set_cut_length(2.2);
@@ -93,18 +84,16 @@ namespace gca {
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 
-      //      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
-    //	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",          
-
     vector<string> passes{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+      "test/stl-files/OctagonWithHoles.stl",
+
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 
 	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
 	  
       	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
 
-	// Passing
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
@@ -112,7 +101,6 @@ namespace gca {
 
 	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl"};
-
 
     vector<string> part_paths{};
 
