@@ -76,7 +76,7 @@ namespace gca {
   toolpath face_pocket::make_toolpath(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const {
-    tool t = select_tool(tools);
+    tool t = select_tool(possible_tools);
     auto params = calculate_cut_params(t, stock_material);
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
@@ -429,14 +429,7 @@ namespace gca {
   flat_pocket::toolpath_lines(const tool& t,
 			      const double cut_depth) const {
     vector<polyline> face_template;
-    // if (holes.size() == 0) {
-    //   auto inter = project(boundary, get_end_depth());
-
-    //   face_template =
-    // 	face_level(inter, t, cut_depth);
-    // } else {
     face_template = flat_level_with_holes(t);
-    //    }
 
     vector<double> depths =
       cut_depths(get_start_depth(), get_end_depth(), cut_depth);
@@ -459,10 +452,6 @@ namespace gca {
   std::vector<polyline>
   trace_pocket::toolpath_lines(const tool& t,
 			       const double cut_depth) const {
-    // vector<oriented_polygon> inter =
-    //   exterior_offset(project(outline, get_end_depth()), t.radius());
-
-    // DBG_ASSERT(inter.size() == 2);
 
     vector<polyline> face_template{to_polyline(outline)};
     vector<double> depths =
