@@ -46,7 +46,7 @@ namespace gca {
 		      SuffixBlocks suffix,
 		      ToolpathGCODE f) {
     if (toolpaths.size() == 0) { return gcode_program{program_name, {}}; }
-    
+
     vector<block> blocks = initial(toolpaths.front());
 
     for (unsigned i = 1; i < toolpaths.size(); i++) {
@@ -58,7 +58,7 @@ namespace gca {
     concat(blocks, suffix());
     return gcode_program(program_name, blocks);
   }
-  
+
 }
 
 #endif

@@ -101,8 +101,6 @@ namespace gca {
     blks.push_back({token('G', 54)});
     blks.push_back({token('G', 10), token('L', 2), token('P', 1), token('Z', t.t.length())});
 
-    //    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.t.diameter()))});
-    //    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()))});
     return blks;
   }
   
