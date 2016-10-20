@@ -9,8 +9,6 @@
 
 namespace gca {
 
-  //  std::vector<cut*> polyline_cuts(const polyline& p);
-
   std::vector<block> emco_f1_code(const toolpath& pocket_lines);
   std::vector<block> emco_f1_code_no_TLC(const toolpath& pocket_lines);
 
