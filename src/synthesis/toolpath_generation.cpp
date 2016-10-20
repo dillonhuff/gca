@@ -898,7 +898,7 @@ namespace gca {
       auto inter = project(get_boundary(), get_end_depth());
 
       face_template =
-	face_level(inter, t, cut_depth);
+	face_level(oriented_polygon(point(0, 0, 1), inter.vertices()), t, cut_depth);
     } else {
       face_template = flat_level_with_holes(t);
     }

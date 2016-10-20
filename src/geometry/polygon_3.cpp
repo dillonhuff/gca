@@ -311,7 +311,7 @@ namespace gca {
   }
 
   box bounding_box(const polygon_3& p) {
-    return bounding_box(p.vertices());
+    return bound_positions(static_cast<std::vector<point>>(p.vertices()));
   }
 
   polygon_3 project(const polygon_3& p, double z) {
