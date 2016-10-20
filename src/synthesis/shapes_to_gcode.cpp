@@ -49,8 +49,19 @@ namespace gca {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->get_end();
 
     vector<cut*> tcuts;
+    lit* feed;
+    if (params.plunge_feed_is_set()) {
+      feed = lit::make(params.plunge_feed());
+    } else {
+      feed = lit::make(params.default_feedrate);
+    }
+
     if (!within_eps(current_loc, next_cut->get_start())) {
-      tcuts = from_to_with_G0_height(current_loc, next_cut->get_start(), params.safe_height, lit::make(params.default_feedrate));
+      tcuts =
+	from_to_with_G0_height(current_loc,
+			       next_cut->get_start(),
+			       params.safe_height,
+			       feed);
     }
     return tcuts;
   }

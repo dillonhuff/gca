@@ -38,7 +38,7 @@ namespace gca {
 			     const double spindle_speed,
 			     const double feedrate) {
     auto ls = p.lines();
-    assert(ls.size() > 0);
+    DBG_ASSERT(ls.size() > 0);
     vector<cut*> c;
     for (auto l : ls) {
       c.push_back(mk_cut(l.start, l.end, tool_number, spindle_speed, feedrate));
@@ -73,7 +73,7 @@ namespace gca {
     }
 
     vector<cut*> all_cuts = insert_transitions(cuts, params);
-    assert(cuts_are_adjacent(all_cuts));
+    DBG_ASSERT(cuts_are_adjacent(all_cuts));
     set_feedrates(all_cuts, params);
     return gcode_blocks_for_toolpath_cuts(all_cuts, params);
   }
@@ -141,7 +141,7 @@ namespace gca {
   std::vector<block> camaster_engraving(const toolpath& last,
 					const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
     cut_params params;
@@ -156,7 +156,7 @@ namespace gca {
 
   std::vector<block> emco_f1_code(const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
     point shift_vector = point(0, 0, tp.t.length());
@@ -174,7 +174,7 @@ namespace gca {
 
   std::vector<block> emco_f1_code_G10_TLC(const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
     vector<polyline> reflected_lines = reflect_y(tp.lines);
@@ -191,7 +191,7 @@ namespace gca {
 
   std::vector<block> emco_f1_code_no_TLC(const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
     vector<polyline> reflected_lines = reflect_y(tp.lines);
