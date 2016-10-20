@@ -333,15 +333,11 @@ namespace gca {
   std::vector<polyline>
   clip_lines(const std::vector<polyline>& lines,
 	     const polygon_3& bound,
-	     const std::vector<oriented_polygon>& holes,
+	     const std::vector<polygon_3>& hole_polys,
 	     const tool& t) {
     if (lines.size() == 0) { return lines; }
 
     //    vector<oriented_polygon> offset_holes;
-    vector<polygon_3> hole_polys;
-    for (auto h : holes) {
-      hole_polys.push_back(polygon_3(h.vertices()));
-    }
 
     vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
 
@@ -363,9 +359,13 @@ namespace gca {
   }
 
   std::vector<polyline>
-  zig_lines(const oriented_polygon& bound,
-	    const std::vector<oriented_polygon>& holes,
+  // zig_lines(const oriented_polygon& bound,
+  // 	    const std::vector<oriented_polygon>& holes,
+  // 	    const tool& t) {
+  zig_lines(const polygon_3& bound,
+	    const std::vector<polygon_3>& holes,
 	    const tool& t) {
+
     box b = bounding_box(bound);
     cout << "Zig lines bounding box = " << endl << b << endl;
     double stepover = t.radius();
@@ -383,13 +383,18 @@ namespace gca {
 
     cout << "# of lines = " << lines.size() << endl;
 
-    lines = clip_lines(lines, polygon_3(bound.vertices()), holes, t);
+    vector<polygon_3> hole_polys;
+    for (auto h : holes) {
+      hole_polys.push_back(polygon_3(h.vertices()));
+    }
+    
+    lines = clip_lines(lines, polygon_3(bound.vertices()), hole_polys, t);
     return lines;
   }
 
   std::vector<polyline>
   flat_pocket::flat_level_with_holes(const tool& t) const {
-    vector<polyline> edges = zig_lines(boundary, holes, t);
+    vector<polyline> edges = zig_lines(get_boundary(), get_holes(), t);
 
     auto inter = interior_offset(boundary, t.radius());
 

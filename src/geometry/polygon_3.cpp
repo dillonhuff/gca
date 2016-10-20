@@ -310,4 +310,28 @@ namespace gca {
     return labeled_polygon_3(clean_vertices(res_pts));
   }
 
+  box bounding_box(const polygon_3& p) {
+    return bounding_box(p.vertices());
+  }
+
+  polygon_3 project(const polygon_3& p, double z) {
+    vector<point> pts;
+    for (auto pt : p.vertices()) {
+      pts.push_back(point(pt.x, pt.y, z));
+    }
+
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+
+      vector<point> hole;
+      for (auto pt : h) {
+	hole.push_back(point(pt.x, pt.y, z));
+      }
+
+      holes.push_back(hole);
+    }
+
+    return polygon_3(pts, holes);
+  }
+  
 }

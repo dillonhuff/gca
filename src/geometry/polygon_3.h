@@ -107,4 +107,8 @@ namespace gca {
   polygon_3
   to_polygon_3(const double z, const boost_poly_2& p);
 
+  box bounding_box(const polygon_3& p);
+
+  polygon_3 project(const polygon_3& p, double z);
+
 }

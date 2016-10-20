@@ -111,11 +111,16 @@ namespace gca {
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
-    inline const vector<oriented_polygon>& get_holes() const
-    { return holes; }
+    inline vector<polygon_3> get_holes() const {
+      std::vector<polygon_3> h_polys;
+      for (auto p : holes) {
+	h_polys.push_back(polygon_3(p.vertices()));
+      }
+      return h_polys;
+    }
 
-    inline const oriented_polygon& get_boundary() const
-    { return boundary; }
+    inline polygon_3 get_boundary() const
+    { return polygon_3(boundary.vertices()); }
 
     toolpath make_toolpath(const material& stock_material,
 			   const double safe_z,
@@ -151,19 +156,17 @@ namespace gca {
 
     const polygon_3& base() const { return bp; }
 
-    vector<oriented_polygon> get_holes() const {
-      vector<oriented_polygon> hs;
-      for (auto h : base().holes()) {
-	hs.push_back(oriented_polygon(base().normal(), h));
+    inline vector<polygon_3> get_holes() const {
+      std::vector<polygon_3> h_polys;
+      for (auto p : bp.holes()) {
+	h_polys.push_back(polygon_3(p));
       }
-
-      return hs;
+      return h_polys;
     }
 
-    oriented_polygon get_boundary() const {
-      return oriented_polygon(base().normal(), base().vertices());
-    }
-    
+    inline polygon_3 get_boundary() const
+    { return polygon_3(bp.vertices()); }
+
     std::vector<polyline>
     flat_level_with_holes(const tool& t) const;
 
