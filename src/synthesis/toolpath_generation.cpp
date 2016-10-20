@@ -637,36 +637,36 @@ namespace gca {
     return pocket_path;
   }
 
-  std::vector<polyline>
-  contour_level(const oriented_polygon& outer,
-		const oriented_polygon& inter,
-		const tool& t,
-		const double level) {
-    double r = t.radius();
+  // std::vector<polyline>
+  // contour_level(const oriented_polygon& outer,
+  // 		const oriented_polygon& inter,
+  // 		const tool& t,
+  // 		const double level) {
+  //   double r = t.radius();
     
-    vector<polyline> polys;
+  //   vector<polyline> polys;
 
-    auto i = exterior_offset(inter, r);
+  //   auto i = exterior_offset(inter, r);
 
-    cout << "# of exterior offsets = " << i.size() << endl;
+  //   cout << "# of exterior offsets = " << i.size() << endl;
     
-    DBG_ASSERT(i.size() == 2);
+  //   DBG_ASSERT(i.size() == 2);
 
 
-    while ((i.size() == 2) && !contains(i.front(), outer)) {
-      polys.push_back(to_polyline(i.back()));
-      r += t.radius();
-      i = exterior_offset(inter, r);
-    }
+  //   while ((i.size() == 2) && !contains(i.front(), outer)) {
+  //     polys.push_back(to_polyline(i.back()));
+  //     r += t.radius();
+  //     i = exterior_offset(inter, r);
+  //   }
 
-    if (contains(i.front(), outer)) {
-      polys.push_back(to_polyline(i.back()));
-    }
+  //   if (contains(i.front(), outer)) {
+  //     polys.push_back(to_polyline(i.back()));
+  //   }
 
-    reverse(begin(polys), end(polys));
+  //   reverse(begin(polys), end(polys));
 
-    return polys;
-  }
+  //   return polys;
+  // }
 
   // TODO: Use tile vertical?
   std::vector<polyline>
