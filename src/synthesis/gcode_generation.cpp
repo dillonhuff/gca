@@ -147,6 +147,7 @@ namespace gca {
     cut_params params;
     params.target_machine = CAMASTER;
     params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.feedrate);
 
     vector<block> blks = camaster_comment_prefix(tp, params);
     concat(blks, camaster_tool_change_block(tp.tool_number()));
@@ -166,6 +167,7 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
+    params.set_plunge_feed(tp.feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
@@ -182,6 +184,7 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, g10_TLC_prefix(tp));
@@ -199,6 +202,7 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
