@@ -184,39 +184,39 @@ namespace gca {
 
   };
   
-  class contour_pocket {
-  protected:
-    double start_depth;
-    double end_depth;
-    oriented_polygon interior;
-    oriented_polygon exterior;
+  // class contour_pocket {
+  // protected:
+  //   double start_depth;
+  //   double end_depth;
+  //   oriented_polygon interior;
+  //   oriented_polygon exterior;
 
-  public:
-    contour_pocket(const double p_start_depth,
-		   const double p_end_depth,
-		   const oriented_polygon& p_i,
-		   const oriented_polygon& p_e)
-      : start_depth(p_start_depth), end_depth(p_end_depth),
-	interior(p_i), exterior(p_e) {}
+  // public:
+  //   contour_pocket(const double p_start_depth,
+  // 		   const double p_end_depth,
+  // 		   const oriented_polygon& p_i,
+  // 		   const oriented_polygon& p_e)
+  //     : start_depth(p_start_depth), end_depth(p_end_depth),
+  // 	interior(p_i), exterior(p_e) {}
     
-    const vector<oriented_polygon>& get_holes() const
-    { DBG_ASSERT(false); }
+  //   const vector<oriented_polygon>& get_holes() const
+  //   { DBG_ASSERT(false); }
 
-    double get_end_depth() const
-    { return end_depth; }
-    double get_start_depth() const
-    { return start_depth; }
-    bool above_base(const point p) const
-    { return p.z > get_end_depth(); }
+  //   double get_end_depth() const
+  //   { return end_depth; }
+  //   double get_start_depth() const
+  //   { return start_depth; }
+  //   bool above_base(const point p) const
+  //   { return p.z > get_end_depth(); }
 
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const;
+  //   toolpath make_toolpath(const material& stock_material,
+  // 			   const double safe_z,
+  // 			   const std::vector<tool>& tools) const;
     
-    pocket_name pocket_type() const { return CONTOUR_POCKET; }
-    tool select_tool(const std::vector<tool>& tools) const;
-    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
-  };
+  //   pocket_name pocket_type() const { return CONTOUR_POCKET; }
+  //   tool select_tool(const std::vector<tool>& tools) const;
+  //   std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
+  // };
   
   class face_pocket {
   protected:

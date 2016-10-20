@@ -63,15 +63,15 @@ namespace gca {
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
   
-  toolpath contour_pocket::make_toolpath(const material& stock_material,
-					 const double safe_z,
-					 const std::vector<tool>& tools) const {
-    tool t = select_tool(tools);
-    auto params = calculate_cut_params(t, stock_material);
+  // toolpath contour_pocket::make_toolpath(const material& stock_material,
+  // 					 const double safe_z,
+  // 					 const std::vector<tool>& tools) const {
+  //   tool t = select_tool(tools);
+  //   auto params = calculate_cut_params(t, stock_material);
 
-    auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
-  }
+  //   auto pocket_paths = toolpath_lines(t, params.cut_depth);
+  //   return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
+  // }
 
   toolpath face_pocket::make_toolpath(const material& stock_material,
 					 const double safe_z,
@@ -687,33 +687,33 @@ namespace gca {
   }
 
   // TODO: Check legality of tool size
-  tool
-  contour_pocket::select_tool(const std::vector<tool>& tools) const {
-    tool t = *(min_element(begin(tools), end(tools),
-  			   [](const tool& l, const tool& r)
-      { return l.diameter() < r.diameter(); }));
-    return t;
-  }
+  // tool
+  // contour_pocket::select_tool(const std::vector<tool>& tools) const {
+  //   tool t = *(min_element(begin(tools), end(tools),
+  // 			   [](const tool& l, const tool& r)
+  //     { return l.diameter() < r.diameter(); }));
+  //   return t;
+  // }
 
-  std::vector<polyline>
-  contour_pocket::toolpath_lines(const tool& t,
-				 const double cut_depth) const {
+  // std::vector<polyline>
+  // contour_pocket::toolpath_lines(const tool& t,
+  // 				 const double cut_depth) const {
 
-    auto i_off = interior_offset(exterior, t.radius());
-    DBG_ASSERT(i_off.size() == 1);
-    auto o = project(i_off.front(), get_end_depth());
-    auto inter = project(interior, get_end_depth());
-    vector<double> depths =
-      cut_depths(get_start_depth(), get_end_depth(), cut_depth);
-    vector<polyline> level_template =
-      contour_level(o, interior, t, get_end_depth());
-    vector<polyline> lines;
-    for (auto depth : depths) {
-      concat(lines, project_lines(level_template, depth));
-    }
-    return lines;
+  //   auto i_off = interior_offset(exterior, t.radius());
+  //   DBG_ASSERT(i_off.size() == 1);
+  //   auto o = project(i_off.front(), get_end_depth());
+  //   auto inter = project(interior, get_end_depth());
+  //   vector<double> depths =
+  //     cut_depths(get_start_depth(), get_end_depth(), cut_depth);
+  //   vector<polyline> level_template =
+  //     contour_level(o, interior, t, get_end_depth());
+  //   vector<polyline> lines;
+  //   for (auto depth : depths) {
+  //     concat(lines, project_lines(level_template, depth));
+  //   }
+  //   return lines;
 
-  }
+  // }
 
   // TODO: Use tile vertical?
   std::vector<polyline>
