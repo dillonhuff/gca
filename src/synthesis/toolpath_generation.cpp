@@ -63,16 +63,6 @@ namespace gca {
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
   }
   
-  // toolpath contour_pocket::make_toolpath(const material& stock_material,
-  // 					 const double safe_z,
-  // 					 const std::vector<tool>& tools) const {
-  //   tool t = select_tool(tools);
-  //   auto params = calculate_cut_params(t, stock_material);
-
-  //   auto pocket_paths = toolpath_lines(t, params.cut_depth);
-  //   return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
-  // }
-
   toolpath face_pocket::make_toolpath(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const {
@@ -353,15 +343,6 @@ namespace gca {
     }
 
     vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
-
-    // for (auto h : holes) {
-    //   //      offset_holes.push_back();
-    //   //      vector<oriented_polygon> h_off = exterior_offset(h, t.radius());
-
-    //   DBG_ASSERT(h_off.size() == 2);
-
-    //   offset_holes.push_back(h_off.back());
-    // }
 
     double z = lines.front().front().z;
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
@@ -686,35 +667,6 @@ namespace gca {
     return polys;
   }
 
-  // TODO: Check legality of tool size
-  // tool
-  // contour_pocket::select_tool(const std::vector<tool>& tools) const {
-  //   tool t = *(min_element(begin(tools), end(tools),
-  // 			   [](const tool& l, const tool& r)
-  //     { return l.diameter() < r.diameter(); }));
-  //   return t;
-  // }
-
-  // std::vector<polyline>
-  // contour_pocket::toolpath_lines(const tool& t,
-  // 				 const double cut_depth) const {
-
-  //   auto i_off = interior_offset(exterior, t.radius());
-  //   DBG_ASSERT(i_off.size() == 1);
-  //   auto o = project(i_off.front(), get_end_depth());
-  //   auto inter = project(interior, get_end_depth());
-  //   vector<double> depths =
-  //     cut_depths(get_start_depth(), get_end_depth(), cut_depth);
-  //   vector<polyline> level_template =
-  //     contour_level(o, interior, t, get_end_depth());
-  //   vector<polyline> lines;
-  //   for (auto depth : depths) {
-  //     concat(lines, project_lines(level_template, depth));
-  //   }
-  //   return lines;
-
-  // }
-
   // TODO: Use tile vertical?
   std::vector<polyline>
   face_pocket::toolpath_lines(const tool& t,
@@ -889,15 +841,6 @@ namespace gca {
       }
     }
 
-    // TODO: Proper polygon merging
-    // for (auto h : get_holes()) {
-    //   auto outer = exterior_offset(h, t.radius());
-
-    //   DBG_ASSERT(outer.size() == 2);
-
-    //   edges.push_back(to_polyline(outer.back()));
-    // }
-    
     return edges;
   }
 
@@ -919,11 +862,6 @@ namespace gca {
     for (auto& t : to_check) {
 
       vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
-
-      // for (auto h : base_poly.holes()) {
-      // 	offset_hs.push_back(polygon_3(exterior_offset(h, t.radius())));
-      // }
-      //      vector<polygon_3> offset_holes = planar_polygon_union(offset_hs);
 
       if (offset_holes.size() == hole_polys.size()) {
 
