@@ -17,6 +17,7 @@ namespace gca {
 
   struct cut_move_parameters {
     double feed;
+    double plunge_feed;
     double speed;
     double cut_depth;
   };
@@ -41,7 +42,7 @@ namespace gca {
       DBG_ASSERT(false);
     }
 
-    return cut_move_parameters{feed, speed, cut_depth};
+    return cut_move_parameters{feed, feed / t.num_flutes(), speed, cut_depth};
   }
 
   toolpath freeform_pocket::make_toolpath(const material& stock_material,
@@ -50,7 +51,7 @@ namespace gca {
     tool t = select_tool(tools);
     auto params = calculate_cut_params(t, stock_material);
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
 
   toolpath trace_pocket::make_toolpath(const material& stock_material,
@@ -60,7 +61,7 @@ namespace gca {
     auto params = calculate_cut_params(t, stock_material);
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
   
   toolpath face_pocket::make_toolpath(const material& stock_material,
@@ -70,7 +71,7 @@ namespace gca {
     auto params = calculate_cut_params(t, stock_material);
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
 
   toolpath flat_pocket::make_toolpath(const material& stock_material,
@@ -85,7 +86,7 @@ namespace gca {
     auto params = calculate_cut_params(t, stock_material);
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
   
   freeform_pocket::freeform_pocket(double start_depthp,
@@ -920,7 +921,7 @@ namespace gca {
     auto params = calculate_cut_params(t, stock_material);
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return toolpath(pocket_type(), safe_z, params.speed, params.feed, t, pocket_paths);
+    return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
   
 }
