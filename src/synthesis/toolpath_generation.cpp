@@ -366,6 +366,7 @@ namespace gca {
 	     const tool& t) {
     if (lines.size() == 0) { return lines; }
 
+    
     double z = lines.front().front().z;
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
     boost_multipoly_2 hole_poly = to_boost_multipoly_2(hole_polys);
@@ -373,7 +374,9 @@ namespace gca {
     boost_multilinestring_2 hole_result;
     bg::difference(ml, hole_poly, hole_result);
 
-    boost_multipoly_2 bound_poly{to_boost_poly_2(bound)};
+
+    polygon_3 bound_p = make_contour_bound(bound, t);
+    boost_multipoly_2 bound_poly{to_boost_poly_2(bound_p)};
 
     boost_multilinestring_2 result;
     bg::difference(hole_result, bound_poly, result);
@@ -387,6 +390,8 @@ namespace gca {
   zig_lines(const polygon_3& bound,
 	    const std::vector<polygon_3>& holes,
 	    const tool& t) {
+
+    DBG_ASSERT(bound.holes().size() == 0);
 
     box b = bounding_box(bound);
     cout << "Zig lines bounding box = " << endl << b << endl;
@@ -416,7 +421,7 @@ namespace gca {
   flat_pocket::flat_level_with_holes(const tool& t) const {
     vector<polygon_3> offset_holes = exterior_offset(get_holes(), t.radius());
 
-    polygon_3 inner_bound = make_interior_bound(get_boundary(), t);
+    polygon_3 inner_bound = shrink(get_boundary(), t.radius()); //make_interior_bound(get_boundary(), t);
 
     vector<polyline> edges = zig_lines(inner_bound, offset_holes, t);
 
@@ -824,15 +829,8 @@ namespace gca {
   std::vector<polyline>
   contour::flat_level_with_holes(const tool& t) const {
 
-    polygon_3 outer_bound = make_contour_bound(get_boundary(), t);
-    vector<polyline> edges = zig_lines(outer_bound, get_holes(), t);
-
-    vector<polygon_3> hole_polys;
-    for (auto h : get_holes()) {
-      hole_polys.push_back(polygon_3(h.vertices()));
-    }
-
-    vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
+    vector<polygon_3> offset_holes = exterior_offset(get_holes(), t.radius());
+    vector<polyline> edges = zig_lines(get_boundary(), offset_holes, t);
 
     for (auto& offset_hole : offset_holes) {
       edges.push_back(to_polyline(oriented_polygon(point(0, 0, 1), offset_hole.vertices())));
