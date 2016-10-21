@@ -344,6 +344,21 @@ namespace gca {
     return inner_bound;
   }
 
+  polygon_3
+  make_contour_bound(const polygon_3& bound,
+		     const tool& t) {
+    auto bound_p = bound;
+    bound_p.correct_winding_order(point(0, 0, 1));
+
+    // TODO: Really should use bounding box polygon instead
+    polygon_3 outer_bound =
+      dilate(bound_p, 10*t.radius());
+
+    polygon_3 inner_bound(outer_bound.vertices(), {bound_p.vertices()});
+
+    return inner_bound;
+  }
+  
   std::vector<polyline>
   clip_lines(const std::vector<polyline>& lines,
 	     const polygon_3& bound,
@@ -390,18 +405,20 @@ namespace gca {
 
     cout << "# of lines = " << lines.size() << endl;
 
-    vector<polygon_3> offset_holes = exterior_offset(holes, t.radius());
+    lines = clip_lines(lines, bound, holes, t);
 
-    polygon_3 inner_bound = make_interior_bound(bound, t);
-
-    lines = clip_lines(lines, inner_bound, offset_holes, t);
+    cout << "# of lines after clipping = " << lines.size() << endl;
 
     return lines;
   }
 
   std::vector<polyline>
   flat_pocket::flat_level_with_holes(const tool& t) const {
-    vector<polyline> edges = zig_lines(get_boundary(), get_holes(), t);
+    vector<polygon_3> offset_holes = exterior_offset(get_holes(), t.radius());
+
+    polygon_3 inner_bound = make_interior_bound(get_boundary(), t);
+
+    vector<polyline> edges = zig_lines(inner_bound, offset_holes, t);
 
     auto inter = interior_offset(boundary, t.radius());
 
@@ -415,7 +432,7 @@ namespace gca {
       DBG_ASSERT(outer.size() == 2);
       edges.push_back(to_polyline(outer.back()));
     }
-    
+
     return edges;
   }
 
@@ -806,7 +823,9 @@ namespace gca {
 
   std::vector<polyline>
   contour::flat_level_with_holes(const tool& t) const {
-    vector<polyline> edges = zig_lines(get_boundary(), get_holes(), t);
+
+    polygon_3 outer_bound = make_contour_bound(get_boundary(), t);
+    vector<polyline> edges = zig_lines(outer_bound, get_holes(), t);
 
     vector<polygon_3> hole_polys;
     for (auto h : get_holes()) {
