@@ -145,6 +145,6 @@ int main(int argc, char* argv[]) {
     visual_debug(step);
   }
 
-  print_programs_no_TLC(plan);
+  print_programs_wells_no_TLC(plan);
 }
 

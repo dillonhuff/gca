@@ -12,6 +12,8 @@ namespace gca {
   std::vector<block> emco_f1_code(const toolpath& pocket_lines);
   std::vector<block> emco_f1_code_no_TLC(const toolpath& pocket_lines);
 
+  std::vector<block> wells_code_no_TLC(const toolpath& pocket_lines);
+
   std::vector<block> camaster_engraving(const toolpath& last,
 					const toolpath& current);
   std::vector<block> camaster_prefix_blocks(const toolpath& initial);

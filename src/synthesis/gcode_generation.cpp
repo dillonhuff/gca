@@ -155,6 +155,23 @@ namespace gca {
     return blks;
   }
 
+  std::vector<block> wells_code_no_TLC(const toolpath& tp) {
+    for (auto l : tp.lines) {
+      DBG_ASSERT(l.num_points() > 0);
+    }
+
+    cut_params params;
+    params.target_machine = WELLS;
+    params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.plunge_feedrate);
+
+    vector<block> blks = comment_prefix(tp, params);
+    concat(blks, polylines_cuts(tp.lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    return blks;
+
+  }
+  
+
   std::vector<block> emco_f1_code(const toolpath& tp) {
     for (auto l : tp.lines) {
       DBG_ASSERT(l.num_points() > 0);

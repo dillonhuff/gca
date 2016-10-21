@@ -96,5 +96,19 @@ namespace gca {
     }
 
   }
+
+  void print_programs_wells_no_TLC(const fabrication_plan& fix_plan) {
+    cout << "Programs" << endl;
+
+    cout.setf(ios::fixed, ios::floatfield);
+    cout.setf(ios::showpoint);
+
+    for (auto f : fix_plan.steps()) {
+      auto program = f.gcode_for_toolpaths(wells_code_no_TLC);
+      cout << program.name << endl;
+      cout << program.blocks << endl;
+    }
+
+  }
   
 }
