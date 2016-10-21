@@ -10,4 +10,11 @@ namespace gca {
     return out;
   }
 
+  double chip_load_per_tooth(const tool& t,
+			     const double feed_ipm,
+			     const double rpm) {
+    return feed_ipm / (rpm * t.num_flutes());
+  }
+  
+  
 }

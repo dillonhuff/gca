@@ -78,6 +78,10 @@ namespace gca {
   };
 
   std::ostream& operator<<(std::ostream& out, const tool& t);
+
+  double chip_load_per_tooth(const tool& t,
+			     const double feed_ipm,
+			     const double rpm);
 }
 
 #endif

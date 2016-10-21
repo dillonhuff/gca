@@ -22,6 +22,25 @@ namespace gca {
     double cut_depth;
   };
 
+  cut_move_parameters
+  calculate_cut_params_aluminum(const tool& t) {
+    double cut_depth, speed, feed;
+    
+    cut_depth = t.cut_diameter() / 3.0;
+
+    if (t.cut_diameter() < 0.25) {
+      speed = 2500;
+    } else {
+      speed = 1000;
+    }
+
+    feed = 5.0;
+
+    cout << "Chip Load Per Tooth = " << chip_load_per_tooth(t, feed, speed) << endl;
+
+    return cut_move_parameters{feed, feed / t.num_flutes(), speed, cut_depth};
+  }
+  
   // TODO: More detailed cut parameter calculation
   cut_move_parameters calculate_cut_params(const tool& t,
 					   const material& stock_material) {
@@ -31,9 +50,7 @@ namespace gca {
       speed = 3000;
       feed = 8.0;
     } else if (stock_material == ALUMINUM) {
-      cut_depth = 0.1;
-      speed = 3000;
-      feed = 5.0;
+      return calculate_cut_params_aluminum(t);
     } else if (stock_material == BRASS) {
       cut_depth = 0.1;
       speed = 16000;
@@ -41,6 +58,8 @@ namespace gca {
     } else {
       DBG_ASSERT(false);
     }
+
+    cout << "Chip Load Per Tooth = " << chip_load_per_tooth(t, feed, speed) << endl;
 
     return cut_move_parameters{feed, feed / t.num_flutes(), speed, cut_depth};
   }
@@ -111,11 +130,6 @@ namespace gca {
   std::pair<oriented_polygon, std::vector<oriented_polygon>>
   optimize_pocket_size(const std::vector<index_t> base,
 		       const triangular_mesh& mesh) {
-    // surface sf(&mesh, base);
-    // plane pl = surface_plane(sf).slide(0.001);
-    // auto polys = mesh_cross_section(mesh, pl);
-    // vector<polygon_2> p = project(polys);
-    
 
     DBG_ASSERT(base.size() > 0);
 
@@ -314,7 +328,7 @@ namespace gca {
     return res;
   }
 
-  boost_multipoly_2
+  polygon_3
   make_interior_bound(const polygon_3& bound,
 		      const tool& t) {
     auto bound_p = bound;
@@ -327,7 +341,7 @@ namespace gca {
     polygon_3 inner_b = shrink(bound_p, t.radius());
     polygon_3 inner_bound(outer_bound.vertices(), {inner_b.vertices()});
 
-    return {to_boost_poly_2(inner_bound)};
+    return inner_bound;
   }
 
   std::vector<polyline>
@@ -337,18 +351,14 @@ namespace gca {
 	     const tool& t) {
     if (lines.size() == 0) { return lines; }
 
-    //    vector<oriented_polygon> offset_holes;
-
-    vector<polygon_3> offset_holes = exterior_offset(hole_polys, t.radius());
-
     double z = lines.front().front().z;
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
-    boost_multipoly_2 hole_poly = to_boost_multipoly_2(offset_holes);
+    boost_multipoly_2 hole_poly = to_boost_multipoly_2(hole_polys);
 
     boost_multilinestring_2 hole_result;
     bg::difference(ml, hole_poly, hole_result);
 
-    boost_multipoly_2 bound_poly = make_interior_bound(bound, t);
+    boost_multipoly_2 bound_poly{to_boost_poly_2(bound)};
 
     boost_multilinestring_2 result;
     bg::difference(hole_result, bound_poly, result);
@@ -359,9 +369,6 @@ namespace gca {
   }
 
   std::vector<polyline>
-  // zig_lines(const oriented_polygon& bound,
-  // 	    const std::vector<oriented_polygon>& holes,
-  // 	    const tool& t) {
   zig_lines(const polygon_3& bound,
 	    const std::vector<polygon_3>& holes,
 	    const tool& t) {
@@ -383,12 +390,12 @@ namespace gca {
 
     cout << "# of lines = " << lines.size() << endl;
 
-    vector<polygon_3> hole_polys;
-    for (auto h : holes) {
-      hole_polys.push_back(polygon_3(h.vertices()));
-    }
-    
-    lines = clip_lines(lines, polygon_3(bound.vertices()), hole_polys, t);
+    vector<polygon_3> offset_holes = exterior_offset(holes, t.radius());
+
+    polygon_3 inner_bound = make_interior_bound(bound, t);
+
+    lines = clip_lines(lines, inner_bound, offset_holes, t);
+
     return lines;
   }
 
@@ -642,37 +649,6 @@ namespace gca {
     return pocket_path;
   }
 
-  // std::vector<polyline>
-  // contour_level(const oriented_polygon& outer,
-  // 		const oriented_polygon& inter,
-  // 		const tool& t,
-  // 		const double level) {
-  //   double r = t.radius();
-    
-  //   vector<polyline> polys;
-
-  //   auto i = exterior_offset(inter, r);
-
-  //   cout << "# of exterior offsets = " << i.size() << endl;
-    
-  //   DBG_ASSERT(i.size() == 2);
-
-
-  //   while ((i.size() == 2) && !contains(i.front(), outer)) {
-  //     polys.push_back(to_polyline(i.back()));
-  //     r += t.radius();
-  //     i = exterior_offset(inter, r);
-  //   }
-
-  //   if (contains(i.front(), outer)) {
-  //     polys.push_back(to_polyline(i.back()));
-  //   }
-
-  //   reverse(begin(polys), end(polys));
-
-  //   return polys;
-  // }
-
   // TODO: Use tile vertical?
   std::vector<polyline>
   face_pocket::toolpath_lines(const tool& t,
@@ -688,9 +664,8 @@ namespace gca {
     for (auto depth : depths) {
       concat(lines, project_lines(face_template, depth));
     }
-    return lines;
 
-    //    return { to_polyline(project(inter, get_end_depth())) };
+    return lines;
   }
 
   tool
