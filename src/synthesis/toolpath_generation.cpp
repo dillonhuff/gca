@@ -23,7 +23,8 @@ namespace gca {
   };
 
   cut_move_parameters
-  calculate_cut_params_aluminum(const tool& t) {
+  calculate_cut_params_aluminum(const tool& t,
+				const pocket_name op_name) {
     double cut_depth, speed, feed;
     
     cut_depth = t.cut_diameter() / 3.0;
@@ -43,14 +44,15 @@ namespace gca {
   
   // TODO: More detailed cut parameter calculation
   cut_move_parameters calculate_cut_params(const tool& t,
-					   const material& stock_material) {
+					   const material& stock_material,
+					   const pocket_name op_name) {
     double cut_depth, speed, feed;
     if (stock_material == ACETAL) {
       cut_depth = 0.2;
       speed = 3000;
       feed = 8.0;
     } else if (stock_material == ALUMINUM) {
-      return calculate_cut_params_aluminum(t);
+      return calculate_cut_params_aluminum(t, op_name);
     } else if (stock_material == BRASS) {
       cut_depth = 0.1;
       speed = 16000;
@@ -68,7 +70,7 @@ namespace gca {
 					  const double safe_z,
 					  const std::vector<tool>& tools) const {
     tool t = select_tool(tools);
-    auto params = calculate_cut_params(t, stock_material);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
@@ -77,7 +79,7 @@ namespace gca {
 					  const double safe_z,
 					  const std::vector<tool>& tools) const {
     tool t = select_tool(tools);
-    auto params = calculate_cut_params(t, stock_material);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
@@ -87,7 +89,7 @@ namespace gca {
 					 const double safe_z,
 					 const std::vector<tool>& tools) const {
     tool t = select_tool(possible_tools);
-    auto params = calculate_cut_params(t, stock_material);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
@@ -102,7 +104,7 @@ namespace gca {
     }
 
     tool t = select_tool(possible_tools);
-    auto params = calculate_cut_params(t, stock_material);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
@@ -915,10 +917,10 @@ namespace gca {
     }
 
     tool t = select_tool(possible_tools);
-    auto params = calculate_cut_params(t, stock_material);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
 
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
     return toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths);
   }
-  
+
 }
