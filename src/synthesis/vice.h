@@ -12,16 +12,16 @@ namespace gca {
   class vice {
   private:
     point pos;
-    double x_length, y_length, base_height, top_height, clamp_width, max_jaw_width, parallel_plate_height;
+    double x_length, y_length, base_height, top_height, clamp_width, opening_capacity, parallel_plate_height;
     
   public:
     vice(point p_pos,
-	 double p_x_length,
+	 double p_jaw_width,
 	 double p_y_length,
 	 double p_base_height,
 	 double p_top_height,
 	 double p_clamp_width,
-	 double p_max_jaw_width);
+	 double p_opening_capacity);
 
     vice(point p_pos,
 	 double p_x_length,
@@ -29,7 +29,7 @@ namespace gca {
 	 double p_base_height,
 	 double p_top_height,
 	 double p_clamp_width,
-	 double p_max_jaw_width,
+	 double p_opening_capacity,
 	 double p_parallel_plate_height);
     
     vice(const vice& v,
@@ -50,9 +50,9 @@ namespace gca {
     inline double y_max() const { return pos.y + y_length; }
     inline double z_max() const { return pos.z + top_height; }
 
-    inline double x_len() const { return x_length; } //x_max() - x_min(); }
-    inline double y_len() const { return y_length; } //y_max() - y_min(); }
-    inline double z_len() const { return top_height; } //z_max() - z_min(); }
+    inline double x_len() const { return x_length; }
+    inline double y_len() const { return y_length; }
+    inline double z_len() const { return top_height; }
     
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
     inline double clamp_y_length() const { return clamp_width; }
@@ -67,20 +67,26 @@ namespace gca {
 
     inline void set_position(const point new_pos) { pos = new_pos; }
 
-    inline double maximum_jaw_width() const { return max_jaw_width; }
+    inline double max_opening_capacity() const { return opening_capacity; }
+
+    inline point base_normal() const { return point(0, 0, 1); }
+
+    inline point top_clamping_face_normal() const { return point(0, -1, 0); }
+
+    inline point right_bound_normal() const { return point(-1, 0, 0); }
 
     inline plane base_plane() const {
-      return plane(point(0, 0, 1),
+      return plane(base_normal(),
 		   point(x_max(), fixed_clamp_y(), base_z()));
     }
 
     inline plane top_jaw_plane() const {
-      return plane(point(0, -1, 0),
+      return plane(top_clamping_face_normal(),
 		   point(x_max(), fixed_clamp_y(), base_z()));
     }
 
     inline plane right_bound_plane() const {
-      return plane(point(-1, 0, 0),
+      return plane(right_bound_normal(),
 		   point(x_max(), fixed_clamp_y(), base_z()));
     }
 

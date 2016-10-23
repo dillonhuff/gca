@@ -270,7 +270,7 @@ namespace gca {
     		auto left_pt = orient.left_plane_point();
     		auto right_pt = orient.right_plane_point();
     		return abs(signed_distance_along(left_pt - right_pt, orient.left_normal()))
-    		  > v.maximum_jaw_width();
+    		  > v.max_opening_capacity();
     	      });
 
   }

@@ -8,17 +8,17 @@ namespace gca {
 	     double p_base_height,
 	     double p_top_height,
 	     double p_clamp_width,
-	     double p_max_jaw_width) :
+	     double p_opening_capacity) :
     pos(p_pos),
     x_length(p_x_length),
     y_length(p_y_length),
     base_height(p_base_height),
     top_height(p_top_height),
     clamp_width(p_clamp_width),
-    max_jaw_width(p_max_jaw_width),
+    opening_capacity(p_opening_capacity),
     parallel_plate_height(0.0) {
 
-    DBG_ASSERT(y_length > max_jaw_width + 2*clamp_width);
+    DBG_ASSERT(y_length > opening_capacity + 2*clamp_width);
   }
 
   vice::vice(point p_pos,
@@ -27,7 +27,7 @@ namespace gca {
 	     double p_base_height,
 	     double p_top_height,
 	     double p_clamp_width,
-	     double p_max_jaw_width,
+	     double p_opening_capacity,
 	     double p_parallel_plate_height) :
     pos(p_pos),
     x_length(p_x_length),
@@ -35,10 +35,10 @@ namespace gca {
     base_height(p_base_height),
     top_height(p_top_height),
     clamp_width(p_clamp_width),
-    max_jaw_width(p_max_jaw_width),
+    opening_capacity(p_opening_capacity),
     parallel_plate_height(p_parallel_plate_height) {
 
-    DBG_ASSERT(y_length > max_jaw_width + 2*clamp_width);
+    DBG_ASSERT(y_length > opening_capacity + 2*clamp_width);
   }
     
   vice::vice(const vice& v,
@@ -49,10 +49,10 @@ namespace gca {
     base_height(v.base_height),
     top_height(v.top_height),
     clamp_width(v.clamp_width),
-    max_jaw_width(v.max_jaw_width),
+    opening_capacity(v.opening_capacity),
     parallel_plate_height(p_parallel_plate_height) {
 
-    DBG_ASSERT(y_length > max_jaw_width + 2*clamp_width);
+    DBG_ASSERT(y_length > opening_capacity + 2*clamp_width);
   }
   
   vice top_jaw_origin_vice(const vice& v) {
