@@ -13,7 +13,7 @@ namespace gca {
   private:
     point pos;
     double x_length, y_length, base_height, top_height, clamp_width, opening_capacity, parallel_plate_height;
-    
+
   public:
     vice(point p_pos,
 	 double p_jaw_width,
@@ -69,14 +69,17 @@ namespace gca {
 
     inline double max_opening_capacity() const { return opening_capacity; }
 
-    inline point base_normal() const { return point(0, 0, 1); }
+    inline point base_face_normal() const { return point(0, 0, 1); }
 
     inline point top_clamping_face_normal() const { return point(0, -1, 0); }
 
-    inline point right_bound_normal() const { return point(-1, 0, 0); }
+    inline point right_bound_normal() const {
+      point rbn = cross(top_clamping_face_normal(), base_face_normal());
+      return rbn;
+    } //return point(-1, 0, 0); }
 
     inline plane base_plane() const {
-      return plane(base_normal(),
+      return plane(base_face_normal(),
 		   point(x_max(), fixed_clamp_y(), base_z()));
     }
 
