@@ -50,9 +50,9 @@ namespace gca {
     inline double y_max() const { return pos.y + y_length; }
     inline double z_max() const { return pos.z + top_height; }
 
-    inline double x_len() const { return x_max() - x_min(); }
-    inline double y_len() const { return y_max() - y_min(); }
-    inline double z_len() const { return z_max() - z_min(); }
+    inline double x_len() const { return x_length; } //x_max() - x_min(); }
+    inline double y_len() const { return y_length; } //y_max() - y_min(); }
+    inline double z_len() const { return top_height; } //z_max() - z_min(); }
     
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
     inline double clamp_y_length() const { return clamp_width; }
@@ -73,12 +73,12 @@ namespace gca {
       return plane(point(0, 0, 1),
 		   point(x_max(), fixed_clamp_y(), base_z()));
     }
-    
+
     inline plane top_jaw_plane() const {
       return plane(point(0, -1, 0),
 		   point(x_max(), fixed_clamp_y(), base_z()));
     }
-    
+
     inline plane right_bound_plane() const {
       return plane(point(-1, 0, 0),
 		   point(x_max(), fixed_clamp_y(), base_z()));

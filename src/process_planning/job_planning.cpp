@@ -78,7 +78,6 @@ namespace gca {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
   
-  //  std::vector<triangular_mesh>
   Nef_polyhedron
   subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features) {
@@ -155,8 +154,6 @@ namespace gca {
     cout << "New volume = " << new_volume << endl;
 
     return volume_info{new_volume, res, inf.dilated_mesh};
-
-
   }
 
   volume_info_map
@@ -222,7 +219,6 @@ namespace gca {
 
     return vol;
   }
-
 
   int curve_count(const std::vector<point>& ring) {
     int count = 0;
