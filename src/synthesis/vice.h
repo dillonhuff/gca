@@ -104,7 +104,6 @@ namespace gca {
 
   vice emco_vice(const point loc);
   vice large_jaw_vice(const double jaw_width, const point loc);
-
   vice current_setup();
 
   box main_box(const vice v);

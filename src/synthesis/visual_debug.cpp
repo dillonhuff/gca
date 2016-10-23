@@ -2,6 +2,7 @@
 #include <vtkLine.h>
 #include <vtkProperty.h>
 
+#include "geometry/homogeneous_transformation.h"
 #include "geometry/vtk_utils.h"
 #include "synthesis/visual_debug.h"
 
@@ -68,10 +69,71 @@ namespace gca {
     box upper_clamp = upper_clamp_box(v);
     box lower_clamp = lower_clamp_box(v);
 
+    triangular_mesh main_mesh = make_mesh(box_triangles(main), 0.001);
+    point top_normal(0, 0, 1);
+    point p = max_point_in_dir(main_mesh, top_normal);
+
+    plane top_plane_neg(-1*top_normal, p);
+
+    
+    triangular_mesh upper_mesh = make_mesh(box_triangles(upper_clamp), 0.001);
+    point upper_normal(0, -1, 0);
+    point upper_pt = max_point_in_dir(upper_mesh, upper_normal);
+
+    plane upper_clamp_neg(-1*upper_normal, upper_pt);
+
+    point right_normal(1, 0, 0);
+    point right_pt = max_point_in_dir(upper_mesh, right_normal);
+
+    plane right_plane_neg(right_normal, right_pt);
+    
+    triangular_mesh left_mesh = make_mesh(box_triangles(lower_clamp), 0.001);
+
+    // auto p1_act = plane_actor(vtk_plane(top_plane_neg));
+    // auto p2_act = plane_actor(vtk_plane(upper_clamp_neg));
+    // auto p3_act = plane_actor(vtk_plane(right_plane_neg));
+
+    // visualize_actors({p1_act, p2_act, p3_act});
+
+    // auto bot = plane_actor(vtk_plane(v.base_plane()));
+    // auto top = plane_actor(vtk_plane(v.top_jaw_plane()));
+    // auto right = plane_actor(vtk_plane(v.right_bound_plane()));
+
+    // visualize_actors({bot, top, right});
+    
+    // triangular_mesh left_mesh = make_mesh(box_triangles(lower_clamp), 0.001);
+    // point left_normal(1, 0, 0);
+    // point left_pt = max_point_in_dir(left_mesh, left_normal);
+
+    // plane left_plane_neg(-1*left_normal, left_pt);
+
+    // auto t = mate_planes(top_plane_neg.flip(), upper_clamp_neg.flip(), right_plane_neg.flip(),
+    // 			 v.base_plane(), v.top_jaw_plane(), v.right_bound_plane());
+
+
+    // NOTE: Finds transform, but it is reversed
+    // auto t =
+    //   mate_planes(v.base_plane(), v.top_jaw_plane(), v.right_bound_plane(),
+    // 		  top_plane_neg.flip(), upper_clamp_neg.flip(), right_plane_neg.flip());
+
+    // NOTE: Seems to be the same result as previous one
+    auto t =
+      mate_planes(top_plane_neg, upper_clamp_neg, right_plane_neg,
+		  v.base_plane(), v.top_jaw_plane(), v.right_bound_plane());
+
+    // NOTE: Segfaults
+    // auto t =
+    //   mate_planes(top_plane_neg.flip(), upper_clamp_neg.flip(), right_plane_neg.flip(),
+    // 		  v.base_plane().flip(), v.top_jaw_plane().flip(), v.right_bound_plane().flip());
+    
+    
+    DBG_ASSERT(t);
+
     vector<triangle> triangles;
-    concat(triangles, box_triangles(main));
-    concat(triangles, box_triangles(upper_clamp));
-    concat(triangles, box_triangles(lower_clamp));
+
+    concat(triangles, apply(*t, main_mesh).triangle_list());
+    concat(triangles, apply(*t, upper_mesh).triangle_list());
+    concat(triangles, apply(*t, left_mesh).triangle_list());
 
     auto vice_pd = polydata_for_triangles(triangles);
     color_polydata(vice_pd, 0, 200, 0);
