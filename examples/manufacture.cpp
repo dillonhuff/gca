@@ -17,8 +17,8 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    //    vice test_v = custom_jaw_vice(6.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
-    vice test_v = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
+    vice test_v =
+      custom_jaw_vice_with_clamp_dir(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0), point(1, 0, 0));
     vice test_vice = top_jaw_origin_vice(test_v);
     
     std::vector<plate_height> plates{0.1, 0.3, 0.7};

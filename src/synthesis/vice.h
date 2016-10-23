@@ -14,6 +14,8 @@ namespace gca {
     point pos;
     double x_length, y_length, base_height, top_height, clamp_width, opening_capacity, parallel_plate_height;
 
+    point base_normal, top_clamp_normal;
+
   public:
     vice(point p_pos,
 	 double p_jaw_width,
@@ -21,7 +23,9 @@ namespace gca {
 	 double p_base_height,
 	 double p_top_height,
 	 double p_clamp_width,
-	 double p_opening_capacity);
+	 double p_opening_capacity,
+	 point p_base_normal,
+	 point p_top_clamp_normal);
 
     vice(point p_pos,
 	 double p_x_length,
@@ -30,7 +34,10 @@ namespace gca {
 	 double p_top_height,
 	 double p_clamp_width,
 	 double p_opening_capacity,
-	 double p_parallel_plate_height);
+	 double p_parallel_plate_height,
+	 point p_base_normal,
+	 point p_top_clamp_normal);
+	 
     
     vice(const vice& v,
 	 double p_parallel_plate_height);
@@ -69,9 +76,9 @@ namespace gca {
 
     inline double max_opening_capacity() const { return opening_capacity; }
 
-    inline point base_face_normal() const { return point(0, 0, 1); }
+    inline point base_face_normal() const { return base_normal; } //point(0, 0, 1); }
 
-    inline point top_clamping_face_normal() const { return point(0, -1, 0); }
+    inline point top_clamping_face_normal() const { return top_clamp_normal; }//point(0, -1, 0); }
 
     inline point right_bound_normal() const {
       point rbn = cross(top_clamping_face_normal(), base_face_normal());
@@ -115,6 +122,12 @@ namespace gca {
 
   vice shift(const point s, const vice& v);
 
+  vice custom_jaw_vice_with_clamp_dir(const double jaw_width,
+				      const double clamp_width,
+				      const double y_length,
+				      const point loc,
+				      const point top_clamp_face_normal);
+  
 }
 
 #endif
