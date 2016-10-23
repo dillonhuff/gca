@@ -349,7 +349,7 @@ int main(int, char *[]) {
     visual_debug(shifted_setup);
 
     cout << "Program for setup" << endl;
-    auto program = shifted_setup.gcode_for_toolpaths(emco_f1_code_no_TLC);
+    auto program = shifted_setup.gcode_for_toolpaths(wells_code_no_TLC);
     cout << program.name << endl;
     cout << program.blocks << endl;
     
