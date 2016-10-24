@@ -1074,6 +1074,7 @@ namespace gca {
 
       vector<polyline> edges =
 	zig_lines(polygon_3(cut_region.vertices()), holes, t);
+      concat(face_template, edges);
     }
     
     vector<double> depths =
@@ -1111,6 +1112,11 @@ namespace gca {
 			    const std::vector<tool>& tools) {
     return max_e(tools, [](const tool& t) { return t.cut_diameter(); });
   }
+
+  tool select_finishing_tool(const flat_region& r,
+			     const std::vector<tool>& tools) {
+    return min_e(tools, [](const tool& t) { return t.cut_diameter(); });
+  }
   
   toolpath rough_flat_region(const flat_region& r,
 			     const double safe_z,
@@ -1125,16 +1131,56 @@ namespace gca {
   //   DBG_ASSERT(false);
   // }
 
+  std::vector<polyline> finish_lines(const flat_region& r,
+				     const tool& t) {
+    vector<polyline> edges;
+
+    for (auto& region_poly : r.machine_area) {
+
+      vector<polygon_3> holes;
+      for (auto h : region_poly.holes()) {
+	holes.push_back(polygon_3(h));
+      }
+      
+      vector<polygon_3> offset_holes = exterior_offset(holes, t.radius());
+
+      for (auto& offset_hole : offset_holes) {
+	edges.push_back(to_polyline(oriented_polygon(point(0, 0, 1), offset_hole.vertices())));
+	for (auto& hole_in_offset_hole : offset_hole.holes()) {
+	  edges.push_back(to_polyline(oriented_polygon(point(0, 0, 1), hole_in_offset_hole)));
+	}
+      }
+    }
+
+    return edges;
+    
+  }
+
+  toolpath finish_path(const flat_region& r,
+		       const double safe_z,
+		       const tool& t) {
+    // TODO: Special finish cut params?
+    auto params = calculate_cut_params(t, r.stock_material, CONTOUR);
+
+    auto finish_paths = finish_lines(r, t);
+
+    toolpath finish_path =
+      toolpath(CONTOUR,
+    	       safe_z,
+    	       params.speed,
+    	       params.feed,
+    	       params.plunge_feed,
+    	       t,
+    	       finish_paths);
+
+    return finish_path;
+  }
+  
   toolpath finish_flat_region(const flat_region& r,
 			      const double safe_z,
 			      const std::vector<tool>& tools) {
-    tool t = select_roughing_tool(r, tools);
-    return zig_rough_path(r, safe_z, t);
-    
-    vector<polyline> face_template;
-
-    return project_lines(face_template, r.end_depth);
-    
+    tool t = select_finishing_tool(r, tools);
+    return finish_path(r, safe_z, t);
   }
 
   std::vector<toolpath>
