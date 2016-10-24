@@ -85,7 +85,9 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 
     vector<string> passes{
-      "test/stl-files/OctagonWithHoles.stl",
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
+
+	"test/stl-files/OctagonWithHoles.stl",
 
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 
@@ -94,7 +96,6 @@ namespace gca {
 	  
       	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
 
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
@@ -135,9 +136,9 @@ namespace gca {
 
       cout << "Number of steps = " << p.steps().size() << endl;
 
-      // for (auto step : p.steps()) {
-      // 	visual_debug(step);
-      // }
+      for (auto step : p.steps()) {
+      	visual_debug(step);
+      }
       
     }
   }

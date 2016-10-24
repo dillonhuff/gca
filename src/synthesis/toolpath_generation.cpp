@@ -316,6 +316,25 @@ namespace gca {
     }
     return res;
   }
+
+  boost_multipoly_2
+  to_boost_multipoly_2(const rotation&r, const std::vector<polygon_3>& lines) {
+    boost_multipoly_2 res;
+    for (auto& pl : lines) {
+      res.push_back(to_boost_poly_2(apply(r, pl)));
+    }
+    return res;
+  }
+
+  vector<polygon_3> from_boost_multipoly_2(const boost_multipoly_2& p,
+					   const rotation& r,
+					   const double z_level) {
+    vector<polygon_3> polys;
+    for (auto pl : p) {
+      polys.push_back(apply(r, to_polygon_3(z_level, pl)));
+    }
+    return polys;
+  }
   
   polyline to_polyline(const boost_linestring_2& l,
 		       const double z) {
@@ -933,10 +952,33 @@ namespace gca {
 
     const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
     const rotation r_inv = inverse(r);
+    double z_level = as.front().vertices().front().z;
 
-    
+    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
+    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
+    boost_multipoly_2 cp;
+    bg::intersection(ap, bp, cp);
+
+    return from_boost_multipoly_2(cp, r, z_level);
   }
 
+  std::vector<polygon_3>
+  polygon_difference(const std::vector<polygon_3>& as,
+		     const std::vector<polygon_3>& bs) {
+    if (as.size() == 0 || bs.size() == 0) { return {}; }
+
+    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+    double z_level = as.front().vertices().front().z;
+
+    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
+    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
+    boost_multipoly_2 cp;
+    bg::difference(ap, bp, cp);
+
+    return from_boost_multipoly_2(cp, r, z_level);
+  }
+  
   toolpath contour_cleanup_path(const std::vector<polygon_3>& remaining_area,
 				const material& stock_material,
 				const double safe_z,
@@ -987,17 +1029,35 @@ namespace gca {
       stock_material(p_stock_material) {
       
     }
-  };
 
-  flat_region residual_flat_region(const flat_region& r, const tool& t) {
-    DBG_ASSERT(false);
-  }
+    flat_region(const polygon_3& p_safe_area,
+		const std::vector<polygon_3>& p_machine_area,
+		const double p_start_depth,
+		const double p_end_depth,
+		const material p_stock_material) :
+      safe_area(p_safe_area),
+      machine_area(p_machine_area),
+      start_depth(p_start_depth),
+      end_depth(p_end_depth),
+      stock_material(p_stock_material) {
+      
+    }
+
+  };
 
   vector<polygon_3>
   accessable_regions(const polygon_3& area, const tool& t) {
     vector<polygon_3> rs = interior_offset({area}, t.radius());
     return rs;
   }
+
+  flat_region residual_flat_region(const flat_region& r, const tool& t) {
+    vector<polygon_3> access_area = accessable_regions(r.safe_area, t);
+    vector<polygon_3> residual =
+      polygon_difference(r.machine_area, access_area);
+    return flat_region(r.safe_area, residual, r.start_depth, r.end_depth, r.stock_material);
+  }
+
 
   std::vector<polyline>
   zig_lines(const flat_region& r, const tool& t, const double cut_depth) {
@@ -1059,16 +1119,22 @@ namespace gca {
     return zig_rough_path(r, safe_z, t);
   }
 
-  toolpath clean_flat_region(const flat_region& r,
-			     const double safe_z,
-			     const std::vector<tool>& tools) {
-    DBG_ASSERT(false);
-  }
+  // toolpath clean_flat_region(const flat_region& r,
+  // 			     const double safe_z,
+  // 			     const std::vector<tool>& tools) {
+  //   DBG_ASSERT(false);
+  // }
 
   toolpath finish_flat_region(const flat_region& r,
 			      const double safe_z,
 			      const std::vector<tool>& tools) {
-    DBG_ASSERT(false);
+    tool t = select_roughing_tool(r, tools);
+    return zig_rough_path(r, safe_z, t);
+    
+    vector<polyline> face_template;
+
+    return project_lines(face_template, r.end_depth);
+    
   }
 
   std::vector<toolpath>
@@ -1082,10 +1148,10 @@ namespace gca {
 
     flat_region residual_region = residual_flat_region(r, rough_path.t);
 
-    toolpath clean_path = clean_flat_region(residual_region, safe_z, tools);
+    //    toolpath clean_path = clean_flat_region(residual_region, safe_z, tools);
     toolpath finish_path = finish_flat_region(r, safe_z, tools);
 
-    return {rough_path, clean_path, finish_path};
+    return {rough_path, finish_path};
 
     // tool t = select_tool(possible_tools);
     // auto params = calculate_cut_params(t, stock_material, pocket_type());
