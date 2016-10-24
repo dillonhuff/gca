@@ -17,7 +17,7 @@ namespace gca {
   std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
 					 const std::vector<tool>& tools,
 					 const material& stock_material) {
-    assert(tools.size() > 0);
+    DBG_ASSERT(tools.size() > 0);
 
     vector<toolpath> toolpaths =
       mill_pockets(pockets, tools, stock_material);
@@ -83,4 +83,32 @@ namespace gca {
 
   }
 
+  void print_programs_no_TLC(const fabrication_plan& fix_plan) {
+    cout << "Programs" << endl;
+
+    cout.setf(ios::fixed, ios::floatfield);
+    cout.setf(ios::showpoint);
+
+    for (auto f : fix_plan.steps()) {
+      auto program = f.gcode_for_toolpaths(emco_f1_code_no_TLC);
+      cout << program.name << endl;
+      cout << program.blocks << endl;
+    }
+
+  }
+
+  void print_programs_wells_no_TLC(const fabrication_plan& fix_plan) {
+    cout << "Programs" << endl;
+
+    cout.setf(ios::fixed, ios::floatfield);
+    cout.setf(ios::showpoint);
+
+    for (auto f : fix_plan.steps()) {
+      auto program = f.gcode_for_toolpaths(wells_code_no_TLC);
+      cout << program.name << endl;
+      cout << program.blocks << endl;
+    }
+
+  }
+  
 }

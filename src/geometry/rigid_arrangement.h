@@ -186,6 +186,7 @@ namespace gca {
     }
 
   };
+
 }
 
 #endif

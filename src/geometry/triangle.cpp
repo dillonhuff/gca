@@ -294,4 +294,8 @@ namespace gca {
     return max_e(zs);
   }
 
+  point normal(const triangle t) {
+    return cross(t.v2 - t.v1,
+		 t.v3 - t.v1).normalize();
+  }
 }

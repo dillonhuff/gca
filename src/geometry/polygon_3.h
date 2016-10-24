@@ -38,6 +38,10 @@ namespace gca {
     polygon_3(const std::vector<point> vertices,
 		      const std::vector<std::vector<point>> hole_verts);
 
+    void add_hole(const std::vector<point>& hole) {
+      inner_rings.push_back(hole);
+    }
+
     point normal() const {
       return ring_normal(outer_ring);
     }
@@ -89,12 +93,22 @@ namespace gca {
 
   double area(const polygon_3& p);
 
-  std::vector<labeled_polygon_3>
-  planar_polygon_union(const std::vector<labeled_polygon_3>& polys);
+  std::vector<polygon_3>
+  planar_polygon_union(const std::vector<polygon_3>& polys);
 
-  labeled_polygon_3
+  boost_multipoly_2
+  planar_union_boost(const std::vector<polygon_3>& polys);
+  
+  polygon_3
   convex_hull_2D(const std::vector<point>& pts,
 		 const point n,
 		 const double z_level);
-  
+
+  polygon_3
+  to_polygon_3(const double z, const boost_poly_2& p);
+
+  box bounding_box(const polygon_3& p);
+
+  polygon_3 project(const polygon_3& p, double z);
+
 }

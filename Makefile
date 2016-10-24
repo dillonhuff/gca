@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named interact-test
+
+# Build rule for target.
+interact-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 interact-test
+.PHONY : interact-test
+
+# fast build rule for target.
+interact-test/fast:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/build
+.PHONY : interact-test/fast
+
+#=============================================================================
 # Target rules for targets named AddCell
 
 # Build rule for target.
@@ -435,6 +448,33 @@ examples/AddCell.s: examples/AddCell.cpp.s
 examples/AddCell.cpp.s:
 	$(MAKE) -f CMakeFiles/AddCell.dir/build.make CMakeFiles/AddCell.dir/examples/AddCell.cpp.s
 .PHONY : examples/AddCell.cpp.s
+
+examples/DataAnimationSubclass.o: examples/DataAnimationSubclass.cpp.o
+
+.PHONY : examples/DataAnimationSubclass.o
+
+# target to build an object file
+examples/DataAnimationSubclass.cpp.o:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.o
+.PHONY : examples/DataAnimationSubclass.cpp.o
+
+examples/DataAnimationSubclass.i: examples/DataAnimationSubclass.cpp.i
+
+.PHONY : examples/DataAnimationSubclass.i
+
+# target to preprocess a source file
+examples/DataAnimationSubclass.cpp.i:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.i
+.PHONY : examples/DataAnimationSubclass.cpp.i
+
+examples/DataAnimationSubclass.s: examples/DataAnimationSubclass.cpp.s
+
+.PHONY : examples/DataAnimationSubclass.s
+
+# target to generate assembly for a file
+examples/DataAnimationSubclass.cpp.s:
+	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.s
+.PHONY : examples/DataAnimationSubclass.cpp.s
 
 examples/camaster_test.o: examples/camaster_test.cpp.o
 
@@ -2542,6 +2582,33 @@ src/synthesis/operation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation.cpp.s
 .PHONY : src/synthesis/operation.cpp.s
 
+src/synthesis/operation_name.o: src/synthesis/operation_name.cpp.o
+
+.PHONY : src/synthesis/operation_name.o
+
+# target to build an object file
+src/synthesis/operation_name.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.o
+.PHONY : src/synthesis/operation_name.cpp.o
+
+src/synthesis/operation_name.i: src/synthesis/operation_name.cpp.i
+
+.PHONY : src/synthesis/operation_name.i
+
+# target to preprocess a source file
+src/synthesis/operation_name.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.i
+.PHONY : src/synthesis/operation_name.cpp.i
+
+src/synthesis/operation_name.s: src/synthesis/operation_name.cpp.s
+
+.PHONY : src/synthesis/operation_name.s
+
+# target to generate assembly for a file
+src/synthesis/operation_name.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.s
+.PHONY : src/synthesis/operation_name.cpp.s
+
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
 .PHONY : src/synthesis/output.o
@@ -2649,6 +2716,33 @@ src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
 src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
+
+src/synthesis/tool.o: src/synthesis/tool.cpp.o
+
+.PHONY : src/synthesis/tool.o
+
+# target to build an object file
+src/synthesis/tool.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.o
+.PHONY : src/synthesis/tool.cpp.o
+
+src/synthesis/tool.i: src/synthesis/tool.cpp.i
+
+.PHONY : src/synthesis/tool.i
+
+# target to preprocess a source file
+src/synthesis/tool.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.i
+.PHONY : src/synthesis/tool.cpp.i
+
+src/synthesis/tool.s: src/synthesis/tool.cpp.s
+
+.PHONY : src/synthesis/tool.s
+
+# target to generate assembly for a file
+src/synthesis/tool.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.s
+.PHONY : src/synthesis/tool.cpp.s
 
 src/synthesis/toolpath_generation.o: src/synthesis/toolpath_generation.cpp.o
 
@@ -4115,6 +4209,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... interact-test"
 	@echo "... AddCell"
 	@echo "... engraving"
 	@echo "... debug-test"
@@ -4142,6 +4237,9 @@ help:
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
 	@echo "... examples/AddCell.s"
+	@echo "... examples/DataAnimationSubclass.o"
+	@echo "... examples/DataAnimationSubclass.i"
+	@echo "... examples/DataAnimationSubclass.s"
 	@echo "... examples/camaster_test.o"
 	@echo "... examples/camaster_test.i"
 	@echo "... examples/camaster_test.s"
@@ -4376,6 +4474,9 @@ help:
 	@echo "... src/synthesis/operation.o"
 	@echo "... src/synthesis/operation.i"
 	@echo "... src/synthesis/operation.s"
+	@echo "... src/synthesis/operation_name.o"
+	@echo "... src/synthesis/operation_name.i"
+	@echo "... src/synthesis/operation_name.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"
@@ -4388,6 +4489,9 @@ help:
 	@echo "... src/synthesis/shapes_to_toolpaths.o"
 	@echo "... src/synthesis/shapes_to_toolpaths.i"
 	@echo "... src/synthesis/shapes_to_toolpaths.s"
+	@echo "... src/synthesis/tool.o"
+	@echo "... src/synthesis/tool.i"
+	@echo "... src/synthesis/tool.s"
 	@echo "... src/synthesis/toolpath_generation.o"
 	@echo "... src/synthesis/toolpath_generation.i"
 	@echo "... src/synthesis/toolpath_generation.s"

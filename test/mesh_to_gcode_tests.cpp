@@ -16,12 +16,85 @@ namespace gca {
     }
   }
 
+  TEST_CASE("Octagon with holes") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_v = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
+    vice test_vice = top_jaw_origin_vice(test_v);
+    
+    std::vector<plate_height> plates{0.1, 0.3, 0.7};
+    fixtures fixes(test_vice, plates);
+
+    workpiece workpiece_dims(5.0, 5.0, 5.0, ALUMINUM);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.5);
+    t2.set_cut_length(0.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.5);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.12);
+    t3.set_cut_length(1.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+
+    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.5);
+    t4.set_cut_length(2.2);
+
+    t4.set_shank_diameter(0.5);
+    t4.set_shank_length(0.05);
+
+    t4.set_holder_diameter(2.5);
+    t4.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3, t4};
+
+    string part_path = "test/stl-files/OctagonWithHoles.stl";
+
+    cout << "Part path: " << part_path << endl;
+
+    auto mesh = parse_stl(part_path, 0.001);
+
+    box bounding = mesh.bounding_box();
+
+    cout << "Bounding box = " << endl;
+    cout << bounding << endl;
+
+    SECTION("Full fabrication plan") {
+      fabrication_plan p =
+	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+
+      REQUIRE(p.steps().size() == 8);
+    }
+  }
+
   TEST_CASE("Mesh to gcode") {
     arena_allocator a;
     set_system_allocator(&a);
 
     // TODO: Make emco_vice again
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0)); //large_jaw_vice(5, point(-0.8, -4.4, -3.3));
     std::vector<plate_height> parallel_plates{0.1, 0.3};
     fixtures fixes(test_vice, parallel_plates);
 
@@ -62,12 +135,154 @@ namespace gca {
     }
   }
 
+
+  TEST_CASE("Part 1(29)") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_vice = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
+    std::vector<plate_height> plates{0.1, 0.3, 0.7};
+    fixtures fixes(test_vice, plates);
+
+    workpiece workpiece_dims(5.0, 5.0, 5.0, ALUMINUM);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.5);
+    t2.set_cut_length(0.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.5);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.05);
+    t3.set_cut_length(1.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+
+    // Ridiculous tool used to test feasability
+    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.5);
+    t4.set_cut_length(2.2);
+
+    t4.set_shank_diameter(0.5);
+    t4.set_shank_length(0.05);
+
+    t4.set_holder_diameter(2.5);
+    t4.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3, t4};
+
+    string part_path = "test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl";
+    auto mesh = parse_stl(part_path, 0.001);
+
+    box bounding = mesh.bounding_box();
+
+    cout << "Bounding box = " << endl;
+    cout << bounding << endl;
+
+    fabrication_plan p = make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+
+    cout << "Number of steps = " << p.steps().size() << endl;
+
+    REQUIRE(p.steps().size() == 3);
+
+  }
+
+  TEST_CASE("Part 1 (24)") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_v = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
+    vice test_vice = top_jaw_origin_vice(test_v);
+    
+    std::vector<plate_height> plates{0.1, 0.3, 0.7};
+    fixtures fixes(test_vice, plates);
+
+    workpiece workpiece_dims(5.0, 5.0, 5.0, ALUMINUM);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.5);
+    t2.set_cut_length(0.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.5);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.12);
+    t3.set_cut_length(1.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+
+    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.5);
+    t4.set_cut_length(2.2);
+
+    t4.set_shank_diameter(0.5);
+    t4.set_shank_length(0.05);
+
+    t4.set_holder_diameter(2.5);
+    t4.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3, t4};
+
+    string part_path =
+      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl";
+
+    cout << "Part path: " << part_path << endl;
+
+    auto mesh = parse_stl(part_path, 0.001);
+
+    box bounding = mesh.bounding_box();
+
+    cout << "Bounding box = " << endl;
+    cout << bounding << endl;
+
+    fabrication_plan p =
+      make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+
+    REQUIRE(p.steps().size() == 2);
+  }
+  
   TEST_CASE("Box with hole") {
     arena_allocator a;
     set_system_allocator(&a);
 
     // TODO: Make emco_vice again
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0)); //large_jaw_vice(5, point(-0.8, -4.4, -3.3));
     std::vector<plate_height> parallel_plates{0.1, 0.3};
     fixtures fixes(test_vice, parallel_plates);
 
@@ -115,22 +330,65 @@ namespace gca {
     //   auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
     //   REQUIRE(result_programs.size() == 2);
     // }
-
-    SECTION("Box with thru hole") {
-      workpiece workpiece_dims(1.51, 1.51, 2.0, ACETAL);
-      auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
-      auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
-      REQUIRE(result_programs.size() == 2);
-    }
     
   }
+
+  TEST_CASE("Code generation for box with thru hole") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    // TODO: Make emco_vice again
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0)); //large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    std::vector<plate_height> parallel_plates{0.1, 0.3};
+    fixtures fixes(test_vice, parallel_plates);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.5);
+    t2.set_cut_length(1.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.5);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
+    // NOTE: Totally unrealistic tool, should remove once open pocket analysis
+    // is in place
+    tool t3(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t3.set_cut_diameter(0.1);
+    t3.set_cut_length(1.5);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.5);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3};
+    workpiece workpiece_dims(1.75, 2.0, 2.0, ACETAL);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWithThruHole.stl", 0.001);
+    auto result_programs = mesh_to_gcode(mesh, fixes, tools, workpiece_dims);
+
+    REQUIRE(result_programs.size() == 2);
+  }  
 
   TEST_CASE("Mesh to gcode with parallel plates") {
     arena_allocator a;
     set_system_allocator(&a);
 
     // Change back to emco_vice
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
     std::vector<plate_height> parallel_plates{0.5, 0.7};
     fixtures fixes(test_vice, parallel_plates);
 
@@ -146,14 +404,14 @@ namespace gca {
 
     tool t2(0.12, 3.0, 4, HSS, FLAT_NOSE);
     t2.set_cut_diameter(0.12);
-    t2.set_cut_length(1.2);
+    t2.set_cut_length(1.3);
 
     t2.set_shank_diameter(0.1);
     t2.set_shank_length(0.5);
 
     t2.set_holder_diameter(2.0);
     t2.set_holder_length(2.5);
-    
+
     vector<tool> tools{t1, t2};
 
     workpiece workpiece_dims(3.0, 1.9, 3.0, ACETAL);
@@ -206,7 +464,7 @@ namespace gca {
     
     std::vector<tool> tools{t1, t2, t3};
 
-    vice test_vice = large_jaw_vice(5, point(-0.8, -4.4, -3.3));
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0)); //large_jaw_vice(5, point(-0.8, -4.4, -3.3));
     std::vector<plate_height> parallel_plates{0.1, 0.3, 0.5};
     fixtures fixes(test_vice, parallel_plates);
 

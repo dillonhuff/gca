@@ -1,33 +1,90 @@
 #include "feature_recognition/visual_debug.h"
+#include "geometry/offset.h"
 #include "process_planning/tool_access.h"
 #include "utils/check.h"
 
 namespace gca {
 
-  boost::optional<feature> access_feature(const feature& f,
-					  const tool& t,
-					  const double diam,
-					  const double len,
-					  const double depth_offset) {
+  std::vector<feature> build_access_features(const feature& f,
+					     const tool& t,
+					     const double diam,
+					     const double len,
+					     const double depth_offset) {
     check_simplicity(f.base());
 
+    cout << "Checking access feature" << endl;
+    //vtk_debug_feature(f);
+
+    // boost::optional<labeled_polygon_3> a_region =
+    //   shrink_optional(f.base(), t.radius());
+
+    // if (!a_region) { return {}; }
+
+    vector<polygon_3> a_regions = interior_offset({f.base()}, t.radius());
+
+    cout << "Interior offset by " << t.radius() << endl;
+    cout << "# of polygons = " << a_regions.size() << endl;
+    //vtk_debug_polygons(a_regions);
+
+    if (a_regions.size() == 0) { return {}; }
+
+    for (auto& a_region : a_regions) {
+      check_simplicity(a_region);
+    }
+
     point n = f.normal();
-    boost::optional<labeled_polygon_3> a_region =
-      shrink_optional(f.base(), t.radius());
 
-    if (!a_region) { return boost::none; }
-
-    check_simplicity(*a_region);
-    
-    labeled_polygon_3 tool_region =
-      dilate(shift(depth_offset*n, *a_region), diam / 2.0);
+    vector<polygon_3> tool_regions =
+      exterior_offset(shift(depth_offset*n, a_regions), diam / 2.0);
 
     //vtk_debug_polygon(tool_region);
 
-    cout << "region normal = " << tool_region.normal() << endl;
-    check_simplicity(tool_region);
+    for (auto& tool_region : tool_regions) {
+      cout << "region normal = " << tool_region.normal() << endl;
+      check_simplicity(tool_region);
+    }
+
+    // TODO: Correct this open closed issue
+    vector<feature> access_features;
+    for (auto tool_region : tool_regions) {
+      access_features.push_back(feature(f.is_closed(), len, tool_region));
+    }
+
+    return access_features;
+    //    return {feature(f.is_closed(), len, tool_region)};
+  }
+
+  std::vector<feature> access_features(const feature& f,
+				       feature_decomposition* decomp,
+				       const tool& t,
+				       const double diam,
+				       const double len,
+				       const double depth_offset) {
+    DBG_ASSERT(decomp->num_children() == 1);
     
-    return feature(len, tool_region);
+    feature_decomposition* top = decomp->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+
+    if (is_outer(f, stock_polygon)) {
+      polygon_3 safe_envelope_outline =
+	dilate(top->feature()->base(), 3.0);
+
+      point pt = f.base().vertices().front();
+      point n = f.normal();
+      plane pl(n, pt);
+
+      polygon_3 projected_outline = project_onto(pl, safe_envelope_outline);
+      polygon_3 dummy_base(projected_outline.vertices(), f.base().holes());
+
+      feature open_feature(false, f.depth(), dummy_base);
+
+      //vtk_debug_feature(open_feature);
+
+      return build_access_features(open_feature, t, diam, len, depth_offset);
+    }
+
+    return build_access_features(f, t, diam, len, depth_offset);
   }
 
   bool feature_is_safe(const feature& f, feature_decomposition* decomp) {
@@ -37,12 +94,16 @@ namespace gca {
 
     // TODO: Eventually make this a parameter, not just a builtin
     labeled_polygon_3 safe_envelope_outline =
-      dilate(top_feature->feature()->base(), 4.0);
+      dilate(top_feature->feature()->base(), 20.0);
     labeled_polygon_3 safe_envelope(safe_envelope_outline.vertices(), {top_feature->feature()->base().vertices()});
 
     point n = top_feature->feature()->normal();
 
-    DBG_ASSERT(angle_eps(n, f.normal(), 0.0, 1.0));
+    if (!(angle_eps(n, f.normal(), 0.0, 1.0))) {
+      cout << "n          = " << n << endl;
+      cout << "f.normal() = " << f.normal() << endl;
+      DBG_ASSERT(angle_eps(n, f.normal(), 0.0, 1.0));
+    }
 
     auto f_range = f.range_along(n);
     auto top_range = top_feature->feature()->range_along(n);
@@ -63,7 +124,6 @@ namespace gca {
     }
 
     const rotation r = rotate_from_to(n, point(0, 0, 1));
-    const rotation r_inv = inverse(r);
 
     cout << "# bases to union = " << bases.size() << endl;
 
@@ -101,31 +161,31 @@ namespace gca {
 	  (t.cut_diameter() <= t.shank_diameter())) { return false; }
     }
 
-    boost::optional<feature> shank_region = 
-      access_feature(f, t, t.shank_diameter(), t.shank_length(), t.cut_length());
+    vector<feature> shank_regions = 
+      access_features(f, decomp, t, t.shank_diameter(), t.shank_length(), t.cut_length());
 
-    if (!shank_region) {
+    if (shank_regions.size() == 0) {
       cout << "Degenerate shank region!" << endl;
       return false;
     }
 
-    // auto fs = collect_features(decomp);
-    // fs.push_back(&(*shank_region));
-    // vtk_debug_features(fs);
-
-    if (!feature_is_safe(*shank_region, decomp)) {
-      cout << "Shank region is not safe" << endl;
-      return false;
+    for (auto shank_region : shank_regions) {
+      if (!feature_is_safe(shank_region, decomp)) {
+	cout << "Shank region is not safe" << endl;
+	return false;
+      }
     }
 
-    boost::optional<feature> holder_region =
-      access_feature(f, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
+    vector<feature> holder_regions =
+      access_features(f, decomp, t, t.holder_diameter(), t.holder_length(), t.cut_length() + t.shank_length());
 
-    if (!holder_region) { return false; }
+    if (holder_regions.size() == 0) { return false; }
 
-    if (!feature_is_safe(*holder_region, decomp)) {
-      cout << "Holder region is not safe" << endl;
-      return false;
+    for (auto holder_region : holder_regions) {
+      if (!feature_is_safe(holder_region, decomp)) {
+	cout << "Holder region is not safe" << endl;
+	return false;
+      }
     }
 
     return true;

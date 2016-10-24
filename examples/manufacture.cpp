@@ -13,13 +13,14 @@
 
 namespace gca {
 
-  TEST_CASE("Single Shot Tray") {
+  TEST_CASE("Manufacturable parts") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_v = large_jaw_vice(5, point(1.3, -4.4, 3.3));
+    vice test_v =
+      custom_jaw_vice_with_clamp_dir(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0), point(1, 0, 0));
     vice test_vice = top_jaw_origin_vice(test_v);
-
+    
     std::vector<plate_height> plates{0.1, 0.3, 0.7};
     fixtures fixes(test_vice, plates);
 
@@ -45,8 +46,8 @@ namespace gca {
     t2.set_holder_diameter(2.5);
     t2.set_holder_length(3.5);
 
-    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-    t3.set_cut_diameter(0.12);
+    tool t3{1.0 / 8.0, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(1.0 / 8.0);
     t3.set_cut_length(1.2);
 
     t3.set_shank_diameter(0.5);
@@ -55,9 +56,8 @@ namespace gca {
     t3.set_holder_diameter(2.5);
     t3.set_holder_length(3.5);
 
-    // Ridiculous tool used to test feasability
-    tool t4{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-    t4.set_cut_diameter(0.5);
+    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.5);
     t4.set_cut_length(2.2);
 
     t4.set_shank_diameter(0.5);
@@ -85,16 +85,22 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 
     vector<string> passes{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
+      "test/stl-files/OctagonWithHoles.stl",
+
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+
+	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
+	  
+      	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
-	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",      
-	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+
 	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl"};
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl"};
 
     vector<string> part_paths{};
 
@@ -108,6 +114,8 @@ namespace gca {
       cout << "X length = " << bounding.x_len() << endl;
       cout << "Y length = " << bounding.y_len() << endl;
       cout << "Z length = " << bounding.z_len() << endl;
+
+      //vtk_debug_mesh(mesh);
     }
 
     for (auto part_path : passes) { //part_paths) {
@@ -120,13 +128,15 @@ namespace gca {
       cout << "Bounding box = " << endl;
       cout << bounding << endl;
 
+      // vtk_debug_mesh(mesh);
+
       fabrication_plan p =
 	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
       cout << "Number of steps = " << p.steps().size() << endl;
 
       for (auto step : p.steps()) {
-	visual_debug(step);
+      	visual_debug(step);
       }
       
     }

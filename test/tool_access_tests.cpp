@@ -9,6 +9,86 @@
 
 namespace gca {
 
+  TEST_CASE("Open Tray") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.25);
+    t1.set_cut_length(0.6);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.3);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.5);
+    t2.set_cut_length(0.3);
+
+    t2.set_shank_diameter(0.5);
+    t2.set_shank_length(0.5);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
+    tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
+    t3.set_cut_diameter(0.12);
+    t3.set_cut_length(1.2);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.05);
+
+    t3.set_holder_diameter(2.5);
+    t3.set_holder_length(3.5);
+
+    tool t4{0.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(0.5);
+    t4.set_cut_length(2.5);
+
+    t4.set_shank_diameter(0.5);
+    t4.set_shank_length(0.5);
+
+    t4.set_holder_diameter(2.5);
+    t4.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3, t4};
+    workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+
+    auto mesh = parse_stl("test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.001);
+
+    box bb = mesh.bounding_box();
+    cout << "Bounding box" << endl;
+    cout << "X LEN = " << bb.x_len() << endl;
+    cout << "Y LEN = " << bb.y_len() << endl;
+    cout << "Z LEN = " << bb.z_len() << endl;
+
+    point n(0, 0, 1);
+
+    vector<surface> stable_surfaces = outer_surfaces(mesh);
+    triangular_mesh stock = align_workpiece(stable_surfaces, workpiece_dims);
+    
+    auto f = build_feature_decomposition(stock, mesh, n);
+
+    REQUIRE(collect_features(f).size() == 3);
+    REQUIRE(f->num_levels() == 4);
+
+    tool_access_info tool_info = find_accessable_tools(f, tools);
+
+    REQUIRE(tool_info.size() == f->num_features());
+
+    feature* base = f->child(0)->child(0)->child(0)->feature();
+
+    cout << "TOOLS USABLE FOR BOTTOM" << endl;
+    for (auto t : tool_info[base]) {
+      cout << t << endl;
+    }
+
+    REQUIRE(tool_info[base].size() == 2);
+    
+  }
+  
   TEST_CASE("Nested Thru holes") {
     arena_allocator a;
     set_system_allocator(&a);

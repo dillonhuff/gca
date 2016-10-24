@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
   box bounding = mesh.bounding_box();
 
-  point axis = part_axis(mesh);
+  point axis = point(0, 1, 0); //part_axis(mesh);
   cout << "Axis = " << axis << endl;
 
   cout << "Diameter along axis = " << diameter(axis, mesh) << endl;
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   cout << bounding << endl;
 
   double max_dim = bounding.y_len();
-  double desired_dim = 0.9;
+  double desired_dim = 4.5;
   double scale_factor = desired_dim / max_dim;
 
   cout << "Scale factor = " << scale_factor << endl;
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
   
   vector<tool> tools{t1, t2, t3};
 
-  workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
+  workpiece workpiece_dims(5.0, 5.0, 5.0, ALUMINUM);
 
   fabrication_plan plan =
     make_fabrication_plan(scaled_mesh, fixes, tools, {workpiece_dims});

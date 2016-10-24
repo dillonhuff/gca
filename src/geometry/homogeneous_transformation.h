@@ -20,6 +20,9 @@ namespace gca {
 
   point apply(const homogeneous_transform& t, const point p);
 
+  homogeneous_transform
+  apply(const point d, const homogeneous_transform& t);
+  
 }
 
 #endif

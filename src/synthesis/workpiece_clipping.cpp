@@ -79,7 +79,7 @@ namespace gca {
       min_e(outlines, [](const oriented_polygon& p)
 	    { return min_z(p); });
 
-    return face_pocket(work_height, part_height, outl);
+    return face_pocket(work_height, part_height, outl, {});
   }
   
   pocket face_down(const triangular_mesh& stock,
@@ -106,7 +106,7 @@ namespace gca {
 
     DBG_ASSERT(outlines.size() == 2);
 
-    return face_pocket(work_height, part_height, outl);
+    return face_pocket(work_height, part_height, outl, {});
   }
 
 
@@ -157,8 +157,11 @@ namespace gca {
     vector<point> part_hull = convex_hull_2D(part.vertex_list(), part_top);
     oriented_polygon part_outline(point(0, 0, 1), part_hull);
 
-    double part_bottom = min_in_dir(part, point(0, 0, 1));    
-    return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
+    double part_bottom = min_in_dir(part, point(0, 0, 1));
+    polygon_3 outline_polygon(stock_outline.vertices(),
+			      {part_outline.vertices()});
+    return contour(part_top, part_bottom, outline_polygon, {});
+    //    return contour_pocket(part_top, part_bottom, part_outline, stock_outline);
   }
 
   fixture_setup

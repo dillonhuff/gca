@@ -1,3 +1,4 @@
+#include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/polygon_3.h"
 #include "geometry/vtk_debug.h"
@@ -32,6 +33,19 @@ namespace gca {
 	inner_rings.push_back(new_h);
       }
     }
+  }
+
+  std::vector<point>
+  clean_for_conversion_to_polygon_3(const std::vector<point>& vertices) {
+    auto outer_ring = vertices;
+
+    outer_ring = clean_vertices(outer_ring);
+
+    if (outer_ring.size() < 3) { return outer_ring; }
+
+    delete_antennas(outer_ring);
+
+    return outer_ring;
   }
 
   void check_simplicity(const labeled_polygon_3& p) {
@@ -88,12 +102,32 @@ namespace gca {
       }
     }
 
-    // TODO: Add holes
     boost::geometry::correct(pr);
     
     return pr;
   }
 
+  polygon_3
+  to_polygon_3(const double z, const boost_poly_2& p) {
+    vector<point> vertices;
+    for (auto p2d : boost::geometry::exterior_ring(p)) {
+      point pt(p2d.get<0>(), p2d.get<1>(), z);
+      vertices.push_back(pt);
+    }
+
+    vector<vector<point>> holes;
+    for (auto ir : boost::geometry::interior_rings(p)) {
+      vector<point> hole_verts;
+      for (auto p2d : ir) {
+	point pt(p2d.get<0>(), p2d.get<1>(), z);
+	hole_verts.push_back(pt);
+      }
+      holes.push_back(clean_vertices(hole_verts));
+    }
+    return labeled_polygon_3(clean_vertices(vertices), holes);
+
+  }
+  
   labeled_polygon_3
   to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
     vector<point> vertices;
@@ -114,6 +148,37 @@ namespace gca {
     return labeled_polygon_3(clean_vertices(vertices), holes);
   }
 
+  boost::optional<polygon_3>
+  to_labeled_polygon_3_maybe(const rotation& r,
+			     const double z,
+			     const boost_poly_2& p) {
+    vector<point> vertices;
+    for (auto p2d : boost::geometry::exterior_ring(p)) {
+      point pt(p2d.get<0>(), p2d.get<1>(), z);
+      vertices.push_back(times_3(r, pt));
+    }
+
+    vertices = clean_for_conversion_to_polygon_3(vertices);
+
+    if (vertices.size() < 3) { return boost::none; }
+
+    vector<vector<point>> holes;
+    for (auto ir : boost::geometry::interior_rings(p)) {
+      vector<point> hole_verts;
+      for (auto p2d : ir) {
+	point pt(p2d.get<0>(), p2d.get<1>(), z);
+	hole_verts.push_back(times_3(r, pt));
+      }
+
+      hole_verts = clean_for_conversion_to_polygon_3(hole_verts);
+      if (hole_verts.size() >= 3) {
+	holes.push_back(hole_verts);
+      }
+    }
+
+    return labeled_polygon_3(vertices, holes);
+  }
+
   // TODO: Version of this code that can handle holes?
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
     return oriented_polygon(p.normal(), p.vertices());
@@ -129,8 +194,8 @@ namespace gca {
     return bg::area(td);
   }
 
-  std::vector<labeled_polygon_3>
-  planar_polygon_union(const std::vector<labeled_polygon_3>& polys) {
+  boost_multipoly_2
+  planar_union_boost(const std::vector<polygon_3>& polys) {
     if (polys.size() == 0) { return {}; }
 
     //vtk_debug_polygons(polys);
@@ -160,15 +225,60 @@ namespace gca {
 
     cout << "# polys in result = " << result.size() << endl;
 
-    std::vector<labeled_polygon_3> res;
-    for (auto r : result) {
-      labeled_polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+    return result;
+  }
 
-      check_simplicity(lp);
+  // TODO: Use planar_union_boost as starting point here?
+  std::vector<polygon_3>
+  planar_polygon_union(const std::vector<polygon_3>& polys) {
+    if (polys.size() == 0) { return {}; }
 
-      lp.correct_winding_order(polys.front().normal());
-      res.push_back(lp);
+    //vtk_debug_polygons(polys);
+
+    double level_z =
+      max_distance_along(polys.front().vertices(), polys.front().normal());
+    point n = polys.front().normal();
+
+    cout << "In planar union" << endl;
+    cout << "n = " << n << endl;
+    for (auto p : polys) {
+      cout << "normal = " << p.normal() << endl;
     }
+    
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    cout << "# polys to union = " << polys.size() << endl;
+
+    boost_multipoly_2 result;
+    result.push_back(to_boost_poly_2(apply(r, polys.front())));
+
+    for (unsigned i = 1; i < polys.size(); i++) {
+      auto& s = polys[i];
+
+      auto bp = to_boost_poly_2(apply(r, s));
+      boost_multipoly_2 r_tmp = result;
+      boost::geometry::clear(result);
+      boost::geometry::union_(r_tmp, bp, result);
+    }
+
+    cout << "# polys in result = " << result.size() << endl;
+    
+
+    std::vector<polygon_3> res;
+    for (auto& r : result) {
+      boost::optional<polygon_3> lp =
+	to_labeled_polygon_3_maybe(r_inv, level_z, r);
+
+      if (lp) {
+	check_simplicity(*lp);
+
+	(*lp).correct_winding_order(polys.front().normal());
+	res.push_back(*lp);
+      }
+    }
+
+    cout << "# of polygon_3 in final output = " << res.size() << endl;
 
     return res;
     
@@ -200,4 +310,28 @@ namespace gca {
     return labeled_polygon_3(clean_vertices(res_pts));
   }
 
+  box bounding_box(const polygon_3& p) {
+    return bound_positions(static_cast<std::vector<point>>(p.vertices()));
+  }
+
+  polygon_3 project(const polygon_3& p, double z) {
+    vector<point> pts;
+    for (auto pt : p.vertices()) {
+      pts.push_back(point(pt.x, pt.y, z));
+    }
+
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+
+      vector<point> hole;
+      for (auto pt : h) {
+	hole.push_back(point(pt.x, pt.y, z));
+      }
+
+      holes.push_back(hole);
+    }
+
+    return polygon_3(pts, holes);
+  }
+  
 }

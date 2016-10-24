@@ -9,9 +9,10 @@
 
 namespace gca {
 
-  std::vector<cut*> polyline_cuts(const polyline& p);
-
   std::vector<block> emco_f1_code(const toolpath& pocket_lines);
+  std::vector<block> emco_f1_code_no_TLC(const toolpath& pocket_lines);
+
+  std::vector<block> wells_code_no_TLC(const toolpath& pocket_lines);
 
   std::vector<block> camaster_engraving(const toolpath& last,
 					const toolpath& current);
@@ -45,7 +46,7 @@ namespace gca {
 		      SuffixBlocks suffix,
 		      ToolpathGCODE f) {
     if (toolpaths.size() == 0) { return gcode_program{program_name, {}}; }
-    
+
     vector<block> blocks = initial(toolpaths.front());
 
     for (unsigned i = 1; i < toolpaths.size(); i++) {
@@ -57,7 +58,7 @@ namespace gca {
     concat(blocks, suffix());
     return gcode_program(program_name, blocks);
   }
-  
+
 }
 
 #endif

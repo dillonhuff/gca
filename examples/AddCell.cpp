@@ -213,6 +213,9 @@ int main(int argc, char* argv[]) {
 
   cout << "Bounding box = " << endl;
   cout << bounding << endl;
+  cout << "X len = " << bounding.x_len() << endl;
+  cout << "Y len = " << bounding.y_len() << endl;
+  cout << "Z len = " << bounding.z_len() << endl;
 
   auto to_render = mesh;
 

@@ -161,8 +161,7 @@ namespace gca {
     
     std::vector<triangle> triangle_list() const {
       std::vector<triangle> ts;
-      // TODO: Add real triangle -> normal map or compute normals
-      point dummy_normal(1, 0, 0);
+
       for (unsigned i = 0; i < tri_vertices.size(); i++) {
 	auto t = tri_vertices[i];
 	ts.push_back(triangle(face_orientation(i),
@@ -400,6 +399,8 @@ namespace gca {
   normal_delta_regions_greedy(vector<index_t>& indices,
 			      const triangular_mesh& mesh,
 			      double delta_degrees);
+
+  triangular_mesh shift(const point s, const triangular_mesh& m);
 
 }
 

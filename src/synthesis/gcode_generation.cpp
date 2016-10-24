@@ -38,7 +38,7 @@ namespace gca {
 			     const double spindle_speed,
 			     const double feedrate) {
     auto ls = p.lines();
-    assert(ls.size() > 0);
+    DBG_ASSERT(ls.size() > 0);
     vector<cut*> c;
     for (auto l : ls) {
       c.push_back(mk_cut(l.start, l.end, tool_number, spindle_speed, feedrate));
@@ -73,7 +73,7 @@ namespace gca {
     }
 
     vector<cut*> all_cuts = insert_transitions(cuts, params);
-    assert(cuts_are_adjacent(all_cuts));
+    DBG_ASSERT(cuts_are_adjacent(all_cuts));
     set_feedrates(all_cuts, params);
     return gcode_blocks_for_toolpath_cuts(all_cuts, params);
   }
@@ -101,8 +101,6 @@ namespace gca {
     blks.push_back({token('G', 54)});
     blks.push_back({token('G', 10), token('L', 2), token('P', 1), token('Z', t.t.length())});
 
-    //    blks.push_back({token("TOOL DIAMETER = " + std::to_string(t.t.diameter()))});
-    //    blks.push_back({token("TOOL LENGTH = " + std::to_string(t.t.length()))});
     return blks;
   }
   
@@ -143,12 +141,13 @@ namespace gca {
   std::vector<block> camaster_engraving(const toolpath& last,
 					const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
     cut_params params;
     params.target_machine = CAMASTER;
     params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.plunge_feedrate);
 
     vector<block> blks = camaster_comment_prefix(tp, params);
     concat(blks, camaster_tool_change_block(tp.tool_number()));
@@ -156,9 +155,26 @@ namespace gca {
     return blks;
   }
 
+  std::vector<block> wells_code_no_TLC(const toolpath& tp) {
+    for (auto l : tp.lines) {
+      DBG_ASSERT(l.num_points() > 0);
+    }
+
+    cut_params params;
+    params.target_machine = WELLS;
+    params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.plunge_feedrate);
+
+    vector<block> blks = comment_prefix(tp, params);
+    concat(blks, polylines_cuts(tp.lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    return blks;
+
+  }
+  
+
   std::vector<block> emco_f1_code(const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
     point shift_vector = point(0, 0, tp.t.length());
@@ -168,6 +184,7 @@ namespace gca {
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
+    params.set_plunge_feed(tp.plunge_feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
@@ -176,18 +193,35 @@ namespace gca {
 
   std::vector<block> emco_f1_code_G10_TLC(const toolpath& tp) {
     for (auto l : tp.lines) {
-      assert(l.num_points() > 0);
+      DBG_ASSERT(l.num_points() > 0);
     }
 
-    point shift_vector = point(0, 0, tp.t.length());
     vector<polyline> reflected_lines = reflect_y(tp.lines);
 
     cut_params params;
     params.target_machine = EMCO_F1;
-    params.safe_height = tp.safe_z_before_tlc; // + tp.t.length();
+    params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.plunge_feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, g10_TLC_prefix(tp));
+    concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    return blks;
+  }
+
+  std::vector<block> emco_f1_code_no_TLC(const toolpath& tp) {
+    for (auto l : tp.lines) {
+      DBG_ASSERT(l.num_points() > 0);
+    }
+
+    vector<polyline> reflected_lines = reflect_y(tp.lines);
+
+    cut_params params;
+    params.target_machine = EMCO_F1;
+    params.safe_height = tp.safe_z_before_tlc;
+    params.set_plunge_feed(tp.plunge_feedrate);
+
+    vector<block> blks = comment_prefix(tp, params);
     concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }

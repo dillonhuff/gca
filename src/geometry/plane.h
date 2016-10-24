@@ -17,12 +17,16 @@ namespace gca {
     plane(const point p_n, const point p_p)
       : norm(p_n.normalize()), p(p_p) {}
 
+    plane() : norm(0, 0, 1), p(0, 0, 0) {}
+    
     inline point normal() const { return norm; }
     inline point pt() const { return p; }
 
     inline plane flip() const { return plane(-1*normal(), pt()); }
     inline plane slide(const double d) const
     { return plane(normal(), pt() + d*normal()); }
+
+    inline double d() const { return -1*dot(normal(), pt()); }
   };
 
   boost::optional<point>

@@ -157,7 +157,12 @@ namespace gca {
   boost::optional<clamp_orientation>
   find_orientation_by_normal_optional(const std::vector<clamp_orientation>& orients,
 				      const point n);
-  
+
+  homogeneous_transform balanced_mating_transform(const triangular_mesh& m,
+						  const clamp_orientation& orient,
+						  const vice& v);
+
+  point part_zero_position(const clamp_orientation& clamp_orient);
 }
 
 #endif

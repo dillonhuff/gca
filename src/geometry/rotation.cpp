@@ -77,10 +77,26 @@ namespace gca {
     return r;
   }
 
+  void check_is_unit_vector(const point v, const double tol) {
+    if (!(within_eps(v.len(), 1.0, 0.00001))) {
+      cout << "Error: Not a unit vector" << endl;
+      cout << "v       = " << v << endl;
+      cout << "v.len() = " << v.len() << endl;
+      cout << "tol     = " << tol << endl;
+
+      DBG_ASSERT(within_eps(v.len(), 1.0, tol));
+    }
+  }
+
   rotation rotate_unit_from_to(const point from_unit, const point to_unit) {
 
-    DBG_ASSERT(within_eps(from_unit.len(), 1.0, 0.00001));
-    DBG_ASSERT(within_eps(to_unit.len(),   1.0, 0.00001));
+    //    DBG_ASSERT(within_eps(from_unit.len(), 1.0, 0.00001));
+    //    DBG_ASSERT(within_eps(to_unit.len(),   1.0, 0.00001));
+
+    double tol = 0.00001;
+
+    check_is_unit_vector(from_unit, tol);
+    check_is_unit_vector(to_unit, tol);
     
     double theta = angle_between(from_unit, to_unit);
 

@@ -61,6 +61,51 @@ namespace gca {
     return *rev;
   }
 
+  homogeneous_transform balanced_mating_transform(const triangular_mesh& m,
+						  const clamp_orientation& orient,
+						  const vice& v) {
+    plane vice_base = v.base_plane();
+    plane vice_top_jaw = v.top_jaw_plane();
+    plane vice_right_bound = v.right_bound_plane();
+    
+    plane mesh_base = orient.base_plane();
+    plane mesh_left = orient.left_plane();
+
+    // TODO: Check that the coordinate system is right handed?
+    point free_axis = cross(mesh_base.normal(), mesh_left.normal());
+
+    // TODO: Eventually filter the points being chosen by whether
+    // they will lie below the plane of the vice
+    point min_pt = min_point_in_dir(m, free_axis);
+    point max_pt = max_point_in_dir(m, free_axis);
+
+    double min_dist = min_in_dir(m, free_axis);
+    double max_dist = max_in_dir(m, free_axis);
+    double v_x = v.x_len();
+
+    point balanced_pt =
+      min_pt + v_x*free_axis - ((v_x - (max_dist - min_dist)) / 2.0)*free_axis;
+
+    plane free_plane(free_axis, balanced_pt);
+
+    boost::optional<homogeneous_transform> t =
+      mate_planes(mesh_base, mesh_left, free_plane,
+		  vice_base, vice_top_jaw, vice_right_bound);
+    if (t) {
+      return *t;
+    }
+    
+    free_axis = -1*free_axis;
+    free_plane = plane(free_axis, max_point_in_dir(m, free_axis));
+
+    boost::optional<homogeneous_transform> rev =
+      mate_planes(mesh_base, mesh_left, free_plane,
+		  vice_base, vice_top_jaw, vice_right_bound);
+
+    DBG_ASSERT(rev);
+    return *rev;
+  }
+  
   triangular_mesh
   oriented_part_mesh(const triangular_mesh& m,
 		     const clamp_orientation& orient,
@@ -225,7 +270,7 @@ namespace gca {
     		auto left_pt = orient.left_plane_point();
     		auto right_pt = orient.right_plane_point();
     		return abs(signed_distance_along(left_pt - right_pt, orient.left_normal()))
-    		  > v.maximum_jaw_width();
+    		  > v.max_opening_capacity();
     	      });
 
   }
@@ -406,6 +451,44 @@ namespace gca {
     DBG_ASSERT(top_orients.size() > 0);
       
     return top_orients.front();
+  }
+
+  ublas::matrix<double> plane_matrix(const clamp_orientation& clamp_orient) {
+    point base_n = clamp_orient.bottom_normal();
+    point left_n = clamp_orient.left_normal();
+    point right_n = clamp_orient.right_normal();
+
+    ublas::matrix<double> p_mat(3, 3);
+    p_mat(0, 0) = base_n.x;
+    p_mat(0, 1) = base_n.y;
+    p_mat(0, 2) = base_n.z;
+
+    p_mat(1, 0) = left_n.x;
+    p_mat(1, 1) = left_n.y;
+    p_mat(1, 2) = left_n.z;
+
+    p_mat(2, 0) = right_n.x;
+    p_mat(2, 1) = right_n.y;
+    p_mat(2, 2) = right_n.z;
+
+    return p_mat;
+  }
+
+  ublas::vector<double> plane_d_vector(const clamp_orientation& clamp_orient) {
+    ublas::vector<double> d_vec(3);
+    d_vec(0) = clamp_orient.base_plane().d();
+    d_vec(1) = clamp_orient.left_plane().d();
+    d_vec(2) = clamp_orient.right_plane().d();
+
+    return d_vec;
+  }
+
+  point part_zero_position(const clamp_orientation& clamp_orient) {  
+    const ublas::matrix<double> plane_mat = plane_matrix(clamp_orient);
+    ublas::vector<double> plane_d_vec = -1*plane_d_vector(clamp_orient);
+
+    const ublas::matrix<double> p_inv = inverse(plane_mat);
+    return from_vector(prod(p_inv, plane_d_vec));
   }
 
 }

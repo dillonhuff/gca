@@ -126,6 +126,7 @@ SET(GCA_HEADERS
 	./src/synthesis/jaw_cutout.h
 	./src/synthesis/clipping_plan.h
 	./src/synthesis/gcode_generation.h
+	./src/synthesis/operation_name.h
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
@@ -133,6 +134,7 @@ SET(GCA_HEADERS
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/synthesis/toolpath_generation.h
 	    ./src/synthesis/millability.h
+	    ./src/synthesis/tool.h
 	    ./src/synthesis/vice.h
 	    ./src/synthesis/tool.h
 	    ./src/synthesis/workpiece.h
@@ -154,6 +156,7 @@ SET(GCA_CPPS
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
+	./src/synthesis/operation_name.cpp
 	./src/synthesis/operation.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
@@ -167,6 +170,7 @@ SET(GCA_CPPS
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
+	 ./src/synthesis/tool.cpp
 	 ./src/synthesis/vice.cpp
 	 ./src/synthesis/visual_debug.cpp
 	 ./src/system/settings.cpp
@@ -286,12 +290,16 @@ target_link_libraries(AddCell geometry utils gcode gprocess gca)
 add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp)
 target_link_libraries(surface-test geometry utils gcode gprocess gca)
 
+add_executable(interact-test MACOSX_BUNDLE examples/DataAnimationSubclass.cpp)
+target_link_libraries(interact-test geometry utils gcode gprocess gca)
+
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})
   target_link_libraries(surface-test ${VTK_LIBRARIES})
   target_link_libraries(geometry ${VTK_LIBRARIES})
+  target_link_libraries(interact-test ${VTK_LIBRARIES})
 else()
   target_link_libraries(AddCell vtkHybrid vtkWidgets)
   target_link_libraries(surface-test vtkHybrid vtkWidgets)
-  target_link_libraries(geometry vtkHybrid vtkWidgets)
+  target_link_libraries(interact-test vtkHybrid vtkWidgets)
 endif()

@@ -90,14 +90,12 @@ namespace gca {
     return num_errs;
   }
 
-  // TODO: Remove use of utils/algorithm
   template<typename Triangle>
   std::vector<Triangle>
-  fix_winding_order_errors(const std::vector<Triangle>& triangles) {
-
+  fix_wind_errors(const std::vector<Triangle>& triangles) {
     vector<Triangle> tris;
     vector<unsigned> remaining_inds = inds(triangles);
-    cout << "Initial # of triangles = " << triangles.size() << endl;
+
     unsigned num_added = 0;
     
     while (remaining_inds.size() > 0) {
@@ -127,6 +125,17 @@ namespace gca {
       }
 
     }
+
+
+    return tris;
+  }
+  
+  // TODO: Remove use of utils/algorithm
+  template<typename Triangle>
+  std::vector<Triangle>
+  fix_winding_order_errors(const std::vector<Triangle>& triangles) {
+
+    vector<Triangle> tris = fix_wind_errors(triangles);
 
     auto ccs =
       connected_components_by(tris, [](const Triangle l, const Triangle r)

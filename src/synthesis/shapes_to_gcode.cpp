@@ -49,8 +49,19 @@ namespace gca {
     point current_loc = last_cut == NULL ? params.start_loc : last_cut->get_end();
 
     vector<cut*> tcuts;
+    lit* feed;
+    if (params.plunge_feed_is_set()) {
+      feed = lit::make(params.plunge_feed());
+    } else {
+      feed = lit::make(params.default_feedrate);
+    }
+
     if (!within_eps(current_loc, next_cut->get_start())) {
-      tcuts = from_to_with_G0_height(current_loc, next_cut->get_start(), params.safe_height, lit::make(params.default_feedrate));
+      tcuts =
+	from_to_with_G0_height(current_loc,
+			       next_cut->get_start(),
+			       params.safe_height,
+			       feed);
     }
     return tcuts;
   }
@@ -60,18 +71,23 @@ namespace gca {
 				cut* next_cut,
 				const cut_params& params) {
     vector<cut*> trans;
-    // if (next_cut->tool_no == DRILL) {
-    //   trans = move_to_next_cut_drill(last_cut, next_cut, params);
-    //    } else
+
     if (next_cut->tool_no == DRAG_KNIFE) {
       trans = move_to_next_cut_dn(last_cut, next_cut, params);
     } else {
       trans = move_to_next_cut_drill(last_cut, next_cut, params);
-      //      assert(false);
     }
+
+    lit* feed;
+    if (params.plunge_feed_is_set()) {
+      feed = lit::make(params.plunge_feed());
+    } else {
+      feed = lit::make(params.default_feedrate);
+    }
+
     for (auto t : trans) {
       t->set_spindle_speed(next_cut->get_spindle_speed());
-      t->set_feedrate(next_cut->get_feedrate());
+      t->set_feedrate(feed); //next_cut->get_feedrate());
     }
     return trans;
   }

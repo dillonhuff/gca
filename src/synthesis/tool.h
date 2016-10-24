@@ -2,8 +2,10 @@
 #define GCA_TOOL_H
 
 #include <cmath>
+#include <iostream>
 
 #include "synthesis/material.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -24,7 +26,7 @@ namespace gca {
 	 material p_mat,
 	 tool_type t) :
       diam(p_diameter), len(p_length), flutes(p_flutes), mat(p_mat), tool_num(-1) {
-      assert(mat == CARBIDE || mat == HSS);
+      DBG_ASSERT(mat == CARBIDE || mat == HSS);
     }
 
     tool(double p_diameter,
@@ -34,7 +36,7 @@ namespace gca {
 	 tool_type t,
 	 const int p_tool_num) :
       diam(p_diameter), len(p_length), flutes(p_flutes), mat(p_mat), tool_num(p_tool_num) {
-      assert(mat == CARBIDE || mat == HSS);
+      DBG_ASSERT(mat == CARBIDE || mat == HSS);
     }
     
     inline double radius() const { return diam / 2.0; }
@@ -75,6 +77,11 @@ namespace gca {
     
   };
 
+  std::ostream& operator<<(std::ostream& out, const tool& t);
+
+  double chip_load_per_tooth(const tool& t,
+			     const double feed_ipm,
+			     const double rpm);
 }
 
 #endif

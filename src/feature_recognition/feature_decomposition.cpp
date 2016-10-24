@@ -1,3 +1,5 @@
+#include <random>
+
 #include <boost/numeric/ublas/io.hpp>
 
 #include "feature_recognition/feature_decomposition.h"
@@ -30,7 +32,7 @@ namespace gca {
       convex_hull_2D(pts, pl.normal(), max_distance_along(pts, pl.normal()));
 
     check_simplicity(p);
-      
+
     p.correct_winding_order(pl.normal());
 
     return p.vertices();
@@ -42,9 +44,9 @@ namespace gca {
 				     const point n) {
     auto not_vert_or_horiz =
       select(surfs, [n, m](const std::vector<index_t>& s) {
-	  return !all_parallel_to(s, m, n, 3.0) &&
-	  !all_orthogonal_to(s, m, n, 3.0) &&
-	  !all_antiparallel_to(s, m, n, 3.0);
+	  return !all_parallel_to(s, m, n, 0.05) &&
+	  !all_orthogonal_to(s, m, n, 0.05) &&
+	  !all_antiparallel_to(s, m, n, 0.05);
 	});
 
     // Cull backfaces
@@ -63,13 +65,25 @@ namespace gca {
     if (vz.size() == 0) { return {}; }
 
     return connect_regions(vz, m);
-  }  
+  }
+
+  point random_point(std::mt19937& gen, const double tol) {
+    std::uniform_real_distribution<> dis(-tol, tol);
+
+    double r_x = dis(gen);
+    double r_y = dis(gen);
+    double r_z = dis(gen);
+
+    return point(r_x, r_y, r_z);
+  }
 
   labeled_polygon_3
   virtual_surface_for_surface(const std::vector<index_t>& s,
 			      const triangular_mesh& m,
 			      const point n) {
     DBG_ASSERT(s.size() > 0);
+
+    //vtk_debug_highlight_inds(s, m);
     
     auto raw_pts = vertexes_on_surface(s, m);
     point max_pt = max_along(raw_pts, n);
@@ -92,22 +106,53 @@ namespace gca {
     }
 
     //vtk_debug_highlight_inds(s, m);
-    
+
+    cout << "Trying planar union for the first time" << endl;
     std::vector<polygon_3> result_polys =
       planar_polygon_union(ts);
+    cout << "Done with planar union for the first time" << endl;
 
     if (!(result_polys.size() == 1)) {
 
-      vector<polygon_3> dilated_ts;
-      for (auto t : result_polys) {
-	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
-	delete_antennas(r_pts);
-	if (r_pts.size() >= 3) {
-	  dilated_ts.push_back(dilate(t, 0.000001));
-	}
+      // vector<polygon_3> dilated_ts;
+      // for (auto t : result_polys) {
+      // 	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
+      // 	delete_antennas(r_pts);
+      // 	if (r_pts.size() >= 3) {
+      // 	  dilated_ts.push_back(dilate(t, 0.000001));
+      // 	}
+      // }
+
+      cout << "Trying dilated planar union" << endl;
+      cout << "Original surface" << endl;
+      vtk_debug_highlight_inds(s, m);
+
+      cout << "Original polygons that were unioned" << endl;
+      vtk_debug_polygons(ts);
+
+      cout << "Result of original union" << endl;
+      vtk_debug_polygons(result_polys);
+      
+      // cout << "Dilated polygons to try" << endl;
+      // vtk_debug_polygons(dilated_ts);
+
+      //auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
+      cout << "Done with dilated planar union" << endl;
+      vector<polygon_3> perturbed;
+    
+      std::random_device rd;
+      std::mt19937 gen(rd());
+      
+      for (auto t : ts) {
+	point perturb = random_point(gen, 0.00001);
+	perturbed.push_back(shift(perturb, t));
       }
 
-      auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
+      cout << "Perturbed polygons to try" << endl;
+      vtk_debug_polygons(perturbed);
+      
+      auto res_polys_try_dilated = planar_polygon_union(perturbed);
+      vtk_debug_polygons(res_polys_try_dilated);
 
       if (res_polys_try_dilated.size() != 1) {
 
@@ -128,6 +173,8 @@ namespace gca {
     return result_polys.front();
   }
 
+  // TODO: Remove indexes parameter?
+  // NOTE: This code is a complete mess, clean up?
   std::vector<labeled_polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<index_t>& indexes,
@@ -138,9 +185,10 @@ namespace gca {
 		 angle_eps(n, m.face_orientation(i), 90.0, 0.1) ||
 		 angle_eps(n, m.face_orientation(i), 180.0, 0.1); });
 
-    
-    auto not_vertical_or_horizontal = normal_delta_regions(inds, m, 90.0);
-      //  not_vertical_or_horizontal_regions(m, surfs, n);
+
+    auto surfs = const_orientation_regions(m);
+    auto not_vertical_or_horizontal = //normal_delta_regions(inds, m, 90.0);
+      not_vertical_or_horizontal_regions(m, surfs, n);
 
     cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
 
@@ -357,6 +405,15 @@ namespace gca {
     return shifted;
   }
 
+  std::vector<polygon_3> shift(const point p,
+			       const std::vector<polygon_3>& polys) {
+    vector<polygon_3> shifted;
+    for (auto& poly : polys) {
+      shifted.push_back(shift(p, poly));
+    }
+    return shifted;
+  }
+
   labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol) {
     auto dr = interior_offset(p.vertices(), tol);
 
@@ -372,6 +429,10 @@ namespace gca {
   boost::optional<labeled_polygon_3>
   shrink_optional(const labeled_polygon_3& p,
 		  const double tol) {
+
+    double level_z =
+      max_distance_along(p.vertices(), p.normal());
+    
     auto drs = interior_offsets(p.vertices(), tol);
 
     if (drs.size() == 0) { return boost::none; }
@@ -389,24 +450,59 @@ namespace gca {
       return boost::none;
     }
 
-    vector<vector<point>> dh;
+    auto dr = drs.front();
+    auto dr_pts = clean_vertices(dr);
+
+    vector<polygon_3> new_holes;
     for (auto h : p.holes()) {
       auto h_clean = clean_vertices(exterior_offset(h, tol));
       if (h_clean.size() >= 3) {
-	dh.push_back(h_clean);
+	new_holes.push_back(polygon_3(h_clean));
       }
     }
 
-    auto dr = drs.front();
-    
-    auto dr_pts = clean_vertices(dr);
+    //    vector<polygon_3> result_holes = planar_polygon_union(new_holes);
 
-    if (dr_pts.size() >= 3) {
-      labeled_polygon_3 poly(dr_pts, dh);
-      return poly;
+    const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, polygon_3(dr_pts))));
+
+    boost_multipoly_2 union_of_holes = planar_union_boost(new_holes);
+
+    boost_multipoly_2 shrunk_res;
+    bg::difference(new_exterior_p, union_of_holes, shrunk_res);
+
+    std::vector<polygon_3> res;
+    for (auto r : shrunk_res) {
+      polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+
+      check_simplicity(lp);
+
+      lp.correct_winding_order(p.normal());
+      res.push_back(lp);
     }
+
+    if (res.size() != 1) { return boost::none; }
+
+    return res.front();
     
-    return boost::none;
+    
+    // if (bg::within(new_exterior_p, union_of_holes)) {
+    //   return boost::none;
+    // }
+
+    // // vector<vector<point>> dh;
+    // // for (auto h : result_holes) {
+    // //   dh.push_back(h.vertices());
+    // // }
+    
+    // if (dr_pts.size() >= 3) {
+    //   labeled_polygon_3 poly(dr_pts, dh);
+    //   return poly;
+    // }
+
+    // return boost::none;
   }
   
   labeled_polygon_3 smooth_buffer(const labeled_polygon_3& p,
@@ -533,7 +629,7 @@ namespace gca {
 
       labeled_polygon_3 shifted = project_onto(base_pl, current_level);
 
-      feature* f = new (allocate<feature>()) feature(feature_depth, shifted);
+      feature* f = new (allocate<feature>()) feature(true, feature_depth, shifted);
       feature_decomposition* child =
     	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
@@ -590,7 +686,7 @@ namespace gca {
 
     labeled_polygon_3 shifted = project_onto(base_pl, current_level);
     
-    feature* f = new (allocate<feature>()) feature(feature_depth, shifted);
+    feature* f = new (allocate<feature>()) feature(true, feature_depth, shifted);
     feature_decomposition* child =
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);
@@ -612,12 +708,33 @@ namespace gca {
 
     traverse_bf(decomp, check_normal);
   }
-  
+
+  void
+  set_open_features(feature_decomposition* decomp) {
+    DBG_ASSERT(decomp->num_children() == 1);
+
+    feature_decomposition* top = decomp->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon(stock_ring);
+
+    auto set_open = [stock_polygon](feature* f) {
+      if (f != nullptr) {
+	if (is_outer(*f, stock_polygon)) {
+	  f->set_closed(false);
+	}
+      }
+    };
+
+    traverse_bf(decomp, set_open);
+  }
+
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& stock,
 			      const triangular_mesh& m,
 			      const point n) {
     labeled_polygon_3 init_outline = initial_outline(stock, n);
+
+    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
 
     DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
 
@@ -636,8 +753,6 @@ namespace gca {
 			     l.normal());
 	cout << "----- Current depth = " << current_depth << endl;
       }
-
-      //vtk_debug_polygons(level);
 
     }
 
@@ -672,21 +787,6 @@ namespace gca {
       cout << "Current depth = " << current_depth << endl;
       cout << "Next depth    = " << next_depth << endl;
 
-      // auto part_data = polydata_for_trimesh(m);
-      // auto part_act = polydata_actor(part_data);
-
-      // auto stock_data = polydata_for_trimesh(stock);
-      // auto stock_act = polydata_actor(stock_data);
-      
-      // auto ring_data = polydata_for_ring(init_outline.vertices());
-      // auto ring_act = polydata_actor(ring_data);
-
-      // auto f_data = polydata_for_ring(levels.back().front().vertices());
-      // auto f_act = polydata_actor(ring_data);
-      
-      //visualize_actors({part_act, stock_act, ring_act, f_act});
-      //vtk_debug_polygons({init_outline, levels.back().front()});
-    
       DBG_ASSERT(current_depth >= next_depth);
     }
 
@@ -696,6 +796,8 @@ namespace gca {
     decompose_volume(init_outline, levels, decomp, base_depth);
 
     check_normals(decomp, n);
+
+    set_open_features(decomp);
 
     return decomp;
   }
@@ -901,6 +1003,28 @@ namespace gca {
 
   double base_area(const feature& f) {
     return area(f.base());
+  }
+
+  bool is_outer(const feature& f, const polygon_3& stock_bound) {
+    const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
+    polygon_3 base_p = f.base().vertices();
+    auto base_poly = to_boost_poly_2(apply(r, base_p));
+    auto stock_poly = to_boost_poly_2(apply(r, stock_bound));
+
+    boost_multipoly_2 sym_diff;
+
+    bg::sym_difference(base_poly, stock_poly, sym_diff);
+    if (bg::area(sym_diff) < 0.001) {
+
+#ifdef VIZ_DBG      
+      cout << "OUTER FEATURE" << endl;
+      vtk_debug_feature(f);
+#endif
+
+      return true;
+    }
+
+    return false;
   }
 
 }

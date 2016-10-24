@@ -5,7 +5,6 @@
 
 namespace gca {
 
-  // TODO: Deal with the polygon holes issue
   std::vector<pocket> pockets_for_feature(const feature& f,
 					  const std::vector<tool>& tools) {
 
@@ -39,7 +38,17 @@ namespace gca {
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();
 
-    return {flat_pocket(top_z, base_z, ob, holes, {tools})};
+    if (f.is_closed()) {
+      return {flat_pocket(top_z, base_z, ob, holes, tools)};
+    } else {
+      DBG_ASSERT(!f.is_closed());
+
+      if (holes.size() == 0) {
+	return {face_pocket(top_z, base_z, ob, tools)};
+      }
+
+      return {contour(top_z, base_z, base, tools)};
+    }
   }
 
   std::vector<pocket>

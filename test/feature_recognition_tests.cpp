@@ -76,39 +76,40 @@ namespace gca {
     
   }
 
-  TEST_CASE("Magnetic latch top") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // NOTE: Removed since this will not be a tested case in the final system
+  // TEST_CASE("Magnetic latch top") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca//test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca//test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.001);
 
-    point n(0, 0, -1);
+  //   point n(0, 0, -1);
 
-    feature_decomposition* f =
-      build_feature_decomposition(mesh, n);
+  //   feature_decomposition* f =
+  //     build_feature_decomposition(mesh, n);
 
-    //vtk_debug_feature_tree(f);
+  //   //vtk_debug_feature_tree(f);
 
-    REQUIRE(f->num_levels() == 6);
+  //   REQUIRE(f->num_levels() == 6);
 
-    double current_min = 100000;
-    auto replace_min = [&current_min](feature* f) {
-      if (f != nullptr) {
-	double bz = f->base_distance_along_normal();
-	if (bz < current_min) {
-	  current_min = bz;
-	}
-      }
-    };
-    traverse_bf(f, replace_min);
+  //   double current_min = 100000;
+  //   auto replace_min = [&current_min](feature* f) {
+  //     if (f != nullptr) {
+  // 	double bz = f->base_distance_along_normal();
+  // 	if (bz < current_min) {
+  // 	  current_min = bz;
+  // 	}
+  //     }
+  //   };
+  //   traverse_bf(f, replace_min);
 
-    double base_depth = min_distance_along(mesh.vertex_list(), n);
+  //   double base_depth = min_distance_along(mesh.vertex_list(), n);
 
-    cout << "current min = " << current_min << endl;
-    cout << "base depth  = " << base_depth <<  endl;
+  //   cout << "current min = " << current_min << endl;
+  //   cout << "base depth  = " << base_depth <<  endl;
 
-    REQUIRE(within_eps(current_min, base_depth, 0.0001));
-  }
+  //   REQUIRE(within_eps(current_min, base_depth, 0.0001));
+  // }
 
   TEST_CASE("PSU Mount") {
     arena_allocator a;

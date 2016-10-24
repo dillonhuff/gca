@@ -118,9 +118,12 @@ namespace gca {
     double top_height = decode_json<double>(p.get_child("vice_top_height"));
     double clamp_width = decode_json<double>(p.get_child("vice_clamp_width"));
     double max_jaw_width = decode_json<double>(p.get_child("vice_max_jaw_width"));
+    point base_norm = decode_json<point>(p.get_child("base_normal"));
+    point top_clamp_norm = decode_json<point>(p.get_child("top_clamp_normal"));
+    
     double protective_base_plate_height =
       decode_json<double>(p.get_child("vice_protective_base_plate_height"));
-      return vice(pos, x_len, y_len, base_height, top_height, clamp_width, max_jaw_width, protective_base_plate_height);
+    return vice(pos, x_len, y_len, base_height, top_height, clamp_width, max_jaw_width, protective_base_plate_height, base_norm, top_clamp_norm);
   }
   plan_inputs parse_inputs_json(const std::string& s);
 
