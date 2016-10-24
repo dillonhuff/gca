@@ -36,9 +36,9 @@ namespace gca {
     inline const oriented_polygon& get_boundary() const
     { return boundary; }
 
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const;
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z,
+					 const std::vector<tool>& tools) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -122,9 +122,9 @@ namespace gca {
     inline polygon_3 get_boundary() const
     { return polygon_3(boundary.vertices()); }
 
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const;
+    std::vector<toolpath> make_toolpath(const material& stock_material,
+					const double safe_z,
+					const std::vector<tool>& tools) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -174,9 +174,9 @@ namespace gca {
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const;
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z,
+					 const std::vector<tool>& tools) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -214,9 +214,9 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const;
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z,
+					 const std::vector<tool>& tools) const;
     
     tool select_tool(const std::vector<tool>& tools) const;
 
@@ -248,6 +248,10 @@ namespace gca {
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
 
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z,
+					 const std::vector<tool>& tools) const;
+    
     toolpath make_toolpath(const material& stock_material,
 			   const double safe_z,
 			   const std::vector<tool>& tools) const;

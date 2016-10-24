@@ -725,6 +725,9 @@ namespace gca {
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
 
+	  stock_nef = subtract_features(stock_nef, features);
+	  current_stock = nef_to_single_trimesh(stock_nef);
+	  
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;
 	
