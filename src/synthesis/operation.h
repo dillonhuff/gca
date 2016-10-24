@@ -42,19 +42,20 @@ namespace gca {
     double get_start_depth() const
     { return self_->get_start_depth(); }
 
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const
-    { return self_->make_toolpath(stock_material, safe_z, tools); }
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z,
+					 const std::vector<tool>& tools) const
+    { return self_->make_toolpaths(stock_material, safe_z, tools); }
 
   private:
     struct concept_t {
       virtual ~concept_t() = default;
 
       virtual pocket_name pocket_type() const = 0;
-      virtual toolpath make_toolpath(const material& stock_material,
-				     const double safe_z,
-				     const std::vector<tool>& tools) const = 0;
+      virtual std::vector<toolpath>
+      make_toolpaths(const material& stock_material,
+		     const double safe_z,
+		     const std::vector<tool>& tools) const = 0;
 
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
@@ -76,10 +77,11 @@ namespace gca {
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }
 
-      virtual toolpath make_toolpath(const material& stock_material,
-				     const double safe_z,
-				     const std::vector<tool>& tools) const
-      { return data_.make_toolpath(stock_material, safe_z, tools); }
+      virtual std::vector<toolpath>
+      make_toolpaths(const material& stock_material,
+		     const double safe_z,
+		     const std::vector<tool>& tools) const
+      { return data_.make_toolpaths(stock_material, safe_z, tools); }
 
       T data_;
     };

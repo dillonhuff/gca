@@ -122,9 +122,9 @@ namespace gca {
     inline polygon_3 get_boundary() const
     { return polygon_3(boundary.vertices()); }
 
-    std::vector<toolpath> make_toolpath(const material& stock_material,
-					const double safe_z,
-					const std::vector<tool>& tools) const;
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z,
+					 const std::vector<tool>& tools) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -251,10 +251,6 @@ namespace gca {
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
-    
-    toolpath make_toolpath(const material& stock_material,
-			   const double safe_z,
-			   const std::vector<tool>& tools) const;
     
     tool select_tool(const std::vector<tool>& tools) const;
 
