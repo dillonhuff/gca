@@ -272,7 +272,13 @@ fabrication_setup shift(const point s,
   return fabrication_setup(shifted_setup, shifted_vice, shifted_toolpaths);
 }
 
-int main(int, char *[]) {
+int main(int argc, char *argv[]) {
+
+  DBG_ASSERT(argc == 2);
+
+  string name = argv[0];
+  cout << "File Name = " << name << endl;
+
   arena_allocator a;
   set_system_allocator(&a);
 
