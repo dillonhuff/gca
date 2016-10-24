@@ -929,7 +929,12 @@ namespace gca {
   std::vector<polygon_3>
   polygon_intersection(const std::vector<polygon_3>& as,
 		       const std::vector<polygon_3>& bs) {
-    DBG_ASSERT(false);
+    if (as.size() == 0 || bs.size() == 0) { return {}; }
+
+    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    
   }
 
   toolpath contour_cleanup_path(const std::vector<polygon_3>& remaining_area,
@@ -988,13 +993,29 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
+  vector<polygon_3>
+  accessable_regions(const polygon_3& area, const tool& t) {
+    vector<polygon_3> rs = interior_offset({area}, t.radius());
+    return rs;
+  }
+
   std::vector<polyline>
   zig_lines(const flat_region& r, const tool& t, const double cut_depth) {
     vector<polygon_3> acc_regions = accessable_regions(r.safe_area, t);
     vector<polygon_3> cut_regions =
       polygon_intersection(acc_regions, r.machine_area);    
-    
 
+    vector<polyline> face_template;
+    for (auto cut_region : cut_regions) {
+      vector<polygon_3> holes;
+      for (auto h : cut_region.holes()) {
+	holes.push_back(polygon_3(h));
+      }
+
+      vector<polyline> edges =
+	zig_lines(polygon_3(cut_region.vertices()), holes, t);
+    }
+    
     vector<double> depths =
       cut_depths(r.start_depth, r.end_depth, cut_depth);
 
