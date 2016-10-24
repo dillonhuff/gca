@@ -912,6 +912,189 @@ namespace gca {
     return lines;
   }
 
+  std::vector<polygon_3>
+  contour_remaining_area(const polygon_3& bound,
+			 const std::vector<polygon_3>& holes,
+			 const tool& t) {
+    DBG_ASSERT(false);
+  }
+  
+  std::vector<polygon_3>
+  contour_access_area(const polygon_3& bound,
+		      const std::vector<polygon_3>& holes,
+		      const tool& t) {
+    DBG_ASSERT(false);
+  }
+
+  std::vector<polygon_3>
+  polygon_intersection(const std::vector<polygon_3>& as,
+		       const std::vector<polygon_3>& bs) {
+    DBG_ASSERT(false);
+  }
+
+  toolpath contour_cleanup_path(const std::vector<polygon_3>& remaining_area,
+				const material& stock_material,
+				const double safe_z,
+				const std::vector<tool>& tools,
+				const polygon_3& boundary,
+				const std::vector<polygon_3>& holes,
+				const double start_depth,
+				const double end_depth) {
+    DBG_ASSERT(tools.size() > 0);
+
+    tool t = min_e(tools, [](const tool& t) { return t.cut_diameter(); });
+    auto params = calculate_cut_params(t, stock_material, CONTOUR);
+
+    vector<polygon_3> accessable_area = contour_access_area(boundary, holes, t);
+    vector<polygon_3> cut_area =
+      polygon_intersection(accessable_area, remaining_area);
+
+    vector<polyline> cut_paths;
+
+    return toolpath(CONTOUR,
+		    safe_z,
+		    params.speed,
+		    params.feed,
+		    params.plunge_feed,
+		    t,
+		    cut_paths);
+  }
+
+  class flat_region {
+  public:
+
+    polygon_3 safe_area;
+    vector<polygon_3> machine_area;
+
+    double start_depth, end_depth;
+    material stock_material;
+
+    
+    flat_region(const polygon_3& p_safe_area,
+		const polygon_3& p_machine_area,
+		const double p_start_depth,
+		const double p_end_depth,
+		const material p_stock_material) :
+      safe_area(p_safe_area),
+      machine_area{p_machine_area},
+      start_depth(p_start_depth),
+      end_depth(p_end_depth),
+      stock_material(p_stock_material) {
+      
+    }
+  };
+
+  flat_region residual_flat_region(const flat_region& r, const tool& t) {
+    DBG_ASSERT(false);
+  }
+
+  std::vector<polyline>
+  zig_lines(const flat_region& r, const tool& t, const double cut_depth) {
+    vector<polygon_3> acc_regions = accessable_regions(r.safe_area, t);
+    vector<polygon_3> cut_regions =
+      polygon_intersection(acc_regions, r.machine_area);    
+    
+
+    vector<double> depths =
+      cut_depths(r.start_depth, r.end_depth, cut_depth);
+
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, project_lines(face_template, depth));
+    }
+    return lines;
+  }
+  
+  toolpath zig_rough_path(const flat_region& r,
+			  const double safe_z,
+			  const tool& t) {
+
+    // TODO: Update operation names?
+    auto params = calculate_cut_params(t, r.stock_material, CONTOUR);
+
+    auto pocket_paths = zig_lines(r, t, params.cut_depth);
+
+    toolpath rough_path =
+      toolpath(CONTOUR,
+    	       safe_z,
+    	       params.speed,
+    	       params.feed,
+    	       params.plunge_feed,
+    	       t,
+    	       pocket_paths);
+
+    return rough_path;
+  }
+
+  tool select_roughing_tool(const flat_region& r,
+			    const std::vector<tool>& tools) {
+    return max_e(tools, [](const tool& t) { return t.cut_diameter(); });
+  }
+  
+  toolpath rough_flat_region(const flat_region& r,
+			     const double safe_z,
+			     const std::vector<tool>& tools) {
+    tool t = select_roughing_tool(r, tools);
+    return zig_rough_path(r, safe_z, t);
+  }
+
+  toolpath clean_flat_region(const flat_region& r,
+			     const double safe_z,
+			     const std::vector<tool>& tools) {
+    DBG_ASSERT(false);
+  }
+
+  toolpath finish_flat_region(const flat_region& r,
+			      const double safe_z,
+			      const std::vector<tool>& tools) {
+    DBG_ASSERT(false);
+  }
+
+  std::vector<toolpath>
+  machine_flat_region(const flat_region& r,
+		      const double safe_z,
+		      const std::vector<tool>& tools) {
+
+    DBG_ASSERT(tools.size() > 0);
+
+    toolpath rough_path = rough_flat_region(r, safe_z, tools);
+
+    flat_region residual_region = residual_flat_region(r, rough_path.t);
+
+    toolpath clean_path = clean_flat_region(residual_region, safe_z, tools);
+    toolpath finish_path = finish_flat_region(r, safe_z, tools);
+
+    return {rough_path, clean_path, finish_path};
+
+    // tool t = select_tool(possible_tools);
+    // auto params = calculate_cut_params(t, stock_material, pocket_type());
+
+    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    // toolpath rough_path =
+    //   toolpath(pocket_type(),
+    // 	       safe_z,
+    // 	       params.speed,
+    // 	       params.feed,
+    // 	       params.plunge_feed,
+    // 	       t,
+    // 	       pocket_paths);
+
+    // vector<polygon_3> remaining_area =
+    //   contour_remaining_area(get_boundary(), get_holes(), t);
+
+    // toolpath cleanup_path = contour_cleanup_path(remaining_area,
+    // 						 stock_material,
+    // 						 safe_z,
+    // 						 tools,
+    // 						 get_boundary(),
+    // 						 get_holes(),
+    // 						 get_start_depth(),
+    // 						 get_end_depth());
+
+    // return {rough_path, cleanup_path};
+
+  }
+
   std::vector<toolpath>
   contour::make_toolpaths(const material& stock_material,
 			  const double safe_z,
@@ -921,11 +1104,20 @@ namespace gca {
       DBG_ASSERT(possible_tools.size() > 0);
     }
 
-    tool t = select_tool(possible_tools);
-    auto params = calculate_cut_params(t, stock_material, pocket_type());
+    tool max_tool = max_e(possible_tools,
+			  [](const tool& t) { return t.cut_diameter(); });
 
-    auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+    polygon_3 safe_area = exterior_offset(get_boundary(), 3*max_tool.radius());
+
+    for (auto h : get_holes()) {
+      DBG_ASSERT(h.holes().size() == 0);
+
+      safe_area.add_hole(h.vertices());
+    }
+
+    flat_region r(safe_area, bp, get_start_depth(), get_end_depth(), stock_material);
+
+    return machine_flat_region(r, safe_z, tools);
   }
 
 }

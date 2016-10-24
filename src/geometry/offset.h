@@ -39,6 +39,9 @@ namespace gca {
   interior_offsets(const std::vector<point>& pts,
 		   const double tol);
 
+  polygon_3 exterior_offset(const polygon_3& polys,
+			    const double d);
+  
   std::vector<polygon_3> exterior_offset(const std::vector<polygon_3>& polys,
 					 const double d);
   std::vector<polygon_3> interior_offset(const std::vector<polygon_3>& polys,

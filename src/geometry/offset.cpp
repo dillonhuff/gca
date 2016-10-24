@@ -595,7 +595,7 @@ namespace gca {
   }
 
   polygon_3 exterior_offset(const polygon_3& poly,
-			    const double d) {
+  			    const double d) {
     point n(0, 0, 1);
     const rotation r = rotate_from_to(poly.normal(), n);
     const rotation r_inv = inverse(r);
