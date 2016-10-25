@@ -85,9 +85,9 @@ namespace gca {
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
 
     vector<string> passes{
+      "test/stl-files/OctagonWithHoles.stl",
       "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 
-	"test/stl-files/OctagonWithHoles.stl",
 
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 

@@ -296,6 +296,51 @@ namespace gca {
 				const material& stock_material);
 
 
+  class flat_region {
+  public:
+
+    polygon_3 safe_area;
+    vector<polygon_3> machine_area;
+
+    double start_depth, end_depth;
+    material stock_material;
+
+    
+    flat_region(const polygon_3& p_safe_area,
+		const polygon_3& p_machine_area,
+		const double p_start_depth,
+		const double p_end_depth,
+		const material p_stock_material) :
+      safe_area(p_safe_area),
+      machine_area{p_machine_area},
+      start_depth(p_start_depth),
+      end_depth(p_end_depth),
+      stock_material(p_stock_material) {
+      
+    }
+
+    flat_region(const polygon_3& p_safe_area,
+		const std::vector<polygon_3>& p_machine_area,
+		const double p_start_depth,
+		const double p_end_depth,
+		const material p_stock_material) :
+      safe_area(p_safe_area),
+      machine_area(p_machine_area),
+      start_depth(p_start_depth),
+      end_depth(p_end_depth),
+      stock_material(p_stock_material) {
+      
+    }
+
+  };
+
+
+  std::vector<toolpath>
+  machine_flat_region(const flat_region& r,
+		      const double safe_z,
+		      const std::vector<tool>& tools);
+
+  boost_linestring_2 to_boost_linestring(const polyline& pl);
 
 }
 

@@ -6,7 +6,6 @@
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/clipping_plan.h"
 #include "synthesis/tool.h"
-#include "synthesis/toolpath_generation.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece.h"
 

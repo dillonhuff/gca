@@ -149,4 +149,13 @@ namespace gca {
 		    apply(r, tri.v2),
 		    apply(r, tri.v3));
   }
+
+  polyline apply(const rotation& r, const polyline& p) {
+    vector<point> applied;
+    for (auto pt : p) {
+      applied.push_back(times_3(r, pt));
+    }
+
+    return polyline(applied);
+  }
 }

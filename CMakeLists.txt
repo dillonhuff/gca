@@ -183,6 +183,11 @@ SET(GCA_CPPS
 add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
+SET(BACKEND_TEST_FILES test/toolpath_generation_tests.cpp)
+
+add_executable(backend-tests test/main_backend.cpp ${BACKEND_TEST_FILES})
+target_link_libraries(backend-tests geometry utils gcode gprocess gca)
+
 SET(TEST_FILES test/main.cpp
 	       test/tool_access_tests.cpp
 	       test/feature_selection_tests.cpp
@@ -213,19 +218,18 @@ SET(TEST_FILES test/main.cpp
 	       test/mesh_tests.cpp
 	       test/checker_tests.cpp
 	       test/cut_tests.cpp
-	       test/toolpath_generation_tests.cpp
 	       test/mill_simulator_tests.cpp
 	       test/transformer_tests.cpp
 	       test/analysis_tests.cpp
 	       test/spline_tests.cpp
 	       test/dxf_to_gcode_tests.cpp
 	       test/shapes_to_toolpaths_tests.cpp
-	       test/toolpath_tests.cpp
 	       test/cut_scheduling_tests.cpp
 	       test/gcode_to_cuts_tests.cpp
 	       test/machine_state_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
-	       test/axis_3_tests.cpp)
+	       test/axis_3_tests.cpp
+	       ${BACKEND_TEST_FILES})
 
 add_executable(all-tests ${TEST_FILES})
 target_link_libraries(all-tests geometry utils gcode gprocess gca)

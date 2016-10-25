@@ -276,7 +276,7 @@ int main(int argc, char *argv[]) {
 
   DBG_ASSERT(argc == 2);
 
-  string name = argv[0];
+  string name = argv[1];
   cout << "File Name = " << name << endl;
 
   arena_allocator a;
@@ -289,10 +289,10 @@ int main(int argc, char *argv[]) {
   
   vice test_vice = top_jaw_origin_vice(test_v);
     
-  std::vector<plate_height> plates{0.1, 0.3, 0.7};
+  std::vector<plate_height> plates{0.5}; //0.1, 0.3, 0.7};
   fixtures fixes(test_vice, plates);
 
-  workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+  workpiece workpiece_dims(1.0, 1.0, 2.5, ALUMINUM);
 
   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
   t1.set_cut_diameter(0.25);
@@ -337,7 +337,10 @@ int main(int argc, char *argv[]) {
   vector<tool> tools{t1, t2, t3, t4};
   
   triangular_mesh mesh =
-    parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.0001);
+    //parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.0001);
+    parse_stl(name, 0.0001);
+
+  vtk_debug_mesh(mesh);
 
   fabrication_plan p =
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});

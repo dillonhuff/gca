@@ -1007,44 +1007,6 @@ namespace gca {
 		    cut_paths);
   }
 
-  class flat_region {
-  public:
-
-    polygon_3 safe_area;
-    vector<polygon_3> machine_area;
-
-    double start_depth, end_depth;
-    material stock_material;
-
-    
-    flat_region(const polygon_3& p_safe_area,
-		const polygon_3& p_machine_area,
-		const double p_start_depth,
-		const double p_end_depth,
-		const material p_stock_material) :
-      safe_area(p_safe_area),
-      machine_area{p_machine_area},
-      start_depth(p_start_depth),
-      end_depth(p_end_depth),
-      stock_material(p_stock_material) {
-      
-    }
-
-    flat_region(const polygon_3& p_safe_area,
-		const std::vector<polygon_3>& p_machine_area,
-		const double p_start_depth,
-		const double p_end_depth,
-		const material p_stock_material) :
-      safe_area(p_safe_area),
-      machine_area(p_machine_area),
-      start_depth(p_start_depth),
-      end_depth(p_end_depth),
-      stock_material(p_stock_material) {
-      
-    }
-
-  };
-
   vector<polygon_3>
   accessable_regions(const polygon_3& area, const tool& t) {
     vector<polygon_3> rs = interior_offset({area}, t.radius());
@@ -1153,7 +1115,6 @@ namespace gca {
     }
 
     return edges;
-    
   }
 
   toolpath finish_path(const flat_region& r,
@@ -1194,37 +1155,9 @@ namespace gca {
 
     flat_region residual_region = residual_flat_region(r, rough_path.t);
 
-    //    toolpath clean_path = clean_flat_region(residual_region, safe_z, tools);
     toolpath finish_path = finish_flat_region(r, safe_z, tools);
 
     return {rough_path, finish_path};
-
-    // tool t = select_tool(possible_tools);
-    // auto params = calculate_cut_params(t, stock_material, pocket_type());
-
-    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    // toolpath rough_path =
-    //   toolpath(pocket_type(),
-    // 	       safe_z,
-    // 	       params.speed,
-    // 	       params.feed,
-    // 	       params.plunge_feed,
-    // 	       t,
-    // 	       pocket_paths);
-
-    // vector<polygon_3> remaining_area =
-    //   contour_remaining_area(get_boundary(), get_holes(), t);
-
-    // toolpath cleanup_path = contour_cleanup_path(remaining_area,
-    // 						 stock_material,
-    // 						 safe_z,
-    // 						 tools,
-    // 						 get_boundary(),
-    // 						 get_holes(),
-    // 						 get_start_depth(),
-    // 						 get_end_depth());
-
-    // return {rough_path, cleanup_path};
 
   }
 

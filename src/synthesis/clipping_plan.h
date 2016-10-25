@@ -4,7 +4,7 @@
 #include "geometry/rigid_arrangement.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/fabrication_plan.h"
-#include "synthesis/toolpath_generation.h"
+#include "synthesis/operation.h"
 
 namespace gca {
 
