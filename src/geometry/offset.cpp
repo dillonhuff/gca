@@ -36,6 +36,20 @@ namespace gca {
     
   }
 
+  void set_orientation_clockwise(Polygon_2& to_offset) {
+    if (!(to_offset.is_simple())) {
+      DBG_ASSERT(false);
+    }
+      
+    
+    if (to_offset.orientation() == CGAL::COUNTERCLOCKWISE) {
+      to_offset.reverse_orientation();
+    }
+
+    DBG_ASSERT(to_offset.orientation() == CGAL::CLOCKWISE);
+    
+  }
+  
   bool
   add_to_existing_polys_as_hole(const polygon_3& next,
 				std::vector<polygon_3>& polygons) {
@@ -648,7 +662,7 @@ namespace gca {
 	hole.push_back( Point(pt.x, pt.y) );
       }
 
-      set_orientation(hole);
+      set_orientation_clockwise(hole);
       to_offset.add_hole( hole );
     }
 

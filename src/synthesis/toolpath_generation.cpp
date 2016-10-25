@@ -1020,12 +1020,20 @@ namespace gca {
     return flat_region(r.safe_area, residual, r.start_depth, r.end_depth, r.stock_material);
   }
 
+  vector<polygon_3> safe_cut_regions(const flat_region& r, const tool& t) {
+    vector<polygon_3> acc_regions = accessable_regions(r.safe_area, t);
+
+    vector<polygon_3> cut_regions =
+      polygon_intersection(acc_regions, r.machine_area);
+
+    return cut_regions;
+  }
 
   std::vector<polyline>
   zig_lines(const flat_region& r, const tool& t, const double cut_depth) {
-    vector<polygon_3> acc_regions = accessable_regions(r.safe_area, t);
-    vector<polygon_3> cut_regions =
-      polygon_intersection(acc_regions, r.machine_area);    
+    vector<polygon_3> cut_regions = safe_cut_regions(r, t);
+
+    vtk_debug_polygons(cut_regions);
 
     vector<polyline> face_template;
     for (auto cut_region : cut_regions) {
