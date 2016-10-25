@@ -85,7 +85,7 @@ namespace gca {
       cout << t << endl;
     }
 
-    REQUIRE(tool_info[base].size() == 2);
+    REQUIRE(tool_info[base].size() == 3);
     
   }
   
