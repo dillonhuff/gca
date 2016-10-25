@@ -1,7 +1,10 @@
 #include "catch.hpp"
+#include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/rotation.h"
+#include "geometry/vtk_utils.h"
 #include "synthesis/toolpath_generation.h"
+#include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
 
 namespace gca {
@@ -17,7 +20,7 @@ namespace gca {
   overlap_2D(const std::vector<polyline>& lines,
 	     const polygon_3& hole) {
     return any_of(begin(lines), end(lines),
-		  [hole](const polyline& pl) { return overlap_2D(pl, hole); });;
+		  [hole](const polyline& pl) { return overlap_2D(pl, hole); });
   }
 
   TEST_CASE("Toolpath compression, nothing to compress") {
@@ -36,26 +39,25 @@ namespace gca {
   }
 
   TEST_CASE("Contour with hole") {
-    vector<point> safe_ring{point(-100, -100, 0),
-	point(100, -100, 0),
-	point(100, 100, 0),
-	point(-100, 100, 0)};
+    vector<point> safe_ring{point(-3, -3, 0),
+	point(3, -3, 0),
+	point(3, 3, 0),
+	point(-3, 3, 0)};
 
-    polygon_3 safe_area(safe_ring);
+    vector<point> outer_machine_ring{point(-2, -2, 0),
+	point(2, -2, 0),
+	point(2, 2, 0),
+	point(-2, 2, 0)};
 
-    vector<point> outer_machine_ring{point(-90, -90, 0),
-	point(90, -90, 0),
-	point(90, 90, 0),
-	point(-90, 90, 0)};
+    vector<point> hole{point(-1, -1, 0),
+	point(1, -1, 0),
+	point(1, 1, 0),
+	point(-1, 1, 0)};
 
-    vector<point> hole{point(-80, -80, 0),
-	point(80, -80, 0),
-	point(80, 80, 0),
-	point(-80, 80, 0)};
-
+    polygon_3 safe_area(safe_ring, {hole});
     polygon_3 machine_area(outer_machine_ring, {hole});
 
-    flat_region r(safe_area, machine_area, 0.5, 0.0, ALUMINUM);
+    flat_region r(safe_area, machine_area, 0.1, 0.0, ALUMINUM);
 
     tool t{1.0 / 8.0, 3.94, 4, HSS, FLAT_NOSE};
     t.set_cut_diameter(1.0 / 8.0);
@@ -71,6 +73,16 @@ namespace gca {
     polygon_3 offset_hole = exterior_offset(hole, t.radius());
 
     for (auto& tp : toolpaths) {
+      auto tp_pd = polydata_for_toolpath(tp);
+      auto tp_act = polydata_actor(tp_pd);
+
+      color white(255, 255, 255);
+      color tp_color = random_color(white);
+      color_polydata(tp_pd, tp_color.red(), tp_color.green(), tp_color.blue());
+
+      auto poly_acts = polygon_3_actors(offset_hole);
+      poly_acts.push_back(tp_act);
+      visualize_actors(poly_acts);
       REQUIRE(!overlap_2D(tp.lines, offset_hole));
     }
   }
