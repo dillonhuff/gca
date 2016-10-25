@@ -69,31 +69,31 @@ namespace gca {
     t.set_holder_diameter(2.5);
     t.set_holder_length(3.5);
 
-    auto poly_acts = polygon_3_actors(safe_area);
-    visualize_actors(poly_acts);
+    // auto poly_acts = polygon_3_actors(safe_area);
+    // visualize_actors(poly_acts);
 
-    auto int_polys = interior_offset({safe_area}, t.radius());
-    for (auto itp : int_polys) {
-      concat(poly_acts, polygon_3_actors(itp));
-    }
+    // auto int_polys = interior_offset({safe_area}, t.radius());
+    // for (auto itp : int_polys) {
+    //   concat(poly_acts, polygon_3_actors(itp));
+    // }
 
-    visualize_actors(poly_acts);
+    // visualize_actors(poly_acts);
     
     std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
-    polygon_3 offset_hole = exterior_offset(hole, t.radius());
+    polygon_3 offset_hole = exterior_offset(hole, t.radius() - 0.01);
 
     for (auto& tp : toolpaths) {
-      auto tp_pd = polydata_for_toolpath(tp);
-      auto tp_act = polydata_actor(tp_pd);
+      // auto tp_pd = polydata_for_toolpath(tp);
+      // auto tp_act = polydata_actor(tp_pd);
 
-      color white(255, 255, 255);
-      color tp_color = random_color(white);
-      color_polydata(tp_pd, tp_color.red(), tp_color.green(), tp_color.blue());
+      // color white(255, 255, 255);
+      // color tp_color = random_color(white);
+      // color_polydata(tp_pd, tp_color.red(), tp_color.green(), tp_color.blue());
 
-      auto poly_acts = polygon_3_actors(offset_hole);
-      concat(poly_acts, polygon_3_actors(hole));
-      poly_acts.push_back(tp_act);
-      visualize_actors(poly_acts);
+      // auto poly_acts = polygon_3_actors(offset_hole);
+      // concat(poly_acts, polygon_3_actors(hole));
+      // poly_acts.push_back(tp_act);
+      // visualize_actors(poly_acts);
       REQUIRE(!overlap_2D(tp.lines, offset_hole));
     }
   }

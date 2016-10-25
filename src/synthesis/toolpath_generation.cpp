@@ -1033,8 +1033,6 @@ namespace gca {
   zig_lines(const flat_region& r, const tool& t, const double cut_depth) {
     vector<polygon_3> cut_regions = safe_cut_regions(r, t);
 
-    vtk_debug_polygons(cut_regions);
-
     vector<polyline> face_template;
     for (auto cut_region : cut_regions) {
       vector<polygon_3> holes;
