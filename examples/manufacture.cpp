@@ -18,13 +18,13 @@ namespace gca {
     set_system_allocator(&a);
 
     vice test_v =
-      custom_jaw_vice_with_clamp_dir(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0), point(1, 0, 0));
+      custom_jaw_vice_with_clamp_dir(4.0, 1.0, 8.0, point(0.0, 0.0, 0.0), point(1, 0, 0));
     vice test_vice = top_jaw_origin_vice(test_v);
     
     std::vector<plate_height> plates{0.1, 0.3, 0.7};
     fixtures fixes(test_vice, plates);
 
-    workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
+    workpiece workpiece_dims(3.5, 3.5, 3.8, ALUMINUM);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.25);
@@ -119,7 +119,9 @@ namespace gca {
       //vtk_debug_mesh(mesh);
     }
 
-    for (auto part_path : passes) { //part_paths) {
+    double total_toolpath_execution_time = 0.0;
+
+    for (auto part_path : passes) {
       cout << "Part path: " << part_path << endl;
 
       auto mesh = parse_stl(part_path, 0.001);
@@ -134,13 +136,28 @@ namespace gca {
       fabrication_plan p =
 	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
-      cout << "Number of steps = " << p.steps().size() << endl;
+      double rapid_feed = 24.0;
 
-      for (auto step : p.steps()) {
-      	visual_debug(step);
+      cout << "Number of steps = " << p.steps().size() << endl;
+      for (auto& step : p.steps()) {
+	cout << "STEP" << endl;
+	for (auto& tp : step.toolpaths()) {
+	  double exec_time = execution_time_seconds(tp, rapid_feed);
+	  cout << "Toolpath execution time = " << exec_time << " seconds " << endl;
+	  total_toolpath_execution_time += exec_time;
+	}
       }
-      
+
+      cout << "Total execution time so far = " << total_toolpath_execution_time << " seconds" << endl;
+      cout << "Total execution time so far = " << total_toolpath_execution_time / 60.0 << " minutes" << endl;
+
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
+
     }
+
+    cout << "Total toolpath time for all parts = " << total_toolpath_execution_time << endl;
   }
 
 }

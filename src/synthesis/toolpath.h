@@ -52,6 +52,11 @@ namespace gca {
 
   };
 
+  double execution_time_seconds(const toolpath& tp, const double rapid_feed);
+  double air_time_seconds(const toolpath& tp,
+			  const double rapid_feed);
+
+
 }
 
 #endif

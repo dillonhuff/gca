@@ -130,4 +130,15 @@ namespace gca {
     return ls;
   }
 
+  double length(const polyline& pl) {
+    DBG_ASSERT(pl.num_points() > 1);
+
+    double length = 0.0;
+
+    for (unsigned i = 0; i < pl.num_points() - 1; i++) {
+      length += (pl.pt(i + 1) - pl.pt(i)).len();
+    }
+
+    return length;
+  }
 }

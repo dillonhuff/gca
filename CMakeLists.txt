@@ -167,6 +167,7 @@ SET(GCA_CPPS
 	 ./src/synthesis/contour_planning.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
+	 ./src/synthesis/toolpath.cpp
 	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
