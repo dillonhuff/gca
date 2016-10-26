@@ -42,15 +42,15 @@ namespace gca {
     point start_location() const {
       DBG_ASSERT(lines.size() > 0);
 
-      point start_pt = lines.front().front();
+      point start_pt = cuts.front()->get_start(); //lines.front().front();
       return point(start_pt.x, start_pt.y, safe_z_before_tlc);
     }
 
     point end_location() const {
       DBG_ASSERT(lines.size() > 0);
 
-      point start_pt = lines.front().front();
-      return point(start_pt.x, start_pt.y, safe_z_before_tlc);
+      point end_pt = cuts.back()->get_end(); //lines.front().front();
+      return point(end_pt.x, end_pt.y, safe_z_before_tlc);
     }
 
   };
