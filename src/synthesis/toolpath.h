@@ -6,6 +6,7 @@
 #include "gcode/cut.h"
 #include "geometry/polyline.h"
 #include "synthesis/operation_name.h"
+#include "synthesis/shape_layout.h"
 #include "synthesis/tool.h"
 
 namespace gca {
@@ -51,6 +52,8 @@ namespace gca {
     }
 
     std::vector<polyline> lines() const;
+
+    std::vector<cut*> contiguous_cuts(const cut_params& params) const;
 
   };
 

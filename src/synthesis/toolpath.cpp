@@ -97,4 +97,12 @@ namespace gca {
     return exec_time;
   }
 
+  std::vector<cut*> toolpath::contiguous_cuts(const cut_params& params) const {
+    vector<cut*> cuts_buffer;
+    for (auto& c : cuts) {
+      concat(cuts_buffer, c);
+    }
+    vector<cut*> all_cuts = insert_transitions(cuts_buffer, params);
+    return all_cuts;
+  }
 }
