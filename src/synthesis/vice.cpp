@@ -80,7 +80,7 @@ namespace gca {
   }
 
   vice large_jaw_vice(const double jaw_width, const point loc) {
-    return vice(loc, 2.5, 5.5, 1.1, 1.87, 1.3, jaw_width, point(0, 0, 1), point(0, -1, 0));
+    return vice(loc, 2.5, 5.5, 1.1, 1.87, 1.3, jaw_width, point(0, 0, 1), point(0, 1, 0));
   }
 
   vice custom_jaw_vice(const double jaw_width,
