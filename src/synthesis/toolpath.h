@@ -21,8 +21,7 @@ namespace gca {
     tool t;
 
   protected:
-    std::vector<std::vector<cut*>> cuts;    
-    std::vector<polyline> ls;
+    std::vector<std::vector<cut*>> cuts;
 
   public:
     toolpath(const pocket_name& p_pocket_type,
@@ -51,7 +50,7 @@ namespace gca {
       return point(end_pt.x, end_pt.y, safe_z_before_tlc);
     }
 
-    std::vector<polyline> lines() const { return ls; }
+    std::vector<polyline> lines() const;
 
   };
 

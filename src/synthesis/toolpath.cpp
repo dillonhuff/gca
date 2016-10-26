@@ -15,8 +15,7 @@ namespace gca {
 	spindle_speed(p_spindle),
 	feedrate(p_feed),
 	plunge_feedrate(p_plunge_feed),
-	t(p_t),
-	ls(p_lines) {
+	t(p_t) {
 
     for (auto pl : p_lines) {
       vector<cut*> line_cuts =
@@ -24,8 +23,30 @@ namespace gca {
       cuts.push_back(line_cuts);
     }
 
-    DBG_ASSERT(ls.size() == cuts.size());
   }
+
+  polyline to_polyline(const std::vector<cut*>& cuts) {
+    DBG_ASSERT(cuts.size() > 0);
+
+    vector<point> pts;
+    pts.push_back(cuts.front()->get_start());
+    for (auto c : cuts) {
+      pts.push_back(c->get_end());
+    }
+
+    return pts;
+  }
+
+  std::vector<polyline> toolpath::lines() const {
+    vector<polyline> pls;
+
+    for (auto cut_lines : cuts) {
+      pls.push_back(to_polyline(cut_lines));
+    }
+
+    return pls;
+  }
+  
   
   double cut_time_seconds(const toolpath& tp) {
     double cut_distance = 0.0;

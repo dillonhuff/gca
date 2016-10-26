@@ -164,9 +164,9 @@ namespace gca {
 
       cout << "Total fraction of air time = " << total_air_pct << " % " << endl;
 
-      // for (auto step : p.steps()) {
-      // 	visual_debug(step);
-      // }
+      for (auto step : p.steps()) {
+      	visual_debug(step);
+      }
 
     }
 

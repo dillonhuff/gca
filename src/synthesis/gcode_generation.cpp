@@ -38,11 +38,16 @@ namespace gca {
 			     const double spindle_speed,
 			     const double feedrate) {
     auto ls = p.lines();
+
     DBG_ASSERT(ls.size() > 0);
+
     vector<cut*> c;
     for (auto l : ls) {
       c.push_back(mk_cut(l.start, l.end, tool_number, spindle_speed, feedrate));
     }
+
+    DBG_ASSERT(c.size() == (ls.size()));
+
     return c;
   }
 
