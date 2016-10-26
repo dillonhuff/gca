@@ -840,7 +840,7 @@ namespace gca {
 			      [](const pocket& l, const pocket& r)
       { return l.get_start_depth() < r.get_start_depth(); }))).get_start_depth();
 
-    double clearance = 0.5;
+    double clearance = 0.20;
     double safe_z = h + clearance;
     
     vector<toolpath> toolpaths;

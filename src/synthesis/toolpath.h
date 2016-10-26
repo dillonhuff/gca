@@ -9,7 +9,11 @@
 
 namespace gca {
 
-  struct toolpath {
+  class toolpath {
+  protected:
+    std::vector<polyline> lines;
+
+  public:
     pocket_name pocket_tp;
     double safe_z_before_tlc;
     double spindle_speed;
@@ -17,7 +21,6 @@ namespace gca {
     double plunge_feedrate;
 
     tool t;
-    std::vector<polyline> lines;
 
     toolpath(const pocket_name& p_pocket_type,
 	     const double p_safe_z,

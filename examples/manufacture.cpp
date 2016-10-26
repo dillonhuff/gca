@@ -86,7 +86,7 @@ namespace gca {
 
     vector<string> passes{
       "test/stl-files/OctagonWithHoles.stl",
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 
 
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
@@ -120,6 +120,9 @@ namespace gca {
     }
 
     double total_toolpath_execution_time = 0.0;
+    double total_air_time = 0.0;
+
+    double rapid_feed = 24.0;
 
     for (auto part_path : passes) {
       cout << "Part path: " << part_path << endl;
@@ -136,20 +139,30 @@ namespace gca {
       fabrication_plan p =
 	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
-      double rapid_feed = 24.0;
-
       cout << "Number of steps = " << p.steps().size() << endl;
       for (auto& step : p.steps()) {
 	cout << "STEP" << endl;
 	for (auto& tp : step.toolpaths()) {
 	  double exec_time = execution_time_seconds(tp, rapid_feed);
+	  double air_time = air_time_seconds(tp, rapid_feed);
+	  double air_pct = (air_time / exec_time) * 100.0;
+
 	  cout << "Toolpath execution time = " << exec_time << " seconds " << endl;
+	  cout << "Toolpath air time = " << exec_time << " seconds " << endl;
+	  cout << "Fraction of toolpath in air = " << air_pct << " % " << endl;
+
 	  total_toolpath_execution_time += exec_time;
+	  total_air_time += air_time;
 	}
       }
 
       cout << "Total execution time so far = " << total_toolpath_execution_time << " seconds" << endl;
-      cout << "Total execution time so far = " << total_toolpath_execution_time / 60.0 << " minutes" << endl;
+      cout << "Total air time so far = " << total_air_time / 60.0 << " minutes" << endl;
+
+      double total_air_pct =
+	(total_air_time / total_toolpath_execution_time) * 100.0;
+
+      cout << "Total fraction of air time = " << total_air_pct << " % " << endl;
 
       // for (auto step : p.steps()) {
       // 	visual_debug(step);
@@ -157,7 +170,14 @@ namespace gca {
 
     }
 
-    cout << "Total toolpath time for all parts = " << total_toolpath_execution_time << endl;
+    cout << "Total toolpath time for all parts = " << total_toolpath_execution_time << " seconds" << endl;
+    cout << "Total air time for all parts = " << total_air_time << " seconds" << endl;    
+
+    double total_air_pct =
+      (total_air_time / total_toolpath_execution_time) * 100.0;
+
+    cout << "Percent of time spent in the air = " << total_air_pct << " % " << endl;
+
   }
 
 }
