@@ -11,7 +11,6 @@
 namespace gca {
 
   class toolpath {
-
   public:
     pocket_name pocket_tp;
     double safe_z_before_tlc;
@@ -21,10 +20,10 @@ namespace gca {
 
     tool t;
 
-    std::vector<polyline> lines;
-
     std::vector<cut*> cuts;
 
+  protected:
+    std::vector<polyline> ls;
 
   public:
     toolpath(const pocket_name& p_pocket_type,
@@ -40,18 +39,20 @@ namespace gca {
     int tool_number() const { return t.tool_number(); }
 
     point start_location() const {
-      DBG_ASSERT(lines.size() > 0);
+      DBG_ASSERT(this->lines().size() > 0);
 
       point start_pt = cuts.front()->get_start(); //lines.front().front();
       return point(start_pt.x, start_pt.y, safe_z_before_tlc);
     }
 
     point end_location() const {
-      DBG_ASSERT(lines.size() > 0);
+      DBG_ASSERT(this->lines().size() > 0);
 
       point end_pt = cuts.back()->get_end(); //lines.front().front();
       return point(end_pt.x, end_pt.y, safe_z_before_tlc);
     }
+
+    std::vector<polyline> lines() const { return ls; }
 
   };
 

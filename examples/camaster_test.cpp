@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
 
   int num_empty_toolpaths = 0;
   for (auto t : toolpaths) {
-    if (t.lines.size() == 0) {
+    if (t.lines().size() == 0) {
       num_empty_toolpaths++;
     }
   }

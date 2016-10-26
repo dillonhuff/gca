@@ -237,10 +237,16 @@ point gui_select_part_zero(const fabrication_setup& setup) {
 
 toolpath shift(const point s, const toolpath& tp) {
   toolpath shifted_toolpath = tp;
-  shifted_toolpath.lines = shift_lines(shifted_toolpath.lines, s);
-  shifted_toolpath.safe_z_before_tlc =
+  auto shifted_lines = shift_lines(shifted_toolpath.lines(), s);
+  double shifted_safe_tlc =
     shifted_toolpath.safe_z_before_tlc + s.z;
-  return shifted_toolpath;
+  return toolpath(tp.pocket_type(),
+		  shifted_safe_tlc,
+		  tp.spindle_speed,
+		  tp.feedrate,
+		  tp.plunge_feedrate,
+		  tp.t,
+		  shifted_lines);
 }
 
 std::vector<toolpath> shift(const point s,

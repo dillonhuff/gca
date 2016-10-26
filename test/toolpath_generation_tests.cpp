@@ -97,7 +97,7 @@ namespace gca {
       // concat(poly_acts, polygon_3_actors(hole));
       // poly_acts.push_back(tp_act);
       // visualize_actors(poly_acts);
-      REQUIRE(!overlap_2D(tp.lines, offset_hole));
+      REQUIRE(!overlap_2D(tp.lines(), offset_hole));
     }
   }
 

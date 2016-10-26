@@ -153,7 +153,7 @@ namespace gca {
 
   std::vector<block> camaster_engraving(const toolpath& last,
 					const toolpath& tp) {
-    for (auto l : tp.lines) {
+    for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
 
@@ -164,12 +164,12 @@ namespace gca {
 
     vector<block> blks = camaster_comment_prefix(tp, params);
     concat(blks, camaster_tool_change_block(tp.tool_number()));
-    concat(blks, polylines_cuts(tp.lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    concat(blks, polylines_cuts(tp.lines(), tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
   }
 
   std::vector<block> wells_code_no_TLC(const toolpath& tp) {
-    for (auto l : tp.lines) {
+    for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
 
@@ -179,20 +179,20 @@ namespace gca {
     params.set_plunge_feed(tp.plunge_feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
-    concat(blks, polylines_cuts(tp.lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    concat(blks, polylines_cuts(tp.lines(), tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
     return blks;
 
   }
   
 
   std::vector<block> emco_f1_code(const toolpath& tp) {
-    for (auto l : tp.lines) {
+    for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
 
     point shift_vector = point(0, 0, tp.t.length());
     vector<polyline> reflected_lines =
-      shift_lines(tp.lines, shift_vector);
+      shift_lines(tp.lines(), shift_vector);
 
     cut_params params;
     params.target_machine = EMCO_F1;
@@ -205,11 +205,11 @@ namespace gca {
   }
 
   std::vector<block> emco_f1_code_G10_TLC(const toolpath& tp) {
-    for (auto l : tp.lines) {
+    for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
 
-    vector<polyline> reflected_lines = tp.lines;
+    vector<polyline> reflected_lines = tp.lines();
 
     cut_params params;
     params.target_machine = EMCO_F1;
@@ -223,11 +223,11 @@ namespace gca {
   }
 
   std::vector<block> emco_f1_code_no_TLC(const toolpath& tp) {
-    for (auto l : tp.lines) {
+    for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
 
-    vector<polyline> reflected_lines = tp.lines;
+    vector<polyline> reflected_lines = tp.lines();
 
     cut_params params;
     params.target_machine = EMCO_F1;

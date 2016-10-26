@@ -570,7 +570,7 @@ namespace gca {
 	  total_map[tp.pocket_type()] = 1;
 	}
 
-	if (tp.lines.size() == 0) {
+	if (tp.lines().size() == 0) {
 
 	  if (empty_map.find(tp.pocket_type()) != end(empty_map)) {
 	    empty_map[tp.pocket_type()] = empty_map[tp.pocket_type()] + 1;

@@ -52,7 +52,7 @@ namespace gca {
     // Add the lines to the polydata container
     linesPolyData->SetLines(lines);
 
-    for (auto& pl : tp.lines) {
+    for (auto& pl : tp.lines()) {
       auto num_points_so_far = linesPolyData->GetNumberOfPoints();
       append_polyline(num_points_so_far, linesPolyData, pts, lines, pl);
     }

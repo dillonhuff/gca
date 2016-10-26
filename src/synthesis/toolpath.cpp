@@ -16,7 +16,7 @@ namespace gca {
 	feedrate(p_feed),
 	plunge_feedrate(p_plunge_feed),
 	t(p_t),
-	lines(p_lines) {
+	ls(p_lines) {
 
     // TODO: Deal with machine specification
     cut_params params;
@@ -24,13 +24,13 @@ namespace gca {
     params.safe_height = safe_z_before_tlc;
     params.set_plunge_feed(plunge_feedrate);
     
-    cuts = polylines_to_cuts(lines, tool_number(), params, spindle_speed, feedrate);
+    cuts = polylines_to_cuts(lines(), tool_number(), params, spindle_speed, feedrate);
   }
   
   double cut_time_seconds(const toolpath& tp) {
     double cut_distance = 0.0;
 
-    for (auto& pl : tp.lines) {
+    for (auto& pl : tp.lines()) {
       cut_distance += length(pl);
     }
 
@@ -41,15 +41,15 @@ namespace gca {
   double air_time_seconds(const toolpath& tp,
 			  const double rapid_feed) {
     
-    if (tp.lines.size() < 2) { return 0.0; }
+    if (tp.lines().size() < 2) { return 0.0; }
 
     double horizontal_air_distance_inches = 0.0;
     double up_air_distance_inches = 0.0;
     double down_air_distance_inches = 0.0;
 
-    for (unsigned i = 0; i < tp.lines.size() - 1; i++) {
-      const point& last = tp.lines[i].back();
-      const point& next = tp.lines[i + 1].front();
+    for (unsigned i = 0; i < tp.lines().size() - 1; i++) {
+      const point& last = tp.lines()[i].back();
+      const point& next = tp.lines()[i + 1].front();
 
       double up_distance = tp.safe_z_before_tlc - last.z;
       double down_distance = tp.safe_z_before_tlc - next.z;
