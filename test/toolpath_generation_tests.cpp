@@ -39,6 +39,9 @@ namespace gca {
   }
 
   TEST_CASE("Contour with hole") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
     vector<point> safe_ring{point(-3, -3, 0),
 	point(3, -3, 0),
 	point(3, 3, 0),
