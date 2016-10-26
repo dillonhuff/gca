@@ -20,9 +20,8 @@ namespace gca {
 
     tool t;
 
-    std::vector<cut*> cuts;
-
   protected:
+    std::vector<std::vector<cut*>> cuts;    
     std::vector<polyline> ls;
 
   public:
@@ -41,14 +40,14 @@ namespace gca {
     point start_location() const {
       DBG_ASSERT(this->lines().size() > 0);
 
-      point start_pt = cuts.front()->get_start(); //lines.front().front();
+      point start_pt = cuts.front().front()->get_start(); //lines.front().front();
       return point(start_pt.x, start_pt.y, safe_z_before_tlc);
     }
 
     point end_location() const {
       DBG_ASSERT(this->lines().size() > 0);
 
-      point end_pt = cuts.back()->get_end(); //lines.front().front();
+      point end_pt = cuts.back().back()->get_end(); //lines.front().front();
       return point(end_pt.x, end_pt.y, safe_z_before_tlc);
     }
 

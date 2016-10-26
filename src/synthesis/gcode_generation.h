@@ -66,6 +66,11 @@ namespace gca {
 				      const double spindle_speed,
 				      const double feedrate);
 
+  std::vector<cut*> polyline_cuts(const polyline& p,
+				  const int tool_number,
+				  const double spindle_speed,
+				  const double feedrate);
+
 }
 
 #endif

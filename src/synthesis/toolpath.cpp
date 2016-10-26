@@ -18,13 +18,13 @@ namespace gca {
 	t(p_t),
 	ls(p_lines) {
 
-    // TODO: Deal with machine specification
-    cut_params params;
-    params.target_machine = EMCO_F1;
-    params.safe_height = safe_z_before_tlc;
-    params.set_plunge_feed(plunge_feedrate);
-    
-    cuts = polylines_to_cuts(lines(), tool_number(), params, spindle_speed, feedrate);
+    for (auto pl : p_lines) {
+      vector<cut*> line_cuts =
+	polyline_cuts(pl, tool_number(), spindle_speed, feedrate);
+      cuts.push_back(line_cuts);
+    }
+
+    DBG_ASSERT(ls.size() == cuts.size());
   }
   
   double cut_time_seconds(const toolpath& tp) {
