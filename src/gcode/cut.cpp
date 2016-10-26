@@ -80,6 +80,10 @@ namespace gca {
     return (c->get_end() - c->get_start()).len() / fr;
   }
 
+  double execution_time_seconds(const std::vector<cut*>& cs) {
+    return execution_time_minutes(cs)*60.0;
+  }
+
   double cut_execution_time_seconds(const cut* c) {
     return cut_execution_time_minutes(c) * 60;
   }

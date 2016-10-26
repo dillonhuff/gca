@@ -4,6 +4,7 @@
 #include "gcode/cut.h"
 #include "gcode/gcode_program.h"
 #include "geometry/polyline.h"
+#include "synthesis/shape_layout.h"
 #include "synthesis/toolpath.h"
 #include "utils/algorithm.h"
 
@@ -58,6 +59,12 @@ namespace gca {
     concat(blocks, suffix());
     return gcode_program(program_name, blocks);
   }
+
+  std::vector<cut*> polylines_to_cuts(const vector<polyline>& pocket_lines,
+				      const int tool_number,
+				      const cut_params params,
+				      const double spindle_speed,
+				      const double feedrate);
 
 }
 

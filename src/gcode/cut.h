@@ -88,7 +88,10 @@ namespace gca {
   // TODO: Make this account for cut shape
   double cut_execution_time_minutes(const cut* c);
   double cut_execution_time_seconds(const cut* c);
+
   double execution_time_minutes(const vector<cut*>& path);
+  double execution_time_seconds(const vector<cut*>& path);
+
   int get_active_tool_no(const vector<cut*>& path);
   double get_spindle_speed(const vector<cut*>& path);
   double get_spindle_speed(const cut* c);

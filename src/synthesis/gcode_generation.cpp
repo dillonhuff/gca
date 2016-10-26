@@ -61,11 +61,11 @@ namespace gca {
     return bs;
   }
 
-  std::vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
-				    const int tool_number,
-				    const cut_params params,
-				    const double spindle_speed,
-				    const double feedrate) {
+  std::vector<cut*> polylines_to_cuts(const vector<polyline>& pocket_lines,
+				      const int tool_number,
+				      const cut_params params,
+				      const double spindle_speed,
+				      const double feedrate) {
     vector<cut*> cuts;
     for (auto p : pocket_lines) {
       auto cs = polyline_cuts(p, tool_number, spindle_speed, feedrate);
@@ -73,8 +73,21 @@ namespace gca {
     }
 
     vector<cut*> all_cuts = insert_transitions(cuts, params);
+
     DBG_ASSERT(cuts_are_adjacent(all_cuts));
+
     set_feedrates(all_cuts, params);
+
+    return all_cuts;
+  }
+
+  std::vector<block> polylines_cuts(const vector<polyline>& pocket_lines,
+				    const int tool_number,
+				    const cut_params params,
+				    const double spindle_speed,
+				    const double feedrate) {
+    auto all_cuts =
+      polylines_to_cuts(pocket_lines, tool_number, params, spindle_speed, feedrate);
     return gcode_blocks_for_toolpath_cuts(all_cuts, params);
   }
 

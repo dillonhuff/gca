@@ -1,7 +1,32 @@
+#include "synthesis/gcode_generation.h"
 #include "synthesis/toolpath.h"
 
 namespace gca {
 
+  toolpath::toolpath(const pocket_name& p_pocket_type,
+		     const double p_safe_z,
+		     const double p_spindle,
+		     const double p_feed,
+		     const double p_plunge_feed,
+		     const tool& p_t,
+		     const std::vector<polyline>& p_lines)
+      : pocket_tp(p_pocket_type),
+	safe_z_before_tlc(p_safe_z),
+	spindle_speed(p_spindle),
+	feedrate(p_feed),
+	plunge_feedrate(p_plunge_feed),
+	t(p_t),
+	lines(p_lines) {
+
+    // TODO: Deal with machine specification
+    cut_params params;
+    params.target_machine = EMCO_F1;
+    params.safe_height = safe_z_before_tlc;
+    params.set_plunge_feed(plunge_feedrate);
+    
+    cuts = polylines_to_cuts(lines, tool_number(), params, spindle_speed, feedrate);
+  }
+  
   double cut_time_seconds(const toolpath& tp) {
     double cut_distance = 0.0;
 
@@ -15,6 +40,7 @@ namespace gca {
   // NOTE: Assumes Square transitions
   double air_time_seconds(const toolpath& tp,
 			  const double rapid_feed) {
+    
     if (tp.lines.size() < 2) { return 0.0; }
 
     double horizontal_air_distance_inches = 0.0;
