@@ -115,6 +115,91 @@ namespace gca {
   //   "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl"
   // 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"
 
+  struct fab_plan_timing_info {
+    double toolpath_time_seconds;
+    double air_time_seconds;
+
+    fab_plan_timing_info() : toolpath_time_seconds(0.0), air_time_seconds(0.0) {}
+
+    fab_plan_timing_info(double tts, double ats) :
+      toolpath_time_seconds(tts),
+      air_time_seconds(ats) {}
+  };
+
+  void increment(fab_plan_timing_info& total_time,
+		 const fab_plan_timing_info& inc_time) {
+    total_time.toolpath_time_seconds += inc_time.toolpath_time_seconds;
+    total_time.air_time_seconds += inc_time.air_time_seconds;
+  }
+
+  fab_plan_timing_info make_timing_info(const toolpath& tp,
+					const double rapid_feed) {
+    double exec_time = execution_time_seconds(tp, rapid_feed);
+    double air_time = air_time_seconds(tp, rapid_feed);
+    double air_pct = (air_time / exec_time) * 100.0;
+
+    cout << "Toolpath execution time = " << exec_time << " seconds " << endl;
+    cout << "Toolpath air time = " << air_time << " seconds " << endl;
+    cout << "Fraction of toolpath in air = " << air_pct << " % " << endl;
+
+    return fab_plan_timing_info(exec_time, air_time);
+  }
+
+  fab_plan_timing_info make_timing_info(const fabrication_setup& step,
+					const double rapid_feed) {
+    fab_plan_timing_info step_time;
+
+    for (auto& tp : step.toolpaths()) {
+      auto toolpath_time = make_timing_info(tp, rapid_feed);
+      increment(step_time, toolpath_time);
+    }
+
+    return step_time;
+  }
+
+  void print_time_info(std::ostream& out,
+		       const fab_plan_timing_info& times) {
+    out << "Total execution time so far = " << times.toolpath_time_seconds << " seconds" << endl;
+    out << "Total air time so far = " << times.air_time_seconds << " seconds" << endl;
+
+    double total_air_pct =
+      (times.air_time_seconds / times.toolpath_time_seconds) * 100.0;
+
+    out << "Total fraction of air time = " << total_air_pct << " % " << endl;
+  }
+
+  triangular_mesh parse_and_scale_box_stl(const std::string& part_path,
+					  const double max_dim,
+					  const double tol) {
+    auto mesh = parse_stl(part_path, tol);
+
+    box b = mesh.bounding_box();
+
+    vector<double> dims{b.x_len(), b.y_len(), b.z_len()};
+
+    double max_mesh_dim = max_e(dims, [](const double d) { return d; });
+    if (max_mesh_dim > max_dim) {
+      double scale_factor = max_dim / max_mesh_dim;
+
+      auto scale_func = [scale_factor](const point p) {
+	return scale_factor*p;
+      };
+
+      mesh =
+	mesh.apply_to_vertices(scale_func);
+
+    }
+
+    box scaled_bounds = mesh.bounding_box();
+
+    cout << "Scaled bounds " << endl;
+    cout << "X length = " << scaled_bounds.x_len() << endl;
+    cout << "Y length = " << scaled_bounds.y_len() << endl;
+    cout << "Z length = " << scaled_bounds.z_len() << endl;
+    
+    return mesh;
+  }
+
   TEST_CASE("Manufacturable parts") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -126,13 +211,12 @@ namespace gca {
       "test/stl-files/OctagonWithHoles.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
 
-
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
 
 	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
 	  
-      	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
 
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
@@ -157,15 +241,14 @@ namespace gca {
       //vtk_debug_mesh(mesh);
     }
 
-    double total_toolpath_execution_time = 0.0;
-    double total_air_time = 0.0;
 
     double rapid_feed = 24.0;
-
+    fab_plan_timing_info total_time;
+    
     for (auto part_path : passes) {
       cout << "Part path: " << part_path << endl;
 
-      auto mesh = parse_stl(part_path, 0.001);
+      auto mesh = parse_and_scale_box_stl(part_path, 2.5, 0.001);
 
       box bounding = mesh.bounding_box();
 
@@ -175,47 +258,27 @@ namespace gca {
       // vtk_debug_mesh(mesh);
 
       fabrication_plan p =
-	make_fabrication_plan(mesh, extended_inputs); //fixes, tools, {workpiece_dims});
+	make_fabrication_plan(mesh, inputs);
 
       cout << "Number of steps = " << p.steps().size() << endl;
       for (auto& step : p.steps()) {
 	cout << "STEP" << endl;
-	for (auto& tp : step.toolpaths()) {
-	  double exec_time = execution_time_seconds(tp, rapid_feed);
-	  double air_time = air_time_seconds(tp, rapid_feed);
-	  double air_pct = (air_time / exec_time) * 100.0;
-
-	  cout << "Toolpath execution time = " << exec_time << " seconds " << endl;
-	  cout << "Toolpath air time = " << air_time << " seconds " << endl;
-	  cout << "Fraction of toolpath in air = " << air_pct << " % " << endl;
-
-	  total_toolpath_execution_time += exec_time;
-	  total_air_time += air_time;
-	}
+	auto step_time = make_timing_info(step, rapid_feed);
+	increment(total_time, step_time);
       }
 
-      cout << "Total execution time so far = " << total_toolpath_execution_time << " seconds" << endl;
-      cout << "Total air time so far = " << total_air_time / 60.0 << " minutes" << endl;
+      cout << "TOTAL TIME" << endl;
+      print_time_info(cout, total_time);
 
-      double total_air_pct =
-	(total_air_time / total_toolpath_execution_time) * 100.0;
-
-      cout << "Total fraction of air time = " << total_air_pct << " % " << endl;
-
-      for (auto step : p.steps()) {
-      	visual_debug(step);
-      }
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
 
     }
 
-    cout << "Total toolpath time for all parts = " << total_toolpath_execution_time << " seconds" << endl;
-    cout << "Total air time for all parts = " << total_air_time << " seconds" << endl;    
-
-    double total_air_pct =
-      (total_air_time / total_toolpath_execution_time) * 100.0;
-
-    cout << "Percent of time spent in the air = " << total_air_pct << " % " << endl;
-
+    cout << "TOTAL TIME FOR ALL PARTS" << endl;
+    print_time_info(cout, total_time);
+    
   }
 
 }
