@@ -13,10 +13,41 @@
 
 namespace gca {
 
-  TEST_CASE("Manufacturable parts") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  fabrication_inputs current_fab_inputs() { 
+    vice test_v = current_setup();
+    vice test_vice = top_jaw_origin_vice(test_v);
 
+    std::vector<plate_height> plates{0.48}; //0.1, 0.3, 0.7};
+    fixtures fixes(test_vice, plates);
+
+    workpiece workpiece_dims(1.5, 1.5, 1.58, ALUMINUM);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(0.14);
+    t1.set_cut_length(0.5);
+
+    t1.set_shank_diameter(.375); //3.0 / 8.0);
+    t1.set_shank_length(0.18);
+
+    t1.set_holder_diameter(1.8);
+    t1.set_holder_length(3.0);
+
+    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(0.335);
+    t2.set_cut_length(0.72);
+
+    t2.set_shank_diameter(0.336);
+    t2.set_shank_length(0.01);
+
+    t2.set_holder_diameter(1.8);
+    t2.set_holder_length(3.0);
+
+    vector<tool> tools{t1, t2};
+
+    return fabrication_inputs(fixes, tools, workpiece_dims);
+  }
+
+  fabrication_inputs extended_fab_inputs() {
     vice test_v =
       custom_jaw_vice_with_clamp_dir(4.0, 1.0, 8.0, point(0.0, 0.0, 0.0), point(1, 0, 0));
     vice test_vice = top_jaw_origin_vice(test_v);
@@ -68,21 +99,28 @@ namespace gca {
     
     vector<tool> tools{t1, t2, t3, t4};
 
-    vector<string> fails{
-      // Winding issue?
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(13).stl",
+    return fabrication_inputs(fixes, tools, workpiece_dims);
+  }
 
-	// Clamp orientation failure?
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl",
+  // NOTE: FAILING INPUTS
+  // "test/stl-files/onshape_parts//Part Studio 1 - Part 1(13).stl"
 
-	// Another clamp orientation failure?
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl",
+  // Clamp orientation failure?
+  // "test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl"
 
-	};
-    
-    vector<string> too_large{
-      "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"};
+  // Another clamp orientation failure?
+  // "test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl"
+
+  // NOTE: Inputs that are too large
+  //   "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl"
+  // 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"
+
+  TEST_CASE("Manufacturable parts") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    fabrication_inputs inputs = current_fab_inputs();
+    fabrication_inputs extended_inputs = extended_fab_inputs();
 
     vector<string> passes{
       "test/stl-files/OctagonWithHoles.stl",
@@ -137,7 +175,7 @@ namespace gca {
       // vtk_debug_mesh(mesh);
 
       fabrication_plan p =
-	make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+	make_fabrication_plan(mesh, extended_inputs); //fixes, tools, {workpiece_dims});
 
       cout << "Number of steps = " << p.steps().size() << endl;
       for (auto& step : p.steps()) {
@@ -148,7 +186,7 @@ namespace gca {
 	  double air_pct = (air_time / exec_time) * 100.0;
 
 	  cout << "Toolpath execution time = " << exec_time << " seconds " << endl;
-	  cout << "Toolpath air time = " << exec_time << " seconds " << endl;
+	  cout << "Toolpath air time = " << air_time << " seconds " << endl;
 	  cout << "Fraction of toolpath in air = " << air_pct << " % " << endl;
 
 	  total_toolpath_execution_time += exec_time;

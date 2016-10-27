@@ -397,17 +397,16 @@ namespace gca {
     boost_multilinestring_2 ml = to_boost_multilinestring_2(lines);
     boost_multipoly_2 hole_poly = to_boost_multipoly_2(hole_polys);
 
-    boost_multilinestring_2 hole_result;
-    bg::difference(ml, hole_poly, hole_result);
-
-
     polygon_3 bound_p = make_contour_bound(bound, t);
     boost_multipoly_2 bound_poly{to_boost_poly_2(bound_p)};
 
-    boost_multilinestring_2 result;
-    bg::difference(hole_result, bound_poly, result);
+    boost_multilinestring_2 bound_result;
+    bg::difference(ml, bound_poly, bound_result);
+    
+    boost_multilinestring_2 hole_result;
+    bg::difference(bound_result, hole_poly, hole_result);
 
-    vector<polyline> clipped = to_polylines(result, z);
+    vector<polyline> clipped = to_polylines(hole_result, z);
 
     return clipped;
   }
