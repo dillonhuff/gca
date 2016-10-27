@@ -13,20 +13,18 @@
 
 namespace gca {
 
-  fabrication_inputs current_fab_inputs() { 
+  fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims) { 
     vice test_v = current_setup();
     vice test_vice = top_jaw_origin_vice(test_v);
 
-    std::vector<plate_height> plates{0.48}; //0.1, 0.3, 0.7};
+    std::vector<plate_height> plates{0.48};
     fixtures fixes(test_vice, plates);
-
-    workpiece workpiece_dims(1.5, 1.5, 1.58, ALUMINUM);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.14);
     t1.set_cut_length(0.5);
 
-    t1.set_shank_diameter(.375); //3.0 / 8.0);
+    t1.set_shank_diameter(.375);
     t1.set_shank_length(0.18);
 
     t1.set_holder_diameter(1.8);
@@ -42,7 +40,27 @@ namespace gca {
     t2.set_holder_diameter(1.8);
     t2.set_holder_length(3.0);
 
-    vector<tool> tools{t1, t2};
+    tool t3(0.125, 3.0, 4, HSS, FLAT_NOSE);
+    t3.set_cut_diameter(0.125);
+    t3.set_cut_length(1.25);
+
+    t3.set_shank_diameter(.375);
+    t3.set_shank_length(0.18);
+
+    t3.set_holder_diameter(1.8);
+    t3.set_holder_length(3.0);
+
+    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.5);
+    t4.set_cut_length(2.2);
+
+    t4.set_shank_diameter(0.5);
+    t4.set_shank_length(0.05);
+
+    t4.set_holder_diameter(2.5);
+    t4.set_holder_length(3.5);
+    
+    vector<tool> tools{t1, t2, t3, t4};
 
     return fabrication_inputs(fixes, tools, workpiece_dims);
   }
@@ -196,41 +214,85 @@ namespace gca {
     cout << "X length = " << scaled_bounds.x_len() << endl;
     cout << "Y length = " << scaled_bounds.y_len() << endl;
     cout << "Z length = " << scaled_bounds.z_len() << endl;
-    
+
     return mesh;
   }
+
+  triangular_mesh parse_and_scale_stl(const std::string& part_path,
+				      const double scale_factor,
+				      const double tol) {
+    auto mesh = parse_stl(part_path, tol);
+
+    auto scale_func = [scale_factor](const point p) {
+      return scale_factor*p;
+    };
+
+    mesh =
+      mesh.apply_to_vertices(scale_func);
+
+    box scaled_bounds = mesh.bounding_box();
+
+    cout << "Scaled bounds " << endl;
+    cout << "X length = " << scaled_bounds.x_len() << endl;
+    cout << "Y length = " << scaled_bounds.y_len() << endl;
+    cout << "Z length = " << scaled_bounds.z_len() << endl;
+
+    return mesh;
+  }
+  
+  struct part_info {
+    string path;
+    double scale_factor;
+    workpiece stock;
+  };
 
   TEST_CASE("Manufacturable parts") {
     arena_allocator a;
     set_system_allocator(&a);
 
-    fabrication_inputs inputs = current_fab_inputs();
-    fabrication_inputs extended_inputs = extended_fab_inputs();
+    //fabrication_inputs extended_inputs = extended_fab_inputs();
 
-    vector<string> passes{
-      "test/stl-files/OctagonWithHoles.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl",
+    workpiece wp(1.5, 1.5, 2.5, ALUMINUM);    
+    
+    vector<part_info> some_scaling{
+	  // Need to fix dimensional issue, could be suboptimal aligment preventing full
+	  // outer contour
+	    {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl",      
+	    // Not sure what is wrong here
+	      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl", 0.5, wp},
 
-	"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl",
-	  
-	"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl",
+	      // Non simple ring?
+		{"test/stl-files/OctagonWithHoles.stl", 0.8, wp},
 
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl",
+		// Does not correctly face away opposing side?
+		  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl", 0.5, wp},
 
-	"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl",
-	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl"};
+		  // Point error at 373
+		    {"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl", 0.5, wp},
 
-    vector<string> part_paths{};
+		    // Cannot find a viable direction, volume ratio at the end is bad
+		      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl", 0.5, wp},
 
-    for (auto part_path : passes) {
-      cout << "Part path: " << part_path << endl;
 
-      auto mesh = parse_stl(part_path, 0.001);
+		      
+		  // Passes
+		    {"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
+		      {"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl", 1.0, wp},
+			{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl", 0.5, wp},
+			  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl", 0.5, wp}
+			  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl", 0.4, wp},
+
+
+			    
+    };
+    
+    vector<part_info> all_paths = some_scaling;
+    concat(all_paths, some_scaling);
+    for (auto part_path : all_paths) {
+      cout << "Part path: " << part_path.path << endl;
+
+      auto mesh = parse_stl(part_path.path, 0.001);
 
       box bounding = mesh.bounding_box();
 
@@ -241,19 +303,15 @@ namespace gca {
       //vtk_debug_mesh(mesh);
     }
 
-
     double rapid_feed = 24.0;
     fab_plan_timing_info total_time;
     
-    for (auto part_path : passes) {
-      cout << "Part path: " << part_path << endl;
+    for (auto info : all_paths) {
+      cout << "Part path: " << info.path << endl;
+      
+      fabrication_inputs inputs = current_fab_inputs(info.stock);
 
-      auto mesh = parse_and_scale_box_stl(part_path, 2.5, 0.001);
-
-      box bounding = mesh.bounding_box();
-
-      cout << "Bounding box = " << endl;
-      cout << bounding << endl;
+      auto mesh = parse_and_scale_stl(info.path, info.scale_factor, 0.001);
 
       // vtk_debug_mesh(mesh);
 
