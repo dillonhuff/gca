@@ -130,7 +130,7 @@ namespace gca {
 
     //	TODO: Refine these tolerances, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.0); //0.05);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.005, 0.05, 0.0); //0.05);
     
     return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
   }
