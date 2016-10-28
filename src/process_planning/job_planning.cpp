@@ -49,15 +49,15 @@ namespace gca {
 
   triangular_mesh feature_mesh(const feature& f,
 			       const double base_dilation,
-			       const double base_extension,
-			       const double top_extension) {
-    point shift_vec = (-1*top_extension)*f.normal();
+			       const double top_extension,
+			       const double base_extension) {
+    point shift_vec = (-1*base_extension)*f.normal();
 
     if (base_dilation > 0.0) {
       auto dilated_base = dilate(f.base(), base_dilation);
       dilated_base = shift(shift_vec, dilated_base);
     
-      auto m = extrude(dilated_base, (base_extension + f.depth())*f.normal());
+      auto m = extrude(dilated_base, (top_extension + f.depth())*f.normal());
 
       DBG_ASSERT(m.is_connected());
 
@@ -66,7 +66,7 @@ namespace gca {
     } else {
       auto base = shift(shift_vec, f.base());
 
-      auto m = extrude(base, (base_extension + f.depth())*f.normal());
+      auto m = extrude(base, (top_extension + f.depth())*f.normal());
 
       DBG_ASSERT(m.is_connected());
 
@@ -75,7 +75,7 @@ namespace gca {
   }
 
   triangular_mesh feature_mesh(const feature& f) {
-    //vtk_debug_feature(f);
+
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
   
@@ -113,7 +113,6 @@ namespace gca {
 
     Nef_polyhedron remaining_volume;
 
-    //triangular_mesh dilated_mesh;
     Nef_polyhedron dilated_mesh;
   };
 
@@ -131,7 +130,7 @@ namespace gca {
 
     //	TODO: Refine these tolerances, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.0); //0.05);
     
     return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
   }
@@ -180,10 +179,6 @@ namespace gca {
     for (auto d : dir_info) {
       concat(feats_left, collect_features(d.decomp));
     }
-
-    //    vector<feature*> feats_to_sub = collect_features(decomp);
-
-    //vector<triangular_mesh> to_subtract;
 
     vector<Nef_polyhedron> to_subtract;
     for (auto f : feats_to_sub) {
