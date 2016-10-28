@@ -50,11 +50,11 @@ namespace gca {
     t3.set_holder_diameter(1.8);
     t3.set_holder_length(3.0);
 
-    tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
-    t4.set_cut_diameter(1.5);
-    t4.set_cut_length(2.2);
+    tool t4{1.0, 3.94, 4, HSS, FLAT_NOSE};
+    t4.set_cut_diameter(1.0);
+    t4.set_cut_length(1.0);
 
-    t4.set_shank_diameter(0.5);
+    t4.set_shank_diameter(1.1);
     t4.set_shank_length(0.05);
 
     t4.set_holder_diameter(2.5);
@@ -255,26 +255,26 @@ namespace gca {
     workpiece wp(1.5, 1.5, 2.5, ALUMINUM);    
     
     vector<part_info> some_scaling{
-      // Point error at 373
-      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.5, wp},
+      // Passes
+      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
-	// Passes
 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
 	
 	  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
 
-
-	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
-
-	    
-	      {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
-		{"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
-		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
-		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
-		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
-			{"test/stl-files/OctagonWithHoles.stl", 0.9, wp},
+	    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
+	      {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
+		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
+		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
+		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
+		      {"test/stl-files/OctagonWithHoles.stl", 0.9, wp},
 			  
-			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
+			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
+
+			// Point error at 373
+			  {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+
+			    
 			    
 			    };
     
@@ -319,9 +319,9 @@ namespace gca {
       cout << "TOTAL TIME" << endl;
       print_time_info(cout, total_time);
 
-      // for (auto step : p.steps()) {
-      // 	visual_debug(step);
-      // }
+      for (auto step : p.steps()) {
+      	visual_debug(step);
+      }
 
     }
 
