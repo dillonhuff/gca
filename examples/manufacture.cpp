@@ -255,17 +255,14 @@ namespace gca {
     workpiece wp(1.5, 1.5, 2.5, ALUMINUM);    
     
     vector<part_info> some_scaling{
-      // Cannot find a viable direction, volume ratio at the end is bad
-      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
+      // Point error at 373
+      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.5, wp},
 
-	// Not sure what is wrong here
-	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
+	// Passes
+	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
+	
+	  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
 
-
-	// Point error at 373
-	  {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.5, wp},
-
-	  // Passes
 
 	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
