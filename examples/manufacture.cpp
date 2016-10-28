@@ -17,7 +17,7 @@ namespace gca {
     vice test_v = current_setup();
     vice test_vice = top_jaw_origin_vice(test_v);
 
-    std::vector<plate_height> plates{0.48};
+    std::vector<plate_height> plates{0.48, 0.6};
     fixtures fixes(test_vice, plates);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
@@ -255,31 +255,32 @@ namespace gca {
     workpiece wp(1.5, 1.5, 2.5, ALUMINUM);    
     
     vector<part_info> some_scaling{
+      // Cannot find a viable direction, volume ratio at the end is bad
+      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl", 0.5, wp},
 
-      // Need to fix dimensional issue, could be suboptimal aligment preventing full
-      // outer contour
-      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
 	// Not sure what is wrong here
 	{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(3).stl", 0.5, wp},
 
-	// Does not correctly face away opposing side? Maybe this is also
-	// Due to a lack of parallel plates?
-	  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl", 0.5, wp},
 
-	  // Point error at 373
-	    {"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl", 0.5, wp},
+	// Point error at 373
+	  {"test/stl-files/onshape_parts//Part Studio 1 - ESC spacer.stl", 0.5, wp},
 
-	    // Cannot find a viable direction, volume ratio at the end is bad
-	      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(23).stl", 0.5, wp},
-		      
-	      // Passes
-		{"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
-		  {"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl", 1.0, wp},
-		    {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl", 0.5, wp},
-		      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl", 0.5, wp},
-			{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl", 0.4, wp},
-			  {"test/stl-files/OctagonWithHoles.stl", 0.9, wp},
+
+	  // Passes
+
+	    {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(29).stl", 0.5, wp},
+
+	    
+	      {"test/stl-files/onshape_parts//Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
+		{"test/stl-files/onshape_parts//PSU Mount - PSU Mount.stl", 1.0, wp},
+		  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(2).stl", 0.5, wp},
+		    {"test/stl-files/onshape_parts//Part Studio 1 - Part 1.stl", 0.5, wp},
+		      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(24).stl", 0.4, wp},
+			{"test/stl-files/OctagonWithHoles.stl", 0.9, wp},
+			  
+			  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(20).stl", 0.7, wp},
+      
 
 			    
 			    };

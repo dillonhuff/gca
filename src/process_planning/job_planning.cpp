@@ -629,15 +629,7 @@ namespace gca {
 
       cout << "Found fixture in " << n << endl;
 
-      // clamp_orientation part_zero = find_part_zero(stock_nef, orient, v, -1*n);
-      // cout << "Part zero" << endl;
-      // auto l_act = plane_actor(vtk_plane(part_zero.left_plane()));
-      // auto r_act = plane_actor(vtk_plane(part_zero.right_plane()));
-      // auto b_act = plane_actor(vtk_plane(part_zero.base_plane()));
-      // auto cs_act = polydata_actor(polydata_for_trimesh(current_stock));
-      // visualize_actors({l_act, r_act, b_act, cs_act});
-
-      fixture fix(orient, v); //, part_zero);
+      fixture fix(orient, v);
 
       return fix;
     }
