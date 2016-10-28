@@ -7,10 +7,11 @@
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
+#include "synthesis/visual_debug.h"
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -112,7 +113,8 @@ namespace gca {
 
     Nef_polyhedron remaining_volume;
 
-    triangular_mesh dilated_mesh;
+    //triangular_mesh dilated_mesh;
+    Nef_polyhedron dilated_mesh;
   };
 
   typedef std::unordered_map<feature*, volume_info> volume_info_map;
@@ -131,7 +133,7 @@ namespace gca {
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.05, 0.05, 0.05);
     
-    return volume_info{vol, feature_nef, dilated_mesh};
+    return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
   }
 
   volume_info
@@ -139,7 +141,7 @@ namespace gca {
 		     const std::vector<triangular_mesh>& to_subtract) {
     if (inf.volume == 0.0) { return inf; }
 
-    auto res = inf.remaining_volume;
+    Nef_polyhedron res = inf.remaining_volume;
     for (auto s : to_subtract) {
       res = res - trimesh_to_nef_polyhedron(s);
     }
@@ -171,7 +173,7 @@ namespace gca {
   }
 
   void
-  clip_volumes(feature_decomposition* decomp,
+  clip_volumes(std::vector<feature*>& feats_to_sub,
 	       volume_info_map& volume_inf,
 	       const std::vector<direction_process_info>& dir_info) {
     vector<feature*> feats_left;
@@ -179,9 +181,11 @@ namespace gca {
       concat(feats_left, collect_features(d.decomp));
     }
 
-    vector<feature*> feats_to_sub = collect_features(decomp);
+    //    vector<feature*> feats_to_sub = collect_features(decomp);
 
-    vector<triangular_mesh> to_subtract;
+    //vector<triangular_mesh> to_subtract;
+
+    vector<Nef_polyhedron> to_subtract;
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
 
@@ -464,9 +468,13 @@ namespace gca {
 			  const fixture& fix) {
     std::vector<feature*> fs = collect_features(decomp);
 
+    cout << "# of features initially = " << fs.size() << endl;
+
     delete_if(fs, [vol_info](feature* feat) {
 	return map_find(feat, vol_info).volume < 0.00001;
       });
+
+    cout << "# of features with some volume left = " << fs.size() << endl;
 
     auto unreachable_feats =
       unreachable_features(fs, fix);
@@ -474,6 +482,8 @@ namespace gca {
     delete_if(fs, [&unreachable_feats](feature *f) {
 	return elem(f, unreachable_feats);
       });
+
+    cout << "# of features after deleting the unreachable = " << fs.size() << endl;
 
     return fs;
   }
@@ -691,11 +701,18 @@ namespace gca {
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
-	clip_volumes(decomp, volume_inf, dir_info);
-	
 	homogeneous_transform t =
 	  balanced_mating_transform(current_stock, fix.orient, fix.v);
 	auto features = collect_viable_features(decomp, volume_inf, fix);
+
+	cout << "# of viable features = " << features.size() << endl;
+
+#ifdef VIZ_DBG
+	fabrication_setup dummy(apply(t, current_stock), fix.v, {});
+	visual_debug(dummy);
+#endif
+
+	clip_volumes(features, volume_inf, dir_info);
 
 	if (features.size() > 0) {
 
