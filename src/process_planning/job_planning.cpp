@@ -138,12 +138,12 @@ namespace gca {
 
   volume_info
   update_volume_info(const volume_info& inf,
-		     const std::vector<triangular_mesh>& to_subtract) {
+		     const std::vector<Nef_polyhedron>& to_subtract) {
     if (inf.volume == 0.0) { return inf; }
 
     Nef_polyhedron res = inf.remaining_volume;
     for (auto s : to_subtract) {
-      res = res - trimesh_to_nef_polyhedron(s);
+      res = res - s;
     }
 
     double new_volume = 0.0;
