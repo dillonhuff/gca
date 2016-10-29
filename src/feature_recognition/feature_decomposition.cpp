@@ -522,12 +522,12 @@ namespace gca {
   
   std::vector<labeled_polygon_3>
   dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol) {
-    vtk_debug_polygons(polys);
 
     std::vector<labeled_polygon_3> dilated_polys;
     for (auto p : polys) {
       dilated_polys.push_back(dilate(p, tol));
     }
+
     return dilated_polys;
   }
 
