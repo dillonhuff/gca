@@ -266,8 +266,17 @@ namespace gca {
 	 });
 
     cout << "Got horizontal surfaces" << endl;
-    
-    return surf_polys;
+
+    vector<polygon_3> cleaned_surf_polys;
+    for (auto& p : surf_polys) {
+      boost::optional<polygon_3> cleaned =
+	clean_polygon_for_offsetting_maybe(p);
+      if (cleaned) {
+	cleaned_surf_polys.push_back(*cleaned);
+      }
+    }
+
+    return cleaned_surf_polys;
   }
 
   surface_levels
@@ -290,6 +299,7 @@ namespace gca {
 
       surface_it = next_it;
     }
+
     return levels;
   }
 
@@ -512,6 +522,8 @@ namespace gca {
   
   std::vector<labeled_polygon_3>
   dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol) {
+    vtk_debug_polygons(polys);
+
     std::vector<labeled_polygon_3> dilated_polys;
     for (auto p : polys) {
       dilated_polys.push_back(dilate(p, tol));

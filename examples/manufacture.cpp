@@ -17,7 +17,7 @@ namespace gca {
     vice test_v = current_setup();
     vice test_vice = top_jaw_origin_vice(test_v);
 
-    std::vector<plate_height> plates{0.48, 0.6};
+    std::vector<plate_height> plates{0.48, 0.625};
     fixtures fixes(test_vice, plates);
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
@@ -30,7 +30,7 @@ namespace gca {
     t1.set_holder_diameter(1.8);
     t1.set_holder_length(3.0);
 
-    tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+    tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
     t2.set_cut_diameter(0.335);
     t2.set_cut_length(0.72);
 
@@ -42,7 +42,7 @@ namespace gca {
 
     tool t3(0.125, 3.0, 4, HSS, FLAT_NOSE);
     t3.set_cut_diameter(0.125);
-    t3.set_cut_length(1.25);
+    t3.set_cut_length(1.0);
 
     t3.set_shank_diameter(.375);
     t3.set_shank_length(0.18);
@@ -132,6 +132,10 @@ namespace gca {
   // NOTE: Inputs that are too large
   //   "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl"
   // 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"
+  //    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+
+			    
+
 
   struct fab_plan_timing_info {
     double toolpath_time_seconds;
@@ -271,10 +275,6 @@ namespace gca {
 			  
 			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
 
-			// Point error at 373
-			  {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
-
-			    
 			    
 			    };
     
@@ -319,9 +319,9 @@ namespace gca {
       cout << "TOTAL TIME" << endl;
       print_time_info(cout, total_time);
 
-      for (auto step : p.steps()) {
-      	visual_debug(step);
-      }
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
 
     }
 

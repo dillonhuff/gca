@@ -374,6 +374,23 @@ namespace gca {
     return polygon_3(cleaned_outer, cleaned_holes);
   }
 
+  boost::optional<polygon_3>
+  clean_polygon_for_offsetting_maybe(const polygon_3& poly) {
+    vector<point> cleaned_outer = clean_ring_for_offsetting_no_fail(poly.vertices());
+
+    if (cleaned_outer.size() < 3) { return boost::none; }
+
+    vector<vector<point>> cleaned_holes;
+    for (auto h : poly.holes()) {
+      auto cl_h = clean_ring_for_offsetting_no_fail(h);
+      if (cl_h.size() >= 3) {
+	cleaned_holes.push_back(cl_h);
+      }
+    }
+
+    return polygon_3(cleaned_outer, cleaned_holes);
+  }
+  
   std::vector<point> exterior_offset(const std::vector<point>& pts,
 				     const double tol) {
 

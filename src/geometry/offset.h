@@ -29,6 +29,9 @@ namespace gca {
 
   void check_simplicity(const std::vector<point>& pts);
 
+  boost::optional<polygon_3>
+  clean_polygon_for_offsetting_maybe(const polygon_3& poly);
+  
   std::vector<point>
   exterior_offset(const std::vector<point>& pts, const double tol);
 
