@@ -132,7 +132,7 @@ namespace gca {
   // NOTE: Inputs that are too large
   //   "test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl"
   // 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"
-  //    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+  //    
 
 			    
 
@@ -259,6 +259,7 @@ namespace gca {
     workpiece wp(1.5, 1.5, 2.5, ALUMINUM);    
     
     vector<part_info> some_scaling{
+      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
       // Passes
       {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
