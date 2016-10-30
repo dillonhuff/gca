@@ -348,7 +348,7 @@ int main(int argc, char *argv[]) {
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
 
-  double scale_factor = 0.5;
+  double scale_factor = 0.02;
   auto scale_func = [scale_factor](const point p) {
     return scale_factor*p;
   };

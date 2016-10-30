@@ -56,6 +56,9 @@ namespace gca {
 
     inline double holder_length() const { return holder_len; }
     inline double holder_diameter() const { return holder_diam; }
+
+    inline void set_tool_number(const int new_tool_no)
+    { tool_num = new_tool_no; }
     
     inline void set_cut_diameter(const double n)
     { diam = n; }
