@@ -1189,11 +1189,12 @@ namespace gca {
 
       cout << "Fraction difference = " << fraction_diff << endl;
 
+      double tol = 0.005;
       // NOTE: Horrible naming issue
-      DBG_ASSERT(second_smallest_access_area <= smallest_access_area);
+      DBG_ASSERT((second_smallest_access_area <= smallest_access_area) ||
+		 within_eps(fraction_diff, 0.0, tol));
 
-      if (within_eps(second_smallest_access_area,
-		     smallest_access_area)) {
+      if (within_eps(fraction_diff, 0.0, tol)) {
 	acceptable_tools.erase(end(acceptable_tools) - 1);
       } else {
 	break;
