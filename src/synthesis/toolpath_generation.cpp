@@ -1189,11 +1189,12 @@ namespace gca {
 
       cout << "Fraction difference = " << fraction_diff << endl;
 
-      double tol = 0.005;
+      double check_tol = 0.01;
       // NOTE: Horrible naming issue
       DBG_ASSERT((second_smallest_access_area <= smallest_access_area) ||
-		 within_eps(fraction_diff, 0.0, tol));
+		 within_eps(fraction_diff, 0.0, check_tol));
 
+      double tol = 0.001;
       if (within_eps(fraction_diff, 0.0, tol)) {
 	acceptable_tools.erase(end(acceptable_tools) - 1);
       } else {
@@ -1214,8 +1215,6 @@ namespace gca {
     DBG_ASSERT(tools.size() > 0);
 
     toolpath rough_path = rough_flat_region(r, safe_z, tools);
-
-    flat_region residual_region = residual_flat_region(r, rough_path.t);
 
     toolpath finish_path = finish_flat_region(r, safe_z, tools);
 
