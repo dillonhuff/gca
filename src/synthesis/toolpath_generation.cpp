@@ -308,24 +308,6 @@ namespace gca {
     return res;
   }
 
-  boost_multipoly_2
-  to_boost_multipoly_2(const std::vector<polygon_3>& lines) {
-    boost_multipoly_2 res;
-    for (auto& pl : lines) {
-      res.push_back(to_boost_poly_2(pl));
-    }
-    return res;
-  }
-
-  boost_multipoly_2
-  to_boost_multipoly_2(const rotation&r, const std::vector<polygon_3>& lines) {
-    boost_multipoly_2 res;
-    for (auto& pl : lines) {
-      res.push_back(to_boost_poly_2(apply(r, pl)));
-    }
-    return res;
-  }
-
   vector<polygon_3> from_boost_multipoly_2(const boost_multipoly_2& p,
 					   const rotation& r,
 					   const double z_level) {

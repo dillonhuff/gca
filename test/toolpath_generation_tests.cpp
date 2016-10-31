@@ -10,6 +10,49 @@
 
 namespace gca {
 
+  double
+  volume_cut_inside_area(const class region& sim_region,
+			 const std::vector<polygon_3>& area_polys,
+			 const double original_height) {
+    auto poly_2d = to_boost_multipoly_2(area_polys);
+
+    double volume_in_area = 0.0;
+
+    int num_in_region = 0;
+
+    for (int i = 0; i < sim_region.num_x_elems; i++) {
+      for (int j = 0; j < sim_region.num_y_elems; j++) {
+	double r_x = sim_region.resolution*i;
+	double r_y = sim_region.resolution*j;
+
+	point dummy(r_x, r_y, 0.0);
+	point converted = sim_region.region_coords_to_machine_coords(dummy);
+
+	bg::model::d2::point_xy<double> conv_pt(converted.x, converted.y);
+
+	if (bg::within(conv_pt, poly_2d)) {
+	  // cout << converted << " is in the region" << endl;
+	  // cout << "Height at " << converted << " = " << sim_region.column_height(i, j) << endl;
+
+	  // if (!within_eps(sim_region.column_height(i, j), 0.1, 0.001)) {
+	  //   cout << "Different height = " << sim_region.column_height(i, j) << endl;
+	  // }
+
+	  num_in_region++;
+	  volume_in_area +=
+	    sim_region.resolution *
+	    sim_region.resolution *
+	    (original_height - sim_region.column_height(i, j));
+	}
+      }
+    }
+
+    cout << "# of points in region = " << num_in_region << endl;
+    cout << "Volume inside cut area = " << volume_in_area << endl;
+
+    return volume_in_area;
+  }
+
   bool
   toolpaths_cover_percent_of_area(const flat_region& machine_region,
 				  const std::vector<toolpath>& toolpaths,
@@ -30,14 +73,16 @@ namespace gca {
     double material_height = machine_region.height();
     class region sim_region = bounding_region(max_diam_t.t.cut_diameter(), b, material_height);
 
-    double volume_cut = 0.0;
     for (auto& tp : toolpaths) {
       cylindrical_bit current_tool(tp.t.cut_diameter());
 
       for (auto cut_sequence : tp.cuts_without_safe_moves()) {
-	volume_cut += simulate_mill(cut_sequence, sim_region, current_tool);
+	simulate_mill(cut_sequence, sim_region, current_tool);
       }
     }
+
+    double volume_cut =
+      volume_cut_inside_area(sim_region, machine_region.machine_area, material_height);
 
     cout << "Volume cut                         = " << volume_cut << endl;
 
@@ -45,7 +90,12 @@ namespace gca {
 
     cout << "Volume that was supposed to be cut = " << volume_to_cut << endl;
 
-    double pct_left = (volume_to_cut - volume_cut) / volume_to_cut;
+    DBG_ASSERT((volume_cut <= volume_to_cut) ||
+	       within_eps(volume_cut, volume_to_cut, 0.5));
+
+    double pct_left = ((volume_to_cut - volume_cut) / volume_to_cut)*100;
+
+    cout << "Percent of volume left = " << pct_left << endl;
 
     return within_eps(pct_left, 0.0, 100.0 - required_threshold);
   }

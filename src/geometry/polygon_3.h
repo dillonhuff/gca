@@ -113,4 +113,10 @@ namespace gca {
 
   polygon_3 project(const polygon_3& p, double z);
 
+  boost_multipoly_2
+  to_boost_multipoly_2(const rotation&r, const std::vector<polygon_3>& lines);
+
+  boost_multipoly_2
+  to_boost_multipoly_2(const std::vector<polygon_3>& lines);
+
 }

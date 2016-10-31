@@ -35,12 +35,18 @@ namespace gca {
 
     // TODO: Generalize to allow for user specification of
     // machine and region coordinates
-    point machine_coords_to_region_coords(point p) {
+    point machine_coords_to_region_coords(point p) const {
       return point(p.x + machine_x_offset,
 		   p.y + machine_y_offset,
 		   p.z + machine_z_offset);
     }
 
+    point region_coords_to_machine_coords(const point p) const {
+      return point(p.x - machine_x_offset,
+		   p.y - machine_y_offset,
+		   p.z - machine_z_offset);
+    }
+    
     inline void set_machine_x_offset(double x_off) { machine_x_offset = x_off; }
     inline void set_machine_y_offset(double y_off) { machine_y_offset = y_off; }
     inline void set_machine_z_offset(double z_off) { machine_z_offset = z_off; }
