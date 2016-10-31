@@ -1083,12 +1083,6 @@ namespace gca {
     return zig_rough_path(r, safe_z, t);
   }
 
-  // toolpath clean_flat_region(const flat_region& r,
-  // 			     const double safe_z,
-  // 			     const std::vector<tool>& tools) {
-  //   DBG_ASSERT(false);
-  // }
-
   std::vector<polyline> finish_lines(const flat_region& r,
 				     const tool& t) {
     vector<polyline> edges;
@@ -1197,10 +1191,11 @@ namespace gca {
     DBG_ASSERT(tools.size() > 0);
 
     toolpath rough_path = rough_flat_region(r, safe_z, tools);
+    toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
 
     toolpath finish_path = finish_flat_region(r, safe_z, tools);
 
-    return {rough_path, finish_path};
+    return {rough_path, rough_finish, finish_path};
 
   }
 
