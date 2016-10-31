@@ -332,6 +332,8 @@ namespace gca {
       
     }
 
+    double height() const { return start_depth - end_depth; }
+
   };
 
 

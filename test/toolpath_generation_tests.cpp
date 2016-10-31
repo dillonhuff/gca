@@ -3,11 +3,52 @@
 #include "geometry/offset.h"
 #include "geometry/rotation.h"
 #include "geometry/vtk_utils.h"
+#include "simulators/sim_mill.h"
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
 
 namespace gca {
+
+  bool
+  toolpaths_cover_percent_of_area(const flat_region& machine_region,
+				  const std::vector<toolpath>& toolpaths,
+				  const double required_threshold) {
+
+    DBG_ASSERT(0.0 <= required_threshold);
+    DBG_ASSERT(required_threshold <= 100.0);
+
+    std::vector<std::vector<cut*>> all_cuts;
+    for (auto& tp : toolpaths) {
+      concat(all_cuts, tp.cuts_without_safe_moves());
+    }
+
+    toolpath max_diam_t =
+      max_e(toolpaths, [](const toolpath& t) { return t.t.cut_diameter(); });
+
+    box b = bound_paths(all_cuts);
+    double material_height = machine_region.height();
+    class region sim_region = bounding_region(max_diam_t.t.cut_diameter(), b, material_height);
+
+    double volume_cut = 0.0;
+    for (auto& tp : toolpaths) {
+      cylindrical_bit current_tool(tp.t.cut_diameter());
+
+      for (auto cut_sequence : tp.cuts_without_safe_moves()) {
+	volume_cut += simulate_mill(cut_sequence, sim_region, current_tool);
+      }
+    }
+
+    cout << "Volume cut                         = " << volume_cut << endl;
+
+    double volume_to_cut = area(machine_region.machine_area)*machine_region.height();
+
+    cout << "Volume that was supposed to be cut = " << volume_to_cut << endl;
+
+    double pct_left = (volume_to_cut - volume_cut) / volume_to_cut;
+
+    return within_eps(pct_left, 0.0, 100.0 - required_threshold);
+  }
 
   bool overlap_2D(const polyline& lines, const polygon_3& poly) {
     const rotation r = rotate_from_to(poly.normal(), point(0, 0, 1));
@@ -84,7 +125,17 @@ namespace gca {
     tiny_tool.set_holder_diameter(2.5);
     tiny_tool.set_holder_length(3.5);
     tiny_tool.set_tool_number(2);
-    
+
+    tool huge_tool{1.5, 3.94, 2, HSS, FLAT_NOSE};
+    huge_tool.set_cut_diameter(1.5);
+    huge_tool.set_cut_length(1.0);
+
+    huge_tool.set_shank_diameter(0.5);
+    huge_tool.set_shank_length(0.05);
+
+    huge_tool.set_holder_diameter(2.5);
+    huge_tool.set_holder_length(3.5);
+    huge_tool.set_tool_number(3);
 
     SECTION("No overlap with 1/8 inch tool") {
       std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
@@ -101,6 +152,12 @@ namespace gca {
       for (auto& tp : toolpaths) {
 	REQUIRE(tp.tool_number() != 2);
       }
+    }
+
+    SECTION("Toolpaths cover most of the region") {
+      std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t, huge_tool});
+
+      REQUIRE(toolpaths_cover_percent_of_area(r, toolpaths, 98.0));
     }
 
   }

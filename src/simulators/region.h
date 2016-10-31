@@ -84,6 +84,7 @@ namespace gca {
       int last_x = static_cast<int>(t.x_max(p) / resolution);
       int first_y = static_cast<int>(t.y_min(p) / resolution);
       int last_y = static_cast<int>(t.y_max(p) / resolution);
+
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  if (t.contains(p, resolution, i, j) && !legal_column(i, j)) {
@@ -91,6 +92,7 @@ namespace gca {
 	  }
 	}
       }
+
       return true;
     }
 
@@ -100,6 +102,7 @@ namespace gca {
       int last_x = static_cast<int>(t.x_max(p) / resolution) + 1;
       int first_y = static_cast<int>(t.y_min(p) / resolution);
       int last_y = static_cast<int>(t.y_max(p) / resolution) + 1;
+
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  if (t.contains(p, resolution, i, j)) {
@@ -112,6 +115,7 @@ namespace gca {
 	  }
 	}
       }
+
       total_volume_removed += volume_removed;
       return volume_removed;
     }

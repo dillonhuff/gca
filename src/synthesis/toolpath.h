@@ -40,20 +40,24 @@ namespace gca {
     point start_location() const {
       DBG_ASSERT(this->lines().size() > 0);
 
-      point start_pt = cuts.front().front()->get_start(); //lines.front().front();
+      point start_pt = cuts.front().front()->get_start();
       return point(start_pt.x, start_pt.y, safe_z_before_tlc);
     }
 
     point end_location() const {
       DBG_ASSERT(this->lines().size() > 0);
 
-      point end_pt = cuts.back().back()->get_end(); //lines.front().front();
+      point end_pt = cuts.back().back()->get_end();
       return point(end_pt.x, end_pt.y, safe_z_before_tlc);
     }
 
     std::vector<polyline> lines() const;
 
     std::vector<cut*> contiguous_cuts(const cut_params& params) const;
+
+    std::vector<std::vector<cut*>> cuts_without_safe_moves() const {
+      return cuts;
+    }
 
   };
 

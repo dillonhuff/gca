@@ -14,7 +14,7 @@ namespace gca {
     //   cout << "ERROR" << endl;
     //   cout << "z_max = " << b.z_max << endl;
     //   cout << "material height = " << material_height << endl;
-    //   assert(false);
+    //   DBG_ASSERT(false);
     // }
     region r(x_len, y_len, z_len, 0.01);
     r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
@@ -51,7 +51,7 @@ namespace gca {
       cout << "Machine x offset: " << r.machine_x_offset << endl;
       cout << "Machine y offset: " << r.machine_y_offset << endl;
       cout << "Machine z offset: " << r.machine_z_offset << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
   }
 
@@ -59,12 +59,14 @@ namespace gca {
     double volume_removed = 0.0;
     double d = r.resolution;
     int num_points = (c.length() / d) + 1;
+
     for (int i = 0; i < num_points; i++) {
       double tp = static_cast<double>(i) / static_cast<double>(num_points);
       point e = r.machine_coords_to_region_coords(c.value_at(tp));
       check_region_bounds(e, r, t);
       volume_removed += r.update(e, t);
     }
+
     return volume_removed;
   }
   

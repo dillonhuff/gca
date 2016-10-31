@@ -8,10 +8,11 @@
 
 namespace gca {
 
-  double update_cut(const cut& c, region& r, const mill_tool& t);
-  double simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t);
-  region set_up_region(const vector<vector<cut*>>& paths, double tool_diameter);
-  region set_up_region_conservative(const vector<vector<cut*>>& paths, double tool_diameter);
+  class region bounding_region(double tool_diameter, box b, double material_height);
+  double update_cut(const cut& c, class region& r, const mill_tool& t);
+  double simulate_mill(const vector<cut*>& p, class region& r, const mill_tool& t);
+  class region set_up_region(const vector<vector<cut*>>& paths, double tool_diameter);
+  class region set_up_region_conservative(const vector<vector<cut*>>& paths, double tool_diameter);
 
 }
 
