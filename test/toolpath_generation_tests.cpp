@@ -212,5 +212,100 @@ namespace gca {
 
   }
 
+  TEST_CASE("Contour with hole with recess") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<point> safe_ring{point(-3, -3, 0),
+	point(3, -3, 0),
+	point(3, 3, 0),
+	point(-3, 3, 0)};
+
+    vector<point> outer_machine_ring{point(-2, -2, 0),
+	point(2, -2, 0),
+	point(2, 2, 0),
+	point(-2, 2, 0)};
+
+    vector<point> hole{point(-1, -1, 0),
+	point(-0.1, -1, 0),
+	point(-0.1, 0, 0),
+	point(0.1, 0, 0),
+	point(0.1, -1, 0),
+	point(1, -1, 0),
+	point(1, 1, 0),
+	point(-1, 1, 0)};
+
+    polygon_3 safe_area(safe_ring, {hole});
+    polygon_3 machine_area(outer_machine_ring, {hole});
+
+    flat_region r(safe_area, machine_area, 0.1, 0.0, ALUMINUM);
+
+    tool t{1.0 / 8.0, 3.94, 4, HSS, FLAT_NOSE};
+    t.set_cut_diameter(1.0 / 8.0);
+    t.set_cut_length(1.2);
+
+    t.set_shank_diameter(0.5);
+    t.set_shank_length(0.05);
+
+    t.set_holder_diameter(2.5);
+    t.set_holder_length(3.5);
+    t.set_tool_number(1);
+
+
+    tool tiny_tool{1.0 / 800.0, 3.94, 4, HSS, FLAT_NOSE};
+    tiny_tool.set_cut_diameter(1.0 / 800);
+    tiny_tool.set_cut_length(1.2);
+
+    tiny_tool.set_shank_diameter(0.5);
+    tiny_tool.set_shank_length(0.05);
+
+    tiny_tool.set_holder_diameter(2.5);
+    tiny_tool.set_holder_length(3.5);
+    tiny_tool.set_tool_number(2);
+
+    tool huge_tool{1.5, 3.94, 2, HSS, FLAT_NOSE};
+    huge_tool.set_cut_diameter(1.5);
+    huge_tool.set_cut_length(1.0);
+
+    huge_tool.set_shank_diameter(0.5);
+    huge_tool.set_shank_length(0.05);
+
+    huge_tool.set_holder_diameter(2.5);
+    huge_tool.set_holder_length(3.5);
+    huge_tool.set_tool_number(3);
+
+    SECTION("No overlap with 1/8 inch tool") {
+      std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
+      polygon_3 offset_hole = exterior_offset(hole, t.radius() - 0.01);
+
+      for (auto& tp : toolpaths) {
+	REQUIRE(!overlap_2D(tp.lines(), offset_hole));
+      }
+    }
+
+    SECTION("No use of tiny tool") {
+      std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t, tiny_tool});
+
+      for (auto& tp : toolpaths) {
+	REQUIRE(tp.tool_number() != 2);
+      }
+    }
+
+    SECTION("Toolpaths cover most of the region") {
+      std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t, huge_tool});
+
+      vector<vtkSmartPointer<vtkActor>> toolpath_actors;
+      for (auto& tp : toolpaths) {
+	cout << "Tool number = " << tp.tool_number() << endl;
+	toolpath_actors.push_back(polydata_actor(polydata_for_toolpath(tp)));
+      }
+
+      visualize_actors(toolpath_actors);
+
+      REQUIRE(toolpaths_cover_percent_of_area(r, toolpaths, 98.0));
+    }
+
+  }
+  
   
 }
