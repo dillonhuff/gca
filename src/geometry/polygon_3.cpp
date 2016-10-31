@@ -335,10 +335,12 @@ namespace gca {
   }
 
   double area(const std::vector<polygon_3>& p) {
-    double total_area;
+    double total_area = 0.0;
 
-    for (auto& poly : p) {
-      total_area += area(poly);
+    for (auto poly : p) {
+      double poly_area = area(poly);
+
+      total_area += poly_area;
     }
 
     return total_area;

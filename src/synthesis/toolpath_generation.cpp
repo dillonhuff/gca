@@ -1173,15 +1173,11 @@ namespace gca {
       auto smallest_access_region =
 	cuttable_regions(r.safe_area, smallest);
 
-      vtk_debug_polygons(smallest_access_region);
-
       auto second_smallest_access_region =
 	cuttable_regions(r.safe_area, second_smallest);
 
-      vtk_debug_polygons(second_smallest_access_region);
-
-      auto smallest_access_area = area(smallest_access_region);
-      auto second_smallest_access_area = area(second_smallest_access_region);
+      double smallest_access_area = area(smallest_access_region);
+      double second_smallest_access_area = area(second_smallest_access_region);
 
       cout << "Smallest diameter           = " << smallest.cut_diameter() << endl;
       cout << "Smallest access area        = " << smallest_access_area << endl;
@@ -1195,6 +1191,13 @@ namespace gca {
 
       // NOTE: Horrible naming issue
       DBG_ASSERT(second_smallest_access_area <= smallest_access_area);
+
+      if (within_eps(second_smallest_access_area,
+		     smallest_access_area)) {
+	acceptable_tools.erase(end(acceptable_tools) - 1);
+      } else {
+	break;
+      }
     }
 
     return acceptable_tools;
