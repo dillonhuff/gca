@@ -333,5 +333,15 @@ namespace gca {
 
     return polygon_3(pts, holes);
   }
+
+  double area(const std::vector<polygon_3>& p) {
+    double total_area;
+
+    for (auto& poly : p) {
+      total_area += area(poly);
+    }
+
+    return total_area;
+  }
   
 }

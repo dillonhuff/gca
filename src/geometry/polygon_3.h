@@ -93,6 +93,8 @@ namespace gca {
 
   double area(const polygon_3& p);
 
+  double area(const std::vector<polygon_3>& p);
+
   std::vector<polygon_3>
   planar_polygon_union(const std::vector<polygon_3>& polys);
 

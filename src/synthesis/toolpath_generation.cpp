@@ -1006,14 +1006,23 @@ namespace gca {
 		    cut_paths);
   }
 
+  // TODO: Perhaps this should be called safe_regions?
   vector<polygon_3>
   accessable_regions(const polygon_3& area, const tool& t) {
     vector<polygon_3> rs = interior_offset({area}, t.radius());
     return rs;
   }
 
+  vector<polygon_3>
+  cuttable_regions(const polygon_3& area, const tool& t) {
+    vector<polygon_3> rs = accessable_regions(area, t);
+    vector<polygon_3> exts = exterior_offset(rs, t.radius());
+    return exts;
+  }
+  
   flat_region residual_flat_region(const flat_region& r, const tool& t) {
-    vector<polygon_3> access_area = accessable_regions(r.safe_area, t);
+    vector<polygon_3> access_area = cuttable_regions(r.safe_area, t);
+
     vector<polygon_3> residual =
       polygon_difference(r.machine_area, access_area);
     return flat_region(r.safe_area, residual, r.start_depth, r.end_depth, r.stock_material);
@@ -1149,10 +1158,54 @@ namespace gca {
     return finish_path(r, safe_z, t);
   }
 
+  std::vector<tool>
+  filter_unneeded_small_tools(const flat_region& r,
+			      const std::vector<tool>& all_tools) {
+
+    vector<tool> acceptable_tools = all_tools;
+    sort_gt(acceptable_tools,
+	    [](const tool& t) { return t.cut_diameter(); });
+
+    while (acceptable_tools.size() > 1) {
+      tool smallest = acceptable_tools.back();
+      tool second_smallest = acceptable_tools[acceptable_tools.size() - 2];
+
+      auto smallest_access_region =
+	cuttable_regions(r.safe_area, smallest);
+
+      vtk_debug_polygons(smallest_access_region);
+
+      auto second_smallest_access_region =
+	cuttable_regions(r.safe_area, second_smallest);
+
+      vtk_debug_polygons(second_smallest_access_region);
+
+      auto smallest_access_area = area(smallest_access_region);
+      auto second_smallest_access_area = area(second_smallest_access_region);
+
+      cout << "Smallest diameter           = " << smallest.cut_diameter() << endl;
+      cout << "Smallest access area        = " << smallest_access_area << endl;
+      cout << "Second smallest diameter    = " << second_smallest.cut_diameter() << endl;
+      cout << "Second smallest access area = " << second_smallest_access_area << endl;
+
+      double fraction_diff =
+	(smallest_access_area - second_smallest_access_area) / smallest_access_area;
+
+      cout << "Fraction difference = " << fraction_diff << endl;
+
+      // NOTE: Horrible naming issue
+      DBG_ASSERT(second_smallest_access_area <= smallest_access_area);
+    }
+
+    return acceptable_tools;
+  }
+
   std::vector<toolpath>
   machine_flat_region(const flat_region& r,
 		      const double safe_z,
-		      const std::vector<tool>& tools) {
+		      const std::vector<tool>& all_tools) {
+
+    vector<tool> tools = filter_unneeded_small_tools(r, all_tools);
 
     DBG_ASSERT(tools.size() > 0);
 
