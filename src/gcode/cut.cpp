@@ -176,5 +176,5 @@ namespace gca {
   double get_spindle_speed(const cut* c) {
     return extract_spindle_speed(c);
   }
-  
+
 }

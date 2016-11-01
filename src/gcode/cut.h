@@ -95,6 +95,7 @@ namespace gca {
   int get_active_tool_no(const vector<cut*>& path);
   double get_spindle_speed(const vector<cut*>& path);
   double get_spindle_speed(const cut* c);
+
 }
 
 

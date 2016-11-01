@@ -72,17 +72,9 @@ namespace gca {
 
   double simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t) {
     double volume_removed = 0.0;
-    double machine_hp = 0.737;
-    double unit_power = 0.3;
 
     for (auto c : p) {
       double cut_volume = update_cut(*c, r, t);
-      double cut_mrr = cut_volume / cut_execution_time_minutes(c);
-      double cut_power = unit_power*cut_mrr;
-
-      cout << "Cut MRR        = " << cut_mrr << " inches^3 / minute" << endl;
-      cout << "Required power = " << cut_power << " horsepower" << endl;
-
       volume_removed += cut_volume;
     }
 
