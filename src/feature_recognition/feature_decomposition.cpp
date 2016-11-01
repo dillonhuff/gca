@@ -84,7 +84,9 @@ namespace gca {
     DBG_ASSERT(s.size() > 0);
 
     //vtk_debug_highlight_inds(s, m);
-    
+
+    cout << "# of triangles initially = " << s.size() << endl;
+
     auto raw_pts = vertexes_on_surface(s, m);
     point max_pt = max_along(raw_pts, n);
     plane top(n, max_pt);
@@ -105,6 +107,8 @@ namespace gca {
       }
     }
 
+    cout << "# of triangle polygons = " << ts.size() << endl;
+
     //vtk_debug_highlight_inds(s, m);
 
     cout << "Trying planar union for the first time" << endl;
@@ -113,7 +117,20 @@ namespace gca {
     cout << "Done with planar union for the first time" << endl;
 
     if (!(result_polys.size() == 1)) {
+      vector<oriented_polygon> bounds = mesh_bounds(s, m);
 
+      DBG_ASSERT(bounds.size() == 1);
+
+      auto projected = project_points(top, bounds.front().vertices());
+      auto projected_clean = clean_ring_for_offsetting_no_fail(projected);
+
+      DBG_ASSERT(projected_clean.size() > 2);
+
+      polygon_3 bound_p(projected_clean);
+      bound_p.correct_winding_order(n);
+
+      
+      return bound_p;
       // vector<polygon_3> dilated_ts;
       // for (auto t : result_polys) {
       // 	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
@@ -123,51 +140,54 @@ namespace gca {
       // 	}
       // }
 
-      cout << "Trying dilated planar union" << endl;
-      cout << "Original surface" << endl;
-      vtk_debug_highlight_inds(s, m);
+      // cout << "Trying dilated planar union" << endl;
+      // cout << "Original surface" << endl;
+      // vtk_debug_highlight_inds(s, m);
 
-      cout << "Original polygons that were unioned" << endl;
-      vtk_debug_polygons(ts);
 
-      cout << "Result of original union" << endl;
-      vtk_debug_polygons(result_polys);
+      // vtk_debug_polygon(bound_p);
+
+      // cout << "Original polygons that were unioned" << endl;
+      // vtk_debug_polygons(ts);
+
+      // cout << "Result of original union" << endl;
+      // vtk_debug_polygons(result_polys);
       
-      // cout << "Dilated polygons to try" << endl;
-      // vtk_debug_polygons(dilated_ts);
+      // // cout << "Dilated polygons to try" << endl;
+      // // vtk_debug_polygons(dilated_ts);
 
-      //auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
-      cout << "Done with dilated planar union" << endl;
-      vector<polygon_3> perturbed;
+      // //auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
+      // cout << "Done with dilated planar union" << endl;
+      // vector<polygon_3> perturbed;
     
-      std::random_device rd;
-      std::mt19937 gen(rd());
+      // std::random_device rd;
+      // std::mt19937 gen(rd());
       
-      for (auto t : ts) {
-	point perturb = random_point(gen, 0.00001);
-	perturbed.push_back(shift(perturb, t));
-      }
+      // for (auto t : ts) {
+      // 	point perturb = random_point(gen, 0.00001);
+      // 	perturbed.push_back(shift(perturb, t));
+      // }
 
-      cout << "Perturbed polygons to try" << endl;
-      vtk_debug_polygons(perturbed);
+      // cout << "Perturbed polygons to try" << endl;
+      // vtk_debug_polygons(perturbed);
       
-      auto res_polys_try_dilated = planar_polygon_union(perturbed);
-      vtk_debug_polygons(res_polys_try_dilated);
+      // auto res_polys_try_dilated = planar_polygon_union(perturbed);
+      // vtk_debug_polygons(res_polys_try_dilated);
 
-      if (res_polys_try_dilated.size() != 1) {
+      // if (res_polys_try_dilated.size() != 1) {
 
-	vtk_debug_polygons(ts);
+      // 	vtk_debug_polygons(ts);
 
-	vtk_debug_polygons(result_polys);
+      // 	vtk_debug_polygons(result_polys);
 
-	vtk_debug_highlight_inds(s, m);
+      // 	vtk_debug_highlight_inds(s, m);
       
-	vtk_debug_polygons(res_polys_try_dilated);
+      // 	vtk_debug_polygons(res_polys_try_dilated);
       
-	DBG_ASSERT(result_polys.size() == 1);
-      }
+      // 	DBG_ASSERT(result_polys.size() == 1);
+      // }
 
-      return res_polys_try_dilated.front();
+      // return res_polys_try_dilated.front();
     }
 
     return result_polys.front();

@@ -31,7 +31,10 @@ namespace gca {
 
   boost::optional<polygon_3>
   clean_polygon_for_offsetting_maybe(const polygon_3& poly);
-  
+
+  std::vector<point>
+  clean_ring_for_offsetting_no_fail(const std::vector<point>& ring);
+
   std::vector<point>
   exterior_offset(const std::vector<point>& pts, const double tol);
 

@@ -55,4 +55,26 @@ namespace gca {
     return make_mesh(parse_stl(stl_path).triangles, tolerance);
   }
 
+  triangular_mesh parse_and_scale_stl(const std::string& part_path,
+				      const double scale_factor,
+				      const double tol) {
+    auto mesh = parse_stl(part_path, tol);
+
+    auto scale_func = [scale_factor](const point p) {
+      return scale_factor*p;
+    };
+
+    mesh =
+      mesh.apply_to_vertices(scale_func);
+
+    box scaled_bounds = mesh.bounding_box();
+
+    cout << "Scaled bounds " << endl;
+    cout << "X length = " << scaled_bounds.x_len() << endl;
+    cout << "Y length = " << scaled_bounds.y_len() << endl;
+    cout << "Z length = " << scaled_bounds.z_len() << endl;
+
+    return mesh;
+  }
+  
 }

@@ -17,6 +17,10 @@ namespace gca {
 
   triangular_mesh parse_stl(const string& stl_path, const double tolerance);
 
+  triangular_mesh parse_and_scale_stl(const std::string& part_path,
+				      const double scale_factor,
+				      const double tol);
+
 }
 
 #endif
