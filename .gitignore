@@ -73,3 +73,9 @@ tri-test
 manufacture
 *.txt
 /test/stl-files/1InchCircleWith2NestedThruHoles.stl
+backend-tests
+blog.cpp
+examples/dead.cpp
+interact-test.app/*
+master_caching_nef_diff
+test/stl-files/onshape_parts/Part Studio 1 - Part 1(37).stl

@@ -1,4 +1,6 @@
 #include "catch.hpp"
+
+#include "backend/feedrate_optimization.h"
 #include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/rotation.h"
@@ -10,45 +12,6 @@
 
 namespace gca {
 
-  class region bounding_region(const flat_region& mregion) {
-    box b = bounding_box(mregion.safe_area);
-    double x_len = b.x_max - b.x_min;
-    double y_len = b.y_max - b.y_min;
-    double z_len = mregion.height();
-
-    class region r(x_len, y_len, z_len, 0.01);
-    r.set_machine_x_offset(-b.x_min);
-    r.set_machine_y_offset(-b.y_min);
-    r.set_machine_z_offset(-b.z_min);
-
-    // TODO: Find better way to express the safe z value in the
-    // machine coordinate system
-    point safe_machine_point(0, 0, mregion.height());
-    point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
-
-    auto poly_2d = to_boost_multipoly_2(mregion.machine_area);
-
-    for (int i = 0; i < r.num_x_elems; i++) {
-      for (int j = 0; j < r.num_y_elems; j++) {
-	double r_x = r.resolution*i;
-	double r_y = r.resolution*j;
-
-	point dummy(r_x, r_y, 0.0);
-	point converted = r.region_coords_to_machine_coords(dummy);
-
-	bg::model::d2::point_xy<double> conv_pt(converted.x, converted.y);
-
-	if (bg::within(conv_pt, poly_2d)) {
-	  r.set_column_height(i, j, safe_region_point.z);
-	} else {
-	  r.set_column_height(i, j, 0.0);
-	}
-      }
-    }
-
-    return r;
-  }
-  
   double
   volume_cut_inside_area(const class region& sim_region,
 			 const std::vector<polygon_3>& area_polys,
@@ -70,13 +33,6 @@ namespace gca {
 	bg::model::d2::point_xy<double> conv_pt(converted.x, converted.y);
 
 	if (bg::within(conv_pt, poly_2d)) {
-	  // cout << converted << " is in the region" << endl;
-	  // cout << "Height at " << converted << " = " << sim_region.column_height(i, j) << endl;
-
-	  // if (!within_eps(sim_region.column_height(i, j), 0.1, 0.001)) {
-	  //   cout << "Different height = " << sim_region.column_height(i, j) << endl;
-	  // }
-
 	  num_in_region++;
 	  volume_in_area +=
 	    sim_region.resolution *
@@ -335,11 +291,16 @@ namespace gca {
       REQUIRE(toolpaths_cover_percent_of_area(r, toolpaths, 98.0));
     }
 
-    SECTION("No cuts exceed the tools power limit") {
+    SECTION("No cuts exceed the tools power limit after after feed simulation") {
       std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t, huge_tool});
 
       double emco_spindle_hp = 0.737;
       double aluminum_unit_hp = 0.3;
+
+      optimize_feedrates_by_MRR_simulation(r,
+					   toolpaths,
+					   emco_spindle_hp,
+					   aluminum_unit_hp);
 
       class region sim_region =
 	bounding_region(r);

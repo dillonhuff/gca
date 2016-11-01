@@ -1110,6 +1110,33 @@ src/analysis/utils.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/utils.cpp.s
 .PHONY : src/analysis/utils.cpp.s
 
+src/backend/feedrate_optimization.o: src/backend/feedrate_optimization.cpp.o
+
+.PHONY : src/backend/feedrate_optimization.o
+
+# target to build an object file
+src/backend/feedrate_optimization.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.o
+.PHONY : src/backend/feedrate_optimization.cpp.o
+
+src/backend/feedrate_optimization.i: src/backend/feedrate_optimization.cpp.i
+
+.PHONY : src/backend/feedrate_optimization.i
+
+# target to preprocess a source file
+src/backend/feedrate_optimization.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.i
+.PHONY : src/backend/feedrate_optimization.cpp.i
+
+src/backend/feedrate_optimization.s: src/backend/feedrate_optimization.cpp.s
+
+.PHONY : src/backend/feedrate_optimization.s
+
+# target to generate assembly for a file
+src/backend/feedrate_optimization.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.s
+.PHONY : src/backend/feedrate_optimization.cpp.s
+
 src/checkers/block_rate_checker.o: src/checkers/block_rate_checker.cpp.o
 
 .PHONY : src/checkers/block_rate_checker.o
@@ -4353,6 +4380,9 @@ help:
 	@echo "... src/analysis/utils.o"
 	@echo "... src/analysis/utils.i"
 	@echo "... src/analysis/utils.s"
+	@echo "... src/backend/feedrate_optimization.o"
+	@echo "... src/backend/feedrate_optimization.i"
+	@echo "... src/backend/feedrate_optimization.s"
 	@echo "... src/checkers/block_rate_checker.o"
 	@echo "... src/checkers/block_rate_checker.i"
 	@echo "... src/checkers/block_rate_checker.s"

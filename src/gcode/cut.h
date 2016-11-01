@@ -26,7 +26,7 @@ namespace gca {
     cut(point s, point e, tool_name t) : c(line(s, e)), tool_no(t) {}
 
     inline value* get_spindle_speed() const { return settings.spindle_speed; }
-    inline value* get_feedrate() const { return settings.feedrate; }
+o    inline value* get_feedrate() const { return settings.feedrate; }
     inline point get_start() const { return c.value(0.0); }
     inline point get_end() const { return c.value(1.0); }
     inline point value_at(double t) const { return c.value(t); }
