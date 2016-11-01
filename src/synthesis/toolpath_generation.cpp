@@ -1126,7 +1126,7 @@ namespace gca {
 
     return finish_path;
   }
-  
+
   toolpath finish_flat_region(const flat_region& r,
 			      const double safe_z,
 			      const std::vector<tool>& tools) {

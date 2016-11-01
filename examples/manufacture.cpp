@@ -259,21 +259,22 @@ namespace gca {
     workpiece wp(1.5, 1.5, 2.5, ALUMINUM);    
     
     vector<part_info> some_scaling{
-      {"test/stl-files/OctagonWithHoles.stl", 0.9, wp},
+      {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
+	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
+
+	  {"test/stl-files/OctagonWithHoles.stl", 0.9, wp},
 			  
-	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
+	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
 
-	  {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+	      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
 
-	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
+		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
-	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
+		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
 	
-		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
+		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
 
-		  {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
-		    {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
-		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
+		      {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
 			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
 			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
 			    };
@@ -304,7 +305,7 @@ namespace gca {
 
       auto mesh = parse_and_scale_stl(info.path, info.scale_factor, 0.001);
 
-      // vtk_debug_mesh(mesh);
+      vtk_debug_mesh(mesh);
 
       fabrication_plan p =
 	make_fabrication_plan(mesh, inputs);
@@ -319,15 +320,15 @@ namespace gca {
       cout << "TOTAL TIME" << endl;
       print_time_info(cout, total_time);
 
-      // for (auto step : p.steps()) {
-      // 	visual_debug(step);
-      // }
+      for (auto step : p.steps()) {
+      	visual_debug(step);
+      }
 
     }
 
     cout << "TOTAL TIME FOR ALL PARTS" << endl;
     print_time_info(cout, total_time);
-    
+
   }
 
 }
