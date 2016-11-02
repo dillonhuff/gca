@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "backend/feedrate_optimization.h"
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
 #include "gcode/cut.h"
@@ -1173,10 +1174,10 @@ namespace gca {
       if (!smallest_test) {
 	vtk_debug_polygons(smallest_access_region);
 	vtk_debug_polygons(second_smallest_access_region);
+	vtk_debug_polygon(r.safe_area);
+
 	DBG_ASSERT(smallest_test);
       }
-    // DBG_ASSERT((second_smallest_access_area <= smallest_access_area) ||
-    // 		 within_eps(fraction_diff, 0.0, check_tol));
 
       double tol = 0.001;
       if (within_eps(fraction_diff, 0.0, tol)) {
@@ -1200,11 +1201,15 @@ namespace gca {
 
     toolpath rough_path = rough_flat_region(r, safe_z, tools);
     toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
-
     toolpath finish_path = finish_flat_region(r, safe_z, tools);
 
-    return {rough_path, rough_finish, finish_path};
+    std::vector<toolpath> all_paths{rough_path, rough_finish, finish_path};
 
+    double emco_hp = 0.737;
+    double aluminum_unit_hp = 0.3;
+    optimize_feedrates_by_MRR_simulation(r, all_paths, emco_hp, aluminum_unit_hp);
+
+    return all_paths;
   }
 
   std::vector<toolpath>

@@ -47,7 +47,6 @@ void KeypressCallbackFunction(vtkObject* caller,
  
   // Stop the interactor
   iren->TerminateApp();
-  std::cout << "Closing window..." << std::endl;
 }
 
 // Catch mouse events
@@ -101,16 +100,12 @@ public:
     picker->Pick(pos[0], pos[1], 0, this->GetDefaultRenderer());
  
     double* worldPosition = picker->GetPickPosition();
-    std::cout << "Cell id is: " << picker->GetCellId() << std::endl;
  
     if(picker->GetCellId() != -1) {
 
       DBG_ASSERT(num_planes_selected < 3);
 
       add_plane(*picker);
- 
-      std::cout << "Pick position is: " << worldPosition[0] << " " << worldPosition[1]
-		<< " " << worldPosition[2] << endl;
  
       vtkSmartPointer<vtkIdTypeArray> ids =
 	vtkSmartPointer<vtkIdTypeArray>::New();
@@ -137,11 +132,6 @@ public:
       vtkSmartPointer<vtkUnstructuredGrid> selected =
 	vtkSmartPointer<vtkUnstructuredGrid>::New();
       selected->ShallowCopy(extractSelection->GetOutput());
- 
-      std::cout << "There are " << selected->GetNumberOfPoints()
-		<< " points in the selection." << std::endl;
-      std::cout << "There are " << selected->GetNumberOfCells()
-		<< " cells in the selection." << std::endl;
  
       selectedMapper->SetInputData(selected);
 
@@ -181,8 +171,6 @@ fab_setup_actors(const fabrication_setup& setup) {
       actors.push_back(other_actor);
     }
   }
-
-  cout << "# of actors = " << actors.size() << endl;
 
   return actors;
 }
@@ -289,6 +277,8 @@ void print_setup_info(const fabrication_setup& shifted_setup) {
   }
 
   double part_len_z = diameter(point(0, 0, 1), shifted_setup.part_mesh());
+
+  cout << "Part length along z axis in setup = " << part_len_z << endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -349,7 +339,7 @@ int main(int argc, char *argv[]) {
 
   vtk_debug_mesh(mesh);
 
-  double scale_factor = 0.5;
+  double scale_factor = 0.45;
   auto scale_func = [scale_factor](const point p) {
     return scale_factor*p;
   };

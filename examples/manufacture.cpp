@@ -222,10 +222,10 @@ namespace gca {
 
     double rapid_feed = 24.0;
     fab_plan_timing_info total_time;
-    
+
     for (auto info : all_paths) {
       cout << "Part path: " << info.path << endl;
-      
+
       fabrication_inputs inputs = current_fab_inputs(info.stock);
 
       auto mesh = parse_and_scale_stl(info.path, info.scale_factor, 0.001);
