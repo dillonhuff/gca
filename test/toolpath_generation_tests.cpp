@@ -301,11 +301,12 @@ namespace gca {
       double aluminum_unit_hp = 0.3;
 
       class region sim_region =
-	bounding_region(r);
+	bounding_region(shifted_up);
       
       bool some_cuts_above_limit = false;
       double limit = 0.01;
 
+      cout << "STARTING HORSEPOWER BOUND TEST" << endl;
       for (auto& tp : toolpaths) {
 	cylindrical_bit current_tool(tp.t.cut_diameter());
 
