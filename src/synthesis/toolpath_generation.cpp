@@ -1167,8 +1167,16 @@ namespace gca {
 
       double check_tol = 0.01;
       // NOTE: Horrible naming issue
-      DBG_ASSERT((second_smallest_access_area <= smallest_access_area) ||
-		 within_eps(fraction_diff, 0.0, check_tol));
+      bool smallest_test = (second_smallest_access_area <= smallest_access_area) ||
+	within_eps(fraction_diff, 0.0, check_tol);
+
+      if (!smallest_test) {
+	vtk_debug_polygons(smallest_access_region);
+	vtk_debug_polygons(second_smallest_access_region);
+	DBG_ASSERT(smallest_test);
+      }
+    // DBG_ASSERT((second_smallest_access_area <= smallest_access_area) ||
+    // 		 within_eps(fraction_diff, 0.0, check_tol));
 
       double tol = 0.001;
       if (within_eps(fraction_diff, 0.0, tol)) {

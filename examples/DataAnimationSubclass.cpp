@@ -281,6 +281,16 @@ fabrication_setup shift(const point s,
   return fabrication_setup(shifted_setup, shifted_vice, shifted_toolpaths);
 }
 
+void print_setup_info(const fabrication_setup& shifted_setup) {
+  if (shifted_setup.v.has_parallel_plate()) {
+    cout << "Vice uses parallel plate of height " << shifted_setup.v.plate_height() << endl;
+  } else {
+    cout << "No parallel plate" << endl;
+  }
+
+  double part_len_z = diameter(point(0, 0, 1), shifted_setup.part_mesh());
+}
+
 int main(int argc, char *argv[]) {
 
   DBG_ASSERT(argc == 2);
@@ -291,12 +301,7 @@ int main(int argc, char *argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  //  vice test_v = custom_jaw_vice(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0));
-
   vice test_v = current_setup();
-
-  //    custom_jaw_vice_with_clamp_dir(6.0, 1.5, 10.0, point(0.0, 0.0, 0.0), point(1, 0, 0));
-
   vice test_vice = top_jaw_origin_vice(test_v);
 
   std::vector<plate_height> plates{0.48}; //0.1, 0.3, 0.7};
@@ -344,7 +349,7 @@ int main(int argc, char *argv[]) {
 
   vtk_debug_mesh(mesh);
 
-  double scale_factor = 0.4;
+  double scale_factor = 0.5;
   auto scale_func = [scale_factor](const point p) {
     return scale_factor*p;
   };
@@ -368,7 +373,7 @@ int main(int argc, char *argv[]) {
 
   double rapid_feed = 24.0;
   fab_plan_timing_info total_time;
-    
+
   cout << "Number of steps = " << p.steps().size() << endl;
   for (auto& step : p.steps()) {
     cout << "STEP" << endl;
@@ -387,19 +392,19 @@ int main(int argc, char *argv[]) {
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
 
-  
   for (auto& step : p.steps()) {
     point zero_pos = gui_select_part_zero(step);
     cout << "Part zero position = " << zero_pos << endl;
 
     fabrication_setup shifted_setup = shift(-1*zero_pos, step);
+    print_setup_info(shifted_setup);
     visual_debug(shifted_setup);
 
     cout << "Program for setup" << endl;
     auto program = shifted_setup.gcode_for_toolpaths(emco_f1_code_no_TLC);
     cout << program.name << endl;
     cout << program.blocks << endl;
-    
+
   }
 
   return EXIT_SUCCESS;

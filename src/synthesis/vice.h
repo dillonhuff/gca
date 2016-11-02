@@ -66,6 +66,9 @@ namespace gca {
     inline double jaw_height() const
     { return top_height - (base_height + parallel_plate_height); }
 
+    inline double plate_height() const
+    { return parallel_plate_height; }
+
     inline double base_z() const
     { return pos.z + base_height + parallel_plate_height; }
     inline double top_z() const { return pos.z + top_height; }
