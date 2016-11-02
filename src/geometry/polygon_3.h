@@ -66,17 +66,19 @@ namespace gca {
 
   typedef polygon_3 labeled_polygon_3;
 
-  labeled_polygon_3 shift(const point p, const labeled_polygon_3& poly);
+  polygon_3 shift(const point p, const labeled_polygon_3& poly);
+  std::vector<polygon_3> shift(const point p,
+			       const std::vector<polygon_3>& poly);
 
   void check_simplicity(const labeled_polygon_3& p);
 
-  labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p);
-  labeled_polygon_3 apply(const homogeneous_transform& r, const labeled_polygon_3& p);
+  polygon_3 apply(const rotation& r, const polygon_3& p);
+  polygon_3 apply(const homogeneous_transform& r, const polygon_3& p);
 
   typedef std::vector<std::vector<labeled_polygon_3>> surface_levels;
 
-  labeled_polygon_3 smooth_buffer(const labeled_polygon_3& p,
-				  const double tol);
+  polygon_3 smooth_buffer(const polygon_3& p,
+			  const double tol);
 
   labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol);
 

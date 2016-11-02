@@ -334,7 +334,16 @@ namespace gca {
 
     double height() const { return start_depth - end_depth; }
 
+    flat_region shift(const point p) const {
+      return flat_region(gca::shift(p, safe_area),
+			 gca::shift(p, machine_area),
+			 start_depth + p.z,
+			 end_depth + p.z,
+			 stock_material);
+    }
+
   };
+
 
 
   std::vector<toolpath>

@@ -291,6 +291,49 @@ namespace gca {
       REQUIRE(toolpaths_cover_percent_of_area(r, toolpaths, 98.0));
     }
 
+    SECTION("Some cuts need more than 0.01 hp even after shifting the flat region") {
+      flat_region shifted_up = r.shift(point(0, 0, 3.2));
+
+      std::vector<toolpath> toolpaths =
+	machine_flat_region(shifted_up, 1.0, {t, huge_tool});
+
+      double emco_spindle_hp = 0.737;
+      double aluminum_unit_hp = 0.3;
+
+      class region sim_region =
+	bounding_region(r);
+      
+      bool some_cuts_above_limit = false;
+      double limit = 0.01;
+
+      for (auto& tp : toolpaths) {
+	cylindrical_bit current_tool(tp.t.cut_diameter());
+
+	for (auto cuts : tp.cuts_without_safe_moves()) {
+
+	  for (auto c : cuts) {
+	    double cut_volume = update_cut(*c, sim_region, current_tool);
+	    double cut_mrr = cut_volume / cut_execution_time_minutes(c);
+	    double cut_power = aluminum_unit_hp*cut_mrr;
+
+	    cout << "Cut draw = " << cut_power << " hp" << endl;
+
+	    if (cut_power > limit) {
+	      cout << "Setting cut above limit" << endl;
+	      some_cuts_above_limit = true;
+	    } else {
+	      cout << cut_power << " <= " << limit << endl;
+	    }
+
+	  }
+
+	}
+
+      }
+
+      REQUIRE(some_cuts_above_limit);
+    }
+
     SECTION("No cuts exceed the tools power limit after after feed simulation") {
       std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t, huge_tool});
 

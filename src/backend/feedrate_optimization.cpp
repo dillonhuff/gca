@@ -11,12 +11,12 @@ namespace gca {
     class region r(x_len, y_len, z_len, 0.01);
     r.set_machine_x_offset(-b.x_min);
     r.set_machine_y_offset(-b.y_min);
-    r.set_machine_z_offset(-b.z_min);
+    r.set_machine_z_offset(-mregion.end_depth); //-b.z_min);
 
     // TODO: Find better way to express the safe z value in the
     // machine coordinate system
-    point safe_machine_point(0, 0, mregion.height());
-    point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
+    // point safe_machine_point(0, 0, mregion.start_depth()); //mregion.height());
+    // point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
 
     auto poly_2d = to_boost_multipoly_2(mregion.machine_area);
 
@@ -31,7 +31,7 @@ namespace gca {
 	bg::model::d2::point_xy<double> conv_pt(converted.x, converted.y);
 
 	if (bg::within(conv_pt, poly_2d)) {
-	  r.set_column_height(i, j, safe_region_point.z);
+	  r.set_column_height(i, j, mregion.height()); //safe_region_point.z);
 	} else {
 	  r.set_column_height(i, j, 0.0);
 	}
