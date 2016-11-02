@@ -25,6 +25,21 @@ namespace gca {
 
   }
 
+  toolpath::toolpath(const pocket_name& p_pocket_type,
+		     const double p_safe_z,
+		     const double p_spindle,
+		     const double p_feed,
+		     const double p_plunge_feed,
+		     const tool& p_t,
+		     const std::vector<std::vector<cut*>>& p_cuts)
+      : pocket_tp(p_pocket_type),
+	safe_z_before_tlc(p_safe_z),
+	spindle_speed(p_spindle),
+	feedrate(p_feed),
+	plunge_feedrate(p_plunge_feed),
+	t(p_t),
+	cuts(p_cuts) {}
+
   polyline to_polyline(const std::vector<cut*>& cuts) {
     DBG_ASSERT(cuts.size() > 0);
 

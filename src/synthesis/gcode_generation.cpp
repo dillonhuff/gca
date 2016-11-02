@@ -209,10 +209,6 @@ namespace gca {
       DBG_ASSERT(l.num_points() > 0);
     }
 
-    point shift_vector = point(0, 0, tp.t.length());
-    vector<polyline> reflected_lines =
-      shift_lines(tp.lines(), shift_vector);
-
     cut_params params;
     params.target_machine = EMCO_F1;
     params.safe_height = tp.safe_z_before_tlc + tp.t.length();
@@ -228,8 +224,6 @@ namespace gca {
     for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
-
-    vector<polyline> reflected_lines = tp.lines();
 
     cut_params params;
     params.target_machine = EMCO_F1;
@@ -247,8 +241,6 @@ namespace gca {
     for (auto l : tp.lines()) {
       DBG_ASSERT(l.num_points() > 0);
     }
-
-    vector<polyline> reflected_lines = tp.lines();
 
     cut_params params;
     params.target_machine = EMCO_F1;

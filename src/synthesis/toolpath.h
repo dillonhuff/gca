@@ -33,6 +33,14 @@ namespace gca {
 	     const tool& p_t,
 	     const std::vector<polyline>& p_lines);
 
+    toolpath(const pocket_name& p_pocket_type,
+	     const double p_safe_z,
+	     const double p_spindle,
+	     const double p_feed,
+	     const double p_plunge_feed,
+	     const tool& p_t,
+	     const std::vector<std::vector<cut*>>& p_cuts);
+    
     pocket_name pocket_type() const { return pocket_tp; }
 
     int tool_number() const { return t.tool_number(); }

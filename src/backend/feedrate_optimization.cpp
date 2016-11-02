@@ -58,10 +58,18 @@ namespace gca {
 	cout << "Cut required power = " << cut_power << " hp" << endl;
 
 	if (cut_power >= machine_hp) {
+
+	  if (c->is_safe_move()) {
+	    cout << "Cut that requires large power is a safe move?" << endl;
+	    DBG_ASSERT(false);
+	  }
+
 	  double scaled_down_power = 0.8*machine_hp;
 
 	  double scaled_down_feed =
 	    (scaled_down_power*(c->length())) / (material_unit_hp * cut_volume);
+
+	  cout << "Scaling down feed to " << scaled_down_feed << endl;
 
 	  c->set_feedrate(lit::make(scaled_down_feed));
 	}

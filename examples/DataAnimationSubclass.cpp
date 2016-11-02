@@ -224,11 +224,28 @@ point gui_select_part_zero(const fabrication_setup& setup) {
   return part_zero;
 }
 
+std::vector<std::vector<cut*>>
+shift_cuts(const point s,
+	   const std::vector<std::vector<cut*>>& cuts_list) {
+  vector<vector<cut*>> shifted_cut_list;
+  for (auto cuts : cuts_list) {
+    vector<cut*> shifted_cuts;
+    for (auto c : cuts) {
+      shifted_cuts.push_back(c->shift(s));
+    }
+    shifted_cut_list.push_back(shifted_cuts);
+  }
+  return shifted_cut_list;
+}
+
 toolpath shift(const point s, const toolpath& tp) {
   toolpath shifted_toolpath = tp;
-  auto shifted_lines = shift_lines(shifted_toolpath.lines(), s);
+  std::vector<std::vector<cut*>> shifted_lines =
+	      shift_cuts(s, shifted_toolpath.cuts_without_safe_moves());
+
   double shifted_safe_tlc =
     shifted_toolpath.safe_z_before_tlc + s.z;
+
   return toolpath(tp.pocket_type(),
 		  shifted_safe_tlc,
 		  tp.spindle_speed,

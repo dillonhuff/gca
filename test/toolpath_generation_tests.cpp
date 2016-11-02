@@ -6,6 +6,8 @@
 #include "geometry/rotation.h"
 #include "geometry/vtk_utils.h"
 #include "simulators/sim_mill.h"
+#include "synthesis/fabrication_plan.h"
+#include "synthesis/gcode_generation.h"
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
@@ -371,6 +373,10 @@ namespace gca {
 	}
 
       }
+
+      auto prog = build_gcode_program("Surface cut", toolpaths, emco_f1_code_no_TLC);
+      cout << prog.name << endl;
+      cout << prog.blocks << endl;
 
       REQUIRE(all_cuts_below_power);
 
