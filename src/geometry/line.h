@@ -27,6 +27,12 @@ namespace gca {
     line scale(double t) const
     { return line(t*start, t*end); }
 
+    line reflect_x() const {
+      point reflected_start(-1*start.x, start.y, start.z);
+      point reflected_end(-1*end.x, end.y, end.z);
+      return line(reflected_start, reflected_end);
+    }
+    
     line scale_xy(double t) const {
       point se = start;
       se.x = t*se.x;

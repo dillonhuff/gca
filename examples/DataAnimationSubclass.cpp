@@ -25,6 +25,7 @@
 #include <vtkExtractSelection.h>
 #include <vtkObjectFactory.h>
 
+#include "backend/timing.h"
 #include "geometry/vtk_utils.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/gcode_generation.h"
@@ -365,11 +366,28 @@ int main(int argc, char *argv[]) {
   fabrication_plan p =
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
 
+  double rapid_feed = 24.0;
+  fab_plan_timing_info total_time;
+    
+  cout << "Number of steps = " << p.steps().size() << endl;
+  for (auto& step : p.steps()) {
+    cout << "STEP" << endl;
+    auto step_time = make_timing_info(step, rapid_feed);
+
+    print_time_info(cout, step_time);
+
+    increment(total_time, step_time);
+  }
+
+  cout << "TOTAL Time Estimate" << endl;
+  print_time_info(cout, total_time);
+
   cout << "Programs" << endl;
 
   cout.setf(ios::fixed, ios::floatfield);
   cout.setf(ios::showpoint);
 
+  
   for (auto& step : p.steps()) {
     point zero_pos = gui_select_part_zero(step);
     cout << "Part zero position = " << zero_pos << endl;

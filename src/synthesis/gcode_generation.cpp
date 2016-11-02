@@ -161,6 +161,13 @@ namespace gca {
     return gcode_blocks_for_toolpath_cuts(tp.contiguous_cuts(params), params);
   }
 
+  std::vector<block>
+  gcode_blocks_for_toolpath_emco(const toolpath& tp,
+				 const cut_params& params) {
+    vector<cut*> reflected = reflect_x(tp.contiguous_cuts(params));
+    return gcode_blocks_for_toolpath_cuts(reflected, params);
+  }
+  
   std::vector<block> camaster_engraving(const toolpath& last,
 					const toolpath& tp) {
     for (auto l : tp.lines()) {
@@ -175,7 +182,7 @@ namespace gca {
     vector<block> blks = camaster_comment_prefix(tp, params);
     concat(blks, camaster_tool_change_block(tp.tool_number()));
     concat(blks, gcode_blocks_for_toolpath(tp, params));
-    //concat(blks, polylines_cuts(tp.lines(), tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+
     return blks;
   }
 
@@ -191,7 +198,7 @@ namespace gca {
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, gcode_blocks_for_toolpath(tp, params));
-    //    concat(blks, polylines_cuts(tp.lines(), tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+
     return blks;
 
   }
@@ -212,8 +219,8 @@ namespace gca {
     params.set_plunge_feed(tp.plunge_feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
-    concat(blks, gcode_blocks_for_toolpath(tp, params));
-    //    concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    concat(blks, gcode_blocks_for_toolpath_emco(tp, params));
+
     return blks;
   }
 
@@ -231,8 +238,8 @@ namespace gca {
 
     vector<block> blks = comment_prefix(tp, params);
     concat(blks, g10_TLC_prefix(tp));
-    concat(blks, gcode_blocks_for_toolpath(tp, params));
-    //concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    concat(blks, gcode_blocks_for_toolpath_emco(tp, params));
+
     return blks;
   }
 
@@ -249,8 +256,8 @@ namespace gca {
     params.set_plunge_feed(tp.plunge_feedrate);
 
     vector<block> blks = comment_prefix(tp, params);
-    concat(blks, gcode_blocks_for_toolpath(tp, params));
-    //concat(blks, polylines_cuts(reflected_lines, tp.tool_number(), params, tp.spindle_speed, tp.feedrate));
+    concat(blks, gcode_blocks_for_toolpath_emco(tp, params));
+
     return blks;
   }
   

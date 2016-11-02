@@ -62,6 +62,12 @@ namespace gca {
       return new_c;
     }
 
+    virtual cut* reflect_x() const {
+      cut* reflected_cut = copy();
+      reflected_cut->c = c.reflect_x();
+      return reflected_cut;
+    }
+
     virtual cut* scale_xy(double s) const {
       cut* new_c = copy();
       new_c->c = c.scale_xy(s);
@@ -95,6 +101,9 @@ namespace gca {
   int get_active_tool_no(const vector<cut*>& path);
   double get_spindle_speed(const vector<cut*>& path);
   double get_spindle_speed(const cut* c);
+
+  std::vector<cut*>
+  reflect_x(const std::vector<cut*>& cuts);
 
 }
 

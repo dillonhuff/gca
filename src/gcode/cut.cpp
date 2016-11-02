@@ -177,4 +177,15 @@ namespace gca {
     return extract_spindle_speed(c);
   }
 
+  std::vector<cut*>
+  reflect_x(const std::vector<cut*>& cuts) {
+    vector<cut*> reflected_cs;
+
+    for (auto c : cuts) {
+      reflected_cs.push_back(c->reflect_x());
+    }
+
+    return reflected_cs;
+  }
+
 }

@@ -6,6 +6,7 @@
 
 #include "geometry/direction.h"
 #include "geometry/point.h"
+#include "utils/check.h"
 
 namespace gca {
 
@@ -47,6 +48,10 @@ namespace gca {
     arc shift(point s) const
     { return arc(start + s, end + s, start_offset(), dir); }
 
+    arc reflect_x() const {
+      DBG_ASSERT(false);
+    }
+    
     arc scale(double s) const {
       return arc(s*start, s*end, s*start_offset(), dir);
     }

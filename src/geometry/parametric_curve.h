@@ -1,6 +1,8 @@
 #ifndef GCA_PARAMETRIC_CURVE_H
 #define GCA_PARAMETRIC_CURVE_H
 
+#include "utils/check.h"
+
 namespace gca {
 
   class parametric_curve {
@@ -12,6 +14,7 @@ namespace gca {
       virtual parametric_curve shift(point t) const = 0;
       virtual parametric_curve scale(double t) const = 0;
       virtual parametric_curve scale_xy(double t) const = 0;
+      virtual parametric_curve reflect_x() const = 0;
     };
 
     template<typename T>
@@ -23,6 +26,7 @@ namespace gca {
       virtual parametric_curve shift(point t) const { return data.shift(t); }
       virtual parametric_curve scale(double t) const { return data.scale(t); }
       virtual parametric_curve scale_xy(double t) const { return data.scale_xy(t); }
+      virtual parametric_curve reflect_x() const { return data.reflect_x(); }
     };
   
     unique_ptr<concept_t> self;
@@ -47,6 +51,9 @@ namespace gca {
     { return self->scale(t); }
     virtual parametric_curve scale_xy(double t) const
     { return self->scale_xy(t); }
+
+    virtual parametric_curve reflect_x() const
+    { return self->reflect_x(); }
     
     template<typename T>
     T& get_obj() {
