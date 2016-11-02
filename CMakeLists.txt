@@ -115,6 +115,7 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
 	./src/backend/feedrate_optimization.h
+	./src/backend/timing.h
 	./src/process_planning/feature_to_pocket.h
 	./src/process_planning/feature_selection.h
 	./src/process_planning/axis_location.h
@@ -146,6 +147,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/backend/feedrate_optimization.cpp
+	./src/backend/timing.cpp
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/visual_debug.cpp
 	./src/process_planning/axis_location.cpp

@@ -301,7 +301,7 @@ int main(int argc, char *argv[]) {
   std::vector<plate_height> plates{0.48}; //0.1, 0.3, 0.7};
   fixtures fixes(test_vice, plates);
 
-  workpiece workpiece_dims(1.5, 1.5, 1.58, ALUMINUM);
+  workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
 
   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
   t1.set_cut_diameter(0.14);
@@ -312,8 +312,9 @@ int main(int argc, char *argv[]) {
 
   t1.set_holder_diameter(1.8);
   t1.set_holder_length(3.0);
+  t1.set_tool_number(1);
 
-  tool t2(0.5, 3.0, 4, HSS, FLAT_NOSE);
+  tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
   t2.set_cut_diameter(0.335);
   t2.set_cut_length(0.72);
 
@@ -322,33 +323,27 @@ int main(int argc, char *argv[]) {
 
   t2.set_holder_diameter(1.8);
   t2.set_holder_length(3.0);
+  t2.set_tool_number(2);
 
-  // tool t3{0.2334, 3.94, 4, HSS, FLAT_NOSE};
-  // t3.set_cut_diameter(0.12);
-  // t3.set_cut_length(1.2);
+  tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
+  t3.set_cut_diameter(0.5);
+  t3.set_cut_length(0.7);
 
-  // t3.set_shank_diameter(0.5);
-  // t3.set_shank_length(0.05);
+  t3.set_shank_diameter(0.7);
+  t3.set_shank_length(0.5);
 
-  // t3.set_holder_diameter(2.5);
-  // t3.set_holder_length(3.5);
-
-  // tool t4{1.5, 3.94, 4, HSS, FLAT_NOSE};
-  // t4.set_cut_diameter(1.5);
-  // t4.set_cut_length(2.2);
-
-  // t4.set_shank_diameter(0.5);
-  // t4.set_shank_length(0.05);
-
-  // t4.set_holder_diameter(2.5);
-  // t4.set_holder_length(3.5);
-    
-  vector<tool> tools{t1, t2}; //, t3, t4};
+  t3.set_holder_diameter(1.8);
+  t3.set_holder_length(3.0);
+  t3.set_tool_number(3);
+  
+  vector<tool> tools{t1, t2, t3}; //, t3, t4};
   
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
 
-  double scale_factor = 0.02;
+  vtk_debug_mesh(mesh);
+
+  double scale_factor = 0.4;
   auto scale_func = [scale_factor](const point p) {
     return scale_factor*p;
   };
