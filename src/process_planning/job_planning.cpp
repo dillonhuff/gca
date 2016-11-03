@@ -610,7 +610,7 @@ namespace gca {
     return zero_planes;
   }
 
-  boost::optional<fixture>
+  boost::optional<std::pair<fixture, homogeneous_transform>>
   find_next_fixture(feature_decomposition* decomp,
 		    Nef_polyhedron& stock_nef,
 		    const triangular_mesh& current_stock,
@@ -636,7 +636,10 @@ namespace gca {
 
       fixture fix(orient, v);
 
-      return fix;
+      homogeneous_transform t =
+	balanced_mating_transform(current_stock, fix.orient, fix.v);
+
+      return std::make_pair(fix, t);
     }
 
     return boost::none;
@@ -683,7 +686,7 @@ namespace gca {
 
       point n = normal(info.decomp);
 
-      boost::optional<fixture> maybe_fix =
+      boost::optional<std::pair<fixture, homogeneous_transform>> maybe_fix =
 	find_next_fixture(info.decomp, stock_nef, current_stock, n, f);
 
 #ifdef VIZ_DBG
@@ -691,13 +694,12 @@ namespace gca {
 #endif
 
       if (maybe_fix) {
-	fixture fix = *maybe_fix;
+	fixture fix = maybe_fix->first;
 
 	auto decomp = info.decomp;
 	auto& acc_info = info.tool_info;
 
-	homogeneous_transform t =
-	  balanced_mating_transform(current_stock, fix.orient, fix.v);
+	homogeneous_transform t = maybe_fix->second;
 	auto features = collect_viable_features(decomp, volume_inf, fix);
 
 	cout << "# of viable features = " << features.size() << endl;
