@@ -25,7 +25,7 @@ namespace gca {
     feature_decomposition* f =
       build_feature_decomposition(stock, mesh, n);
 
-    REQUIRE(f->num_levels() == 4);
+    REQUIRE(f->num_levels() == 7);
 
     REQUIRE(f->num_features() == 8);
 
