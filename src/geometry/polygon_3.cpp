@@ -43,7 +43,7 @@ namespace gca {
 
     if (outer_ring.size() < 3) { return outer_ring; }
 
-    delete_antennas(outer_ring);
+    delete_antennas_no_fail(outer_ring);
 
     return outer_ring;
   }

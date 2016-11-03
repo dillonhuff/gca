@@ -38,6 +38,10 @@ namespace gca {
 
     feed = 5.0;
 
+    if (t.cut_diameter() > 0.4) {
+      feed = 4.0;
+    }
+    
     cout << "Chip Load Per Tooth = " << chip_load_per_tooth(t, feed, speed) << endl;
 
     return cut_move_parameters{feed, feed / t.num_flutes(), speed, cut_depth};

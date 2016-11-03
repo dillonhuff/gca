@@ -117,9 +117,14 @@ namespace gca {
     cout << "Done with planar union for the first time" << endl;
 
     if (!(result_polys.size() == 1)) {
+
+      vtk_debug_highlight_inds(s, m);
       vector<oriented_polygon> bounds = mesh_bounds(s, m);
 
-      DBG_ASSERT(bounds.size() == 1);
+      if (bounds.size() != 1) {
+	vtk_debug_polygons(bounds);
+	DBG_ASSERT(bounds.size() == 1);
+      }
 
       auto projected = project_points(top, bounds.front().vertices());
       auto projected_clean = clean_ring_for_offsetting_no_fail(projected);
@@ -131,63 +136,6 @@ namespace gca {
 
       
       return bound_p;
-      // vector<polygon_3> dilated_ts;
-      // for (auto t : result_polys) {
-      // 	auto r_pts = clean_vertices_within_eps(t.vertices(), 0.005, 0.0000001);
-      // 	delete_antennas(r_pts);
-      // 	if (r_pts.size() >= 3) {
-      // 	  dilated_ts.push_back(dilate(t, 0.000001));
-      // 	}
-      // }
-
-      // cout << "Trying dilated planar union" << endl;
-      // cout << "Original surface" << endl;
-      // vtk_debug_highlight_inds(s, m);
-
-
-      // vtk_debug_polygon(bound_p);
-
-      // cout << "Original polygons that were unioned" << endl;
-      // vtk_debug_polygons(ts);
-
-      // cout << "Result of original union" << endl;
-      // vtk_debug_polygons(result_polys);
-      
-      // // cout << "Dilated polygons to try" << endl;
-      // // vtk_debug_polygons(dilated_ts);
-
-      // //auto res_polys_try_dilated = planar_polygon_union(dilated_ts);
-      // cout << "Done with dilated planar union" << endl;
-      // vector<polygon_3> perturbed;
-    
-      // std::random_device rd;
-      // std::mt19937 gen(rd());
-      
-      // for (auto t : ts) {
-      // 	point perturb = random_point(gen, 0.00001);
-      // 	perturbed.push_back(shift(perturb, t));
-      // }
-
-      // cout << "Perturbed polygons to try" << endl;
-      // vtk_debug_polygons(perturbed);
-      
-      // auto res_polys_try_dilated = planar_polygon_union(perturbed);
-      // vtk_debug_polygons(res_polys_try_dilated);
-
-      // if (res_polys_try_dilated.size() != 1) {
-
-      // 	vtk_debug_polygons(ts);
-
-      // 	vtk_debug_polygons(result_polys);
-
-      // 	vtk_debug_highlight_inds(s, m);
-      
-      // 	vtk_debug_polygons(res_polys_try_dilated);
-      
-      // 	DBG_ASSERT(result_polys.size() == 1);
-      // }
-
-      // return res_polys_try_dilated.front();
     }
 
     return result_polys.front();
@@ -199,15 +147,17 @@ namespace gca {
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<index_t>& indexes,
 			 const point n) {
-    auto inds = indexes;
-    delete_if(inds, [m, n](const index_t i)
-	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1) ||
-		 angle_eps(n, m.face_orientation(i), 90.0, 0.1) ||
-		 angle_eps(n, m.face_orientation(i), 180.0, 0.1); });
+    // auto inds = indexes;
+    // delete_if(inds, [m, n](const index_t i)
+    // 	     { return angle_eps(n, m.face_orientation(i), 0.0, 30.0) ||
+    // 		 angle_eps(n, m.face_orientation(i), 90.0, 30.0) ||
+    // 		 angle_eps(n, m.face_orientation(i), 180.0, 30.0); });
 
+
+    // vtk_debug_highlight_inds(inds, m);
 
     auto surfs = const_orientation_regions(m);
-    auto not_vertical_or_horizontal = //normal_delta_regions(inds, m, 90.0);
+    auto not_vertical_or_horizontal =
       not_vertical_or_horizontal_regions(m, surfs, n);
 
     cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
@@ -229,13 +179,13 @@ namespace gca {
       select(inds, [m, n](const index_t i)
 	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1); });
 
+    auto virtual_surfaces =
+      build_virtual_surfaces(m, inds, n);
+    
     //vtk_debug_highlight_inds(horiz_inds, m);    
 
     // TODO: Does angle matter now? It shouldnt
     auto surfs = normal_delta_regions(horiz_inds, m, 3.0);
-
-    auto virtual_surfaces =
-      build_virtual_surfaces(m, inds, n);
 
     cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
     // for (auto s : surfs) {

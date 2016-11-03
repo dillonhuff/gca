@@ -293,8 +293,12 @@ void print_setup_info(const fabrication_setup& shifted_setup) {
     cout << "No parallel plate" << endl;
   }
 
+  double part_len_x = diameter(point(1, 0, 0), shifted_setup.part_mesh());
+  double part_len_y = diameter(point(0, 1, 0), shifted_setup.part_mesh());
   double part_len_z = diameter(point(0, 0, 1), shifted_setup.part_mesh());
 
+  cout << "Part length along x axis in setup = " << part_len_x << endl;
+  cout << "Part length along y axis in setup = " << part_len_y << endl;
   cout << "Part length along z axis in setup = " << part_len_z << endl;
 }
 
@@ -354,7 +358,7 @@ int main(int argc, char *argv[]) {
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
 
-  vtk_debug_mesh(mesh);
+  //vtk_debug_mesh(mesh);
 
   double scale_factor = 0.45;
   auto scale_func = [scale_factor](const point p) {
@@ -373,7 +377,7 @@ int main(int argc, char *argv[]) {
   cout << "Y len = " << b.y_len() << endl;
   cout << "Z len = " << b.z_len() << endl;
 
-  vtk_debug_mesh(mesh);
+  //vtk_debug_mesh(mesh);
 
   fabrication_plan p =
     make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});

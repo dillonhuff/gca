@@ -99,6 +99,8 @@ namespace gca {
 
   void delete_antennas(std::vector<point>& pts);
 
+  void delete_antennas_no_fail(std::vector<point>& pts);
+
   bool has_antenna(const std::vector<point>& ring);
 
 }
