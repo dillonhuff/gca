@@ -154,8 +154,8 @@ namespace gca {
     // Just use parallel to or orthogonal_to functions?
     vector<index_t> vert_or_horiz =
       select(all_millable_faces, [n, part](const index_t& s) {
-	  return all_parallel_to({s}, part, n, 1.0) ||
-	  all_orthogonal_to({s}, part, n, 1.0);
+	  return all_parallel_to({s}, part, n, 10.0) ||
+	  all_orthogonal_to({s}, part, n, 10.0);
 	});
 
     return vert_or_horiz;
@@ -186,7 +186,10 @@ namespace gca {
 
     DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
 
-    //vtk_debug_highlight_inds(all_millable_faces, part);
+    unsigned num_uncut = part.face_indexes().size() - all_millable_faces.size();
+
+    cout << "# of uncut triangles = " << num_uncut << endl;
+    vtk_debug_highlight_inds(all_millable_faces, part);
 
     while (all_millable_faces.size() < part.face_indexes().size()) {
       point next_norm = select_next_cut_dir(all_millable_faces, part);

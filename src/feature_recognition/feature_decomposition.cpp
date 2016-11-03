@@ -154,9 +154,9 @@ namespace gca {
     // 		 angle_eps(n, m.face_orientation(i), 180.0, 30.0); });
 
 
-    // vtk_debug_highlight_inds(inds, m);
-
-    auto surfs = const_orientation_regions(m);
+    auto inds = indexes;
+    auto surfs = normal_delta_regions(inds, m, 1.0);
+    //const_orientation_regions(m, indexes);
     auto not_vertical_or_horizontal =
       not_vertical_or_horizontal_regions(m, surfs, n);
 
@@ -178,6 +178,10 @@ namespace gca {
     auto horiz_inds =
       select(inds, [m, n](const index_t i)
 	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1); });
+
+    vtk_debug_highlight_inds(horiz_inds, m);
+
+    delete_if(inds, [&horiz_inds](const index_t i) { return elem(i, horiz_inds); });
 
     auto virtual_surfaces =
       build_virtual_surfaces(m, inds, n);
