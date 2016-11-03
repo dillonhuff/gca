@@ -183,7 +183,72 @@ namespace gca {
     return orients;
     
   }
-  
+
+  std::vector<std::pair<clamp_orientation, homogeneous_transform>>
+  all_stable_orientations_with_side_transforms(const Nef_polyhedron& part_nef,
+					       const vice& v,
+					       const point n) {
+    auto part = nef_to_single_trimesh(part_nef);
+    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
+
+    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
+    plane vice_top_plane(-1*n, vice_pl_pt);
+
+    double big = 2000.0;
+
+    polygon_3 p = project_onto(vice_top_plane, hull);
+    polygon_3 plane_approx = dilate(p, big);
+
+    triangular_mesh m = extrude(plane_approx, big*n);
+
+
+    // cout << "To be clipped" << endl;
+    // vtk_debug_mesh(part);
+
+    // cout << "To clip with" << endl;
+    // vtk_debug_mesh(m);
+
+    // cout << "Clipper and clippee" << endl;
+    // vtk_debug_meshes({part, m});
+    
+    auto clip_nef = trimesh_to_nef_polyhedron(m);
+    auto cut_parts_nef = part_nef - clip_nef;
+
+    //    DBG_ASSERT(cut_parts.size() == 1);
+
+    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
+
+    // cout << "Result of clipping" << endl;
+    // vector<triangular_mesh> subs{m};
+    // auto cut_parts = boolean_difference(part, subs);
+    // vtk_debug_mesh(cut_part);
+
+    vector<surface> cregions = outer_surfaces(cut_part);
+    sort(begin(cregions), end(cregions),
+	 [](const surface& l, const surface& r)
+	 { return l.surface_area() < r.surface_area(); });
+    reverse(begin(cregions), end(cregions));
+
+    cout << "# of const orientation regions = " << cregions.size() << endl;
+    // for (auto cregion : cregions) {
+    //   vtk_debug_highlight_inds(cregion);
+    // }
+
+    std::vector<clamp_orientation> orients =
+      all_stable_orientations_with_top_normal(cregions, v, n);
+
+    vector<pair<clamp_orientation, homogeneous_transform>> orients_with_transforms;
+
+    for (auto orient : orients) {
+      homogeneous_transform t = mating_transform(cut_part, orient, v);
+      orients_with_transforms.push_back(std::make_pair(orient, t));
+    }
+
+    cout << "# of orients for cregions = " << orients.size() << endl;
+
+    return orients_with_transforms;
+    
+  }
 
   std::vector<clamp_orientation>
   all_viable_clamp_orientations(const std::vector<const surface*>& surfaces,

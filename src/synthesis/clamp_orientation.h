@@ -163,6 +163,12 @@ namespace gca {
 						  const vice& v);
 
   point part_zero_position(const clamp_orientation& clamp_orient);
+
+  std::vector<std::pair<clamp_orientation, homogeneous_transform>>
+  all_stable_orientations_with_side_transforms(const Nef_polyhedron& part_nef,
+					       const vice& v,
+					       const point n);
+
 }
 
 #endif

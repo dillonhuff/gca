@@ -645,6 +645,45 @@ namespace gca {
     return boost::none;
   }
 
+  boost::optional<std::pair<fixture, homogeneous_transform>>
+  find_next_fixture_side_vice(feature_decomposition* decomp,
+			      Nef_polyhedron& stock_nef,
+			      const triangular_mesh& current_stock,
+			      const point n,
+			      const fixtures& f) {
+
+    boost::optional<double> par_plate =
+      select_parallel_plate(decomp, current_stock, f);
+
+    vice v = f.get_vice();
+    if (par_plate) {
+      v = vice(f.get_vice(), *par_plate);
+    }
+
+    vector<pair<clamp_orientation, homogeneous_transform>> orients =
+      all_stable_orientations_with_side_transforms(stock_nef, v, n);
+
+    cout << "# of orients in " << n << " = " << orients.size() << endl;
+
+    if (orients.size() > 0) {
+      auto orient =
+	max_e(orients,
+	      [current_stock]
+	      (const std::pair<clamp_orientation, homogeneous_transform>& c)
+	      { return c.first.contact_area(current_stock); });
+
+      cout << "Found fixture in " << n << endl;
+
+      fixture fix(orient.first, v);
+
+      homogeneous_transform t = orient.second;
+      //	balanced_mating_transform(current_stock, fix.orient, fix.v);
+
+      return std::make_pair(fix, t);
+    }
+
+    return boost::none;
+  }  
   std::vector<fixture_setup>
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
@@ -687,7 +726,7 @@ namespace gca {
       point n = normal(info.decomp);
 
       boost::optional<std::pair<fixture, homogeneous_transform>> maybe_fix =
-	find_next_fixture(info.decomp, stock_nef, current_stock, n, f);
+	find_next_fixture_side_vice(info.decomp, stock_nef, current_stock, n, f);
 
 #ifdef VIZ_DBG
       vtk_debug_feature_decomposition(info.decomp);
