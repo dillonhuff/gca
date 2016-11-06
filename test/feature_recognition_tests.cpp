@@ -27,7 +27,7 @@ namespace gca {
 
     REQUIRE(f->num_levels() == 7);
 
-    REQUIRE(f->num_features() == 8);
+    REQUIRE(f->num_features() == 7);
 
     double current_min = 100000;
     auto replace_min = [&current_min](feature* f) {
