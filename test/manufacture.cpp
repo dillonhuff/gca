@@ -192,14 +192,15 @@ namespace gca {
     workpiece wp(1.75, 1.75, 2.5, ALUMINUM);    
 
     vector<part_info> some_scaling{
-      //      {"test/stl-files/onshape_parts/Part Studio 4 - Part 1.stl", 0.2, wp},
-      {"test/stl-files/OctagonWithHolesShort.stl", 1.0, wp},
-	{"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
-	  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
+      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+	//      {"test/stl-files/onshape_parts/Part Studio 4 - Part 1.stl", 0.2, wp},
+	{"test/stl-files/OctagonWithHolesShort.stl", 1.0, wp},
+	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
+	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
 
-	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
+	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
 
-	      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+
 
 		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
