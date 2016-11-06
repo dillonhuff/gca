@@ -118,7 +118,7 @@ namespace gca {
 
     if (!(result_polys.size() == 1)) {
 
-      vtk_debug_highlight_inds(s, m);
+      //vtk_debug_highlight_inds(s, m);
       vector<oriented_polygon> bounds = mesh_bounds(s, m);
 
       if (bounds.size() != 1) {

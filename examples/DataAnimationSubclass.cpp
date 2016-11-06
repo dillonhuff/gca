@@ -360,7 +360,11 @@ int main(int argc, char *argv[]) {
 
   //vtk_debug_mesh(mesh);
 
-  double scale_factor = 0.45;
+
+  // NOTE: Used for part 1 (2)
+  // double scale_factor = 0.45;
+
+  double scale_factor = 0.15; //0.45;
   auto scale_func = [scale_factor](const point p) {
     return scale_factor*p;
   };
