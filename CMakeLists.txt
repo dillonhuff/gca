@@ -193,6 +193,11 @@ SET(BACKEND_TEST_FILES test/toolpath_generation_tests.cpp)
 add_executable(backend-tests test/main_backend.cpp ${BACKEND_TEST_FILES})
 target_link_libraries(backend-tests geometry utils gcode gprocess gca)
 
+SET(MANUFACTURE_TEST_FILES test/manufacture.cpp)
+
+add_executable(manufacture-tests test/main_manufacture.cpp ${MANUFACTURE_TEST_FILES})
+target_link_libraries(manufacture-tests geometry utils gcode gprocess gca)
+
 SET(TEST_FILES test/main.cpp
 	       test/tool_access_tests.cpp
 	       test/feature_selection_tests.cpp
@@ -236,7 +241,10 @@ SET(TEST_FILES test/main.cpp
 	       test/axis_3_tests.cpp
 	       ${BACKEND_TEST_FILES})
 
-add_executable(all-tests ${TEST_FILES})
+add_executable(non-manufacture-tests ${TEST_FILES})
+target_link_libraries(non-manufacture-tests geometry utils gcode gprocess gca)
+
+add_executable(all-tests ${TEST_FILES} ${MANUFACTURE_TEST_FILES})
 target_link_libraries(all-tests geometry utils gcode gprocess gca)
 
 add_executable(json-mesh examples/json_mesh.cpp)
@@ -274,9 +282,6 @@ target_link_libraries(nef-test geometry utils gcode gprocess gca)
 
 add_executable(tri-test examples/tri_test.cpp)
 target_link_libraries(tri-test geometry utils gcode gprocess gca)
-
-add_executable(manufacture examples/manufacture.cpp)
-target_link_libraries(manufacture geometry utils gcode gprocess gca)
 
 #/Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 

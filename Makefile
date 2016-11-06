@@ -228,45 +228,6 @@ ublas/fast:
 .PHONY : ublas/fast
 
 #=============================================================================
-# Target rules for targets named backend-tests
-
-# Build rule for target.
-backend-tests: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 backend-tests
-.PHONY : backend-tests
-
-# fast build rule for target.
-backend-tests/fast:
-	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/build
-.PHONY : backend-tests/fast
-
-#=============================================================================
-# Target rules for targets named json-plan
-
-# Build rule for target.
-json-plan: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 json-plan
-.PHONY : json-plan
-
-# fast build rule for target.
-json-plan/fast:
-	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/build
-.PHONY : json-plan/fast
-
-#=============================================================================
-# Target rules for targets named camaster-test
-
-# Build rule for target.
-camaster-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 camaster-test
-.PHONY : camaster-test
-
-# fast build rule for target.
-camaster-test/fast:
-	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/build
-.PHONY : camaster-test/fast
-
-#=============================================================================
 # Target rules for targets named json-mesh
 
 # Build rule for target.
@@ -306,6 +267,19 @@ plate-cutter/fast:
 .PHONY : plate-cutter/fast
 
 #=============================================================================
+# Target rules for targets named manufacture-tests
+
+# Build rule for target.
+manufacture-tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 manufacture-tests
+.PHONY : manufacture-tests
+
+# fast build rule for target.
+manufacture-tests/fast:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/build
+.PHONY : manufacture-tests/fast
+
+#=============================================================================
 # Target rules for targets named all-tests
 
 # Build rule for target.
@@ -319,17 +293,43 @@ all-tests/fast:
 .PHONY : all-tests/fast
 
 #=============================================================================
-# Target rules for targets named gca
+# Target rules for targets named backend-tests
 
 # Build rule for target.
-gca: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gca
-.PHONY : gca
+backend-tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 backend-tests
+.PHONY : backend-tests
 
 # fast build rule for target.
-gca/fast:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/build
-.PHONY : gca/fast
+backend-tests/fast:
+	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/build
+.PHONY : backend-tests/fast
+
+#=============================================================================
+# Target rules for targets named json-plan
+
+# Build rule for target.
+json-plan: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 json-plan
+.PHONY : json-plan
+
+# fast build rule for target.
+json-plan/fast:
+	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/build
+.PHONY : json-plan/fast
+
+#=============================================================================
+# Target rules for targets named camaster-test
+
+# Build rule for target.
+camaster-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 camaster-test
+.PHONY : camaster-test
+
+# fast build rule for target.
+camaster-test/fast:
+	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/build
+.PHONY : camaster-test/fast
 
 #=============================================================================
 # Target rules for targets named feature-decomp
@@ -358,32 +358,6 @@ gprocess/fast:
 .PHONY : gprocess/fast
 
 #=============================================================================
-# Target rules for targets named gcode
-
-# Build rule for target.
-gcode: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gcode
-.PHONY : gcode
-
-# fast build rule for target.
-gcode/fast:
-	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
-.PHONY : gcode/fast
-
-#=============================================================================
-# Target rules for targets named manufacture
-
-# Build rule for target.
-manufacture: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 manufacture
-.PHONY : manufacture
-
-# fast build rule for target.
-manufacture/fast:
-	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/build
-.PHONY : manufacture/fast
-
-#=============================================================================
 # Target rules for targets named nef-test
 
 # Build rule for target.
@@ -397,17 +371,43 @@ nef-test/fast:
 .PHONY : nef-test/fast
 
 #=============================================================================
-# Target rules for targets named geometry
+# Target rules for targets named non-manufacture-tests
 
 # Build rule for target.
-geometry: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 geometry
-.PHONY : geometry
+non-manufacture-tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 non-manufacture-tests
+.PHONY : non-manufacture-tests
 
 # fast build rule for target.
-geometry/fast:
-	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
-.PHONY : geometry/fast
+non-manufacture-tests/fast:
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/build
+.PHONY : non-manufacture-tests/fast
+
+#=============================================================================
+# Target rules for targets named gca
+
+# Build rule for target.
+gca: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gca
+.PHONY : gca
+
+# fast build rule for target.
+gca/fast:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/build
+.PHONY : gca/fast
+
+#=============================================================================
+# Target rules for targets named gcode
+
+# Build rule for target.
+gcode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gcode
+.PHONY : gcode
+
+# fast build rule for target.
+gcode/fast:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/build
+.PHONY : gcode/fast
 
 #=============================================================================
 # Target rules for targets named stl-parse
@@ -421,6 +421,19 @@ stl-parse: cmake_check_build_system
 stl-parse/fast:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
 .PHONY : stl-parse/fast
+
+#=============================================================================
+# Target rules for targets named geometry
+
+# Build rule for target.
+geometry: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry
+.PHONY : geometry
+
+# fast build rule for target.
+geometry/fast:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
+.PHONY : geometry/fast
 
 #=============================================================================
 # Target rules for targets named utils
@@ -677,33 +690,6 @@ examples/json_plan.s: examples/json_plan.cpp.s
 examples/json_plan.cpp.s:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/examples/json_plan.cpp.s
 .PHONY : examples/json_plan.cpp.s
-
-examples/manufacture.o: examples/manufacture.cpp.o
-
-.PHONY : examples/manufacture.o
-
-# target to build an object file
-examples/manufacture.cpp.o:
-	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/examples/manufacture.cpp.o
-.PHONY : examples/manufacture.cpp.o
-
-examples/manufacture.i: examples/manufacture.cpp.i
-
-.PHONY : examples/manufacture.i
-
-# target to preprocess a source file
-examples/manufacture.cpp.i:
-	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/examples/manufacture.cpp.i
-.PHONY : examples/manufacture.cpp.i
-
-examples/manufacture.s: examples/manufacture.cpp.s
-
-.PHONY : examples/manufacture.s
-
-# target to generate assembly for a file
-examples/manufacture.cpp.s:
-	$(MAKE) -f CMakeFiles/manufacture.dir/build.make CMakeFiles/manufacture.dir/examples/manufacture.cpp.s
-.PHONY : examples/manufacture.cpp.s
 
 examples/nef_test.o: examples/nef_test.cpp.o
 
@@ -3142,6 +3128,7 @@ test/analysis_tests.o: test/analysis_tests.cpp.o
 # target to build an object file
 test/analysis_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/analysis_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/analysis_tests.cpp.o
 .PHONY : test/analysis_tests.cpp.o
 
 test/analysis_tests.i: test/analysis_tests.cpp.i
@@ -3151,6 +3138,7 @@ test/analysis_tests.i: test/analysis_tests.cpp.i
 # target to preprocess a source file
 test/analysis_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/analysis_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/analysis_tests.cpp.i
 .PHONY : test/analysis_tests.cpp.i
 
 test/analysis_tests.s: test/analysis_tests.cpp.s
@@ -3160,6 +3148,7 @@ test/analysis_tests.s: test/analysis_tests.cpp.s
 # target to generate assembly for a file
 test/analysis_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/analysis_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/analysis_tests.cpp.s
 .PHONY : test/analysis_tests.cpp.s
 
 test/arc_tests.o: test/arc_tests.cpp.o
@@ -3169,6 +3158,7 @@ test/arc_tests.o: test/arc_tests.cpp.o
 # target to build an object file
 test/arc_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/arc_tests.cpp.o
 .PHONY : test/arc_tests.cpp.o
 
 test/arc_tests.i: test/arc_tests.cpp.i
@@ -3178,6 +3168,7 @@ test/arc_tests.i: test/arc_tests.cpp.i
 # target to preprocess a source file
 test/arc_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/arc_tests.cpp.i
 .PHONY : test/arc_tests.cpp.i
 
 test/arc_tests.s: test/arc_tests.cpp.s
@@ -3187,6 +3178,7 @@ test/arc_tests.s: test/arc_tests.cpp.s
 # target to generate assembly for a file
 test/arc_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/arc_tests.cpp.s
 .PHONY : test/arc_tests.cpp.s
 
 test/axis_3_tests.o: test/axis_3_tests.cpp.o
@@ -3196,6 +3188,7 @@ test/axis_3_tests.o: test/axis_3_tests.cpp.o
 # target to build an object file
 test/axis_3_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_3_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_3_tests.cpp.o
 .PHONY : test/axis_3_tests.cpp.o
 
 test/axis_3_tests.i: test/axis_3_tests.cpp.i
@@ -3205,6 +3198,7 @@ test/axis_3_tests.i: test/axis_3_tests.cpp.i
 # target to preprocess a source file
 test/axis_3_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_3_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_3_tests.cpp.i
 .PHONY : test/axis_3_tests.cpp.i
 
 test/axis_3_tests.s: test/axis_3_tests.cpp.s
@@ -3214,6 +3208,7 @@ test/axis_3_tests.s: test/axis_3_tests.cpp.s
 # target to generate assembly for a file
 test/axis_3_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_3_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_3_tests.cpp.s
 .PHONY : test/axis_3_tests.cpp.s
 
 test/checker_tests.o: test/checker_tests.cpp.o
@@ -3223,6 +3218,7 @@ test/checker_tests.o: test/checker_tests.cpp.o
 # target to build an object file
 test/checker_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/checker_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/checker_tests.cpp.o
 .PHONY : test/checker_tests.cpp.o
 
 test/checker_tests.i: test/checker_tests.cpp.i
@@ -3232,6 +3228,7 @@ test/checker_tests.i: test/checker_tests.cpp.i
 # target to preprocess a source file
 test/checker_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/checker_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/checker_tests.cpp.i
 .PHONY : test/checker_tests.cpp.i
 
 test/checker_tests.s: test/checker_tests.cpp.s
@@ -3241,6 +3238,7 @@ test/checker_tests.s: test/checker_tests.cpp.s
 # target to generate assembly for a file
 test/checker_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/checker_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/checker_tests.cpp.s
 .PHONY : test/checker_tests.cpp.s
 
 test/circular_arc_tests.o: test/circular_arc_tests.cpp.o
@@ -3250,6 +3248,7 @@ test/circular_arc_tests.o: test/circular_arc_tests.cpp.o
 # target to build an object file
 test/circular_arc_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/circular_arc_tests.cpp.o
 .PHONY : test/circular_arc_tests.cpp.o
 
 test/circular_arc_tests.i: test/circular_arc_tests.cpp.i
@@ -3259,6 +3258,7 @@ test/circular_arc_tests.i: test/circular_arc_tests.cpp.i
 # target to preprocess a source file
 test/circular_arc_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/circular_arc_tests.cpp.i
 .PHONY : test/circular_arc_tests.cpp.i
 
 test/circular_arc_tests.s: test/circular_arc_tests.cpp.s
@@ -3268,6 +3268,7 @@ test/circular_arc_tests.s: test/circular_arc_tests.cpp.s
 # target to generate assembly for a file
 test/circular_arc_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/circular_arc_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/circular_arc_tests.cpp.s
 .PHONY : test/circular_arc_tests.cpp.s
 
 test/contour_planning_tests.o: test/contour_planning_tests.cpp.o
@@ -3277,6 +3278,7 @@ test/contour_planning_tests.o: test/contour_planning_tests.cpp.o
 # target to build an object file
 test/contour_planning_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/contour_planning_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/contour_planning_tests.cpp.o
 .PHONY : test/contour_planning_tests.cpp.o
 
 test/contour_planning_tests.i: test/contour_planning_tests.cpp.i
@@ -3286,6 +3288,7 @@ test/contour_planning_tests.i: test/contour_planning_tests.cpp.i
 # target to preprocess a source file
 test/contour_planning_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/contour_planning_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/contour_planning_tests.cpp.i
 .PHONY : test/contour_planning_tests.cpp.i
 
 test/contour_planning_tests.s: test/contour_planning_tests.cpp.s
@@ -3295,6 +3298,7 @@ test/contour_planning_tests.s: test/contour_planning_tests.cpp.s
 # target to generate assembly for a file
 test/contour_planning_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/contour_planning_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/contour_planning_tests.cpp.s
 .PHONY : test/contour_planning_tests.cpp.s
 
 test/cut_scheduling_tests.o: test/cut_scheduling_tests.cpp.o
@@ -3304,6 +3308,7 @@ test/cut_scheduling_tests.o: test/cut_scheduling_tests.cpp.o
 # target to build an object file
 test/cut_scheduling_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_scheduling_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_scheduling_tests.cpp.o
 .PHONY : test/cut_scheduling_tests.cpp.o
 
 test/cut_scheduling_tests.i: test/cut_scheduling_tests.cpp.i
@@ -3313,6 +3318,7 @@ test/cut_scheduling_tests.i: test/cut_scheduling_tests.cpp.i
 # target to preprocess a source file
 test/cut_scheduling_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_scheduling_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_scheduling_tests.cpp.i
 .PHONY : test/cut_scheduling_tests.cpp.i
 
 test/cut_scheduling_tests.s: test/cut_scheduling_tests.cpp.s
@@ -3322,6 +3328,7 @@ test/cut_scheduling_tests.s: test/cut_scheduling_tests.cpp.s
 # target to generate assembly for a file
 test/cut_scheduling_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_scheduling_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_scheduling_tests.cpp.s
 .PHONY : test/cut_scheduling_tests.cpp.s
 
 test/cut_tests.o: test/cut_tests.cpp.o
@@ -3331,6 +3338,7 @@ test/cut_tests.o: test/cut_tests.cpp.o
 # target to build an object file
 test/cut_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_tests.cpp.o
 .PHONY : test/cut_tests.cpp.o
 
 test/cut_tests.i: test/cut_tests.cpp.i
@@ -3340,6 +3348,7 @@ test/cut_tests.i: test/cut_tests.cpp.i
 # target to preprocess a source file
 test/cut_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_tests.cpp.i
 .PHONY : test/cut_tests.cpp.i
 
 test/cut_tests.s: test/cut_tests.cpp.s
@@ -3349,6 +3358,7 @@ test/cut_tests.s: test/cut_tests.cpp.s
 # target to generate assembly for a file
 test/cut_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/cut_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_tests.cpp.s
 .PHONY : test/cut_tests.cpp.s
 
 test/dxf_to_gcode_tests.o: test/dxf_to_gcode_tests.cpp.o
@@ -3358,6 +3368,7 @@ test/dxf_to_gcode_tests.o: test/dxf_to_gcode_tests.cpp.o
 # target to build an object file
 test/dxf_to_gcode_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/dxf_to_gcode_tests.cpp.o
 .PHONY : test/dxf_to_gcode_tests.cpp.o
 
 test/dxf_to_gcode_tests.i: test/dxf_to_gcode_tests.cpp.i
@@ -3367,6 +3378,7 @@ test/dxf_to_gcode_tests.i: test/dxf_to_gcode_tests.cpp.i
 # target to preprocess a source file
 test/dxf_to_gcode_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/dxf_to_gcode_tests.cpp.i
 .PHONY : test/dxf_to_gcode_tests.cpp.i
 
 test/dxf_to_gcode_tests.s: test/dxf_to_gcode_tests.cpp.s
@@ -3376,6 +3388,7 @@ test/dxf_to_gcode_tests.s: test/dxf_to_gcode_tests.cpp.s
 # target to generate assembly for a file
 test/dxf_to_gcode_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/dxf_to_gcode_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/dxf_to_gcode_tests.cpp.s
 .PHONY : test/dxf_to_gcode_tests.cpp.s
 
 test/extrusion_tests.o: test/extrusion_tests.cpp.o
@@ -3385,6 +3398,7 @@ test/extrusion_tests.o: test/extrusion_tests.cpp.o
 # target to build an object file
 test/extrusion_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/extrusion_tests.cpp.o
 .PHONY : test/extrusion_tests.cpp.o
 
 test/extrusion_tests.i: test/extrusion_tests.cpp.i
@@ -3394,6 +3408,7 @@ test/extrusion_tests.i: test/extrusion_tests.cpp.i
 # target to preprocess a source file
 test/extrusion_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/extrusion_tests.cpp.i
 .PHONY : test/extrusion_tests.cpp.i
 
 test/extrusion_tests.s: test/extrusion_tests.cpp.s
@@ -3403,6 +3418,7 @@ test/extrusion_tests.s: test/extrusion_tests.cpp.s
 # target to generate assembly for a file
 test/extrusion_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/extrusion_tests.cpp.s
 .PHONY : test/extrusion_tests.cpp.s
 
 test/feature_recognition_tests.o: test/feature_recognition_tests.cpp.o
@@ -3412,6 +3428,7 @@ test/feature_recognition_tests.o: test/feature_recognition_tests.cpp.o
 # target to build an object file
 test/feature_recognition_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_recognition_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_recognition_tests.cpp.o
 .PHONY : test/feature_recognition_tests.cpp.o
 
 test/feature_recognition_tests.i: test/feature_recognition_tests.cpp.i
@@ -3421,6 +3438,7 @@ test/feature_recognition_tests.i: test/feature_recognition_tests.cpp.i
 # target to preprocess a source file
 test/feature_recognition_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_recognition_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_recognition_tests.cpp.i
 .PHONY : test/feature_recognition_tests.cpp.i
 
 test/feature_recognition_tests.s: test/feature_recognition_tests.cpp.s
@@ -3430,6 +3448,7 @@ test/feature_recognition_tests.s: test/feature_recognition_tests.cpp.s
 # target to generate assembly for a file
 test/feature_recognition_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_recognition_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_recognition_tests.cpp.s
 .PHONY : test/feature_recognition_tests.cpp.s
 
 test/feature_selection_tests.o: test/feature_selection_tests.cpp.o
@@ -3439,6 +3458,7 @@ test/feature_selection_tests.o: test/feature_selection_tests.cpp.o
 # target to build an object file
 test/feature_selection_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_selection_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_selection_tests.cpp.o
 .PHONY : test/feature_selection_tests.cpp.o
 
 test/feature_selection_tests.i: test/feature_selection_tests.cpp.i
@@ -3448,6 +3468,7 @@ test/feature_selection_tests.i: test/feature_selection_tests.cpp.i
 # target to preprocess a source file
 test/feature_selection_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_selection_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_selection_tests.cpp.i
 .PHONY : test/feature_selection_tests.cpp.i
 
 test/feature_selection_tests.s: test/feature_selection_tests.cpp.s
@@ -3457,6 +3478,7 @@ test/feature_selection_tests.s: test/feature_selection_tests.cpp.s
 # target to generate assembly for a file
 test/feature_selection_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/feature_selection_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_selection_tests.cpp.s
 .PHONY : test/feature_selection_tests.cpp.s
 
 test/fixture_analysis_tests.o: test/fixture_analysis_tests.cpp.o
@@ -3466,6 +3488,7 @@ test/fixture_analysis_tests.o: test/fixture_analysis_tests.cpp.o
 # target to build an object file
 test/fixture_analysis_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fixture_analysis_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fixture_analysis_tests.cpp.o
 .PHONY : test/fixture_analysis_tests.cpp.o
 
 test/fixture_analysis_tests.i: test/fixture_analysis_tests.cpp.i
@@ -3475,6 +3498,7 @@ test/fixture_analysis_tests.i: test/fixture_analysis_tests.cpp.i
 # target to preprocess a source file
 test/fixture_analysis_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fixture_analysis_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fixture_analysis_tests.cpp.i
 .PHONY : test/fixture_analysis_tests.cpp.i
 
 test/fixture_analysis_tests.s: test/fixture_analysis_tests.cpp.s
@@ -3484,6 +3508,7 @@ test/fixture_analysis_tests.s: test/fixture_analysis_tests.cpp.s
 # target to generate assembly for a file
 test/fixture_analysis_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fixture_analysis_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fixture_analysis_tests.cpp.s
 .PHONY : test/fixture_analysis_tests.cpp.s
 
 test/gcode_to_cuts_tests.o: test/gcode_to_cuts_tests.cpp.o
@@ -3493,6 +3518,7 @@ test/gcode_to_cuts_tests.o: test/gcode_to_cuts_tests.cpp.o
 # target to build an object file
 test/gcode_to_cuts_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/gcode_to_cuts_tests.cpp.o
 .PHONY : test/gcode_to_cuts_tests.cpp.o
 
 test/gcode_to_cuts_tests.i: test/gcode_to_cuts_tests.cpp.i
@@ -3502,6 +3528,7 @@ test/gcode_to_cuts_tests.i: test/gcode_to_cuts_tests.cpp.i
 # target to preprocess a source file
 test/gcode_to_cuts_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/gcode_to_cuts_tests.cpp.i
 .PHONY : test/gcode_to_cuts_tests.cpp.i
 
 test/gcode_to_cuts_tests.s: test/gcode_to_cuts_tests.cpp.s
@@ -3511,6 +3538,7 @@ test/gcode_to_cuts_tests.s: test/gcode_to_cuts_tests.cpp.s
 # target to generate assembly for a file
 test/gcode_to_cuts_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/gcode_to_cuts_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/gcode_to_cuts_tests.cpp.s
 .PHONY : test/gcode_to_cuts_tests.cpp.s
 
 test/jaw_cutout_tests.o: test/jaw_cutout_tests.cpp.o
@@ -3520,6 +3548,7 @@ test/jaw_cutout_tests.o: test/jaw_cutout_tests.cpp.o
 # target to build an object file
 test/jaw_cutout_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/jaw_cutout_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/jaw_cutout_tests.cpp.o
 .PHONY : test/jaw_cutout_tests.cpp.o
 
 test/jaw_cutout_tests.i: test/jaw_cutout_tests.cpp.i
@@ -3529,6 +3558,7 @@ test/jaw_cutout_tests.i: test/jaw_cutout_tests.cpp.i
 # target to preprocess a source file
 test/jaw_cutout_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/jaw_cutout_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/jaw_cutout_tests.cpp.i
 .PHONY : test/jaw_cutout_tests.cpp.i
 
 test/jaw_cutout_tests.s: test/jaw_cutout_tests.cpp.s
@@ -3538,6 +3568,7 @@ test/jaw_cutout_tests.s: test/jaw_cutout_tests.cpp.s
 # target to generate assembly for a file
 test/jaw_cutout_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/jaw_cutout_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/jaw_cutout_tests.cpp.s
 .PHONY : test/jaw_cutout_tests.cpp.s
 
 test/lexer_tests.o: test/lexer_tests.cpp.o
@@ -3547,6 +3578,7 @@ test/lexer_tests.o: test/lexer_tests.cpp.o
 # target to build an object file
 test/lexer_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/lexer_tests.cpp.o
 .PHONY : test/lexer_tests.cpp.o
 
 test/lexer_tests.i: test/lexer_tests.cpp.i
@@ -3556,6 +3588,7 @@ test/lexer_tests.i: test/lexer_tests.cpp.i
 # target to preprocess a source file
 test/lexer_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/lexer_tests.cpp.i
 .PHONY : test/lexer_tests.cpp.i
 
 test/lexer_tests.s: test/lexer_tests.cpp.s
@@ -3565,6 +3598,7 @@ test/lexer_tests.s: test/lexer_tests.cpp.s
 # target to generate assembly for a file
 test/lexer_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/lexer_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/lexer_tests.cpp.s
 .PHONY : test/lexer_tests.cpp.s
 
 test/line_tests.o: test/line_tests.cpp.o
@@ -3574,6 +3608,7 @@ test/line_tests.o: test/line_tests.cpp.o
 # target to build an object file
 test/line_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.o
 .PHONY : test/line_tests.cpp.o
 
 test/line_tests.i: test/line_tests.cpp.i
@@ -3583,6 +3618,7 @@ test/line_tests.i: test/line_tests.cpp.i
 # target to preprocess a source file
 test/line_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.i
 .PHONY : test/line_tests.cpp.i
 
 test/line_tests.s: test/line_tests.cpp.s
@@ -3592,6 +3628,7 @@ test/line_tests.s: test/line_tests.cpp.s
 # target to generate assembly for a file
 test/line_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.s
 .PHONY : test/line_tests.cpp.s
 
 test/machine_state_tests.o: test/machine_state_tests.cpp.o
@@ -3601,6 +3638,7 @@ test/machine_state_tests.o: test/machine_state_tests.cpp.o
 # target to build an object file
 test/machine_state_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/machine_state_tests.cpp.o
 .PHONY : test/machine_state_tests.cpp.o
 
 test/machine_state_tests.i: test/machine_state_tests.cpp.i
@@ -3610,6 +3648,7 @@ test/machine_state_tests.i: test/machine_state_tests.cpp.i
 # target to preprocess a source file
 test/machine_state_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/machine_state_tests.cpp.i
 .PHONY : test/machine_state_tests.cpp.i
 
 test/machine_state_tests.s: test/machine_state_tests.cpp.s
@@ -3619,6 +3658,7 @@ test/machine_state_tests.s: test/machine_state_tests.cpp.s
 # target to generate assembly for a file
 test/machine_state_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machine_state_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/machine_state_tests.cpp.s
 .PHONY : test/machine_state_tests.cpp.s
 
 test/main.o: test/main.cpp.o
@@ -3628,6 +3668,7 @@ test/main.o: test/main.cpp.o
 # target to build an object file
 test/main.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/main.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/main.cpp.o
 .PHONY : test/main.cpp.o
 
 test/main.i: test/main.cpp.i
@@ -3637,6 +3678,7 @@ test/main.i: test/main.cpp.i
 # target to preprocess a source file
 test/main.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/main.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/main.cpp.i
 .PHONY : test/main.cpp.i
 
 test/main.s: test/main.cpp.s
@@ -3646,6 +3688,7 @@ test/main.s: test/main.cpp.s
 # target to generate assembly for a file
 test/main.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/main.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/main.cpp.s
 .PHONY : test/main.cpp.s
 
 test/main_backend.o: test/main_backend.cpp.o
@@ -3675,6 +3718,63 @@ test/main_backend.cpp.s:
 	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/main_backend.cpp.s
 .PHONY : test/main_backend.cpp.s
 
+test/main_manufacture.o: test/main_manufacture.cpp.o
+
+.PHONY : test/main_manufacture.o
+
+# target to build an object file
+test/main_manufacture.cpp.o:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/test/main_manufacture.cpp.o
+.PHONY : test/main_manufacture.cpp.o
+
+test/main_manufacture.i: test/main_manufacture.cpp.i
+
+.PHONY : test/main_manufacture.i
+
+# target to preprocess a source file
+test/main_manufacture.cpp.i:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/test/main_manufacture.cpp.i
+.PHONY : test/main_manufacture.cpp.i
+
+test/main_manufacture.s: test/main_manufacture.cpp.s
+
+.PHONY : test/main_manufacture.s
+
+# target to generate assembly for a file
+test/main_manufacture.cpp.s:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/test/main_manufacture.cpp.s
+.PHONY : test/main_manufacture.cpp.s
+
+test/manufacture.o: test/manufacture.cpp.o
+
+.PHONY : test/manufacture.o
+
+# target to build an object file
+test/manufacture.cpp.o:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/test/manufacture.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/manufacture.cpp.o
+.PHONY : test/manufacture.cpp.o
+
+test/manufacture.i: test/manufacture.cpp.i
+
+.PHONY : test/manufacture.i
+
+# target to preprocess a source file
+test/manufacture.cpp.i:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/test/manufacture.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/manufacture.cpp.i
+.PHONY : test/manufacture.cpp.i
+
+test/manufacture.s: test/manufacture.cpp.s
+
+.PHONY : test/manufacture.s
+
+# target to generate assembly for a file
+test/manufacture.cpp.s:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/test/manufacture.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/manufacture.cpp.s
+.PHONY : test/manufacture.cpp.s
+
 test/matrix_tests.o: test/matrix_tests.cpp.o
 
 .PHONY : test/matrix_tests.o
@@ -3682,6 +3782,7 @@ test/matrix_tests.o: test/matrix_tests.cpp.o
 # target to build an object file
 test/matrix_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/matrix_tests.cpp.o
 .PHONY : test/matrix_tests.cpp.o
 
 test/matrix_tests.i: test/matrix_tests.cpp.i
@@ -3691,6 +3792,7 @@ test/matrix_tests.i: test/matrix_tests.cpp.i
 # target to preprocess a source file
 test/matrix_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/matrix_tests.cpp.i
 .PHONY : test/matrix_tests.cpp.i
 
 test/matrix_tests.s: test/matrix_tests.cpp.s
@@ -3700,6 +3802,7 @@ test/matrix_tests.s: test/matrix_tests.cpp.s
 # target to generate assembly for a file
 test/matrix_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/matrix_tests.cpp.s
 .PHONY : test/matrix_tests.cpp.s
 
 test/mesh_tests.o: test/mesh_tests.cpp.o
@@ -3709,6 +3812,7 @@ test/mesh_tests.o: test/mesh_tests.cpp.o
 # target to build an object file
 test/mesh_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_tests.cpp.o
 .PHONY : test/mesh_tests.cpp.o
 
 test/mesh_tests.i: test/mesh_tests.cpp.i
@@ -3718,6 +3822,7 @@ test/mesh_tests.i: test/mesh_tests.cpp.i
 # target to preprocess a source file
 test/mesh_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_tests.cpp.i
 .PHONY : test/mesh_tests.cpp.i
 
 test/mesh_tests.s: test/mesh_tests.cpp.s
@@ -3727,6 +3832,7 @@ test/mesh_tests.s: test/mesh_tests.cpp.s
 # target to generate assembly for a file
 test/mesh_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_tests.cpp.s
 .PHONY : test/mesh_tests.cpp.s
 
 test/mesh_to_gcode_tests.o: test/mesh_to_gcode_tests.cpp.o
@@ -3736,6 +3842,7 @@ test/mesh_to_gcode_tests.o: test/mesh_to_gcode_tests.cpp.o
 # target to build an object file
 test/mesh_to_gcode_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_to_gcode_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_to_gcode_tests.cpp.o
 .PHONY : test/mesh_to_gcode_tests.cpp.o
 
 test/mesh_to_gcode_tests.i: test/mesh_to_gcode_tests.cpp.i
@@ -3745,6 +3852,7 @@ test/mesh_to_gcode_tests.i: test/mesh_to_gcode_tests.cpp.i
 # target to preprocess a source file
 test/mesh_to_gcode_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_to_gcode_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_to_gcode_tests.cpp.i
 .PHONY : test/mesh_to_gcode_tests.cpp.i
 
 test/mesh_to_gcode_tests.s: test/mesh_to_gcode_tests.cpp.s
@@ -3754,6 +3862,7 @@ test/mesh_to_gcode_tests.s: test/mesh_to_gcode_tests.cpp.s
 # target to generate assembly for a file
 test/mesh_to_gcode_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_to_gcode_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_to_gcode_tests.cpp.s
 .PHONY : test/mesh_to_gcode_tests.cpp.s
 
 test/mill_simulator_tests.o: test/mill_simulator_tests.cpp.o
@@ -3763,6 +3872,7 @@ test/mill_simulator_tests.o: test/mill_simulator_tests.cpp.o
 # target to build an object file
 test/mill_simulator_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mill_simulator_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mill_simulator_tests.cpp.o
 .PHONY : test/mill_simulator_tests.cpp.o
 
 test/mill_simulator_tests.i: test/mill_simulator_tests.cpp.i
@@ -3772,6 +3882,7 @@ test/mill_simulator_tests.i: test/mill_simulator_tests.cpp.i
 # target to preprocess a source file
 test/mill_simulator_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mill_simulator_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mill_simulator_tests.cpp.i
 .PHONY : test/mill_simulator_tests.cpp.i
 
 test/mill_simulator_tests.s: test/mill_simulator_tests.cpp.s
@@ -3781,6 +3892,7 @@ test/mill_simulator_tests.s: test/mill_simulator_tests.cpp.s
 # target to generate assembly for a file
 test/mill_simulator_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mill_simulator_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mill_simulator_tests.cpp.s
 .PHONY : test/mill_simulator_tests.cpp.s
 
 test/millability_tests.o: test/millability_tests.cpp.o
@@ -3790,6 +3902,7 @@ test/millability_tests.o: test/millability_tests.cpp.o
 # target to build an object file
 test/millability_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/millability_tests.cpp.o
 .PHONY : test/millability_tests.cpp.o
 
 test/millability_tests.i: test/millability_tests.cpp.i
@@ -3799,6 +3912,7 @@ test/millability_tests.i: test/millability_tests.cpp.i
 # target to preprocess a source file
 test/millability_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/millability_tests.cpp.i
 .PHONY : test/millability_tests.cpp.i
 
 test/millability_tests.s: test/millability_tests.cpp.s
@@ -3808,6 +3922,7 @@ test/millability_tests.s: test/millability_tests.cpp.s
 # target to generate assembly for a file
 test/millability_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/millability_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/millability_tests.cpp.s
 .PHONY : test/millability_tests.cpp.s
 
 test/plane_tests.o: test/plane_tests.cpp.o
@@ -3817,6 +3932,7 @@ test/plane_tests.o: test/plane_tests.cpp.o
 # target to build an object file
 test/plane_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/plane_tests.cpp.o
 .PHONY : test/plane_tests.cpp.o
 
 test/plane_tests.i: test/plane_tests.cpp.i
@@ -3826,6 +3942,7 @@ test/plane_tests.i: test/plane_tests.cpp.i
 # target to preprocess a source file
 test/plane_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/plane_tests.cpp.i
 .PHONY : test/plane_tests.cpp.i
 
 test/plane_tests.s: test/plane_tests.cpp.s
@@ -3835,6 +3952,7 @@ test/plane_tests.s: test/plane_tests.cpp.s
 # target to generate assembly for a file
 test/plane_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/plane_tests.cpp.s
 .PHONY : test/plane_tests.cpp.s
 
 test/point_tests.o: test/point_tests.cpp.o
@@ -3844,6 +3962,7 @@ test/point_tests.o: test/point_tests.cpp.o
 # target to build an object file
 test/point_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/point_tests.cpp.o
 .PHONY : test/point_tests.cpp.o
 
 test/point_tests.i: test/point_tests.cpp.i
@@ -3853,6 +3972,7 @@ test/point_tests.i: test/point_tests.cpp.i
 # target to preprocess a source file
 test/point_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/point_tests.cpp.i
 .PHONY : test/point_tests.cpp.i
 
 test/point_tests.s: test/point_tests.cpp.s
@@ -3862,6 +3982,7 @@ test/point_tests.s: test/point_tests.cpp.s
 # target to generate assembly for a file
 test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
 test/polygon_tests.o: test/polygon_tests.cpp.o
@@ -3871,6 +3992,7 @@ test/polygon_tests.o: test/polygon_tests.cpp.o
 # target to build an object file
 test/polygon_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polygon_tests.cpp.o
 .PHONY : test/polygon_tests.cpp.o
 
 test/polygon_tests.i: test/polygon_tests.cpp.i
@@ -3880,6 +4002,7 @@ test/polygon_tests.i: test/polygon_tests.cpp.i
 # target to preprocess a source file
 test/polygon_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polygon_tests.cpp.i
 .PHONY : test/polygon_tests.cpp.i
 
 test/polygon_tests.s: test/polygon_tests.cpp.s
@@ -3889,6 +4012,7 @@ test/polygon_tests.s: test/polygon_tests.cpp.s
 # target to generate assembly for a file
 test/polygon_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polygon_tests.cpp.s
 .PHONY : test/polygon_tests.cpp.s
 
 test/polyline_tests.o: test/polyline_tests.cpp.o
@@ -3898,6 +4022,7 @@ test/polyline_tests.o: test/polyline_tests.cpp.o
 # target to build an object file
 test/polyline_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polyline_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polyline_tests.cpp.o
 .PHONY : test/polyline_tests.cpp.o
 
 test/polyline_tests.i: test/polyline_tests.cpp.i
@@ -3907,6 +4032,7 @@ test/polyline_tests.i: test/polyline_tests.cpp.i
 # target to preprocess a source file
 test/polyline_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polyline_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polyline_tests.cpp.i
 .PHONY : test/polyline_tests.cpp.i
 
 test/polyline_tests.s: test/polyline_tests.cpp.s
@@ -3916,6 +4042,7 @@ test/polyline_tests.s: test/polyline_tests.cpp.s
 # target to generate assembly for a file
 test/polyline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polyline_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polyline_tests.cpp.s
 .PHONY : test/polyline_tests.cpp.s
 
 test/position_table_tests.o: test/position_table_tests.cpp.o
@@ -3925,6 +4052,7 @@ test/position_table_tests.o: test/position_table_tests.cpp.o
 # target to build an object file
 test/position_table_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/position_table_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/position_table_tests.cpp.o
 .PHONY : test/position_table_tests.cpp.o
 
 test/position_table_tests.i: test/position_table_tests.cpp.i
@@ -3934,6 +4062,7 @@ test/position_table_tests.i: test/position_table_tests.cpp.i
 # target to preprocess a source file
 test/position_table_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/position_table_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/position_table_tests.cpp.i
 .PHONY : test/position_table_tests.cpp.i
 
 test/position_table_tests.s: test/position_table_tests.cpp.s
@@ -3943,6 +4072,7 @@ test/position_table_tests.s: test/position_table_tests.cpp.s
 # target to generate assembly for a file
 test/position_table_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/position_table_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/position_table_tests.cpp.s
 .PHONY : test/position_table_tests.cpp.s
 
 test/retargeting_tests.o: test/retargeting_tests.cpp.o
@@ -3952,6 +4082,7 @@ test/retargeting_tests.o: test/retargeting_tests.cpp.o
 # target to build an object file
 test/retargeting_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/retargeting_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/retargeting_tests.cpp.o
 .PHONY : test/retargeting_tests.cpp.o
 
 test/retargeting_tests.i: test/retargeting_tests.cpp.i
@@ -3961,6 +4092,7 @@ test/retargeting_tests.i: test/retargeting_tests.cpp.i
 # target to preprocess a source file
 test/retargeting_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/retargeting_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/retargeting_tests.cpp.i
 .PHONY : test/retargeting_tests.cpp.i
 
 test/retargeting_tests.s: test/retargeting_tests.cpp.s
@@ -3970,6 +4102,7 @@ test/retargeting_tests.s: test/retargeting_tests.cpp.s
 # target to generate assembly for a file
 test/retargeting_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/retargeting_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/retargeting_tests.cpp.s
 .PHONY : test/retargeting_tests.cpp.s
 
 test/rigid_arrangement_tests.o: test/rigid_arrangement_tests.cpp.o
@@ -3979,6 +4112,7 @@ test/rigid_arrangement_tests.o: test/rigid_arrangement_tests.cpp.o
 # target to build an object file
 test/rigid_arrangement_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rigid_arrangement_tests.cpp.o
 .PHONY : test/rigid_arrangement_tests.cpp.o
 
 test/rigid_arrangement_tests.i: test/rigid_arrangement_tests.cpp.i
@@ -3988,6 +4122,7 @@ test/rigid_arrangement_tests.i: test/rigid_arrangement_tests.cpp.i
 # target to preprocess a source file
 test/rigid_arrangement_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rigid_arrangement_tests.cpp.i
 .PHONY : test/rigid_arrangement_tests.cpp.i
 
 test/rigid_arrangement_tests.s: test/rigid_arrangement_tests.cpp.s
@@ -3997,6 +4132,7 @@ test/rigid_arrangement_tests.s: test/rigid_arrangement_tests.cpp.s
 # target to generate assembly for a file
 test/rigid_arrangement_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rigid_arrangement_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rigid_arrangement_tests.cpp.s
 .PHONY : test/rigid_arrangement_tests.cpp.s
 
 test/rotation_tests.o: test/rotation_tests.cpp.o
@@ -4006,6 +4142,7 @@ test/rotation_tests.o: test/rotation_tests.cpp.o
 # target to build an object file
 test/rotation_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rotation_tests.cpp.o
 .PHONY : test/rotation_tests.cpp.o
 
 test/rotation_tests.i: test/rotation_tests.cpp.i
@@ -4015,6 +4152,7 @@ test/rotation_tests.i: test/rotation_tests.cpp.i
 # target to preprocess a source file
 test/rotation_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rotation_tests.cpp.i
 .PHONY : test/rotation_tests.cpp.i
 
 test/rotation_tests.s: test/rotation_tests.cpp.s
@@ -4024,6 +4162,7 @@ test/rotation_tests.s: test/rotation_tests.cpp.s
 # target to generate assembly for a file
 test/rotation_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rotation_tests.cpp.s
 .PHONY : test/rotation_tests.cpp.s
 
 test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
@@ -4033,6 +4172,7 @@ test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
 # target to build an object file
 test/shapes_to_toolpaths_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/shapes_to_toolpaths_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/shapes_to_toolpaths_tests.cpp.o
 .PHONY : test/shapes_to_toolpaths_tests.cpp.o
 
 test/shapes_to_toolpaths_tests.i: test/shapes_to_toolpaths_tests.cpp.i
@@ -4042,6 +4182,7 @@ test/shapes_to_toolpaths_tests.i: test/shapes_to_toolpaths_tests.cpp.i
 # target to preprocess a source file
 test/shapes_to_toolpaths_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/shapes_to_toolpaths_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/shapes_to_toolpaths_tests.cpp.i
 .PHONY : test/shapes_to_toolpaths_tests.cpp.i
 
 test/shapes_to_toolpaths_tests.s: test/shapes_to_toolpaths_tests.cpp.s
@@ -4051,6 +4192,7 @@ test/shapes_to_toolpaths_tests.s: test/shapes_to_toolpaths_tests.cpp.s
 # target to generate assembly for a file
 test/shapes_to_toolpaths_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/shapes_to_toolpaths_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/shapes_to_toolpaths_tests.cpp.s
 .PHONY : test/shapes_to_toolpaths_tests.cpp.s
 
 test/spline_tests.o: test/spline_tests.cpp.o
@@ -4060,6 +4202,7 @@ test/spline_tests.o: test/spline_tests.cpp.o
 # target to build an object file
 test/spline_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/spline_tests.cpp.o
 .PHONY : test/spline_tests.cpp.o
 
 test/spline_tests.i: test/spline_tests.cpp.i
@@ -4069,6 +4212,7 @@ test/spline_tests.i: test/spline_tests.cpp.i
 # target to preprocess a source file
 test/spline_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/spline_tests.cpp.i
 .PHONY : test/spline_tests.cpp.i
 
 test/spline_tests.s: test/spline_tests.cpp.s
@@ -4078,6 +4222,7 @@ test/spline_tests.s: test/spline_tests.cpp.s
 # target to generate assembly for a file
 test/spline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/spline_tests.cpp.s
 .PHONY : test/spline_tests.cpp.s
 
 test/surface_tests.o: test/surface_tests.cpp.o
@@ -4087,6 +4232,7 @@ test/surface_tests.o: test/surface_tests.cpp.o
 # target to build an object file
 test/surface_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/surface_tests.cpp.o
 .PHONY : test/surface_tests.cpp.o
 
 test/surface_tests.i: test/surface_tests.cpp.i
@@ -4096,6 +4242,7 @@ test/surface_tests.i: test/surface_tests.cpp.i
 # target to preprocess a source file
 test/surface_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/surface_tests.cpp.i
 .PHONY : test/surface_tests.cpp.i
 
 test/surface_tests.s: test/surface_tests.cpp.s
@@ -4105,6 +4252,7 @@ test/surface_tests.s: test/surface_tests.cpp.s
 # target to generate assembly for a file
 test/surface_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/surface_tests.cpp.s
 .PHONY : test/surface_tests.cpp.s
 
 test/system_algorithm_tests.o: test/system_algorithm_tests.cpp.o
@@ -4114,6 +4262,7 @@ test/system_algorithm_tests.o: test/system_algorithm_tests.cpp.o
 # target to build an object file
 test/system_algorithm_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/system_algorithm_tests.cpp.o
 .PHONY : test/system_algorithm_tests.cpp.o
 
 test/system_algorithm_tests.i: test/system_algorithm_tests.cpp.i
@@ -4123,6 +4272,7 @@ test/system_algorithm_tests.i: test/system_algorithm_tests.cpp.i
 # target to preprocess a source file
 test/system_algorithm_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/system_algorithm_tests.cpp.i
 .PHONY : test/system_algorithm_tests.cpp.i
 
 test/system_algorithm_tests.s: test/system_algorithm_tests.cpp.s
@@ -4132,6 +4282,7 @@ test/system_algorithm_tests.s: test/system_algorithm_tests.cpp.s
 # target to generate assembly for a file
 test/system_algorithm_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/system_algorithm_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/system_algorithm_tests.cpp.s
 .PHONY : test/system_algorithm_tests.cpp.s
 
 test/tool_access_tests.o: test/tool_access_tests.cpp.o
@@ -4141,6 +4292,7 @@ test/tool_access_tests.o: test/tool_access_tests.cpp.o
 # target to build an object file
 test/tool_access_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/tool_access_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/tool_access_tests.cpp.o
 .PHONY : test/tool_access_tests.cpp.o
 
 test/tool_access_tests.i: test/tool_access_tests.cpp.i
@@ -4150,6 +4302,7 @@ test/tool_access_tests.i: test/tool_access_tests.cpp.i
 # target to preprocess a source file
 test/tool_access_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/tool_access_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/tool_access_tests.cpp.i
 .PHONY : test/tool_access_tests.cpp.i
 
 test/tool_access_tests.s: test/tool_access_tests.cpp.s
@@ -4159,6 +4312,7 @@ test/tool_access_tests.s: test/tool_access_tests.cpp.s
 # target to generate assembly for a file
 test/tool_access_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/tool_access_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/tool_access_tests.cpp.s
 .PHONY : test/tool_access_tests.cpp.s
 
 test/toolpath_generation_tests.o: test/toolpath_generation_tests.cpp.o
@@ -4167,8 +4321,9 @@ test/toolpath_generation_tests.o: test/toolpath_generation_tests.cpp.o
 
 # target to build an object file
 test/toolpath_generation_tests.cpp.o:
-	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.o
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.o
+	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/toolpath_generation_tests.cpp.o
 .PHONY : test/toolpath_generation_tests.cpp.o
 
 test/toolpath_generation_tests.i: test/toolpath_generation_tests.cpp.i
@@ -4177,8 +4332,9 @@ test/toolpath_generation_tests.i: test/toolpath_generation_tests.cpp.i
 
 # target to preprocess a source file
 test/toolpath_generation_tests.cpp.i:
-	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.i
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.i
+	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/toolpath_generation_tests.cpp.i
 .PHONY : test/toolpath_generation_tests.cpp.i
 
 test/toolpath_generation_tests.s: test/toolpath_generation_tests.cpp.s
@@ -4187,8 +4343,9 @@ test/toolpath_generation_tests.s: test/toolpath_generation_tests.cpp.s
 
 # target to generate assembly for a file
 test/toolpath_generation_tests.cpp.s:
-	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.s
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.s
+	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/toolpath_generation_tests.cpp.s
 .PHONY : test/toolpath_generation_tests.cpp.s
 
 test/transformer_tests.o: test/transformer_tests.cpp.o
@@ -4198,6 +4355,7 @@ test/transformer_tests.o: test/transformer_tests.cpp.o
 # target to build an object file
 test/transformer_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/transformer_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/transformer_tests.cpp.o
 .PHONY : test/transformer_tests.cpp.o
 
 test/transformer_tests.i: test/transformer_tests.cpp.i
@@ -4207,6 +4365,7 @@ test/transformer_tests.i: test/transformer_tests.cpp.i
 # target to preprocess a source file
 test/transformer_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/transformer_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/transformer_tests.cpp.i
 .PHONY : test/transformer_tests.cpp.i
 
 test/transformer_tests.s: test/transformer_tests.cpp.s
@@ -4216,6 +4375,7 @@ test/transformer_tests.s: test/transformer_tests.cpp.s
 # target to generate assembly for a file
 test/transformer_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/transformer_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/transformer_tests.cpp.s
 .PHONY : test/transformer_tests.cpp.s
 
 test/triangle_tests.o: test/triangle_tests.cpp.o
@@ -4225,6 +4385,7 @@ test/triangle_tests.o: test/triangle_tests.cpp.o
 # target to build an object file
 test/triangle_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/triangle_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/triangle_tests.cpp.o
 .PHONY : test/triangle_tests.cpp.o
 
 test/triangle_tests.i: test/triangle_tests.cpp.i
@@ -4234,6 +4395,7 @@ test/triangle_tests.i: test/triangle_tests.cpp.i
 # target to preprocess a source file
 test/triangle_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/triangle_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/triangle_tests.cpp.i
 .PHONY : test/triangle_tests.cpp.i
 
 test/triangle_tests.s: test/triangle_tests.cpp.s
@@ -4243,6 +4405,7 @@ test/triangle_tests.s: test/triangle_tests.cpp.s
 # target to generate assembly for a file
 test/triangle_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/triangle_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/triangle_tests.cpp.s
 .PHONY : test/triangle_tests.cpp.s
 
 test/unfold_tests.o: test/unfold_tests.cpp.o
@@ -4252,6 +4415,7 @@ test/unfold_tests.o: test/unfold_tests.cpp.o
 # target to build an object file
 test/unfold_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/unfold_tests.cpp.o
 .PHONY : test/unfold_tests.cpp.o
 
 test/unfold_tests.i: test/unfold_tests.cpp.i
@@ -4261,6 +4425,7 @@ test/unfold_tests.i: test/unfold_tests.cpp.i
 # target to preprocess a source file
 test/unfold_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/unfold_tests.cpp.i
 .PHONY : test/unfold_tests.cpp.i
 
 test/unfold_tests.s: test/unfold_tests.cpp.s
@@ -4270,6 +4435,7 @@ test/unfold_tests.s: test/unfold_tests.cpp.s
 # target to generate assembly for a file
 test/unfold_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/unfold_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/unfold_tests.cpp.s
 .PHONY : test/unfold_tests.cpp.s
 
 test/workpiece_alignment_tests.o: test/workpiece_alignment_tests.cpp.o
@@ -4279,6 +4445,7 @@ test/workpiece_alignment_tests.o: test/workpiece_alignment_tests.cpp.o
 # target to build an object file
 test/workpiece_alignment_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/workpiece_alignment_tests.cpp.o
 .PHONY : test/workpiece_alignment_tests.cpp.o
 
 test/workpiece_alignment_tests.i: test/workpiece_alignment_tests.cpp.i
@@ -4288,6 +4455,7 @@ test/workpiece_alignment_tests.i: test/workpiece_alignment_tests.cpp.i
 # target to preprocess a source file
 test/workpiece_alignment_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/workpiece_alignment_tests.cpp.i
 .PHONY : test/workpiece_alignment_tests.cpp.i
 
 test/workpiece_alignment_tests.s: test/workpiece_alignment_tests.cpp.s
@@ -4297,6 +4465,7 @@ test/workpiece_alignment_tests.s: test/workpiece_alignment_tests.cpp.s
 # target to generate assembly for a file
 test/workpiece_alignment_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/workpiece_alignment_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/workpiece_alignment_tests.cpp.s
 .PHONY : test/workpiece_alignment_tests.cpp.s
 
 # Help Target
@@ -4315,22 +4484,23 @@ help:
 	@echo "... check-contours"
 	@echo "... vtk-mass"
 	@echo "... ublas"
-	@echo "... backend-tests"
-	@echo "... json-plan"
-	@echo "... camaster-test"
 	@echo "... json-mesh"
 	@echo "... tri-test"
 	@echo "... plate-cutter"
+	@echo "... manufacture-tests"
 	@echo "... all-tests"
-	@echo "... gca"
+	@echo "... backend-tests"
+	@echo "... json-plan"
+	@echo "... camaster-test"
 	@echo "... feature-decomp"
 	@echo "... gprocess"
+	@echo "... nef-test"
+	@echo "... non-manufacture-tests"
+	@echo "... gca"
 	@echo "... rebuild_cache"
 	@echo "... gcode"
-	@echo "... manufacture"
-	@echo "... nef-test"
-	@echo "... geometry"
 	@echo "... stl-parse"
+	@echo "... geometry"
 	@echo "... utils"
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
@@ -4359,9 +4529,6 @@ help:
 	@echo "... examples/json_plan.o"
 	@echo "... examples/json_plan.i"
 	@echo "... examples/json_plan.s"
-	@echo "... examples/manufacture.o"
-	@echo "... examples/manufacture.i"
-	@echo "... examples/manufacture.s"
 	@echo "... examples/nef_test.o"
 	@echo "... examples/nef_test.i"
 	@echo "... examples/nef_test.s"
@@ -4692,6 +4859,12 @@ help:
 	@echo "... test/main_backend.o"
 	@echo "... test/main_backend.i"
 	@echo "... test/main_backend.s"
+	@echo "... test/main_manufacture.o"
+	@echo "... test/main_manufacture.i"
+	@echo "... test/main_manufacture.s"
+	@echo "... test/manufacture.o"
+	@echo "... test/manufacture.i"
+	@echo "... test/manufacture.s"
 	@echo "... test/matrix_tests.o"
 	@echo "... test/matrix_tests.i"
 	@echo "... test/matrix_tests.s"
