@@ -128,9 +128,9 @@ namespace gca {
 
     double vol = volume(nef_to_single_trimesh(feature_nef));
 
-    //	TODO: Refine these tolerances, it may not matter but
+    //	TODO: Refine the dilation tolerance, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.0005, 0.05, 0.0); //0.05);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.0005, 0.05, 0.0);
     
     return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
   }
