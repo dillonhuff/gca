@@ -59,8 +59,18 @@ namespace gca {
 
     t4.set_holder_diameter(2.5);
     t4.set_holder_length(3.5);
+
+    tool t5(0.0625, 3.0, 4, HSS, FLAT_NOSE);
+    t5.set_cut_diameter(0.0625);
+    t5.set_cut_length(0.4);
+
+    t5.set_shank_diameter(.375);
+    t5.set_shank_length(0.18);
+
+    t5.set_holder_diameter(1.8);
+    t5.set_holder_length(3.0);
     
-    vector<tool> tools{t1, t2, t3, t4};
+    vector<tool> tools{t1, t2, t3, t4, t5};
 
     return fabrication_inputs(fixes, tools, workpiece_dims);
   }

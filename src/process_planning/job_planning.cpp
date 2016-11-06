@@ -85,7 +85,7 @@ namespace gca {
 
     auto res = m;
     for (auto f : features) {
-      Nef_polyhedron f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 1.0, 0.0001));
+      Nef_polyhedron f_nef = trimesh_to_nef_polyhedron(feature_mesh(*f, 0.000001, 1.0, 0.000001)); //1)); //0.0001));
 
       for (auto it = f_nef.volumes_begin(); it != f_nef.volumes_end(); it++) {
 	cout << "VOLUME" << endl;
