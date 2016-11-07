@@ -180,10 +180,24 @@ namespace gca {
 		  const triangular_mesh& portion) {
     point n = original.normal();
 
+    cout << "NORMAL = " << n << endl;
+
     vector<index_t> inds = portion.face_indexes();
+    for (auto i : inds) {
+      cout << "Face " << i << " normal = " << portion.face_orientation(i) << endl;
+    }
+
     auto top = select(inds, [portion, n](const index_t i) {
-	return angle_eps(portion.face_orientation(i), n, 0.0, 1.0);
+    	return angle_eps(portion.face_orientation(i), n, 0.0, 1.0);
       });
+    
+    auto top_cpy = top;
+    auto top_regions = normal_delta_regions(top_cpy, portion, 180.0);
+
+    if (top_regions.size() != 1) {
+      cout << "# of top regions = " << top_regions.size() << endl;
+      return boost::none;
+    }
 
     subtract(inds, top);
 
@@ -191,11 +205,30 @@ namespace gca {
 	return angle_eps(portion.face_orientation(i), n, 180.0, 1.0);
       });
 
+    auto bottom_cpy = bottom;
+    auto bottom_regions = normal_delta_regions(bottom_cpy, portion, 180.0);
+    if (bottom_regions.size() != 1) {
+      cout << "# of bottom regions = " << bottom_regions.size() << endl;
+      return boost::none;
+    }
+    
     subtract(inds, bottom);
 
-    
-    
-    return boost::none;
+    vtk_debug_highlight_inds(top, portion);
+    vtk_debug_highlight_inds(bottom, portion);
+    vtk_debug_highlight_inds(inds, portion);
+
+    bool all_other_triangles_vertical =
+      all_of(begin(inds), end(inds), [portion, n](const index_t i) {
+	  return angle_eps(portion.face_orientation(i), n, 90.0, 1.0);
+	});
+
+    if (!all_other_triangles_vertical) {
+      cout << "All other triangles not vertical" << endl;
+      return boost::none;
+    }
+
+    DBG_ASSERT(false);
   }
 
   std::vector<feature*>
