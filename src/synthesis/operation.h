@@ -47,6 +47,9 @@ namespace gca {
 					 const std::vector<tool>& tools) const
     { return self_->make_toolpaths(stock_material, safe_z, tools); }
 
+    double volume() const
+    { return self_->volume(); }
+
   private:
     struct concept_t {
       virtual ~concept_t() = default;
@@ -59,6 +62,7 @@ namespace gca {
 
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
+      virtual double volume() const = 0;
 
       virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const = 0;
       virtual concept_t* copy_() const = 0;
@@ -76,6 +80,8 @@ namespace gca {
 
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }
+
+      double volume() const { return data_.volume(); }
 
       virtual std::vector<toolpath>
       make_toolpaths(const material& stock_material,

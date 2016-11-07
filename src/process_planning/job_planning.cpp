@@ -174,12 +174,13 @@ namespace gca {
     return m;
   }
 
+  // NOTE: Perhaps all we need to do is find a viable hull for the remaining feature?
   boost::optional<feature>
   extract_feature(const feature& original,
 		  const triangular_mesh& portion) {
     point n = original.normal();
 
-    vector<index_t> inds = original.face_indexes();
+    vector<index_t> inds = portion.face_indexes();
     auto top = select(inds, [portion, n](const index_t i) {
 	return angle_eps(portion.face_orientation(i), n, 0.0, 1.0);
       });
@@ -191,6 +192,8 @@ namespace gca {
       });
 
     subtract(inds, bottom);
+
+    
     
     return boost::none;
   }

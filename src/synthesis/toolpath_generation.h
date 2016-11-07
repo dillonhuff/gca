@@ -36,6 +36,8 @@ namespace gca {
     inline const oriented_polygon& get_boundary() const
     { return boundary; }
 
+    inline double volume() const { DBG_ASSERT(false); }
+
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
@@ -104,6 +106,9 @@ namespace gca {
 
     polygon_3 base() const;
 
+    inline double volume() const
+    { return area(base())*(get_start_depth() - get_end_depth()); }
+
     std::vector<polyline>
     flat_level_with_holes(const tool& t) const;
 
@@ -164,6 +169,9 @@ namespace gca {
       return h_polys;
     }
 
+    inline double volume() const
+    { return area(base())*(get_start_depth() - get_end_depth()); }
+
     inline polygon_3 get_boundary() const
     { return polygon_3(bp.vertices()); }
 
@@ -204,6 +212,10 @@ namespace gca {
 
     const vector<oriented_polygon>& get_holes() const
     { DBG_ASSERT(false); }
+
+    inline double volume() const
+    { return area(polygon_3(base.vertices()))*(get_start_depth() - get_end_depth()); }
+
 
     pocket_name pocket_type() const { return FACE_POCKET; }    
 
@@ -247,6 +259,8 @@ namespace gca {
     { return start_depth; }
     bool above_base(const point p) const
     { return p.z > get_end_depth(); }
+
+    double volume() const { return 0.0; }
 
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,

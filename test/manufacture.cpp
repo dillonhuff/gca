@@ -199,11 +199,7 @@ namespace gca {
 	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
 
 	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
-
-
-
 		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
-
 		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
 	
 		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
