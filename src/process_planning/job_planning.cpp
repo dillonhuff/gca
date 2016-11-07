@@ -174,6 +174,48 @@ namespace gca {
     return m;
   }
 
+  boost::optional<feature>
+  extract_feature(const feature& original,
+		  const triangular_mesh& portion) {
+    point n = original.normal();
+
+    vector<index_t> inds = original.face_indexes();
+    auto top = select(inds, [portion, n](const index_t i) {
+	return angle_eps(portion.face_orientation(i), n, 0.0, 1.0);
+      });
+
+    subtract(inds, top);
+
+    auto bottom = select(inds, [portion, n](const index_t i) {
+	return angle_eps(portion.face_orientation(i), n, 180.0, 1.0);
+      });
+
+    subtract(inds, bottom);
+    
+    return boost::none;
+  }
+
+  std::vector<feature*>
+  clipped_features(feature* f,
+		   const volume_info& vol_info) {
+    auto& feat_nef = vol_info.remaining_volume;
+    vector<triangular_mesh> meshes = nef_polyhedron_to_trimeshes(feat_nef);
+
+    vector<feature*> clipped_features;
+    for (auto& feature_mesh : meshes) {
+      boost::optional<feature> f_m = extract_feature(*f, feature_mesh);
+
+      if (f_m) {
+	clipped_features.push_back(new (allocate<feature>()) feature(*f_m));
+      } else {
+	return {f};
+      }
+
+    }
+
+    return clipped_features;
+  }
+
   void
   clip_volumes(std::vector<feature*>& feats_to_sub,
 	       volume_info_map& volume_inf,
@@ -483,7 +525,10 @@ namespace gca {
 
     cout << "# of features after deleting the unreachable = " << fs.size() << endl;
 
-    vector<feature*> final_features = fs;
+    vector<feature*> final_features;
+    for (auto f : fs) {
+      concat(final_features, clipped_features(f, map_find(f, vol_info)));
+    }
 
     return final_features;
   }
