@@ -253,7 +253,8 @@ namespace gca {
 
   std::vector<feature*>
   clipped_features(feature* f,
-		   const volume_info& vol_info) {
+		   const volume_info& vol_info,
+		   tool_access_info& tool_info) {
     auto& feat_nef = vol_info.remaining_volume;
     vector<triangular_mesh> meshes = nef_polyhedron_to_trimeshes(feat_nef);
 
@@ -267,6 +268,10 @@ namespace gca {
 	return {f};
       }
 
+    }
+
+    for (auto cf : clipped_features) {
+      tool_info[cf] = map_find(f, tool_info);
     }
 
     return clipped_features;
@@ -870,7 +875,8 @@ namespace gca {
 
 	  vector<feature*> final_features;
 	  for (auto f : features) {
-	    concat(final_features, clipped_features(f, map_find(f, volume_inf)));
+	    concat(final_features,
+		   clipped_features(f, map_find(f, volume_inf), info.tool_info));
 	  }
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info));
