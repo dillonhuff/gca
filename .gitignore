@@ -79,3 +79,8 @@ examples/dead.cpp
 interact-test.app/*
 master_caching_nef_diff
 test/stl-files/onshape_parts/Part Studio 1 - Part 1(37).stl
+all_tests_reduced_direction_selection
+bmp-prog.app/*
+manufacture-tests
+manufacture_with_vice_zeroing
+non-manufacture-tests

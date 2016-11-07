@@ -483,7 +483,9 @@ namespace gca {
 
     cout << "# of features after deleting the unreachable = " << fs.size() << endl;
 
-    return fs;
+    vector<feature*> final_features = fs;
+
+    return final_features;
   }
 
   boost::optional<double>
@@ -679,7 +681,6 @@ namespace gca {
       fixture fix(orient.first, v);
 
       homogeneous_transform t = orient.second;
-      //	balanced_mating_transform(current_stock, fix.orient, fix.v);
 
       return std::make_pair(fix, t);
     }
