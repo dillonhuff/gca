@@ -1,5 +1,6 @@
 #include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
+#include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/visual_debug.h"
@@ -235,9 +236,19 @@ namespace gca {
       return boost::none;
     }
 
-    //DBG_ASSERT(false);
+    vector<oriented_polygon> bounds = mesh_bounds(bottom, portion);
+    vector<vector<point>> rings;
+    for (auto& b : bounds) {
+      rings.push_back(b.vertices());
+    }
 
-    return boost::none;
+    vector<polygon_3> polys = arrange_rings(rings);
+
+    DBG_ASSERT(polys.size() == 1);
+
+    feature clipped_feature(original.is_closed(), original.depth(), polys.front());
+
+    return clipped_feature;
   }
 
   std::vector<feature*>
@@ -570,12 +581,8 @@ namespace gca {
 
     cout << "# of features after deleting the unreachable = " << fs.size() << endl;
 
-    vector<feature*> final_features;
-    for (auto f : fs) {
-      concat(final_features, clipped_features(f, map_find(f, vol_info)));
-    }
+    return fs;
 
-    return final_features;
   }
 
   boost::optional<double>
@@ -861,7 +868,12 @@ namespace gca {
 	  concat(all_features, features);
 #endif
 
-	  cut_setups.push_back(create_setup(t, current_stock, part, features, fix, info.tool_info));
+	  vector<feature*> final_features;
+	  for (auto f : features) {
+	    concat(final_features, clipped_features(f, map_find(f, volume_inf)));
+	  }
+
+	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info));
 
 	  stock_nef = subtract_features(stock_nef, features);
 	  current_stock = nef_to_single_trimesh(stock_nef);
