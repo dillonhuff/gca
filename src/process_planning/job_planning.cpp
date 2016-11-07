@@ -133,7 +133,7 @@ namespace gca {
 
     //	TODO: Refine the dilation tolerance, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.00005, 0.05, 0.0);
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.000005, 0.05, 0.0);
     
     return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
   }
@@ -496,7 +496,7 @@ namespace gca {
     feature_decomposition* top = decomp->child(0);
     vector<point> stock_ring = top->feature()->base().vertices();
     polygon_3 stock_polygon(stock_ring);
-    
+
     point n = normal(decomp);
 
     // TODO: Should really make this max double value
@@ -513,7 +513,6 @@ namespace gca {
       }
     }
 
-    
     vice v_pre = f.get_vice();
     double part_min = min_in_dir(current_stock, n);
 
