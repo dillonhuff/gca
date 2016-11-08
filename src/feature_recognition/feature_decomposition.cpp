@@ -95,16 +95,10 @@ namespace gca {
     for (auto i : s) {
       triangle t = m.face_triangle(i);
       vector<point> pts = project_points(top, {t.v1, t.v2, t.v3});
-
-      //      if (no_duplicate_points(pts, 0.001)) {
-	polygon_3 l(pts, true);
-
-	//check_simplicity(l);
-
-	//l.correct_winding_order(n);
+      polygon_3 l(pts, true);
       
-	ts.push_back(l);
-	//      }
+      ts.push_back(l);
+
     }
 
     cout << "# of triangle polygons = " << ts.size() << endl;
