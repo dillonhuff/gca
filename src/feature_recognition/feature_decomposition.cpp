@@ -289,7 +289,7 @@ namespace gca {
     top_poly.correct_winding_order(n);
 
     // TODO: Shift plane eps
-    plane eps_pl(top_poly.normal(), top_poly.vertex(0) + 0.01*top_poly.normal());
+    plane eps_pl(top_poly.normal(), top_poly.vertex(0) + 0.00001*top_poly.normal());
     return project_onto(eps_pl, top_poly);
   }
 
