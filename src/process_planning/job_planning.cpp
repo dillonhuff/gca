@@ -249,7 +249,11 @@ namespace gca {
 
 
     if (polys.size() != 1) {
-      DBG_ASSERT(polys.size() == 1);
+      // vtk_debug_polygons(polys);
+      // DBG_ASSERT(polys.size() == 1);
+
+      DBG_ASSERT(polys.size() > 0);
+      return boost::none;
     }
 
     cout << "Using split feature" << endl;
