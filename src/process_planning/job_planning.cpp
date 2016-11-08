@@ -193,7 +193,7 @@ namespace gca {
     auto top = select(inds, [portion, n](const index_t i) {
     	return angle_eps(portion.face_orientation(i), n, 0.0, 1.0);
       });
-    
+
     auto top_cpy = top;
     auto top_regions = normal_delta_regions(top_cpy, portion, 180.0);
 
@@ -223,7 +223,7 @@ namespace gca {
       cout << "# of bottom regions = " << bottom_regions.size() << endl;
       return boost::none;
     }
-    
+
     subtract(inds, bottom);
 
     // cout << "REST" << endl;

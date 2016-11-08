@@ -91,20 +91,20 @@ namespace gca {
     point max_pt = max_along(raw_pts, n);
     plane top(n, max_pt);
 
-    std::vector<labeled_polygon_3> ts;
+    std::vector<polygon_3> ts;
     for (auto i : s) {
       triangle t = m.face_triangle(i);
       vector<point> pts = project_points(top, {t.v1, t.v2, t.v3});
 
-      if (no_duplicate_points(pts, 0.001)) {
-	labeled_polygon_3 l(pts);
+      //      if (no_duplicate_points(pts, 0.001)) {
+	polygon_3 l(pts, true);
 
-	check_simplicity(l);
+	//check_simplicity(l);
 
 	l.correct_winding_order(n);
       
 	ts.push_back(l);
-      }
+	//      }
     }
 
     cout << "# of triangle polygons = " << ts.size() << endl;
@@ -141,20 +141,10 @@ namespace gca {
     return result_polys.front();
   }
 
-  // TODO: Remove indexes parameter?
-  // NOTE: This code is a complete mess, clean up?
   std::vector<labeled_polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<index_t>& indexes,
 			 const point n) {
-    // auto inds = indexes;
-    // delete_if(inds, [m, n](const index_t i)
-    // 	     { return angle_eps(n, m.face_orientation(i), 0.0, 30.0) ||
-    // 		 angle_eps(n, m.face_orientation(i), 90.0, 30.0) ||
-    // 		 angle_eps(n, m.face_orientation(i), 180.0, 30.0); });
-
-
-    // vtk_debug_highlight_inds(inds, m);
 
     auto surfs = const_orientation_regions(m);
     auto not_vertical_or_horizontal =

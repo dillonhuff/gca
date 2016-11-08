@@ -5,6 +5,34 @@
 
 namespace gca {
 
+  polygon_3 apply_no_check(const rotation& r, const polygon_3& p) {
+    DBG_ASSERT(p.holes().size() == 0);
+
+    vector<point> pts = apply(r, p.vertices());
+
+    // vector<vector<point>> holes;
+    // for (auto h : p.holes()) {
+    //   holes.push_back(apply(r, h));
+    // }
+
+    polygon_3 rotated(pts, true); //, holes);
+
+    rotated.correct_winding_order(times_3(r, p.normal()));
+
+    point rnorm = rotated.normal();
+    point pnorm = p.normal();
+    point rtnorm = times_3(r, p.normal());
+
+    // cout << "Original normal             = " << pnorm << endl;
+    // cout << "Rotated normal              = " << rnorm << endl;
+    // cout << "Rotation of original normal = " << rtnorm << endl;
+    
+    double theta = angle_between(rotated.normal(), rtnorm);
+  
+    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
+
+    return rotated;
+  }
   
   polygon_3::polygon_3(const std::vector<point> vertices,
 		       const std::vector<std::vector<point>> hole_verts) :
@@ -251,12 +279,12 @@ namespace gca {
     cout << "# polys to union = " << polys.size() << endl;
 
     boost_multipoly_2 result;
-    result.push_back(to_boost_poly_2(apply(r, polys.front())));
+    result.push_back(to_boost_poly_2(apply_no_check(r, polys.front())));
 
     for (unsigned i = 1; i < polys.size(); i++) {
       auto& s = polys[i];
 
-      auto bp = to_boost_poly_2(apply(r, s));
+      auto bp = to_boost_poly_2(apply_no_check(r, s));
       boost_multipoly_2 r_tmp = result;
       boost::geometry::clear(result);
       boost::geometry::union_(r_tmp, bp, result);

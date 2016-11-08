@@ -35,6 +35,12 @@ namespace gca {
       DBG_ASSERT(outer_ring.size() >= 3);
     }
 
+    polygon_3(const std::vector<point> vertices, const bool dummy_param) :
+      outer_ring(vertices) {
+
+      DBG_ASSERT(outer_ring.size() >= 3);
+    }
+    
     polygon_3(const std::vector<point> vertices,
 		      const std::vector<std::vector<point>> hole_verts);
 

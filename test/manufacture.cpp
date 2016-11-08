@@ -189,25 +189,26 @@ namespace gca {
 
     //fabrication_inputs extended_inputs = extended_fab_inputs();
 
-    workpiece wp(1.75, 1.75, 2.5, ALUMINUM);    
+    workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
+    //    workpiece wp(10.75, 10.75, 20.5, ALUMINUM);    
 
     vector<part_info> some_scaling{
-      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
-	{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
-	//      {"test/stl-files/onshape_parts/Part Studio 4 - Part 1.stl", 0.2, wp},
-	  {"test/stl-files/OctagonWithHolesShort.stl", 1.0, wp},
-	    {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
-	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
+      {"test/stl-files/onshape_parts/Part Studio 4 - Part 1.stl", 0.2, wp},
+	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
+	  {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
+	    {"test/stl-files/OctagonWithHolesShort.stl", 1.0, wp},
+	      {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
+		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
 
-		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
-		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
+		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
+		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
 	
-		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
+		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
 
-		      {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
-			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
-			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
-			    };
+			{"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
+			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
+			    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
+			      };
     
     vector<part_info> all_paths = some_scaling;
     for (auto part_path : all_paths) {
