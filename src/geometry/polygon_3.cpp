@@ -265,62 +265,6 @@ namespace gca {
     return result;
   }
 
-  // TODO: Use planar_union_boost as starting point here?
-  std::vector<polygon_3>
-  planar_polygon_union(const std::vector<polygon_3>& polys) {
-    if (polys.size() == 0) { return {}; }
-
-    //vtk_debug_polygons(polys);
-
-    double level_z =
-      max_distance_along(polys.front().vertices(), polys.front().normal());
-    point n = polys.front().normal();
-
-    cout << "In planar union" << endl;
-    cout << "n = " << n << endl;
-    for (auto p : polys) {
-      cout << "normal = " << p.normal() << endl;
-    }
-    
-    const rotation r = rotate_from_to(n, point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-
-    cout << "# polys to union = " << polys.size() << endl;
-
-    boost_multipoly_2 result;
-    result.push_back(to_boost_poly_2(apply_no_check(r, polys.front())));
-
-    for (unsigned i = 1; i < polys.size(); i++) {
-      auto& s = polys[i];
-
-      auto bp = to_boost_poly_2(apply_no_check(r, s));
-      boost_multipoly_2 r_tmp = result;
-      boost::geometry::clear(result);
-      boost::geometry::union_(r_tmp, bp, result);
-    }
-
-    cout << "# polys in result = " << result.size() << endl;
-    
-
-    std::vector<polygon_3> res;
-    for (auto& r : result) {
-      boost::optional<polygon_3> lp =
-	to_labeled_polygon_3_maybe(r_inv, level_z, r);
-
-      if (lp) {
-	check_simplicity(*lp);
-
-	(*lp).correct_winding_order(polys.front().normal());
-	res.push_back(*lp);
-      }
-    }
-
-    cout << "# of polygon_3 in final output = " << res.size() << endl;
-
-    return res;
-    
-  }
-
   std::vector<polygon_3>
   planar_polygon_union(const point n,
 		       const std::vector<polygon_3>& polys) {
@@ -376,6 +320,65 @@ namespace gca {
     
   }
   
+  // TODO: Use planar_union_boost as starting point here?
+  std::vector<polygon_3>
+  planar_polygon_union(const std::vector<polygon_3>& polys) {
+    if (polys.size() == 0) { return {}; }
+    point n = polys.front().normal();
+
+    return planar_polygon_union(n, polys);
+
+    // //vtk_debug_polygons(polys);
+
+    // double level_z =
+    //   max_distance_along(polys.front().vertices(), polys.front().normal());
+    // point n = polys.front().normal();
+
+    // cout << "In planar union" << endl;
+    // cout << "n = " << n << endl;
+    // for (auto p : polys) {
+    //   cout << "normal = " << p.normal() << endl;
+    // }
+    
+    // const rotation r = rotate_from_to(n, point(0, 0, 1));
+    // const rotation r_inv = inverse(r);
+
+    // cout << "# polys to union = " << polys.size() << endl;
+
+    // boost_multipoly_2 result;
+    // result.push_back(to_boost_poly_2(apply_no_check(r, polys.front())));
+
+    // for (unsigned i = 1; i < polys.size(); i++) {
+    //   auto& s = polys[i];
+
+    //   auto bp = to_boost_poly_2(apply_no_check(r, s));
+    //   boost_multipoly_2 r_tmp = result;
+    //   boost::geometry::clear(result);
+    //   boost::geometry::union_(r_tmp, bp, result);
+    // }
+
+    // cout << "# polys in result = " << result.size() << endl;
+    
+
+    // std::vector<polygon_3> res;
+    // for (auto& r : result) {
+    //   boost::optional<polygon_3> lp =
+    // 	to_labeled_polygon_3_maybe(r_inv, level_z, r);
+
+    //   if (lp) {
+    // 	check_simplicity(*lp);
+
+    // 	(*lp).correct_winding_order(polys.front().normal());
+    // 	res.push_back(*lp);
+    //   }
+    // }
+
+    // cout << "# of polygon_3 in final output = " << res.size() << endl;
+
+    // return res;
+    
+  }
+
   labeled_polygon_3
   convex_hull_2D(const std::vector<point>& pts,
 		 const point n,

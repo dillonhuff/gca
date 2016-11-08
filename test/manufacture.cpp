@@ -190,7 +190,6 @@ namespace gca {
     //fabrication_inputs extended_inputs = extended_fab_inputs();
 
     workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
-    //    workpiece wp(10.75, 10.75, 20.5, ALUMINUM);    
 
     vector<part_info> some_scaling{
       //      {"test/stl-files/onshape_parts/Part Studio 4 - Part 1.stl", 0.2, wp},
