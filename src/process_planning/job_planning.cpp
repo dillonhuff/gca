@@ -247,7 +247,10 @@ namespace gca {
 
     vector<polygon_3> polys = arrange_rings(rings);
 
-    DBG_ASSERT(polys.size() == 1);
+
+    if (polys.size() != 1) {
+      DBG_ASSERT(polys.size() == 1);
+    }
 
     cout << "Using split feature" << endl;
     if (polys.front().holes().size() == original.base().holes().size()) {

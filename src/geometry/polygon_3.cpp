@@ -6,16 +6,14 @@
 namespace gca {
 
   polygon_3 apply_no_check(const rotation& r, const polygon_3& p) {
-    DBG_ASSERT(p.holes().size() == 0);
-
     vector<point> pts = apply(r, p.vertices());
 
-    // vector<vector<point>> holes;
-    // for (auto h : p.holes()) {
-    //   holes.push_back(apply(r, h));
-    // }
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+      holes.push_back(apply(r, h));
+    }
 
-    polygon_3 rotated(pts, true); //, holes);
+    polygon_3 rotated(pts, holes, true); //, holes);
 
     rotated.correct_winding_order(times_3(r, p.normal()));
 
@@ -32,6 +30,17 @@ namespace gca {
     DBG_ASSERT(within_eps(theta, 0.0, 0.1));
 
     return rotated;
+  }
+
+  polygon_3::polygon_3(const std::vector<point> vertices,
+		       const std::vector<std::vector<point>> hole_verts,
+		       const bool dummy_param) :
+    outer_ring(vertices),
+    inner_rings{} {
+
+    for (auto h : hole_verts) {
+      inner_rings.push_back(h);
+    }
   }
   
   polygon_3::polygon_3(const std::vector<point> vertices,
