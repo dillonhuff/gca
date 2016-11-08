@@ -183,6 +183,8 @@ namespace gca {
 
     cout << "NORMAL = " << n << endl;
 
+    vtk_debug_mesh(portion);
+
     vector<index_t> inds = portion.face_indexes();
     for (auto i : inds) {
       cout << "Face " << i << " normal = " << portion.face_orientation(i) << endl;
@@ -194,6 +196,10 @@ namespace gca {
     
     auto top_cpy = top;
     auto top_regions = normal_delta_regions(top_cpy, portion, 180.0);
+
+    // cout << "TOP" << endl;
+    // cout << portion.face_orientation(top.front()) << endl;
+    // vtk_debug_highlight_inds(top, portion);
 
     if (top_regions.size() != 1) {
       cout << "# of top regions = " << top_regions.size() << endl;
@@ -208,20 +214,17 @@ namespace gca {
 
     auto bottom_cpy = bottom;
     auto bottom_regions = normal_delta_regions(bottom_cpy, portion, 180.0);
+
+    // cout << "BOTTOM" << endl;
+    // cout << portion.face_orientation(bottom.front()) << endl;
+    // vtk_debug_highlight_inds(bottom, portion);
+
     if (bottom_regions.size() != 1) {
       cout << "# of bottom regions = " << bottom_regions.size() << endl;
       return boost::none;
     }
     
     subtract(inds, bottom);
-
-    // cout << "TOP" << endl;
-    // cout << portion.face_orientation(top.front()) << endl;
-    // vtk_debug_highlight_inds(top, portion);
-
-    // cout << "BOTTOM" << endl;
-    // cout << portion.face_orientation(bottom.front()) << endl;
-    // vtk_debug_highlight_inds(bottom, portion);
 
     // cout << "REST" << endl;
     // vtk_debug_highlight_inds(inds, portion);
@@ -246,9 +249,15 @@ namespace gca {
 
     DBG_ASSERT(polys.size() == 1);
 
-    feature clipped_feature(original.is_closed(), original.depth(), polys.front());
+    cout << "Using split feature" << endl;
+    if (polys.front().holes().size() == original.base().holes().size()) {
+      feature clipped_feature(original.is_closed(), original.depth(), polys.front());
+      return clipped_feature;
+    } else {
+      feature clipped_feature(true, original.depth(), polys.front());
+      return clipped_feature;
+    }
 
-    return clipped_feature;
   }
 
   std::vector<feature*>
