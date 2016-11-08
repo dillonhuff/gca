@@ -211,7 +211,7 @@ namespace gca {
       hs.push_back(h.vertices());
     }
 
-    return polygon_3(get_boundary().vertices(), hs);
+    return build_clean_polygon_3(get_boundary().vertices(), hs);
   }
 
   tool
@@ -866,7 +866,7 @@ namespace gca {
 
     vector<polygon_3> hole_polys;
     for (auto h : base_poly.holes()) {
-      hole_polys.push_back(polygon_3(h));
+      hole_polys.push_back(build_clean_polygon_3(h));
     }
 
     for (auto& t : to_check) {
@@ -1032,11 +1032,11 @@ namespace gca {
     for (auto cut_region : cut_regions) {
       vector<polygon_3> holes;
       for (auto h : cut_region.holes()) {
-	holes.push_back(polygon_3(h));
+	holes.push_back(build_clean_polygon_3(h));
       }
 
       vector<polyline> edges =
-	zig_lines(polygon_3(cut_region.vertices()), holes, t);
+	zig_lines(build_clean_polygon_3(cut_region.vertices()), holes, t);
       concat(face_template, edges);
     }
     
@@ -1096,7 +1096,7 @@ namespace gca {
 
       vector<polygon_3> holes;
       for (auto h : region_poly.holes()) {
-	holes.push_back(polygon_3(h));
+	holes.push_back(build_clean_polygon_3(h));
       }
       
       vector<polygon_3> offset_holes = exterior_offset(holes, t.radius());

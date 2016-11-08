@@ -32,6 +32,43 @@ namespace gca {
     return rotated;
   }
 
+  polygon_3
+  build_clean_polygon_3(const std::vector<point> vertices,
+			const std::vector<std::vector<point>> hole_verts) {
+    vector<point> outer_ring = clean_vertices(vertices);
+    delete_antennas(outer_ring);
+
+    // There is an occasional test failure here in simple box
+    if (!(outer_ring.size() >= 3)) {
+      cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
+      vtk_debug_ring(outer_ring);
+
+      DBG_ASSERT(outer_ring.size() >= 3);
+    }
+
+    vector<vector<point>> inner_rings;
+    for (auto h : hole_verts) {
+
+      auto new_h = clean_vertices(h);
+      delete_antennas(new_h);
+
+      if (!(new_h.size() >= 3)) {
+	cout << "ERROR: Inner ring size = " << h.size() << endl;
+      } else {
+	inner_rings.push_back(new_h);
+      }
+    }
+
+    return polygon_3(outer_ring, inner_rings, true);
+  }
+
+  polygon_3
+  build_clean_polygon_3(const std::vector<point> vertices) {
+    return build_clean_polygon_3(vertices, {});
+  }
+
+
+  // NOTE: These should be references
   polygon_3::polygon_3(const std::vector<point> vertices,
 		       const std::vector<std::vector<point>> hole_verts,
 		       const bool dummy_param) :
@@ -161,7 +198,7 @@ namespace gca {
       }
       holes.push_back(clean_vertices(hole_verts));
     }
-    return labeled_polygon_3(clean_vertices(vertices), holes);
+    return build_clean_polygon_3(clean_vertices(vertices), holes);
 
   }
   
@@ -182,7 +219,7 @@ namespace gca {
       }
       holes.push_back(clean_vertices(hole_verts));
     }
-    return labeled_polygon_3(clean_vertices(vertices), holes);
+    return build_clean_polygon_3(clean_vertices(vertices), holes);
   }
 
   boost::optional<polygon_3>
@@ -213,7 +250,7 @@ namespace gca {
       }
     }
 
-    return labeled_polygon_3(vertices, holes);
+    return build_clean_polygon_3(vertices, holes);
   }
 
   // TODO: Version of this code that can handle holes?
@@ -352,7 +389,7 @@ namespace gca {
       res_pts.push_back(times_3(r_inv, pz));
     }
 
-    return labeled_polygon_3(clean_vertices(res_pts));
+    return build_clean_polygon_3(clean_vertices(res_pts));
   }
 
   box bounding_box(const polygon_3& p) {
@@ -376,7 +413,7 @@ namespace gca {
       holes.push_back(hole);
     }
 
-    return polygon_3(pts, holes);
+    return build_clean_polygon_3(pts, holes);
   }
 
   double area(const std::vector<polygon_3>& p) {

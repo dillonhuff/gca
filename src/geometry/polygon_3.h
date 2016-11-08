@@ -135,4 +135,12 @@ namespace gca {
   boost_multipoly_2
   to_boost_multipoly_2(const std::vector<polygon_3>& lines);
 
+  polygon_3
+  build_clean_polygon_3(const std::vector<point> vertices,
+			const std::vector<std::vector<point>> hole_verts);
+
+  polygon_3
+  build_clean_polygon_3(const std::vector<point> vertices);
+  
+
 }
