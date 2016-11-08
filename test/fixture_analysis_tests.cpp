@@ -74,7 +74,9 @@ namespace gca {
     double total_volume = 0.0;
     for (auto& f : p.fixtures()) {
       for (auto& p : f.pockets) {
-	total_volume += p.volume();
+	double pocket_vol = p.volume();
+	cout << "Pocket volume = " << pocket_vol << endl;
+	total_volume += pocket_vol;
       }
     }
 
@@ -82,6 +84,7 @@ namespace gca {
 
     cout << "Total volume removed = " << total_volume << endl;
     cout << "Volume to remove     = " << volume_to_remove << endl;
+    cout << "Difference           = " << total_volume - volume_to_remove << endl;
     
     REQUIRE(within_eps(total_volume, volume_to_remove, 0.001));
   }

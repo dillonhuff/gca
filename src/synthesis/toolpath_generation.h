@@ -213,8 +213,13 @@ namespace gca {
     const vector<oriented_polygon>& get_holes() const
     { DBG_ASSERT(false); }
 
-    inline double volume() const
-    { return area(polygon_3(base.vertices()))*(get_start_depth() - get_end_depth()); }
+    inline double volume() const {
+      double ar = area(polygon_3(base.vertices()));
+      double height = get_start_depth() - get_end_depth();
+      cout << "Pocket base area = " << ar << endl;
+      cout << "Pocket height    = " << height << endl;
+      return ar*height;
+    }
 
 
     pocket_name pocket_type() const { return FACE_POCKET; }    

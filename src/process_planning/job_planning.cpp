@@ -215,16 +215,16 @@ namespace gca {
     
     subtract(inds, bottom);
 
-    cout << "TOP" << endl;
-    cout << portion.face_orientation(top.front()) << endl;
-    vtk_debug_highlight_inds(top, portion);
+    // cout << "TOP" << endl;
+    // cout << portion.face_orientation(top.front()) << endl;
+    // vtk_debug_highlight_inds(top, portion);
 
-    cout << "BOTTOM" << endl;
-    cout << portion.face_orientation(bottom.front()) << endl;
-    vtk_debug_highlight_inds(bottom, portion);
+    // cout << "BOTTOM" << endl;
+    // cout << portion.face_orientation(bottom.front()) << endl;
+    // vtk_debug_highlight_inds(bottom, portion);
 
-    cout << "REST" << endl;
-    vtk_debug_highlight_inds(inds, portion);
+    // cout << "REST" << endl;
+    // vtk_debug_highlight_inds(inds, portion);
 
     bool all_other_triangles_vertical =
       all_of(begin(inds), end(inds), [portion, n](const index_t i) {
