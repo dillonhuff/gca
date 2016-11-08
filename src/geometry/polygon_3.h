@@ -110,6 +110,10 @@ namespace gca {
   std::vector<polygon_3>
   planar_polygon_union(const std::vector<polygon_3>& polys);
 
+  std::vector<polygon_3>
+  planar_polygon_union(const point n,
+		       const std::vector<polygon_3>& polys);
+  
   boost_multipoly_2
   planar_union_boost(const std::vector<polygon_3>& polys);
   

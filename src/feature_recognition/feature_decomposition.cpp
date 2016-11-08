@@ -101,7 +101,7 @@ namespace gca {
 
 	//check_simplicity(l);
 
-	l.correct_winding_order(n);
+	//l.correct_winding_order(n);
       
 	ts.push_back(l);
 	//      }
@@ -113,7 +113,7 @@ namespace gca {
 
     cout << "Trying planar union for the first time" << endl;
     std::vector<polygon_3> result_polys =
-      planar_polygon_union(ts);
+      planar_polygon_union(n, ts);
     cout << "Done with planar union for the first time" << endl;
 
     if (!(result_polys.size() == 1)) {

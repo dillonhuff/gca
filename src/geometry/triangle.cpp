@@ -23,6 +23,7 @@ namespace gca {
 
   vector<point> collect_polygon(vector<line>& lines) {
     DBG_ASSERT(lines.size() > 0);
+
     vector<point> points;
     vector<line> to_remove;
     points.push_back(lines.front().start);
@@ -34,7 +35,7 @@ namespace gca {
 	if (within_eps(lines[i].end, points.front())) {
 	  lines.erase(lines.begin() + i);
 
-	  DBG_ASSERT(no_duplicate_points(points, 0.001));
+	  //DBG_ASSERT(no_duplicate_points(points, 0.001));
 	  
 	  return points;
 	}
@@ -45,7 +46,7 @@ namespace gca {
 	if (within_eps(lines[i].start, points.front())) {
 	  lines.erase(lines.begin() + i);
 
-	  DBG_ASSERT(no_duplicate_points(points, 0.001));
+	  //DBG_ASSERT(no_duplicate_points(points, 0.001));
 	  
 	  return points;
 	}
