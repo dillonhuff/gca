@@ -134,8 +134,8 @@ namespace gca {
 
     //	TODO: Refine the dilation tolerance, it may not matter but
     //	best to be safe
-    triangular_mesh dilated_mesh = feature_mesh(f, 0.000005, 0.05, 0.0);
-    
+    triangular_mesh dilated_mesh = feature_mesh(f, 0.00005, 0.05, 0.0); //0.000005, 0.05, 0.0);
+
     return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
   }
 
@@ -183,7 +183,7 @@ namespace gca {
 
     cout << "NORMAL = " << n << endl;
 
-    vtk_debug_mesh(portion);
+    //vtk_debug_mesh(portion);
 
     vector<index_t> inds = portion.face_indexes();
     for (auto i : inds) {
