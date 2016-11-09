@@ -240,10 +240,12 @@ namespace gca {
     t.v[i] = j;
   }
 
+  // TODO: Use simple mesh struct to build a mesh
   triangular_mesh
   build_mesh_from_vertex_triangles(std::vector<triangle_t>& vertex_triangles,
 				   const std::vector<point>& vertices,
 				   const std::vector<point>& face_orientations) {
+    DBG_ASSERT(false);
   }
   
   triangular_mesh
@@ -445,7 +447,7 @@ namespace gca {
   maybe<double> triangular_mesh::z_at(double x, double y) const {
     for (unsigned i = 0; i < tri_vertices.size(); i++) {
       auto t = tri_vertices[i];
-      auto orient = face_orientations[i];
+      auto orient = face_orientation(i);
       if (point_in_triangle_2d(point(x, y, 0),
 			       vertices[t.v[0]],
 			       vertices[t.v[1]],
