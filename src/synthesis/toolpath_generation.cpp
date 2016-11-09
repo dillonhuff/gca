@@ -352,7 +352,8 @@ namespace gca {
       dilate(bound_p, 10*t.radius());
 
     polygon_3 inner_b = shrink(bound_p, t.radius());
-    polygon_3 inner_bound(outer_bound.vertices(), {inner_b.vertices()});
+    polygon_3 inner_bound =
+      build_clean_polygon_3(outer_bound.vertices(), {inner_b.vertices()});
 
     return inner_bound;
   }
@@ -367,7 +368,8 @@ namespace gca {
     polygon_3 outer_bound =
       dilate(bound_p, 10*t.radius());
 
-    polygon_3 inner_bound(outer_bound.vertices(), {bound_p.vertices()});
+    polygon_3 inner_bound =
+      build_clean_polygon_3(outer_bound.vertices(), {bound_p.vertices()});
 
     return inner_bound;
   }

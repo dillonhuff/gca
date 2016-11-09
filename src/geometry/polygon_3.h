@@ -26,27 +26,27 @@ namespace gca {
     std::vector<std::vector<point>> inner_rings;
     
   public:
-    polygon_3(const std::vector<point> vertices) :
-      outer_ring(vertices) {
+    // polygon_3(const std::vector<point> vertices) :
+    //   outer_ring(vertices) {
 
-      outer_ring = clean_vertices(outer_ring);
-      delete_antennas(outer_ring);
+    //   outer_ring = clean_vertices(outer_ring);
+    //   delete_antennas(outer_ring);
 
-      DBG_ASSERT(outer_ring.size() >= 3);
-    }
+    //   DBG_ASSERT(outer_ring.size() >= 3);
+    // }
 
-    polygon_3(const std::vector<point> vertices,
-	      const std::vector<std::vector<point>> hole_verts,
+    polygon_3(const std::vector<point>& vertices,
+	      const std::vector<std::vector<point>>& hole_verts,
 	      const bool dummy_param);
     
-    polygon_3(const std::vector<point> vertices, const bool dummy_param) :
+    polygon_3(const std::vector<point>& vertices, const bool dummy_param) :
       outer_ring(vertices) {
 
       DBG_ASSERT(outer_ring.size() >= 3);
     }
     
-    polygon_3(const std::vector<point> vertices,
-		      const std::vector<std::vector<point>> hole_verts);
+    // polygon_3(const std::vector<point> vertices,
+    // 		      const std::vector<std::vector<point>> hole_verts);
 
     void add_hole(const std::vector<point>& hole) {
       inner_rings.push_back(hole);
@@ -136,11 +136,11 @@ namespace gca {
   to_boost_multipoly_2(const std::vector<polygon_3>& lines);
 
   polygon_3
-  build_clean_polygon_3(const std::vector<point> vertices,
-			const std::vector<std::vector<point>> hole_verts);
+  build_clean_polygon_3(const std::vector<point>& vertices,
+			const std::vector<std::vector<point>>& hole_verts);
 
   polygon_3
-  build_clean_polygon_3(const std::vector<point> vertices);
+  build_clean_polygon_3(const std::vector<point>& vertices);
   
 
 }

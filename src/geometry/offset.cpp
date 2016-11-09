@@ -62,7 +62,7 @@ namespace gca {
     for (unsigned i = 0; i < polygons.size(); i++) {
       const auto& current_poly = polygons[i];
       boost_poly_2 current_boost_p = to_boost_poly_2(current_poly);
-      double outer_area = area(polygon_3(current_poly.vertices()));
+      double outer_area = area(build_clean_polygon_3(current_poly.vertices()));
       cout << "outer area = " << outer_area << endl;
 
       if (bg::within(next_boost_p, current_boost_p) && outer_area > outer_area_max) {
@@ -96,7 +96,7 @@ namespace gca {
 
     vector<polygon_3> ring_polys;
     for (auto r : rings) {
-      ring_polys.push_back(r);
+      ring_polys.push_back(build_clean_polygon_3(r));
     }
 
     vector<polygon_3> polygons;
@@ -161,7 +161,7 @@ namespace gca {
   boost_poly_2 CGAL_polygon_for_boost_poly(const Polygon_2& poly) {
     double z_level = 0;
     vector<point> pts = ring_for_CGAL_polygon(poly, z_level);
-    return to_boost_poly_2(pts);
+    return to_boost_poly_2(build_clean_polygon_3(pts));
   }
 
   oriented_polygon
@@ -371,7 +371,7 @@ namespace gca {
       cleaned_holes.push_back(clean_ring_for_offsetting(h));
     }
 
-    return polygon_3(cleaned_outer, cleaned_holes);
+    return build_clean_polygon_3(cleaned_outer, cleaned_holes);
   }
 
   boost::optional<polygon_3>
@@ -388,7 +388,7 @@ namespace gca {
       }
     }
 
-    return polygon_3(cleaned_outer, cleaned_holes);
+    return build_clean_polygon_3(cleaned_outer, cleaned_holes);
   }
   
   std::vector<point> exterior_offset(const std::vector<point>& pts,
@@ -559,7 +559,7 @@ namespace gca {
 
     boost_multipoly_2 holes_to_subtract;
     for (auto h : poly.holes()) {
-      polygon_3 hole_polygon(h);
+      polygon_3 hole_polygon = build_clean_polygon_3(h);
       vector<polygon_3> hole_interior_offsets =
 	interior_offset({hole_polygon}, d);
 

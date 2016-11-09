@@ -402,6 +402,9 @@ namespace gca {
 
   triangular_mesh shift(const point s, const triangular_mesh& m);
 
+  triangular_mesh make_merged_mesh(const std::vector<triangle>& triangles,
+				   double tolerance);
+
 }
 
 #endif

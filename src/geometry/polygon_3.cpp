@@ -13,7 +13,7 @@ namespace gca {
       holes.push_back(apply(r, h));
     }
 
-    polygon_3 rotated(pts, holes, true); //, holes);
+    polygon_3 rotated = polygon_3(pts, holes, true); //, holes);
 
     rotated.correct_winding_order(times_3(r, p.normal()));
 
@@ -33,8 +33,8 @@ namespace gca {
   }
 
   polygon_3
-  build_clean_polygon_3(const std::vector<point> vertices,
-			const std::vector<std::vector<point>> hole_verts) {
+  build_clean_polygon_3(const std::vector<point>& vertices,
+			const std::vector<std::vector<point>>& hole_verts) {
     vector<point> outer_ring = clean_vertices(vertices);
     delete_antennas(outer_ring);
 
@@ -63,14 +63,14 @@ namespace gca {
   }
 
   polygon_3
-  build_clean_polygon_3(const std::vector<point> vertices) {
+  build_clean_polygon_3(const std::vector<point>& vertices) {
     return build_clean_polygon_3(vertices, {});
   }
 
 
   // NOTE: These should be references
-  polygon_3::polygon_3(const std::vector<point> vertices,
-		       const std::vector<std::vector<point>> hole_verts,
+  polygon_3::polygon_3(const std::vector<point>& vertices,
+		       const std::vector<std::vector<point>>& hole_verts,
 		       const bool dummy_param) :
     outer_ring(vertices),
     inner_rings{} {
@@ -80,34 +80,34 @@ namespace gca {
     }
   }
   
-  polygon_3::polygon_3(const std::vector<point> vertices,
-		       const std::vector<std::vector<point>> hole_verts) :
-    outer_ring(vertices),
-    inner_rings{} {
+  // polygon_3::polygon_3(const std::vector<point> vertices,
+  // 		       const std::vector<std::vector<point>> hole_verts) :
+  //   outer_ring(vertices),
+  //   inner_rings{} {
 
-    outer_ring = clean_vertices(outer_ring);
-    delete_antennas(outer_ring);
+  //   outer_ring = clean_vertices(outer_ring);
+  //   delete_antennas(outer_ring);
 
-    // There is an occasional test failure here in simple box
-    if (!(outer_ring.size() >= 3)) {
-      cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
-      vtk_debug_ring(outer_ring);
+  //   // There is an occasional test failure here in simple box
+  //   if (!(outer_ring.size() >= 3)) {
+  //     cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
+  //     vtk_debug_ring(outer_ring);
 
-      DBG_ASSERT(outer_ring.size() >= 3);
-    }
+  //     DBG_ASSERT(outer_ring.size() >= 3);
+  //   }
 
-    for (auto h : hole_verts) {
+  //   for (auto h : hole_verts) {
 
-      auto new_h = clean_vertices(h);
-      delete_antennas(new_h);
+  //     auto new_h = clean_vertices(h);
+  //     delete_antennas(new_h);
 
-      if (!(new_h.size() >= 3)) {
-	cout << "ERROR: Inner ring size = " << h.size() << endl;
-      } else {
-	inner_rings.push_back(new_h);
-      }
-    }
-  }
+  //     if (!(new_h.size() >= 3)) {
+  // 	cout << "ERROR: Inner ring size = " << h.size() << endl;
+  //     } else {
+  // 	inner_rings.push_back(new_h);
+  //     }
+  //   }
+  // }
 
   std::vector<point>
   clean_for_conversion_to_polygon_3(const std::vector<point>& vertices) {
@@ -122,7 +122,7 @@ namespace gca {
     return outer_ring;
   }
 
-  void check_simplicity(const labeled_polygon_3& p) {
+  void check_simplicity(const polygon_3& p) {
     check_simplicity(static_cast<const std::vector<point>&>(p.vertices()));
 
     for (auto h : p.holes()) {
@@ -140,8 +140,8 @@ namespace gca {
     return res_pts;
   }
   
-  labeled_polygon_3 project_onto(const plane p,
-				 const labeled_polygon_3& poly) {
+  polygon_3 project_onto(const plane p,
+			 const polygon_3& poly) {
 
     vector<point> proj_outer = project(p, poly.vertices());
 
@@ -150,7 +150,7 @@ namespace gca {
       proj_holes.push_back(project(p, h));
     }
 
-    labeled_polygon_3 l(proj_outer, proj_holes);
+    polygon_3 l = build_clean_polygon_3(proj_outer, proj_holes);
 
     if (!(within_eps(angle_between(l.normal(), p.normal()), 0.0, 0.1))) {
       l.correct_winding_order(p.normal());
@@ -454,7 +454,7 @@ namespace gca {
       dh.push_back(shift(p, h));
     }
 
-    labeled_polygon_3 shifted(dr, dh);
+    polygon_3 shifted = build_clean_polygon_3(dr, dh);
     return shifted;
   }
 
@@ -475,7 +475,7 @@ namespace gca {
       holes.push_back(apply(r, h));
     }
 
-    labeled_polygon_3 rotated(pts, holes);
+    polygon_3 rotated = build_clean_polygon_3(pts, holes);
 
     rotated.correct_winding_order(times_3(r, p.normal()));
 
@@ -512,7 +512,7 @@ namespace gca {
       holes.push_back(apply(t, h));
     }
 
-    labeled_polygon_3 transformed(rotated_verts, holes);
+    polygon_3 transformed = build_clean_polygon_3(rotated_verts, holes);
     
     transformed.correct_winding_order(times_3(t.first, p.normal()));
 

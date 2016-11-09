@@ -16,7 +16,7 @@ namespace gca {
 
   gca::feature* node_value(feature_decomposition* f) { return f->feature(); }
 
-  labeled_polygon_3
+  polygon_3
   convex_hull_2D(const triangular_mesh& m,
 		 const point n) {
     double z_level = max_distance_along(m.vertex_list(), n);
@@ -28,7 +28,7 @@ namespace gca {
 				    const std::vector<point>& raw_pts) {
     auto pts = project_points(pl, raw_pts);
 
-    labeled_polygon_3 p =
+    polygon_3 p =
       convex_hull_2D(pts, pl.normal(), max_distance_along(pts, pl.normal()));
 
     check_simplicity(p);
@@ -77,7 +77,7 @@ namespace gca {
     return point(r_x, r_y, r_z);
   }
 
-  labeled_polygon_3
+  polygon_3
   virtual_surface_for_surface(const std::vector<index_t>& s,
 			      const triangular_mesh& m,
 			      const point n) {
@@ -125,7 +125,8 @@ namespace gca {
 
       DBG_ASSERT(projected_clean.size() > 2);
 
-      polygon_3 bound_p(projected_clean);
+      polygon_3 bound_p =
+	build_clean_polygon_3(projected_clean);
       bound_p.correct_winding_order(n);
 
       
@@ -135,7 +136,7 @@ namespace gca {
     return result_polys.front();
   }
 
-  std::vector<labeled_polygon_3>
+  std::vector<polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<index_t>& indexes,
 			 const point n) {
@@ -146,7 +147,7 @@ namespace gca {
 
     cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
 
-    vector<labeled_polygon_3> polys;
+    vector<polygon_3> polys;
     for (auto s : not_vertical_or_horizontal) {
       auto l = virtual_surface_for_surface(s, m, n);
       polys.push_back(l);
@@ -155,7 +156,7 @@ namespace gca {
     return polys;
   }
 
-  std::vector<labeled_polygon_3>
+  std::vector<polygon_3>
   horizontal_surfaces(const triangular_mesh& m, const point n) {
     auto inds = m.face_indexes();
 
@@ -181,7 +182,7 @@ namespace gca {
 
     triangular_mesh mr = apply(r, m);
 
-    vector<labeled_polygon_3> surf_polys = virtual_surfaces;
+    vector<polygon_3> surf_polys = virtual_surfaces;
     for (auto s : surfs) {
       DBG_ASSERT(s.size() > 0);
 
@@ -206,7 +207,7 @@ namespace gca {
 	hole_verts.push_back(apply(r_inv, h.vertices()));
       }
 
-      labeled_polygon_3 lp(apply(r_inv, boundary.vertices()), hole_verts);
+      polygon_3 lp = build_clean_polygon_3(apply(r_inv, boundary.vertices()), hole_verts);
 
       lp.correct_winding_order(n);
 
@@ -214,7 +215,7 @@ namespace gca {
     }
 
     sort(begin(surf_polys), end(surf_polys),
-	 [n](const labeled_polygon_3& x, const labeled_polygon_3& y) {
+	 [n](const polygon_3& x, const polygon_3& y) {
 	   return max_distance_along(x.vertices(), n) <
 	     max_distance_along(y.vertices(), n);
 	 });
@@ -240,7 +241,7 @@ namespace gca {
     auto surface_it = begin(h_surfs);
     surface_levels levels;
     while (surface_it != end(h_surfs)) {
-      const labeled_polygon_3& current_surf = *surface_it;
+      const polygon_3& current_surf = *surface_it;
       double current_surf_dist = max_distance_along(current_surf.vertices(), n);
       auto next_it =
 	find_if_not(surface_it, end(h_surfs),
@@ -290,7 +291,8 @@ namespace gca {
       }
     }
 
-    labeled_polygon_3 poly(clean_vertices(dr), dh);
+    labeled_polygon_3 poly =
+      build_clean_polygon_3(clean_vertices(dr), dh);
     return poly;
   }
 
@@ -302,7 +304,8 @@ namespace gca {
       dh.push_back(exterior_offset(h, tol));
     }
 
-    labeled_polygon_3 poly(dr, dh);
+    labeled_polygon_3 poly =
+      build_clean_polygon_3(dr, dh);
     return poly;
   }
 
@@ -337,7 +340,7 @@ namespace gca {
     for (auto h : p.holes()) {
       auto h_clean = clean_vertices(exterior_offset(h, tol));
       if (h_clean.size() >= 3) {
-	new_holes.push_back(polygon_3(h_clean));
+	new_holes.push_back(build_clean_polygon_3(h_clean));
       }
     }
 
@@ -346,7 +349,7 @@ namespace gca {
     const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
     const rotation r_inv = inverse(r);
 
-    boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, polygon_3(dr_pts))));
+    boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, build_clean_polygon_3(dr_pts))));
 
     boost_multipoly_2 union_of_holes = planar_union_boost(new_holes);
 
@@ -597,7 +600,8 @@ namespace gca {
 
     feature_decomposition* top = decomp->child(0);
     vector<point> stock_ring = top->feature()->base().vertices();
-    polygon_3 stock_polygon(stock_ring);
+    polygon_3 stock_polygon =
+      build_clean_polygon_3(stock_ring);
 
     auto set_open = [stock_polygon](feature* f) {
       if (f != nullptr) {
@@ -889,7 +893,8 @@ namespace gca {
 
   bool is_outer(const feature& f, const polygon_3& stock_bound) {
     const rotation r = rotate_from_to(f.normal(), point(0, 0, 1));
-    polygon_3 base_p = f.base().vertices();
+    polygon_3 base_p =
+      build_clean_polygon_3(f.base().vertices());
     auto base_poly = to_boost_poly_2(apply(r, base_p));
     auto stock_poly = to_boost_poly_2(apply(r, stock_bound));
 

@@ -64,7 +64,7 @@ namespace gca {
     
     feature_decomposition* top = decomp->child(0);
     vector<point> stock_ring = top->feature()->base().vertices();
-    polygon_3 stock_polygon(stock_ring);
+    polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
 
     if (is_outer(f, stock_polygon)) {
       polygon_3 safe_envelope_outline =
@@ -75,7 +75,8 @@ namespace gca {
       plane pl(n, pt);
 
       polygon_3 projected_outline = project_onto(pl, safe_envelope_outline);
-      polygon_3 dummy_base(projected_outline.vertices(), f.base().holes());
+      polygon_3 dummy_base =
+	build_clean_polygon_3(projected_outline.vertices(), f.base().holes());
 
       feature open_feature(false, f.depth(), dummy_base);
 
@@ -95,7 +96,8 @@ namespace gca {
     // TODO: Eventually make this a parameter, not just a builtin
     labeled_polygon_3 safe_envelope_outline =
       dilate(top_feature->feature()->base(), 20.0);
-    labeled_polygon_3 safe_envelope(safe_envelope_outline.vertices(), {top_feature->feature()->base().vertices()});
+    labeled_polygon_3 safe_envelope =
+      build_clean_polygon_3(safe_envelope_outline.vertices(), {top_feature->feature()->base().vertices()});
 
     point n = top_feature->feature()->normal();
 

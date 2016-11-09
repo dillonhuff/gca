@@ -15,7 +15,7 @@ namespace gca {
 	point(0, 1, 0),
 	point(1, 1, 0),
 	point(1, 0, 0)};
-    polygon_3 poly(pts);
+    polygon_3 poly = build_clean_polygon_3(pts);
 
     triangular_mesh m = extrude(poly, extrude_vector);
 
@@ -59,7 +59,7 @@ namespace gca {
 
     holes.push_back(hole);
     
-    polygon_3 poly(pts, holes);
+    polygon_3 poly = build_clean_polygon_3(pts, holes);
 
     triangular_mesh m = extrude(poly, extrude_vector);
 

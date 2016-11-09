@@ -119,13 +119,13 @@ namespace gca {
     inline vector<polygon_3> get_holes() const {
       std::vector<polygon_3> h_polys;
       for (auto p : holes) {
-	h_polys.push_back(polygon_3(p.vertices()));
+	h_polys.push_back(build_clean_polygon_3(p.vertices()));
       }
       return h_polys;
     }
 
     inline polygon_3 get_boundary() const
-    { return polygon_3(boundary.vertices()); }
+    { return build_clean_polygon_3(boundary.vertices()); }
 
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
@@ -164,7 +164,7 @@ namespace gca {
     inline vector<polygon_3> get_holes() const {
       std::vector<polygon_3> h_polys;
       for (auto p : bp.holes()) {
-	h_polys.push_back(polygon_3(p));
+	h_polys.push_back(build_clean_polygon_3(p));
       }
       return h_polys;
     }
@@ -173,7 +173,7 @@ namespace gca {
     { return area(base())*(get_start_depth() - get_end_depth()); }
 
     inline polygon_3 get_boundary() const
-    { return polygon_3(bp.vertices()); }
+    { return build_clean_polygon_3(bp.vertices()); }
 
     std::vector<polyline>
     flat_level_with_holes(const tool& t) const;
@@ -214,7 +214,7 @@ namespace gca {
     { DBG_ASSERT(false); }
 
     inline double volume() const {
-      double ar = area(polygon_3(base.vertices()));
+      double ar = area(build_clean_polygon_3(base.vertices()));
       double height = get_start_depth() - get_end_depth();
       cout << "Pocket base area = " << ar << endl;
       cout << "Pocket height    = " << height << endl;

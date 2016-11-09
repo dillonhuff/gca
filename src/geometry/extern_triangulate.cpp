@@ -165,7 +165,7 @@ namespace gca {
   }
 
   point interior_point(const std::vector<point>& pts) {
-    polygon_3 hole_poly(pts);
+    polygon_3 hole_poly = build_clean_polygon_3(pts);
     auto bp = to_boost_poly_2(hole_poly);
 
     for (unsigned i = 0; i < pts.size(); i++) {
@@ -288,7 +288,7 @@ namespace gca {
     for (unsigned i = 0; i < in->numberofholes; i++) {
       point pt = interior_point(p.holes()[i]);
 
-      polygon_3 hole_poly(p.holes()[i]);
+      polygon_3 hole_poly = build_clean_polygon_3(p.holes()[i]);
       auto bp = to_boost_poly_2(hole_poly);
       auto pt_2 = bg::model::d2::point_xy<double>(pt.x, pt.y);
 

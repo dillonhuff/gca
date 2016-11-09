@@ -394,7 +394,7 @@ namespace gca {
     
     feature_decomposition* top = f->child(0);
     vector<point> stock_ring = top->feature()->base().vertices();
-    polygon_3 stock_polygon(stock_ring);
+    polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
 
     for (auto feat : collect_features(f)) {
       if (is_outer(*feat, stock_polygon)) {
@@ -615,7 +615,7 @@ namespace gca {
 
     feature_decomposition* top = decomp->child(0);
     vector<point> stock_ring = top->feature()->base().vertices();
-    polygon_3 stock_polygon(stock_ring);
+    polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
 
     point n = normal(decomp);
 

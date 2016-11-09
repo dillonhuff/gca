@@ -70,7 +70,8 @@ namespace gca {
 	holes.push_back(hole_pts);
       }
 
-      labeled_polygon_3 top(verts, holes);
+      labeled_polygon_3 top =
+	build_clean_polygon_3(verts, holes);
 
       top.correct_winding_order(base().normal());
 

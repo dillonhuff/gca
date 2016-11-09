@@ -145,8 +145,8 @@ namespace gca {
 	point(1, 1, 0),
 	point(-1, 1, 0)};
 
-    polygon_3 safe_area(safe_ring, {hole});
-    polygon_3 machine_area(outer_machine_ring, {hole});
+    polygon_3 safe_area = build_clean_polygon_3(safe_ring, {hole});
+    polygon_3 machine_area = build_clean_polygon_3(outer_machine_ring, {hole});
 
     flat_region r(safe_area, machine_area, 0.1, 0.0, ALUMINUM);
 
@@ -185,7 +185,7 @@ namespace gca {
 
     SECTION("No overlap with 1/8 inch tool") {
       std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
-      polygon_3 offset_hole = exterior_offset(hole, t.radius() - 0.01);
+      polygon_3 offset_hole = exterior_offset(build_clean_polygon_3(hole), t.radius() - 0.01);
 
       for (auto& tp : toolpaths) {
 	REQUIRE(!overlap_2D(tp.lines(), offset_hole));
@@ -231,8 +231,8 @@ namespace gca {
 	point(1, 1, 0),
 	point(-1, 1, 0)};
 
-    polygon_3 safe_area(safe_ring, {hole});
-    polygon_3 machine_area(outer_machine_ring, {hole});
+    polygon_3 safe_area = build_clean_polygon_3(safe_ring, {hole});
+    polygon_3 machine_area = build_clean_polygon_3(outer_machine_ring, {hole});
 
     flat_region r(safe_area, machine_area, 0.1, 0.0, ALUMINUM);
 
@@ -272,7 +272,7 @@ namespace gca {
 
     SECTION("No overlap with 1/8 inch tool") {
       std::vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
-      polygon_3 offset_hole = exterior_offset(hole, t.radius() - 0.01);
+      polygon_3 offset_hole = exterior_offset(build_clean_polygon_3(hole), t.radius() - 0.01);
 
       for (auto& tp : toolpaths) {
 	REQUIRE(!overlap_2D(tp.lines(), offset_hole));
