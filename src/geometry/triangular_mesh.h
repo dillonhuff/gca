@@ -38,7 +38,6 @@ namespace gca {
   private:
     std::vector<point> vertices;
     std::vector<triangle_t> tri_vertices;
-    //    std::vector<point> face_orientations;
     trimesh_t mesh;
 
   public:
@@ -46,11 +45,9 @@ namespace gca {
     
     triangular_mesh(const std::vector<point>& vertices_p,
 		    const std::vector<triangle_t>& triangles_p,
-		    const std::vector<point>& face_orientations_p,
 		    trimesh_t mesh_p) :
       vertices(vertices_p),
       tri_vertices(triangles_p),
-      //      face_orientations(face_orientations_p),
       mesh(mesh_p) {}
 
     std::vector<edge> edges() const {
@@ -130,7 +127,6 @@ namespace gca {
     }
 
     inline point face_orientation(index_t i) const {
-      //      return face_orientations[i];
       auto t = tri_vertices[i];
       return cross(vertex(t.v[1]) - vertex(t.v[0]),
 		   vertex(t.v[2]) - vertex(t.v[0])).normalize();
@@ -176,18 +172,15 @@ namespace gca {
     triangular_mesh apply(F f) const {
       vector<point> tverts(vertices.size());
       transform(begin(vertices), end(vertices), begin(tverts), f);
-      vector<point> torients; //(face_orientations.size());
-      // transform(begin(face_orientations), end(face_orientations),
-      // 		begin(torients),
-      // 		f);
-      return triangular_mesh(tverts, tri_vertices, torients, mesh);
+
+      return triangular_mesh(tverts, tri_vertices, mesh);
     }
 
     template<typename F>
     triangular_mesh apply_to_vertices(F f) const {
       vector<point> tverts(vertices.size());
       transform(begin(vertices), end(vertices), begin(tverts), f);
-      return triangular_mesh(tverts, tri_vertices, {}, mesh); //face_orientations, mesh);
+      return triangular_mesh(tverts, tri_vertices, mesh);
     }
 
   };

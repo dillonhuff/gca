@@ -132,6 +132,23 @@ namespace gca {
     DBG_ASSERT(num_degenerate_triangles == 0);
   }
 
+  triangular_mesh
+  build_mesh_from_vertex_triangles(std::vector<triangle_t>& vertex_triangles,
+				   const std::vector<point>& vertices) {
+    std::vector<edge_t> edges;
+    unordered_edges_from_triangles(vertex_triangles.size(),
+				   &vertex_triangles[0],
+				   edges);
+    trimesh_t mesh;
+    mesh.build(vertices.size(),
+	       vertex_triangles.size(),
+	       &vertex_triangles[0],
+	       edges.size(),
+	       &edges[0]);
+
+    return triangular_mesh(vertices, vertex_triangles, mesh);
+  }
+  
   std::vector<triangle_t>
   fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
 					 std::vector<point>& vertices,
@@ -193,20 +210,24 @@ namespace gca {
     std::vector<point> vertices;
     std::vector<triangle_t> vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
-    std::vector<point> face_orientations(triangles.size());
-    transform(begin(triangles), end(triangles), begin(face_orientations),
-	      [](const triangle t) { return t.normal; });
-    std::vector<edge_t> edges;
-    unordered_edges_from_triangles(vertex_triangles.size(),
-				   &vertex_triangles[0],
-				   edges);
-    trimesh_t mesh;
-    mesh.build(vertices.size(),
-	       triangles.size(),
-	       &vertex_triangles[0],
-	       edges.size(),
-	       &edges[0]);
-    return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
+
+    // std::vector<point> face_orientations(triangles.size());
+    // transform(begin(triangles), end(triangles), begin(face_orientations),
+    // 	      [](const triangle t) { return t.normal; });
+
+    return build_mesh_from_vertex_triangles(vertex_triangles, vertices);
+
+    // std::vector<edge_t> edges;
+    // unordered_edges_from_triangles(vertex_triangles.size(),
+    // 				   &vertex_triangles[0],
+    // 				   edges);
+    // trimesh_t mesh;
+    // mesh.build(vertices.size(),
+    // 	       triangles.size(),
+    // 	       &vertex_triangles[0],
+    // 	       edges.size(),
+    // 	       &edges[0]);
+    // return triangular_mesh(vertices, vertex_triangles, mesh);
   }
 
   bool
@@ -240,14 +261,6 @@ namespace gca {
     t.v[i] = j;
   }
 
-  // TODO: Use simple mesh struct to build a mesh
-  triangular_mesh
-  build_mesh_from_vertex_triangles(std::vector<triangle_t>& vertex_triangles,
-				   const std::vector<point>& vertices,
-				   const std::vector<point>& face_orientations) {
-    DBG_ASSERT(false);
-  }
-  
   triangular_mesh
   correct_winding_and_build(std::vector<triangle_t>& vertex_triangles,
 			    const std::vector<point>& vertices,
@@ -258,23 +271,11 @@ namespace gca {
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
 
-    //    return build_mesh_from_vertex_triangles(vertex_triangles, vertices);
+    return build_mesh_from_vertex_triangles(vertex_triangles, vertices);
 
     // TODO: Create more versatile normal checks
     //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
     
-    std::vector<edge_t> edges;
-    unordered_edges_from_triangles(vertex_triangles.size(),
-				   &vertex_triangles[0],
-				   edges);
-    trimesh_t mesh;
-    mesh.build(vertices.size(),
-	       vertex_triangles.size(),
-	       &vertex_triangles[0],
-	       edges.size(),
-	       &edges[0]);
-
-    return triangular_mesh(vertices, vertex_triangles, face_orientations, mesh);
   }
 
   void
