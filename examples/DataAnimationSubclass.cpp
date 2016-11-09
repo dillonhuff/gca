@@ -302,16 +302,7 @@ void print_setup_info(const fabrication_setup& shifted_setup) {
   cout << "Part length along z axis in setup = " << part_len_z << endl;
 }
 
-int main(int argc, char *argv[]) {
-
-  DBG_ASSERT(argc == 2);
-
-  string name = argv[1];
-  cout << "File Name = " << name << endl;
-
-  arena_allocator a;
-  set_system_allocator(&a);
-
+fabrication_inputs part_1_2_inputs() {
   vice test_v = current_setup();
   vice test_vice = top_jaw_origin_vice(test_v);
 
@@ -354,6 +345,21 @@ int main(int argc, char *argv[]) {
   t3.set_tool_number(3);
   
   vector<tool> tools{t1, t2, t3}; //, t3, t4};
+
+  return fabrication_inputs(fixes, tools, workpiece_dims);
+}
+
+int main(int argc, char *argv[]) {
+
+  DBG_ASSERT(argc == 2);
+
+  string name = argv[1];
+  cout << "File Name = " << name << endl;
+
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  fabrication_inputs fab_inputs = part_1_2_inputs();
   
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
@@ -384,7 +390,7 @@ int main(int argc, char *argv[]) {
   //vtk_debug_mesh(mesh);
 
   fabrication_plan p =
-    make_fabrication_plan(mesh, fixes, tools, {workpiece_dims});
+    make_fabrication_plan(mesh, fab_inputs); //fixes, tools, {workpiece_dims});
 
   double rapid_feed = 24.0;
   fab_plan_timing_info total_time;

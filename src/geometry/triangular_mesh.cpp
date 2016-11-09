@@ -239,6 +239,12 @@ namespace gca {
   void set_vertex(triangle_t& t, const index_t i, const index_t j) {
     t.v[i] = j;
   }
+
+  triangular_mesh
+  build_mesh_from_vertex_triangles(std::vector<triangle_t>& vertex_triangles,
+				   const std::vector<point>& vertices,
+				   const std::vector<point>& face_orientations) {
+  }
   
   triangular_mesh
   correct_winding_and_build(std::vector<triangle_t>& vertex_triangles,
@@ -249,6 +255,8 @@ namespace gca {
       cout << "Flipped winding order!" << endl;
       vertex_triangles = flip_winding_orders(vertex_triangles);
     }
+
+    //    return build_mesh_from_vertex_triangles(vertex_triangles, vertices);
 
     // TODO: Create more versatile normal checks
     //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
@@ -396,6 +404,7 @@ namespace gca {
       vector<triangle_t> comp_tris;
       for (auto i : c) {
 	comp_tris.push_back(vertex_triangles[i]);
+	new_face_orientations.push_back(triangles[i].normal);
       }
 
       int wind_errs = num_winding_order_errors(comp_tris);
@@ -411,10 +420,6 @@ namespace gca {
         DBG_ASSERT(new_wind_errs == 0);
 
         comp_tris = fixed_triangles;
-      }
-
-      for (auto i : comp_tris) {
-	new_face_orientations.push_back(triangles[i].normal);
       }
 
       concat(mesh_tris, comp_tris);
