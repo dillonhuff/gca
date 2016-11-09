@@ -94,28 +94,162 @@ namespace gca {
     return false;
   }
 
+  bool duplicate(const triangle_t t, const std::vector<triangle_t>& tris) {
+
+    auto is_neighbor = [t](const triangle_t other) {
+      if ((t != other) && share_edge(other, t)) {
+	return true;
+      }
+
+      return false;
+    };
+
+    vector<triangle_t> neighbors =
+      select(tris, is_neighbor);
+
+    vector<index_t> tris_inds{t.v[0], t.v[1], t.v[2]};
+    for (auto n : neighbors) {
+      vector<index_t> n_inds{n.v[0], n.v[1], n.v[2]};
+
+      if (intersection(tris_inds, n_inds).size() == 3) {
+	return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool hanging(const triangle_t t, const std::vector<triangle_t>& tris) {
+
+    auto is_neighbor = [t](const triangle_t other) {
+      if ((t != other) && share_edge(other, t)) {
+	return true;
+      }
+
+      return false;
+    };
+
+    vector<triangle_t> neighbors =
+      select(tris, is_neighbor);
+
+    if (neighbors.size() < 3) { return true; }
+
+    return false;
+  }
+  
   void
-  delete_degenerate_triangles(std::vector<triangle_t>& tris,
-			      const std::vector<point>& verts,
-			      std::vector<point>& normals) {
-    vector<unsigned> inds_to_remove;
+  delete_hanging_triangles(std::vector<triangle_t>& tris,
+			   const std::vector<point>& verts,
+			   std::vector<point>& normals) {
+    unsigned inds_removed = 0;
     bool removed = true;
 
     while (removed) {
       removed = false;
 
       for (unsigned i = 0; i < tris.size(); i++) {
-	if (degenerate(tris[i])) {
+
+	if (hanging(tris[i], tris)) {
 	  tris.erase(begin(tris) + i);
 	  normals.erase(begin(normals) + i);
 	  removed = true;
+
+	  inds_removed++;
+
 	  break;
 	}
+
       }
 
     }
 
-    cout << "Deleted " << inds_to_remove.size() << " degenerate triangles" << endl;
+    cout << "Deleted " << inds_removed << " hanging triangles" << endl;
+  }
+  
+  void
+  delete_degenerate_triangles(std::vector<triangle_t>& tris,
+			      const std::vector<point>& verts,
+			      std::vector<point>& normals) {
+    unsigned inds_removed = 0;
+    bool removed = true;
+
+    while (removed) {
+      removed = false;
+
+      for (unsigned i = 0; i < tris.size(); i++) {
+
+	if (degenerate(tris[i])) {
+	  tris.erase(begin(tris) + i);
+	  normals.erase(begin(normals) + i);
+	  removed = true;
+
+	  inds_removed++;
+	  break;
+	}
+
+      }
+
+    }
+
+    cout << "Deleted " << inds_removed << " degenerate triangles" << endl;
+  }
+
+  void
+  delete_duplicate_triangles(std::vector<triangle_t>& tris,
+			     const std::vector<point>& verts,
+			     std::vector<point>& normals) {
+    unsigned inds_removed = 0;
+    bool removed = true;
+
+    while (removed) {
+      removed = false;
+
+      for (unsigned i = 0; i < tris.size(); i++) {
+
+	if (duplicate(tris[i], tris)) {
+	  tris.erase(begin(tris) + i);
+	  normals.erase(begin(normals) + i);
+	  removed = true;
+
+	  inds_removed++;
+	  break;
+	}
+
+      }
+
+    }
+
+    cout << "Deleted " << inds_removed << " duplicate triangles" << endl;
+  }
+  
+  void
+  check_non_manifold_triangles(const std::vector<triangle_t>& vertex_triangles,
+			       const std::vector<point>& vertices) {
+
+    for (auto t : vertex_triangles) {
+
+      auto is_neighbor = [t](const triangle_t other) {
+	if ((t != other) && share_edge(other, t)) {
+	  return true;
+	}
+
+	return false;
+      };
+
+      vector<triangle_t> neighbors =
+	select(vertex_triangles, is_neighbor);
+
+      if (neighbors.size() != 3) {
+
+	cout << "ERROR: Non manifold triangle " << t << endl;
+	cout << " has " << neighbors.size() << " neighbors" << endl;
+	for (auto r : neighbors) {
+	  cout << r << endl;
+	}
+
+	DBG_ASSERT(false);
+      }
+    }
   }
 
   void check_degenerate_triangles(const std::vector<triangle_t>& tris,
@@ -211,23 +345,8 @@ namespace gca {
     std::vector<triangle_t> vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
 
-    // std::vector<point> face_orientations(triangles.size());
-    // transform(begin(triangles), end(triangles), begin(face_orientations),
-    // 	      [](const triangle t) { return t.normal; });
-
     return build_mesh_from_vertex_triangles(vertex_triangles, vertices);
 
-    // std::vector<edge_t> edges;
-    // unordered_edges_from_triangles(vertex_triangles.size(),
-    // 				   &vertex_triangles[0],
-    // 				   edges);
-    // trimesh_t mesh;
-    // mesh.build(vertices.size(),
-    // 	       triangles.size(),
-    // 	       &vertex_triangles[0],
-    // 	       edges.size(),
-    // 	       &edges[0]);
-    // return triangular_mesh(vertices, vertex_triangles, mesh);
   }
 
   bool
@@ -308,6 +427,22 @@ namespace gca {
     auto vertex_triangles =
       fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
 
+    std::vector<point> face_orientations(triangles.size());
+    transform(begin(triangles), end(triangles), begin(face_orientations),
+	      [](const triangle t) { return t.normal; });
+    
+    delete_duplicate_triangles(vertex_triangles, vertices, face_orientations);    
+    delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
+    delete_hanging_triangles(vertex_triangles, vertices, face_orientations);
+
+    cout << "# of triangles left = " << vertex_triangles.size() << endl;
+
+    if (vertex_triangles.size() == 0) { return {}; }
+
+    check_degenerate_triangles(vertex_triangles, vertices);
+    check_non_manifold_triangles(vertex_triangles, vertices);
+
+
     DBG_ASSERT(vertex_triangles.size() > 0);
 
     auto initial_comps =
@@ -354,8 +489,14 @@ namespace gca {
     transform(begin(triangles), end(triangles), begin(face_orientations),
 	      [](const triangle t) { return t.normal; });
 
+    delete_duplicate_triangles(vertex_triangles, vertices, face_orientations);    
     delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
+    delete_hanging_triangles(vertex_triangles, vertices, face_orientations);
+
+    cout << "# of triangles left = " << vertex_triangles.size() << endl;
+
     check_degenerate_triangles(vertex_triangles, vertices);
+    check_non_manifold_triangles(vertex_triangles, vertices);
     check_components(vertex_triangles, triangles);
 
 

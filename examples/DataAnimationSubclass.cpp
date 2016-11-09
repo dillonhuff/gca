@@ -425,7 +425,6 @@ int main(int argc, char *argv[]) {
 
   mesh =
     mesh.apply_to_vertices(scale_func);
-  
 
   box b = mesh.bounding_box();
 
@@ -439,7 +438,6 @@ int main(int argc, char *argv[]) {
 
   fabrication_plan p =
     make_fabrication_plan(mesh, fab_inputs); //fixes, tools, {workpiece_dims});
-
 
   double rapid_feed = 24.0;
   fab_plan_timing_info total_time;
@@ -474,6 +472,8 @@ int main(int argc, char *argv[]) {
     auto program = step.gcode_for_toolpaths(emco_f1_code_no_TLC);
     cout << program.name << endl;
     cout << program.blocks << endl;
+
+    visual_debug(step);
 
   }
 

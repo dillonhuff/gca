@@ -2068,6 +2068,33 @@ src/geometry/trimesh.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/trimesh.cpp.s
 .PHONY : src/geometry/trimesh.cpp.s
 
+src/geometry/trimesh_types.o: src/geometry/trimesh_types.cpp.o
+
+.PHONY : src/geometry/trimesh_types.o
+
+# target to build an object file
+src/geometry/trimesh_types.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/trimesh_types.cpp.o
+.PHONY : src/geometry/trimesh_types.cpp.o
+
+src/geometry/trimesh_types.i: src/geometry/trimesh_types.cpp.i
+
+.PHONY : src/geometry/trimesh_types.i
+
+# target to preprocess a source file
+src/geometry/trimesh_types.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/trimesh_types.cpp.i
+.PHONY : src/geometry/trimesh_types.cpp.i
+
+src/geometry/trimesh_types.s: src/geometry/trimesh_types.cpp.s
+
+.PHONY : src/geometry/trimesh_types.s
+
+# target to generate assembly for a file
+src/geometry/trimesh_types.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/trimesh_types.cpp.s
+.PHONY : src/geometry/trimesh_types.cpp.s
+
 src/geometry/vtk_debug.o: src/geometry/vtk_debug.cpp.o
 
 .PHONY : src/geometry/vtk_debug.o
@@ -4682,6 +4709,9 @@ help:
 	@echo "... src/geometry/trimesh.o"
 	@echo "... src/geometry/trimesh.i"
 	@echo "... src/geometry/trimesh.s"
+	@echo "... src/geometry/trimesh_types.o"
+	@echo "... src/geometry/trimesh_types.i"
+	@echo "... src/geometry/trimesh_types.s"
 	@echo "... src/geometry/vtk_debug.o"
 	@echo "... src/geometry/vtk_debug.i"
 	@echo "... src/geometry/vtk_debug.s"

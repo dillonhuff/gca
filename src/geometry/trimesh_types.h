@@ -35,6 +35,9 @@ namespace gca {
       v[0] = v[1] = v[2] = -1;
     }
   };
+
+  bool operator==(const triangle_t l, const triangle_t r);
+  bool operator!=(const triangle_t l, const triangle_t r);
 }
 
 #endif /* __trimesh_types_h__ */
