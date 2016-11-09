@@ -415,13 +415,13 @@ namespace gca {
     }
   }
 
-  std::vector<triangular_mesh>
-  make_meshes(const std::vector<triangle>& triangles,
-	      double tolerance) {
-    cout << "# of triangles = " << triangles.size() << endl;
+  struct list_trimesh {
+    std::vector<triangle_t> tris;
+    std::vector<point> vertexes;
+  };
 
-    DBG_ASSERT(triangles.size() > 0);
-
+  list_trimesh build_list_trimesh(const std::vector<triangle>& triangles,
+				  const double tolerance) {
     std::vector<point> vertices;
 
     auto vertex_triangles =
@@ -442,6 +442,21 @@ namespace gca {
     check_degenerate_triangles(vertex_triangles, vertices);
     check_non_manifold_triangles(vertex_triangles, vertices);
 
+    return list_trimesh{vertex_triangles, vertices};
+  }
+
+  std::vector<triangular_mesh>
+  make_meshes(const std::vector<triangle>& triangles,
+	      double tolerance) {
+    cout << "# of triangles = " << triangles.size() << endl;
+
+    DBG_ASSERT(triangles.size() > 0);
+
+    list_trimesh list_mesh = build_list_trimesh(triangles, tolerance);
+    auto vertex_triangles = list_mesh.tris;
+    auto vertices = list_mesh.vertexes;
+
+    if (vertex_triangles.size() == 0) { return {}; }
 
     DBG_ASSERT(vertex_triangles.size() > 0);
 
@@ -1077,7 +1092,6 @@ namespace gca {
     	      { return !all_parallel_to(surface, mesh, n, 3.0); });
   }
   
-
   bool operator==(const edge x, const edge y) {
     return (x.l == y.l && x.r == y.r) || (x.r == y.l && x.l == y.r);
   }
