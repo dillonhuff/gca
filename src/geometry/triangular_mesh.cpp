@@ -449,29 +449,30 @@ namespace gca {
       connected_components_by_elems(vertex_triangles, [](const triangle_t l, const triangle_t r)
 				    { return share_edge(l, r); });
 
-    //    vector<vector<triangle>> mesh_tris;
-
     vector<triangular_mesh> meshes;
     for (auto c : initial_comps) {
+
+      int wind_errs = num_winding_order_errors(c);
+      if (wind_errs > 0) {
+
+	cout << "Num winding errors = " << wind_errs << endl;
+
+	auto fixed_triangles = fix_winding_order_errors(c);
+	int new_wind_errs = num_winding_order_errors(fixed_triangles);
+
+	cout << "Num winding errors after fixing = " << new_wind_errs << endl;
+
+	DBG_ASSERT(new_wind_errs == 0);
+
+	c = fixed_triangles;
+      }
+      
       triangular_mesh m = 
 	build_mesh_from_vertex_triangles(c, vertices);
       meshes.push_back(m);
 
-	// vector<triangle> comp_tris;
 
-	// for (auto i : c) {
-	//   comp_tris.push_back(triangles[i]);
-	// }
-
-	// mesh_tris.push_back(comp_tris);
-      }
-
-      //      DBG_ASSERT(mesh_tris.size() == initial_comps.size());
-
-      // vector<triangular_mesh> meshes;
-      // for (auto tris : mesh_tris) {
-      // 	meshes.push_back(make_mesh(tris, tolerance));
-      // }
+    }
 
     DBG_ASSERT(meshes.size() == initial_comps.size());
     
