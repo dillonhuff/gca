@@ -446,29 +446,35 @@ namespace gca {
     DBG_ASSERT(vertex_triangles.size() > 0);
 
     auto initial_comps =
-      connected_components_by(vertex_triangles, [](const triangle_t l, const triangle_t r)
-			      { return share_edge(l, r); });
+      connected_components_by_elems(vertex_triangles, [](const triangle_t l, const triangle_t r)
+				    { return share_edge(l, r); });
 
-    vector<vector<triangle>> mesh_tris;
-    for (auto c : initial_comps) {
-      vector<triangle> comp_tris;
-
-      for (auto i : c) {
-	comp_tris.push_back(triangles[i]);
-      }
-
-      mesh_tris.push_back(comp_tris);
-    }
-
-    DBG_ASSERT(mesh_tris.size() == initial_comps.size());
+    //    vector<vector<triangle>> mesh_tris;
 
     vector<triangular_mesh> meshes;
-    for (auto tris : mesh_tris) {
-      meshes.push_back(make_mesh(tris, tolerance));
-    }
+    for (auto c : initial_comps) {
+      triangular_mesh m = 
+	build_mesh_from_vertex_triangles(c, vertices);
+      meshes.push_back(m);
+
+	// vector<triangle> comp_tris;
+
+	// for (auto i : c) {
+	//   comp_tris.push_back(triangles[i]);
+	// }
+
+	// mesh_tris.push_back(comp_tris);
+      }
+
+      //      DBG_ASSERT(mesh_tris.size() == initial_comps.size());
+
+      // vector<triangular_mesh> meshes;
+      // for (auto tris : mesh_tris) {
+      // 	meshes.push_back(make_mesh(tris, tolerance));
+      // }
 
     DBG_ASSERT(meshes.size() == initial_comps.size());
-
+    
     return meshes;
   }
   
