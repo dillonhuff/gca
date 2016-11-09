@@ -349,6 +349,32 @@ namespace gca {
 
   }
 
+  bool 
+  winding_orders_are_consistent(const std::vector<unsigned>& comp_inds,
+				const std::vector<triangle_t>& tris,
+				const std::vector<point>& verts,
+				const std::vector<point>& face_orientations) {
+
+    DBG_ASSERT(tris.size() == face_orientations.size());
+
+    for (unsigned i = 0; i < tris.size(); i++) {
+      auto t = tris[i];
+      point computed_normal =
+	cross(verts[t.v[1]] - verts[t.v[0]],
+	      verts[t.v[2]] - verts[t.v[0]]).normalize();
+
+      point fi = (face_orientations[i]).normalize();
+      if (!angle_eps(fi, computed_normal, 0.0, 0.5)) {
+	cout << "Computed normal = " << computed_normal << endl;
+	cout << "Listed normal   = " << fi << endl;
+
+	return false;
+      }
+    }
+    return true;
+
+  }
+
   bool
   all_normals_consistent(const std::vector<triangle_t>& vertex_triangles,
 			 const std::vector<point>& vertices,
@@ -420,6 +446,8 @@ namespace gca {
     std::vector<point> vertexes;
   };
 
+  // TODO: Add test of agreement for computed normals and
+  // stored normals in triangles
   list_trimesh build_list_trimesh(const std::vector<triangle>& triangles,
 				  const double tolerance) {
     std::vector<point> vertices;
@@ -442,6 +470,21 @@ namespace gca {
     check_degenerate_triangles(vertex_triangles, vertices);
     check_non_manifold_triangles(vertex_triangles, vertices);
 
+    auto initial_comps =
+      connected_components_by(vertex_triangles, [](const triangle_t l, const triangle_t r)
+			   { return share_edge(l, r); });
+
+    for (vector<unsigned>& comp_inds : initial_comps) {
+      if (!winding_orders_are_consistent(comp_inds,
+					 vertex_triangles,
+					 vertices,
+					 face_orientations)) {
+	for (auto i : comp_inds) {
+	  vertex_triangles[i] = flip_winding_order(vertex_triangles[i]);
+	}
+      }
+    }
+    
     return list_trimesh{vertex_triangles, vertices};
   }
 
