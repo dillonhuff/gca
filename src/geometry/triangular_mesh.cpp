@@ -585,56 +585,103 @@ namespace gca {
 
   triangular_mesh make_merged_mesh(const std::vector<triangle>& triangles,
 				   double tolerance) {
+
     cout << "# of triangles = " << triangles.size() << endl;
 
     DBG_ASSERT(triangles.size() > 0);
 
-    std::vector<point> vertices;
+    list_trimesh list_mesh = build_list_trimesh(triangles, tolerance);
+    auto vertex_triangles = list_mesh.tris;
+    auto vertices = list_mesh.vertexes;
 
-    auto vertex_triangles =
-      fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+    if (vertex_triangles.size() == 0) { return {}; }
 
     DBG_ASSERT(vertex_triangles.size() > 0);
 
-    std::vector<point> face_orientations(triangles.size());
-    transform(begin(triangles), end(triangles), begin(face_orientations),
-	      [](const triangle t) { return t.normal; });
-
-    delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
-    check_degenerate_triangles(vertex_triangles, vertices);
-
     auto initial_comps =
-      connected_components_by(vertex_triangles, [](const triangle_t l, const triangle_t r)
-			      { return share_edge(l, r); });
+      connected_components_by_elems(vertex_triangles, [](const triangle_t l, const triangle_t r)
+				    { return share_edge(l, r); });
 
-    vector<triangle_t> mesh_tris;
-    vector<point> new_face_orientations;
+    vector<triangular_mesh> meshes;
+
+    vector<triangle_t> corrected_tris;
     for (auto c : initial_comps) {
-      vector<triangle_t> comp_tris;
-      for (auto i : c) {
-	comp_tris.push_back(vertex_triangles[i]);
-	new_face_orientations.push_back(triangles[i].normal);
-      }
 
-      int wind_errs = num_winding_order_errors(comp_tris);
+      int wind_errs = num_winding_order_errors(c);
       if (wind_errs > 0) {
 
-        cout << "Num winding errors = " << wind_errs << endl;
+	cout << "Num winding errors = " << wind_errs << endl;
 
-        auto fixed_triangles = fix_winding_order_errors(comp_tris);
-        int new_wind_errs = num_winding_order_errors(fixed_triangles);
+	auto fixed_triangles = fix_winding_order_errors(c);
+	int new_wind_errs = num_winding_order_errors(fixed_triangles);
 
-        cout << "Num winding errors after fixing = " << new_wind_errs << endl;
+	cout << "Num winding errors after fixing = " << new_wind_errs << endl;
 
-        DBG_ASSERT(new_wind_errs == 0);
+	DBG_ASSERT(new_wind_errs == 0);
 
-        comp_tris = fixed_triangles;
+	c = fixed_triangles;
+
       }
 
-      concat(mesh_tris, comp_tris);
+      concat(corrected_tris, c);
+
     }
+
+    triangular_mesh m = 
+      build_mesh_from_vertex_triangles(corrected_tris, vertices);
+
+    return m;
     
-    return correct_winding_and_build(mesh_tris, vertices, new_face_orientations);
+    // cout << "# of triangles = " << triangles.size() << endl;
+
+    // DBG_ASSERT(triangles.size() > 0);
+
+    // std::vector<point> vertices;
+
+    // auto vertex_triangles =
+    //   fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
+
+    // DBG_ASSERT(vertex_triangles.size() > 0);
+
+    // std::vector<point> face_orientations(triangles.size());
+    // transform(begin(triangles), end(triangles), begin(face_orientations),
+    // 	      [](const triangle t) { return t.normal; });
+
+    // delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
+    // check_degenerate_triangles(vertex_triangles, vertices);
+
+    // auto initial_comps =
+    //   connected_components_by(vertex_triangles, [](const triangle_t l, const triangle_t r)
+    // 			      { return share_edge(l, r); });
+
+    // vector<triangle_t> mesh_tris;
+    // vector<point> new_face_orientations;
+    // for (auto c : initial_comps) {
+    //   vector<triangle_t> comp_tris;
+    //   for (auto i : c) {
+    // 	comp_tris.push_back(vertex_triangles[i]);
+    // 	new_face_orientations.push_back(triangles[i].normal);
+    //   }
+
+    //   int wind_errs = num_winding_order_errors(comp_tris);
+    //   if (wind_errs > 0) {
+
+    //     cout << "Num winding errors = " << wind_errs << endl;
+
+    //     auto fixed_triangles = fix_winding_order_errors(comp_tris);
+    //     int new_wind_errs = num_winding_order_errors(fixed_triangles);
+
+    //     cout << "Num winding errors after fixing = " << new_wind_errs << endl;
+
+    //     DBG_ASSERT(new_wind_errs == 0);
+
+    //     comp_tris = fixed_triangles;
+    //   }
+
+    //   concat(mesh_tris, comp_tris);
+    // }
+    
+    // return correct_winding_and_build(mesh_tris, vertices, new_face_orientations);
   }
   
   double sign(point p1, point p2, point p3) {

@@ -186,9 +186,6 @@ namespace gca {
     //vtk_debug_mesh(portion);
 
     vector<index_t> inds = portion.face_indexes();
-    for (auto i : inds) {
-      cout << "Face " << i << " normal = " << portion.face_orientation(i) << endl;
-    }
 
     auto top = select(inds, [portion, n](const index_t i) {
     	return angle_eps(portion.face_orientation(i), n, 0.0, 1.0);
