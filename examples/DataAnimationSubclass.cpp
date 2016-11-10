@@ -356,7 +356,7 @@ fabrication_inputs octagon_with_holes_short_inputs() {
   std::vector<plate_height> plates{0.48}; //0.1, 0.3, 0.7};
   fixtures fixes(test_vice, plates);
 
-  workpiece workpiece_dims(1.5, 1.5, 1.5, ALUMINUM);
+  workpiece workpiece_dims(1.5, 1.58, 1.5, ALUMINUM);
 
   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
   t1.set_cut_diameter(0.14);

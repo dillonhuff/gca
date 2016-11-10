@@ -73,10 +73,8 @@ namespace gca {
     }
   };
 
-  boost::optional<triangular_mesh>
-  nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
+  std::vector<triangle> nef_to_triangle_list(const Nef_polyhedron& p) {
     //    DBG_DBG_ASSERT(p.is_simple());
-    if (!p.is_simple()) { return boost::none; }
 
     Polyhedron poly;
     p.convert_to_polyhedron(poly);
@@ -112,6 +110,16 @@ namespace gca {
       tris.push_back(triangle(norm, v0, v1, v2));
     }
 
+    return tris;
+  }
+
+  boost::optional<triangular_mesh>
+  nef_polyhedron_to_trimesh(const Nef_polyhedron& p) {
+
+    if (!p.is_simple()) { return boost::none; }
+
+    auto tris = nef_to_triangle_list(p);
+
     if (tris.size() == 0) { return boost::none; }
 
     return make_mesh(tris, 1e-20);
@@ -119,41 +127,8 @@ namespace gca {
 
   std::vector<triangular_mesh>
   nef_polyhedron_to_trimeshes(const Nef_polyhedron& p) {
-    if (!p.is_simple()) { {}; }
 
-    Polyhedron poly;
-    p.convert_to_polyhedron(poly);
-
-    vector<triangle> tris;
-    for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
-      auto fc = *it;
-
-      auto he = fc.facet_begin();
-      auto end = fc.facet_begin();
-      vector<point> pts;
-      CGAL_For_all(he, end) {
-	auto h = *he;
-	auto v = h.vertex();
-	auto r = (*v).point();
-	
-	point res_pt(CGAL::to_double(r.x()),
-		     CGAL::to_double(r.y()),
-		     CGAL::to_double(r.z()));
-
-	pts.push_back(res_pt);
-      }
-
-      DBG_ASSERT(pts.size() == 3);
-
-      point v0 = pts[0];
-      point v1 = pts[1];
-      point v2 = pts[2];
-
-      point q1 = v1 - v0;
-      point q2 = v2 - v0;
-      point norm = cross(q1, q2).normalize();
-      tris.push_back(triangle(norm, v0, v1, v2));
-    }
+    auto tris = nef_to_triangle_list(p);
 
     if (tris.size() == 0) { return {}; }
 
@@ -535,46 +510,7 @@ namespace gca {
   }
 
   triangular_mesh nef_to_single_merged_trimesh(const Nef_polyhedron& p) {
-    if (!p.is_simple()) {
-      DBG_ASSERT(false);
-    }
-
-    Polyhedron poly;
-    p.convert_to_polyhedron(poly);
-
-    vector<triangle> tris;
-    for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
-      auto fc = *it;
-
-      auto he = fc.facet_begin();
-      auto end = fc.facet_begin();
-      vector<point> pts;
-      CGAL_For_all(he, end) {
-	auto h = *he;
-	auto v = h.vertex();
-	auto r = (*v).point();
-	
-	point res_pt(CGAL::to_double(r.x()),
-		     CGAL::to_double(r.y()),
-		     CGAL::to_double(r.z()));
-
-	pts.push_back(res_pt);
-      }
-
-      DBG_ASSERT(pts.size() == 3);
-
-      point v0 = pts[0];
-      point v1 = pts[1];
-      point v2 = pts[2];
-
-      point q1 = v1 - v0;
-      point q2 = v2 - v0;
-      point norm = cross(q1, q2).normalize();
-      tris.push_back(triangle(norm, v1, v0, v2));
-    }
-
-    if (tris.size() == 0) { return {}; }
-
+    vector<triangle> tris = nef_to_triangle_list(p);
     return make_merged_mesh(tris, 1e-20);
   }
 

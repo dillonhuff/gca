@@ -157,7 +157,7 @@ namespace gca {
 
     //    DBG_ASSERT(cut_parts.size() == 1);
 
-    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front();
+    auto cut_part = nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front();
 
     // cout << "Result of clipping" << endl;
     // vector<triangular_mesh> subs{m};
@@ -216,7 +216,7 @@ namespace gca {
 
     //    DBG_ASSERT(cut_parts.size() == 1);
 
-    auto cut_part = nef_to_single_trimesh(cut_parts_nef); //nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front(); nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
+    auto cut_part = nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front(); nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
 
     // cout << "Result of clipping" << endl;
     // vector<triangular_mesh> subs{m};
