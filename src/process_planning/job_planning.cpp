@@ -179,6 +179,7 @@ namespace gca {
   boost::optional<feature>
   extract_feature(const feature& original,
 		  const triangular_mesh& portion) {
+
     point n = original.normal();
 
     cout << "NORMAL = " << n << endl;

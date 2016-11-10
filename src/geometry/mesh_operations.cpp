@@ -106,7 +106,7 @@ namespace gca {
 
       point q1 = v1 - v0;
       point q2 = v2 - v0;
-      point norm = cross(q2, q1).normalize();
+      point norm = cross(q1, q2).normalize();
       tris.push_back(triangle(norm, v0, v1, v2));
     }
 

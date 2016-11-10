@@ -314,9 +314,9 @@ namespace gca {
 
     cout << "In planar union" << endl;
     cout << "n = " << n << endl;
-    for (auto p : polys) {
-      cout << "normal = " << p.normal() << endl;
-    }
+    // for (auto p : polys) {
+    //   cout << "normal = " << p.normal() << endl;
+    // }
     
     const rotation r = rotate_from_to(n, point(0, 0, 1));
     const rotation r_inv = inverse(r);
