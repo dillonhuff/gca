@@ -419,8 +419,9 @@ int main(int argc, char *argv[]) {
 
   double part_1_2_scale_factor = 0.45;
   double octagon_with_holes_short_scale_factor = 1.0; //0.15; //0.45;
-  auto scale_func = [octagon_with_holes_short_scale_factor](const point p) {
-    return octagon_with_holes_short_scale_factor*p;
+  double japan_contour_scale_factor = 0.4;
+  auto scale_func = [japan_contour_scale_factor](const point p) {
+    return japan_contour_scale_factor*p;
   };
 
   mesh =
@@ -468,6 +469,7 @@ int main(int argc, char *argv[]) {
     // print_setup_info(shifted_setup);
     // visual_debug(shifted_setup);
 
+    print_setup_info(step);
     cout << "Program for setup" << endl;
     auto program = step.gcode_for_toolpaths(emco_f1_code_no_TLC);
     cout << program.name << endl;

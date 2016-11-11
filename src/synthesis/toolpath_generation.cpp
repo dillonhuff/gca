@@ -435,7 +435,11 @@ namespace gca {
   flat_pocket::flat_level_with_holes(const tool& t) const {
     vector<polygon_3> offset_holes = exterior_offset(get_holes(), t.radius());
 
-    polygon_3 inner_bound = shrink(get_boundary(), t.radius()); //make_interior_bound(get_boundary(), t);
+    // vector<polygon_3> inners =
+    //   interior_offset({get_boundary()}, t.radius());
+
+    polygon_3 inner_bound = shrink(get_boundary(), t.radius()); // + 0.05); //make_interior_bound(get_boundary(), t);
+
 
     vector<polyline> edges = zig_lines(inner_bound, offset_holes, t);
 

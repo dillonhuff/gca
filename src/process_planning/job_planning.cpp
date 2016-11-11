@@ -12,7 +12,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-//#define VIZ_DBG
+#define VIZ_DBG
 
 namespace gca {
 

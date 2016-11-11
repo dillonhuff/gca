@@ -296,7 +296,7 @@ namespace gca {
     return poly;
   }
 
-  labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol) {
+  polygon_3 shrink(const polygon_3& p, const double tol) {
     auto dr = interior_offset(p.vertices(), tol);
 
     vector<vector<point>> dh;
@@ -304,7 +304,7 @@ namespace gca {
       dh.push_back(exterior_offset(h, tol));
     }
 
-    labeled_polygon_3 poly =
+    polygon_3 poly =
       build_clean_polygon_3(dr, dh);
     return poly;
   }
