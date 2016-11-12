@@ -5,6 +5,7 @@
 
 #include "geometry/matrix.h"
 #include "geometry/plane.h"
+#include "geometry/polygon_3.h"
 #include "geometry/triangular_mesh.h"
 
 namespace gca {
@@ -22,7 +23,9 @@ namespace gca {
 
   homogeneous_transform
   apply(const point d, const homogeneous_transform& t);
-  
+
+    polygon_3 apply(const homogeneous_transform& r, const polygon_3& p);
+
 }
 
 #endif

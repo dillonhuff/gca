@@ -47,4 +47,41 @@ namespace gca {
     return p;
   }
 
+  std::vector<point> apply(const homogeneous_transform& t,
+			   const std::vector<point>& pts) {
+    vector<point> rpts;
+    for (auto p : pts) {
+      rpts.push_back(apply(t, p));
+    }
+    return rpts;
+  }
+
+  labeled_polygon_3 apply(const homogeneous_transform& t,
+			  const labeled_polygon_3& p) {
+    vector<point> rotated_verts = apply(t, p.vertices());
+
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+      holes.push_back(apply(t, h));
+    }
+
+    polygon_3 transformed = build_clean_polygon_3(rotated_verts, holes);
+    
+    transformed.correct_winding_order(times_3(t.first, p.normal()));
+
+    point rnorm = transformed.normal();
+    point pnorm = p.normal();
+    point rtnorm = times_3(t.first, p.normal());
+
+    // cout << "Original normal             = " << pnorm << endl;
+    // cout << "Transformed normal              = " << rnorm << endl;
+    // cout << "Rotation of original normal = " << rtnorm << endl;
+    
+    double theta = angle_between(transformed.normal(), rtnorm);
+  
+    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
+
+    return transformed;
+  }
+
 }

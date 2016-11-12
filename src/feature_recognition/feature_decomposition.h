@@ -3,7 +3,9 @@
 
 #include <deque>
 
+#include "geometry/homogeneous_transformation.h"
 #include "geometry/polygon_3.h"
+#include "geometry/rotation.h"
 #include "synthesis/contour_planning.h"
 
 namespace gca {

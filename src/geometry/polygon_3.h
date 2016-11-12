@@ -4,9 +4,9 @@
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 
-#include "geometry/homogeneous_transformation.h"
+#include "geometry/box.h"
+#include "geometry/plane.h"
 #include "geometry/ring.h"
-#include "geometry/rotation.h"
 
 namespace gca {
 
@@ -81,9 +81,6 @@ namespace gca {
 
   void check_simplicity(const labeled_polygon_3& p);
 
-  polygon_3 apply(const rotation& r, const polygon_3& p);
-  polygon_3 apply(const homogeneous_transform& r, const polygon_3& p);
-
   typedef std::vector<std::vector<labeled_polygon_3>> surface_levels;
 
   polygon_3 smooth_buffer(const polygon_3& p,
@@ -127,9 +124,6 @@ namespace gca {
   box bounding_box(const polygon_3& p);
 
   polygon_3 project(const polygon_3& p, double z);
-
-  boost_multipoly_2
-  to_boost_multipoly_2(const rotation&r, const std::vector<polygon_3>& lines);
 
   boost_multipoly_2
   to_boost_multipoly_2(const std::vector<polygon_3>& lines);

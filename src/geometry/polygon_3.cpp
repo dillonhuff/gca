@@ -5,33 +5,6 @@
 
 namespace gca {
 
-  polygon_3 apply_no_check(const rotation& r, const polygon_3& p) {
-    vector<point> pts = apply(r, p.vertices());
-
-    vector<vector<point>> holes;
-    for (auto h : p.holes()) {
-      holes.push_back(apply(r, h));
-    }
-
-    polygon_3 rotated = polygon_3(pts, holes, true); //, holes);
-
-    rotated.correct_winding_order(times_3(r, p.normal()));
-
-    point rnorm = rotated.normal();
-    point pnorm = p.normal();
-    point rtnorm = times_3(r, p.normal());
-
-    // cout << "Original normal             = " << pnorm << endl;
-    // cout << "Rotated normal              = " << rnorm << endl;
-    // cout << "Rotation of original normal = " << rtnorm << endl;
-    
-    double theta = angle_between(rotated.normal(), rtnorm);
-  
-    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
-
-    return rotated;
-  }
-
   polygon_3
   build_clean_polygon_3(const std::vector<point>& vertices,
 			const std::vector<std::vector<point>>& hole_verts) {
@@ -437,15 +410,6 @@ namespace gca {
     return res;
   }
 
-  boost_multipoly_2
-  to_boost_multipoly_2(const rotation&r, const std::vector<polygon_3>& lines) {
-    boost_multipoly_2 res;
-    for (auto& pl : lines) {
-      res.push_back(to_boost_poly_2(apply(r, pl)));
-    }
-    return res;
-  }
-
   polygon_3 shift(const point p, const polygon_3& poly) {
     auto dr = shift(p, poly.vertices());
 
@@ -465,70 +429,6 @@ namespace gca {
       shifted.push_back(shift(p, poly));
     }
     return shifted;
-  }
-
-  labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p) {
-    vector<point> pts = apply(r, p.vertices());
-
-    vector<vector<point>> holes;
-    for (auto h : p.holes()) {
-      holes.push_back(apply(r, h));
-    }
-
-    polygon_3 rotated = build_clean_polygon_3(pts, holes);
-
-    rotated.correct_winding_order(times_3(r, p.normal()));
-
-    point rnorm = rotated.normal();
-    point pnorm = p.normal();
-    point rtnorm = times_3(r, p.normal());
-
-    // cout << "Original normal             = " << pnorm << endl;
-    // cout << "Rotated normal              = " << rnorm << endl;
-    // cout << "Rotation of original normal = " << rtnorm << endl;
-    
-    double theta = angle_between(rotated.normal(), rtnorm);
-  
-    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
-
-    return rotated;
-  }
-
-  std::vector<point> apply(const homogeneous_transform& t,
-			   const std::vector<point>& pts) {
-    vector<point> rpts;
-    for (auto p : pts) {
-      rpts.push_back(apply(t, p));
-    }
-    return rpts;
-  }
-
-  labeled_polygon_3 apply(const homogeneous_transform& t,
-			  const labeled_polygon_3& p) {
-    vector<point> rotated_verts = apply(t, p.vertices());
-
-    vector<vector<point>> holes;
-    for (auto h : p.holes()) {
-      holes.push_back(apply(t, h));
-    }
-
-    polygon_3 transformed = build_clean_polygon_3(rotated_verts, holes);
-    
-    transformed.correct_winding_order(times_3(t.first, p.normal()));
-
-    point rnorm = transformed.normal();
-    point pnorm = p.normal();
-    point rtnorm = times_3(t.first, p.normal());
-
-    // cout << "Original normal             = " << pnorm << endl;
-    // cout << "Transformed normal              = " << rnorm << endl;
-    // cout << "Rotation of original normal = " << rtnorm << endl;
-    
-    double theta = angle_between(transformed.normal(), rtnorm);
-  
-    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
-
-    return transformed;
   }
 
 }

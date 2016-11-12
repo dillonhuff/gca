@@ -2,6 +2,7 @@
 #define GCA_ROTATION_H
 
 #include "geometry/matrix.h"
+#include "geometry/polygon_3.h"
 #include "geometry/triangular_mesh.h"
 
 namespace gca {
@@ -17,6 +18,13 @@ namespace gca {
   triangle apply(const rotation& r, const triangle tri);
 
   polyline apply(const rotation& r, const polyline& p);
+
+  polygon_3 apply(const rotation& r, const polygon_3& p);
+
+  boost_multipoly_2
+  to_boost_multipoly_2(const rotation& r, const std::vector<polygon_3>& lines);
+
+  polygon_3 apply_no_check(const rotation& r, const polygon_3& p);
 }
 
 #endif

@@ -5,6 +5,33 @@
 
 namespace gca {
 
+  labeled_polygon_3 apply(const rotation& r, const labeled_polygon_3& p) {
+    vector<point> pts = apply(r, p.vertices());
+
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+      holes.push_back(apply(r, h));
+    }
+
+    polygon_3 rotated = build_clean_polygon_3(pts, holes);
+
+    rotated.correct_winding_order(times_3(r, p.normal()));
+
+    point rnorm = rotated.normal();
+    point pnorm = p.normal();
+    point rtnorm = times_3(r, p.normal());
+
+    // cout << "Original normal             = " << pnorm << endl;
+    // cout << "Rotated normal              = " << rnorm << endl;
+    // cout << "Rotation of original normal = " << rtnorm << endl;
+    
+    double theta = angle_between(rotated.normal(), rtnorm);
+  
+    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
+
+    return rotated;
+  }
+
   void test_rotation(const point from_unit, const point to_unit, const rotation& r) {
     double d = determinant(r);
     if (!(within_eps(d, 1.0, 0.001))) {
@@ -158,4 +185,41 @@ namespace gca {
 
     return polyline(applied);
   }
+
+  boost_multipoly_2
+  to_boost_multipoly_2(const rotation&r, const std::vector<polygon_3>& lines) {
+    boost_multipoly_2 res;
+    for (auto& pl : lines) {
+      res.push_back(to_boost_poly_2(apply(r, pl)));
+    }
+    return res;
+  }
+
+  polygon_3 apply_no_check(const rotation& r, const polygon_3& p) {
+    vector<point> pts = apply(r, p.vertices());
+
+    vector<vector<point>> holes;
+    for (auto h : p.holes()) {
+      holes.push_back(apply(r, h));
+    }
+
+    polygon_3 rotated = polygon_3(pts, holes, true); //, holes);
+
+    rotated.correct_winding_order(times_3(r, p.normal()));
+
+    point rnorm = rotated.normal();
+    point pnorm = p.normal();
+    point rtnorm = times_3(r, p.normal());
+
+    // cout << "Original normal             = " << pnorm << endl;
+    // cout << "Rotated normal              = " << rnorm << endl;
+    // cout << "Rotation of original normal = " << rtnorm << endl;
+    
+    double theta = angle_between(rotated.normal(), rtnorm);
+  
+    DBG_ASSERT(within_eps(theta, 0.0, 0.1));
+
+    return rotated;
+  }
+
 }

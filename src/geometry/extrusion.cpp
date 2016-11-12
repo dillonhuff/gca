@@ -3,6 +3,7 @@
 
 #include "geometry/extern_triangulate.h"
 #include "geometry/extrusion.h"
+#include "geometry/rotation.h"
 #include "utils/relation.h"
 
 #define ANSI_DECLARATORS
