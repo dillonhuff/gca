@@ -2473,6 +2473,33 @@ src/synthesis/dxf_reader.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/dxf_reader.cpp.s
 .PHONY : src/synthesis/dxf_reader.cpp.s
 
+src/synthesis/fabrication_plan.o: src/synthesis/fabrication_plan.cpp.o
+
+.PHONY : src/synthesis/fabrication_plan.o
+
+# target to build an object file
+src/synthesis/fabrication_plan.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/fabrication_plan.cpp.o
+.PHONY : src/synthesis/fabrication_plan.cpp.o
+
+src/synthesis/fabrication_plan.i: src/synthesis/fabrication_plan.cpp.i
+
+.PHONY : src/synthesis/fabrication_plan.i
+
+# target to preprocess a source file
+src/synthesis/fabrication_plan.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/fabrication_plan.cpp.i
+.PHONY : src/synthesis/fabrication_plan.cpp.i
+
+src/synthesis/fabrication_plan.s: src/synthesis/fabrication_plan.cpp.s
+
+.PHONY : src/synthesis/fabrication_plan.s
+
+# target to generate assembly for a file
+src/synthesis/fabrication_plan.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/fabrication_plan.cpp.s
+.PHONY : src/synthesis/fabrication_plan.cpp.s
+
 src/synthesis/face_clipping.o: src/synthesis/face_clipping.cpp.o
 
 .PHONY : src/synthesis/face_clipping.o
@@ -4754,6 +4781,9 @@ help:
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"
+	@echo "... src/synthesis/fabrication_plan.o"
+	@echo "... src/synthesis/fabrication_plan.i"
+	@echo "... src/synthesis/fabrication_plan.s"
 	@echo "... src/synthesis/face_clipping.o"
 	@echo "... src/synthesis/face_clipping.i"
 	@echo "... src/synthesis/face_clipping.s"

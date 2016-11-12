@@ -58,7 +58,7 @@ namespace gca {
   }
 
   bool is_horizontal(const oriented_polygon& p) {
-    return within_eps(p.normal.z, 1.0, 0.001);
+    return within_eps(p.normal().z, 1.0, 0.001);
   }
 
   box bounding_box(const oriented_polygon& p) {
@@ -90,7 +90,7 @@ namespace gca {
     for (auto pt : p.vertices()) {
       pts.push_back(point(pt.x, pt.y, z));
     }
-    return oriented_polygon(p.normal, pts);
+    return oriented_polygon(p.normal(), pts);
   }
 
   polyline to_polyline(const oriented_polygon& p) {

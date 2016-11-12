@@ -104,6 +104,8 @@ namespace gca {
     { return custom_fixes; }
   };
 
+  fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims);
+
 }
 
 #endif

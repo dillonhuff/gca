@@ -11,17 +11,19 @@ namespace gca {
   class oriented_polygon {
   protected:
     vector<point> verts;
+    point norm;
 
   public:
-    point normal;
 
     oriented_polygon() :
-      verts({}), normal(point(0, 0, 0)) {}
+      verts({}), norm(point(0, 0, 0)) {}
 
     // TODO: Add assertion about vertex values at start and end?
     oriented_polygon(point normalp, const vector<point>& verticesp) :
-      verts(verticesp), normal(normalp) {
+      verts(verticesp), norm(normalp) {
     }
+
+    point normal() const { return norm; }
 
     inline const vector<point>& vertices() const { return verts; }
 

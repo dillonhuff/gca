@@ -567,9 +567,19 @@ namespace gca {
 
     for (auto info : dir_info) {
       feature_decomposition* decomp = info.decomp;
+
+#ifdef VIZ_DBG
+      vtk_debug_feature_decomposition(decomp);
+#endif
+
       tool_access_info& acc_info = info.tool_info;
 
       delete_inaccessable_non_leaf_nodes(decomp, acc_info);
+
+#ifdef VIZ_DBG
+      vtk_debug_feature_decomposition(decomp);
+#endif
+
     }
 
     clip_top_and_bottom_pairs(dir_info, tools);
@@ -822,6 +832,10 @@ namespace gca {
     double part_volume = volume(part);
 
 #ifdef VIZ_DBG
+    // for (auto d : dir_info) {
+    //   vtk_debug_feature_decomposition(d.decomp);
+    // }
+
     vector<feature*> init_features;
     cout << "# of directions = " << dir_info.size() << endl;
     for (auto d : dir_info) {

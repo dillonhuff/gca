@@ -157,6 +157,7 @@ SET(GCA_CPPS
 	./src/process_planning/job_planning.cpp
 	./src/process_planning/tool_access.cpp
 	./src/synthesis/clamp_orientation.cpp
+	./src/synthesis/fabrication_plan.cpp
 	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp

@@ -187,7 +187,7 @@ namespace gca {
     } else {
       vector<point> pts = q.vertices();
       reverse(begin(pts), end(pts));
-      p = oriented_polygon(q.normal, pts);
+      p = oriented_polygon(q.normal(), pts);
     }
 
     DBG_ASSERT(p.vertices().size() > 0);
@@ -217,7 +217,7 @@ namespace gca {
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
       Polygon_2 off_p = *off_ptr;
-      auto op = oriented_polygon_for_CGAL_polygon(off_p, z_va, p.normal);
+      auto op = oriented_polygon_for_CGAL_polygon(off_p, z_va, p.normal());
       results.push_back(op);
     }
     return results;
@@ -276,7 +276,7 @@ namespace gca {
     vector<oriented_polygon> results;
     for (auto off_ptr : inner_offset_polygons) {
       Polygon_2 off_p = *off_ptr;
-      auto op = oriented_polygon_for_CGAL_polygon(off_p, z_va, p.normal);
+      auto op = oriented_polygon_for_CGAL_polygon(off_p, z_va, p.normal());
       results.push_back(op);
     }
     return results;

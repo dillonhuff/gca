@@ -24,7 +24,6 @@ namespace gca {
   protected:
     std::vector<point> outer_ring;
     std::vector<std::vector<point>> inner_rings;
-    
   public:
     // polygon_3(const std::vector<point> vertices) :
     //   outer_ring(vertices) {
