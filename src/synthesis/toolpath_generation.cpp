@@ -438,8 +438,21 @@ namespace gca {
     // vector<polygon_3> inners =
     //   interior_offset({get_boundary()}, t.radius());
 
-    polygon_3 inner_bound = shrink(get_boundary(), t.radius()); // + 0.05); //make_interior_bound(get_boundary(), t);
+    vector<polygon_3> bounds{get_boundary()};
+    double safe_margin = 0.02;
+    vector<polygon_3> inner_bounds =
+      interior_offset(bounds, t.radius() + safe_margin);
 
+    if (inner_bounds.size() == 0) { return {}; }
+
+    if (inner_bounds.size() > 1) {
+      vtk_debug_polygon(get_boundary());
+      vtk_debug_polygons(inner_bounds);
+
+      DBG_ASSERT(false);
+    }
+    
+    polygon_3 inner_bound = inner_bounds.front(); //shrink(get_boundary(), t.radius()); // + 0.05); //make_interior_bound(get_boundary(), t);
 
     vector<polyline> edges = zig_lines(inner_bound, offset_holes, t);
 

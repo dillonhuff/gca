@@ -119,7 +119,7 @@ namespace gca {
 
       auto mesh = parse_and_scale_stl(info.path, info.scale_factor, 0.001);
 
-      vtk_debug_mesh(mesh);
+      //vtk_debug_mesh(mesh);
 
       fabrication_plan p =
 	make_fabrication_plan(mesh, inputs);
@@ -134,9 +134,9 @@ namespace gca {
       cout << "TOTAL TIME" << endl;
       print_time_info(cout, total_time);
 
-      for (auto step : p.steps()) {
-      	visual_debug(step);
-      }
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
 
     }
 
