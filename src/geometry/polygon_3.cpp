@@ -431,4 +431,12 @@ namespace gca {
     return shifted;
   }
 
+  polyline to_polyline(const polygon_3& p) {
+    DBG_ASSERT(p.holes().size() == 0);
+
+    auto v = p.vertices();
+    v.push_back(p.vertices().front());
+    return polyline(v);
+  }
+
 }

@@ -435,9 +435,6 @@ namespace gca {
   flat_pocket::flat_level_with_holes(const tool& t) const {
     vector<polygon_3> offset_holes = exterior_offset(get_holes(), t.radius());
 
-    // vector<polygon_3> inners =
-    //   interior_offset({get_boundary()}, t.radius());
-
     vector<polygon_3> bounds{get_boundary()};
     double safe_margin = 0.02;
     vector<polygon_3> inner_bounds =
@@ -451,8 +448,8 @@ namespace gca {
 
       DBG_ASSERT(false);
     }
-    
-    polygon_3 inner_bound = inner_bounds.front(); //shrink(get_boundary(), t.radius()); // + 0.05); //make_interior_bound(get_boundary(), t);
+
+    polygon_3 inner_bound = inner_bounds.front();
 
     vector<polyline> edges = zig_lines(inner_bound, offset_holes, t);
 
@@ -463,12 +460,20 @@ namespace gca {
     }
 
     // TODO: Proper polygon merging
-    for (auto h : holes) {
-      auto outer = exterior_offset(h, t.radius());
-      DBG_ASSERT(outer.size() == 2);
-      edges.push_back(to_polyline(outer.back()));
-    }
+    // for (auto h : holes) {
+    //   auto outer = exterior_offset(h, t.radius());
+    //   DBG_ASSERT(outer.size() == 2);
+    //   edges.push_back(to_polyline(outer.back()));
+    // }
 
+    for (auto outer : exterior_offset(get_holes(), t.radius())) {
+      //      auto outer = exterior_offset(h, t.radius());
+      //      DBG_ASSERT(outer.size() == 2);
+      DBG_ASSERT(outer.holes().size() == 0);
+
+      edges.push_back(to_polyline(outer)); //.back()));
+    }
+    
     return edges;
   }
 
