@@ -222,10 +222,12 @@ namespace gca {
     polygon_3 base_poly = base();
 
     for (auto& t : to_check) {
-      auto offset_base_maybe = shrink_optional(base_poly, t.radius());
+      vector<polygon_3> base_polys{base_poly};
+      vector<polygon_3> offset_bases = interior_offset(base_polys, t.radius());
+      //      auto offset_base_maybe = shrink_optional(base_poly, t.radius());
 
-      if (offset_base_maybe) {
-	polygon_3 offset_base = *offset_base_maybe;
+      if (offset_bases.size() == 1) {
+	auto offset_base = offset_bases.front();
 
 	if (offset_base.holes().size() == base_poly.holes().size()) {
 
@@ -237,6 +239,20 @@ namespace gca {
 	  return t;
 	}
       }
+      
+      // if (offset_base_maybe) {
+      // 	polygon_3 offset_base = *offset_base_maybe;
+
+      // 	if (offset_base.holes().size() == base_poly.holes().size()) {
+
+      // 	  cout << "Chosen tool: " << endl;
+      // 	  cout << t << endl;
+      // 	  cout << "Cut area    = " << area(offset_base) << endl;
+      // 	  cout << "Pocket area = " << area(base_poly) << endl;
+
+      // 	  return t;
+      // 	}
+      // }
     }
 
     cout << "ERROR: No viable tools" << endl;
@@ -459,19 +475,10 @@ namespace gca {
       edges.push_back(to_polyline(i));
     }
 
-    // TODO: Proper polygon merging
-    // for (auto h : holes) {
-    //   auto outer = exterior_offset(h, t.radius());
-    //   DBG_ASSERT(outer.size() == 2);
-    //   edges.push_back(to_polyline(outer.back()));
-    // }
-
     for (auto outer : exterior_offset(get_holes(), t.radius())) {
-      //      auto outer = exterior_offset(h, t.radius());
-      //      DBG_ASSERT(outer.size() == 2);
       DBG_ASSERT(outer.holes().size() == 0);
 
-      edges.push_back(to_polyline(outer)); //.back()));
+      edges.push_back(to_polyline(outer));
     }
     
     return edges;
