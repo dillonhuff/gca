@@ -115,6 +115,7 @@ add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})
 target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
+	./src/backend/operation.h
 	./src/backend/feedrate_optimization.h
 	./src/backend/timing.h
 	./src/process_planning/feature_to_pocket.h
@@ -123,7 +124,6 @@ SET(GCA_HEADERS
 	./src/process_planning/job_planning.h
 	./src/feature_recognition/feature_decomposition.h
 	./src/feature_recognition/visual_debug.h
-	./src/synthesis/operation.h
 	./src/synthesis/clamp_orientation.h
 	./src/synthesis/visual_debug.h
 	./src/synthesis/jaw_cutout.h
@@ -148,6 +148,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/backend/feedrate_optimization.cpp
+	./src/backend/operation.cpp
 	./src/backend/timing.cpp
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/visual_debug.cpp
@@ -163,7 +164,6 @@ SET(GCA_CPPS
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
 	./src/synthesis/operation_name.cpp
-	./src/synthesis/operation.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/synthesis/dxf_reader.cpp

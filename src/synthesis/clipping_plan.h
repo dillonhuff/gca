@@ -1,10 +1,10 @@
 #ifndef GCA_CLIPPING_PLAN_H
 #define GCA_CLIPPING_PLAN_H
 
+#include "backend/operation.h"
 #include "geometry/rigid_arrangement.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/fabrication_plan.h"
-#include "synthesis/operation.h"
 
 namespace gca {
 

@@ -2,7 +2,7 @@
 #define GCA_TOOLPATH_GENERATION_H
 
 #include "geometry/box.h"
-#include "synthesis/operation.h"
+#include "backend/operation.h"
 
 namespace gca {
 

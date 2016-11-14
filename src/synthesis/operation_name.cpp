@@ -1,4 +1,6 @@
-#include "synthesis/operation.h"
+#include <iostream>
+
+#include "synthesis/operation_name.h"
 #include "utils/check.h"
 
 namespace gca {
