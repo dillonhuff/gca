@@ -134,9 +134,9 @@ namespace gca {
       cout << "TOTAL TIME" << endl;
       print_time_info(cout, total_time);
 
-      for (auto step : p.steps()) {
-      	visual_debug(step);
-      }
+      // for (auto step : p.steps()) {
+      // 	visual_debug(step);
+      // }
 
     }
 
