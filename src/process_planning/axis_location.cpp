@@ -90,16 +90,20 @@ namespace gca {
 
     for (surface& ri : regions) {
       point ni = normal(ri);
+
       for (surface& rj : regions) {
+
 	if (rj.parallel_to(ni, 1.0)) {
+
 	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
 
 	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
 	  horizontal_counts[&ri] = horizontal_counts[&ri] + 1;
 	}
-	
+
 	if (rj.orthogonal_to(ni, 1.0) ||
 	    rj.antiparallel_to(ni, 1.0)) {
+
 	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
 
 	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
@@ -123,7 +127,7 @@ namespace gca {
     point neg_n = -1*n;
 
     unsigned horizontal_count = horizontal_counts[max_region->first];
-    
+
     for (auto& r : regions) {
       if (angle_eps(normal(r), neg_n, 0.0, 1.0)) {
 	unsigned neg_horizontal_count = horizontal_counts[&r];

@@ -396,6 +396,53 @@ fabrication_inputs octagon_with_holes_short_inputs() {
   return fabrication_inputs(fixes, tools, workpiece_dims);
 }
 
+fabrication_inputs dice_inputs() {
+  vice test_v = current_setup();
+  vice test_vice = top_jaw_origin_vice(test_v);
+
+  std::vector<plate_height> plates{0.48}; //0.1, 0.3, 0.7};
+  fixtures fixes(test_vice, plates);
+
+  workpiece workpiece_dims(1.5, 1.58, 1.5, ALUMINUM);
+
+  tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  t1.set_cut_diameter(0.14);
+  t1.set_cut_length(0.5);
+
+  t1.set_shank_diameter(.375); //3.0 / 8.0);
+  t1.set_shank_length(0.18);
+
+  t1.set_holder_diameter(1.8);
+  t1.set_holder_length(3.0);
+  t1.set_tool_number(1);
+
+  tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
+  t2.set_cut_diameter(0.335);
+  t2.set_cut_length(0.72);
+
+  t2.set_shank_diameter(0.336);
+  t2.set_shank_length(0.01);
+
+  t2.set_holder_diameter(1.8);
+  t2.set_holder_length(3.0);
+  t2.set_tool_number(2);
+
+  tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
+  t3.set_cut_diameter(0.59);
+  t3.set_cut_length(0.7);
+
+  t3.set_shank_diameter(0.7);
+  t3.set_shank_length(0.5);
+
+  t3.set_holder_diameter(1.8);
+  t3.set_holder_length(3.0);
+  t3.set_tool_number(3);
+  
+  vector<tool> tools{t1, t2, t3}; //, t3, t4};
+
+  return fabrication_inputs(fixes, tools, workpiece_dims);
+}
+
 int main(int argc, char *argv[]) {
 
   DBG_ASSERT(argc == 2);
@@ -406,7 +453,7 @@ int main(int argc, char *argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  fabrication_inputs fab_inputs = current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
+  fabrication_inputs fab_inputs = dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
   
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
@@ -420,8 +467,9 @@ int main(int argc, char *argv[]) {
   double part_1_2_scale_factor = 0.45;
   double octagon_with_holes_short_scale_factor = 1.0; //0.15; //0.45;
   double japan_contour_scale_factor = 0.4;
-  auto scale_func = [japan_contour_scale_factor](const point p) {
-    return japan_contour_scale_factor*p;
+  double dice_scale_factor = 0.7;
+  auto scale_func = [dice_scale_factor](const point p) {
+    return dice_scale_factor*p;
   };
 
   mesh =
@@ -438,7 +486,7 @@ int main(int argc, char *argv[]) {
   //vtk_debug_mesh(mesh);
 
   fabrication_plan p =
-    make_fabrication_plan(mesh, fab_inputs); //fixes, tools, {workpiece_dims});
+    make_fabrication_plan(mesh, fab_inputs);
 
   double rapid_feed = 24.0;
   fab_plan_timing_info total_time;

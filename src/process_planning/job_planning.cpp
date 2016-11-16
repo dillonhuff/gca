@@ -775,7 +775,7 @@ namespace gca {
     return boost::none;
   }
 
-  boost::optional<std::pair<fixture, homogeneous_transform>>
+  boost::optional<std::pair<fixture, homogeneous_transform> >
   find_next_fixture_side_vice(feature_decomposition* decomp,
 			      Nef_polyhedron& stock_nef,
 			      const triangular_mesh& current_stock,
