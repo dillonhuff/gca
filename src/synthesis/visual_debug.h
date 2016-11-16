@@ -29,6 +29,8 @@ namespace gca {
   vtkSmartPointer<vtkPolyData>
   polydata_for_toolpath(const toolpath& tp);
 
+  point gui_select_part_zero(const fabrication_setup& setup);
+
 }
 
 #endif
