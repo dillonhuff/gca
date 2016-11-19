@@ -67,6 +67,7 @@ group_records_into_sections(const std::vector<iges_record>& records) {
     } else {
       cout << "Bad record with number = " << r.number << endl;
       cout << "Text = " << r.line << endl;
+
       DBG_ASSERT(false);
     }
   }
@@ -85,19 +86,70 @@ group_records_into_sections(const std::vector<iges_record>& records) {
       sections[4]};
 }
 
+void print_entity_name(const int n) {
+  switch(n) {
+  case 100:
+    cout << "CIRCULAR ARC" << endl;
+    break;
+  case 102:
+    cout << "COMPOSITE CURVE" << endl;
+    break;
+  case 104:
+    cout << "CONIC ARC" << endl;
+    break;
+  case 110:
+    cout << "LINE" << endl;
+    break;
+  case 120:
+    cout << "SURFACE OF REVOLUTION" << endl;
+    break;
+  case 122:
+    cout << "TABULATED CYLINDER" << endl;
+    break;
+  case 124:
+    cout << "TRANSFORMATION MATRIX" << endl;
+    break;
+  case 126:
+    cout << "RATIONAL B-SPLINE CURVE" << endl;
+    break;
+  case 142:
+    cout << "CURVE ON A PARAMETRIC SURFACE" << endl;
+    break;
+  case 144:
+    cout << "TRIMMED PARAMETRIC SURFACE" << endl;
+    break;
+  case 314:
+    cout << "COLOR DEFINITION ENTITY" << endl;
+    break;
+  default:
+    cout << "UNKNOWN ENTITY CODE " << n << endl;
+    DBG_ASSERT(false);
+  }
+}
+
+void print_directory_entry_types(const std::vector<iges_record>& dirents) {
+  DBG_ASSERT((dirents.size() % 2) == 0);
+
+  for (unsigned i = 0; i < dirents.size(); i += 2) {
+    string s = dirents[i].line.substr(0, 8);
+    int n = stoi(s);
+
+    print_entity_name(n);
+  }
+
+}
+
 void parse_iges(const std::string& file_name) {
   ifstream iges_file(file_name.c_str());
 
   std::vector<iges_record> records = lex_records(iges_file);
 
   cout << "# of records = " << records.size() << endl;
-  // for (auto& r : records) {
-  //   cout << "RECORD # = " << r.number << endl;
-  //   cout << "LINE     = " << r.line << endl;
-  // }
 
   iges_sections sections =
     group_records_into_sections(records);
+
+  print_directory_entry_types(sections.directory_entry);
 }
 
 int main(int argc, char* argv[]) {
