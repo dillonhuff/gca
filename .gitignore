@@ -84,3 +84,4 @@ bmp-prog.app/*
 manufacture-tests
 manufacture_with_vice_zeroing
 non-manufacture-tests
+parse-iges

@@ -150,6 +150,19 @@ AddCell/fast:
 .PHONY : AddCell/fast
 
 #=============================================================================
+# Target rules for targets named camaster-test
+
+# Build rule for target.
+camaster-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 camaster-test
+.PHONY : camaster-test
+
+# fast build rule for target.
+camaster-test/fast:
+	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/build
+.PHONY : camaster-test/fast
+
+#=============================================================================
 # Target rules for targets named engraving
 
 # Build rule for target.
@@ -161,6 +174,32 @@ engraving: cmake_check_build_system
 engraving/fast:
 	$(MAKE) -f CMakeFiles/engraving.dir/build.make CMakeFiles/engraving.dir/build
 .PHONY : engraving/fast
+
+#=============================================================================
+# Target rules for targets named geometry
+
+# Build rule for target.
+geometry: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry
+.PHONY : geometry
+
+# fast build rule for target.
+geometry/fast:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
+.PHONY : geometry/fast
+
+#=============================================================================
+# Target rules for targets named parse-iges
+
+# Build rule for target.
+parse-iges: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 parse-iges
+.PHONY : parse-iges
+
+# fast build rule for target.
+parse-iges/fast:
+	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/build
+.PHONY : parse-iges/fast
 
 #=============================================================================
 # Target rules for targets named debug-test
@@ -319,19 +358,6 @@ json-plan/fast:
 .PHONY : json-plan/fast
 
 #=============================================================================
-# Target rules for targets named camaster-test
-
-# Build rule for target.
-camaster-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 camaster-test
-.PHONY : camaster-test
-
-# fast build rule for target.
-camaster-test/fast:
-	$(MAKE) -f CMakeFiles/camaster-test.dir/build.make CMakeFiles/camaster-test.dir/build
-.PHONY : camaster-test/fast
-
-#=============================================================================
 # Target rules for targets named feature-decomp
 
 # Build rule for target.
@@ -421,19 +447,6 @@ stl-parse: cmake_check_build_system
 stl-parse/fast:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
 .PHONY : stl-parse/fast
-
-#=============================================================================
-# Target rules for targets named geometry
-
-# Build rule for target.
-geometry: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 geometry
-.PHONY : geometry
-
-# fast build rule for target.
-geometry/fast:
-	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
-.PHONY : geometry/fast
 
 #=============================================================================
 # Target rules for targets named utils
@@ -717,6 +730,33 @@ examples/nef_test.s: examples/nef_test.cpp.s
 examples/nef_test.cpp.s:
 	$(MAKE) -f CMakeFiles/nef-test.dir/build.make CMakeFiles/nef-test.dir/examples/nef_test.cpp.s
 .PHONY : examples/nef_test.cpp.s
+
+examples/parse_iges.o: examples/parse_iges.cpp.o
+
+.PHONY : examples/parse_iges.o
+
+# target to build an object file
+examples/parse_iges.cpp.o:
+	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/examples/parse_iges.cpp.o
+.PHONY : examples/parse_iges.cpp.o
+
+examples/parse_iges.i: examples/parse_iges.cpp.i
+
+.PHONY : examples/parse_iges.i
+
+# target to preprocess a source file
+examples/parse_iges.cpp.i:
+	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/examples/parse_iges.cpp.i
+.PHONY : examples/parse_iges.cpp.i
+
+examples/parse_iges.s: examples/parse_iges.cpp.s
+
+.PHONY : examples/parse_iges.s
+
+# target to generate assembly for a file
+examples/parse_iges.cpp.s:
+	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/examples/parse_iges.cpp.s
+.PHONY : examples/parse_iges.cpp.s
 
 examples/plate_cutter.o: examples/plate_cutter.cpp.o
 
@@ -4532,7 +4572,10 @@ help:
 	@echo "... interact-test"
 	@echo "... surface-test"
 	@echo "... AddCell"
+	@echo "... camaster-test"
 	@echo "... engraving"
+	@echo "... geometry"
+	@echo "... parse-iges"
 	@echo "... debug-test"
 	@echo "... scale-down-mesh"
 	@echo "... check-contours"
@@ -4545,7 +4588,6 @@ help:
 	@echo "... all-tests"
 	@echo "... backend-tests"
 	@echo "... json-plan"
-	@echo "... camaster-test"
 	@echo "... feature-decomp"
 	@echo "... gprocess"
 	@echo "... nef-test"
@@ -4554,7 +4596,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... gcode"
 	@echo "... stl-parse"
-	@echo "... geometry"
 	@echo "... utils"
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
@@ -4586,6 +4627,9 @@ help:
 	@echo "... examples/nef_test.o"
 	@echo "... examples/nef_test.i"
 	@echo "... examples/nef_test.s"
+	@echo "... examples/parse_iges.o"
+	@echo "... examples/parse_iges.i"
+	@echo "... examples/parse_iges.s"
 	@echo "... examples/plate_cutter.o"
 	@echo "... examples/plate_cutter.i"
 	@echo "... examples/plate_cutter.s"

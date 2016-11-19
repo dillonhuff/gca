@@ -285,6 +285,9 @@ target_link_libraries(nef-test geometry utils gcode gprocess gca)
 add_executable(tri-test examples/tri_test.cpp)
 target_link_libraries(tri-test geometry utils gcode gprocess gca)
 
+add_executable(parse-iges examples/parse_iges.cpp)
+target_link_libraries(parse-iges geometry utils gcode gprocess gca)
+
 #/Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 find_package( OpenCV REQUIRED )
