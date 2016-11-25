@@ -45,7 +45,12 @@ namespace gca {
   void vtk_debug_ring(const std::vector<point>& pts);
 
   vtkSmartPointer<vtkActor> plane_actor(vtkSmartPointer<vtkPlane> pl);
-  
+
+  void vtk_debug_polygon(const labeled_polygon_3& p);
+  void vtk_debug_polygons(const std::vector<labeled_polygon_3>& p);
+  std::vector<vtkSmartPointer<vtkActor>>
+  polygon_3_actors(const polygon_3& p);
+
 }
 
 #endif

@@ -7,11 +7,6 @@
 
 namespace gca {
 
-  void vtk_debug_polygon(const labeled_polygon_3& p);
-  void vtk_debug_polygons(const std::vector<labeled_polygon_3>& p);
-  std::vector<vtkSmartPointer<vtkActor>>
-  polygon_3_actors(const polygon_3& p);
-
   void vtk_debug_feature_decomposition(feature_decomposition* f);
   void vtk_debug_feature_tree(feature_decomposition* f);
 
@@ -20,7 +15,6 @@ namespace gca {
   void vtk_debug_features(const std::vector<feature*>& f);
 
   void vtk_debug_features(const std::vector<feature*>& fs);
-
   
 }
 

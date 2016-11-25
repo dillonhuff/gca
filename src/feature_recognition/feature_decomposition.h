@@ -13,13 +13,13 @@ namespace gca {
   class feature {
   protected:
     bool closed;
-    labeled_polygon_3 base_poly;
+    polygon_3 base_poly;
     double dp;
     
   public:
     feature(const bool p_closed,
 	    const double p_depth,
-	    const labeled_polygon_3& p_base) :
+	    const polygon_3& p_base) :
       closed(p_closed), base_poly(p_base), dp(p_depth) {
       DBG_ASSERT(depth() >= 0);
     }
@@ -52,9 +52,9 @@ namespace gca {
 
     double depth() const { return dp; }
 
-    labeled_polygon_3 base() const { return base_poly; }
+    polygon_3 base() const { return base_poly; }
 
-    labeled_polygon_3 top() const {
+    polygon_3 top() const {
       vector<point> verts;
 
       for (auto p : base_poly.vertices()) {
@@ -72,7 +72,7 @@ namespace gca {
 	holes.push_back(hole_pts);
       }
 
-      labeled_polygon_3 top =
+      polygon_3 top =
 	build_clean_polygon_3(verts, holes);
 
       top.correct_winding_order(base().normal());
@@ -84,7 +84,7 @@ namespace gca {
     { return gca::min_distance_along(base_poly.vertices(), base_poly.normal()); }
 
     feature apply(const rotation& r) const {
-      labeled_polygon_3 rotated_base = gca::apply(r, base_poly);
+      polygon_3 rotated_base = gca::apply(r, base_poly);
       rotated_base.correct_winding_order(times_3(r, base_poly.normal()));
 
       return feature(is_closed(), dp, rotated_base);
