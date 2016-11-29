@@ -8,6 +8,10 @@
 namespace gca {
 
   TEST_CASE("Solid figure 8 soft jaw") {
+    triangular_mesh figure_8_mesh =
+      parse_stl("./test/stl-files/Figure8_1.stl", 0.0001);
+
+    
     REQUIRE(false);
   }
 
