@@ -17,13 +17,13 @@ namespace gca {
 
     return not_vert_or_horiz;
   }
-  
+
   std::vector<std::vector<index_t> >
   chamfer_regions(const triangular_mesh& mesh, const point n) {
     vector<index_t> non_prismatic_faces =
       non_prismatic_millable_faces(n, mesh);
 
-    return normal_delta_regions(non_prismatic_faces, mesh, 90.0);
+    return normal_delta_regions(non_prismatic_faces, mesh, 180.0);
   }
 
 }

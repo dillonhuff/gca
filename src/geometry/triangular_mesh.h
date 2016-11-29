@@ -101,7 +101,7 @@ namespace gca {
       if (!(vi < tri_vertices.size())) {
 	cout << "Error in triangular_mesh::triangle_vertices, ";
 	cout << "!(" << vi << " < " << tri_vertices.size() << ")" << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
       return tri_vertices[vi];
     }
@@ -219,7 +219,8 @@ namespace gca {
 					const triangular_mesh& part,
 					S select_initial_face,
 					N neighboring_faces) {
-    assert(face_indices.size() > 0);
+    DBG_ASSERT(face_indices.size() > 0);
+
     sort(begin(face_indices), end(face_indices));
     vector<index_t> surface_face_inds;
     vector<index_t> remaining_vertex_inds;
