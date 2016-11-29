@@ -4,7 +4,6 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
-#include "synthesis/workpiece_clipping.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 

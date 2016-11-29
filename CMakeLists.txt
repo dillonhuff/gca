@@ -241,6 +241,7 @@ SET(TEST_FILES test/main.cpp
 	       test/machine_state_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp
+	       test/soft_jaw_tests.cpp
 	       ${BACKEND_TEST_FILES})
 
 add_executable(non-manufacture-tests ${TEST_FILES})

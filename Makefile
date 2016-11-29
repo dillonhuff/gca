@@ -4289,6 +4289,36 @@ test/shapes_to_toolpaths_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/shapes_to_toolpaths_tests.cpp.s
 .PHONY : test/shapes_to_toolpaths_tests.cpp.s
 
+test/soft_jaw_tests.o: test/soft_jaw_tests.cpp.o
+
+.PHONY : test/soft_jaw_tests.o
+
+# target to build an object file
+test/soft_jaw_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/soft_jaw_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/soft_jaw_tests.cpp.o
+.PHONY : test/soft_jaw_tests.cpp.o
+
+test/soft_jaw_tests.i: test/soft_jaw_tests.cpp.i
+
+.PHONY : test/soft_jaw_tests.i
+
+# target to preprocess a source file
+test/soft_jaw_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/soft_jaw_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/soft_jaw_tests.cpp.i
+.PHONY : test/soft_jaw_tests.cpp.i
+
+test/soft_jaw_tests.s: test/soft_jaw_tests.cpp.s
+
+.PHONY : test/soft_jaw_tests.s
+
+# target to generate assembly for a file
+test/soft_jaw_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/soft_jaw_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/soft_jaw_tests.cpp.s
+.PHONY : test/soft_jaw_tests.cpp.s
+
 test/spline_tests.o: test/spline_tests.cpp.o
 
 .PHONY : test/spline_tests.o
@@ -5011,6 +5041,9 @@ help:
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"
+	@echo "... test/soft_jaw_tests.o"
+	@echo "... test/soft_jaw_tests.i"
+	@echo "... test/soft_jaw_tests.s"
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"
