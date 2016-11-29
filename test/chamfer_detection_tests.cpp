@@ -8,21 +8,42 @@
 
 namespace gca {
 
-  TEST_CASE("Three chamfers") {
+  TEST_CASE("Chamfer detection") {
+    arena_allocator a;
+    set_system_allocator(&a);
 
-    triangular_mesh three_chamfer_mesh =
-      parse_stl("./test/stl-files/ThreeChamfers.stl", 0.0001);
+    SECTION("Three chamfers") {
 
-    point n(0, 0, 1);
-    vector<vector<index_t>> chamfer_surfaces =
-      chamfer_regions(three_chamfer_mesh, n);
+      triangular_mesh three_chamfer_mesh =
+	parse_stl("./test/stl-files/ThreeChamfers.stl", 0.0001);
+
+      point n(0, 0, 1);
+      vector<vector<index_t>> chamfer_surfaces =
+	chamfer_regions(three_chamfer_mesh, n);
 
 
-    for (auto& surf : chamfer_surfaces) {
-      vtk_debug_highlight_inds(surf, three_chamfer_mesh);
+      for (auto& surf : chamfer_surfaces) {
+	vtk_debug_highlight_inds(surf, three_chamfer_mesh);
+      }
+
+      REQUIRE(chamfer_surfaces.size() == 3);
     }
 
-    REQUIRE(chamfer_surfaces.size() == 3);
+    SECTION("One chamfer and one fillet") {
+
+      triangular_mesh one_chamfer_mesh =
+	parse_stl("./test/stl-files/OneChamferOneFillet.stl", 0.0001);
+
+      point n(0, 0, 1);
+      vector<vector<index_t>> chamfer_surfaces =
+	chamfer_regions(one_chamfer_mesh, n);
+
+      for (auto& surf : chamfer_surfaces) {
+	vtk_debug_highlight_inds(surf, one_chamfer_mesh);
+      }
+
+      REQUIRE(chamfer_surfaces.size() == 1);
+    }
     
   }
 
