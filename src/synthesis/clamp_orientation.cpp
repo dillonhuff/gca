@@ -125,15 +125,14 @@ namespace gca {
     return all_stable_orientations(surfs, v);
   }
 
-  std::vector<clamp_orientation>
-  all_stable_orientations_box(const Nef_polyhedron& part_nef,
-			      const vice& v,
-			      const point n) {
-    auto part = nef_to_single_trimesh(part_nef);
-    polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
+  Nef_polyhedron clip_nef(const Nef_polyhedron& part_nef,
+			  const plane vice_top_plane) {
+    point n = -1*vice_top_plane.normal();
 
-    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
-    plane vice_top_plane(-1*n, vice_pl_pt);
+    auto part = nef_to_single_trimesh(part_nef);
+    polygon_3 hull = convex_hull_2D(part.vertex_list(),
+				    n,
+				    0.0);
 
     double big = 2000.0;
 
@@ -157,6 +156,20 @@ namespace gca {
 
     //    DBG_ASSERT(cut_parts.size() == 1);
 
+    return cut_parts_nef;
+  }
+
+  std::vector<clamp_orientation>
+  all_stable_orientations_box(const Nef_polyhedron& part_nef,
+			      const vice& v,
+			      const point n) {
+
+    auto part = nef_to_single_trimesh(part_nef);
+    
+    point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
+    plane vice_top_plane(-1*n, vice_pl_pt);
+
+    Nef_polyhedron cut_parts_nef = clip_nef(part_nef, vice_top_plane);
     auto cut_part = nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front();
 
     // cout << "Result of clipping" << endl;
@@ -201,7 +214,6 @@ namespace gca {
 
     triangular_mesh m = extrude(plane_approx, big*n);
 
-
     // cout << "To be clipped" << endl;
     // vtk_debug_mesh(part);
 
@@ -210,7 +222,7 @@ namespace gca {
 
     // cout << "Clipper and clippee" << endl;
     // vtk_debug_meshes({part, m});
-    
+
     auto clip_nef = trimesh_to_nef_polyhedron(m);
     auto cut_parts_nef = part_nef - clip_nef;
 

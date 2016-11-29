@@ -911,10 +911,10 @@ namespace gca {
 
 	  stock_nef = subtract_features(stock_nef, features);
 	  current_stock = nef_to_single_trimesh(stock_nef);
-	  
+
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;
-	
+
 	  cout << "Part volume  = " << part_volume << endl;
 	  cout << "Stock volume = " << stock_volume << endl;
 	  cout << "part / stock = " << volume_ratio << endl;

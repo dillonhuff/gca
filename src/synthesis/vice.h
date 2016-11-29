@@ -47,7 +47,7 @@ namespace gca {
 
     inline bool has_parallel_plate() const
     { return parallel_plate_height != 0.0; }
-    
+
     inline double x_min() const { return pos.x; }
     inline double y_min() const { return pos.y; }
     inline double z_min() const { return pos.z; }
