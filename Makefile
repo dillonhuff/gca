@@ -1379,6 +1379,33 @@ src/dxflib/dl_writer_ascii.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/dxflib/dl_writer_ascii.cpp.s
 .PHONY : src/dxflib/dl_writer_ascii.cpp.s
 
+src/feature_recognition/chamfer_detection.o: src/feature_recognition/chamfer_detection.cpp.o
+
+.PHONY : src/feature_recognition/chamfer_detection.o
+
+# target to build an object file
+src/feature_recognition/chamfer_detection.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/chamfer_detection.cpp.o
+.PHONY : src/feature_recognition/chamfer_detection.cpp.o
+
+src/feature_recognition/chamfer_detection.i: src/feature_recognition/chamfer_detection.cpp.i
+
+.PHONY : src/feature_recognition/chamfer_detection.i
+
+# target to preprocess a source file
+src/feature_recognition/chamfer_detection.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/chamfer_detection.cpp.i
+.PHONY : src/feature_recognition/chamfer_detection.cpp.i
+
+src/feature_recognition/chamfer_detection.s: src/feature_recognition/chamfer_detection.cpp.s
+
+.PHONY : src/feature_recognition/chamfer_detection.s
+
+# target to generate assembly for a file
+src/feature_recognition/chamfer_detection.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/chamfer_detection.cpp.s
+.PHONY : src/feature_recognition/chamfer_detection.cpp.s
+
 src/feature_recognition/feature_decomposition.o: src/feature_recognition/feature_decomposition.cpp.o
 
 .PHONY : src/feature_recognition/feature_decomposition.o
@@ -3305,6 +3332,36 @@ test/axis_3_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_3_tests.cpp.s
 .PHONY : test/axis_3_tests.cpp.s
 
+test/chamfer_detection_tests.o: test/chamfer_detection_tests.cpp.o
+
+.PHONY : test/chamfer_detection_tests.o
+
+# target to build an object file
+test/chamfer_detection_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/chamfer_detection_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/chamfer_detection_tests.cpp.o
+.PHONY : test/chamfer_detection_tests.cpp.o
+
+test/chamfer_detection_tests.i: test/chamfer_detection_tests.cpp.i
+
+.PHONY : test/chamfer_detection_tests.i
+
+# target to preprocess a source file
+test/chamfer_detection_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/chamfer_detection_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/chamfer_detection_tests.cpp.i
+.PHONY : test/chamfer_detection_tests.cpp.i
+
+test/chamfer_detection_tests.s: test/chamfer_detection_tests.cpp.s
+
+.PHONY : test/chamfer_detection_tests.s
+
+# target to generate assembly for a file
+test/chamfer_detection_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/chamfer_detection_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/chamfer_detection_tests.cpp.s
+.PHONY : test/chamfer_detection_tests.cpp.s
+
 test/checker_tests.o: test/checker_tests.cpp.o
 
 .PHONY : test/checker_tests.o
@@ -4289,36 +4346,6 @@ test/shapes_to_toolpaths_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/shapes_to_toolpaths_tests.cpp.s
 .PHONY : test/shapes_to_toolpaths_tests.cpp.s
 
-test/soft_jaw_tests.o: test/soft_jaw_tests.cpp.o
-
-.PHONY : test/soft_jaw_tests.o
-
-# target to build an object file
-test/soft_jaw_tests.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/soft_jaw_tests.cpp.o
-	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/soft_jaw_tests.cpp.o
-.PHONY : test/soft_jaw_tests.cpp.o
-
-test/soft_jaw_tests.i: test/soft_jaw_tests.cpp.i
-
-.PHONY : test/soft_jaw_tests.i
-
-# target to preprocess a source file
-test/soft_jaw_tests.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/soft_jaw_tests.cpp.i
-	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/soft_jaw_tests.cpp.i
-.PHONY : test/soft_jaw_tests.cpp.i
-
-test/soft_jaw_tests.s: test/soft_jaw_tests.cpp.s
-
-.PHONY : test/soft_jaw_tests.s
-
-# target to generate assembly for a file
-test/soft_jaw_tests.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/soft_jaw_tests.cpp.s
-	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/soft_jaw_tests.cpp.s
-.PHONY : test/soft_jaw_tests.cpp.s
-
 test/spline_tests.o: test/spline_tests.cpp.o
 
 .PHONY : test/spline_tests.o
@@ -4729,6 +4756,9 @@ help:
 	@echo "... src/dxflib/dl_writer_ascii.o"
 	@echo "... src/dxflib/dl_writer_ascii.i"
 	@echo "... src/dxflib/dl_writer_ascii.s"
+	@echo "... src/feature_recognition/chamfer_detection.o"
+	@echo "... src/feature_recognition/chamfer_detection.i"
+	@echo "... src/feature_recognition/chamfer_detection.s"
 	@echo "... src/feature_recognition/feature_decomposition.o"
 	@echo "... src/feature_recognition/feature_decomposition.i"
 	@echo "... src/feature_recognition/feature_decomposition.s"
@@ -4942,6 +4972,9 @@ help:
 	@echo "... test/axis_3_tests.o"
 	@echo "... test/axis_3_tests.i"
 	@echo "... test/axis_3_tests.s"
+	@echo "... test/chamfer_detection_tests.o"
+	@echo "... test/chamfer_detection_tests.i"
+	@echo "... test/chamfer_detection_tests.s"
 	@echo "... test/checker_tests.o"
 	@echo "... test/checker_tests.i"
 	@echo "... test/checker_tests.s"
@@ -5041,9 +5074,6 @@ help:
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"
-	@echo "... test/soft_jaw_tests.o"
-	@echo "... test/soft_jaw_tests.i"
-	@echo "... test/soft_jaw_tests.s"
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"

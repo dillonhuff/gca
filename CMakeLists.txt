@@ -150,6 +150,7 @@ SET(GCA_CPPS
 	./src/backend/feedrate_optimization.cpp
 	./src/backend/operation.cpp
 	./src/backend/timing.cpp
+	./src/feature_recognition/chamfer_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/visual_debug.cpp
 	./src/process_planning/axis_location.cpp
@@ -241,7 +242,7 @@ SET(TEST_FILES test/main.cpp
 	       test/machine_state_tests.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp
-	       test/soft_jaw_tests.cpp
+	       test/chamfer_detection_tests.cpp
 	       ${BACKEND_TEST_FILES})
 
 add_executable(non-manufacture-tests ${TEST_FILES})
