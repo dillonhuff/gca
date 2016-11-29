@@ -1,6 +1,6 @@
-#include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/polygon_3.h"
+#include "geometry/rotation.h"
 #include "geometry/vtk_debug.h"
 
 namespace gca {
@@ -53,48 +53,6 @@ namespace gca {
     }
   }
   
-  // polygon_3::polygon_3(const std::vector<point> vertices,
-  // 		       const std::vector<std::vector<point>> hole_verts) :
-  //   outer_ring(vertices),
-  //   inner_rings{} {
-
-  //   outer_ring = clean_vertices(outer_ring);
-  //   delete_antennas(outer_ring);
-
-  //   // There is an occasional test failure here in simple box
-  //   if (!(outer_ring.size() >= 3)) {
-  //     cout << "ERROR: Outer ring size = " << outer_ring.size() << endl;
-  //     vtk_debug_ring(outer_ring);
-
-  //     DBG_ASSERT(outer_ring.size() >= 3);
-  //   }
-
-  //   for (auto h : hole_verts) {
-
-  //     auto new_h = clean_vertices(h);
-  //     delete_antennas(new_h);
-
-  //     if (!(new_h.size() >= 3)) {
-  // 	cout << "ERROR: Inner ring size = " << h.size() << endl;
-  //     } else {
-  // 	inner_rings.push_back(new_h);
-  //     }
-  //   }
-  // }
-
-  std::vector<point>
-  clean_for_conversion_to_polygon_3(const std::vector<point>& vertices) {
-    auto outer_ring = vertices;
-
-    outer_ring = clean_vertices(outer_ring);
-
-    if (outer_ring.size() < 3) { return outer_ring; }
-
-    delete_antennas_no_fail(outer_ring);
-
-    return outer_ring;
-  }
-
   void check_simplicity(const polygon_3& p) {
     check_simplicity(static_cast<const std::vector<point>&>(p.vertices()));
 
@@ -173,57 +131,6 @@ namespace gca {
     }
     return build_clean_polygon_3(clean_vertices(vertices), holes);
 
-  }
-  
-  labeled_polygon_3
-  to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p) {
-    vector<point> vertices;
-    for (auto p2d : boost::geometry::exterior_ring(p)) {
-      point pt(p2d.get<0>(), p2d.get<1>(), z);
-      vertices.push_back(times_3(r, pt));
-    }
-
-    vector<vector<point>> holes;
-    for (auto ir : boost::geometry::interior_rings(p)) {
-      vector<point> hole_verts;
-      for (auto p2d : ir) {
-	point pt(p2d.get<0>(), p2d.get<1>(), z);
-	hole_verts.push_back(times_3(r, pt));
-      }
-      holes.push_back(clean_vertices(hole_verts));
-    }
-    return build_clean_polygon_3(clean_vertices(vertices), holes);
-  }
-
-  boost::optional<polygon_3>
-  to_labeled_polygon_3_maybe(const rotation& r,
-			     const double z,
-			     const boost_poly_2& p) {
-    vector<point> vertices;
-    for (auto p2d : boost::geometry::exterior_ring(p)) {
-      point pt(p2d.get<0>(), p2d.get<1>(), z);
-      vertices.push_back(times_3(r, pt));
-    }
-
-    vertices = clean_for_conversion_to_polygon_3(vertices);
-
-    if (vertices.size() < 3) { return boost::none; }
-
-    vector<vector<point>> holes;
-    for (auto ir : boost::geometry::interior_rings(p)) {
-      vector<point> hole_verts;
-      for (auto p2d : ir) {
-	point pt(p2d.get<0>(), p2d.get<1>(), z);
-	hole_verts.push_back(times_3(r, pt));
-      }
-
-      hole_verts = clean_for_conversion_to_polygon_3(hole_verts);
-      if (hole_verts.size() >= 3) {
-	holes.push_back(hole_verts);
-      }
-    }
-
-    return build_clean_polygon_3(vertices, holes);
   }
 
   // TODO: Version of this code that can handle holes?
@@ -319,7 +226,7 @@ namespace gca {
       if (lp) {
 	check_simplicity(*lp);
 
-	(*lp).correct_winding_order(n); //polys.front().normal());
+	(*lp).correct_winding_order(n);
 	res.push_back(*lp);
       }
     }

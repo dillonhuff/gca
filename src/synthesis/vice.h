@@ -18,14 +18,14 @@ namespace gca {
 
   public:
     vice(point p_pos,
-	 double p_jaw_width,
-	 double p_y_length,
-	 double p_base_height,
-	 double p_top_height,
-	 double p_clamp_width,
-	 double p_opening_capacity,
-	 point p_base_normal,
-	 point p_top_clamp_normal);
+    	 double p_x_length,
+    	 double p_y_length,
+    	 double p_base_height,
+    	 double p_top_height,
+    	 double p_clamp_width,
+    	 double p_opening_capacity,
+    	 point p_base_normal,
+    	 point p_top_clamp_normal);
 
     vice(point p_pos,
 	 double p_x_length,
@@ -37,8 +37,7 @@ namespace gca {
 	 double p_parallel_plate_height,
 	 point p_base_normal,
 	 point p_top_clamp_normal);
-	 
-    
+
     vice(const vice& v,
 	 double p_parallel_plate_height);
 
@@ -60,7 +59,7 @@ namespace gca {
     inline double x_len() const { return x_length; }
     inline double y_len() const { return y_length; }
     inline double z_len() const { return top_height; }
-    
+
     inline double fixed_clamp_y() const { return y_max() - clamp_width; }
     inline double clamp_y_length() const { return clamp_width; }
     inline double jaw_height() const
@@ -79,14 +78,14 @@ namespace gca {
 
     inline double max_opening_capacity() const { return opening_capacity; }
 
-    inline point base_face_normal() const { return base_normal; } //point(0, 0, 1); }
+    inline point base_face_normal() const { return base_normal; }
 
-    inline point top_clamping_face_normal() const { return top_clamp_normal; }//point(0, -1, 0); }
+    inline point top_clamping_face_normal() const { return top_clamp_normal; }
 
     inline point right_bound_normal() const {
       point rbn = cross(top_clamping_face_normal(), base_face_normal());
       return rbn;
-    } //return point(-1, 0, 0); }
+    }
 
     inline plane base_plane() const {
       return plane(base_face_normal(),

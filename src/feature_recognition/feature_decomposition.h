@@ -262,9 +262,6 @@ namespace gca {
     }
   }
 
-  labeled_polygon_3
-  to_labeled_polygon_3(const rotation& r, const double z, const boost_poly_2& p);
-
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
   
   feature_decomposition*

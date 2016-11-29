@@ -136,6 +136,5 @@ namespace gca {
   build_clean_polygon_3(const std::vector<point>& vertices);
 
   polyline to_polyline(const polygon_3& p);
-  
 
 }
