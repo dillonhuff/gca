@@ -62,6 +62,15 @@ namespace gca {
       return tri_indexes;
     }
 
+    std::vector<point> vertex_list() const {
+      vector<point> verts;
+      for (auto i : index_list()) {
+	verts.push_back(vertex(i));
+      }
+
+      return verts;
+    }
+
     bool contained_by_sorted(const std::vector<index_t>& inds) const {
       for (auto i : tri_indexes) {
 	if (!binary_search(begin(inds), end(inds), i)) {
@@ -210,7 +219,10 @@ namespace gca {
   std::vector<gca::edge>
   orthogonal_boundary_edges(const surface& s,
 			    const point n);
-  
+
+  double min_in_dir(const surface& mesh, const point dir);
+  double max_in_dir(const surface& mesh, const point dir);
+
 }
 
 #endif
