@@ -593,11 +593,13 @@ namespace gca {
 			 const std::vector<tool>& tools,
 			 const std::vector<point>& norms) {
 
+    vector<double> angles = chamfer_angles(tools);
+
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
       feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
       tool_access_info info = find_accessable_tools(decomp, tools);
-      vector<vector<index_t> > chamfers = chamfer_regions(part, n);
+      vector<vector<index_t> > chamfers = chamfer_regions(part, n, angles);
       dir_info.push_back({decomp, info, chamfers});
     }
 

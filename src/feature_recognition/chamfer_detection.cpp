@@ -38,13 +38,16 @@ namespace gca {
       }
     }
 
-      return true;
+    cout << "CHAMFER ANGLE = " << first_angle << endl;
+
+    return true;
   }
 
   std::vector<std::vector<index_t> >
   chamfer_regions(const std::vector<index_t>& non_prismatic_faces,
 		  const triangular_mesh& mesh,
-		  const point n) {
+		  const point n,
+		  const std::vector<double>& chamfer_angles) {
 
     auto npf = non_prismatic_faces;
 
@@ -54,21 +57,41 @@ namespace gca {
     delete_if(possible_regions, [mesh, n](const vector<index_t>& inds) {
 	return !all_constant_angle_wrt(inds, mesh, n, 1.0);
       });
+
+    delete_if(possible_regions,
+	      [mesh, chamfer_angles, n](const vector<index_t>& inds) {
+		if (inds.size() == 0) { return true; }
+
+		double angle_wrt_n =
+		  angle_between(mesh.face_orientation(inds.front()), n);
+
+		for (auto angle : chamfer_angles) {
+		  if (within_eps(angle_wrt_n, angle, 1.0)) {
+		    return false;
+		  }
+		}
+		return true;
+	      });
+
     return possible_regions;
   }
 
   std::vector<std::vector<index_t> >
-  chamfer_regions(const triangular_mesh& mesh, const point n) {
+  chamfer_regions(const triangular_mesh& mesh,
+		  const point n,
+		  const std::vector<double>& chamfer_angles) {
     vector<index_t> non_prismatic_faces =
       non_prismatic_millable_faces(n, mesh);
 
-    return chamfer_regions(non_prismatic_faces, mesh, n);
+    return chamfer_regions(non_prismatic_faces, mesh, n, chamfer_angles);
 
   }
 
   std::vector<index_t>
-  chamfer_faces(const triangular_mesh& mesh, const point n) {
-    auto chamfers = chamfer_regions(mesh, n);
+  chamfer_faces(const triangular_mesh& mesh,
+		const point n,
+		const std::vector<double>& chamfer_angles) {
+    auto chamfers = chamfer_regions(mesh, n, chamfer_angles);
 
     vector<index_t> inds;
     for (auto& chamfer_faces : chamfers) {

@@ -18,8 +18,11 @@ namespace gca {
 	parse_stl("./test/stl-files/ThreeChamfers.stl", 0.0001);
 
       point n(0, 0, 1);
+
+      vector<double> chamfer_angles{45.0, 53.0};
+
       vector<vector<index_t>> chamfer_surfaces =
-	chamfer_regions(three_chamfer_mesh, n);
+	chamfer_regions(three_chamfer_mesh, n, chamfer_angles);
 
 
       for (auto& surf : chamfer_surfaces) {
@@ -35,16 +38,31 @@ namespace gca {
 	parse_stl("./test/stl-files/OneChamferOneFillet.stl", 0.0001);
 
       point n(0, 0, 1);
-      vector<vector<index_t>> chamfer_surfaces =
-	chamfer_regions(one_chamfer_mesh, n);
 
-      for (auto& surf : chamfer_surfaces) {
-	vtk_debug_highlight_inds(surf, one_chamfer_mesh);
+      SECTION("With chamfer angle 45") {
+	vector<double> chamfer_angles{45.0};
+      
+	vector<vector<index_t>> chamfer_surfaces =
+	  chamfer_regions(one_chamfer_mesh, n, chamfer_angles);
+
+	for (auto& surf : chamfer_surfaces) {
+	  vtk_debug_highlight_inds(surf, one_chamfer_mesh);
+	}
+
+	REQUIRE(chamfer_surfaces.size() == 1);
       }
 
-      REQUIRE(chamfer_surfaces.size() == 1);
+      SECTION("Without chamfer angle 45") {
+	vector<double> chamfer_angles{57.0, 60.0, 90.0};
+      
+	vector<vector<index_t>> chamfer_surfaces =
+	  chamfer_regions(one_chamfer_mesh, n, chamfer_angles);
+
+	REQUIRE(chamfer_surfaces.size() == 0);
+      }
+
     }
-    
+
   }
 
 }

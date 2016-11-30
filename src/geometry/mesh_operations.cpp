@@ -90,7 +90,7 @@ namespace gca {
 	auto h = *he;
 	auto v = h.vertex();
 	auto r = (*v).point();
-	
+
 	point res_pt(CGAL::to_double(r.x()),
 		     CGAL::to_double(r.y()),
 		     CGAL::to_double(r.z()));

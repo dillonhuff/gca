@@ -3,13 +3,14 @@
 
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 #include "synthesis/material.h"
 #include "utils/check.h"
 
 namespace gca {
 
-  enum tool_type { FLAT_NOSE, BALL_NOSE };
+  enum tool_type { FLAT_NOSE, BALL_NOSE, CHAMFER };
 
   class tool {
   protected:
@@ -18,6 +19,8 @@ namespace gca {
     material mat;
     int tool_num;
     double cut_len, shank_diam, shank_len, holder_diam, holder_len;
+    double incl_angle;
+    tool_type tp;
 
   public:
     tool(double p_diameter,
@@ -25,7 +28,7 @@ namespace gca {
 	 unsigned p_flutes,
 	 material p_mat,
 	 tool_type t) :
-      diam(p_diameter), len(p_length), flutes(p_flutes), mat(p_mat), tool_num(-1) {
+      diam(p_diameter), len(p_length), flutes(p_flutes), mat(p_mat), tool_num(-1), tp(t) {
       DBG_ASSERT(mat == CARBIDE || mat == HSS);
     }
 
@@ -35,7 +38,7 @@ namespace gca {
 	 material p_mat,
 	 tool_type t,
 	 const int p_tool_num) :
-      diam(p_diameter), len(p_length), flutes(p_flutes), mat(p_mat), tool_num(p_tool_num) {
+      diam(p_diameter), len(p_length), flutes(p_flutes), mat(p_mat), tool_num(p_tool_num), tp(t) {
       DBG_ASSERT(mat == CARBIDE || mat == HSS);
     }
     
@@ -57,6 +60,21 @@ namespace gca {
     inline double holder_length() const { return holder_len; }
     inline double holder_diameter() const { return holder_diam; }
 
+    inline double type() const { return tp; }
+
+    inline double included_angle() const {
+      DBG_ASSERT(type() == CHAMFER);
+      return incl_angle;
+    }
+
+    inline double angle_per_side_from_centerline() const {
+      DBG_ASSERT(type() == CHAMFER);
+      return incl_angle / 2.0;
+    }
+    
+    inline void set_chamfer_included_angle(const double inc_angle)
+    { incl_angle = inc_angle; }
+
     inline void set_tool_number(const int new_tool_no)
     { tool_num = new_tool_no; }
     
@@ -77,7 +95,7 @@ namespace gca {
 
     inline void set_holder_length(const double n)
     { holder_len = n; }
-    
+
   };
 
   std::ostream& operator<<(std::ostream& out, const tool& t);
@@ -85,6 +103,9 @@ namespace gca {
   double chip_load_per_tooth(const tool& t,
 			     const double feed_ipm,
 			     const double rpm);
+
+  std::vector<double> chamfer_angles(const std::vector<tool>& tools);
+
 }
 
 #endif

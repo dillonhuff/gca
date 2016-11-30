@@ -182,10 +182,12 @@ namespace gca {
 
     DBG_ASSERT(norms.size() == 6);
 
+    vector<double> angles = chamfer_angles(tools);
+
     vector<index_t> all_millable_faces;
     for (auto n : norms) {
       concat(all_millable_faces, prismatic_millable_faces(n, part));
-      concat(all_millable_faces, chamfer_faces(part, n));
+      concat(all_millable_faces, chamfer_faces(part, n, angles));
     }
 
     all_millable_faces = sort_unique(all_millable_faces);
@@ -201,7 +203,8 @@ namespace gca {
       norms.push_back(next_norm);
 
       concat(all_millable_faces, prismatic_millable_faces(next_norm, part));
-      concat(all_millable_faces, chamfer_faces(part, next_norm));
+      concat(all_millable_faces, chamfer_faces(part, next_norm, angles));
+
       all_millable_faces = sort_unique(all_millable_faces);
 
       DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());

@@ -15,6 +15,16 @@ namespace gca {
 			     const double rpm) {
     return feed_ipm / (rpm * t.num_flutes());
   }
-  
+
+  std::vector<double> chamfer_angles(const std::vector<tool>& tools) {
+    std::vector<double> angles;
+    for (auto t : tools) {
+      if (t.type() == CHAMFER) {
+	angles.push_back(t.angle_per_side_from_centerline());
+      }
+    }
+
+    return angles;
+  }
   
 }
