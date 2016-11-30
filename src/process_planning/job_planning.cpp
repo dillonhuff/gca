@@ -87,7 +87,13 @@ namespace gca {
 		   const triangular_mesh& part,
 		   const point n) {
     triangular_mesh m = extrude_surface_negative(surf, part, n, 200);
+
+    vtk_debug_meshes({m, part});
+
     Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
+
+    DBG_ASSERT(mesh_nef.is_simple());
+
     return stock_nef - mesh_nef;
   }
   
@@ -102,6 +108,7 @@ namespace gca {
 
     Nef_polyhedron final_nef = stock_nef;
     for (auto& s : surfs) {
+
       final_nef = subtract_surface(final_nef, s, part, n);
     }
 
@@ -941,7 +948,10 @@ namespace gca {
 	  stock_nef = subtract_features(stock_nef, features);
 	  // NOTE: Assumes all chamfers are accessable
 	  stock_nef = subtract_surfaces(stock_nef, info.chamfer_surfaces, part, n);
+
+	  cout << "Just before in loop nef to trimesh" << endl;
 	  current_stock = nef_to_single_trimesh(stock_nef);
+	  cout << "Just after in loop nef to trimesh" << endl;
 
 	  double stock_volume = volume(current_stock);
 	  double volume_ratio = part_volume / stock_volume;

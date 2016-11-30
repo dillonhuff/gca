@@ -418,9 +418,6 @@ namespace gca {
 
     return build_mesh_from_vertex_triangles(vertex_triangles, vertices);
 
-    // TODO: Create more versatile normal checks
-    //    DBG_ASSERT(all_normals_consistent(vertex_triangles, vertices, face_orientations));
-    
   }
 
   void
