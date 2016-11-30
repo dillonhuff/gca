@@ -93,7 +93,7 @@ namespace gca {
 		   const point n) {
     triangular_mesh m = extrude_surface_negative(surf, part, n, 200);
 
-    vtk_debug_meshes({m, part});
+    //vtk_debug_meshes({m, part});
 
     Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
 

@@ -1242,7 +1242,7 @@ namespace gca {
 
     double emco_hp = 0.737;
     double aluminum_unit_hp = 0.3;
-    optimize_feedrates_by_MRR_simulation(r, all_paths, emco_hp, aluminum_unit_hp);
+    //optimize_feedrates_by_MRR_simulation(r, all_paths, emco_hp, aluminum_unit_hp);
 
     return all_paths;
   }
