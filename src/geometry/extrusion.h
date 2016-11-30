@@ -40,6 +40,13 @@ namespace gca {
 				      const point n);
 
   triangular_mesh extrude(const polygon_3& p, const point v);
+
+  triangular_mesh
+  extrude_surface_negative(const std::vector<index_t>& surf,
+			   const triangular_mesh& part,
+			   const point n,
+			   const double length);
+
 }
 
 #endif

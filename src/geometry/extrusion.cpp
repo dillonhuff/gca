@@ -3,6 +3,7 @@
 
 #include "geometry/extern_triangulate.h"
 #include "geometry/extrusion.h"
+#include "geometry/offset.h"
 #include "geometry/rotation.h"
 #include "utils/relation.h"
 
@@ -414,4 +415,63 @@ namespace gca {
 
     return make_mesh(base, 0.0001);
   }
+
+  polygon_3 base_polygon(const std::vector<index_t>& surf,
+			 const triangular_mesh& part) {
+    auto bounds = mesh_bounds(surf, part);
+
+    vector<vector<point> > bound_rings;
+    for (auto& bound : bounds) {
+      bound_rings.push_back(bound.vertices());
+    }
+
+    vector<polygon_3> polys = arrange_rings(bound_rings);
+
+    DBG_ASSERT(polys.size() == 1);
+
+    return polys.front();
+  }
+
+  std::vector<triangle>
+  flipped_surface_triangles(const std::vector<index_t>& surf,
+			    const triangular_mesh& part) {
+    vector<triangle> tris;
+    for (auto i : surf) {
+      triangle_t tvs = part.triangle_vertices(i);
+
+      triangle flipped_tri(-1*part.face_orientation(i),
+			   part.vertex(tvs.v[1]),
+			   part.vertex(tvs.v[0]),
+			   part.vertex(tvs.v[2]));
+
+      tris.push_back(flipped_tri);
+    }
+
+    return tris;
+  }
+  
+  triangular_mesh
+  extrude_surface_negative(const std::vector<index_t>& surf,
+			   const triangular_mesh& part,
+			   const point v,
+			   const double length) {
+
+    polygon_3 base_poly = base_polygon(surf, part);
+
+    std::vector<triangle> base = flipped_surface_triangles(surf, part);
+
+    std::vector<triangle> top = build_top(base, v);
+
+    concat(base, top);
+
+    std::vector<triangle> sides = build_sides(base_poly, v);
+    cout << "# of triangles in sides = " << sides.size() << endl;
+    concat(base, sides);
+
+    vtk_debug_triangles(base);
+
+    return make_mesh(base, 0.0001);
+  }
+
+
 }

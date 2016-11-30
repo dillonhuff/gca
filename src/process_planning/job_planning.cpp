@@ -81,14 +81,6 @@ namespace gca {
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
 
-  triangular_mesh
-  extrude_surface_negative(const std::vector<index_t>& surf,
-			   const triangular_mesh& part,
-			   const point n,
-			   const double length) {
-    DBG_ASSERT(false);
-  }
-
   Nef_polyhedron
   subtract_surface(const Nef_polyhedron& stock_nef,
 		   const std::vector<index_t>& surf,
