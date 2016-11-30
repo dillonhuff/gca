@@ -1,5 +1,6 @@
 #include <unordered_map>
 
+#include "feature_recognition/chamfer_detection.h"
 #include "geometry/surface.h"
 #include "process_planning/axis_location.h"
 #include "synthesis/millability.h"
@@ -184,6 +185,7 @@ namespace gca {
     vector<index_t> all_millable_faces;
     for (auto n : norms) {
       concat(all_millable_faces, prismatic_millable_faces(n, part));
+      concat(all_millable_faces, chamfer_faces(part, n));
     }
 
     all_millable_faces = sort_unique(all_millable_faces);
@@ -199,6 +201,7 @@ namespace gca {
       norms.push_back(next_norm);
 
       concat(all_millable_faces, prismatic_millable_faces(next_norm, part));
+      concat(all_millable_faces, chamfer_faces(part, next_norm));
       all_millable_faces = sort_unique(all_millable_faces);
 
       DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());

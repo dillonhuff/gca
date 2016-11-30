@@ -66,4 +66,16 @@ namespace gca {
 
   }
 
+  std::vector<index_t>
+  chamfer_faces(const triangular_mesh& mesh, const point n) {
+    auto chamfers = chamfer_regions(mesh, n);
+
+    vector<index_t> inds;
+    for (auto& chamfer_faces : chamfers) {
+      concat(inds, chamfer_faces);
+    }
+
+    return inds;
+  }
+
 }
