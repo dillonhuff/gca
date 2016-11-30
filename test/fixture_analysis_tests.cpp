@@ -218,10 +218,9 @@ namespace gca {
 
     t3.set_holder_diameter(2.0);
     t3.set_holder_length(2.5);
-    
-    
+
     vector<tool> tools{t1, t2, t3};
-    
+
     workpiece workpiece_dims(4.0, 4.0, 4.0, BRASS);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/ThreeChamfers.stl", 0.001);
@@ -229,6 +228,17 @@ namespace gca {
     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
     REQUIRE(p.fixtures().size() == 2);
+
+    const fixture_setup& fix_0 = p.fixtures()[0];
+
+    int num_chamfers = 0;
+    for (auto& p : fix_0.pockets) {
+      if (p.pocket_type() == CHAMFER_POCKET) {
+	num_chamfers++;
+      }
+    }
+
+    REQUIRE(num_chamfers == 3);
   }
 
   // TEST_CASE("Single Shot Tray") {

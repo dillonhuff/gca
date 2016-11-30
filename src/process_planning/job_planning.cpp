@@ -1,3 +1,4 @@
+#include "backend/chamfer_operation.h"
 #include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/offset.h"
@@ -38,12 +39,16 @@ namespace gca {
 	       const triangular_mesh& part_mesh,
 	       const std::vector<feature*>& features,
 	       const fixture& f,
-	       const tool_access_info& tool_info) {
+	       const tool_access_info& tool_info,
+	       const std::vector<std::vector<index_t> >& chamfers) {
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
+    for (auto& chamfer : chamfers) {
+      pockets.push_back(chamfer_operation(chamfer, part));
+    }
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     return fixture_setup(m, f, pockets);
@@ -945,7 +950,7 @@ namespace gca {
 		   clipped_features(f, map_find(f, volume_inf), info.tool_info));
 	  }
 
-	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info));
+	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces));
 
 	  stock_nef = subtract_features(stock_nef, features);
 	  // NOTE: Assumes all chamfers are accessable
@@ -1005,5 +1010,5 @@ namespace gca {
 
     return select_jobs_and_features(stock, part, f, tools, norms);
   }
-  
+
 }
