@@ -3,6 +3,7 @@
 #include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
+#include "feature_recognition/chamfer_detection.h"
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/axis_location.h"
 #include "process_planning/feature_selection.h"
@@ -79,7 +80,42 @@ namespace gca {
 
     return feature_mesh(f, 0.0, 0.0001, 0.0000); 
   }
+
+  triangular_mesh
+  extrude_surface_negative(const std::vector<index_t>& surf,
+			   const triangular_mesh& part,
+			   const point n,
+			   const double length) {
+    DBG_ASSERT(false);
+  }
+
+  Nef_polyhedron
+  subtract_surface(const Nef_polyhedron& stock_nef,
+		   const std::vector<index_t>& surf,
+		   const triangular_mesh& part,
+		   const point n) {
+    triangular_mesh m = extrude_surface_negative(surf, part, n, 200);
+    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
+    return stock_nef - mesh_nef;
+  }
   
+  Nef_polyhedron
+  subtract_surfaces(const Nef_polyhedron& stock_nef,
+		    const std::vector<std::vector<index_t> >& surfs,
+		    const triangular_mesh& part,
+		    const point n) {
+    if (surfs.size() == 0) {
+      return stock_nef;
+    }
+
+    Nef_polyhedron final_nef = stock_nef;
+    for (auto& s : surfs) {
+      final_nef = subtract_surface(final_nef, s, part, n);
+    }
+
+    return final_nef;
+  }
+
   Nef_polyhedron
   subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features) {
@@ -562,7 +598,8 @@ namespace gca {
     for (auto n : norms) {
       feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
       tool_access_info info = find_accessable_tools(decomp, tools);
-      dir_info.push_back({decomp, info});
+      vector<vector<index_t> > chamfers = chamfer_regions(part, n);
+      dir_info.push_back({decomp, info, chamfers});
     }
 
     for (auto info : dir_info) {
@@ -910,6 +947,8 @@ namespace gca {
 	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info));
 
 	  stock_nef = subtract_features(stock_nef, features);
+	  // NOTE: Assumes all chamfers are accessable
+	  stock_nef = subtract_surfaces(stock_nef, info.chamfer_surfaces, part, n);
 	  current_stock = nef_to_single_trimesh(stock_nef);
 
 	  double stock_volume = volume(current_stock);
@@ -933,7 +972,7 @@ namespace gca {
 
     double stock_volume = volume(current_stock);
     double volume_ratio = part_volume / stock_volume;
-	
+
     cout << "Part volume              = " << part_volume << endl;
     cout << "Final stock volume       = " << stock_volume << endl;
     cout << "Final part / stock       = " << volume_ratio << endl;

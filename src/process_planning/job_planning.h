@@ -9,6 +9,7 @@ namespace gca {
   struct direction_process_info {
     feature_decomposition* decomp;
     tool_access_info tool_info;
+    std::vector<std::vector<index_t> > chamfer_surfaces;
   };
 
   std::vector<fixture_setup> plan_jobs(const triangular_mesh& stock,
