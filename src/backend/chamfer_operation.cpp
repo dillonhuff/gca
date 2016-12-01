@@ -32,15 +32,17 @@ namespace gca {
     bool outer_ring_is_lower_chamfer_edge =
       outer_z < inner_z;
 
-    vector<point> chamfer_ring = outer_ring_is_lower_chamfer_edge ?
-		bound.vertices() : bound.holes()[0];
+    vector<point> chamfer_ring = outer_ring_is_lower_chamfer_edge ? bound.vertices() : bound.holes()[0];
 
     polygon_3 raw_chamfer_outline =
       build_clean_polygon_3(chamfer_ring);
 
     double offset = 0.05;
-    double first_angle = angle_between(mesh.face_orientation(surf.front()), mill_direction);
-    double theta = 90 - first_angle;
+    double theta = t.angle_per_side_from_centerline(); //90 - angle_between(mesh.face_orientation(surf.front()), mill_direction);
+    // cout << "Theta = " << theta << endl;
+    // cout << "Centerlline = " << t.angle_per_side_from_centerline() << endl;
+    // DBG_ASSERT(within_eps(theta, t.angle_per_side_from_centerline(), 1.0));
+
     double l = offset / sin(theta);
     double vertical_shift = sqrt(l*l - offset*offset); //0.05;
 
