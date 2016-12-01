@@ -147,6 +147,7 @@ SET(GCA_HEADERS
 	    ./src/system/parse_stl.h)
 
 SET(GCA_CPPS
+	./src/backend/chamfer_operation.cpp
 	./src/backend/feedrate_optimization.cpp
 	./src/backend/operation.cpp
 	./src/backend/timing.cpp

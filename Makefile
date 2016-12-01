@@ -1136,6 +1136,33 @@ src/analysis/utils.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/utils.cpp.s
 .PHONY : src/analysis/utils.cpp.s
 
+src/backend/chamfer_operation.o: src/backend/chamfer_operation.cpp.o
+
+.PHONY : src/backend/chamfer_operation.o
+
+# target to build an object file
+src/backend/chamfer_operation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.o
+.PHONY : src/backend/chamfer_operation.cpp.o
+
+src/backend/chamfer_operation.i: src/backend/chamfer_operation.cpp.i
+
+.PHONY : src/backend/chamfer_operation.i
+
+# target to preprocess a source file
+src/backend/chamfer_operation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.i
+.PHONY : src/backend/chamfer_operation.cpp.i
+
+src/backend/chamfer_operation.s: src/backend/chamfer_operation.cpp.s
+
+.PHONY : src/backend/chamfer_operation.s
+
+# target to generate assembly for a file
+src/backend/chamfer_operation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.s
+.PHONY : src/backend/chamfer_operation.cpp.s
+
 src/backend/feedrate_optimization.o: src/backend/feedrate_optimization.cpp.o
 
 .PHONY : src/backend/feedrate_optimization.o
@@ -4729,6 +4756,9 @@ help:
 	@echo "... src/analysis/utils.o"
 	@echo "... src/analysis/utils.i"
 	@echo "... src/analysis/utils.s"
+	@echo "... src/backend/chamfer_operation.o"
+	@echo "... src/backend/chamfer_operation.i"
+	@echo "... src/backend/chamfer_operation.s"
 	@echo "... src/backend/feedrate_optimization.o"
 	@echo "... src/backend/feedrate_optimization.i"
 	@echo "... src/backend/feedrate_optimization.s"

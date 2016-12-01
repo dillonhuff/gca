@@ -48,9 +48,13 @@ namespace gca {
 
   void vtk_debug_polygon(const labeled_polygon_3& p);
   void vtk_debug_polygons(const std::vector<labeled_polygon_3>& p);
+
   std::vector<vtkSmartPointer<vtkActor>>
   polygon_3_actors(const polygon_3& p);
 
+  vtkSmartPointer<vtkActor>
+  mesh_actors(const triangular_mesh& m);
+  
 }
 
 #endif
