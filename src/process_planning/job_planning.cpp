@@ -859,11 +859,9 @@ namespace gca {
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
 			   const fixtures& f,
-			   const std::vector<tool>& tools,
-			   const std::vector<point>& norms) {
-
-    vector<direction_process_info> dir_info =
-      initial_decompositions(stock, part, tools, norms);
+			   //			   const std::vector<tool>& tools,
+			   std::vector<direction_process_info>& dir_info) {
+			   //			   const std::vector<point>& norms) {
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
@@ -1006,8 +1004,11 @@ namespace gca {
 				       const fixtures& f,
 				       const std::vector<tool>& tools) {
     vector<point> norms = select_cut_directions(stock, part, f, tools);
+    vector<direction_process_info> dir_info =
+      initial_decompositions(stock, part, tools, norms);
 
-    return select_jobs_and_features(stock, part, f, tools, norms);
+    //return select_jobs_and_features(stock, part, f, tools, dir_info);
+    return select_jobs_and_features(stock, part, f, dir_info);
   }
 
 }
