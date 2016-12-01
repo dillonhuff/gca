@@ -4,7 +4,6 @@
 #include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
-#include "feature_recognition/chamfer_detection.h"
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/axis_location.h"
 #include "process_planning/feature_selection.h"
@@ -40,14 +39,14 @@ namespace gca {
 	       const std::vector<feature*>& features,
 	       const fixture& f,
 	       const tool_access_info& tool_info,
-	       const std::vector<std::vector<index_t> >& chamfers) {
+	       const std::vector<chamfer>& chamfers) {
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
-    for (auto& chamfer : chamfers) {
-      pockets.push_back(chamfer_operation(chamfer, part));
+    for (auto& ch : chamfers) {
+      pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
     }
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
@@ -103,18 +102,18 @@ namespace gca {
   }
   
   Nef_polyhedron
-  subtract_surfaces(const Nef_polyhedron& stock_nef,
-		    const std::vector<std::vector<index_t> >& surfs,
+  subtract_chamfers(const Nef_polyhedron& stock_nef,
+		    const std::vector<chamfer>& chamfers,
 		    const triangular_mesh& part,
 		    const point n) {
-    if (surfs.size() == 0) {
+    if (chamfers.size() == 0) {
       return stock_nef;
     }
 
     Nef_polyhedron final_nef = stock_nef;
-    for (auto& s : surfs) {
+    for (auto& s : chamfers) {
 
-      final_nef = subtract_surface(final_nef, s, part, n);
+      final_nef = subtract_surface(final_nef, s.faces, part, n);
     }
 
     return final_nef;
@@ -598,13 +597,13 @@ namespace gca {
 			 const std::vector<tool>& tools,
 			 const std::vector<point>& norms) {
 
-    vector<double> angles = chamfer_angles(tools);
+    //    vector<double> angles = chamfer_angles(tools);
 
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
       feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
       tool_access_info info = find_accessable_tools(decomp, tools);
-      vector<vector<index_t> > chamfers = chamfer_regions(part, n, angles);
+      vector<chamfer> chamfers = chamfer_regions(part, n, tools);
       dir_info.push_back({decomp, info, chamfers});
     }
 
@@ -954,7 +953,7 @@ namespace gca {
 
 	  stock_nef = subtract_features(stock_nef, features);
 	  // NOTE: Assumes all chamfers are accessable
-	  stock_nef = subtract_surfaces(stock_nef, info.chamfer_surfaces, part, n);
+	  stock_nef = subtract_chamfers(stock_nef, info.chamfer_surfaces, part, n);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
 	  current_stock = nef_to_single_trimesh(stock_nef);

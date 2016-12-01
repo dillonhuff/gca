@@ -52,6 +52,8 @@ namespace gca {
       return point(start_pt.x, start_pt.y, safe_z_before_tlc);
     }
 
+    tool get_tool() const { return t; }
+
     point end_location() const {
       DBG_ASSERT(this->lines().size() > 0);
 

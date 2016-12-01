@@ -19,15 +19,41 @@ namespace gca {
 
       point n(0, 0, 1);
 
-      vector<double> chamfer_angles{45.0, 53.0};
+      tool t2(0.1, 3.0, 4, HSS, CHAMFER);
+      t2.set_chamfer_included_angle(45.0*2.0);
+    
+      t2.set_cut_diameter(0.5);
+      t2.set_cut_length(1.0);
 
-      vector<vector<index_t>> chamfer_surfaces =
-	chamfer_regions(three_chamfer_mesh, n, chamfer_angles);
+      t2.set_shank_diameter(3.0 / 8.0);
+      t2.set_shank_length(0.1);
+
+      t2.set_holder_diameter(2.0);
+      t2.set_holder_length(2.5);
+      t2.set_tool_number(2);
+
+      tool t3(0.1, 3.0, 4, HSS, CHAMFER);
+      t3.set_chamfer_included_angle(36.0*2.0);
+    
+      t3.set_cut_diameter(0.5);
+      t3.set_cut_length(1.0);
+
+      t3.set_shank_diameter(3.0 / 8.0);
+      t3.set_shank_length(0.1);
+
+      t3.set_holder_diameter(2.0);
+      t3.set_holder_length(2.5);
+      t3.set_tool_number(3);
+
+      vector<tool> tools{t2, t3};
+      
+      vector<chamfer> chamfer_surfaces =
+	chamfer_regions(three_chamfer_mesh, n, tools);
 
 
-      for (auto& surf : chamfer_surfaces) {
-	vtk_debug_highlight_inds(surf, three_chamfer_mesh);
-      }
+      // for (auto& surf : chamfer_surfaces) {
+      // 	vtk_debug_highlight_inds(surf.faces, three_chamfer_mesh);
+      // }
 
       REQUIRE(chamfer_surfaces.size() == 3);
     }
@@ -40,23 +66,39 @@ namespace gca {
       point n(0, 0, 1);
 
       SECTION("With chamfer angle 45") {
-	vector<double> chamfer_angles{45.0};
-      
-	vector<vector<index_t>> chamfer_surfaces =
-	  chamfer_regions(one_chamfer_mesh, n, chamfer_angles);
+	//	vector<double> chamfer_angles{45.0};
 
-	for (auto& surf : chamfer_surfaces) {
-	  vtk_debug_highlight_inds(surf, one_chamfer_mesh);
-	}
+	tool t2(0.1, 3.0, 4, HSS, CHAMFER);
+	t2.set_chamfer_included_angle(45.0*2.0);
+    
+	t2.set_cut_diameter(0.5);
+	t2.set_cut_length(1.0);
+
+	t2.set_shank_diameter(3.0 / 8.0);
+	t2.set_shank_length(0.1);
+
+	t2.set_holder_diameter(2.0);
+	t2.set_holder_length(2.5);
+	t2.set_tool_number(2);
+
+	vector<tool> tools{t2};
+      
+	vector<chamfer> chamfer_surfaces =
+	  chamfer_regions(one_chamfer_mesh, n, tools);
+
+	// for (auto& surf : chamfer_surfaces) {
+	//   vtk_debug_highlight_inds(surf.faces, one_chamfer_mesh);
+	// }
 
 	REQUIRE(chamfer_surfaces.size() == 1);
       }
 
       SECTION("Without chamfer angle 45") {
-	vector<double> chamfer_angles{57.0, 60.0, 90.0};
+
+	vector<tool> tools{};
       
-	vector<vector<index_t>> chamfer_surfaces =
-	  chamfer_regions(one_chamfer_mesh, n, chamfer_angles);
+	vector<chamfer> chamfer_surfaces =
+	  chamfer_regions(one_chamfer_mesh, n, tools);
 
 	REQUIRE(chamfer_surfaces.size() == 0);
       }

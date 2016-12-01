@@ -618,6 +618,7 @@ namespace gca {
 
     t1.set_holder_diameter(2.0);
     t1.set_holder_length(2.5);
+    t1.set_tool_number(1);
 
     vector<double> chamfer_angles{45.0, 53.0};
 
@@ -632,9 +633,10 @@ namespace gca {
 
     t2.set_holder_diameter(2.0);
     t2.set_holder_length(2.5);
+    t2.set_tool_number(2);
 
     tool t3(0.1, 3.0, 4, HSS, CHAMFER);
-    t3.set_chamfer_included_angle(53.0*2.0);
+    t3.set_chamfer_included_angle(36.0*2.0);
     
     t3.set_cut_diameter(0.5);
     t3.set_cut_length(1.0);
@@ -644,6 +646,7 @@ namespace gca {
 
     t3.set_holder_diameter(2.0);
     t3.set_holder_length(2.5);
+    t3.set_tool_number(3);
 
     vector<tool> tools{t1, t2, t3};
 
@@ -670,7 +673,12 @@ namespace gca {
       fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
 
     REQUIRE(fab_plan.steps().size() == 2);
+
+    for (auto& tp : fab_plan.steps()[0].toolpaths()) {
+      if (tp.pocket_type() == CHAMFER_POCKET) {
+	REQUIRE((tp.get_tool().type() == CHAMFER));
+      }
+    }
   }
 
-  
 }
