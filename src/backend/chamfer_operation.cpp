@@ -32,15 +32,17 @@ namespace gca {
     bool outer_ring_is_lower_chamfer_edge =
       outer_z < inner_z;
 
-    vector<point> chamfer_ring =
-		outer_ring_is_lower_chamfer_edge ? bound.vertices() : bound.holes()[0]; // : bound.vertices();
+    vector<point> chamfer_ring = outer_ring_is_lower_chamfer_edge ?
+		bound.vertices() : bound.holes()[0];
 
     polygon_3 raw_chamfer_outline =
       build_clean_polygon_3(chamfer_ring);
 
-
     double offset = 0.05;
-    double vertical_shift = 0.05;
+    double first_angle = angle_between(mesh.face_orientation(surf.front()), mill_direction);
+    double theta = 90 - first_angle;
+    double l = offset / sin(theta);
+    double vertical_shift = sqrt(l*l - offset*offset); //0.05;
 
     vector<polygon_3> chamfer_polys{raw_chamfer_outline};
 
@@ -59,10 +61,10 @@ namespace gca {
 
     chamfer_path = shift(-1*vertical_shift*mill_direction, chamfer_path);
 
-    auto acts = polygon_3_actors(chamfer_path);
-    visualize_actors(acts);
-    acts.push_back(mesh_actors(mesh));
-    visualize_actors(acts);
+    // auto acts = polygon_3_actors(chamfer_path);
+    // visualize_actors(acts);
+    // acts.push_back(mesh_actors(mesh));
+    // visualize_actors(acts);
 
     return {to_polyline(chamfer_path)};
   }
