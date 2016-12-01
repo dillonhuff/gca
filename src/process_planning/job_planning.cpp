@@ -711,77 +711,6 @@ namespace gca {
     return max_plate;
   }
 
-  clamp_orientation
-  find_part_zero(const Nef_polyhedron& part_nef,
-		 const clamp_orientation& orient,
-		 const vice& v,
-		 const point n) {
-    auto part = nef_to_single_trimesh(part_nef);
-
-    // polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
-
-    // point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
-    // plane vice_top_plane(-1*n, vice_pl_pt);
-
-    // double big = 2000.0;
-
-    // polygon_3 p = project_onto(vice_top_plane, hull);
-    // polygon_3 plane_approx = dilate(p, big);
-
-    // triangular_mesh m = extrude(plane_approx, big*n);
-    
-    // auto clip_nef = trimesh_to_nef_polyhedron(m);
-    // auto cut_parts_nef = part_nef - clip_nef;
-
-    // auto cut_part = nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
-
-    // vector<surface> cregions = outer_surfaces(cut_part);
-    // sort(begin(cregions), end(cregions),
-    // 	 [](const surface& l, const surface& r)
-    // 	 { return l.surface_area() < r.surface_area(); });
-    // reverse(begin(cregions), end(cregions));
-
-
-    // std::vector<clamp_orientation> orients =
-    //   all_stable_orientations_with_top_normal(cregions, v, n);
-
-    // DBG_ASSERT(orients.size() > 0);
-
-    // auto orient = max_e(orients, [part](const clamp_orientation& c)
-    // 			{ return c.contact_area(part); });
-
-    // vector<surface> initial_regions =
-    //   inds_to_surfaces(const_orientation_regions(part), part);
-
-    // vector<unsigned> millable_from =
-    //   surfaces_millable_from(orient, ptrs(initial_regions), v);
-
-    // vector<surface> cregions;
-    // for (auto ind : millable_from) {
-    //   cregions.push_back(initial_regions[ind]);
-    // }
-
-    //    vtk_debug_highlight_inds(initial_regions);
-
-    // vector<surface> cregions =
-    //   surfaces_visible_from(initial_regions, n);
-
-    vector<surface> cregions = outer_surfaces(part);
-
-    vtk_debug_highlight_inds(cregions);
-
-    DBG_ASSERT(cregions.size() > 2);
-
-    std::vector<surface> ortho =
-      take_basis(cregions, [](const surface& l, const surface& r) {
-    	  return angle_eps(normal(l), normal(r), 90.0, 1.0);
-    	},
-    	3);
-
-    clamp_orientation zero_planes(&(ortho[0]), &(ortho[1]), &(ortho[2]));
-    return zero_planes;
-  }
-
   boost::optional<std::pair<fixture, homogeneous_transform>>
   find_next_fixture(feature_decomposition* decomp,
 		    Nef_polyhedron& stock_nef,
@@ -859,9 +788,7 @@ namespace gca {
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
 			   const fixtures& f,
-			   //			   const std::vector<tool>& tools,
 			   std::vector<direction_process_info>& dir_info) {
-			   //			   const std::vector<point>& norms) {
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
@@ -1007,7 +934,6 @@ namespace gca {
     vector<direction_process_info> dir_info =
       initial_decompositions(stock, part, tools, norms);
 
-    //return select_jobs_and_features(stock, part, f, tools, dir_info);
     return select_jobs_and_features(stock, part, f, dir_info);
   }
 
