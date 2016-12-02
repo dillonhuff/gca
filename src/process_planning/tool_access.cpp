@@ -156,6 +156,8 @@ namespace gca {
   bool can_access_feature_with_tool(const feature& f,
 				    const tool& t,
 				    feature_decomposition* decomp) {
+    if (t.type() == CHAMFER) { return false; }
+
     auto top_feature = decomp->child(0)->feature();
     // NOTE: Top feature is always completely open
     if (&f != top_feature) {

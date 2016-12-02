@@ -392,7 +392,10 @@ namespace gca {
       point d1 = current_pt - prev_pt;
       point d2 = next_pt - current_pt;
 
-      if (!(angle_eps(d1, d2, 0.0, 3.0) ||
+      double angle = angle_between(d1, d2);
+      cout << "Angle between = " << angle << endl;
+
+      if (!(angle_eps(d1, d2, 0.0, 1.0) ||
 	    angle_eps(d1, d2, 90.0, 3.0) ||
 	    angle_eps(d1, d2, -90.0, 3.0) ||
 	    angle_eps(d1, d2, 180.0, 3.0))) {
@@ -408,7 +411,11 @@ namespace gca {
     count += curve_count(f.vertices());
 
     for (auto& h : f.holes()) {
-      count += curve_count(h);
+      int ch = curve_count(h);
+      count += ch;
+
+      cout << "Hole curve count = " << ch << endl;;
+      //vtk_debug_ring(h);
     }
 
     return count;

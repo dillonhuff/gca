@@ -299,7 +299,7 @@ int main(int argc, char *argv[]) {
   double octagon_with_holes_short_scale_factor = 1.0; //0.15; //0.45;
   double japan_contour_scale_factor = 0.4;
   double dice_scale_factor = 0.7;
-  double part_1_29_scale_factor = 0.2;
+  double part_1_29_scale_factor = 0.7;
   auto scale_func = [part_1_29_scale_factor](const point p) {
     return part_1_29_scale_factor*p;
   };
