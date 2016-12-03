@@ -13,14 +13,16 @@ namespace gca {
   class feature {
   protected:
     bool closed;
+    bool through;
     polygon_3 base_poly;
     double dp;
     
   public:
     feature(const bool p_closed,
+	    const bool p_through,
 	    const double p_depth,
 	    const polygon_3& p_base) :
-      closed(p_closed), base_poly(p_base), dp(p_depth) {
+      closed(p_closed), through(p_through), base_poly(p_base), dp(p_depth) {
       DBG_ASSERT(depth() >= 0);
     }
 
@@ -33,6 +35,8 @@ namespace gca {
 
       return gca::min_distance_along(pts, n);
     }
+
+    bool is_through() const { return through; }
 
     double max_distance_along(const point n) const {
       vector<point> pts;
@@ -87,7 +91,7 @@ namespace gca {
       polygon_3 rotated_base = gca::apply(r, base_poly);
       rotated_base.correct_winding_order(times_3(r, base_poly.normal()));
 
-      return feature(is_closed(), dp, rotated_base);
+      return feature(is_closed(), is_through(), dp, rotated_base);
     }
 
     bool is_closed() const { return closed; }
@@ -98,7 +102,7 @@ namespace gca {
       labeled_polygon_3 rotated_base = gca::apply(t, base_poly);
       rotated_base.correct_winding_order(times_3(t.first, base_poly.normal()));
 
-      return feature(is_closed(), dp, rotated_base);
+      return feature(is_closed(), is_through(), dp, rotated_base);
     }
 
     point normal() const { return base_poly.normal(); }

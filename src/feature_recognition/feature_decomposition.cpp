@@ -514,7 +514,7 @@ namespace gca {
 
       labeled_polygon_3 shifted = project_onto(base_pl, current_level);
 
-      feature* f = new (allocate<feature>()) feature(true, feature_depth, shifted);
+      feature* f = new (allocate<feature>()) feature(true, false, feature_depth, shifted);
       feature_decomposition* child =
     	new (allocate<feature_decomposition>()) feature_decomposition(f);
       parent->add_child(child);
@@ -571,7 +571,7 @@ namespace gca {
 
     labeled_polygon_3 shifted = project_onto(base_pl, current_level);
     
-    feature* f = new (allocate<feature>()) feature(true, feature_depth, shifted);
+    feature* f = new (allocate<feature>()) feature(true, false, feature_depth, shifted);
     feature_decomposition* child =
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);

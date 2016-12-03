@@ -295,10 +295,10 @@ namespace gca {
 
     cout << "Using split feature" << endl;
     if (polys.front().holes().size() == original.base().holes().size()) {
-      feature clipped_feature(original.is_closed(), original.depth(), polys.front());
+      feature clipped_feature(original.is_closed(), original.is_through(), original.depth(), polys.front());
       return clipped_feature;
     } else {
-      feature clipped_feature(true, original.depth(), polys.front());
+      feature clipped_feature(true, false, original.depth(), polys.front());
       return clipped_feature;
     }
 

@@ -394,7 +394,7 @@ int main(int argc, char** argv) {
 
   vector<gca::feature> features;
   for (auto dark_area : dark_polys) {
-    features.push_back(gca::feature(true, total_depth_of_cut, dark_area));
+    features.push_back(gca::feature(true, false, total_depth_of_cut, dark_area));
   }
 
   cout << "Done building features" << endl;

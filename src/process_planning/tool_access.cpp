@@ -47,7 +47,7 @@ namespace gca {
     // TODO: Correct this open closed issue
     vector<feature> access_features;
     for (auto tool_region : tool_regions) {
-      access_features.push_back(feature(f.is_closed(), len, tool_region));
+      access_features.push_back(feature(f.is_closed(), f.is_through(), len, tool_region));
     }
 
     return access_features;
@@ -78,7 +78,7 @@ namespace gca {
       polygon_3 dummy_base =
 	build_clean_polygon_3(projected_outline.vertices(), f.base().holes());
 
-      feature open_feature(false, f.depth(), dummy_base);
+      feature open_feature(false, false, f.depth(), dummy_base);
 
       //vtk_debug_feature(open_feature);
 

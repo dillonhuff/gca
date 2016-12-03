@@ -75,6 +75,14 @@ namespace gca {
     double base_depth = min_distance_along(mesh.vertex_list(), n);
 
     REQUIRE(within_eps(current_min, base_depth));
+
+    int num_through_features = 0;
+    for (auto f : collect_features(f)) {
+      if (f->is_through()) {
+	num_through_features++;
+      }
+    }
+    REQUIRE(num_through_features == 6);
   }
 
   TEST_CASE("Rectangle with circular notch") {

@@ -311,7 +311,7 @@ namespace gca {
       DBG_ASSERT(new_target_depth >= 0.0);
     }
 
-    return feature(target.is_closed(), new_target_depth, new_target_base);
+    return feature(target.is_closed(), target.is_through(), new_target_depth, new_target_base);
   }
 
   void replace_features(feature_decomposition* f,
