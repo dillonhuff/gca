@@ -10,7 +10,7 @@
 
 namespace gca {
 
-  enum tool_type { FLAT_NOSE, BALL_NOSE, CHAMFER };
+  enum tool_type { FLAT_NOSE, BALL_NOSE, CHAMFER, TWIST_DRILL };
 
   class tool {
   protected:

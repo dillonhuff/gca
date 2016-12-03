@@ -681,4 +681,104 @@ namespace gca {
     }
   }
 
+  TEST_CASE("Part with drilled holes") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_vice = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
+    std::vector<plate_height> parallel_plates{0.5, 0.7};
+    fixtures fixes(test_vice, parallel_plates);
+
+    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+    t1.set_cut_diameter(1.0 / 8.0);
+    t1.set_cut_length(3.0 / 8.0);
+
+    t1.set_shank_diameter(3.0 / 8.0);
+    t1.set_shank_length(0.1);
+
+    t1.set_holder_diameter(1.8);
+    t1.set_holder_length(3.0);
+    t1.set_tool_number(1);
+
+    tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
+    t2.set_cut_diameter(3.0 / 8.0);
+    t2.set_cut_length(0.75);
+
+    t2.set_shank_diameter(3.0 / 8.0);
+    t2.set_shank_length(0.1);
+
+    t2.set_holder_diameter(1.8);
+    t2.set_holder_length(3.0);
+    t2.set_tool_number(2);
+
+    tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
+    t3.set_cut_diameter(0.5);
+    t3.set_cut_length(2.25);
+
+    t3.set_shank_diameter(0.5);
+    t3.set_shank_length(0.5);
+
+    t3.set_holder_diameter(1.8);
+    t3.set_holder_length(3.0);
+    t3.set_tool_number(3);
+
+    tool t4(0.1, 3.0, 4, HSS, CHAMFER);
+    t4.set_chamfer_included_angle(45.0*2.0);
+    
+    t4.set_cut_diameter(0.5);
+    t4.set_cut_length(1.0);
+
+    t4.set_shank_diameter(3.0 / 8.0);
+    t4.set_shank_length(0.1);
+
+    t4.set_holder_diameter(2.0);
+    t4.set_holder_length(2.5);
+    t4.set_tool_number(2);
+
+    tool t5(0.1, 3.0, 4, HSS, CHAMFER);
+    t5.set_chamfer_included_angle(36.0*2.0);
+    
+    t5.set_cut_diameter(0.5);
+    t5.set_cut_length(1.0);
+
+    t5.set_shank_diameter(3.0 / 8.0);
+    t5.set_shank_length(0.1);
+
+    t5.set_holder_diameter(2.0);
+    t5.set_holder_length(2.5);
+    t5.set_tool_number(3);
+
+    vector<tool> tools{t1, t2, t3, t4, t5};
+
+    workpiece workpiece_dims(4.0, 4.0, 4.0, BRASS);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/100-013 - Part 1.stl", 0.0001);
+
+    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+    REQUIRE(p.fixtures().size() == 3);
+
+    const fixture_setup& fix_2 = p.fixtures()[2];
+
+    int num_drilled_holes = 0;
+    for (auto& p : fix_2.pockets) {
+      if (p.pocket_type() == DRILLED_HOLE_POCKET) {
+	num_drilled_holes++;
+      }
+    }
+
+    REQUIRE(num_drilled_holes == 2);
+
+    fabrication_plan fab_plan =
+      fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
+
+    REQUIRE(fab_plan.steps().size() == 2);
+
+    for (auto& tp : fab_plan.steps()[0].toolpaths()) {
+      if (tp.pocket_type() == DRILLED_HOLE_POCKET) {
+	REQUIRE((tp.get_tool().type() == TWIST_DRILL));
+      }
+    }
+  }
+  
 }

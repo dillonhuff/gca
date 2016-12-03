@@ -9,7 +9,8 @@ namespace gca {
     CONTOUR,
     FLAT_POCKET,
     TRACE_POCKET,
-    CHAMFER_POCKET
+    CHAMFER_POCKET,
+    DRILLED_HOLE_POCKET,
   };
 
   std::ostream& operator<<(std::ostream& out, const pocket_name p);
