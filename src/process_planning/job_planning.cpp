@@ -414,7 +414,7 @@ namespace gca {
       int ch = curve_count(h);
       count += ch;
 
-      cout << "Hole curve count = " << ch << endl;;
+      cout << "Hole curve count = " << ch << endl;
       //vtk_debug_ring(h);
     }
 
