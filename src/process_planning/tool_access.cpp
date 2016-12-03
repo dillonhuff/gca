@@ -152,11 +152,31 @@ namespace gca {
     return false;
   }
 
-  // TODO: Reintroduce commented out code when done debugging PSU mount
+  struct hole_properties {
+    double diameter, depth;
+  };
+
+  boost::optional<hole_properties>
+  through_hole_properties(const feature& f) {
+    if (!f.is_closed() || !f.is_through()) { return boost::none; }
+    polygon_3 base = f.base();
+    
+    return boost::none;
+  }
+
   bool can_access_feature_with_tool(const feature& f,
 				    const tool& t,
 				    feature_decomposition* decomp) {
-    if (t.type() == CHAMFER) { return false; }
+    if (t.type() == TWIST_DRILL) {
+      boost::optional<hole_properties> h = through_hole_properties(f);
+      if (h &&
+	  within_eps(h->diameter, t.cut_diameter(), 0.0001) &&
+	  h->depth <= t.cut_length()) {
+	return true;
+      }
+    }
+
+    if (t.type() != FLAT_NOSE && t.type() != BALL_NOSE) { return false; }
 
     auto top_feature = decomp->child(0)->feature();
     // NOTE: Top feature is always completely open
