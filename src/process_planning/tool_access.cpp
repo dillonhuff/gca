@@ -156,11 +156,67 @@ namespace gca {
     double diameter, depth;
   };
 
+  std::vector<double> segment_angles(const std::vector<point>& ring) {
+    vector<double> angles;
+
+    unsigned num_pts = ring.size();
+    for (unsigned i = 0; i < num_pts; i++) {
+      unsigned prev = (i + (num_pts - 1)) % num_pts;
+      unsigned next = (i + 1) % num_pts;
+
+      point prev_pt = ring[prev];
+      point current_pt = ring[i];
+      point next_pt = ring[next];
+
+      point d1 = prev_pt - current_pt;
+      point d2 = next_pt - current_pt;
+
+      double angle = angle_between(d1, d2);
+      cout << "Interior angle between = " << angle << endl;
+      angles.push_back(angle);
+
+    }
+
+    return angles;
+    
+  }
+
+  boost::optional<double> circle_diameter(const polygon_3& base) {
+    if (base.holes().size() != 0) { return boost::none; }
+
+    vector<double> angles = segment_angles(base.vertices());
+    double max = max_e(angles, [](const double angle) { return angle; });
+    double min = min_e(angles, [](const double angle) { return angle; });
+
+    cout << "max angle = " << max << endl;
+    cout << "min angle = " << min << endl;
+
+    // NOTE: Make this tolerance smaller
+    if (!within_eps(max, min, 1.0) || (angles.front() < 140)) {
+      return boost::none;
+    }
+
+    double side_len = (base.vertices()[1] - base.vertices()[0]).len();
+
+    cout << "Side len = " << side_len << endl;
+    double angle_rads = (180 / angles.size()) * (M_PI / 180);
+    return side_len / sin(angle_rads);
+  }
+
   boost::optional<hole_properties>
   through_hole_properties(const feature& f) {
     if (!f.is_closed() || !f.is_through()) { return boost::none; }
+
+    cout << "Found closed through feature" << endl;
     polygon_3 base = f.base();
-    
+    // TODO: Add segment length test
+    boost::optional<double> diameter = circle_diameter(base);
+
+    if (diameter) {
+      cout << "Found circle with diameter = " << *diameter << endl;
+      return hole_properties{*diameter, f.depth()};
+    }
+
     return boost::none;
   }
 
@@ -168,7 +224,12 @@ namespace gca {
 				    const tool& t,
 				    feature_decomposition* decomp) {
     if (t.type() == TWIST_DRILL) {
+      cout << "Looking for through hole" << endl;
       boost::optional<hole_properties> h = through_hole_properties(f);
+
+      if (h) {
+	cout << "Found through hole" << endl;
+      }
       if (h &&
 	  within_eps(h->diameter, t.cut_diameter(), 0.0001) &&
 	  h->depth <= t.cut_length()) {

@@ -749,17 +749,17 @@ namespace gca {
     t5.set_tool_number(3);
 
     tool t6(0.1, 3.0, 4, HSS, TWIST_DRILL);
-    t5.set_cut_diameter(0.333);
-    t5.set_cut_length(2.0);
+    t6.set_cut_diameter(0.3515);
+    t6.set_cut_length(2.0);
 
-    t5.set_shank_diameter(3.0 / 8.0);
-    t5.set_shank_length(0.1);
+    t6.set_shank_diameter(3.0 / 8.0);
+    t6.set_shank_length(0.1);
 
-    t5.set_holder_diameter(2.0);
-    t5.set_holder_length(2.5);
-    t5.set_tool_number(3);
+    t6.set_holder_diameter(2.0);
+    t6.set_holder_length(2.5);
+    t6.set_tool_number(3);
     
-    vector<tool> tools{t1, t2, t3, t4, t5};
+    vector<tool> tools{t1, t2, t3, t4, t5, t6};
 
     workpiece workpiece_dims(4.0, 4.0, 4.0, BRASS);
 
