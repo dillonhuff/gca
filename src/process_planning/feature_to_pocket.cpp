@@ -1,3 +1,4 @@
+#include "backend/drilled_hole_operation.h"
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
 #include "utils/algorithm.h"
@@ -26,9 +27,12 @@ namespace gca {
       DBG_ASSERT(within_eps(theta, 0.0, 0.3));
     }
 
+    double base_z = base.vertex(0).z;
+    double top_z = base_z + f.depth();
+
     for (auto t : tools) {
       if (t.type() == TWIST_DRILL) {
-	return drilled_hole_operation(centroid(base), f.depth(), t);
+	return {drilled_hole_operation(top_z, base_z, centroid(base.vertices()), t)};
       }
     }
 
@@ -40,9 +44,6 @@ namespace gca {
 
       holes.push_back(hp);
     }
-
-    double base_z = base.vertex(0).z;
-    double top_z = base_z + f.depth();
 
     if (f.is_closed()) {
       return {flat_pocket(top_z, base_z, ob, holes, tools)};

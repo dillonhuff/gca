@@ -1,3 +1,5 @@
+#pragma once
+
 #include "backend/operation.h"
 #include "geometry/surface.h"
 

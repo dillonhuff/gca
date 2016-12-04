@@ -148,6 +148,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/backend/chamfer_operation.cpp
+	./src/backend/drilled_hole_operation.cpp
 	./src/backend/feedrate_optimization.cpp
 	./src/backend/operation.cpp
 	./src/backend/timing.cpp

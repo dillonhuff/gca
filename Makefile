@@ -1163,6 +1163,33 @@ src/backend/chamfer_operation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.s
 .PHONY : src/backend/chamfer_operation.cpp.s
 
+src/backend/drilled_hole_operation.o: src/backend/drilled_hole_operation.cpp.o
+
+.PHONY : src/backend/drilled_hole_operation.o
+
+# target to build an object file
+src/backend/drilled_hole_operation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.o
+.PHONY : src/backend/drilled_hole_operation.cpp.o
+
+src/backend/drilled_hole_operation.i: src/backend/drilled_hole_operation.cpp.i
+
+.PHONY : src/backend/drilled_hole_operation.i
+
+# target to preprocess a source file
+src/backend/drilled_hole_operation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.i
+.PHONY : src/backend/drilled_hole_operation.cpp.i
+
+src/backend/drilled_hole_operation.s: src/backend/drilled_hole_operation.cpp.s
+
+.PHONY : src/backend/drilled_hole_operation.s
+
+# target to generate assembly for a file
+src/backend/drilled_hole_operation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.s
+.PHONY : src/backend/drilled_hole_operation.cpp.s
+
 src/backend/feedrate_optimization.o: src/backend/feedrate_optimization.cpp.o
 
 .PHONY : src/backend/feedrate_optimization.o
@@ -4759,6 +4786,9 @@ help:
 	@echo "... src/backend/chamfer_operation.o"
 	@echo "... src/backend/chamfer_operation.i"
 	@echo "... src/backend/chamfer_operation.s"
+	@echo "... src/backend/drilled_hole_operation.o"
+	@echo "... src/backend/drilled_hole_operation.i"
+	@echo "... src/backend/drilled_hole_operation.s"
 	@echo "... src/backend/feedrate_optimization.o"
 	@echo "... src/backend/feedrate_optimization.i"
 	@echo "... src/backend/feedrate_optimization.s"
