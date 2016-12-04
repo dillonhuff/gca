@@ -30,9 +30,10 @@ namespace gca {
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();
 
+    point base_center = centroid(base.vertices());
     for (auto t : tools) {
       if (t.type() == TWIST_DRILL) {
-	return {drilled_hole_operation(top_z, base_z, centroid(base.vertices()), t)};
+	return {drilled_hole_operation(top_z, base_z, base_center, t)};
       }
     }
 

@@ -4,6 +4,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/toolpath_generation.h"
+#include "synthesis/visual_debug.h"
 #include "utils/arena_allocator.h"
 #include "system/parse_stl.h"
 
@@ -783,12 +784,16 @@ namespace gca {
     fabrication_plan fab_plan =
       fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
 
-    REQUIRE(fab_plan.steps().size() == 2);
+    REQUIRE(fab_plan.steps().size() == 3);
 
     for (auto& tp : fab_plan.steps()[0].toolpaths()) {
       if (tp.pocket_type() == DRILLED_HOLE_POCKET) {
 	REQUIRE((tp.get_tool().type() == TWIST_DRILL));
       }
+    }
+
+    for (auto& step : fab_plan.steps()) {
+      visual_debug(step);
     }
   }
   
