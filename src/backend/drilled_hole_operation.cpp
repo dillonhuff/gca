@@ -24,18 +24,51 @@ namespace gca {
     double feed;
   };
 
+
+  double drilling_sfm(const material& stock_material) {
+    switch (stock_material) {
+    case ALUMINUM:
+      return 250;
+    case BRASS:
+      return 225;
+
+    default:
+      DBG_ASSERT(false);
+    }
+
+  }
+
+  double drilling_inches_per_rev(const double diam) {
+    if (diam < 1.0 / 8.0) {
+      return 0.002;
+    }
+
+    if (diam < 1.0 / 4.0) {
+      return 0.004;
+    }
+
+    if (diam < 1.0 / 2.0) {
+      return 0.007;
+    }
+
+    if (diam <= 1.0) {
+      return 0.011;
+    }
+
+    DBG_ASSERT(false);
+  }
+
   drill_feeds calculate_drill_feeds(const material& stock_material,
 				    const tool& t) {
     DBG_ASSERT(t.type() == TWIST_DRILL);
-    DBG_ASSERT(stock_material == ALUMINUM);
 
     double diam = t.cut_diameter();
 
     // TODO: Add real calculations for these parameters
-    double target_sfm = 250;
-    double inches_per_rev = 0.004;
+    double target_sfm = drilling_sfm(stock_material);
+    double inches_per_rev = drilling_inches_per_rev(diam);
 
-    double spindle_speed = (target_sfm*12.0)*diam*M_PI;
+    double spindle_speed = (target_sfm*12.0) / (diam*M_PI);
     double feedrate = inches_per_rev*spindle_speed;
 
     cout << "Spindle speed = " << spindle_speed << endl;
@@ -59,9 +92,6 @@ namespace gca {
 		     fs.speed,
 		     fs.feed,
 		     fs.feed,
-		     //		     2000,
-		     //		     5.0,
-		     //		     2.5,
 		     t,
 		     lines)};
 
