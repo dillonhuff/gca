@@ -26,6 +26,12 @@ namespace gca {
       DBG_ASSERT(within_eps(theta, 0.0, 0.3));
     }
 
+    for (auto t : tools) {
+      if (t.type() == TWIST_DRILL) {
+	return drilled_hole_operation(centroid(base), f.depth(), t);
+      }
+    }
+
     oriented_polygon ob = to_oriented_polygon(base);
 
     vector<oriented_polygon> holes;
