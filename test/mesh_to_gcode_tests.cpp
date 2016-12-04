@@ -762,7 +762,7 @@ namespace gca {
     
     vector<tool> tools{t1, t2, t3, t4, t5, t6};
 
-    workpiece workpiece_dims(4.0, 4.0, 4.0, BRASS);
+    workpiece workpiece_dims(4.0, 4.0, 4.0, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/100-013 - Part 1.stl", 0.0001);
 
@@ -792,9 +792,6 @@ namespace gca {
       }
     }
 
-    for (auto& step : fab_plan.steps()) {
-      visual_debug(step);
-    }
   }
   
 }
