@@ -441,7 +441,7 @@ namespace gca {
     polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
 
     for (auto feat : collect_features(f)) {
-      if (is_outer(*feat, stock_polygon)) {
+      if (is_outer(*feat, stock_polygon) && feat->is_through()) {
 	cout << "Found outer feature in " << normal(f) << endl;
 	count += curve_count(*feat);
       }
