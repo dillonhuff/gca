@@ -33,7 +33,8 @@ namespace gca {
     point base_center = centroid(base.vertices());
     for (auto t : tools) {
       if (t.type() == TWIST_DRILL) {
-	return {drilled_hole_operation(top_z, base_z, base_center, t)};
+	point up_direction(0, 0, 1);
+	return {drilled_hole_operation(f.depth(), base_center, up_direction, t)};
       }
     }
 

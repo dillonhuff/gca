@@ -792,6 +792,10 @@ namespace gca {
       }
     }
 
+    // for (auto& step : fab_plan.steps()) {
+    //   visual_debug(step);
+    // }
+
   }
   
 }
