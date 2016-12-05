@@ -5,7 +5,9 @@ namespace gca {
   class drilled_hole_operation {
   protected:
     double start_depth, end_depth;
-    point loc;
+    point base_loc;
+    point up_direction;
+    double depth;
     tool t;
 
   public:
@@ -15,7 +17,7 @@ namespace gca {
 			   const tool& t_p) :
       start_depth(p_start_depth),
       end_depth(p_end_depth),
-      loc(p_loc),
+      base_loc(p_loc),
       t(t_p) {
 
       DBG_ASSERT(t.type() == TWIST_DRILL);

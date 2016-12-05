@@ -111,6 +111,23 @@ namespace gca {
 		  [hole](const polyline& pl) { return overlap_2D(pl, hole); });
   }
 
+  TEST_CASE("Drill toolpath generation") {
+    point base_loc(0, 0, -1);
+
+    tool t6(0.1, 3.0, 4, HSS, TWIST_DRILL);
+    t6.set_cut_diameter(1.0 / 8.0);
+    t6.set_cut_length(2.5);
+
+    t6.set_shank_diameter(3.0 / 8.0);
+    t6.set_shank_length(0.1);
+
+    t6.set_holder_diameter(2.0);
+    t6.set_holder_length(2.5);
+    t6.set_tool_number(3);
+
+    
+  }
+
   TEST_CASE("Toolpath compression, nothing to compress") {
     vector<point> pts{point(0, 0, 0), point(1, 0, 0)};
     polyline p(pts);

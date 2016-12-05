@@ -7,13 +7,13 @@ namespace gca {
 					 const double) const {
     DBG_ASSERT(t.type() == TWIST_DRILL);
 
-    point end = loc;
-    double depth = start_depth - end_depth;
+    point end = base_loc;
+    //    double depth = start_depth - end_depth;
 
     DBG_ASSERT(depth > 0.0);
 
-    point n(0, 0, 1);
-    point start = loc + depth*n;
+    //    point n(0, 0, 1);
+    point start = base_loc + depth*up_direction;
 
     polyline drill{{start, end}};
     return {drill};
