@@ -137,4 +137,6 @@ namespace gca {
 
   polyline to_polyline(const polygon_3& p);
 
+  std::vector<polyline> to_polylines(const polygon_3& p);
+
 }

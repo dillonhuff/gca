@@ -1322,11 +1322,12 @@ namespace gca {
 
     reverse(begin(paths), end(paths));
 
-    //vtk_debug_polygons(paths);
+    vtk_debug_polygons(paths);
 
     vector<polyline> lines;
     for (auto p : paths) {
-      lines.push_back(to_polyline(p));
+      // TODO: Eventually handle holes be recursively generating interior contours
+      concat(lines, to_polylines(p));
     }
     return lines;
   }

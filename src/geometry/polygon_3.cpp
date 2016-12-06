@@ -346,4 +346,19 @@ namespace gca {
     return polyline(v);
   }
 
+  std::vector<polyline> to_polylines(const polygon_3& p) {
+
+    vector<polyline> lines;
+    auto v = p.vertices();
+    v.push_back(p.vertices().front());
+
+    lines.push_back(polyline(v));
+
+    for (auto& h : p.holes()) {
+      lines.push_back(polyline(h));
+    }
+
+    return lines;
+  }
+
 }
