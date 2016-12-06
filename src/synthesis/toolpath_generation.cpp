@@ -1328,7 +1328,7 @@ namespace gca {
 				      const double cut_depth) {
     // TODO: Make these parameters?
     double stepover_fraction = 0.3;
-    double wall_margin = 0.05;
+    double wall_margin = 0.005;
     vector<polyline> level_lines =
       contour_level(r, t, stepover_fraction, wall_margin);
 
