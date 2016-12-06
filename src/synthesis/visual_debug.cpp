@@ -62,6 +62,11 @@ namespace gca {
  
   }
 
+  vtkSmartPointer<vtkActor>
+  actor_for_toolpath(const toolpath& tp) {
+    return polydata_actor(polydata_for_toolpath(tp));
+  }
+  
   vtkSmartPointer<vtkPolyData>
   polydata_for_toolpath(const toolpath& tp) {
     // Create the polydata where we will store all the geometric data

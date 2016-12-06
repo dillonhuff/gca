@@ -111,21 +111,52 @@ namespace gca {
 		  [hole](const polyline& pl) { return overlap_2D(pl, hole); });
   }
 
-  TEST_CASE("Drill toolpath generation") {
-    point base_loc(0, 0, -1);
+  TEST_CASE("Island contour generation") {
+    arena_allocator a;
+    set_system_allocator(&a);
 
-    tool t6(0.1, 3.0, 4, HSS, TWIST_DRILL);
-    t6.set_cut_diameter(1.0 / 8.0);
-    t6.set_cut_length(2.5);
+    tool t{1.0 / 8.0, 3.94, 4, HSS, FLAT_NOSE};
+    t.set_cut_diameter(1.0 / 2.0);
+    t.set_cut_length(1.25);
 
-    t6.set_shank_diameter(3.0 / 8.0);
-    t6.set_shank_length(0.1);
+    t.set_shank_diameter(0.5);
+    t.set_shank_length(0.05);
 
-    t6.set_holder_diameter(2.0);
-    t6.set_holder_length(2.5);
-    t6.set_tool_number(3);
+    t.set_holder_diameter(2.5);
+    t.set_holder_length(3.5);
+    t.set_tool_number(1);
 
+    vector<point> safe_pts{point(-2, -2, 0),
+	point(-2, 2, 0),
+	point(2, 2, 0),
+	point(2, -2, 0)};
+
+    vector<point> block_pts{point(-1, -1, 0),
+	point(-1, 1, 0),
+	point(1, 1, 0),
+	point(1, -1, 0)};
+
+    vector<point> island_pts{point(-0.9, -0.5, 0),
+	point(-0.9, 0.5, 0),
+	point(0.9, 0.5, 0),
+	point(0.9, -0.5, 0)};
+
+    polygon_3 safe = build_clean_polygon_3(safe_pts, {island_pts});
     
+    polygon_3 block = build_clean_polygon_3(block_pts, {island_pts});
+
+    flat_region r(safe, block, 0.5, 0.0, ALUMINUM);
+
+    vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
+
+    vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(block);
+    for (auto tp : toolpaths) {
+      actors.push_back(actor_for_toolpath(tp));
+    }
+
+    visualize_actors(actors);
+
+    REQUIRE(toolpaths_cover_percent_of_area(r, toolpaths, 98.0));
   }
 
   TEST_CASE("Toolpath compression, nothing to compress") {
