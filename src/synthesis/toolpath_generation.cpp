@@ -980,6 +980,38 @@ namespace gca {
   }
 
   std::vector<polygon_3>
+  polygon_union(const std::vector<polygon_3>& as,
+		const std::vector<polygon_3>& bs) {
+    if (as.size() == 0 || bs.size() == 0) { return {}; }
+
+    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+    double z_level = as.front().vertices().front().z;
+
+    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
+    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
+    boost_multipoly_2 cp;
+    bg::union_(ap, bp, cp);
+
+    return from_boost_multipoly_2(cp, r, z_level);
+  }
+
+  bool
+  contains(const std::vector<polygon_3>& as,
+	   const std::vector<polygon_3>& bs) {
+    if (as.size() == 0 || bs.size() == 0) { return {}; }
+
+    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+    double z_level = as.front().vertices().front().z;
+
+    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
+    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
+
+    return bg::within(bp, ap);
+  }
+  
+  std::vector<polygon_3>
   polygon_difference(const std::vector<polygon_3>& as,
 		     const std::vector<polygon_3>& bs) {
     if (as.size() == 0 || bs.size() == 0) { return {}; }
@@ -1247,6 +1279,111 @@ namespace gca {
     return all_paths;
   }
 
+  std::vector<polyline> contour_level(const flat_region& r,
+				      const tool& t,
+				      const double stepover_fraction,
+				      const double wall_margin) {
+    DBG_ASSERT(0.0 < stepover_fraction);
+    DBG_ASSERT(stepover_fraction < 1.0);
+
+    vector<polygon_3> island_polys;
+    for (auto h : r.safe_area.holes()) {
+      island_polys.push_back(build_clean_polygon_3(h));
+    }
+
+    double safe_margin = t.radius() + wall_margin;
+    vector<polygon_3> safe_islands = exterior_offset(island_polys, safe_margin);
+
+    double stepover_value = stepover_fraction*t.cut_diameter();
+    vector<polygon_3> cut_rings = exterior_offset(island_polys, stepover_value);
+
+    vector<polygon_3> paths;
+    while (!contains(cut_rings, r.machine_area)) {
+      vector<polygon_3> path_rings =
+	polygon_union(polygon_intersection(r.machine_area, cut_rings), safe_islands);
+
+      concat(paths, path_rings);
+
+      cut_rings = exterior_offset(cut_rings, stepover_value);
+    }
+
+    vector<polygon_3> final_rings =
+      exterior_offset(polygon_union(r.machine_area, safe_islands), stepover_value);
+
+    concat(paths, final_rings);
+
+    reverse(begin(paths), end(paths));
+
+    vtk_debug_polygons(paths);
+
+    vector<polyline> lines;
+    for (auto p : paths) {
+      lines.push_back(to_polyline(p));
+    }
+    return lines;
+  }
+  
+  std::vector<polyline> contour_lines(const flat_region& r,
+				      const tool& t,
+				      const double cut_depth) {
+    // TODO: Make these parameters?
+    double stepover_fraction = 0.3;
+    double wall_margin = 0.05;
+    vector<polyline> level_lines =
+      contour_level(r, t, stepover_fraction, wall_margin);
+
+    return tile_vertical(level_lines, r.start_depth, r.end_depth, cut_depth);
+  }
+
+  toolpath contour_rough_path(const flat_region& r,
+			      const double safe_z,
+			      const tool& t) {
+    // TODO: Update operation names?
+    auto params = calculate_cut_params(t, r.stock_material, CONTOUR);
+
+    auto pocket_paths = contour_lines(r, t, params.cut_depth);
+
+    toolpath rough_path =
+      toolpath(CONTOUR,
+    	       safe_z,
+    	       params.speed,
+    	       params.feed,
+    	       params.plunge_feed,
+    	       t,
+    	       pocket_paths);
+
+    return rough_path;
+  }
+  
+  toolpath
+  rough_flat_region_with_contours(const flat_region& r,
+				  const double safe_z,
+				  const std::vector<tool>& tools) {
+    tool t = select_roughing_tool(r, tools);
+    return contour_rough_path(r, safe_z, t);
+  }
+  
+  std::vector<toolpath>
+  machine_flat_region_with_contours(const flat_region& r,
+				    const double safe_z,
+				    const std::vector<tool>& all_tools) {
+    vector<tool> tools = filter_unneeded_small_tools(r, all_tools);
+
+    DBG_ASSERT(tools.size() > 0);
+
+    toolpath rough_path = rough_flat_region_with_contours(r, safe_z, tools);
+    toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
+    toolpath finish_path = finish_flat_region(r, safe_z, tools);
+
+    std::vector<toolpath> all_paths{rough_path, rough_finish, finish_path};
+
+    double emco_hp = 0.737;
+    double aluminum_unit_hp = 0.3;
+    //optimize_feedrates_by_MRR_simulation(r, all_paths, emco_hp, aluminum_unit_hp);
+
+    return all_paths;
+  }
+  
   std::vector<toolpath>
   contour::make_toolpaths(const material& stock_material,
 			  const double safe_z,

@@ -370,6 +370,11 @@ namespace gca {
 		      const double safe_z,
 		      const std::vector<tool>& tools);
 
+  std::vector<toolpath>
+  machine_flat_region_with_contours(const flat_region& r,
+				    const double safe_z,
+				    const std::vector<tool>& tools);
+  
   boost_linestring_2 to_boost_linestring(const polyline& pl);
 
 }

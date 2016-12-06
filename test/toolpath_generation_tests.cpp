@@ -147,7 +147,7 @@ namespace gca {
 
     flat_region r(safe, block, 0.5, 0.0, ALUMINUM);
 
-    vector<toolpath> toolpaths = machine_flat_region(r, 1.0, {t});
+    vector<toolpath> toolpaths = machine_flat_region_with_contours(r, 1.0, {t});
 
     vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(block);
     for (auto tp : toolpaths) {
