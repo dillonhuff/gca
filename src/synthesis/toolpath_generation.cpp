@@ -1363,7 +1363,7 @@ namespace gca {
 
     return rough_path;
   }
-  
+
   toolpath
   rough_flat_region_with_contours(const flat_region& r,
 				  const double safe_z,
@@ -1380,11 +1380,26 @@ namespace gca {
 
     DBG_ASSERT(tools.size() > 0);
 
-    toolpath rough_path = rough_flat_region_with_contours(r, safe_z, tools);
-    toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
-    toolpath finish_path = finish_flat_region(r, safe_z, tools);
+    tool rough_tool = select_roughing_too(r, tools);
+    tool finish_tool = select_finishing_tool(r, tools);
 
-    std::vector<toolpath> all_paths{rough_path, rough_finish, finish_path};
+    toolpath rough_path = contour_rough_path(r, safe_z, rough_tool);
+    //rough_flat_region_with_contours(r, safe_z, tools);
+
+    toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
+
+    flat_region after_roughing = residual_flat_region(r, rough_path.t);
+
+    toolpath finish_rough =
+      rough_flat_region_with_contours(after_roughing, safe_z, {finish_tool});
+    toolpath finish_path = finish_path(after_roughing, safe_z, tools);
+    //finish_flat_region(after_roughing, safe_z, tools);
+
+    // TODO: fix horrible names
+    std::vector<toolpath> all_paths{rough_path,
+	rough_finish,
+	finish_rough,
+	finish_path};
 
     double emco_hp = 0.737;
     double aluminum_unit_hp = 0.3;
