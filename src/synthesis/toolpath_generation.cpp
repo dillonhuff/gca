@@ -1297,10 +1297,18 @@ namespace gca {
     double stepover_value = stepover_fraction*t.cut_diameter();
     vector<polygon_3> cut_rings = safe_islands; //exterior_offset(island_polys, stepover_value);
 
+    double outer_offset = t.radius() - stepover_value;
+    if (outer_offset < 0.0) {
+      outer_offset = 0.0;
+    }
+
+    vector<polygon_3> outer_bound =
+      exterior_offset(r.machine_area, outer_offset);
+
     vector<polygon_3> paths;
-    while (!contains(cut_rings, r.machine_area)) {
+    while (!contains(cut_rings, outer_bound)) {
       vector<polygon_3> path_rings =
-	polygon_union(polygon_intersection(r.machine_area, cut_rings), safe_islands);
+	polygon_union(polygon_intersection(outer_bound, cut_rings), safe_islands);
 
       concat(paths, path_rings);
 
@@ -1308,7 +1316,7 @@ namespace gca {
     }
 
     vector<polygon_3> final_rings =
-      exterior_offset(polygon_union(r.machine_area, safe_islands), stepover_value);
+      polygon_union(outer_bound, safe_islands);
 
     concat(paths, final_rings);
 
