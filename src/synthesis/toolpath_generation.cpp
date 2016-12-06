@@ -1322,7 +1322,7 @@ namespace gca {
 
     reverse(begin(paths), end(paths));
 
-    vtk_debug_polygons(paths);
+    //vtk_debug_polygons(paths);
 
     vector<polyline> lines;
     for (auto p : paths) {

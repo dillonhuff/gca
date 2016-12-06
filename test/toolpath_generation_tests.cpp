@@ -149,12 +149,12 @@ namespace gca {
 
     vector<toolpath> toolpaths = machine_flat_region_with_contours(r, 1.0, {t});
 
-    vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(block);
-    for (auto tp : toolpaths) {
-      actors.push_back(actor_for_toolpath(tp));
-    }
+    // vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(block);
+    // for (auto tp : toolpaths) {
+    //   actors.push_back(actor_for_toolpath(tp));
+    // }
 
-    visualize_actors(actors);
+    // visualize_actors(actors);
 
     REQUIRE(toolpaths_cover_percent_of_area(r, toolpaths, 98.0));
   }
