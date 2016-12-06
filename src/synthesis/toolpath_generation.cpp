@@ -1295,7 +1295,7 @@ namespace gca {
     vector<polygon_3> safe_islands = exterior_offset(island_polys, safe_margin);
 
     double stepover_value = stepover_fraction*t.cut_diameter();
-    vector<polygon_3> cut_rings = exterior_offset(island_polys, stepover_value);
+    vector<polygon_3> cut_rings = safe_islands; //exterior_offset(island_polys, stepover_value);
 
     vector<polygon_3> paths;
     while (!contains(cut_rings, r.machine_area)) {
@@ -1406,7 +1406,7 @@ namespace gca {
 
     flat_region r(safe_area, bp, get_start_depth(), get_end_depth(), stock_material);
 
-    return machine_flat_region(r, safe_z, tools);
+    return machine_flat_region_with_contours(r, safe_z, tools);
   }
 
 }
