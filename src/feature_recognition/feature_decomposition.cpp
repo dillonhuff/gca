@@ -483,6 +483,8 @@ namespace gca {
 
     if (result_same) { return boost::none; }
 
+
+    // TODO: Add feature patching here?
     return res;
   }
 
