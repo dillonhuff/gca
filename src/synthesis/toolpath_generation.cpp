@@ -1322,7 +1322,7 @@ namespace gca {
 
     reverse(begin(paths), end(paths));
 
-    vtk_debug_polygons(paths);
+    //vtk_debug_polygons(paths);
 
     vector<polyline> lines;
     for (auto p : paths) {
@@ -1334,10 +1334,10 @@ namespace gca {
   
   std::vector<polyline> contour_lines(const flat_region& r,
 				      const tool& t,
-				      const double cut_depth) {
+				      const double cut_depth,
+				      const double stepover_fraction,
+				      const double wall_margin) {
     // TODO: Make these parameters?
-    double stepover_fraction = 0.3;
-    double wall_margin = 0.005;
     vector<polyline> level_lines =
       contour_level(r, t, stepover_fraction, wall_margin);
 
@@ -1350,7 +1350,11 @@ namespace gca {
     // TODO: Update operation names?
     auto params = calculate_cut_params(t, r.stock_material, CONTOUR);
 
-    auto pocket_paths = contour_lines(r, t, params.cut_depth);
+    double stepover_fraction = 0.3;
+    double wall_margin = 0.005;
+    
+    auto pocket_paths =
+      contour_lines(r, t, params.cut_depth, stepover_fraction, wall_margin);
 
     toolpath rough_path =
       toolpath(CONTOUR,
@@ -1380,7 +1384,7 @@ namespace gca {
 
     DBG_ASSERT(tools.size() > 0);
 
-    tool rough_tool = select_roughing_too(r, tools);
+    tool rough_tool = select_roughing_tool(r, tools);
     tool finish_tool = select_finishing_tool(r, tools);
 
     toolpath rough_path = contour_rough_path(r, safe_z, rough_tool);
@@ -1390,16 +1394,17 @@ namespace gca {
 
     flat_region after_roughing = residual_flat_region(r, rough_path.t);
 
-    toolpath finish_rough =
-      rough_flat_region_with_contours(after_roughing, safe_z, {finish_tool});
-    toolpath finish_path = finish_path(after_roughing, safe_z, tools);
+    toolpath finish_rough = contour_rough_path(after_roughing, safe_z, finish_tool);
+      //rough_flat_region_with_contours(after_roughing, safe_z, {finish_tool});
+
+    toolpath finishing_path = finish_path(after_roughing, safe_z, finish_tool);
     //finish_flat_region(after_roughing, safe_z, tools);
 
     // TODO: fix horrible names
     std::vector<toolpath> all_paths{rough_path,
 	rough_finish,
 	finish_rough,
-	finish_path};
+	finishing_path};
 
     double emco_hp = 0.737;
     double aluminum_unit_hp = 0.3;

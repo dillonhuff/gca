@@ -219,6 +219,7 @@ SET(TEST_FILES test/main.cpp
 	       test/workpiece_alignment_tests.cpp
 	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp
+	       test/ring_tests.cpp
 	       test/polygon_tests.cpp
 	       test/polyline_tests.cpp
 	       test/triangle_tests.cpp

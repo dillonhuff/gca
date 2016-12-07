@@ -35,6 +35,16 @@ namespace gca {
   }
 
   template<typename Ring>
+  point clockwise_normal(const Ring& r) {
+    return ring_normal(r);
+  }
+
+  template<typename Ring>
+  point counterclockwise_normal(const Ring& r) {
+    return -1*ring_normal(r);
+  }
+  
+  template<typename Ring>
   void correct_winding_order(Ring& r, const point n) {
     double theta = angle_between(ring_normal(r), n);
 

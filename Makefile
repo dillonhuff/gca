@@ -4340,6 +4340,36 @@ test/rigid_arrangement_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rigid_arrangement_tests.cpp.s
 .PHONY : test/rigid_arrangement_tests.cpp.s
 
+test/ring_tests.o: test/ring_tests.cpp.o
+
+.PHONY : test/ring_tests.o
+
+# target to build an object file
+test/ring_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/ring_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/ring_tests.cpp.o
+.PHONY : test/ring_tests.cpp.o
+
+test/ring_tests.i: test/ring_tests.cpp.i
+
+.PHONY : test/ring_tests.i
+
+# target to preprocess a source file
+test/ring_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/ring_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/ring_tests.cpp.i
+.PHONY : test/ring_tests.cpp.i
+
+test/ring_tests.s: test/ring_tests.cpp.s
+
+.PHONY : test/ring_tests.s
+
+# target to generate assembly for a file
+test/ring_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/ring_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/ring_tests.cpp.s
+.PHONY : test/ring_tests.cpp.s
+
 test/rotation_tests.o: test/rotation_tests.cpp.o
 
 .PHONY : test/rotation_tests.o
@@ -5128,6 +5158,9 @@ help:
 	@echo "... test/rigid_arrangement_tests.o"
 	@echo "... test/rigid_arrangement_tests.i"
 	@echo "... test/rigid_arrangement_tests.s"
+	@echo "... test/ring_tests.o"
+	@echo "... test/ring_tests.i"
+	@echo "... test/ring_tests.s"
 	@echo "... test/rotation_tests.o"
 	@echo "... test/rotation_tests.i"
 	@echo "... test/rotation_tests.s"
