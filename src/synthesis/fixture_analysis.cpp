@@ -120,7 +120,7 @@ namespace gca {
     for (auto b : basis) {
       cout << b.normal() << endl;
     }
-    
+
     vector<plane> offset_basis;
     for (unsigned i = 0; i < basis.size(); i++) {
       double stock_diam = diameter(basis[i].normal(), mesh);
