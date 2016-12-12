@@ -1217,6 +1217,33 @@ src/backend/feedrate_optimization.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.s
 .PHONY : src/backend/feedrate_optimization.cpp.s
 
+src/backend/freeform_toolpaths.o: src/backend/freeform_toolpaths.cpp.o
+
+.PHONY : src/backend/freeform_toolpaths.o
+
+# target to build an object file
+src/backend/freeform_toolpaths.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.o
+.PHONY : src/backend/freeform_toolpaths.cpp.o
+
+src/backend/freeform_toolpaths.i: src/backend/freeform_toolpaths.cpp.i
+
+.PHONY : src/backend/freeform_toolpaths.i
+
+# target to preprocess a source file
+src/backend/freeform_toolpaths.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.i
+.PHONY : src/backend/freeform_toolpaths.cpp.i
+
+src/backend/freeform_toolpaths.s: src/backend/freeform_toolpaths.cpp.s
+
+.PHONY : src/backend/freeform_toolpaths.s
+
+# target to generate assembly for a file
+src/backend/freeform_toolpaths.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.s
+.PHONY : src/backend/freeform_toolpaths.cpp.s
+
 src/backend/operation.o: src/backend/operation.cpp.o
 
 .PHONY : src/backend/operation.o
@@ -4822,6 +4849,9 @@ help:
 	@echo "... src/backend/feedrate_optimization.o"
 	@echo "... src/backend/feedrate_optimization.i"
 	@echo "... src/backend/feedrate_optimization.s"
+	@echo "... src/backend/freeform_toolpaths.o"
+	@echo "... src/backend/freeform_toolpaths.i"
+	@echo "... src/backend/freeform_toolpaths.s"
 	@echo "... src/backend/operation.o"
 	@echo "... src/backend/operation.i"
 	@echo "... src/backend/operation.s"

@@ -294,7 +294,7 @@ namespace gca {
     auto r = find_if(begin(fixes), end(fixes),
 		     [n](const fixture& s)
 		     { return within_eps(angle_between(s.orient.top_normal(), n), 0, 1.0); });
-    assert(r != end(orients));
+    DBG_ASSERT(r != end(fixes));
     return *r;
   }
 

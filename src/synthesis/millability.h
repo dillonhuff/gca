@@ -17,6 +17,10 @@ namespace gca {
   surfaces_visible_from(const std::vector<surface>& surfaces_left,
 			const point n);
 
+  std::vector<index_t>
+  non_prismatic_millable_faces(const point n,
+			       const triangular_mesh& part);
+
 }
 
 #endif

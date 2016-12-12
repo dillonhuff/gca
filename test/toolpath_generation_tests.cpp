@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "backend/feedrate_optimization.h"
+#include "backend/freeform_toolpaths.h"
 #include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/rotation.h"
@@ -8,6 +9,7 @@
 #include "simulators/sim_mill.h"
 #include "synthesis/fabrication_plan.h"
 #include "synthesis/gcode_generation.h"
+#include "synthesis/millability.h"
 #include "synthesis/toolpath_generation.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
@@ -109,6 +111,47 @@ namespace gca {
 	     const polygon_3& hole) {
     return any_of(begin(lines), end(lines),
 		  [hole](const polyline& pl) { return overlap_2D(pl, hole); });
+  }
+
+  TEST_CASE("Simple freeform") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    tool t{1.0 / 8.0, 3.94, 4, HSS, BALL_NOSE};
+    t.set_cut_diameter(1.0 / 4.0);
+    t.set_cut_length(1.25);
+
+    t.set_shank_diameter(0.5);
+    t.set_shank_length(0.05);
+
+    t.set_holder_diameter(2.5);
+    t.set_holder_length(3.5);
+    t.set_tool_number(1);
+
+    vector<tool> tools{t};
+
+    triangular_mesh mesh =
+      parse_stl("./test/stl-files/CubeSubtractSphere.stl", 0.0001);
+
+    vtk_debug_mesh(mesh);
+
+    point n(0, 0, 1);
+    auto inds = non_prismatic_millable_faces(n, mesh);
+
+    vtk_debug_highlight_inds(inds, mesh);
+
+    double stepover_fraction = 0.1;
+    double safe_z = 1.2;
+    toolpath finish_tp =
+      freeform_finish_lines(inds, mesh, t, safe_z, stepover_fraction);
+
+    vector<vtkSmartPointer<vtkActor> > actors;
+    actors.push_back(polydata_actor(polydata_for_trimesh(mesh)));
+    actors.push_back(actor_for_toolpath(finish_tp));
+
+    visualize_actors(actors);
+
+    REQUIRE(false);
   }
 
   TEST_CASE("Island contour generation") {

@@ -13,6 +13,9 @@ include(${VTK_USE_FILE})
 SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2")
 #-Werror -Wall")
 
+SET(CXX_OCL_LINK_FLAGS "-locl -locl.11.10.66")
+SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${CXX_OCL_LINK_FLAGS}")
+
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_COMPILE_FLAGS}")
 
 INCLUDE_DIRECTORIES(./src/)
@@ -150,6 +153,7 @@ SET(GCA_CPPS
 	./src/backend/chamfer_operation.cpp
 	./src/backend/drilled_hole_operation.cpp
 	./src/backend/feedrate_optimization.cpp
+	./src/backend/freeform_toolpaths.cpp
 	./src/backend/operation.cpp
 	./src/backend/timing.cpp
 	./src/feature_recognition/chamfer_detection.cpp
@@ -194,6 +198,7 @@ add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
 target_link_libraries(gca gcode geometry utils gprocess)
 
 SET(BACKEND_TEST_FILES test/toolpath_generation_tests.cpp)
+#//		       test/freeform_toolpath_tests.cpp)
 
 add_executable(backend-tests test/main_backend.cpp ${BACKEND_TEST_FILES})
 target_link_libraries(backend-tests geometry utils gcode gprocess gca)

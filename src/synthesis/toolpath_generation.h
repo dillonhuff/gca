@@ -377,6 +377,11 @@ namespace gca {
   
   boost_linestring_2 to_boost_linestring(const polyline& pl);
 
+  std::vector<polyline>
+  zig_lines(const polygon_3& bound,
+	    const std::vector<polygon_3>& holes,
+	    const tool& t);
+
 }
 
 #endif
