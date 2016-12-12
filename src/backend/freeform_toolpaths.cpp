@@ -91,7 +91,6 @@ namespace gca {
     std::cout << "# of clpoints = " << pts.size() << std::endl;
     for (auto pt : pts) {
       std::cout << pt << std::endl;
-
       final_pts.push_back(point(pt.x, pt.y, pt.z));
     }
     
@@ -130,7 +129,7 @@ namespace gca {
 
     vector<polygon_3> polys = arrange_rings(rings);
 
-    vtk_debug_polygons(polys);
+    //vtk_debug_polygons(polys);
 
     DBG_ASSERT(polys.size() == 1);
 
@@ -190,6 +189,9 @@ namespace gca {
     vector<double> depths = cut_depths(start_depth, end_depth, cut_depth);
 
     cout << "# of depths = " << depths.size() << endl;
+    for (auto d : depths) {
+      cout << d << endl;
+    }
 
     vtk_debug_highlight_inds(surf);
     
@@ -197,7 +199,7 @@ namespace gca {
 
     vector<polyline> lines;
     for (auto depth : depths) {
-      concat(lines, freeform_zig(inds, mesh, t, safe_z, cut_depth, stepover_fraction));
+      concat(lines, freeform_zig(inds, mesh, t, safe_z, depth, stepover_fraction));
     }
 
     return {toolpath(FREEFORM_POCKET,
