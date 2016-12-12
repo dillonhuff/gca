@@ -517,6 +517,25 @@ namespace gca {
     return boost::none;
   }
 
+  double volume(const std::vector<freeform_surface>& surfs,
+		const point n) {
+    double vol = 0.0;
+
+    for (auto& surf : surfs) {
+      double surf_height =
+	(max_in_dir(surf.s, n) - min_in_dir(surf.s, n)) + 0.01;
+      triangular_mesh m =
+	extrude_surface_negative(surf.s.index_list(),
+				 surf.s.get_parent_mesh(),
+				 n,
+				 surf_height);
+      vol += volume(m);
+    }
+
+    cout << "Freeform surface volume in " << n << " = " << vol << endl;
+    return vol;
+  }
+
   direction_process_info
   select_next_dir(std::vector<direction_process_info>& dir_info,
 		  const volume_info_map& vol_info) {
@@ -542,8 +561,8 @@ namespace gca {
     auto next = max_element(begin(dir_info), end(dir_info),
     			    [vol_info](const direction_process_info& l,
     				       const direction_process_info& r) {
-    			      return volume(l.decomp, vol_info) <
-    			      volume(r.decomp, vol_info);
+    			      return (volume(l.decomp, vol_info) + volume(l.freeform_surfaces, normal(l.decomp))) <
+    			      (volume(r.decomp, vol_info) + volume(r.freeform_surfaces, normal(r.decomp)));
     			    });
 
     DBG_ASSERT(next != end(dir_info));
