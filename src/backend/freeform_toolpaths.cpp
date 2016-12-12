@@ -187,7 +187,7 @@ namespace gca {
       cout << d << endl;
     }
 
-    vtk_debug_highlight_inds(surf);
+    //vtk_debug_highlight_inds(surf);
     
     DBG_ASSERT(depths.size() > 0);
 

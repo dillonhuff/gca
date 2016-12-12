@@ -1392,18 +1392,18 @@ namespace gca {
 
     toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
 
-    flat_region after_roughing = residual_flat_region(r, rough_path.t);
+    //flat_region after_roughing = residual_flat_region(r, rough_path.t);
 
-    toolpath finish_rough = contour_rough_path(after_roughing, safe_z, finish_tool);
+    //    toolpath finish_rough = contour_rough_path(after_roughing, safe_z, finish_tool);
       //rough_flat_region_with_contours(after_roughing, safe_z, {finish_tool});
 
-    toolpath finishing_path = finish_path(after_roughing, safe_z, finish_tool);
+    toolpath finishing_path = finish_path(r, safe_z, finish_tool);
     //finish_flat_region(after_roughing, safe_z, tools);
 
     // TODO: fix horrible names
     std::vector<toolpath> all_paths{rough_path,
 	rough_finish,
-	finish_rough,
+	//	finish_rough,
 	finishing_path};
 
     double emco_hp = 0.737;

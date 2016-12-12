@@ -133,12 +133,12 @@ namespace gca {
     triangular_mesh mesh =
       parse_stl("./test/stl-files/CubeSubtractSphere.stl", 0.0001);
 
-    vtk_debug_mesh(mesh);
+    //vtk_debug_mesh(mesh);
 
     point n(0, 0, 1);
     auto inds = non_prismatic_millable_faces(n, mesh);
 
-    vtk_debug_highlight_inds(inds, mesh);
+    //vtk_debug_highlight_inds(inds, mesh);
 
     double stepover_fraction = 0.1;
     double safe_z = 1.2;
@@ -161,11 +161,11 @@ namespace gca {
 			   rough_stepover_fraction,
 			   rough_depth_fraction);
 
-    vector<vtkSmartPointer<vtkActor> > rough_actors;
-    rough_actors.push_back(polydata_actor(polydata_for_trimesh(mesh)));
-    rough_actors.push_back(actor_for_toolpath(rough_tp));
+    // vector<vtkSmartPointer<vtkActor> > rough_actors;
+    // rough_actors.push_back(polydata_actor(polydata_for_trimesh(mesh)));
+    // rough_actors.push_back(actor_for_toolpath(rough_tp));
 
-    visualize_actors(rough_actors);
+    // visualize_actors(rough_actors);
     
     REQUIRE(true);
   }
