@@ -192,6 +192,9 @@ namespace gca {
 
     all_millable_faces = sort_unique(all_millable_faces);
 
+    // TODO: Restore normal selection once I am done with sphere experiment
+    return norms;
+
     DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
 
     //vtk_debug_highlight_inds(all_millable_faces, part);
