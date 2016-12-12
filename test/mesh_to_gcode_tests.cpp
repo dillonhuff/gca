@@ -792,9 +792,70 @@ namespace gca {
       }
     }
 
-    // for (auto& step : fab_plan.steps()) {
-    //   visual_debug(step);
-    // }
+  }
+
+  TEST_CASE("Part with freeform surface") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vice test_v = current_setup();
+    vice test_vice = top_jaw_origin_vice(test_v);
+    
+    std::vector<plate_height> parallel_plates{0.4995};
+    fixtures fixes(test_vice, parallel_plates);
+
+    tool t1{1.0 / 8.0, 3.94, 4, HSS, BALL_NOSE};
+    t1.set_cut_diameter(1.0 / 4.0);
+    t1.set_cut_length(1.25);
+
+    t1.set_shank_diameter(0.5);
+    t1.set_shank_length(0.05);
+
+    t1.set_holder_diameter(2.5);
+    t1.set_holder_length(3.5);
+    t1.set_tool_number(1);
+    
+    tool t2{1.0, 3.94, 4, HSS, FLAT_NOSE};
+    t2.set_cut_diameter(1.0);
+    t2.set_cut_length(1.0);
+
+    t2.set_shank_diameter(1.1);
+    t2.set_shank_length(0.05);
+
+    t2.set_holder_diameter(2.5);
+    t2.set_holder_length(3.5);
+
+    vector<tool> tools{t1, t2};
+
+    workpiece workpiece_dims(1.58, 1.5, 1.5, ALUMINUM);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CubeSubtractSphere.stl", 0.0001);
+
+    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+
+    REQUIRE(p.fixtures().size() == 2);
+
+    const fixture_setup& fix_2 = p.fixtures()[0];
+
+    int num_freeform = 0;
+    for (auto& p : fix_2.pockets) {
+      if (p.pocket_type() == DRILLED_HOLE_POCKET) {
+	num_freeform++;
+      }
+    }
+
+    REQUIRE(num_freeform == 2);
+
+    fabrication_plan fab_plan =
+      fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
+
+    REQUIRE(fab_plan.steps().size() == 2);
+
+    for (auto& tp : fab_plan.steps()[0].toolpaths()) {
+      if (tp.pocket_type() == FREEFORM_POCKET) {
+	REQUIRE((tp.get_tool().type() == BALL_NOSE));
+      }
+    }
 
   }
   
