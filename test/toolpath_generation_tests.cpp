@@ -142,15 +142,31 @@ namespace gca {
 
     double stepover_fraction = 0.1;
     double safe_z = 1.2;
-    toolpath finish_tp =
-      freeform_finish_lines(inds, mesh, t, safe_z, stepover_fraction);
+    // toolpath finish_tp =
+    //   freeform_finish_lines(inds, mesh, t, safe_z, stepover_fraction);
 
-    vector<vtkSmartPointer<vtkActor> > actors;
-    actors.push_back(polydata_actor(polydata_for_trimesh(mesh)));
-    actors.push_back(actor_for_toolpath(finish_tp));
+    // vector<vtkSmartPointer<vtkActor> > actors;
+    // actors.push_back(polydata_actor(polydata_for_trimesh(mesh)));
+    // actors.push_back(actor_for_toolpath(finish_tp));
 
-    visualize_actors(actors);
+    // visualize_actors(actors);
 
+    double rough_stepover_fraction = 0.3;
+    double rough_depth_fraction = 0.2;
+    toolpath rough_tp =
+      freeform_rough_lines(inds,
+			   mesh,
+			   t,
+			   safe_z,
+			   stepover_fraction,
+			   rough_depth_fraction);
+
+    vector<vtkSmartPointer<vtkActor> > rough_actors;
+    rough_actors.push_back(polydata_actor(polydata_for_trimesh(mesh)));
+    rough_actors.push_back(actor_for_toolpath(rough_tp));
+
+    visualize_actors(rough_actors);
+    
     REQUIRE(true);
   }
 

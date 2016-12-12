@@ -113,12 +113,14 @@ namespace gca {
     return dropped;
   }
 
-  toolpath
-  freeform_finish_lines(const std::vector<index_t>& inds,
-			const triangular_mesh& mesh,
-			const tool& t,
-			const double safe_z,
-			const double stepover_fraction) {
+  vector<polyline>
+  freeform_zig(const std::vector<index_t>& inds,
+	       const triangular_mesh& mesh,
+	       const tool& t,
+	       const double safe_z,
+	       const double z_min,
+	       const double stepover_fraction) {
+
     auto inds_cpy = inds;
     vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, mesh);
     vector<vector<point> > rings;
@@ -138,8 +140,21 @@ namespace gca {
 
     vector<polyline> init_lines =
       zig_lines_sampled(surface_bound, {}, t, stepover_fraction);
-    double z_min = 0.0;
     vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
+
+    return lines;
+  }
+
+  toolpath
+  freeform_finish_lines(const std::vector<index_t>& inds,
+			const triangular_mesh& mesh,
+			const tool& t,
+			const double safe_z,
+			const double stepover_fraction) {
+    double z_min = 0.0;
+
+    vector<polyline> lines =
+      freeform_zig(inds, mesh, t, safe_z, z_min, stepover_fraction);
 
     return {toolpath(FREEFORM_POCKET,
 		     safe_z,
@@ -148,7 +163,50 @@ namespace gca {
 		     2.5,
 		     t,
 		     lines)};
-    
   }
-  
+
+  toolpath
+  freeform_rough_lines(const std::vector<index_t>& inds,
+		       const triangular_mesh& mesh,
+		       const tool& t,
+		       const double safe_z,
+		       const double stepover_fraction,
+		       const double depth_fraction) {
+
+    DBG_ASSERT(stepover_fraction > 0.0);
+    DBG_ASSERT(stepover_fraction <= 0.5);
+
+    surface surf(&mesh, inds);
+    point up(0, 0, 1);
+
+    double start_depth = max_in_dir(surf, up);
+    double end_depth = min_in_dir(surf, up);
+
+
+    cout << "Start depth = " << start_depth << endl;
+    cout << "End depth   = " << end_depth << endl;
+
+    double cut_depth = depth_fraction*t.diameter();
+    vector<double> depths = cut_depths(start_depth, end_depth, cut_depth);
+
+    cout << "# of depths = " << depths.size() << endl;
+
+    vtk_debug_highlight_inds(surf);
+    
+    DBG_ASSERT(depths.size() > 0);
+
+    vector<polyline> lines;
+    for (auto depth : depths) {
+      concat(lines, freeform_zig(inds, mesh, t, safe_z, cut_depth, stepover_fraction));
+    }
+
+    return {toolpath(FREEFORM_POCKET,
+		     safe_z,
+		     2000,
+		     5.0,
+		     2.5,
+		     t,
+		     lines)};
+  }
+
 }

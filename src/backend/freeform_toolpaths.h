@@ -10,4 +10,12 @@ namespace gca {
 			const double safe_z,
 			const double stepover_fraction);
 
+  toolpath
+  freeform_rough_lines(const std::vector<index_t>& inds,
+		       const triangular_mesh& mesh,
+		       const tool& t,
+		       const double safe_z,
+		       const double stepover_fraction,
+		       const double depth_fraction);
+
 }

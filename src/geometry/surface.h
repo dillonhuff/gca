@@ -65,7 +65,11 @@ namespace gca {
     std::vector<point> vertex_list() const {
       vector<point> verts;
       for (auto i : index_list()) {
-	verts.push_back(vertex(i));
+	triangle t = get_parent_mesh().face_triangle(i);
+	verts.push_back(t.v1);
+	verts.push_back(t.v2);
+	verts.push_back(t.v3);
+	//	verts.push_back(vertex(i));
       }
 
       return verts;
