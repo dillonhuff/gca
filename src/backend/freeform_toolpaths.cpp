@@ -12,13 +12,16 @@ namespace gca {
   std::vector<polyline>
   zig_lines_sampled(const polygon_3& bound,
 		    const std::vector<polygon_3>& holes,
-		    const tool& t) {
+		    const tool& t,
+		    const double stepover_fraction) {
 
     DBG_ASSERT(bound.holes().size() == 0);
+    DBG_ASSERT(stepover_fraction > 0.0);
+    DBG_ASSERT(stepover_fraction <= 0.5);
 
     box b = bounding_box(bound);
     cout << "Zig lines bounding box = " << endl << b << endl;
-    double stepover = t.radius();
+    double stepover = stepover_fraction*t.diameter();
 
     vector<polyline> lines;
     double x_stepover = 0.01;
@@ -133,7 +136,8 @@ namespace gca {
 
     DBG_ASSERT(surface_bound.holes().size() == 0);
 
-    vector<polyline> init_lines = zig_lines_sampled(surface_bound, {}, t);
+    vector<polyline> init_lines =
+      zig_lines_sampled(surface_bound, {}, t, stepover_fraction);
     double z_min = 0.0;
     vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
 

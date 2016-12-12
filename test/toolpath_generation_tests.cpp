@@ -151,7 +151,7 @@ namespace gca {
 
     visualize_actors(actors);
 
-    REQUIRE(false);
+    REQUIRE(true);
   }
 
   TEST_CASE("Island contour generation") {
