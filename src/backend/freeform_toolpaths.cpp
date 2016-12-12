@@ -77,20 +77,13 @@ namespace gca {
     pdc.setSTL(surf);
     pdc.setCutter(&ballCut);
   
-    std::vector<ocl::CLPoint> pts = pdc.getCLPoints();
-    std::cout << "# of clpoints = " << pts.size() << std::endl;
-    for (auto pt : pts) {
-      std::cout << pt << std::endl;
-    }
-
     pdc.run();
 
     vector<point> final_pts;
 
-    pts = pdc.getCLPoints();
+    auto pts = pdc.getCLPoints();
     std::cout << "# of clpoints = " << pts.size() << std::endl;
     for (auto pt : pts) {
-      std::cout << pt << std::endl;
       final_pts.push_back(point(pt.x, pt.y, pt.z));
     }
     
@@ -137,6 +130,7 @@ namespace gca {
 
     DBG_ASSERT(surface_bound.holes().size() == 0);
 
+    
     vector<polyline> init_lines =
       zig_lines_sampled(surface_bound, {}, t, stepover_fraction);
     vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);

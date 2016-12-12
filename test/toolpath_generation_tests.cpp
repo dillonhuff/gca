@@ -151,14 +151,14 @@ namespace gca {
 
     // visualize_actors(actors);
 
-    double rough_stepover_fraction = 0.3;
+    double rough_stepover_fraction = 0.25;
     double rough_depth_fraction = 0.2;
     toolpath rough_tp =
       freeform_rough_lines(inds,
 			   mesh,
 			   t,
 			   safe_z,
-			   stepover_fraction,
+			   rough_stepover_fraction,
 			   rough_depth_fraction);
 
     vector<vtkSmartPointer<vtkActor> > rough_actors;
