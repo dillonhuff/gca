@@ -611,7 +611,11 @@ namespace gca {
       feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
       tool_access_info info = find_accessable_tools(decomp, tools);
       vector<chamfer> chamfers = chamfer_regions(part, n, tools);
-      dir_info.push_back({decomp, info, chamfers});
+      vector<freeform_surface> freeform_surfs =
+	freeform_surface_regions(part, n, tools);
+
+      cout << "# of freeform surfaces in " <<  n <<  " = " << freeform_surfs.size() << endl;
+      dir_info.push_back({decomp, info, chamfers, freeform_surfs});
     }
 
     for (auto info : dir_info) {

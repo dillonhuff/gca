@@ -157,6 +157,7 @@ SET(GCA_CPPS
 	./src/backend/operation.cpp
 	./src/backend/timing.cpp
 	./src/feature_recognition/chamfer_detection.cpp
+	./src/feature_recognition/freeform_surface_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/visual_debug.cpp
 	./src/process_planning/axis_location.cpp

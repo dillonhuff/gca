@@ -1514,6 +1514,33 @@ src/feature_recognition/feature_decomposition.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/feature_decomposition.cpp.s
 .PHONY : src/feature_recognition/feature_decomposition.cpp.s
 
+src/feature_recognition/freeform_surface_detection.o: src/feature_recognition/freeform_surface_detection.cpp.o
+
+.PHONY : src/feature_recognition/freeform_surface_detection.o
+
+# target to build an object file
+src/feature_recognition/freeform_surface_detection.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/freeform_surface_detection.cpp.o
+.PHONY : src/feature_recognition/freeform_surface_detection.cpp.o
+
+src/feature_recognition/freeform_surface_detection.i: src/feature_recognition/freeform_surface_detection.cpp.i
+
+.PHONY : src/feature_recognition/freeform_surface_detection.i
+
+# target to preprocess a source file
+src/feature_recognition/freeform_surface_detection.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/freeform_surface_detection.cpp.i
+.PHONY : src/feature_recognition/freeform_surface_detection.cpp.i
+
+src/feature_recognition/freeform_surface_detection.s: src/feature_recognition/freeform_surface_detection.cpp.s
+
+.PHONY : src/feature_recognition/freeform_surface_detection.s
+
+# target to generate assembly for a file
+src/feature_recognition/freeform_surface_detection.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/freeform_surface_detection.cpp.s
+.PHONY : src/feature_recognition/freeform_surface_detection.cpp.s
+
 src/feature_recognition/visual_debug.o: src/feature_recognition/visual_debug.cpp.o
 
 .PHONY : src/feature_recognition/visual_debug.o
@@ -4882,6 +4909,9 @@ help:
 	@echo "... src/feature_recognition/feature_decomposition.o"
 	@echo "... src/feature_recognition/feature_decomposition.i"
 	@echo "... src/feature_recognition/feature_decomposition.s"
+	@echo "... src/feature_recognition/freeform_surface_detection.o"
+	@echo "... src/feature_recognition/freeform_surface_detection.i"
+	@echo "... src/feature_recognition/freeform_surface_detection.s"
 	@echo "... src/feature_recognition/visual_debug.o"
 	@echo "... src/feature_recognition/visual_debug.i"
 	@echo "... src/feature_recognition/visual_debug.s"

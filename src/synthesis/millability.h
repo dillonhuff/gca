@@ -21,6 +21,10 @@ namespace gca {
   non_prismatic_millable_faces(const point n,
 			       const triangular_mesh& part);
 
+  std::vector<index_t>
+  prismatic_millable_faces(const point n,
+			   const triangular_mesh& part);
+  
 }
 
 #endif

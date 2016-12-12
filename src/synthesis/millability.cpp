@@ -259,4 +259,19 @@ namespace gca {
     return not_vert_or_horiz;
   }
 
+  std::vector<index_t>
+  prismatic_millable_faces(const point n,
+			   const triangular_mesh& part) {
+    vector<index_t> all_millable_faces = millable_faces(n, part);
+
+    // Just use parallel to or orthogonal_to functions?
+    vector<index_t> vert_or_horiz =
+      select(all_millable_faces, [n, part](const index_t& s) {
+	  return all_parallel_to({s}, part, n, 1.0) ||
+	  all_orthogonal_to({s}, part, n, 1.0);
+	});
+
+    return vert_or_horiz;
+  }
+
 }
