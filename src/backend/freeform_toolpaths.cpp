@@ -9,6 +9,45 @@
 
 namespace gca {
 
+  std::vector<polyline>
+  zig_lines_sampled(const polygon_3& bound,
+		    const std::vector<polygon_3>& holes,
+		    const tool& t) {
+
+    DBG_ASSERT(bound.holes().size() == 0);
+
+    box b = bounding_box(bound);
+    cout << "Zig lines bounding box = " << endl << b << endl;
+    double stepover = t.radius();
+
+    vector<polyline> lines;
+    double x_stepover = 0.01;
+
+    double current_y = b.y_min;
+
+    while (current_y < b.y_max) {
+
+      double current_x = b.x_min;
+      vector<point> line;
+      while (current_x < b.x_max) {
+	point start(current_x, current_y, b.z_min);
+	line.push_back(start);
+	current_x += x_stepover;
+      }
+
+      lines.push_back(line);
+      current_y += stepover;
+    }
+
+    cout << "# of lines = " << lines.size() << endl;
+
+    lines = clip_lines(lines, bound, holes, t);
+
+    cout << "# of lines after clipping = " << lines.size() << endl;
+
+    return lines;
+  }
+  
   polyline
   drop_polyline(const double z_min,
 		const triangular_mesh& mesh,
@@ -31,14 +70,6 @@ namespace gca {
       ocl::CLPoint cl_pt(p.x, p.y, z_min);
       pdc.appendPoint(cl_pt);
     }
-    // ocl::CLPoint cp(s.x, s.y, s.z);
-    // ocl::CLPoint ep(e.x, e.y, e.z);
-    // ocl::CLPoint lp(l.x, l.y, l.z);
-
-    // pdc.appendPoint(cp);
-    // pdc.appendPoint(ep);
-    // pdc.appendPoint(lp);
-
 
     pdc.setSTL(surf);
     pdc.setCutter(&ballCut);
@@ -102,7 +133,7 @@ namespace gca {
 
     DBG_ASSERT(surface_bound.holes().size() == 0);
 
-    vector<polyline> init_lines = zig_lines(surface_bound, {}, t);
+    vector<polyline> init_lines = zig_lines_sampled(surface_bound, {}, t);
     double z_min = 0.0;
     vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
 

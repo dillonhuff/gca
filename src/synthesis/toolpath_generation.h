@@ -382,6 +382,12 @@ namespace gca {
 	    const std::vector<polygon_3>& holes,
 	    const tool& t);
 
+  std::vector<polyline>
+  clip_lines(const std::vector<polyline>& lines,
+	     const polygon_3& bound,
+	     const std::vector<polygon_3>& hole_polys,
+	     const tool& t);
+
 }
 
 #endif
