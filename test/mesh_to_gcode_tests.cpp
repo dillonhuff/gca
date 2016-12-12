@@ -833,18 +833,18 @@ namespace gca {
 
     fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-    REQUIRE(p.fixtures().size() == 2);
-
-    const fixture_setup& fix_2 = p.fixtures()[0];
+    //REQUIRE(p.fixtures().size() == 2);
 
     int num_freeform = 0;
-    for (auto& p : fix_2.pockets) {
-      if (p.pocket_type() == DRILLED_HOLE_POCKET) {
-	num_freeform++;
+    for (auto& fix_2 : p.fixtures()) {
+      for (auto& p : fix_2.pockets) {
+	if (p.pocket_type() == FREEFORM_POCKET) {
+	  num_freeform++;
+	}
       }
     }
 
-    REQUIRE(num_freeform == 2);
+    REQUIRE(num_freeform == 1);
 
     fabrication_plan fab_plan =
       fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);

@@ -1,4 +1,5 @@
 #include "backend/chamfer_operation.h"
+#include "backend/freeform_toolpaths.h"
 #include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/offset.h"
@@ -39,7 +40,8 @@ namespace gca {
 	       const std::vector<feature*>& features,
 	       const fixture& f,
 	       const tool_access_info& tool_info,
-	       const std::vector<chamfer>& chamfers) {
+	       const std::vector<chamfer>& chamfers,
+	       const std::vector<freeform_surface>& freeforms) {
 
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
@@ -47,6 +49,9 @@ namespace gca {
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
+    }
+    for (auto& freeform : freeforms) {
+      pockets.push_back(freeform_operation(freeform.s, freeform.tools));
     }
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
@@ -119,6 +124,23 @@ namespace gca {
     return final_nef;
   }
 
+  Nef_polyhedron
+  subtract_freeforms(const Nef_polyhedron& stock_nef,
+		     const std::vector<freeform_surface>& chamfers,
+		     const triangular_mesh& part,
+		     const point n) {
+    if (chamfers.size() == 0) {
+      return stock_nef;
+    }
+
+    Nef_polyhedron final_nef = stock_nef;
+    for (auto& s : chamfers) {
+      final_nef = subtract_surface(final_nef, s.s.index_list(), part, n);
+    }
+
+    return final_nef;
+  }
+  
   Nef_polyhedron
   subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features) {
@@ -885,11 +907,12 @@ namespace gca {
 		   clipped_features(f, map_find(f, volume_inf), info.tool_info));
 	  }
 
-	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces));
+	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces, info.freeform_surfaces));
 
 	  stock_nef = subtract_features(stock_nef, features);
-	  // NOTE: Assumes all chamfers are accessable
+	  // NOTE: Assumes all chamfers and freeform surfaces are accessable
 	  stock_nef = subtract_chamfers(stock_nef, info.chamfer_surfaces, part, n);
+	  stock_nef = subtract_freeforms(stock_nef, info.freeform_surfaces, part, n);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
 	  current_stock = nef_to_single_trimesh(stock_nef);

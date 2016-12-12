@@ -25,7 +25,11 @@ namespace gca {
     for (auto& r : regions) {
       surface s(&part, r);
       //vtk_debug_highlight_inds(s);
-      freeform_surface surf{s, {}};
+
+      vector<tool> ball_tools =
+	select(tools, [](const tool& t) { return t.type() == BALL_NOSE; });
+
+      freeform_surface surf{s, ball_tools};
       surfs.push_back(surf);
     }
 
