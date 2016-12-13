@@ -1,3 +1,4 @@
+#include "process_planning/axis_location.h"
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
 
@@ -71,8 +72,6 @@ namespace gca {
 			 const std::vector<tool>& tools,
 			 const std::vector<point>& norms) {
 
-    //    vector<double> angles = chamfer_angles(tools);
-
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
       feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
@@ -103,6 +102,18 @@ namespace gca {
     }
 
     clip_top_and_bottom_pairs(dir_info, tools);
+
+    return dir_info;
+  }
+
+  std::vector<direction_process_info>
+  select_mill_directions(const triangular_mesh& stock,
+			 const triangular_mesh& part,
+			 const fixtures& f,
+			 const std::vector<tool>& tools) {
+    vector<point> norms = select_cut_directions(stock, part, f, tools);
+    vector<direction_process_info> dir_info =
+      initial_decompositions(stock, part, tools, norms);
 
     return dir_info;
   }

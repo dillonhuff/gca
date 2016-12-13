@@ -4,6 +4,7 @@
 #include "feature_recognition/freeform_surface_detection.h"
 #include "feature_recognition/feature_decomposition.h"
 #include "process_planning/tool_access.h"
+#include "synthesis/fixture_analysis.h"
 
 namespace gca {
 
@@ -19,5 +20,11 @@ namespace gca {
 			 const triangular_mesh& part,
 			 const std::vector<tool>& tools,
 			 const std::vector<point>& norms);
+
+  std::vector<direction_process_info>
+  select_mill_directions(const triangular_mesh& stock,
+			 const triangular_mesh& part,
+			 const fixtures& f,
+			 const std::vector<tool>& tools);
   
 }

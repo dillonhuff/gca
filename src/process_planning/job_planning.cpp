@@ -6,7 +6,7 @@
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/visual_debug.h"
-#include "process_planning/axis_location.h"
+#include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "synthesis/visual_debug.h"
@@ -878,9 +878,8 @@ namespace gca {
 				       const triangular_mesh& part,
 				       const fixtures& f,
 				       const std::vector<tool>& tools) {
-    vector<point> norms = select_cut_directions(stock, part, f, tools);
     vector<direction_process_info> dir_info =
-      initial_decompositions(stock, part, tools, norms);
+      select_mill_directions(stock, part, f, tools);
 
     return select_jobs_and_features(stock, part, f, dir_info);
   }

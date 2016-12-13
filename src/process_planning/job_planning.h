@@ -1,7 +1,6 @@
 #pragma once
 
 #include "process_planning/direction_selection.h"
-#include "synthesis/fixture_analysis.h"
 
 namespace gca {
 
