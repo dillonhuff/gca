@@ -85,3 +85,5 @@ manufacture-tests
 manufacture_with_vice_zeroing
 non-manufacture-tests
 parse-iges
+cut-rect.app/
+patch_master_diff
