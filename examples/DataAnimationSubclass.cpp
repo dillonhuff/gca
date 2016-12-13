@@ -321,6 +321,64 @@ fabrication_inputs part_100_013_inputs() {
   return fabrication_inputs(fixes, tools, workpiece_dims);
 }
 
+fabrication_inputs part_1_42_inputs() {
+  vice test_v = current_setup();
+  vice test_vice = top_jaw_origin_vice(test_v);
+
+  std::vector<plate_height> plates{0.4995}; //0.1, 0.3, 0.7};
+  fixtures fixes(test_vice, plates);
+
+  workpiece workpiece_dims(1.51, 1.58, 1.51, ALUMINUM);
+
+  tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  t1.set_cut_diameter(1.0 / 8.0);
+  t1.set_cut_length(3.0 / 8.0);
+
+  t1.set_shank_diameter(3.0 / 8.0); //.375); //3.0 / 8.0);
+  t1.set_shank_length(0.1);
+
+  t1.set_holder_diameter(1.8);
+  t1.set_holder_length(3.0);
+  t1.set_tool_number(1);
+
+  tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
+  t2.set_cut_diameter(3.0 / 8.0);
+  t2.set_cut_length(0.75);
+
+  t2.set_shank_diameter(3.0 / 8.0);
+  t2.set_shank_length(0.1);
+
+  t2.set_holder_diameter(1.8);
+  t2.set_holder_length(3.0);
+  t2.set_tool_number(2);
+
+  tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
+  t3.set_cut_diameter(0.5);
+  t3.set_cut_length(1.25);
+
+  t3.set_shank_diameter(0.5);
+  t3.set_shank_length(0.5);
+
+  t3.set_holder_diameter(1.8);
+  t3.set_holder_length(3.0);
+  t3.set_tool_number(3);
+
+  tool t4{1.0 / 8.0, 3.94, 4, HSS, BALL_NOSE};
+  t4.set_cut_diameter(1.0 / 4.0);
+  t4.set_cut_length(1.25);
+
+  t4.set_shank_diameter(0.5);
+  t4.set_shank_length(0.05);
+
+  t4.set_holder_diameter(2.5);
+  t4.set_holder_length(3.5);
+  t4.set_tool_number(1);
+  
+  vector<tool> tools{t1, t2, t3, t4};
+
+  return fabrication_inputs(fixes, tools, workpiece_dims);
+}
+
 fabrication_inputs part_100_009_inputs() {
   vice test_v = current_setup();
   vice test_vice = top_jaw_origin_vice(test_v);
@@ -389,7 +447,7 @@ int main(int argc, char *argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  fabrication_inputs fab_inputs = part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
+  fabrication_inputs fab_inputs = part_1_42_inputs(); //part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
   
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
@@ -402,9 +460,10 @@ int main(int argc, char *argv[]) {
   double dice_scale_factor = 0.7;
   double part_100_013_scale_factor = 0.7;
   double part_100_009_scale_factor = 1.0;
+  double part_1_42_scale_factor = 1.0;
 
-  auto scale_func = [part_100_013_scale_factor](const point p) {
-    return part_100_013_scale_factor*p;
+  auto scale_func = [part_1_42_scale_factor](const point p) {
+    return part_1_42_scale_factor*p;
   };
 
   mesh =

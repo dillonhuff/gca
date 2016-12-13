@@ -204,12 +204,18 @@ namespace gca {
 	   (possible_dirs.size() > 0)) {
       point next_norm = select_next_cut_dir(all_millable_faces, part);
 
+      cout << "Next norm = " << next_norm << endl;
       bool viable_dir =
 	any_of(begin(possible_dirs), end(possible_dirs),
 	       [next_norm](const point d) {
 		 return angle_eps(d, next_norm, 0.0, 0.05);
 	       });
 
+      delete_if(possible_dirs,
+		[next_norm](const point p) {
+		  return angle_eps(p, next_norm, 0.0, 0.5);
+		});
+      
       if (viable_dir) {
 	cout << "next_norm = " << next_norm << endl;
 	norms.push_back({next_norm, false});
@@ -237,7 +243,27 @@ namespace gca {
       }
     }
 
-    DBG_ASSERT(all_millable_faces.size() == part.face_indexes().size());
+
+    if (!(all_millable_faces.size() == part.face_indexes().size())) {
+      cout << "# of faces          = " << part.face_indexes().size() << endl;
+      cout << "# of millable faces = " << all_millable_faces.size() << endl;
+
+      auto unmillable = part.face_indexes();
+      subtract(unmillable, all_millable_faces);
+
+      surface s(&part, unmillable);
+
+      double eps = 0.00001;
+      double unmillable_area = s.surface_area();
+      cout << "Unmillable surface area = " << unmillable_area << endl;
+      if (s.surface_area() <= eps) {
+	return norms;
+      }
+
+      vtk_debug_highlight_inds(all_millable_faces, part);
+
+      DBG_ASSERT(all_millable_faces.size() == part.face_indexes().size());
+    }
 
     cout << "# of cut directions to consider = " << norms.size() << endl;
 
