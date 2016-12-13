@@ -161,18 +161,19 @@ namespace gca {
     return dirs;
   }
 
-  std::vector<point> select_cut_directions(const triangular_mesh& stock,
-					   const triangular_mesh& part,
-					   const fixtures& f,
-					   const std::vector<tool>& tools) {
+  std::vector<direction_info>
+  select_cut_directions(const triangular_mesh& stock,
+			const triangular_mesh& part,
+			const fixtures& f,
+			const std::vector<tool>& tools) {
     vector<surface> surfs = outer_surfaces(stock);
 
     DBG_ASSERT(surfs.size() == 6);
 
-    vector<point> norms;
+    vector<direction_info> norms;
     for (auto ax : surfs) {
       point n = ax.face_orientation(ax.front());
-      norms.push_back(n);
+      norms.push_back({n, false});
     }
 
     DBG_ASSERT(norms.size() == 6);
@@ -181,8 +182,8 @@ namespace gca {
 
     vector<index_t> all_millable_faces;
     for (auto n : norms) {
-      concat(all_millable_faces, prismatic_millable_faces(n, part));
-      concat(all_millable_faces, chamfer_faces(part, n, tools));
+      concat(all_millable_faces, prismatic_millable_faces(n.dir, part));
+      concat(all_millable_faces, chamfer_faces(part, n.dir, tools));
     }
 
     all_millable_faces = sort_unique(all_millable_faces);
@@ -194,8 +195,8 @@ namespace gca {
     vector<point> possible_dirs = possible_mill_directions(part);
     delete_if(possible_dirs,
 	      [norms](const point p) {
-		return any_of(begin(norms), end(norms), [p](const point d) {
-		    return angle_eps(d, p, 0.0, 0.5);
+		return any_of(begin(norms), end(norms), [p](const direction_info d) {
+		    return angle_eps(d.dir, p, 0.0, 0.5);
 		  });
 	      });
 
@@ -211,7 +212,7 @@ namespace gca {
 
       if (viable_dir) {
 	cout << "next_norm = " << next_norm << endl;
-	norms.push_back(next_norm);
+	norms.push_back({next_norm, false});
 
 	concat(all_millable_faces, prismatic_millable_faces(next_norm, part));
 	concat(all_millable_faces, chamfer_faces(part, next_norm, tools));
@@ -220,6 +221,20 @@ namespace gca {
       }
 
       DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
+    }
+
+    // Need to search for freeform surfaces
+    if (all_millable_faces.size() != part.face_indexes().size()) {
+      for (direction_info& n : norms) {
+	n.search_for_freeform_features = true;
+
+	concat(all_millable_faces, millable_faces(n.dir, part));
+	all_millable_faces = sort_unique(all_millable_faces);
+
+	if (all_millable_faces.size() == part.face_indexes().size()) {
+	  break;
+	}
+      }
     }
 
     DBG_ASSERT(all_millable_faces.size() == part.face_indexes().size());

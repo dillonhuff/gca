@@ -16,12 +16,6 @@ namespace gca {
   };
 
   std::vector<direction_process_info>
-  initial_decompositions(const triangular_mesh& stock,
-			 const triangular_mesh& part,
-			 const std::vector<tool>& tools,
-			 const std::vector<point>& norms);
-
-  std::vector<direction_process_info>
   select_mill_directions(const triangular_mesh& stock,
 			 const triangular_mesh& part,
 			 const fixtures& f,

@@ -798,7 +798,7 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    vice test_v = current_setup(); //custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
+    vice test_v = custom_jaw_vice(5.0, 1.5, 8.1, point(0.0, 0.0, 0.0));
     vice test_vice = top_jaw_origin_vice(test_v);
     
     std::vector<plate_height> parallel_plates{0.4995};
@@ -827,8 +827,8 @@ namespace gca {
 
     vector<tool> tools{t1, t2};
 
-    //workpiece workpiece_dims(2.58, 2.5, 2.5, ALUMINUM);
-    workpiece workpiece_dims(1.58, 1.5, 1.5, ALUMINUM);
+    workpiece workpiece_dims(2.58, 2.5, 2.5, ALUMINUM);
+    //    workpiece workpiece_dims(1.58, 1.5, 1.5, ALUMINUM);
 
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/CubeSubtractSphere.stl", 0.0001);
 
