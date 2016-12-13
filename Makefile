@@ -137,6 +137,19 @@ surface-test/fast:
 .PHONY : surface-test/fast
 
 #=============================================================================
+# Target rules for targets named cut-rect
+
+# Build rule for target.
+cut-rect: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cut-rect
+.PHONY : cut-rect
+
+# fast build rule for target.
+cut-rect/fast:
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/build
+.PHONY : cut-rect/fast
+
+#=============================================================================
 # Target rules for targets named AddCell
 
 # Build rule for target.
@@ -568,6 +581,33 @@ examples/check_contours.s: examples/check_contours.cpp.s
 examples/check_contours.cpp.s:
 	$(MAKE) -f CMakeFiles/check-contours.dir/build.make CMakeFiles/check-contours.dir/examples/check_contours.cpp.s
 .PHONY : examples/check_contours.cpp.s
+
+examples/cut_rect.o: examples/cut_rect.cpp.o
+
+.PHONY : examples/cut_rect.o
+
+# target to build an object file
+examples/cut_rect.cpp.o:
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.o
+.PHONY : examples/cut_rect.cpp.o
+
+examples/cut_rect.i: examples/cut_rect.cpp.i
+
+.PHONY : examples/cut_rect.i
+
+# target to preprocess a source file
+examples/cut_rect.cpp.i:
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.i
+.PHONY : examples/cut_rect.cpp.i
+
+examples/cut_rect.s: examples/cut_rect.cpp.s
+
+.PHONY : examples/cut_rect.s
+
+# target to generate assembly for a file
+examples/cut_rect.cpp.s:
+	$(MAKE) -f CMakeFiles/cut-rect.dir/build.make CMakeFiles/cut-rect.dir/examples/cut_rect.cpp.s
+.PHONY : examples/cut_rect.cpp.s
 
 examples/debug_test.o: examples/debug_test.cpp.o
 
@@ -4766,6 +4806,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... interact-test"
 	@echo "... surface-test"
+	@echo "... cut-rect"
 	@echo "... AddCell"
 	@echo "... camaster-test"
 	@echo "... engraving"
@@ -4804,6 +4845,9 @@ help:
 	@echo "... examples/check_contours.o"
 	@echo "... examples/check_contours.i"
 	@echo "... examples/check_contours.s"
+	@echo "... examples/cut_rect.o"
+	@echo "... examples/cut_rect.i"
+	@echo "... examples/cut_rect.s"
 	@echo "... examples/debug_test.o"
 	@echo "... examples/debug_test.i"
 	@echo "... examples/debug_test.s"

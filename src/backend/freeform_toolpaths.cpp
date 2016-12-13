@@ -10,10 +10,10 @@
 namespace gca {
 
   std::vector<polyline>
-  zig_lines_sampled(const polygon_3& bound,
-		    const std::vector<polygon_3>& holes,
-		    const tool& t,
-		    const double stepover_fraction) {
+  zig_lines_sampled_x(const polygon_3& bound,
+		      const std::vector<polygon_3>& holes,
+		      const tool& t,
+		      const double stepover_fraction) {
 
     DBG_ASSERT(bound.holes().size() == 0);
     DBG_ASSERT(stepover_fraction > 0.0);
@@ -40,6 +40,48 @@ namespace gca {
 
       lines.push_back(line);
       current_y += stepover;
+    }
+
+    cout << "# of lines = " << lines.size() << endl;
+
+    lines = clip_lines(lines, bound, holes, t);
+
+    cout << "# of lines after clipping = " << lines.size() << endl;
+
+    return lines;
+  }
+
+  std::vector<polyline>
+  zig_lines_sampled_y(const polygon_3& bound,
+		      const std::vector<polygon_3>& holes,
+		      const tool& t,
+		      const double stepover_fraction) {
+
+    DBG_ASSERT(bound.holes().size() == 0);
+    DBG_ASSERT(stepover_fraction > 0.0);
+    DBG_ASSERT(stepover_fraction <= 0.5);
+
+    box b = bounding_box(bound);
+    cout << "Zig lines bounding box = " << endl << b << endl;
+    double stepover = stepover_fraction*t.diameter();
+
+    vector<polyline> lines;
+    double y_stepover = 0.01;
+
+    double current_x = b.x_min;
+
+    while (current_x < b.x_max) {
+
+      double current_y = b.y_min;
+      vector<point> line;
+      while (current_y < b.y_max) {
+	point start(current_x, current_y, b.z_min);
+	line.push_back(start);
+	current_y += y_stepover;
+      }
+
+      lines.push_back(line);
+      current_x += stepover;
     }
 
     cout << "# of lines = " << lines.size() << endl;
@@ -132,7 +174,7 @@ namespace gca {
 
     
     vector<polyline> init_lines =
-      zig_lines_sampled(surface_bound, {}, t, stepover_fraction);
+      zig_lines_sampled_y(surface_bound, {}, t, stepover_fraction);
     vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
 
     return lines;
@@ -144,7 +186,7 @@ namespace gca {
 			const tool& t,
 			const double safe_z,
 			const double stepover_fraction) {
-    double z_min = 0.0;
+    double z_min = min_in_dir(surface(&mesh, inds), point(0, 0, 1));
 
     vector<polyline> lines =
       freeform_zig(inds, mesh, t, safe_z, z_min, stepover_fraction);
@@ -152,8 +194,8 @@ namespace gca {
     return {toolpath(FREEFORM_POCKET,
 		     safe_z,
 		     2000,
-		     5.0,
-		     2.5,
+		     15.0,
+		     7.5,
 		     t,
 		     lines)};
   }
@@ -199,8 +241,8 @@ namespace gca {
     return {toolpath(FREEFORM_POCKET,
 		     safe_z,
 		     2000,
-		     5.0,
-		     2.5,
+		     15.0,
+		     7.5,
 		     t,
 		     lines)};
   }
@@ -228,7 +270,7 @@ namespace gca {
 			   rough_stepover_fraction,
 			   rough_depth_fraction);
 
-    double stepover_fraction = 0.1;
+    double stepover_fraction = 0.01;
     toolpath finish_tp =
       freeform_finish_lines(surf.index_list(),
 			    surf.get_parent_mesh(),

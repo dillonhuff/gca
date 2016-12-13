@@ -237,7 +237,8 @@ namespace gca {
       }
     }
 
-    if (t.type() != FLAT_NOSE && t.type() != BALL_NOSE) { return false; }
+    //if (t.type() != FLAT_NOSE && t.type() != BALL_NOSE) { return false; }
+    if (t.type() != FLAT_NOSE) { return false; }
 
     auto top_feature = decomp->child(0)->feature();
     // NOTE: Top feature is always completely open
