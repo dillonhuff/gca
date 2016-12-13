@@ -103,6 +103,9 @@ namespace gca {
 
   std::vector<clamp_orientation>
   all_clamp_orientations(const std::vector<const surface*>& surfaces);
+
+  std::vector<clamp_orientation>
+  all_stable_orientations(const std::vector<surface>& surfaces);
   
   void filter_stub_orientations(std::vector<clamp_orientation>& orients,
 				const vice& v);

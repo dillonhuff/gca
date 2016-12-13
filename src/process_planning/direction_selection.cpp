@@ -66,6 +66,22 @@ namespace gca {
       });
   }
 
+  direction_process_info
+  build_direction_info(const triangular_mesh& stock,
+		       const triangular_mesh& part,
+		       const point n,
+		       const std::vector<tool>& tools) {
+    feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
+    tool_access_info info = find_accessable_tools(decomp, tools);
+    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
+    // vector<freeform_surface> freeform_surfs =
+    //   freeform_surface_regions(part, n, tools);
+
+    // cout << "# of freeform surfaces in " <<  n <<  " = " << freeform_surfs.size() << endl;
+
+    return {decomp, info, chamfers, {}}; //freeform_surfs};
+  }
+  
   std::vector<direction_process_info>
   initial_decompositions(const triangular_mesh& stock,
 			 const triangular_mesh& part,
@@ -74,14 +90,9 @@ namespace gca {
 
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
-      feature_decomposition* decomp = build_feature_decomposition(stock, part, n);
-      tool_access_info info = find_accessable_tools(decomp, tools);
-      vector<chamfer> chamfers = chamfer_regions(part, n, tools);
-      vector<freeform_surface> freeform_surfs =
-	freeform_surface_regions(part, n, tools);
-
-      cout << "# of freeform surfaces in " <<  n <<  " = " << freeform_surfs.size() << endl;
-      dir_info.push_back({decomp, info, chamfers, freeform_surfs});
+      direction_process_info info =
+	build_direction_info(stock, part, n, tools);
+      dir_info.push_back(info);
     }
 
     for (auto info : dir_info) {

@@ -125,6 +125,16 @@ namespace gca {
     return all_stable_orientations(surfs, v);
   }
 
+  std::vector<clamp_orientation>
+  all_stable_orientations(const std::vector<surface>& surfaces) {
+    std::vector<const surface*> surfs;
+    for (unsigned i = 0; i < surfaces.size(); i++) {
+      const surface* s = &(surfaces[i]);
+      surfs.push_back(s);
+    }
+    return all_clamp_orientations(surfs);
+  }
+  
   Nef_polyhedron clip_nef(const Nef_polyhedron& part_nef,
 			  const plane vice_top_plane) {
     point n = -1*vice_top_plane.normal();

@@ -151,6 +151,16 @@ namespace gca {
     return part_axis(inds, part);
   }
 
+  std::vector<point> possible_mill_directions(const triangular_mesh& part) {
+    auto surfs = outer_surfaces(part);
+    std::vector<clamp_orientation> orients = all_stable_orientations(surfs);
+    vector<point> dirs;
+    for (auto orient : orients) {
+      dirs.push_back(orient.top_normal());
+    }
+    return dirs;
+  }
+
   std::vector<point> select_cut_directions(const triangular_mesh& stock,
 					   const triangular_mesh& part,
 					   const fixtures& f,
@@ -177,26 +187,42 @@ namespace gca {
 
     all_millable_faces = sort_unique(all_millable_faces);
 
-    // TODO: Restore normal selection once I am done with sphere experiment
-    return norms;
-
     DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
 
     //vtk_debug_highlight_inds(all_millable_faces, part);
 
-    while (all_millable_faces.size() < part.face_indexes().size()) {
+    vector<point> possible_dirs = possible_mill_directions(part);
+    delete_if(possible_dirs,
+	      [norms](const point p) {
+		return any_of(begin(norms), end(norms), [p](const point d) {
+		    return angle_eps(d, p, 0.0, 0.5);
+		  });
+	      });
+
+    while ((all_millable_faces.size() < part.face_indexes().size()) &&
+	   (possible_dirs.size() > 0)) {
       point next_norm = select_next_cut_dir(all_millable_faces, part);
 
-      cout << "next_norm = " << next_norm << endl;
-      norms.push_back(next_norm);
+      bool viable_dir =
+	any_of(begin(possible_dirs), end(possible_dirs),
+	       [next_norm](const point d) {
+		 return angle_eps(d, next_norm, 0.0, 0.05);
+	       });
 
-      concat(all_millable_faces, prismatic_millable_faces(next_norm, part));
-      concat(all_millable_faces, chamfer_faces(part, next_norm, tools));
+      if (viable_dir) {
+	cout << "next_norm = " << next_norm << endl;
+	norms.push_back(next_norm);
 
-      all_millable_faces = sort_unique(all_millable_faces);
+	concat(all_millable_faces, prismatic_millable_faces(next_norm, part));
+	concat(all_millable_faces, chamfer_faces(part, next_norm, tools));
+
+	all_millable_faces = sort_unique(all_millable_faces);
+      }
 
       DBG_ASSERT(all_millable_faces.size() <= part.face_indexes().size());
     }
+
+    DBG_ASSERT(all_millable_faces.size() == part.face_indexes().size());
 
     cout << "# of cut directions to consider = " << norms.size() << endl;
 
