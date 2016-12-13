@@ -142,6 +142,101 @@ namespace gca {
 
   }
 
+  point part_axis(const std::vector<point>& possible_dirs,
+		  const std::vector<index_t>& viable_inds,
+		  const triangular_mesh& part) {
+    cout << "Part axis " << endl;
+
+    auto vinds = viable_inds;
+    auto const_regions = normal_delta_regions(vinds, part, 1.0);
+    vector<surface> regions = inds_to_surfaces(const_regions, part);
+
+    unordered_map<surface*, double> ortho_areas;
+    unordered_map<surface*, unsigned> horizontal_counts;
+    for (surface& r : regions) {
+      ortho_areas[&r] = 0.0;
+      horizontal_counts[&r] = 0;
+    }
+
+    for (surface& ri : regions) {
+      point ni = normal(ri);
+
+      for (surface& rj : regions) {
+
+	if (rj.parallel_to(ni, 1.0)) {
+
+	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
+
+	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
+	  horizontal_counts[&ri] = horizontal_counts[&ri] + 1;
+	}
+
+	if (rj.orthogonal_to(ni, 1.0) ||
+	    rj.antiparallel_to(ni, 1.0)) {
+
+	  DBG_ASSERT(ortho_areas.find(&ri) != end(ortho_areas));
+
+	  ortho_areas[&ri] = ortho_areas[&ri] + rj.surface_area();
+	}
+
+      }
+    }
+
+    auto max_region =
+      max_element(begin(ortho_areas),
+		  end(ortho_areas),
+		  [](const std::pair<surface*, double>& l,
+		     const std::pair<surface*, double>& r) {
+		    return l.second < r.second;
+		  });
+
+    auto is_legal_dir = [possible_dirs](const point p) {
+      return any_of(begin(possible_dirs), end(possible_dirs),
+		    [p](const point d) {
+		      return angle_eps(p, d, 0.0, 0.05);
+		    });
+    };
+
+    point current_norm = normal(*(max_region->first));
+    // Search for the first legal direction
+    while (!is_legal_dir(current_norm)) {
+      cout << "Current norm = " << current_norm << endl;
+
+      ortho_areas.erase(max_region);
+
+      DBG_ASSERT(ortho_areas.size() > 0);
+
+      max_region = max_element(begin(ortho_areas),
+			       end(ortho_areas),
+			       [](const std::pair<surface*, double>& l,
+				  const std::pair<surface*, double>& r) {
+				 return l.second < r.second;
+			       });
+
+      current_norm = normal(*(max_region->first));
+    }
+
+    cout << "Max area = " << max_region->second << endl;
+
+    point n = normal(*(max_region->first));
+
+    point neg_n = -1*n;
+
+    unsigned horizontal_count = horizontal_counts[max_region->first];
+
+    for (auto& r : regions) {
+      if (angle_eps(normal(r), neg_n, 0.0, 1.0)) {
+	unsigned neg_horizontal_count = horizontal_counts[&r];
+	if (neg_horizontal_count > horizontal_count) {
+	  return neg_n;
+	}
+      }
+    }
+
+    return n;
+
+  }
+  
 
   point select_next_cut_dir(const std::vector<index_t>& millable_faces,
 			    const triangular_mesh& part) {
@@ -151,6 +246,16 @@ namespace gca {
     return part_axis(inds, part);
   }
 
+  point select_next_cut_dir(const std::vector<point>& possible_dirs,
+			    const std::vector<index_t>& millable_faces,
+			    const triangular_mesh& part) {
+    std::vector<index_t> inds = part.face_indexes();
+    subtract(inds, millable_faces);
+
+    return part_axis(possible_dirs, inds, part);
+  }
+
+  
   std::vector<point> possible_mill_directions(const triangular_mesh& part) {
     auto surfs = outer_surfaces(part);
     std::vector<clamp_orientation> orients = all_stable_orientations(surfs);
@@ -202,7 +307,33 @@ namespace gca {
 
     while ((all_millable_faces.size() < part.face_indexes().size()) &&
 	   (possible_dirs.size() > 0)) {
-      point next_norm = select_next_cut_dir(all_millable_faces, part);
+
+      for (auto d : possible_dirs) {
+	cout << "Possible dir = " << d << endl;
+      }
+
+
+      auto is_legal_dir = [possible_dirs](const point p) {
+	return any_of(begin(possible_dirs), end(possible_dirs),
+		      [p](const point d) {
+			return angle_eps(p, d, 0.0, 0.05);
+		      });
+      };
+
+      vector<index_t> remaining_faces = part.face_indexes();
+      subtract(remaining_faces, all_millable_faces);
+      bool some_legal_dir = false;
+      for (auto i : remaining_faces) {
+	if (is_legal_dir(part.face_orientation(i))) {
+	  some_legal_dir = true;
+	  cout << part.face_orientation(i) << " is a legal direction" << endl;
+	  break;
+	}
+      }
+
+      if (!some_legal_dir) { break; }
+
+      point next_norm = select_next_cut_dir(possible_dirs, all_millable_faces, part);
 
       cout << "Next norm = " << next_norm << endl;
       bool viable_dir =
