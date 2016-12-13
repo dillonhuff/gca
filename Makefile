@@ -2418,6 +2418,33 @@ src/process_planning/axis_location.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/axis_location.cpp.s
 .PHONY : src/process_planning/axis_location.cpp.s
 
+src/process_planning/direction_selection.o: src/process_planning/direction_selection.cpp.o
+
+.PHONY : src/process_planning/direction_selection.o
+
+# target to build an object file
+src/process_planning/direction_selection.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/direction_selection.cpp.o
+.PHONY : src/process_planning/direction_selection.cpp.o
+
+src/process_planning/direction_selection.i: src/process_planning/direction_selection.cpp.i
+
+.PHONY : src/process_planning/direction_selection.i
+
+# target to preprocess a source file
+src/process_planning/direction_selection.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/direction_selection.cpp.i
+.PHONY : src/process_planning/direction_selection.cpp.i
+
+src/process_planning/direction_selection.s: src/process_planning/direction_selection.cpp.s
+
+.PHONY : src/process_planning/direction_selection.s
+
+# target to generate assembly for a file
+src/process_planning/direction_selection.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/direction_selection.cpp.s
+.PHONY : src/process_planning/direction_selection.cpp.s
+
 src/process_planning/feature_selection.o: src/process_planning/feature_selection.cpp.o
 
 .PHONY : src/process_planning/feature_selection.o
@@ -5049,6 +5076,9 @@ help:
 	@echo "... src/process_planning/axis_location.o"
 	@echo "... src/process_planning/axis_location.i"
 	@echo "... src/process_planning/axis_location.s"
+	@echo "... src/process_planning/direction_selection.o"
+	@echo "... src/process_planning/direction_selection.i"
+	@echo "... src/process_planning/direction_selection.s"
 	@echo "... src/process_planning/feature_selection.o"
 	@echo "... src/process_planning/feature_selection.i"
 	@echo "... src/process_planning/feature_selection.s"
