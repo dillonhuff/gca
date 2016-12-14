@@ -1,3 +1,4 @@
+#include "geometry/offset.h"
 #include "process_planning/axis_location.h"
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
@@ -66,6 +67,58 @@ namespace gca {
       });
   }
 
+  void
+  remove_inaccessable_tools(freeform_surface& surf,
+			    feature_decomposition* decomp) {
+    auto inds_cpy = surf.s.index_list();
+    vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, surf.s.get_parent_mesh());
+    vector<vector<point> > rings;
+    for (auto& b : bounds) {
+      rings.push_back(b.vertices());
+    }
+
+    vector<polygon_3> polys = arrange_rings(rings);
+
+    //vtk_debug_polygons(polys);
+
+    DBG_ASSERT(polys.size() == 1);
+
+    polygon_3 surface_bound = polys.front();
+
+    DBG_ASSERT(surface_bound.holes().size() == 0);
+
+    point n = normal(decomp);
+    point base_pt = min_point_in_dir(surf.s, n);
+    plane base_plane(n, base_pt);
+
+    polygon_3 base = project_onto(base_plane, surface_bound);
+
+    double start_depth = max_in_dir(surf.s, n);
+    double end_depth = min_in_dir(surf.s, n);
+
+    double depth = start_depth - end_depth;
+
+    DBG_ASSERT(depth >= 0.0);
+
+    feature conservative_approximation(true, false, depth, base);
+
+    delete_if(surf.tools,
+	      [conservative_approximation, decomp](const tool& t) {
+		return !can_access_flat_feature_with_tool(conservative_approximation,
+							  t,
+							  decomp);
+	      });
+
+  }
+  
+  void
+  remove_inaccessable_tools(std::vector<freeform_surface>& freeform_surfs,
+			    feature_decomposition* decomp) {
+    for (auto& surf : freeform_surfs) {
+      remove_inaccessable_tools(surf, decomp);
+    }
+  }
+
   direction_process_info
   build_direction_info(const triangular_mesh& stock,
 		       const triangular_mesh& part,
@@ -77,6 +130,7 @@ namespace gca {
     vector<freeform_surface> freeform_surfs;
     if (n.search_for_freeform_features) {
       freeform_surfs = freeform_surface_regions(part, n.dir, tools);
+      remove_inaccessable_tools(freeform_surfs, decomp);
     }
 
     // cout << "# of freeform surfaces in " <<  n <<  " = " << freeform_surfs.size() << endl;

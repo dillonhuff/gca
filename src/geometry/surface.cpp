@@ -397,4 +397,14 @@ namespace gca {
     return min_distance_along(mesh.vertex_list(), dir);
   }
 
+  point max_point_in_dir(const surface& mesh,
+			  const point dir) {
+    return max_along(mesh.vertex_list(), dir);
+  }
+
+  point min_point_in_dir(const surface& mesh,
+			  const point dir) {
+    return min_along(mesh.vertex_list(), dir);
+  }
+  
 }

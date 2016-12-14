@@ -227,6 +227,9 @@ namespace gca {
   double min_in_dir(const surface& mesh, const point dir);
   double max_in_dir(const surface& mesh, const point dir);
 
+  point min_point_in_dir(const surface& mesh, const point dir);
+  point max_point_in_dir(const surface& mesh, const point dir);
+  
 }
 
 #endif

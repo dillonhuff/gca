@@ -220,25 +220,9 @@ namespace gca {
     return boost::none;
   }
 
-  bool can_access_feature_with_tool(const feature& f,
-				    const tool& t,
-				    feature_decomposition* decomp) {
-    if (t.type() == TWIST_DRILL) {
-      cout << "Looking for through hole" << endl;
-      boost::optional<hole_properties> h = through_hole_properties(f);
-
-      if (h) {
-	cout << "Found through hole" << endl;
-      }
-      if (h &&
-	  within_eps(h->diameter, t.cut_diameter(), 0.0001) &&
-	  h->depth <= t.cut_length()) {
-	return true;
-      }
-    }
-
-    //if (t.type() != FLAT_NOSE && t.type() != BALL_NOSE) { return false; }
-    if (t.type() != FLAT_NOSE) { return false; }
+  bool can_access_flat_feature_with_tool(const feature& f,
+					 const tool& t,
+					 feature_decomposition* decomp) {
 
     auto top_feature = decomp->child(0)->feature();
     // NOTE: Top feature is always completely open
@@ -275,6 +259,31 @@ namespace gca {
     }
 
     return true;
+
+  }
+
+  bool can_access_feature_with_tool(const feature& f,
+				    const tool& t,
+				    feature_decomposition* decomp) {
+    if (t.type() == TWIST_DRILL) {
+      cout << "Looking for through hole" << endl;
+      boost::optional<hole_properties> h = through_hole_properties(f);
+
+      if (h) {
+	cout << "Found through hole" << endl;
+      }
+      if (h &&
+	  within_eps(h->diameter, t.cut_diameter(), 0.0001) &&
+	  h->depth <= t.cut_length()) {
+	return true;
+      }
+    }
+
+    //if (t.type() != FLAT_NOSE && t.type() != BALL_NOSE) { return false; }
+    if (t.type() != FLAT_NOSE) { return false; }
+
+    return can_access_flat_feature_with_tool(f, t, decomp);
+
   }
 				    
   tool_access_info
