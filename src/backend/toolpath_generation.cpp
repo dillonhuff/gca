@@ -103,7 +103,7 @@ namespace gca {
     double feedrate = 30.0;
     double spindle_speed = 2000;
     double depth_of_cut = t.cut_diameter() / 10.0;
-    double width_of_cut = t.cut_diameter() / 3.0;
+    double width_of_cut = t.cut_diameter() / 4.0;
     
     face_parameters params{depth_of_cut,
 	width_of_cut,

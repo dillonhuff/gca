@@ -52,7 +52,7 @@ namespace gca {
     cout << "Depth of cut = " << f.depth_of_cut << endl;
     cout << "# of levels = " << cut_depths(start_depth, end_depth, f.depth_of_cut).size() << endl;
 
-    vector<polyline> connected_level{link_with_rapids(lines, safe_z)};
+    //    vector<polyline> connected_level{link_with_rapids(lines, safe_z)};
 
     return toolpath(FACE_POCKET,
 		    safe_z,
@@ -60,7 +60,7 @@ namespace gca {
 		    f.feedrate,
 		    f.feedrate,
 		    t,
-		    connected_level);
+		    lines);
 
   }
 
