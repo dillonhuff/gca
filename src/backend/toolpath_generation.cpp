@@ -443,12 +443,20 @@ namespace gca {
   zig_lines(const polygon_3& bound,
 	    const std::vector<polygon_3>& holes,
 	    const tool& t) {
+    double stepover = t.radius();
+    return zig_lines(bound, holes, stepover, t);
+  }
+  
+  std::vector<polyline>
+  zig_lines(const polygon_3& bound,
+	    const std::vector<polygon_3>& holes,
+	    const double stepover,
+	    const tool& t) {
 
     DBG_ASSERT(bound.holes().size() == 0);
 
     box b = bounding_box(bound);
     cout << "Zig lines bounding box = " << endl << b << endl;
-    double stepover = t.radius();
 
     vector<polyline> lines;
     double current_y = b.y_min;

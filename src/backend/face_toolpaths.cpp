@@ -42,10 +42,12 @@ namespace gca {
     // Really ought to test that the polygon is convex
     DBG_ASSERT(face.holes().size() == 0);
 
-    polygon_3 outer_bound = exterior_offset(face, t.cut_diameter());
+    polygon_3 outer_bound = exterior_offset(face, t.radius() + 0.05);
 
+    DBG_ASSERT(f.width_of_cut <= t.radius());
+    
     vector<polyline> level =
-      zig_lines(outer_bound, {}, t);
+      zig_lines(outer_bound, {}, f.width_of_cut, t);
     auto lines =
       tile_vertical(level, start_depth, end_depth, f.depth_of_cut);
 
