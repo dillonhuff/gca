@@ -13,7 +13,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -45,15 +45,19 @@ namespace gca {
     auto aligned = apply(s_t, wp_mesh);
     auto part = apply(s_t, part_mesh);
 
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+    triangular_mesh* pm = new(allocate<triangular_mesh>()) triangular_mesh(part);
+
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
     }
     for (auto& freeform : freeforms) {
-      pockets.push_back(freeform_operation(freeform.s, freeform.tools));
+      surface rotated_surf(pm, freeform.s.index_list());
+      pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
     }
 
-    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+
     return fixture_setup(m, f, pockets);
   }
 
@@ -103,6 +107,22 @@ namespace gca {
     DBG_ASSERT(mesh_nef.is_simple());
 
     return stock_nef - mesh_nef;
+  }
+
+  Nef_polyhedron
+  intersect_surface(const Nef_polyhedron& stock_nef,
+		    const std::vector<index_t>& surf,
+		    const triangular_mesh& part,
+		    const point n) {
+    triangular_mesh m = extrude_surface_negative(surf, part, n, 200);
+
+    //vtk_debug_meshes({m, part});
+
+    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
+
+    DBG_ASSERT(mesh_nef.is_simple());
+
+    return stock_nef.intersection(mesh_nef);
   }
   
   Nef_polyhedron
@@ -730,7 +750,38 @@ namespace gca {
     }
 
     return boost::none;
-  }  
+  }
+
+  // TODO: Track freeform surface volumes the same way other feature
+  // volumes are tracked. This feels heavy handed
+  std::vector<freeform_surface>
+  select_needed_freeform_surfaces(const Nef_polyhedron& current_stock,
+				  const std::vector<freeform_surface>& surfs,
+				  const point n) {
+    vector<freeform_surface> needed_surfs;
+    for (auto& surf : surfs) {
+      auto intersected = intersect_surface(current_stock,
+					   surf.s.index_list(),
+					   surf.s.get_parent_mesh(),
+					   n);
+      auto meshes = nef_polyhedron_to_trimeshes(intersected);
+      double vol = 0.0;
+      for (auto& mesh : meshes) {
+	vol += volume(mesh);
+      }
+
+      cout << "Total volume left = " << vol << endl;
+      if (vol > 0.001) {
+	needed_surfs.push_back(surf);
+      }
+    }
+
+    cout << "# of surfs                 = " << surfs.size() << endl;
+    cout << "# of needed freeform surfs = " << surfs.size() << endl;
+
+    return needed_surfs;
+  }
+
   std::vector<fixture_setup>
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
@@ -797,7 +848,8 @@ namespace gca {
 
 	clip_volumes(features, volume_inf, dir_info);
 
-	if (features.size() > 0) {
+	if (features.size() > 0 ||
+	    info.freeform_surfaces.size() > 0) {
 
 	  cout << "Found features in " << n << endl;
 
@@ -821,7 +873,10 @@ namespace gca {
 		   clipped_features(f, map_find(f, volume_inf), info.tool_info));
 	  }
 
-	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces, info.freeform_surfaces));
+	  vector<freeform_surface> surfs =
+	    select_needed_freeform_surfaces(stock_nef, info.freeform_surfaces, n);
+
+	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces, surfs));
 
 	  stock_nef = subtract_features(stock_nef, features);
 	  // NOTE: Assumes all chamfers and freeform surfaces are accessable

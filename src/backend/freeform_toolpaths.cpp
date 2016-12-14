@@ -155,6 +155,8 @@ namespace gca {
 	       const double z_min,
 	       const double stepover_fraction) {
 
+    //vtk_debug_highlight_inds(inds, mesh);
+
     auto inds_cpy = inds;
     vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, mesh);
     vector<vector<point> > rings;
