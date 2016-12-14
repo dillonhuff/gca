@@ -1,5 +1,5 @@
 #include "synthesis/gcode_generation.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 
 namespace gca {
 

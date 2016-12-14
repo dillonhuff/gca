@@ -6,7 +6,7 @@
 #include "geometry/polyline.h"
 #include "synthesis/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 #include "utils/algorithm.h"
 
 namespace gca {

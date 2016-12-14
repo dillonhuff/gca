@@ -3,7 +3,7 @@
 
 #include "geometry/polyline.h"
 #include "synthesis/shape_layout.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 
 namespace gca {
 

@@ -2,7 +2,7 @@
 
 #include "backend/operation.h"
 #include "geometry/surface.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 
 namespace gca {
 

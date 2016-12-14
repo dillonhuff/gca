@@ -5,7 +5,7 @@
 #include "geometry/rigid_arrangement.h"
 #include "synthesis/vice.h"
 #include "synthesis/tool.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 #include "synthesis/workpiece.h"
 
 namespace gca {

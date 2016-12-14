@@ -11,7 +11,7 @@
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
 #include "synthesis/material.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 #include "utils/check.h"
 
 

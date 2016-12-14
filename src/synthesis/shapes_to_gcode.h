@@ -4,7 +4,7 @@
 #include "synthesis/align_blade.h"
 #include "synthesis/output.h"
 #include "synthesis/shape_layout.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 
 namespace gca {
 

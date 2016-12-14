@@ -1,7 +1,7 @@
 #pragma once
 
 #include "synthesis/fabrication_plan.h"
-#include "synthesis/toolpath.h"
+#include "backend/toolpath.h"
 
 namespace gca {
 
