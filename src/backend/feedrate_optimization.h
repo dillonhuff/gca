@@ -1,7 +1,7 @@
 #pragma once
 
 #include "simulators/sim_mill.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 
 namespace gca {
 

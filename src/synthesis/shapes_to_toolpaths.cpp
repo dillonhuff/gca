@@ -6,7 +6,7 @@
 #include "gcode/linear_cut.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "geometry/spline_sampling.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 #include "utils/algorithm.h"
 #include "utils/check.h"
 

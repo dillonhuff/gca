@@ -4,7 +4,7 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "geometry/homogeneous_transformation.h"
 #include "process_planning/tool_access.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 
 namespace gca {
 

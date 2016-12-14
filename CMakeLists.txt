@@ -138,7 +138,7 @@ SET(GCA_HEADERS
 	    ./src/synthesis/face_clipping.h
 	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
-	    ./src/synthesis/toolpath_generation.h
+	    ./src/backend/toolpath_generation.h
 	    ./src/synthesis/millability.h
 	    ./src/synthesis/tool.h
 	    ./src/synthesis/vice.h

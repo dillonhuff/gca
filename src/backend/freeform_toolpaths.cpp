@@ -5,7 +5,7 @@
 #include "backend/freeform_toolpaths.h"
 #include "geometry/offset.h"
 #include "geometry/vtk_debug.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 
 namespace gca {
 

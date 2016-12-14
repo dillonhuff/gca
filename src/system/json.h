@@ -12,7 +12,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/shapes_to_gcode.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 #include "utils/algorithm.h"
 #include "system/parse_stl.h"
 
