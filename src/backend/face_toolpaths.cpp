@@ -13,14 +13,13 @@ namespace gca {
       pts.push_back(pt);
     }
 
-    point up_dir(0, 0, 1);
-
     for (unsigned i = 1; i < lines.size(); i++) {
       point last = pts.back();
-      point safe_up_start = last + safe_z*up_dir;
+      point safe_up_start(last.x, last.y, safe_z);
 
       auto& next_line = lines[i];
-      point safe_up_end = next_line.front() + safe_z*up_dir;
+      point next_pt = next_line.front();
+      point safe_up_end (next_pt.x, next_pt.y, safe_z);
 
       pts.push_back(safe_up_start);
       pts.push_back(safe_up_end);
@@ -55,13 +54,13 @@ namespace gca {
 
     vector<polyline> connected_level{link_with_rapids(lines, safe_z)};
 
-    return {toolpath(FACE_POCKET,
-		     safe_z,
-		     f.spindle_speed,
-		     f.feedrate,
-		     f.feedrate,
-		     t,
-		     connected_level)};
+    return toolpath(FACE_POCKET,
+		    safe_z,
+		    f.spindle_speed,
+		    f.feedrate,
+		    f.feedrate,
+		    t,
+		    connected_level);
 
   }
 

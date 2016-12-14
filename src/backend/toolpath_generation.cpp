@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "backend/face_toolpaths.h"
 #include "backend/feedrate_optimization.h"
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
@@ -87,8 +88,8 @@ namespace gca {
 			       const std::vector<tool>& tools) const {
     tool t = select_tool(tools);
     auto params = calculate_cut_params(t, stock_material, pocket_type());
-
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
+
     return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
   }
   
@@ -96,11 +97,33 @@ namespace gca {
   face_pocket::make_toolpaths(const material& stock_material,
 			      const double safe_z,
 			      const std::vector<tool>& tools) const {
-    tool t = select_tool(possible_tools);
-    auto params = calculate_cut_params(t, stock_material, pocket_type());
 
-    auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+    tool t = select_tool(tools);
+
+    double feedrate = 30.0;
+    double spindle_speed = 2000;
+    double depth_of_cut = t.cut_diameter() / 10.0;
+    double width_of_cut = t.cut_diameter() / 3.0;
+    
+    face_parameters params{depth_of_cut,
+	width_of_cut,
+	feedrate,
+	spindle_speed};
+    
+    //    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+
+    return {rough_face(params,
+		       safe_z,
+		       get_start_depth(),
+		       get_end_depth(),
+		       build_clean_polygon_3(base.vertices()),
+		       t)};
+    
+    // tool t = select_tool(possible_tools);
+    // auto params = calculate_cut_params(t, stock_material, pocket_type());
+
+    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    // return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
   }
 
   std::vector<toolpath>

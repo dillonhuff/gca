@@ -210,10 +210,24 @@ namespace gca {
     toolpath face_rough =
       rough_face(fp, safe_z, start_depth, end_depth, safe, t);
 
-    vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(safe);
-    actors.push_back(actor_for_toolpath(face_rough));
+    // vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(safe);
+    // actors.push_back(actor_for_toolpath(face_rough));
 
-    visualize_actors(actors);
+    // visualize_actors(actors);
+
+    auto lines = face_rough.lines();
+
+    REQUIRE(lines.size() == 1);
+
+    polyline pl = lines.front();
+
+    point max_pt =
+      *(max_element(begin(pl), end(pl),
+		    [](const point x, const point y) {
+		      return x.z < y.z;
+		    }));
+
+    REQUIRE(within_eps(max_pt.z, safe_z, 0.001));
 
   }
 
