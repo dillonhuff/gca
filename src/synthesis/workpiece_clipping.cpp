@@ -16,7 +16,7 @@
 #include "synthesis/jaw_cutout.h"
 #include "synthesis/millability.h"
 #include "synthesis/tool.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece_clipping.h"
 
