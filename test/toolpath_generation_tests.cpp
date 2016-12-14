@@ -10,7 +10,7 @@
 #include "synthesis/fabrication_plan.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/millability.h"
-#include "synthesis/toolpath_generation.h"
+#include "backend/toolpath_generation.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
 
