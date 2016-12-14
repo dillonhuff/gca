@@ -1365,6 +1365,33 @@ src/backend/timing.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/timing.cpp.s
 .PHONY : src/backend/timing.cpp.s
 
+src/backend/toolpath_generation.o: src/backend/toolpath_generation.cpp.o
+
+.PHONY : src/backend/toolpath_generation.o
+
+# target to build an object file
+src/backend/toolpath_generation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/toolpath_generation.cpp.o
+.PHONY : src/backend/toolpath_generation.cpp.o
+
+src/backend/toolpath_generation.i: src/backend/toolpath_generation.cpp.i
+
+.PHONY : src/backend/toolpath_generation.i
+
+# target to preprocess a source file
+src/backend/toolpath_generation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/toolpath_generation.cpp.i
+.PHONY : src/backend/toolpath_generation.cpp.i
+
+src/backend/toolpath_generation.s: src/backend/toolpath_generation.cpp.s
+
+.PHONY : src/backend/toolpath_generation.s
+
+# target to generate assembly for a file
+src/backend/toolpath_generation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/toolpath_generation.cpp.s
+.PHONY : src/backend/toolpath_generation.cpp.s
+
 src/checkers/block_rate_checker.o: src/checkers/block_rate_checker.cpp.o
 
 .PHONY : src/checkers/block_rate_checker.o
@@ -3119,33 +3146,6 @@ src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
 src/synthesis/toolpath.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.s
 .PHONY : src/synthesis/toolpath.cpp.s
-
-src/synthesis/toolpath_generation.o: src/synthesis/toolpath_generation.cpp.o
-
-.PHONY : src/synthesis/toolpath_generation.o
-
-# target to build an object file
-src/synthesis/toolpath_generation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath_generation.cpp.o
-.PHONY : src/synthesis/toolpath_generation.cpp.o
-
-src/synthesis/toolpath_generation.i: src/synthesis/toolpath_generation.cpp.i
-
-.PHONY : src/synthesis/toolpath_generation.i
-
-# target to preprocess a source file
-src/synthesis/toolpath_generation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath_generation.cpp.i
-.PHONY : src/synthesis/toolpath_generation.cpp.i
-
-src/synthesis/toolpath_generation.s: src/synthesis/toolpath_generation.cpp.s
-
-.PHONY : src/synthesis/toolpath_generation.s
-
-# target to generate assembly for a file
-src/synthesis/toolpath_generation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath_generation.cpp.s
-.PHONY : src/synthesis/toolpath_generation.cpp.s
 
 src/synthesis/vice.o: src/synthesis/vice.cpp.o
 
@@ -4959,6 +4959,9 @@ help:
 	@echo "... src/backend/timing.o"
 	@echo "... src/backend/timing.i"
 	@echo "... src/backend/timing.s"
+	@echo "... src/backend/toolpath_generation.o"
+	@echo "... src/backend/toolpath_generation.i"
+	@echo "... src/backend/toolpath_generation.s"
 	@echo "... src/checkers/block_rate_checker.o"
 	@echo "... src/checkers/block_rate_checker.i"
 	@echo "... src/checkers/block_rate_checker.s"
@@ -5154,9 +5157,6 @@ help:
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"
-	@echo "... src/synthesis/toolpath_generation.o"
-	@echo "... src/synthesis/toolpath_generation.i"
-	@echo "... src/synthesis/toolpath_generation.s"
 	@echo "... src/synthesis/vice.o"
 	@echo "... src/synthesis/vice.i"
 	@echo "... src/synthesis/vice.s"

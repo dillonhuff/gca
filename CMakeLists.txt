@@ -157,6 +157,7 @@ SET(GCA_CPPS
 	./src/backend/operation.cpp
 	./src/backend/operation_name.cpp
 	./src/backend/timing.cpp
+	./src/backend/toolpath_generation.cpp
 	./src/feature_recognition/chamfer_detection.cpp
 	./src/feature_recognition/freeform_surface_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
@@ -183,7 +184,6 @@ SET(GCA_CPPS
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
 	 ./src/synthesis/toolpath.cpp
-	 ./src/synthesis/toolpath_generation.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/tool.cpp
