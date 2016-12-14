@@ -152,6 +152,7 @@ SET(GCA_HEADERS
 SET(GCA_CPPS
 	./src/backend/chamfer_operation.cpp
 	./src/backend/drilled_hole_operation.cpp
+	./src/backend/face_toolpaths.cpp
 	./src/backend/feedrate_optimization.cpp
 	./src/backend/freeform_toolpaths.cpp
 	./src/backend/operation.cpp

@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "backend/face_toolpaths.h"
 #include "backend/feedrate_optimization.h"
 #include "backend/freeform_toolpaths.h"
 #include "feature_recognition/visual_debug.h"
@@ -168,6 +169,52 @@ namespace gca {
     // visualize_actors(rough_actors);
     
     REQUIRE(true);
+  }
+
+  TEST_CASE("Face region") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    tool t{1.0 / 2.0, 3.94, 2, HSS, FLAT_NOSE};
+    t.set_cut_diameter(1.0 / 8.0);
+    t.set_cut_length(1.25);
+
+    t.set_shank_diameter(0.5);
+    t.set_shank_length(0.05);
+
+    t.set_holder_diameter(2.5);
+    t.set_holder_length(3.5);
+    t.set_tool_number(1);
+
+    vector<point> safe_pts{point(-2, -2, 0),
+	point(-2, 2, 0),
+	point(2, 2, 0),
+	point(2, -2, 0)};
+
+    polygon_3 safe = build_clean_polygon_3(safe_pts);
+
+    double feedrate = 30.0;
+    double spindle_speed = 2000;
+    double depth_of_cut = t.cut_diameter() / 10.0;
+    double width_of_cut = t.cut_diameter() / 3.0;
+    
+    face_parameters fp{depth_of_cut,
+	width_of_cut,
+	feedrate,
+	spindle_speed};
+
+    double start_depth = 1.0;
+    double end_depth = 0.7;
+    double safe_z = 1.1;
+
+    toolpath face_rough =
+      rough_face(fp, safe_z, start_depth, end_depth, safe, t);
+
+    vector<vtkSmartPointer<vtkActor> > actors = polygon_3_actors(safe);
+    actors.push_back(actor_for_toolpath(face_rough));
+
+    visualize_actors(actors);
+
   }
 
   TEST_CASE("Island contour generation") {

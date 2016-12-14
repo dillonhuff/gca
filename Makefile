@@ -1230,6 +1230,33 @@ src/backend/drilled_hole_operation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.s
 .PHONY : src/backend/drilled_hole_operation.cpp.s
 
+src/backend/face_toolpaths.o: src/backend/face_toolpaths.cpp.o
+
+.PHONY : src/backend/face_toolpaths.o
+
+# target to build an object file
+src/backend/face_toolpaths.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/face_toolpaths.cpp.o
+.PHONY : src/backend/face_toolpaths.cpp.o
+
+src/backend/face_toolpaths.i: src/backend/face_toolpaths.cpp.i
+
+.PHONY : src/backend/face_toolpaths.i
+
+# target to preprocess a source file
+src/backend/face_toolpaths.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/face_toolpaths.cpp.i
+.PHONY : src/backend/face_toolpaths.cpp.i
+
+src/backend/face_toolpaths.s: src/backend/face_toolpaths.cpp.s
+
+.PHONY : src/backend/face_toolpaths.s
+
+# target to generate assembly for a file
+src/backend/face_toolpaths.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/face_toolpaths.cpp.s
+.PHONY : src/backend/face_toolpaths.cpp.s
+
 src/backend/feedrate_optimization.o: src/backend/feedrate_optimization.cpp.o
 
 .PHONY : src/backend/feedrate_optimization.o
@@ -4944,6 +4971,9 @@ help:
 	@echo "... src/backend/drilled_hole_operation.o"
 	@echo "... src/backend/drilled_hole_operation.i"
 	@echo "... src/backend/drilled_hole_operation.s"
+	@echo "... src/backend/face_toolpaths.o"
+	@echo "... src/backend/face_toolpaths.i"
+	@echo "... src/backend/face_toolpaths.s"
 	@echo "... src/backend/feedrate_optimization.o"
 	@echo "... src/backend/feedrate_optimization.i"
 	@echo "... src/backend/feedrate_optimization.s"
