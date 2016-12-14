@@ -119,6 +119,7 @@ target_link_libraries(gprocess gcode geometry utils)
 
 SET(GCA_HEADERS
 	./src/backend/operation.h
+	./src/backend/operation_name.h
 	./src/backend/feedrate_optimization.h
 	./src/backend/timing.h
 	./src/process_planning/feature_to_pocket.h
@@ -132,7 +133,6 @@ SET(GCA_HEADERS
 	./src/synthesis/jaw_cutout.h
 	./src/synthesis/clipping_plan.h
 	./src/synthesis/gcode_generation.h
-	./src/synthesis/operation_name.h
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
@@ -155,6 +155,7 @@ SET(GCA_CPPS
 	./src/backend/feedrate_optimization.cpp
 	./src/backend/freeform_toolpaths.cpp
 	./src/backend/operation.cpp
+	./src/backend/operation_name.cpp
 	./src/backend/timing.cpp
 	./src/feature_recognition/chamfer_detection.cpp
 	./src/feature_recognition/freeform_surface_detection.cpp
@@ -172,7 +173,6 @@ SET(GCA_CPPS
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
-	./src/synthesis/operation_name.cpp
 	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/synthesis/dxf_reader.cpp

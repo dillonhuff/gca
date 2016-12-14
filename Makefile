@@ -1311,6 +1311,33 @@ src/backend/operation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation.cpp.s
 .PHONY : src/backend/operation.cpp.s
 
+src/backend/operation_name.o: src/backend/operation_name.cpp.o
+
+.PHONY : src/backend/operation_name.o
+
+# target to build an object file
+src/backend/operation_name.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.o
+.PHONY : src/backend/operation_name.cpp.o
+
+src/backend/operation_name.i: src/backend/operation_name.cpp.i
+
+.PHONY : src/backend/operation_name.i
+
+# target to preprocess a source file
+src/backend/operation_name.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.i
+.PHONY : src/backend/operation_name.cpp.i
+
+src/backend/operation_name.s: src/backend/operation_name.cpp.s
+
+.PHONY : src/backend/operation_name.s
+
+# target to generate assembly for a file
+src/backend/operation_name.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.s
+.PHONY : src/backend/operation_name.cpp.s
+
 src/backend/timing.o: src/backend/timing.cpp.o
 
 .PHONY : src/backend/timing.o
@@ -2930,33 +2957,6 @@ src/synthesis/millability.s: src/synthesis/millability.cpp.s
 src/synthesis/millability.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/millability.cpp.s
 .PHONY : src/synthesis/millability.cpp.s
-
-src/synthesis/operation_name.o: src/synthesis/operation_name.cpp.o
-
-.PHONY : src/synthesis/operation_name.o
-
-# target to build an object file
-src/synthesis/operation_name.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.o
-.PHONY : src/synthesis/operation_name.cpp.o
-
-src/synthesis/operation_name.i: src/synthesis/operation_name.cpp.i
-
-.PHONY : src/synthesis/operation_name.i
-
-# target to preprocess a source file
-src/synthesis/operation_name.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.i
-.PHONY : src/synthesis/operation_name.cpp.i
-
-src/synthesis/operation_name.s: src/synthesis/operation_name.cpp.s
-
-.PHONY : src/synthesis/operation_name.s
-
-# target to generate assembly for a file
-src/synthesis/operation_name.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/operation_name.cpp.s
-.PHONY : src/synthesis/operation_name.cpp.s
 
 src/synthesis/output.o: src/synthesis/output.cpp.o
 
@@ -4953,6 +4953,9 @@ help:
 	@echo "... src/backend/operation.o"
 	@echo "... src/backend/operation.i"
 	@echo "... src/backend/operation.s"
+	@echo "... src/backend/operation_name.o"
+	@echo "... src/backend/operation_name.i"
+	@echo "... src/backend/operation_name.s"
 	@echo "... src/backend/timing.o"
 	@echo "... src/backend/timing.i"
 	@echo "... src/backend/timing.s"
@@ -5133,9 +5136,6 @@ help:
 	@echo "... src/synthesis/millability.o"
 	@echo "... src/synthesis/millability.i"
 	@echo "... src/synthesis/millability.s"
-	@echo "... src/synthesis/operation_name.o"
-	@echo "... src/synthesis/operation_name.i"
-	@echo "... src/synthesis/operation_name.s"
 	@echo "... src/synthesis/output.o"
 	@echo "... src/synthesis/output.i"
 	@echo "... src/synthesis/output.s"

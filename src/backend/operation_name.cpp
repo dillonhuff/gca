@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "synthesis/operation_name.h"
+#include "backend/operation_name.h"
 #include "utils/check.h"
 
 namespace gca {
