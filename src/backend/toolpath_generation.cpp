@@ -29,7 +29,7 @@ namespace gca {
 				const pocket_name op_name) {
     double cut_depth, speed, feed;
     
-    cut_depth = t.cut_diameter() / 3.0;
+    cut_depth = t.cut_diameter() / 10.0;
 
     if (t.cut_diameter() < 0.25) {
       speed = 2500;
@@ -37,10 +37,11 @@ namespace gca {
       speed = 1000;
     }
 
-    feed = 5.0;
+    // NOTE: Turn down on machine with FR override
+    feed = 30.0;
 
     if (t.cut_diameter() > 0.4) {
-      feed = 4.0;
+      feed = 30.0;
     }
     
     cout << "Chip Load Per Tooth = " << chip_load_per_tooth(t, feed, speed) << endl;
@@ -105,25 +106,44 @@ namespace gca {
     double depth_of_cut = t.cut_diameter() / 10.0;
     double width_of_cut = t.cut_diameter() / 4.0;
     
-    face_parameters params{depth_of_cut,
+    face_parameters rough_params{depth_of_cut,
 	width_of_cut,
 	feedrate,
 	spindle_speed};
     
-    //    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    double finish_height = 0.005;
+    double rough_start = get_start_depth();
+    double rough_end = get_end_depth() + finish_height;
 
-    return {rough_face(params,
-		       safe_z,
-		       get_start_depth(),
-		       get_end_depth(),
-		       build_clean_polygon_3(base.vertices()),
-		       t)};
+    toolpath rough_tp = rough_face(rough_params,
+				   safe_z,
+				   rough_start,
+				   rough_end,
+				   build_clean_polygon_3(base.vertices()),
+				   t);
+
+    double finish_feedrate = 15.0;
+    double finish_spindle_speed = 2500;
+    // Finish should have exactly one pass
+    double depth_of_cut = finish_height + 0.001;
+    double width_of_cut = t.cut_diameter() / 4.0;
+
+    double finish_start = rough_end;
+    double finish_end = get_end_depth();
     
-    // tool t = select_tool(possible_tools);
-    // auto params = calculate_cut_params(t, stock_material, pocket_type());
+    face_parameters finish_params{depth_of_cut,
+	width_of_cut,
+	feedrate,
+	spindle_speed};
 
-    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
-    // return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+    toolpath finish_tp = rough_face(finish_params,
+				    safe_z,
+				    finish_start,
+				    finish_end,
+				    build_clean_polygon_3(base.vertices()),
+				    t);
+
+    return {rough_tp, finish_tp};
   }
 
   std::vector<toolpath>
@@ -1381,7 +1401,7 @@ namespace gca {
     // TODO: Update operation names?
     auto params = calculate_cut_params(t, r.stock_material, CONTOUR);
 
-    double stepover_fraction = 0.3;
+    double stepover_fraction = 0.25;
     double wall_margin = 0.005;
     
     auto pocket_paths =
@@ -1419,24 +1439,18 @@ namespace gca {
     tool finish_tool = select_finishing_tool(r, tools);
 
     toolpath rough_path = contour_rough_path(r, safe_z, rough_tool);
-    //rough_flat_region_with_contours(r, safe_z, tools);
 
     toolpath rough_finish = finish_path(r, safe_z, rough_path.t);
 
-    //flat_region after_roughing = residual_flat_region(r, rough_path.t);
-
-    //    toolpath finish_rough = contour_rough_path(after_roughing, safe_z, finish_tool);
-      //rough_flat_region_with_contours(after_roughing, safe_z, {finish_tool});
-
-    toolpath finishing_path = finish_path(r, safe_z, finish_tool);
-    //finish_flat_region(after_roughing, safe_z, tools);
-
     // TODO: fix horrible names
     std::vector<toolpath> all_paths{rough_path,
-	rough_finish,
-	//	finish_rough,
-	finishing_path};
+	rough_finish};
 
+    if (finish_tool.tool_number() != rough_tool.tool_number()) {
+      toolpath finishing_path = finish_path(r, safe_z, finish_tool);
+      all_paths.push_back(finishing_path);
+    }
+    
     double emco_hp = 0.737;
     double aluminum_unit_hp = 0.3;
     //optimize_feedrates_by_MRR_simulation(r, all_paths, emco_hp, aluminum_unit_hp);

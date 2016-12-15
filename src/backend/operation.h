@@ -33,8 +33,8 @@ namespace gca {
 
     pocket_name pocket_type() const { return self_->pocket_type(); }
 
-    std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
-    { return self_->toolpath_lines(t, cut_depth); }
+    // std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+    // { return self_->toolpath_lines(t, cut_depth); }
 
     double get_end_depth() const
     { return self_->get_end_depth(); }

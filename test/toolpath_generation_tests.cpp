@@ -233,7 +233,7 @@ namespace gca {
     double rapid_feed = 54.0;
     auto timing_info = make_timing_info(face_rough, rapid_feed);
 
-    REQUIRE(timing_info.toolpath_time_seconds < 1000);
+    REQUIRE(timing_info.toolpath_time_seconds < 2500);
   }
 
   TEST_CASE("Island contour generation") {
