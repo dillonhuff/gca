@@ -4,6 +4,7 @@
 
 #include "backend/freeform_toolpaths.h"
 #include "geometry/offset.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "backend/toolpath_generation.h"
 
@@ -157,14 +158,15 @@ namespace gca {
 
     //vtk_debug_highlight_inds(inds, mesh);
 
-    auto inds_cpy = inds;
-    vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, mesh);
-    vector<vector<point> > rings;
-    for (auto& b : bounds) {
-      rings.push_back(b.vertices());
-    }
+    // auto inds_cpy = inds;
+    // vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, mesh);
+    // vector<vector<point> > rings;
+    // for (auto& b : bounds) {
+    //   rings.push_back(b.vertices());
+    // }
 
-    vector<polygon_3> polys = arrange_rings(rings);
+    vector<polygon_3> polys =
+      surface_boundary_polygons(inds, mesh); //arrange_rings(rings);
 
     //vtk_debug_polygons(polys);
 

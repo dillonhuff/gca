@@ -8,6 +8,7 @@
 #include "gcode/linear_cut.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/offset.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/shape_layout.h"

@@ -3,6 +3,7 @@
 #include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/offset.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/visual_debug.h"
@@ -317,13 +318,14 @@ namespace gca {
       return boost::none;
     }
 
-    vector<oriented_polygon> bounds = mesh_bounds(bottom, portion);
-    vector<vector<point>> rings;
-    for (auto& b : bounds) {
-      rings.push_back(b.vertices());
-    }
+    // vector<oriented_polygon> bounds = mesh_bounds(bottom, portion);
+    // vector<vector<point>> rings;
+    // for (auto& b : bounds) {
+    //   rings.push_back(b.vertices());
+    // }
 
-    vector<polygon_3> polys = arrange_rings(rings);
+    vector<polygon_3> polys = surface_boundary_polygons(bottom, portion);
+    //arrange_rings(rings);
 
 
     if (polys.size() != 1) {

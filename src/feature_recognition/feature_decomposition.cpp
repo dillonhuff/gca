@@ -7,6 +7,7 @@
 #include "geometry/offset.h"
 #include "geometry/rotation.h"
 #include "geometry/surface.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/contour_planning.h"
 #include "utils/arena_allocator.h"

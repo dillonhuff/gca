@@ -8,7 +8,7 @@
 #include "gcode/gcode_program.h"
 #include "gcode/lexer.h"
 #include "geometry/vtk_debug.h"
-#include "geometry/triangular_mesh.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "synthesis/contour_planning.h"

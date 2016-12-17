@@ -1,4 +1,5 @@
 #include "geometry/offset.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "process_planning/axis_location.h"
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
@@ -70,14 +71,15 @@ namespace gca {
   void
   remove_inaccessable_tools(freeform_surface& surf,
 			    feature_decomposition* decomp) {
-    auto inds_cpy = surf.s.index_list();
-    vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, surf.s.get_parent_mesh());
-    vector<vector<point> > rings;
-    for (auto& b : bounds) {
-      rings.push_back(b.vertices());
-    }
+    // auto inds_cpy = surf.s.index_list();
+    // vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, surf.s.get_parent_mesh());
+    // vector<vector<point> > rings;
+    // for (auto& b : bounds) {
+    //   rings.push_back(b.vertices());
+    // }
 
-    vector<polygon_3> polys = arrange_rings(rings);
+    vector<polygon_3> polys =
+      surface_boundary_polygons(surf.s.index_list(), surf.s.get_parent_mesh()); //arrange_rings(rings);
 
     //vtk_debug_polygons(polys);
 
