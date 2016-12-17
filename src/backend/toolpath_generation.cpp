@@ -115,6 +115,8 @@ namespace gca {
     double rough_start = get_start_depth();
     double rough_end = get_end_depth() + finish_height;
 
+    DBG_ASSERT((rough_start - rough_end) > 0.0);
+
     toolpath rough_tp = rough_face(rough_params,
 				   safe_z,
 				   rough_start,
@@ -124,17 +126,20 @@ namespace gca {
 
     double finish_feedrate = 15.0;
     double finish_spindle_speed = 2500;
-    // Finish should have exactly one pass
-    double depth_of_cut = finish_height + 0.001;
-    double width_of_cut = t.cut_diameter() / 4.0;
+
+    double finish_depth_of_cut = finish_height + 0.001;
+    double finish_width_of_cut = t.cut_diameter() / 4.0;
 
     double finish_start = rough_end;
     double finish_end = get_end_depth();
+
+    // Finish should have exactly one pass
+    DBG_ASSERT((finish_start - finish_end) < finish_depth_of_cut);
     
-    face_parameters finish_params{depth_of_cut,
-	width_of_cut,
-	feedrate,
-	spindle_speed};
+    face_parameters finish_params{finish_depth_of_cut,
+	finish_width_of_cut,
+	finish_feedrate,
+	finish_spindle_speed};
 
     toolpath finish_tp = rough_face(finish_params,
 				    safe_z,
