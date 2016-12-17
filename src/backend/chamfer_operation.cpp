@@ -1,19 +1,21 @@
 #include "backend/chamfer_operation.h"
 #include "geometry/offset.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 
 namespace gca {
 
   std::vector<polyline>
   chamfer_operation::toolpath_lines(const tool& t, const double cut_depth) const {
-    auto bounds = mesh_bounds(surf, mesh);
+    // auto bounds = mesh_bounds(surf, mesh);
 
-    vector<vector<point> > bound_rings;
-    for (auto& bound : bounds) {
-      bound_rings.push_back(bound.vertices());
-    }
+    // vector<vector<point> > bound_rings;
+    // for (auto& bound : bounds) {
+    //   bound_rings.push_back(bound.vertices());
+    // }
 
-    std::vector<polygon_3> polys = arrange_rings(bound_rings);
+    std::vector<polygon_3> polys =
+      surface_boundary_polygons(surf, mesh); //arrange_rings(bound_rings);
 
     DBG_ASSERT(polys.size() == 1);
 

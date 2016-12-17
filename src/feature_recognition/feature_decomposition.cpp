@@ -186,28 +186,34 @@ namespace gca {
     for (auto s : surfs) {
       DBG_ASSERT(s.size() > 0);
 
-      auto bounds = mesh_bounds(s, mr);
+      auto bounds = surface_boundary_polygons(s, mr);
 
-      DBG_ASSERT(bounds.size() > 0);
+      DBG_ASSERT(bounds.size() == 1);
 
-      auto boundary = extract_boundary(bounds);
+      polygon_3 lp = apply(r_inv, bounds.front());
 
-      check_simplicity(boundary.vertices());
+      // auto bounds = mesh_bounds(s, mr);
 
-      // if (!(area(boundary) > 0.001)) {
-      // 	vtk_debug_highlight_inds(s, m);
-      // 	DBG_ASSERT(area(boundary) > 0.001);
+      // DBG_ASSERT(bounds.size() > 0);
+
+      // auto boundary = extract_boundary(bounds);
+
+      // check_simplicity(boundary.vertices());
+
+      // // if (!(area(boundary) > 0.001)) {
+      // // 	vtk_debug_highlight_inds(s, m);
+      // // 	DBG_ASSERT(area(boundary) > 0.001);
+      // // }
+
+      // auto holes = bounds;
+
+      // vector<vector<point>> hole_verts;
+      // for (auto h : holes) {
+      // 	check_simplicity(h.vertices());
+      // 	hole_verts.push_back(apply(r_inv, h.vertices()));
       // }
 
-      auto holes = bounds;
-
-      vector<vector<point>> hole_verts;
-      for (auto h : holes) {
-	check_simplicity(h.vertices());
-	hole_verts.push_back(apply(r_inv, h.vertices()));
-      }
-
-      polygon_3 lp = build_clean_polygon_3(apply(r_inv, boundary.vertices()), hole_verts);
+      // polygon_3 lp = build_clean_polygon_3(apply(r_inv, boundary.vertices()), hole_verts);
 
       lp.correct_winding_order(n);
 

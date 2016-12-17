@@ -32,9 +32,6 @@ namespace gca {
   boost::optional<polygon_3>
   clean_polygon_for_offsetting_maybe(const polygon_3& poly);
 
-  std::vector<polygon_3>
-  arrange_rings(const std::vector<std::vector<point>>& rings);
-  
   std::vector<point>
   clean_ring_for_offsetting_no_fail(const std::vector<point>& ring);
 

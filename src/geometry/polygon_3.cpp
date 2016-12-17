@@ -361,4 +361,79 @@ namespace gca {
     return lines;
   }
 
+  bool
+  add_to_existing_polys_as_hole(const polygon_3& next,
+				std::vector<polygon_3>& polygons) {
+    if (polygons.size() == 0) { return false; }
+
+    boost_poly_2 next_boost_p = to_boost_poly_2(next);
+
+    int max_ind = -1;
+    double outer_area_max = -1.0;
+    for (unsigned i = 0; i < polygons.size(); i++) {
+      const auto& current_poly = polygons[i];
+      boost_poly_2 current_boost_p = to_boost_poly_2(current_poly);
+      double outer_area = area(build_clean_polygon_3(current_poly.vertices()));
+      cout << "outer area = " << outer_area << endl;
+
+      if (bg::within(next_boost_p, current_boost_p) && outer_area > outer_area_max) {
+	outer_area_max = outer_area;
+	max_ind = i;
+	cout << "set max_ind = " << max_ind << endl;
+      }
+    }
+
+    if (max_ind >= 0) {
+      auto& current_poly = polygons[max_ind];
+      unsigned old_num_holes = current_poly.holes().size();
+      current_poly.add_hole(next.vertices());
+
+      unsigned new_num_holes = polygons[max_ind].holes().size();
+
+      DBG_ASSERT(new_num_holes == (old_num_holes + 1));
+
+      cout << "ADDED TO POLYGON AS HOLE" << endl;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  std::vector<polygon_3>
+  arrange_rings(const std::vector<std::vector<point>>& rings) {
+    cout << "# of rings before arranging = " << rings.size() << endl;
+    if (rings.size() == 0) { return {}; }
+
+    vector<polygon_3> ring_polys;
+    for (auto r : rings) {
+      ring_polys.push_back(build_clean_polygon_3(r));
+    }
+
+    vector<polygon_3> polygons;
+    while (ring_polys.size() > 0) {
+      auto next_poly =
+	max_element(begin(ring_polys), end(ring_polys),
+		    [](const polygon_3& l, const polygon_3& r) {
+		      return area(l) < area(r);
+		    });
+
+      DBG_ASSERT(next_poly != end(ring_polys));
+
+      polygon_3 next_p = *next_poly;
+
+      ring_polys.erase(next_poly);
+
+      bool is_hole = add_to_existing_polys_as_hole(next_p, polygons);
+
+      if (!is_hole) {
+	polygons.push_back(next_p);
+      }
+    }
+
+    cout << "# of polygons after arranging = " << polygons.size() << endl;
+
+    return polygons;
+  }
+
 }

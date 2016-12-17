@@ -139,4 +139,7 @@ namespace gca {
 
   std::vector<polyline> to_polylines(const polygon_3& p);
 
+  std::vector<polygon_3>
+  arrange_rings(const std::vector<std::vector<point>>& rings);
+  
 }

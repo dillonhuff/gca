@@ -5,6 +5,7 @@
 #include "geometry/extrusion.h"
 #include "geometry/offset.h"
 #include "geometry/rotation.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "utils/relation.h"
 
 #define ANSI_DECLARATORS

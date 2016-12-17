@@ -335,9 +335,6 @@ namespace gca {
   bool any_vertex_in(const triangle_t tri,
 		     const std::vector<index_t>& inds);
 
-  vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
-				       const triangular_mesh& mesh);
-
   void filter_vertical_surfaces(std::vector<std::vector<index_t>>& delta_regions,
 				const triangular_mesh& mesh);
 

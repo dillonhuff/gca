@@ -17,7 +17,6 @@ namespace gca {
     return part_outline;
   }
 
-  // TODO: Really should not be oriented polygons
   vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
 				       const triangular_mesh& mesh) {
     vector<oriented_polygon> ps;
@@ -57,5 +56,20 @@ namespace gca {
 
     return unordered_segments_to_polygons(normal, no_dups);
   }
+
+  vector<polygon_3> surface_boundary_polygons(const vector<index_t>& faces,
+					      const triangular_mesh& mesh) {
+    auto bounds = mesh_bounds(faces, mesh);
+
+    vector<vector<point> > bound_rings;
+    for (auto& bound : bounds) {
+      bound_rings.push_back(bound.vertices());
+    }
+
+    std::vector<polygon_3> polys = arrange_rings(bound_rings);
+
+    return polys;
+  }
+  
 
 }
