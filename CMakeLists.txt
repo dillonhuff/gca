@@ -62,6 +62,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/rotation.cpp
 	 ./src/geometry/triangle.cpp
 	 ./src/geometry/triangular_mesh.cpp
+	 ./src/geometry/triangular_mesh_utils.cpp
 	 ./src/geometry/trimesh.cpp
 	 ./src/geometry/trimesh_types.cpp
 	 ./src/geometry/homogeneous_transformation.cpp

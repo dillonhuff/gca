@@ -1,4 +1,5 @@
 #include "geometry/surface.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 
 namespace gca {

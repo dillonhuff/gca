@@ -370,9 +370,6 @@ namespace gca {
 
   double dihedral_angle(const gca::edge e, const triangular_mesh& m);
 
-  oriented_polygon max_area_outline(const std::vector<index_t>& inds,
-				    const triangular_mesh& m);
-
   std::ostream& operator<<(std::ostream& out, const triangle_t t);
 
   bool has_no_base(const std::vector<index_t>& surf,

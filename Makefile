@@ -2364,6 +2364,33 @@ src/geometry/triangular_mesh.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/triangular_mesh.cpp.s
 .PHONY : src/geometry/triangular_mesh.cpp.s
 
+src/geometry/triangular_mesh_utils.o: src/geometry/triangular_mesh_utils.cpp.o
+
+.PHONY : src/geometry/triangular_mesh_utils.o
+
+# target to build an object file
+src/geometry/triangular_mesh_utils.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/triangular_mesh_utils.cpp.o
+.PHONY : src/geometry/triangular_mesh_utils.cpp.o
+
+src/geometry/triangular_mesh_utils.i: src/geometry/triangular_mesh_utils.cpp.i
+
+.PHONY : src/geometry/triangular_mesh_utils.i
+
+# target to preprocess a source file
+src/geometry/triangular_mesh_utils.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/triangular_mesh_utils.cpp.i
+.PHONY : src/geometry/triangular_mesh_utils.cpp.i
+
+src/geometry/triangular_mesh_utils.s: src/geometry/triangular_mesh_utils.cpp.s
+
+.PHONY : src/geometry/triangular_mesh_utils.s
+
+# target to generate assembly for a file
+src/geometry/triangular_mesh_utils.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/triangular_mesh_utils.cpp.s
+.PHONY : src/geometry/triangular_mesh_utils.cpp.s
+
 src/geometry/trimesh.o: src/geometry/trimesh.cpp.o
 
 .PHONY : src/geometry/trimesh.o
@@ -5097,6 +5124,9 @@ help:
 	@echo "... src/geometry/triangular_mesh.o"
 	@echo "... src/geometry/triangular_mesh.i"
 	@echo "... src/geometry/triangular_mesh.s"
+	@echo "... src/geometry/triangular_mesh_utils.o"
+	@echo "... src/geometry/triangular_mesh_utils.i"
+	@echo "... src/geometry/triangular_mesh_utils.s"
 	@echo "... src/geometry/trimesh.o"
 	@echo "... src/geometry/trimesh.i"
 	@echo "... src/geometry/trimesh.s"
