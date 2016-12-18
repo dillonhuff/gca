@@ -366,21 +366,34 @@ namespace gca {
 				std::vector<polygon_3>& polygons) {
     if (polygons.size() == 0) { return false; }
 
-    boost_poly_2 next_boost_p = to_boost_poly_2(next);
+    const rotation r = rotate_from_to(next.normal(), point(0, 0, 1));
+    boost_poly_2 next_boost_p = to_boost_poly_2(apply(r, next));
 
     int max_ind = -1;
     double outer_area_max = -1.0;
+    cout << "outer max = " << outer_area_max << endl;
     for (unsigned i = 0; i < polygons.size(); i++) {
       const auto& current_poly = polygons[i];
-      boost_poly_2 current_boost_p = to_boost_poly_2(current_poly);
+
+      // cout << "Current polygon" << endl;
+      // vtk_debug_polygon(current_poly);
+      // cout << "Both polygons" << endl;
+      // vtk_debug_polygons({current_poly, next});
+
+      boost_poly_2 current_boost_p = to_boost_poly_2(apply(r, current_poly));
       double outer_area = area(build_clean_polygon_3(current_poly.vertices()));
       cout << "outer area = " << outer_area << endl;
 
-      if (bg::within(next_boost_p, current_boost_p) && outer_area > outer_area_max) {
+      bool within_current = bg::within(next_boost_p, current_boost_p);
+      cout << "within_current = " << within_current << endl;
+
+      if (within_current && outer_area > outer_area_max) {
 	outer_area_max = outer_area;
 	max_ind = i;
 	cout << "set max_ind = " << max_ind << endl;
       }
+
+      cout << "outer max = " << outer_area_max << endl;
     }
 
     if (max_ind >= 0) {

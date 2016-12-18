@@ -419,16 +419,26 @@ namespace gca {
 
   polygon_3 base_polygon(const std::vector<index_t>& surf,
 			 const triangular_mesh& part) {
-    auto bounds = mesh_bounds(surf, part);
+    // auto bounds = mesh_bounds(surf, part);
 
-    vector<vector<point> > bound_rings;
-    for (auto& bound : bounds) {
-      bound_rings.push_back(bound.vertices());
+    // vector<vector<point> > bound_rings;
+    // for (auto& bound : bounds) {
+    //   bound_rings.push_back(bound.vertices());
+    // }
+
+    vector<polygon_3> polys =
+      surface_boundary_polygons(surf, part); //arrange_rings(bound_rings);
+
+    if (polys.size() != 1) {
+      cout << "ERROR: polys.size() = " << polys.size() << endl;
+      vtk_debug_highlight_inds(surf, part);
+      for (auto& p : polys) {
+	vtk_debug_polygon(p);
+      }
+      vtk_debug_polygons(polys);
+
+      DBG_ASSERT(polys.size() == 1);
     }
-
-    vector<polygon_3> polys = arrange_rings(bound_rings);
-
-    DBG_ASSERT(polys.size() == 1);
 
     return polys.front();
   }
