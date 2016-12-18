@@ -283,6 +283,26 @@ namespace gca {
   }
 
   std::vector<mandatory_volume>
+  build_mandatory_volumes(const vector<surface>& surf_complex) {
+    if (surf_complex.size() == 0) { return {}; }
+
+    std::vector<index_t> face_inds;
+    for (auto& s : surf_complex) {
+      concat(face_inds, s.index_list());
+    }
+
+    const triangular_mesh& m = surf_complex.front().get_parent_mesh();
+
+    vector<mandatory_volume> vols;
+    for (auto& s : surf_complex) {
+      point s_n = normal(s);
+
+      
+    }
+    return vols;
+  }
+
+  std::vector<mandatory_volume>
   mandatory_volumes(const triangular_mesh& part) {
     auto regions = const_orientation_regions(part);
     vector<surface> const_surfs = inds_to_surfaces(regions, part);
@@ -296,11 +316,13 @@ namespace gca {
 	return surf_complex.size() < 2;
       });
 
+    vector<mandatory_volume> volumes;
     for (auto& sc : surf_complexes) {
       vtk_debug_highlight_inds(sc);
+      concat(volumes, build_mandatory_volumes(sc));
     }
 
-    return {};
+    return volumes;
   }
 
   std::vector<direction_process_info>
