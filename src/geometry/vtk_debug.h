@@ -53,7 +53,7 @@ namespace gca {
   polygon_3_actors(const polygon_3& p);
 
   vtkSmartPointer<vtkActor>
-  mesh_actors(const triangular_mesh& m);
+  mesh_actor(const triangular_mesh& m);
   
 }
 

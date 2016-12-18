@@ -379,7 +379,7 @@ namespace gca {
   }
 
   vtkSmartPointer<vtkActor>
-  mesh_actors(const triangular_mesh& m) {
+  mesh_actor(const triangular_mesh& m) {
     auto mpd = polydata_for_trimesh(m);
     return polydata_actor(mpd);
   }
