@@ -461,11 +461,11 @@ namespace gca {
 
     std::vector<triangle> base = flipped_surface_triangles(surf, part);
 
-    std::vector<triangle> top = build_top(base, v);
+    std::vector<triangle> top = build_top(base, length*v);
 
     concat(base, top);
 
-    std::vector<triangle> sides = build_sides(base_poly, v);
+    std::vector<triangle> sides = build_sides(base_poly, length*v);
     cout << "# of triangles in sides = " << sides.size() << endl;
     concat(base, sides);
 
