@@ -182,6 +182,7 @@ namespace gca {
 			 const std::vector<tool>& tools) {
     vector<direction_info> norms =
       select_cut_directions(stock, part, f, tools);
+
     vector<direction_process_info> dir_info =
       initial_decompositions(stock, part, tools, norms);
 
