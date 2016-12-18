@@ -47,7 +47,7 @@ namespace gca {
     auto part = apply(s_t, part_mesh);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
-    triangular_mesh* pm = new(allocate<triangular_mesh>()) triangular_mesh(part);
+    triangular_mesh* pm = new (allocate<triangular_mesh>()) triangular_mesh(part);
 
     vector<pocket> pockets = feature_pockets(features, s_t, tool_info);
     for (auto& ch : chamfers) {
