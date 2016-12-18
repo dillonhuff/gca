@@ -322,11 +322,21 @@ namespace gca {
     for (auto& s : surf_complex) {
       point s_n = normal(s);
       cout << "Trying normal = " << s_n << endl;
-      auto millable_faces = prismatic_millable_faces(s_n, m);
-      if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
-	cout << "Viable direction = " << s_n << endl;
 
-	vols.push_back(mandatory_volume{extrude_mandatory_volume(s, surf_complex, s_n), s_n});
+      vector<index_t> vert_or_horiz =
+	select(face_inds, [s_n, m](const index_t& i) {
+	    return all_parallel_to({i}, m, s_n, 1.0) ||
+	    all_orthogonal_to({i}, m, s_n, 1.0);
+	  });
+
+      if (vert_or_horiz.size() == face_inds.size()) {
+      
+	auto millable_faces = prismatic_millable_faces(s_n, m);
+	if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
+	  cout << "Viable direction = " << s_n << endl;
+
+	  vols.push_back(mandatory_volume{extrude_mandatory_volume(s, surf_complex, s_n), s_n});
+	}
       }
     }
     return vols;
