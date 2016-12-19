@@ -470,7 +470,7 @@ fabrication_inputs part_100_009_inputs() {
 
   tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
   t3.set_cut_diameter(0.5);
-  t3.set_cut_length(2.25);
+  t3.set_cut_length(1.25);
 
   t3.set_shank_diameter(0.5);
   t3.set_shank_length(0.5);
@@ -479,16 +479,16 @@ fabrication_inputs part_100_009_inputs() {
   t3.set_holder_length(3.0);
   t3.set_tool_number(3);
 
-  tool t4(0.5, 3.0, 2, HSS, FLAT_NOSE);
-  t4.set_cut_diameter(0.005);
-  t4.set_cut_length(2.25);
+  tool t4{1.0 / 8.0, 3.94, 4, HSS, BALL_NOSE};
+  t4.set_cut_diameter(1.0 / 4.0);
+  t4.set_cut_length(1.25);
 
   t4.set_shank_diameter(0.5);
-  t4.set_shank_length(0.5);
+  t4.set_shank_length(0.05);
 
-  t4.set_holder_diameter(1.8);
-  t4.set_holder_length(3.0);
-  t4.set_tool_number(3);
+  t4.set_holder_diameter(2.5);
+  t4.set_holder_length(3.5);
+  t4.set_tool_number(4);
   
   vector<tool> tools{t1, t2, t3, t4};
 

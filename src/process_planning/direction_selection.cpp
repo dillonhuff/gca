@@ -376,14 +376,14 @@ namespace gca {
     vector<mandatory_volume> mandatory =
       mandatory_volumes(part);
 
-    // vector<vtkSmartPointer<vtkActor> > actors{mesh_actor(part)};
-    // for (auto& v : mandatory) {
-    //   auto pd = polydata_for_trimesh(v.volume);
-    //   color_polydata(pd, 0, 255, 0);
-    //   actors.push_back(polydata_actor(pd));
-    // }
+    vector<vtkSmartPointer<vtkActor> > actors{mesh_actor(part)};
+    for (auto& v : mandatory) {
+      auto pd = polydata_for_trimesh(v.volume);
+      color_polydata(pd, 0, 255, 0);
+      actors.push_back(polydata_actor(pd));
+    }
 
-    // visualize_actors(actors);
+    visualize_actors(actors);
 
     vector<direction_process_info> dir_info =
       initial_decompositions(stock, part, tools, norms);
