@@ -2634,6 +2634,33 @@ src/process_planning/job_planning.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.s
 .PHONY : src/process_planning/job_planning.cpp.s
 
+src/process_planning/mandatory_volumes.o: src/process_planning/mandatory_volumes.cpp.o
+
+.PHONY : src/process_planning/mandatory_volumes.o
+
+# target to build an object file
+src/process_planning/mandatory_volumes.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/mandatory_volumes.cpp.o
+.PHONY : src/process_planning/mandatory_volumes.cpp.o
+
+src/process_planning/mandatory_volumes.i: src/process_planning/mandatory_volumes.cpp.i
+
+.PHONY : src/process_planning/mandatory_volumes.i
+
+# target to preprocess a source file
+src/process_planning/mandatory_volumes.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/mandatory_volumes.cpp.i
+.PHONY : src/process_planning/mandatory_volumes.cpp.i
+
+src/process_planning/mandatory_volumes.s: src/process_planning/mandatory_volumes.cpp.s
+
+.PHONY : src/process_planning/mandatory_volumes.s
+
+# target to generate assembly for a file
+src/process_planning/mandatory_volumes.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/mandatory_volumes.cpp.s
+.PHONY : src/process_planning/mandatory_volumes.cpp.s
+
 src/process_planning/tool_access.o: src/process_planning/tool_access.cpp.o
 
 .PHONY : src/process_planning/tool_access.o
@@ -5154,6 +5181,9 @@ help:
 	@echo "... src/process_planning/job_planning.o"
 	@echo "... src/process_planning/job_planning.i"
 	@echo "... src/process_planning/job_planning.s"
+	@echo "... src/process_planning/mandatory_volumes.o"
+	@echo "... src/process_planning/mandatory_volumes.i"
+	@echo "... src/process_planning/mandatory_volumes.s"
 	@echo "... src/process_planning/tool_access.o"
 	@echo "... src/process_planning/tool_access.i"
 	@echo "... src/process_planning/tool_access.s"

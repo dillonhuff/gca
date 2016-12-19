@@ -169,6 +169,7 @@ SET(GCA_CPPS
 	./src/process_planning/feature_to_pocket.cpp
 	./src/process_planning/feature_selection.cpp
 	./src/process_planning/job_planning.cpp
+	./src/process_planning/mandatory_volumes.cpp
 	./src/process_planning/tool_access.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/fabrication_plan.cpp

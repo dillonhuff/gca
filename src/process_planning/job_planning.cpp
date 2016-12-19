@@ -10,11 +10,12 @@
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
+#include "process_planning/mandatory_volumes.h"
 #include "synthesis/visual_debug.h"
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-//#define VIZ_DBG
+#define VIZ_DBG
 
 namespace gca {
 
@@ -782,6 +783,49 @@ namespace gca {
     return needed_surfs;
   }
 
+  void
+  subtract_mandatory_volumes(volume_info_map& volume_inf,
+			     const triangular_mesh& part) {
+    vector<vector<mandatory_volume> > mandatories =
+      mandatory_volumes(part);
+
+    vector<vtkSmartPointer<vtkActor> > actors{mesh_actor(part)};
+    for (auto& mandatory : mandatories) {
+      for (auto& v : mandatory) {
+	auto pd = polydata_for_trimesh(v.volume);
+	color_polydata(pd, 0, 255, 0);
+	actors.push_back(polydata_actor(pd));
+      }
+    }
+
+    visualize_actors(actors);
+
+    for (auto& mandatory : mandatories) {
+
+      for (auto& mv : mandatory) {
+	Nef_polyhedron mv_nef = trimesh_to_nef_polyhedron(mv.volume);
+
+	for (auto& feature_volume_info : volume_inf) {
+	  feature* f = feature_volume_info.first;
+	  volume_info& vol_info = feature_volume_info.second;
+
+	  bool is_mandatory_direction =
+	    any_of(begin(mandatory), end(mandatory),
+		   [f](const mandatory_volume& mv) {
+		     return angle_eps(mv.direction, f->normal(), 0.0, 0.5);
+		   });
+
+	  if (!is_mandatory_direction) {
+	    //vol_info.dilated_mesh = vol_info.dilated_mesh - mv_nef;
+	    vol_info.remaining_volume = vol_info.remaining_volume - mv_nef;
+	  }
+	}
+      }
+    }
+
+    
+  }
+
   std::vector<fixture_setup>
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
@@ -791,6 +835,7 @@ namespace gca {
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
+    subtract_mandatory_volumes(volume_inf, part);
 
     vector<fixture_setup> cut_setups;
 
