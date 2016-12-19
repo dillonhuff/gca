@@ -235,9 +235,12 @@ namespace gca {
   }
 
   surface_levels
-  initial_surface_levels(const triangular_mesh& m,
+  initial_surface_levels(const std::vector<triangular_mesh>& meshes,
 			 const point n) {
-    auto surf_polys = horizontal_surfaces(m, n);
+    vector<polygon_3> surf_polys;
+    for (auto& m : meshes) {
+      concat(surf_polys, horizontal_surfaces(m, n));
+    }
 
     sort(begin(surf_polys), end(surf_polys),
 	 [n](const polygon_3& x, const polygon_3& y) {
@@ -607,7 +610,7 @@ namespace gca {
   }
 
   void 
-  check_level_depths(const surface_levels& levels) {
+  check_level_sizes(const surface_levels& levels) {
 
     for (auto level : levels) {
       
@@ -625,39 +628,26 @@ namespace gca {
 
   }
 
-  feature_decomposition*
-  build_feature_decomposition(const triangular_mesh& stock,
-			      const triangular_mesh& m,
-			      const point n) {
-    labeled_polygon_3 init_outline = initial_outline(stock, n);
-
-    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
-
-    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
-
-    double base_depth = min_distance_along(m.vertex_list(), n);
-
-    surface_levels levels = initial_surface_levels(m, n);
-
-    check_level_depths(levels);
-
-    if (levels.size() > 0) {
+  void 
+  check_level_depths(const polygon_3& init_outline,
+		     const surface_levels& levels) {
+    if (levels.size() > 0) {    
       for (unsigned i = 0; i < levels.size() - 1; i++) {
-    	auto& current = levels[i + 1];
-    	auto& next = levels[i];
+	auto& current = levels[i + 1];
+	auto& next = levels[i];
 
-    	double current_depth =
-    	  max_distance_along(current.front().vertices(),
-    			     current.front().normal());
+	double current_depth =
+	  max_distance_along(current.front().vertices(),
+			     current.front().normal());
 
-    	double next_depth =
-    	  max_distance_along(next.front().vertices(),
-    			     next.front().normal());
+	double next_depth =
+	  max_distance_along(next.front().vertices(),
+			     next.front().normal());
 
-    	cout << "Current depth = " << current_depth << endl;
-    	cout << "Next depth    = " << next_depth << endl;
+	cout << "Current depth = " << current_depth << endl;
+	cout << "Next depth    = " << next_depth << endl;
 
-    	DBG_ASSERT(current_depth >= next_depth);
+	DBG_ASSERT(current_depth >= next_depth);
       }
 
       double current_depth =
@@ -674,10 +664,29 @@ namespace gca {
 
       DBG_ASSERT(current_depth >= next_depth);
     }
+    
+  }
+
+
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& stock,
+			      const triangular_mesh& m,
+			      const point n) {
+    labeled_polygon_3 init_outline = initial_outline(stock, n);
+
+    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
+
+    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
+
+    double base_depth = min_distance_along(m.vertex_list(), n);
+
+    surface_levels levels = initial_surface_levels({m}, n);
+
+    check_level_sizes(levels);
+    check_level_depths(init_outline, levels);
 
     feature_decomposition* decomp =
       new (allocate<feature_decomposition>()) feature_decomposition();
-
     decompose_volume(init_outline, levels, decomp, base_depth);
 
     check_normals(decomp, n);

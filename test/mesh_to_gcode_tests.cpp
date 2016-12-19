@@ -860,75 +860,75 @@ namespace gca {
 
   }
 
-  TEST_CASE("Mandatory volume needed") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Mandatory volume needed") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
     
-    vice test_v = current_setup();
-    vice test_vice = top_jaw_origin_vice(test_v);
+  //   vice test_v = current_setup();
+  //   vice test_vice = top_jaw_origin_vice(test_v);
 
-    std::vector<plate_height> plates{0.48, 0.6};
-    fixtures fixes(test_vice, plates);
+  //   std::vector<plate_height> plates{0.48, 0.6};
+  //   fixtures fixes(test_vice, plates);
 
-    workpiece workpiece_dims(1.75, 1.3, 2.5, ALUMINUM);
+  //   workpiece workpiece_dims(1.75, 1.3, 2.5, ALUMINUM);
 
-    tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
-    t1.set_cut_diameter(1.0 / 8.0);
-    t1.set_cut_length(3.0 / 8.0);
+  //   tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
+  //   t1.set_cut_diameter(1.0 / 8.0);
+  //   t1.set_cut_length(3.0 / 8.0);
 
-    t1.set_shank_diameter(3.0 / 8.0);
-    t1.set_shank_length(0.1);
+  //   t1.set_shank_diameter(3.0 / 8.0);
+  //   t1.set_shank_length(0.1);
 
-    t1.set_holder_diameter(1.8);
-    t1.set_holder_length(3.0);
-    t1.set_tool_number(1);
+  //   t1.set_holder_diameter(1.8);
+  //   t1.set_holder_length(3.0);
+  //   t1.set_tool_number(1);
 
-    tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
-    t2.set_cut_diameter(3.0 / 8.0);
-    t2.set_cut_length(0.75);
+  //   tool t2(0.335, 3.0, 4, HSS, FLAT_NOSE);
+  //   t2.set_cut_diameter(3.0 / 8.0);
+  //   t2.set_cut_length(0.75);
 
-    t2.set_shank_diameter(3.0 / 8.0);
-    t2.set_shank_length(0.1);
+  //   t2.set_shank_diameter(3.0 / 8.0);
+  //   t2.set_shank_length(0.1);
 
-    t2.set_holder_diameter(1.8);
-    t2.set_holder_length(3.0);
-    t2.set_tool_number(2);
+  //   t2.set_holder_diameter(1.8);
+  //   t2.set_holder_length(3.0);
+  //   t2.set_tool_number(2);
 
-    tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
-    t3.set_cut_diameter(0.5);
-    t3.set_cut_length(1.25);
+  //   tool t3(0.5, 3.0, 2, HSS, FLAT_NOSE);
+  //   t3.set_cut_diameter(0.5);
+  //   t3.set_cut_length(1.25);
 
-    t3.set_shank_diameter(0.5);
-    t3.set_shank_length(0.5);
+  //   t3.set_shank_diameter(0.5);
+  //   t3.set_shank_length(0.5);
 
-    t3.set_holder_diameter(1.8);
-    t3.set_holder_length(3.0);
-    t3.set_tool_number(3);
+  //   t3.set_holder_diameter(1.8);
+  //   t3.set_holder_length(3.0);
+  //   t3.set_tool_number(3);
 
-    tool t4{1.0 / 8.0, 3.94, 4, HSS, BALL_NOSE};
-    t4.set_cut_diameter(1.0 / 4.0);
-    t4.set_cut_length(1.25);
+  //   tool t4{1.0 / 8.0, 3.94, 4, HSS, BALL_NOSE};
+  //   t4.set_cut_diameter(1.0 / 4.0);
+  //   t4.set_cut_length(1.25);
 
-    t4.set_shank_diameter(0.5);
-    t4.set_shank_length(0.05);
+  //   t4.set_shank_diameter(0.5);
+  //   t4.set_shank_length(0.05);
 
-    t4.set_holder_diameter(2.5);
-    t4.set_holder_length(3.5);
-    t4.set_tool_number(4);
+  //   t4.set_holder_diameter(2.5);
+  //   t4.set_holder_length(3.5);
+  //   t4.set_tool_number(4);
   
-    vector<tool> tools{t1, t2, t3, t4};
+  //   vector<tool> tools{t1, t2, t3, t4};
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/100-009 - Part 1.stl", 0.0001);
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/100-009 - Part 1.stl", 0.0001);
 
-    fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
+  //   fixture_plan p = make_fixture_plan(mesh, fixes, tools, {workpiece_dims});
 
-    REQUIRE(p.fixtures().size() == 3);
+  //   REQUIRE(p.fixtures().size() == 3);
 
-    fabrication_plan fab_plan =
-      fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
+  //   fabrication_plan fab_plan =
+  //     fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
 
-    REQUIRE(fab_plan.steps().size() == 3);
+  //   REQUIRE(fab_plan.steps().size() == 3);
 
-  }
+  // }
   
 }

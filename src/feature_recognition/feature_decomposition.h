@@ -274,7 +274,7 @@ namespace gca {
   vector<feature*> collect_features(feature_decomposition* f);
 
   surface_levels
-  initial_surface_levels(const triangular_mesh& m,
+  initial_surface_levels(const std::vector<triangular_mesh>& m,
 			 const point n);
 
   point normal(feature_decomposition* f);

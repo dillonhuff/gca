@@ -93,7 +93,7 @@ namespace gca {
 
     point n(0, -1, 0);
 
-    surface_levels ls = initial_surface_levels(mesh, n);
+    surface_levels ls = initial_surface_levels({mesh}, n);
 
     REQUIRE(ls.size() == 1);
     REQUIRE(ls.front().size() == 2);
