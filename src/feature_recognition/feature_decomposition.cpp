@@ -192,40 +192,10 @@ namespace gca {
       DBG_ASSERT(bounds.size() == 1);
 
       polygon_3 lp = apply(r_inv, bounds.front());
-
-      // auto bounds = mesh_bounds(s, mr);
-
-      // DBG_ASSERT(bounds.size() > 0);
-
-      // auto boundary = extract_boundary(bounds);
-
-      // check_simplicity(boundary.vertices());
-
-      // // if (!(area(boundary) > 0.001)) {
-      // // 	vtk_debug_highlight_inds(s, m);
-      // // 	DBG_ASSERT(area(boundary) > 0.001);
-      // // }
-
-      // auto holes = bounds;
-
-      // vector<vector<point>> hole_verts;
-      // for (auto h : holes) {
-      // 	check_simplicity(h.vertices());
-      // 	hole_verts.push_back(apply(r_inv, h.vertices()));
-      // }
-
-      // polygon_3 lp = build_clean_polygon_3(apply(r_inv, boundary.vertices()), hole_verts);
-
       lp.correct_winding_order(n);
 
       surf_polys.push_back(lp);
     }
-
-    sort(begin(surf_polys), end(surf_polys),
-	 [n](const polygon_3& x, const polygon_3& y) {
-	   return max_distance_along(x.vertices(), n) <
-	     max_distance_along(y.vertices(), n);
-	 });
 
     cout << "Got horizontal surfaces" << endl;
 
@@ -242,9 +212,8 @@ namespace gca {
   }
 
   surface_levels
-  initial_surface_levels(const triangular_mesh& m,
-			 const point n) {
-    auto h_surfs = horizontal_surfaces(m, n);
+  build_surface_levels(const std::vector<polygon_3>& h_surfs,
+		       const point n) {
     auto surface_it = begin(h_surfs);
     surface_levels levels;
     while (surface_it != end(h_surfs)) {
@@ -263,6 +232,20 @@ namespace gca {
     }
 
     return levels;
+  }
+
+  surface_levels
+  initial_surface_levels(const triangular_mesh& m,
+			 const point n) {
+    auto surf_polys = horizontal_surfaces(m, n);
+
+    sort(begin(surf_polys), end(surf_polys),
+	 [n](const polygon_3& x, const polygon_3& y) {
+	   return max_distance_along(x.vertices(), n) <
+	     max_distance_along(y.vertices(), n);
+	 });
+
+    return build_surface_levels(surf_polys, n);
   }
 
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
@@ -623,19 +606,8 @@ namespace gca {
     traverse_bf(decomp, set_open);
   }
 
-  feature_decomposition*
-  build_feature_decomposition(const triangular_mesh& stock,
-			      const triangular_mesh& m,
-			      const point n) {
-    labeled_polygon_3 init_outline = initial_outline(stock, n);
-
-    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
-
-    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
-
-    double base_depth = min_distance_along(m.vertex_list(), n);
-
-    surface_levels levels = initial_surface_levels(m, n);
+  void 
+  check_level_depths(const surface_levels& levels) {
 
     for (auto level : levels) {
       
@@ -650,6 +622,24 @@ namespace gca {
       }
 
     }
+
+  }
+
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& stock,
+			      const triangular_mesh& m,
+			      const point n) {
+    labeled_polygon_3 init_outline = initial_outline(stock, n);
+
+    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
+
+    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
+
+    double base_depth = min_distance_along(m.vertex_list(), n);
+
+    surface_levels levels = initial_surface_levels(m, n);
+
+    check_level_depths(levels);
 
     if (levels.size() > 0) {
       for (unsigned i = 0; i < levels.size() - 1; i++) {

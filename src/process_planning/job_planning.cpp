@@ -15,7 +15,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -835,7 +835,7 @@ namespace gca {
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
-    subtract_mandatory_volumes(volume_inf, part);
+    //subtract_mandatory_volumes(volume_inf, part);
 
     vector<fixture_setup> cut_setups;
 
