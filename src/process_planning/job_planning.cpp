@@ -884,19 +884,17 @@ namespace gca {
 			   const std::vector<tool>& tools) {
 
 #ifdef VIZ_DBG
+    vector<feature*> all_features{};
     visualize_initial_features(dir_info);
 #endif
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
-    //subtract_mandatory_volumes(volume_inf, part);
 
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
-
-    vector<feature*> all_features{};
 
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
@@ -934,8 +932,11 @@ namespace gca {
 
 	clip_volumes(features, volume_inf, dir_info);
 
+	vector<freeform_surface> surfs =
+	  select_needed_freeform_surfaces(stock_nef, info.freeform_surfaces, n);
+
 	if (features.size() > 0 ||
-	    info.freeform_surfaces.size() > 0) {
+	    surfs.size() > 0) {
 
 	  cout << "Found features in " << n << endl;
 
@@ -953,16 +954,12 @@ namespace gca {
 				    info.decomp));
 	  }
 
-	  vector<freeform_surface> surfs =
-	    select_needed_freeform_surfaces(stock_nef, info.freeform_surfaces, n);
-
 	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces, surfs));
 
 	  stock_nef = subtract_features(stock_nef, features);
-	  // NOTE: Assumes all chamfers and freeform surfaces are accessable
+	  // NOTE: Assumes all chamfers are accessable
 	  stock_nef = subtract_chamfers(stock_nef, info.chamfer_surfaces, part, n);
-	  // TODO: Change info.freeform_surfaces to just surfs ?
-	  stock_nef = subtract_freeforms(stock_nef, info.freeform_surfaces, part, n);
+	  stock_nef = subtract_freeforms(stock_nef, surfs, part, n);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
 	  current_stock = nef_to_single_trimesh(stock_nef);
