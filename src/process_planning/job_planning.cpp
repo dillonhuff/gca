@@ -204,7 +204,17 @@ namespace gca {
 
   volume_info initial_volume_info(const feature& f,
 				  const Nef_polyhedron& stock_nef) {
+    cout << "Starting feature mesh" << endl;
+    cout << "Feature depth  = " << f.depth() << endl;
+    cout << "Feature normal = " << f.normal() << endl;
+    vtk_debug_feature(f);
+
+    DBG_ASSERT(f.depth() > 0.0);
+
     triangular_mesh mesh = feature_mesh(f);
+
+    cout << "Ending feature mesh" << endl;
+    
     auto feature_nef = trimesh_to_nef_polyhedron(mesh);
     feature_nef = stock_nef.intersection(feature_nef);
 

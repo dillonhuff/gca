@@ -504,6 +504,9 @@ namespace gca {
     // a through feature
     if (levels.size() == 0) {
       double feature_depth = current_depth - base_depth;
+
+      DBG_ASSERT(feature_depth > 0.0);
+
       point v = feature_depth*current_level.normal();
       plane base_pl(current_level.normal(), current_level.vertex(0) - v);
 
@@ -560,6 +563,8 @@ namespace gca {
     }
 
     double feature_depth = current_depth - next_depth;
+
+    DBG_ASSERT(feature_depth > 0.0);
 
     point v = feature_depth*current_level.normal();
     plane base_pl(current_level.normal(), current_level.vertex(0) - v);
