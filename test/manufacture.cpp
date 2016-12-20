@@ -77,9 +77,10 @@ namespace gca {
     vector<part_info> some_scaling{
       // Failing due to a mesh with no edges?
       //{"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", 0.45, wp},
-      //{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
-      //{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
-      //{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
+      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
+      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
+      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp},
+
 
       {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
 		  

@@ -208,9 +208,9 @@ namespace gca {
     cout << "Feature depth  = " << f.depth() << endl;
     cout << "Feature normal = " << f.normal() << endl;
 
-#ifdef VIZ_DBG
-    vtk_debug_feature(f);
-#endif
+// #ifdef VIZ_DBG
+//     vtk_debug_feature(f);
+// #endif
 
     DBG_ASSERT(f.depth() > 0.0);
 
@@ -852,9 +852,9 @@ namespace gca {
 			   const std::vector<tool>& tools) {
 
 #ifdef VIZ_DBG
-    // for (auto d : dir_info) {
-    //   vtk_debug_feature_decomposition(d.decomp);
-    // }
+    for (auto d : dir_info) {
+      vtk_debug_feature_decomposition(d.decomp);
+    }
 
     vector<feature*> init_features;
     cout << "# of directions = " << dir_info.size() << endl;

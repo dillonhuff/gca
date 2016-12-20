@@ -79,11 +79,11 @@ namespace gca {
 
     }
 
-    for (auto& d : dirs) {
-      delete_leaves(d.decomp, [](feature* f) {
-	  return within_eps(f->depth(), 0.0);
-	});
-    }
+    // for (auto& d : dirs) {
+    //   delete_leaves(d.decomp, [](feature* f) {
+    // 	  return within_eps(f->depth(), 0.0);
+    // 	});
+    // }
     
     
   }
@@ -185,19 +185,19 @@ namespace gca {
 
       vector<triangular_mesh> meshes{};
 
-      for (auto& mv : mvs) {
-	bool is_mandatory_direction =
-	  any_of(begin(mv), end(mv),
-		 [n](const mandatory_volume& mv) {
-		   return angle_eps(mv.direction, n.dir, 0.0, 0.5);
-		 });
+      // for (auto& mv : mvs) {
+      // 	bool is_mandatory_direction =
+      // 	  any_of(begin(mv), end(mv),
+      // 		 [n](const mandatory_volume& mv) {
+      // 		   return angle_eps(mv.direction, n.dir, 0.0, 0.5);
+      // 		 });
 
-	if (!is_mandatory_direction) {
-	  for (auto& m : mv) {
-	    meshes.push_back(m.volume);
-	  }
-	}
-      }
+      // 	if (!is_mandatory_direction) {
+      // 	  for (auto& m : mv) {
+      // 	    meshes.push_back(m.volume);
+      // 	  }
+      // 	}
+      // }
       
       // for (auto& md : mvs) {
       // 	for (auto& m : md) {
