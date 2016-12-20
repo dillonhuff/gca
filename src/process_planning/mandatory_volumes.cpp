@@ -112,14 +112,14 @@ namespace gca {
 			   const point n) {
     cout << "# of surfaces = " << surf_complex.size() << endl;
 
-    surface min_surf = min_e(surf_complex,
-			     [n](const surface& sf) { return min_in_dir(sf, n); });
+    // surface min_surf = min_e(surf_complex,
+    // 			     [n](const surface& sf) { return min_in_dir(sf, n); });
     surface max_surf = max_e(surf_complex,
 			     [n](const surface& sf) { return max_in_dir(sf, n); });
 
-    double dist = max_in_dir(max_surf, n) - min_in_dir(min_surf, n);
+    double dist = max_in_dir(max_surf, n) - min_in_dir(s, n);
 
-    cout << "Min distance along " << n << " = " << min_in_dir(min_surf, n) << endl;
+    cout << "Min distance along " << n << " = " << min_in_dir(s, n) << endl;
     cout << "Max distance along " << n << " = " << max_in_dir(max_surf, n) << endl;
     cout << "Distance to extrude = " << dist << endl;
 

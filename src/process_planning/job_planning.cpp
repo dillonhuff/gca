@@ -835,7 +835,7 @@ namespace gca {
 		   });
 
 	  if (!is_mandatory_direction) {
-	    //vol_info.dilated_mesh = vol_info.dilated_mesh - mv_nef;
+	    vol_info.dilated_mesh = vol_info.dilated_mesh - mv_nef;
 	    vol_info.remaining_volume = vol_info.remaining_volume - mv_nef;
 	  }
 	}
@@ -891,7 +891,7 @@ namespace gca {
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
-
+    
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
