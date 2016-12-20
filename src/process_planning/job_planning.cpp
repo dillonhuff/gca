@@ -845,14 +845,24 @@ namespace gca {
     
   }
 
-  std::vector<fixture_setup>
-  select_jobs_and_features(const triangular_mesh& stock,
-			   const triangular_mesh& part,
-			   const fixtures& f,
-			   std::vector<direction_process_info>& dir_info,
-			   const std::vector<tool>& tools) {
+  void visualize_current_features(const std::vector<feature*>& features,
+				  const volume_info_map& volume_inf,
+				  std::vector<feature*>& all_features) {
+    for (auto f : features) {
+      auto vol_data = map_find(f, volume_inf);
+      cout << "delta volume = " << vol_data.volume << endl;
 
-#ifdef VIZ_DBG
+      vtk_debug_feature(*f);
+
+      vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
+
+    }
+    vtk_debug_features(features);
+    concat(all_features, features);
+  }
+  
+  void
+  visualize_initial_features(const std::vector<direction_process_info>& dir_info) {
     for (auto d : dir_info) {
       vtk_debug_feature_decomposition(d.decomp);
     }
@@ -864,6 +874,17 @@ namespace gca {
     }
 
     vtk_debug_features(init_features);
+  }
+
+  std::vector<fixture_setup>
+  select_jobs_and_features(const triangular_mesh& stock,
+			   const triangular_mesh& part,
+			   const fixtures& f,
+			   std::vector<direction_process_info>& dir_info,
+			   const std::vector<tool>& tools) {
+
+#ifdef VIZ_DBG
+    visualize_initial_features(dir_info);
 #endif
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
@@ -919,17 +940,7 @@ namespace gca {
 	  cout << "Found features in " << n << endl;
 
 #ifdef VIZ_DBG
-	  for (auto f : features) {
-	    auto vol_data = map_find(f, volume_inf);
-	    cout << "delta volume = " << vol_data.volume << endl;
-
-	    vtk_debug_feature(*f);
-
-	    vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
-
-	  }
-	  vtk_debug_features(features);
-	  concat(all_features, features);
+	  visualize_current_features(features, volume_inf, all_features);
 #endif
 
 	  vector<feature*> final_features;
