@@ -285,7 +285,21 @@ namespace gca {
     return can_access_flat_feature_with_tool(f, t, decomp);
 
   }
-				    
+
+
+  std::vector<tool>
+  accessable_tools_for_flat_feature(const feature& feat,
+				    feature_decomposition* f,
+				    const std::vector<tool>& tools) {
+    vector<tool> viable;
+    for (auto t : tools) {
+      if (can_access_feature_with_tool(feat, t, f)) {
+	viable.push_back(t);
+      }
+    }
+    return viable;
+  }
+  
   tool_access_info
   find_accessable_tools(feature_decomposition* f,
 			const std::vector<tool>& tools) {

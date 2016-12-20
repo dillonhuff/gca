@@ -349,7 +349,9 @@ namespace gca {
   std::vector<feature*>
   clipped_features(feature* f,
 		   const volume_info& vol_info,
-		   tool_access_info& tool_info) {
+		   tool_access_info& tool_info,
+		   const std::vector<tool>& tools,
+		   feature_decomposition* decomp) {
     auto& feat_nef = vol_info.remaining_volume;
     vector<triangular_mesh> meshes = nef_polyhedron_to_trimeshes(feat_nef);
 
@@ -367,7 +369,7 @@ namespace gca {
 
     for (auto cf : clipped_features) {
       // Actually should redo tool info here?
-      tool_info[cf] = map_find(f, tool_info);
+      tool_info[cf] = accessable_tools_for_flat_feature(*cf, decomp, tools); //map_find(f, tool_info);
     }
 
     return clipped_features;
@@ -831,7 +833,8 @@ namespace gca {
   select_jobs_and_features(const triangular_mesh& stock,
 			   const triangular_mesh& part,
 			   const fixtures& f,
-			   std::vector<direction_process_info>& dir_info) {
+			   std::vector<direction_process_info>& dir_info,
+			   const std::vector<tool>& tools) {
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
@@ -916,7 +919,11 @@ namespace gca {
 	  vector<feature*> final_features;
 	  for (auto f : features) {
 	    concat(final_features,
-		   clipped_features(f, map_find(f, volume_inf), info.tool_info));
+		   clipped_features(f,
+				    map_find(f, volume_inf),
+				    info.tool_info,
+				    tools,
+				    info.decomp));
 	  }
 
 	  vector<freeform_surface> surfs =
@@ -982,7 +989,7 @@ namespace gca {
     vector<direction_process_info> dir_info =
       select_mill_directions(stock, part, f, tools);
 
-    return select_jobs_and_features(stock, part, f, dir_info);
+    return select_jobs_and_features(stock, part, f, dir_info, tools);
   }
 
 }
