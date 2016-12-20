@@ -50,6 +50,8 @@ namespace gca {
       tri_vertices(triangles_p),
       mesh(mesh_p) {}
 
+    triangular_mesh flip_winding_order() const;
+
     std::vector<edge> edges() const {
       std::vector<edge> edges;
       unordered_set<edge> edge_set;

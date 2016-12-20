@@ -6,6 +6,7 @@
 #include "process_planning/axis_location.h"
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
+#include "process_planning/mandatory_volumes.h"
 
 namespace gca {
 
@@ -129,7 +130,15 @@ namespace gca {
 		       const triangular_mesh& part,
 		       const direction_info n,
 		       const std::vector<tool>& tools) {
-    feature_decomposition* decomp = build_feature_decomposition(stock, part, n.dir);
+    auto mvs = mandatory_volumes(part);
+    vector<triangular_mesh> meshes{part};
+    for (auto& md : mvs) {
+      for (auto& m : md) {
+	meshes.push_back(m.volume);
+      }
+    }
+    
+    feature_decomposition* decomp = build_feature_decomposition(stock, meshes, n.dir);
     tool_access_info info = find_accessable_tools(decomp, tools);
     vector<chamfer> chamfers = chamfer_regions(part, n.dir, tools);
     vector<freeform_surface> freeform_surfs;

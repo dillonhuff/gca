@@ -302,6 +302,11 @@ namespace gca {
 
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& stock,
+			      const std::vector<triangular_mesh>& meshes,
+			      const point n);
+  
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& stock,
 			      const triangular_mesh& m,
 			      const point n);
 

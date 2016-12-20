@@ -667,10 +667,9 @@ namespace gca {
     
   }
 
-
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& stock,
-			      const triangular_mesh& m,
+			      const std::vector<triangular_mesh>& meshes,
 			      const point n) {
     labeled_polygon_3 init_outline = initial_outline(stock, n);
 
@@ -678,9 +677,12 @@ namespace gca {
 
     DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
 
-    double base_depth = min_distance_along(m.vertex_list(), n);
+    triangular_mesh lowest = min_e(meshes, [n](const triangular_mesh& m) {
+	return min_distance_along(m.vertex_list(), n);
+      });
+    double base_depth = min_distance_along(lowest.vertex_list(), n);
 
-    surface_levels levels = initial_surface_levels({m}, n);
+    surface_levels levels = initial_surface_levels(meshes, n);
 
     check_level_sizes(levels);
     check_level_depths(init_outline, levels);
@@ -694,6 +696,14 @@ namespace gca {
     set_open_features(decomp);
 
     return decomp;
+  }
+  
+
+  feature_decomposition*
+  build_feature_decomposition(const triangular_mesh& stock,
+			      const triangular_mesh& m,
+			      const point n) {
+    return build_feature_decomposition(stock, {m}, n);
   }
 
   // Uses the part itself as an outline

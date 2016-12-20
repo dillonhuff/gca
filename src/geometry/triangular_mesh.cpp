@@ -10,6 +10,10 @@ namespace gca {
     return out;
   }
 
+  triangular_mesh triangular_mesh::flip_winding_order() const {
+    return triangular_mesh(vertices, gca::flip_winding_orders(tri_vertices), mesh);
+  }
+  
   index_t
   vertex_index_of(const index_t ind, const triangle_t t1) {
     for (index_t i = 0; i < 3; i++) {

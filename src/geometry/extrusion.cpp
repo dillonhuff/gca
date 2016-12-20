@@ -481,7 +481,7 @@ namespace gca {
 
     //vtk_debug_triangles(base);
 
-    return make_mesh(base, 0.0001);
+    return make_mesh(base, 0.0001).flip_winding_order();
   }
 
 
