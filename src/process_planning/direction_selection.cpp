@@ -7,8 +7,25 @@
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/mandatory_volumes.h"
+#include "feature_recognition/visual_debug.h"
 
 namespace gca {
+
+  void check_feature_depths(const std::vector<direction_process_info>& dir_info) {
+    for (auto& d : dir_info) {
+      for (auto f : collect_features(d.decomp)) {
+	if (!(f->depth() > 0.0)) {
+	  cout << "Feature depth       = " << f->depth() << endl;
+	  cout << "Feature normal      = " << f->normal() << endl;
+	  cout << "Feature is closed   = " << f->is_closed() << endl;
+	  cout << "Feature is through  = " << f->is_through() << endl;
+	  
+	  vtk_debug_feature(*f);
+	  DBG_ASSERT(f->depth() > 0.0);
+	}
+      }
+    }
+  }
 
   void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
 				 const std::vector<tool>& tools) {
@@ -59,7 +76,15 @@ namespace gca {
 	}
 
       }
+
     }
+
+    for (auto& d : dirs) {
+      delete_leaves(d.decomp, [](feature* f) {
+	  return within_eps(f->depth(), 0.0);
+	});
+    }
+    
     
   }
 
@@ -185,6 +210,8 @@ namespace gca {
       dir_info.push_back(info);
     }
 
+    check_feature_depths(dir_info);
+
     for (auto info : dir_info) {
       feature_decomposition* decomp = info.decomp;
 
@@ -217,6 +244,8 @@ namespace gca {
 
     vector<direction_process_info> dir_info =
       initial_decompositions(stock, part, tools, norms);
+
+    check_feature_depths(dir_info);
 
     return dir_info;
   }

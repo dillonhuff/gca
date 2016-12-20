@@ -207,7 +207,10 @@ namespace gca {
     cout << "Starting feature mesh" << endl;
     cout << "Feature depth  = " << f.depth() << endl;
     cout << "Feature normal = " << f.normal() << endl;
+
+#ifdef VIZ_DBG
     vtk_debug_feature(f);
+#endif
 
     DBG_ASSERT(f.depth() > 0.0);
 
