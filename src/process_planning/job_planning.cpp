@@ -15,7 +15,7 @@
 #include "synthesis/workpiece_clipping.h"
 #include "utils/check.h"
 
-#define VIZ_DBG
+//#define VIZ_DBG
 
 namespace gca {
 
@@ -369,7 +369,9 @@ namespace gca {
 
     for (auto cf : clipped_features) {
       // Actually should redo tool info here?
-      tool_info[cf] = accessable_tools_for_flat_feature(*cf, decomp, tools); //map_find(f, tool_info);
+      vector<tool> new_tools = tool_info[f];
+      concat(new_tools, accessable_tools_for_flat_feature(*cf, decomp, tools)); //map_find(f, tool_info);
+      tool_info[cf] = new_tools;
     }
 
     return clipped_features;
@@ -836,15 +838,6 @@ namespace gca {
 			   std::vector<direction_process_info>& dir_info,
 			   const std::vector<tool>& tools) {
 
-    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
-
-    volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
-    //subtract_mandatory_volumes(volume_inf, part);
-
-    vector<fixture_setup> cut_setups;
-
-    double part_volume = volume(part);
-
 #ifdef VIZ_DBG
     // for (auto d : dir_info) {
     //   vtk_debug_feature_decomposition(d.decomp);
@@ -858,6 +851,15 @@ namespace gca {
 
     vtk_debug_features(init_features);
 #endif
+
+    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+
+    volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
+    //subtract_mandatory_volumes(volume_inf, part);
+
+    vector<fixture_setup> cut_setups;
+
+    double part_volume = volume(part);
 
     vector<feature*> all_features{};
 

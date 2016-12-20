@@ -703,7 +703,8 @@ namespace gca {
   build_feature_decomposition(const triangular_mesh& stock,
 			      const triangular_mesh& m,
 			      const point n) {
-    return build_feature_decomposition(stock, {m}, n);
+    vector<triangular_mesh> meshes{m};
+    return build_feature_decomposition(stock, meshes, n);
   }
 
   // Uses the part itself as an outline
