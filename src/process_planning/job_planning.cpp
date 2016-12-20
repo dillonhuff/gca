@@ -366,6 +366,7 @@ namespace gca {
     }
 
     for (auto cf : clipped_features) {
+      // Actually should redo tool info here?
       tool_info[cf] = map_find(f, tool_info);
     }
 

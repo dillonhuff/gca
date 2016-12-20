@@ -128,16 +128,12 @@ namespace gca {
   direction_process_info
   build_direction_info(const triangular_mesh& stock,
 		       const triangular_mesh& part,
+		       const std::vector<triangular_mesh>& mandatory_meshes,
 		       const direction_info n,
 		       const std::vector<tool>& tools) {
-    auto mvs = mandatory_volumes(part);
-    vector<triangular_mesh> meshes{part};
-    for (auto& md : mvs) {
-      for (auto& m : md) {
-	meshes.push_back(m.volume);
-      }
-    }
-    
+    vector<triangular_mesh> meshes = mandatory_meshes;
+    meshes.push_back(part);
+
     feature_decomposition* decomp = build_feature_decomposition(stock, meshes, n.dir);
     tool_access_info info = find_accessable_tools(decomp, tools);
     vector<chamfer> chamfers = chamfer_regions(part, n.dir, tools);
@@ -157,11 +153,35 @@ namespace gca {
 			 const triangular_mesh& part,
 			 const std::vector<tool>& tools,
 			 const std::vector<direction_info>& norms) {
-
+    auto mvs = mandatory_volumes(part);
+    
     vector<direction_process_info> dir_info;
     for (auto n : norms) {
+
+      vector<triangular_mesh> meshes{};
+
+      for (auto& mv : mvs) {
+	bool is_mandatory_direction =
+	  any_of(begin(mv), end(mv),
+		 [n](const mandatory_volume& mv) {
+		   return angle_eps(mv.direction, n.dir, 0.0, 0.5);
+		 });
+
+	if (!is_mandatory_direction) {
+	  for (auto& m : mv) {
+	    meshes.push_back(m.volume);
+	  }
+	}
+      }
+      
+      // for (auto& md : mvs) {
+      // 	for (auto& m : md) {
+      // 	  meshes.push_back(m.volume);
+      // 	}
+      // }
+      
       direction_process_info info =
-	build_direction_info(stock, part, n, tools);
+	build_direction_info(stock, part, meshes, n, tools);
       dir_info.push_back(info);
     }
 
