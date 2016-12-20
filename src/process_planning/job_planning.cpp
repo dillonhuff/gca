@@ -961,6 +961,7 @@ namespace gca {
 	  stock_nef = subtract_features(stock_nef, features);
 	  // NOTE: Assumes all chamfers and freeform surfaces are accessable
 	  stock_nef = subtract_chamfers(stock_nef, info.chamfer_surfaces, part, n);
+	  // TODO: Change info.freeform_surfaces to just surfs ?
 	  stock_nef = subtract_freeforms(stock_nef, info.freeform_surfaces, part, n);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
