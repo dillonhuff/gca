@@ -801,7 +801,7 @@ namespace gca {
     return needed_surfs;
   }
 
-  // TODO: Remove this obsolete function
+  // TODO: Remove this obsolete functio
   void
   subtract_mandatory_volumes(volume_info_map& volume_inf,
 			     const triangular_mesh& part) {
