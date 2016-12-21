@@ -233,6 +233,62 @@ namespace gca {
   }
 
   volume_info
+  update_clipped_volume_info(const volume_info& inf,
+			     const std::vector<Nef_polyhedron>& to_subtract) {
+    if (within_eps(inf.volume, 0.0)) { return inf; }
+
+    // TODO: Refine this to include feature normal etc.
+    bool exact_match = false;
+    for (auto& s : to_subtract) {
+      auto nef_meshes = nef_polyhedron_to_trimeshes(s);
+      double nef_volume = 0.0;
+      for (auto& nef_mesh : nef_meshes) {
+	nef_volume += volume(nef_mesh);
+      }
+
+      cout << "nef volume           = " << nef_volume << endl;
+      cout << "old mandatory volume = " << inf.volume << endl;
+
+      if (within_eps(nef_volume, nef_volume, 0.0001)) {
+	cout << "Found exact match feature for mandatory volume" << endl;
+	return volume_info{0.0, inf.remaining_volume, inf.dilated_mesh};
+      }
+    }
+
+    cout << "Starting subtractions" << endl;
+
+    Nef_polyhedron res = inf.remaining_volume;
+    for (auto s : to_subtract) {
+      res = res - s;
+    }
+
+    cout << "Done with subtractions" << endl;
+
+    if (!res.is_simple()) {
+      cout << "Result of subtraction is not simple!" << endl;
+      cout << "Initial volume to clip" << endl;
+      vtk_debug_meshes(nef_polyhedron_to_trimeshes(inf.remaining_volume));
+
+      for (auto& nf : to_subtract) {
+	cout << "Nef subtracted" << endl;
+	vtk_debug_meshes(nef_polyhedron_to_trimeshes(nf));
+      }
+
+      DBG_ASSERT(false);
+    }
+
+    double new_volume = 0.0;
+    for (auto& m : nef_polyhedron_to_trimeshes(res)) {
+      new_volume += volume(m);
+    }
+
+    cout << "Old volume = " << inf.volume << endl;
+    cout << "New volume = " << new_volume << endl;
+
+    return volume_info{new_volume, res, inf.dilated_mesh};
+  }
+
+  volume_info
   update_volume_info(const volume_info& inf,
 		     const std::vector<Nef_polyhedron>& to_subtract) {
     if (inf.volume == 0.0) { return inf; }
@@ -266,7 +322,7 @@ namespace gca {
 
     return volume_info{new_volume, res, inf.dilated_mesh};
   }
-
+  
   volume_info_map
   initial_volume_info(const std::vector<direction_process_info>& dir_info,
 		      const Nef_polyhedron& stock_nef) {
@@ -924,6 +980,41 @@ namespace gca {
     return mandatory_volume_info{vol_info, clip_dirs};
   }
 
+  std::vector<feature*>
+  select_mandatory_features(const point n,
+			    std::vector<feature*>& feats_to_sub,
+			    const volume_info_map& volume_inf,
+			    mandatory_volume_info& mandatory_info) {
+    vector<mandatory_volume*> mandatory_vols;
+    for (auto& mv : mandatory_info.mandatory_info) {
+      if (angle_eps(mv.first->direction, n, 0.0, 0.5)) {
+	mandatory_vols.push_back(mv.first);
+      }
+    }
+
+    cout << "# of mandatory volumes in " << n << " = " << mandatory_vols.size() << endl;
+
+    if (mandatory_vols.size() == 0) { return feats_to_sub; }
+
+    vector<Nef_polyhedron> to_sub;
+    for (auto& mv : mandatory_vols) {
+      to_sub.push_back(map_find(mv, mandatory_info.mandatory_info).dilated_mesh);
+    }
+    
+    for (auto f : feats_to_sub) {
+      cout << "Feature volume before adjustment = " << map_find(f, volume_inf).volume << endl;
+      update_volume_info(map_find(f, volume_inf), to_sub);
+      cout << "Feature volume after adjustment = " << map_find(f, volume_inf).volume << endl;
+    }
+
+    vector<feature*> feats = feats_to_sub;
+    delete_if(feats, [volume_inf](feature* feat) {
+	return map_find(feat, volume_inf).volume < 0.00001;
+      });
+
+    return feats;
+  }
+  
   void
   clip_mandatory_volumes(std::vector<feature*>& feats_to_sub,
 			 const volume_info_map& volume_inf,
@@ -958,10 +1049,9 @@ namespace gca {
 
 	cout << "Clipping feature normal = " << n << endl;
 	mandatory_info.mandatory_info[f] =
-	  update_volume_info(info_pair.second, to_subtract);
+	  update_clipped_volume_info(info_pair.second, to_subtract);
       }
     }
-    
   }
 
   std::vector<fixture_setup>
@@ -1024,6 +1114,7 @@ namespace gca {
 
 	clip_volumes(features, volume_inf, dir_info);
 	clip_mandatory_volumes(features, volume_inf, mandatory_info);
+	features = select_mandatory_features(n, features, volume_inf, mandatory_info);
 
 	vector<freeform_surface> surfs =
 	  select_needed_freeform_surfaces(stock_nef, info.freeform_surfaces, n);
