@@ -237,11 +237,25 @@ namespace gca {
 		     const std::vector<Nef_polyhedron>& to_subtract) {
     if (inf.volume == 0.0) { return inf; }
 
+    cout << "Starting subtractions" << endl;
+
     Nef_polyhedron res = inf.remaining_volume;
     for (auto s : to_subtract) {
       res = res - s;
     }
 
+    cout << "Done with subtractions" << endl;
+
+    if (!res.is_simple()) {
+      cout << "Result of subtraction is not simple!" << endl;
+      cout << "Initial volume to clip" << endl;
+      vtk_debug_meshes(nef_polyhedron_to_trimeshes(inf.remaining_volume));
+
+      for (auto& nf : to_subtract) {
+	cout << "Nef subtracted" << endl;
+	vtk_debug_meshes(nef_polyhedron_to_trimeshes(nf));
+      }
+    }
     double new_volume = 0.0;
     for (auto& m : nef_polyhedron_to_trimeshes(res)) {
       new_volume += volume(m);
@@ -937,6 +951,12 @@ namespace gca {
 	       [n](const point p) { return angle_eps(n, p, 0.0, 0.5); });
 
       if (is_legal_clip_dir) {
+	cout << "Mandatory volume normals = " << endl;
+	for (auto dir : clip_dirs) {
+	  cout << dir << endl;
+	}
+
+	cout << "Clipping feature normal = " << n << endl;
 	mandatory_info.mandatory_info[f] =
 	  update_volume_info(info_pair.second, to_subtract);
       }
