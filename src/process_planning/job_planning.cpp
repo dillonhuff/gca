@@ -1023,6 +1023,16 @@ namespace gca {
     vtk_debug_features(init_features);
   }
 
+  void vtk_debug_nef_polyhedra(const std::vector<Nef_polyhedron>& nefs) {
+    vector<triangular_mesh> mesh_complex;
+    for (auto& nef : nefs) {
+      concat(mesh_complex,
+	     nef_polyhedron_to_trimeshes(nef));
+    }
+
+    vtk_debug_meshes(mesh_complex);
+  }
+
   typedef std::unordered_map<mandatory_volume*, volume_info> mandatory_info_map;
   typedef std::unordered_map<mandatory_volume*, std::vector<point> > clip_dir_map;
   
@@ -1086,6 +1096,7 @@ namespace gca {
       cout << "Candidate has volume = " << mv.second.volume << endl;
       if (angle_eps(mv.first->direction, n, 0.0, 0.5) &&
 	  (mv.second.volume > 0.00001)) {
+	vtk_debug_nef_polyhedra({mv.second.remaining_volume});
 	mandatory_vols.push_back(mv.first);
       }
     }
@@ -1132,16 +1143,6 @@ namespace gca {
     }
 
     return feats;
-  }
-
-  void vtk_debug_nef_polyhedra(const std::vector<Nef_polyhedron>& nefs) {
-    vector<triangular_mesh> mesh_complex;
-    for (auto& nef : nefs) {
-      concat(mesh_complex,
-	     nef_polyhedron_to_trimeshes(nef));
-    }
-
-    vtk_debug_meshes(mesh_complex);
   }
 
   void
