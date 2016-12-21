@@ -83,13 +83,16 @@ namespace gca {
       //{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
 
       //Failing for unknown reasons related to mandatory volumes
+      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
+
+	// Passing
       {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
-      //		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
+      
 
       {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
 
-	// Passing
+	
 	  {"test/stl-files/OctagonWithHolesShort.stl", 1.0, wp},
 	    {"test/stl-files/CircleWithFilletAndSide.stl", 1.0, wp},
 	      {"test/stl-files/onshape_parts/100-013 - Part 1.stl", 0.7, wp},
