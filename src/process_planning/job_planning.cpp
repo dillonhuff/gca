@@ -1143,7 +1143,22 @@ namespace gca {
 
     vtk_debug_meshes(mesh_complex);
   }
-  
+
+  void
+  clear_mandatory_features(const point n,
+			   mandatory_volume_info& mandatory_info) {
+    vector<mandatory_volume*> vols_to_remove;
+    for (auto& mv : mandatory_info.mandatory_info) {
+      if (angle_eps(mv.first->direction, n, 0.0, 0.5)) {
+	vols_to_remove.push_back(mv.first);
+      }
+    }
+
+    for (auto m : vols_to_remove) {
+      mandatory_info.mandatory_info.erase(m);
+    }
+  }
+
   void
   clip_mandatory_volumes(std::vector<feature*>& feats_to_sub,
 			 const volume_info_map& volume_inf,
@@ -1285,6 +1300,8 @@ namespace gca {
 	    }
 	  }
 
+
+	  
 	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces, surfs));
 
 	  stock_nef = subtract_features(stock_nef, features);
@@ -1292,6 +1309,8 @@ namespace gca {
 	  stock_nef = subtract_chamfers(stock_nef, info.chamfer_surfaces, part, n);
 	  stock_nef = subtract_freeforms(stock_nef, surfs, part, n);
 	  stock_nef = subtract_mandatory_volumes(stock_nef, n, mandatory_info);
+
+	  clear_mandatory_features(n, mandatory_info);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
 	  current_stock = nef_to_single_trimesh(stock_nef);
