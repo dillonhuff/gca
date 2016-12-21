@@ -879,7 +879,6 @@ namespace gca {
   typedef std::unordered_map<mandatory_volume*, std::vector<point> > clip_dir_map;
   
   struct mandatory_volume_info {
-    std::vector<std::vector<mandatory_volume> > mandatory;
     mandatory_info_map mandatory_info;
     clip_dir_map clip_dirs;
   };
@@ -901,15 +900,48 @@ namespace gca {
   }
 
   mandatory_volume_info
-  build_mandatory_info(const triangular_mesh& part) {
-    auto mandatory = mandatory_volumes(part);
+  build_mandatory_info(std::vector<std::vector<mandatory_volume> >& mandatory) {
     mandatory_info_map vol_info;
     clip_dir_map clip_dirs;
     for (auto& mandatory_group : mandatory) {
       append_mandatory_group(mandatory_group, vol_info, clip_dirs);
     }
 
-    return mandatory_volume_info{mandatory, vol_info, clip_dirs};
+    return mandatory_volume_info{vol_info, clip_dirs};
+  }
+
+  void
+  clip_mandatory_volumes(std::vector<feature*>& feats_to_sub,
+			 const volume_info_map& volume_inf,
+			 mandatory_volume_info& mandatory_info) {
+    if (feats_to_sub.size() == 0) { return; }
+
+    vector<Nef_polyhedron> to_subtract;
+    for (auto f : feats_to_sub) {
+      volume_info f_info = map_find(f, volume_inf);
+
+      // If the volume still exists
+      if (f_info.volume > 0.0) {
+	to_subtract.push_back(f_info.remaining_volume);
+      }
+    }
+
+    point n = feats_to_sub.front()->normal();
+
+    for (auto& info_pair : mandatory_info.mandatory_info) {
+      mandatory_volume* f = info_pair.first;
+
+      vector<point> clip_dirs = map_find(f, mandatory_info.clip_dirs);
+      bool is_legal_clip_dir =
+	any_of(begin(clip_dirs), end(clip_dirs),
+	       [n](const point p) { return angle_eps(n, p, 0.0, 0.5); });
+
+      if (is_legal_clip_dir) {
+	mandatory_info.mandatory_info[f] =
+	  update_volume_info(info_pair.second, to_subtract);
+      }
+    }
+    
   }
 
   std::vector<fixture_setup>
@@ -932,6 +964,10 @@ namespace gca {
 
     double part_volume = volume(part);
 
+    auto mandatory = mandatory_volumes(part);
+    mandatory_volume_info mandatory_info =
+      build_mandatory_info(mandatory);
+    
     while (dir_info.size() > 0) {
       direction_process_info info = select_next_dir(dir_info, volume_inf);
 
@@ -967,6 +1003,7 @@ namespace gca {
 #endif
 
 	clip_volumes(features, volume_inf, dir_info);
+	clip_mandatory_volumes(features, volume_inf, mandatory_info);
 
 	vector<freeform_surface> surfs =
 	  select_needed_freeform_surfaces(stock_nef, info.freeform_surfaces, n);
@@ -1038,6 +1075,16 @@ namespace gca {
       vtk_debug_mesh(current_stock);
 
       DBG_ASSERT(false);
+    }
+
+    for (auto& mandatory_vol : mandatory_info.mandatory_info) {
+      if (!(within_eps(mandatory_vol.second.volume, 0, 0.0001))) {
+	cout << "ERROR: Mandatory volume not fully cut" << endl;
+	cout << "Remaining volume = " << mandatory_vol.second.volume << endl;
+	vtk_debug_meshes(nef_polyhedron_to_trimeshes(mandatory_vol.second.remaining_volume));
+
+	DBG_ASSERT(within_eps(mandatory_vol.second.volume, 0, 0.0001));
+      }
     }
 
     return cut_setups;
