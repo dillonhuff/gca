@@ -338,6 +338,82 @@ namespace gca {
     return m;
   }
 
+  feature
+  extract_extrusion_feature(const point n,
+			    const triangular_mesh& m) {
+
+    cout << "Extracting extrusion feature" << endl;
+    cout << "NORMAL = " << n << endl;
+
+    vtk_debug_mesh(m);
+
+    vector<index_t> inds = m.face_indexes();
+
+    auto top = select(inds, [m, n](const index_t i) {
+    	return angle_eps(m.face_orientation(i), n, 0.0, 1.0);
+      });
+
+    auto top_cpy = top;
+    auto top_regions = normal_delta_regions(top_cpy, m, 180.0);
+
+    cout << "TOP" << endl;
+    cout << m.face_orientation(top.front()) << endl;
+    vtk_debug_highlight_inds(top, m);
+
+    if (top_regions.size() != 1) {
+      cout << "# of top regions = " << top_regions.size() << endl;
+      DBG_ASSERT(false);
+    }
+
+    subtract(inds, top);
+
+    auto bottom = select(inds, [m, n](const index_t i) {
+	return angle_eps(m.face_orientation(i), n, 180.0, 1.0);
+      });
+
+    auto bottom_cpy = bottom;
+    auto bottom_regions = normal_delta_regions(bottom_cpy, m, 180.0);
+
+    // cout << "BOTTOM" << endl;
+    // cout << portion.face_orientation(bottom.front()) << endl;
+    // vtk_debug_highlight_inds(bottom, portion);
+
+    if (bottom_regions.size() != 1) {
+      cout << "# of bottom regions = " << bottom_regions.size() << endl;
+      DBG_ASSERT(false);
+    }
+
+    subtract(inds, bottom);
+
+    // cout << "REST" << endl;
+    // vtk_debug_highlight_inds(inds, portion);
+
+    bool all_other_triangles_vertical =
+      all_of(begin(inds), end(inds), [m, n](const index_t i) {
+	  return angle_eps(m.face_orientation(i), n, 90.0, 1.0);
+	});
+
+    if (!all_other_triangles_vertical) {
+      cout << "All other triangles not vertical" << endl;
+      DBG_ASSERT(false);
+    }
+
+    vector<polygon_3> polys = surface_boundary_polygons(bottom, m);
+
+    if (polys.size() != 1) {
+      vtk_debug_polygons(polys);
+
+      DBG_ASSERT(false);
+    }
+
+    double depth = max_in_dir(m, n) - min_in_dir(m, n);
+    feature result(true, false, depth, polys.front());
+
+    vtk_debug_feature(result);
+
+    return result;
+  }
+
   // NOTE: Perhaps all we need to do is find a viable hull for the remaining feature?
   boost::optional<feature>
   extract_feature(const feature& original,
@@ -984,7 +1060,10 @@ namespace gca {
   select_mandatory_features(const point n,
 			    std::vector<feature*>& feats_to_sub,
 			    volume_info_map& volume_inf,
-			    mandatory_volume_info& mandatory_info) {
+			    mandatory_volume_info& mandatory_info,
+			    feature_decomposition* decomp,
+			    tool_access_info& acc_info,
+			    const std::vector<tool>& tools) {
     vector<mandatory_volume*> mandatory_vols;
     for (auto& mv : mandatory_info.mandatory_info) {
       if (angle_eps(mv.first->direction, n, 0.0, 0.5)) {
@@ -1025,6 +1104,13 @@ namespace gca {
     delete_if(feats, [volume_inf](feature* feat) {
 	return map_find(feat, volume_inf).volume < 0.00001;
       });
+
+    for (auto& mv : mandatory_vols) {
+      feature vol_feat = extract_extrusion_feature(n, mv->volume);
+      feature* fptr = new (allocate<feature>()) feature(vol_feat);
+      feats.push_back(fptr);
+      acc_info[fptr] = accessable_tools_for_flat_feature(*fptr, decomp, tools);
+    }
 
     return feats;
   }
@@ -1128,7 +1214,14 @@ namespace gca {
 
 	clip_volumes(features, volume_inf, dir_info);
 	clip_mandatory_volumes(features, volume_inf, mandatory_info);
-	features = select_mandatory_features(n, features, volume_inf, mandatory_info);
+	features =
+	  select_mandatory_features(n,
+				    features,
+				    volume_inf,
+				    mandatory_info,
+				    decomp,
+				    acc_info,
+				    tools);
 
 	vector<freeform_surface> surfs =
 	  select_needed_freeform_surfaces(stock_nef, info.freeform_surfaces, n);
@@ -1144,12 +1237,16 @@ namespace gca {
 
 	  vector<feature*> final_features;
 	  for (auto f : features) {
-	    concat(final_features,
-		   clipped_features(f,
-				    map_find(f, volume_inf),
-				    info.tool_info,
-				    tools,
-				    info.decomp));
+	    if (volume_inf.find(f) != end(volume_inf)) {
+	      concat(final_features,
+		     clipped_features(f,
+				      map_find(f, volume_inf),
+				      info.tool_info,
+				      tools,
+				      info.decomp));
+	    } else {
+	      final_features.push_back(f);
+	    }
 	  }
 
 	  cut_setups.push_back(create_setup(t, current_stock, part, final_features, fix, info.tool_info, info.chamfer_surfaces, surfs));
