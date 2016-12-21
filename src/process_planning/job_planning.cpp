@@ -1082,7 +1082,20 @@ namespace gca {
 
     return result;
   }
-  
+
+  bool non_empty_volume(const mandatory_volume& v,
+			const volume_info& mv) {
+    if (mv.volume <= 0.00001) { return false; }
+
+    double original_vol = volume(v.volume);
+    double density = mv.volume / volume(v.volume);
+
+    cout << "Original volume = " << original_vol << endl;
+    cout << "Density         = " << density << endl;
+
+    return density > 1e-4;
+  }
+
   std::vector<feature*>
   select_mandatory_features(const point n,
 			    std::vector<feature*>& feats_to_sub,
@@ -1095,7 +1108,8 @@ namespace gca {
     for (auto& mv : mandatory_info.mandatory_info) {
       cout << "Candidate has volume = " << mv.second.volume << endl;
       if (angle_eps(mv.first->direction, n, 0.0, 0.5) &&
-	  (mv.second.volume > 0.00001)) {
+	  non_empty_volume(*(mv.first), mv.second)) {
+
 	vtk_debug_nef_polyhedra({mv.second.remaining_volume});
 	mandatory_vols.push_back(mv.first);
       }
