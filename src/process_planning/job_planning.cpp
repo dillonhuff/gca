@@ -406,8 +406,10 @@ namespace gca {
       DBG_ASSERT(false);
     }
 
+    // TODO: Fix this hack, it may not actually work in all cases
+    polygon_3 base_poly = build_clean_polygon_3(polys.front().vertices());
     double depth = max_in_dir(m, n) - min_in_dir(m, n);
-    feature result(true, false, depth, polys.front());
+    feature result(true, false, depth, base_poly);
 
     vtk_debug_feature(result);
 
