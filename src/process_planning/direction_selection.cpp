@@ -178,17 +178,17 @@ namespace gca {
 			 const triangular_mesh& part,
 			 const std::vector<tool>& tools,
 			 const std::vector<direction_info>& norms) {
-    auto mvs = mandatory_volumes(part);
-    vector<vtkSmartPointer<vtkActor> > ptrs{polydata_actor(polydata_for_trimesh(part))};
-    for (auto& mv : mvs) {
-      for (auto& m : mv) {
-	auto pd = polydata_for_trimesh(m.volume);
-	color_polydata(pd, 0, 255, 0);
-	ptrs.push_back(polydata_actor(pd));
-      }
-    }
+    // auto mvs = mandatory_volumes(part);
+    // vector<vtkSmartPointer<vtkActor> > ptrs{polydata_actor(polydata_for_trimesh(part))};
+    // for (auto& mv : mvs) {
+    //   for (auto& m : mv) {
+    // 	auto pd = polydata_for_trimesh(m.volume);
+    // 	color_polydata(pd, 0, 255, 0);
+    // 	ptrs.push_back(polydata_actor(pd));
+    //   }
+    // }
 
-    visualize_actors(ptrs);
+    // visualize_actors(ptrs);
     
     
     vector<direction_process_info> dir_info;

@@ -866,7 +866,6 @@ namespace gca {
     for (auto d : dir_info) {
       vtk_debug_feature_decomposition(d.decomp);
     }
-
     vector<feature*> init_features;
     cout << "# of directions = " << dir_info.size() << endl;
     for (auto d : dir_info) {
@@ -874,6 +873,43 @@ namespace gca {
     }
 
     vtk_debug_features(init_features);
+  }
+
+  typedef std::unordered_map<mandatory_volume*, volume_info> mandatory_info_map;
+  typedef std::unordered_map<mandatory_volume*, std::vector<point> > clip_dir_map;
+  
+  struct mandatory_volume_info {
+    std::vector<std::vector<mandatory_volume> > mandatory;
+    mandatory_info_map mandatory_info;
+    clip_dir_map clip_dirs;
+  };
+
+  void
+  append_mandatory_group(std::vector<mandatory_volume>& mandatory_group,
+			 mandatory_info_map& vol_info,
+			 clip_dir_map& clip_dirs) {
+    vector<point> clip_dir_list{};
+    for (auto& m : mandatory_group) {
+      clip_dir_list.push_back(m.direction);
+    }
+
+    for (auto& m : mandatory_group) {
+      auto mesh_nef = trimesh_to_nef_polyhedron(m.volume);
+      vol_info[&m] = volume_info{volume(m.volume), mesh_nef, mesh_nef};
+      clip_dirs[&m] = clip_dir_list;
+    }
+  }
+
+  mandatory_volume_info
+  build_mandatory_info(const triangular_mesh& part) {
+    auto mandatory = mandatory_volumes(part);
+    mandatory_info_map vol_info;
+    clip_dir_map clip_dirs;
+    for (auto& mandatory_group : mandatory) {
+      append_mandatory_group(mandatory_group, vol_info, clip_dirs);
+    }
+
+    return mandatory_volume_info{mandatory, vol_info, clip_dirs};
   }
 
   std::vector<fixture_setup>
@@ -891,7 +927,7 @@ namespace gca {
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
-    
+
     vector<fixture_setup> cut_setups;
 
     double part_volume = volume(part);
