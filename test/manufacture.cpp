@@ -75,19 +75,18 @@ namespace gca {
     workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
 
     vector<part_info> some_scaling{
-      //Not sure, this part is idiotic anyway, should really replace it with a
+      // This part is idiotic, should really replace it with a
       // more interesting and realistic part
       // {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl", 0.5, wp}, 
 
       // Failing due to non-manifold triangle in result
       //{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl", 0.7, wp},
 
-      //Failing for unknown reasons related to mandatory volumes
-      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},
 
 	// Passing
+      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},      
       {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
-      
+
 
       {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},

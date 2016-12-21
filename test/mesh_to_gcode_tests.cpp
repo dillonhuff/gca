@@ -929,9 +929,9 @@ namespace gca {
     fabrication_plan fab_plan =
       fabrication_plan_for_fixture_plan(p, mesh, tools, workpiece_dims);
 
-    for (auto& s : fab_plan.steps()) {
-      visual_debug(s);
-    }
+    // for (auto& s : fab_plan.steps()) {
+    //   visual_debug(s);
+    // }
     REQUIRE(fab_plan.steps().size() == 3);
 
   }

@@ -345,7 +345,7 @@ namespace gca {
     cout << "Extracting extrusion feature" << endl;
     cout << "NORMAL = " << n << endl;
 
-    vtk_debug_mesh(m);
+    //vtk_debug_mesh(m);
 
     vector<index_t> inds = m.face_indexes();
 
@@ -358,7 +358,7 @@ namespace gca {
 
     cout << "TOP" << endl;
     cout << m.face_orientation(top.front()) << endl;
-    vtk_debug_highlight_inds(top, m);
+    //vtk_debug_highlight_inds(top, m);
 
     if (top_regions.size() != 1) {
       cout << "# of top regions = " << top_regions.size() << endl;
@@ -411,7 +411,7 @@ namespace gca {
     double depth = max_in_dir(m, n) - min_in_dir(m, n);
     feature result(true, false, depth, base_poly);
 
-    vtk_debug_feature(result);
+    //vtk_debug_feature(result);
 
     return result;
   }
@@ -1110,7 +1110,7 @@ namespace gca {
       if (angle_eps(mv.first->direction, n, 0.0, 0.5) &&
 	  non_empty_volume(*(mv.first), mv.second)) {
 
-	vtk_debug_nef_polyhedra({mv.second.remaining_volume});
+	//vtk_debug_nef_polyhedra({mv.second.remaining_volume});
 	mandatory_vols.push_back(mv.first);
       }
     }
@@ -1126,7 +1126,7 @@ namespace gca {
       concat(to_sub_meshes, nef_polyhedron_to_trimeshes(to_sub.back()));
     }
 
-    vtk_debug_meshes(to_sub_meshes);
+    //vtk_debug_meshes(to_sub_meshes);
     
     for (auto f : feats_to_sub) {
       volume_info& feature_info = volume_inf.find(f)->second; //map_find(f, volume_inf);
@@ -1138,7 +1138,7 @@ namespace gca {
 
       cout << "Feature volume before adjustment = " << feature_info.volume << endl;
 
-      vtk_debug_meshes(mesh_complex);
+      //vtk_debug_meshes(mesh_complex);
       
       volume_inf[f] = update_volume_info(feature_info, to_sub);
       cout << "Feature volume after adjustment = " << feature_info.volume << endl;
@@ -1210,7 +1210,7 @@ namespace gca {
 	cout << "Volume before clipping = " << mandatory_info.mandatory_info[f].volume << endl;
 
 	cout << "Clipping nefs = " << endl;
-	vtk_debug_nef_polyhedra(to_subtract);
+	//vtk_debug_nef_polyhedra(to_subtract);
 	
 	mandatory_info.mandatory_info[f] =
 	  update_clipped_volume_info(info_pair.second, to_subtract);
