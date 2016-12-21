@@ -983,7 +983,7 @@ namespace gca {
   std::vector<feature*>
   select_mandatory_features(const point n,
 			    std::vector<feature*>& feats_to_sub,
-			    const volume_info_map& volume_inf,
+			    volume_info_map& volume_inf,
 			    mandatory_volume_info& mandatory_info) {
     vector<mandatory_volume*> mandatory_vols;
     for (auto& mv : mandatory_info.mandatory_info) {
@@ -997,14 +997,28 @@ namespace gca {
     if (mandatory_vols.size() == 0) { return feats_to_sub; }
 
     vector<Nef_polyhedron> to_sub;
+    vector<triangular_mesh> to_sub_meshes;
     for (auto& mv : mandatory_vols) {
       to_sub.push_back(map_find(mv, mandatory_info.mandatory_info).dilated_mesh);
+      concat(to_sub_meshes, nef_polyhedron_to_trimeshes(to_sub.back()));
     }
+
+    vtk_debug_meshes(to_sub_meshes);
     
     for (auto f : feats_to_sub) {
-      cout << "Feature volume before adjustment = " << map_find(f, volume_inf).volume << endl;
-      update_volume_info(map_find(f, volume_inf), to_sub);
-      cout << "Feature volume after adjustment = " << map_find(f, volume_inf).volume << endl;
+      volume_info& feature_info = volume_inf.find(f)->second; //map_find(f, volume_inf);
+      auto mesh_complex = to_sub_meshes;
+      concat(mesh_complex,
+	     nef_polyhedron_to_trimeshes(feature_info.remaining_volume));
+
+      
+
+      cout << "Feature volume before adjustment = " << feature_info.volume << endl;
+
+      vtk_debug_meshes(mesh_complex);
+      
+      volume_inf[f] = update_volume_info(feature_info, to_sub);
+      cout << "Feature volume after adjustment = " << feature_info.volume << endl;
     }
 
     vector<feature*> feats = feats_to_sub;
