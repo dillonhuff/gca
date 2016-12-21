@@ -249,7 +249,7 @@ namespace gca {
       cout << "nef volume           = " << nef_volume << endl;
       cout << "old mandatory volume = " << inf.volume << endl;
 
-      if (within_eps(nef_volume, nef_volume, 0.0001)) {
+      if (within_eps(inf.volume, nef_volume, 0.0001)) {
 	cout << "Found exact match feature for mandatory volume" << endl;
 	return volume_info{0.0, inf.remaining_volume, inf.dilated_mesh};
       }
@@ -1058,6 +1058,21 @@ namespace gca {
     return mandatory_volume_info{vol_info, clip_dirs};
   }
 
+  Nef_polyhedron
+  subtract_mandatory_volumes(const Nef_polyhedron& current_stock,
+			     const point n,
+			     mandatory_volume_info& mandatory_info) {
+    Nef_polyhedron result = current_stock;
+    for (auto& mv : mandatory_info.mandatory_info) {
+      if (angle_eps(mv.first->direction, n, 0.0, 0.5)) {
+	cout << "Subtracting mandatory volume" << endl;
+	result = result - mv.second.dilated_mesh;
+      }
+    }
+
+    return result;
+  }
+  
   std::vector<feature*>
   select_mandatory_features(const point n,
 			    std::vector<feature*>& feats_to_sub,
@@ -1068,7 +1083,9 @@ namespace gca {
 			    const std::vector<tool>& tools) {
     vector<mandatory_volume*> mandatory_vols;
     for (auto& mv : mandatory_info.mandatory_info) {
-      if (angle_eps(mv.first->direction, n, 0.0, 0.5)) {
+      cout << "Candidate has volume = " << mv.second.volume << endl;
+      if (angle_eps(mv.first->direction, n, 0.0, 0.5) &&
+	  (mv.second.volume > 0.00001)) {
 	mandatory_vols.push_back(mv.first);
       }
     }
@@ -1116,6 +1133,16 @@ namespace gca {
 
     return feats;
   }
+
+  void vtk_debug_nef_polyhedra(const std::vector<Nef_polyhedron>& nefs) {
+    vector<triangular_mesh> mesh_complex;
+    for (auto& nef : nefs) {
+      concat(mesh_complex,
+	     nef_polyhedron_to_trimeshes(nef));
+    }
+
+    vtk_debug_meshes(mesh_complex);
+  }
   
   void
   clip_mandatory_volumes(std::vector<feature*>& feats_to_sub,
@@ -1150,8 +1177,15 @@ namespace gca {
 	}
 
 	cout << "Clipping feature normal = " << n << endl;
+	cout << "Volume before clipping = " << mandatory_info.mandatory_info[f].volume << endl;
+
+	cout << "Clipping nefs = " << endl;
+	vtk_debug_nef_polyhedra(to_subtract);
+	
 	mandatory_info.mandatory_info[f] =
 	  update_clipped_volume_info(info_pair.second, to_subtract);
+
+	cout << "Volume after clipping = " << mandatory_info.mandatory_info[f].volume << endl;
       }
     }
   }
@@ -1257,6 +1291,7 @@ namespace gca {
 	  // NOTE: Assumes all chamfers are accessable
 	  stock_nef = subtract_chamfers(stock_nef, info.chamfer_surfaces, part, n);
 	  stock_nef = subtract_freeforms(stock_nef, surfs, part, n);
+	  stock_nef = subtract_mandatory_volumes(stock_nef, n, mandatory_info);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
 	  current_stock = nef_to_single_trimesh(stock_nef);
