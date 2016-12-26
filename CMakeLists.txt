@@ -163,6 +163,7 @@ SET(GCA_CPPS
 	./src/feature_recognition/chamfer_detection.cpp
 	./src/feature_recognition/freeform_surface_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
+	./src/feature_recognition/prismatic_feature.cpp
 	./src/feature_recognition/visual_debug.cpp
 	./src/process_planning/axis_location.cpp
 	./src/process_planning/direction_selection.cpp

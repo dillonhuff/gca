@@ -133,11 +133,6 @@ namespace gca {
 
   }
 
-  // TODO: Version of this code that can handle holes?
-  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p) {
-    return oriented_polygon(p.normal(), p.vertices());
-  }
-
   boost_poly_2 rotate_to_2D(const labeled_polygon_3& p) {
     const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
     return to_boost_poly_2(apply(r, p));
@@ -447,6 +442,132 @@ namespace gca {
     cout << "# of polygons after arranging = " << polygons.size() << endl;
 
     return polygons;
+  }
+
+  labeled_polygon_3 dilate(const labeled_polygon_3& p, const double tol) {
+    cout << "P normal = " << p.normal() << endl;
+    
+    auto dr = exterior_offset(clean_vertices(p.vertices()), tol);
+
+    vector<vector<point>> dh;
+    for (auto h : p.holes()) {
+      auto offs = interior_offsets(clean_vertices(h), tol);
+      for (auto off : offs) {
+	dh.push_back(clean_vertices(off));
+      }
+    }
+
+    labeled_polygon_3 poly =
+      build_clean_polygon_3(clean_vertices(dr), dh);
+    return poly;
+  }
+
+  polygon_3 shrink(const polygon_3& p, const double tol) {
+    auto dr = interior_offset(p.vertices(), tol);
+
+    vector<vector<point>> dh;
+    for (auto h : p.holes()) {
+      dh.push_back(exterior_offset(h, tol));
+    }
+
+    polygon_3 poly =
+      build_clean_polygon_3(dr, dh);
+    return poly;
+  }
+
+  boost::optional<labeled_polygon_3>
+  shrink_optional(const labeled_polygon_3& p,
+		  const double tol) {
+
+    double level_z =
+      max_distance_along(p.vertices(), p.normal());
+    
+    auto drs = interior_offsets(p.vertices(), tol);
+
+    if (drs.size() == 0) { return boost::none; }
+
+    if (drs.size() != 1) {
+      //      vtk_debug_polygon(p);
+
+      cout << "# of interior offsets = " << drs.size() << endl;
+
+      // for (auto r : drs) {
+      // 	vtk_debug_ring(r);
+      // }
+
+      //      DBG_ASSERT(false);
+      return boost::none;
+    }
+
+    auto dr = drs.front();
+    auto dr_pts = clean_vertices(dr);
+
+    vector<polygon_3> new_holes;
+    for (auto h : p.holes()) {
+      auto h_clean = clean_vertices(exterior_offset(h, tol));
+      if (h_clean.size() >= 3) {
+	new_holes.push_back(build_clean_polygon_3(h_clean));
+      }
+    }
+
+    //    vector<polygon_3> result_holes = planar_polygon_union(new_holes);
+
+    const rotation r = rotate_from_to(p.normal(), point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    boost_poly_2 new_exterior_p(to_boost_poly_2(apply(r, build_clean_polygon_3(dr_pts))));
+
+    boost_multipoly_2 union_of_holes = planar_union_boost(new_holes);
+
+    boost_multipoly_2 shrunk_res;
+    bg::difference(new_exterior_p, union_of_holes, shrunk_res);
+
+    std::vector<polygon_3> res;
+    for (auto r : shrunk_res) {
+      polygon_3 lp = to_labeled_polygon_3(r_inv, level_z, r);
+
+      check_simplicity(lp);
+
+      lp.correct_winding_order(p.normal());
+      res.push_back(lp);
+    }
+
+    if (res.size() != 1) { return boost::none; }
+
+    return res.front();
+    
+    
+    // if (bg::within(new_exterior_p, union_of_holes)) {
+    //   return boost::none;
+    // }
+
+    // // vector<vector<point>> dh;
+    // // for (auto h : result_holes) {
+    // //   dh.push_back(h.vertices());
+    // // }
+    
+    // if (dr_pts.size() >= 3) {
+    //   labeled_polygon_3 poly(dr_pts, dh);
+    //   return poly;
+    // }
+
+    // return boost::none;
+  }
+
+  labeled_polygon_3 smooth_buffer(const labeled_polygon_3& p,
+				  const double tol) {
+    return shrink(dilate(p, tol), tol);
+  }
+  
+  std::vector<labeled_polygon_3>
+  dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol) {
+
+    std::vector<labeled_polygon_3> dilated_polys;
+    for (auto p : polys) {
+      dilated_polys.push_back(dilate(p, tol));
+    }
+
+    return dilated_polys;
   }
 
 }

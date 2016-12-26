@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/ring.h"
 #include "geometry/rotation.h"

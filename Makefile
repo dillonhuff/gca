@@ -1662,6 +1662,33 @@ src/feature_recognition/freeform_surface_detection.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/freeform_surface_detection.cpp.s
 .PHONY : src/feature_recognition/freeform_surface_detection.cpp.s
 
+src/feature_recognition/prismatic_feature.o: src/feature_recognition/prismatic_feature.cpp.o
+
+.PHONY : src/feature_recognition/prismatic_feature.o
+
+# target to build an object file
+src/feature_recognition/prismatic_feature.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/prismatic_feature.cpp.o
+.PHONY : src/feature_recognition/prismatic_feature.cpp.o
+
+src/feature_recognition/prismatic_feature.i: src/feature_recognition/prismatic_feature.cpp.i
+
+.PHONY : src/feature_recognition/prismatic_feature.i
+
+# target to preprocess a source file
+src/feature_recognition/prismatic_feature.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/prismatic_feature.cpp.i
+.PHONY : src/feature_recognition/prismatic_feature.cpp.i
+
+src/feature_recognition/prismatic_feature.s: src/feature_recognition/prismatic_feature.cpp.s
+
+.PHONY : src/feature_recognition/prismatic_feature.s
+
+# target to generate assembly for a file
+src/feature_recognition/prismatic_feature.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/prismatic_feature.cpp.s
+.PHONY : src/feature_recognition/prismatic_feature.cpp.s
+
 src/feature_recognition/visual_debug.o: src/feature_recognition/visual_debug.cpp.o
 
 .PHONY : src/feature_recognition/visual_debug.o
@@ -5073,6 +5100,9 @@ help:
 	@echo "... src/feature_recognition/freeform_surface_detection.o"
 	@echo "... src/feature_recognition/freeform_surface_detection.i"
 	@echo "... src/feature_recognition/freeform_surface_detection.s"
+	@echo "... src/feature_recognition/prismatic_feature.o"
+	@echo "... src/feature_recognition/prismatic_feature.i"
+	@echo "... src/feature_recognition/prismatic_feature.s"
 	@echo "... src/feature_recognition/visual_debug.o"
 	@echo "... src/feature_recognition/visual_debug.i"
 	@echo "... src/feature_recognition/visual_debug.s"

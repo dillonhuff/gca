@@ -105,5 +105,18 @@ namespace gca {
     
   };
 
-  
+
+  bool contains(const feature& maybe_contained,
+		const std::vector<feature*>& container);
+
+  std::vector<feature*>
+  containing_subset(const feature& maybe_contained,
+		    const std::vector<feature*>& container);
+
+  bool same_base(const feature& l, const feature& r, const double tol);
+
+  double base_area(const feature& f);
+
+  bool is_outer(const feature& f, const polygon_3& stock_bound);  
+
 }

@@ -141,5 +141,18 @@ namespace gca {
 
   std::vector<polygon_3>
   arrange_rings(const std::vector<std::vector<point>>& rings);
+
+  labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol);
+
+  boost::optional<labeled_polygon_3>
+  shrink_optional(const labeled_polygon_3& p,
+		  const double tol);
+
+  std::vector<polygon_3> shift(const point p,
+			       const std::vector<polygon_3>& polys);
+
+
+  std::vector<labeled_polygon_3>
+  dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol);
   
 }

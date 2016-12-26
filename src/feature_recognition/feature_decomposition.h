@@ -165,8 +165,6 @@ namespace gca {
     }
   }
 
-  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
-  
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& m, const point n);
 
@@ -178,26 +176,9 @@ namespace gca {
 
   point normal(feature_decomposition* f);
 
-  bool contains(const feature& maybe_contained,
-		const std::vector<feature*>& container);
-
-  std::vector<feature*>
-  containing_subset(const feature& maybe_contained,
-		    const std::vector<feature*>& container);
-
   std::vector<feature*> collect_leaf_features(feature_decomposition* f);
 
-  bool same_base(const feature& l, const feature& r, const double tol);
-
   feature* parent_feature(feature* f, feature_decomposition* decomp);
-
-  double base_area(const feature& f);
-
-  labeled_polygon_3 shrink(const labeled_polygon_3& p, const double tol);
-
-  boost::optional<labeled_polygon_3>
-  shrink_optional(const labeled_polygon_3& p,
-		  const double tol);
 
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& stock,
@@ -209,12 +190,7 @@ namespace gca {
 			      const triangular_mesh& m,
 			      const point n);
 
-
-  bool is_outer(const feature& f, const polygon_3& stock_bound);
-
-  // TODO: Should be moved to polygon_3
-  std::vector<polygon_3> shift(const point p,
-			       const std::vector<polygon_3>& polys);
+  oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
 
 }
 
