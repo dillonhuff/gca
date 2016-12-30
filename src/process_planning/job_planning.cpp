@@ -3,7 +3,6 @@
 #include "geometry/extrusion.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/offset.h"
-#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/prismatic_feature_utils.h"
