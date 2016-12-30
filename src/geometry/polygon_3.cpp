@@ -570,4 +570,20 @@ namespace gca {
     return dilated_polys;
   }
 
+
+  int curve_count(const polygon_3& f) {
+    int count = 0;
+    count += curve_count(f.vertices());
+
+    for (auto& h : f.holes()) {
+      int ch = curve_count(h);
+      count += ch;
+
+      cout << "Hole curve count = " << ch << endl;
+      //vtk_debug_ring(h);
+    }
+
+    return count;
+  }
+
 }

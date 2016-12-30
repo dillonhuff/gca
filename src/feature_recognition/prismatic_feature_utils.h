@@ -14,5 +14,14 @@ namespace gca {
 			    const triangular_mesh& m);
 
   double volume(const feature& f);
-  
+
+  triangular_mesh feature_mesh(const feature& f,
+			       const double base_dilation,
+			       const double top_extension,
+			       const double base_extension);
+
+  triangular_mesh feature_mesh(const feature& f);  
+
+  int curve_count(const feature& f);
+
 }

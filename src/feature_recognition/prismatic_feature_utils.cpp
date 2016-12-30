@@ -1,4 +1,5 @@
 #include "feature_recognition/prismatic_feature_utils.h"
+#include "geometry/extrusion.h"
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 
@@ -182,5 +183,40 @@ namespace gca {
     return base_area * f.depth();
   }
 
-  
+  triangular_mesh feature_mesh(const feature& f,
+			       const double base_dilation,
+			       const double top_extension,
+			       const double base_extension) {
+    point shift_vec = (-1*base_extension)*f.normal();
+
+    if (base_dilation > 0.0) {
+      auto dilated_base = dilate(f.base(), base_dilation);
+      dilated_base = shift(shift_vec, dilated_base);
+    
+      auto m = extrude(dilated_base, (top_extension + f.depth())*f.normal());
+
+      DBG_ASSERT(m.is_connected());
+
+      return m;
+
+    } else {
+      auto base = shift(shift_vec, f.base());
+
+      auto m = extrude(base, (top_extension + f.depth())*f.normal());
+
+      DBG_ASSERT(m.is_connected());
+
+      return m;
+    }
+  }
+
+  triangular_mesh feature_mesh(const feature& f) {
+
+    return feature_mesh(f, 0.0, 0.0001, 0.0000); 
+  }
+
+  int curve_count(const feature& f) {
+    return curve_count(f.base());
+  }
+
 }

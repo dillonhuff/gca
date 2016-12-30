@@ -3,11 +3,13 @@
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
+#include "feature_recognition/prismatic_feature_utils.h"
+#include "feature_recognition/visual_debug.h"
 #include "process_planning/axis_location.h"
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/mandatory_volumes.h"
-#include "feature_recognition/visual_debug.h"
+
 
 namespace gca {
 
@@ -259,6 +261,77 @@ namespace gca {
     check_feature_depths(dir_info);
 
     return dir_info;
+  }
+
+  int curve_count(feature_decomposition* f) {
+    int count = 0;
+
+    for (auto feat : collect_features(f)) {
+      count += curve_count(*feat);
+    }
+
+    return count;
+  }
+
+  int outer_curve_count(feature_decomposition* f) {
+    DBG_ASSERT(f->num_children() == 1);
+
+    int count = 0;
+
+    cout << "Checking for outer features in " << normal(f) << endl;
+
+#ifdef VIZ_DBG
+    vtk_debug_feature_decomposition(f);
+#endif
+    
+    feature_decomposition* top = f->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
+
+    for (auto feat : collect_features(f)) {
+      if (is_outer(*feat, stock_polygon) && feat->is_through()) {
+	cout << "Found outer feature in " << normal(f) << endl;
+	count += curve_count(*feat);
+      }
+    }
+
+    cout << "Final curve count for " << normal(f) << " = " << count << endl;
+
+    return count;
+  }
+
+  
+  boost::optional<direction_process_info>
+  find_outer_curve(std::vector<direction_process_info>& dir_info) {
+    int curve_max = 0;
+    unsigned max_index = 0;
+    boost::optional<direction_process_info> outer_curve = boost::none;
+
+    for (unsigned i = 0; i < dir_info.size(); i++) {
+      auto dir = dir_info[i];
+      auto decomp = dir.decomp;
+
+      int outer_max = outer_curve_count(decomp);
+
+      if (outer_max > curve_max) {
+	outer_curve = dir;
+	max_index = i;
+	curve_max = outer_max;
+      }
+    }
+
+    if (curve_max > 0) {
+      direction_process_info next_elem = dir_info[max_index];
+
+      cout << "Max curve count is " << curve_max << " in " << normal(next_elem.decomp) << endl;
+      cout << "Max index is " << max_index << endl;
+
+      dir_info.erase(begin(dir_info) + max_index);
+
+      return next_elem;
+    }
+
+    return boost::none;
   }
 
 }

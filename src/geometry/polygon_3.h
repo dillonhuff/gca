@@ -154,5 +154,7 @@ namespace gca {
 
   std::vector<labeled_polygon_3>
   dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol);
+
+  int curve_count(const polygon_3& f);
   
 }

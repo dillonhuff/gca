@@ -74,6 +74,36 @@ namespace gca {
 
     return (1.0 / r.size()) * centroid;
   }
+
+  template<typename Ring>
+  int curve_count(const Ring& ring) {
+    int count = 0;
+
+    unsigned num_pts = ring.size();
+    for (unsigned i = 0; i < num_pts; i++) {
+      unsigned prev = (i + (num_pts - 1)) % num_pts;
+      unsigned next = (i + 1) % num_pts;
+
+      point prev_pt = ring[prev];
+      point current_pt = ring[i];
+      point next_pt = ring[next];
+
+      point d1 = current_pt - prev_pt;
+      point d2 = next_pt - current_pt;
+
+      double angle = angle_between(d1, d2);
+      cout << "Angle between = " << angle << endl;
+
+      if (!(angle_eps(d1, d2, 0.0, 1.0) ||
+	    angle_eps(d1, d2, 90.0, 3.0) ||
+	    angle_eps(d1, d2, -90.0, 3.0) ||
+	    angle_eps(d1, d2, 180.0, 3.0))) {
+	count++;
+      }
+    }
+
+    return count;
+  }
   
 }
 

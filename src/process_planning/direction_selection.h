@@ -20,5 +20,8 @@ namespace gca {
 			 const triangular_mesh& part,
 			 const fixtures& f,
 			 const std::vector<tool>& tools);
+
+  boost::optional<direction_process_info>
+  find_outer_curve(std::vector<direction_process_info>& dir_info);
   
 }
