@@ -454,5 +454,19 @@ namespace gca {
 
     visualize_actors(ring_acts);
   }
-  
+
+  color random_color(const color mix) {
+    unsigned red = rand() % 256;
+    unsigned green = rand() % 256;
+    unsigned blue = rand() % 256;
+
+    // mix the color
+    red = (red + mix.red()) / 2;
+    green = (green + mix.green()) / 2;
+    blue = (blue + mix.blue()) / 2;
+
+    color color(red, green, blue);
+    return color;    
+  }
+
 }
