@@ -449,7 +449,7 @@ namespace gca {
       new (allocate<feature_decomposition>()) feature_decomposition(f);
     parent->add_child(child);
 
-    vector<feature_decomposition*> children;
+    //vector<feature_decomposition*> children;
     for (auto r : result_polys) {
       decompose_volume(r, levels, child, base_depth);
     }
