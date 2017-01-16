@@ -505,7 +505,7 @@ int main(int argc, char *argv[]) {
   arena_allocator a;
   set_system_allocator(&a);
 
-  fabrication_inputs fab_inputs = part_100_009_inputs(); //dice_2_inputs(); //part_1_42_inputs(); //part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
+  fabrication_inputs fab_inputs = part_1_42_inputs(); //part_100_009_inputs(); //dice_2_inputs(); //part_1_42_inputs(); //part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
   
   triangular_mesh mesh =
     parse_stl(name, 0.0001);
