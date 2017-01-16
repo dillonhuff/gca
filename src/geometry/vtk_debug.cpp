@@ -91,14 +91,14 @@ namespace gca {
   {
     vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
     // Create axes
-    vtkSmartPointer<vtkAxesActor> axes =
-      vtkSmartPointer<vtkAxesActor>::New();
+    // vtkSmartPointer<vtkAxesActor> axes =
+    //   vtkSmartPointer<vtkAxesActor>::New();
 
-    renderer->AddActor(axes);
+    // renderer->AddActor(axes);
     for (auto actor : actors) {
       renderer->AddActor(actor);
     }
-    renderer->SetBackground(.1, .2, .3);
+    renderer->SetBackground(0.0, 0.0, 0.0); //1.0, 1.0, 1.0); //0.0, 0.0, 0.0); //.1, .2, .3);
 
     vtkSmartPointer<vtkRenderWindow> renderWindow =
       vtkSmartPointer<vtkRenderWindow>::New();

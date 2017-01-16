@@ -208,6 +208,24 @@ namespace gca {
     visualize_actors(actors);
   }
 
+  void vtk_debug_toolpaths(const fabrication_setup& setup) {
+    vector<vtkSmartPointer<vtkActor>> actors{};
+
+    color white(255, 255, 255);
+
+    for (auto& tp : setup.toolpaths()) {
+      auto tp_polydata = polydata_for_toolpath(tp);
+      color tp_color = random_color(white);
+      color_polydata(tp_polydata, tp_color.red(), tp_color.green(), tp_color.blue());
+
+      actors.push_back(polydata_actor(tp_polydata));
+    }
+
+    cout << "# of actors = " << actors.size() << endl;
+    
+    visualize_actors(actors);
+  }
+  
   void KeypressCallbackFunction(vtkObject* caller,
 				long unsigned int vtkNotUsed(eventId),
 				void* vtkNotUsed(clientData),

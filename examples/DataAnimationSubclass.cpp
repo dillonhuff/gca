@@ -570,13 +570,16 @@ int main(int argc, char *argv[]) {
     // print_setup_info(shifted_setup);
     // visual_debug(shifted_setup);
 
-    print_setup_info(step);
-    cout << "Program for setup" << endl;
-    auto program = step.gcode_for_toolpaths(emco_f1_code_no_TLC);
-    cout << program.name << endl;
-    cout << program.blocks << endl;
+    // Uncomment after toolpath viz
+    // print_setup_info(step);
+    // cout << "Program for setup" << endl;
+    // auto program = step.gcode_for_toolpaths(emco_f1_code_no_TLC);
+    // cout << program.name << endl;
+    // cout << program.blocks << endl;
 
-    visual_debug(step);
+    // visual_debug(step);
+
+    vtk_debug_toolpaths(step);
 
   }
 

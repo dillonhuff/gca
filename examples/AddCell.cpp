@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   auto poly_data = polydata_for_trimesh(to_render);
   auto poly_actor = polydata_actor(poly_data);
 
-  poly_actor->GetProperty()->SetColor(0.5, 0.5, 0.5);
+  poly_actor->GetProperty()->SetColor(0.9, 0.9, 0.9);
 
   vector<vtkSmartPointer<vtkActor>> actors{poly_actor};
   visualize_actors(actors);

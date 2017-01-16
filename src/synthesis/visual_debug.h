@@ -8,6 +8,8 @@ namespace gca {
 
   void visual_debug(const fabrication_setup& setup);
 
+  void vtk_debug_toolpaths(const fabrication_setup& setup);
+
   vtkSmartPointer<vtkPolyData>
   polydata_for_vice(const vice v);
 
