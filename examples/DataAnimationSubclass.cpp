@@ -495,34 +495,22 @@ fabrication_inputs part_100_009_inputs() {
   return fabrication_inputs(fixes, tools, workpiece_dims);
 }
 
-int main(int argc, char *argv[]) {
+struct test_info {
+  string stl_file_name;
+  fabrication_inputs fab_inputs;
+  double scale_factor;
+};
 
-  DBG_ASSERT(argc == 2);
+//part_1_42_inputs(); //part_100_009_inputs(); //dice_2_inputs(); //part_1_42_inputs(); //part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
 
-  string name = argv[1];
-  cout << "File Name = " << name << endl;
+void print_test_info(const test_info& info) {
+  auto fab_inputs = info.fab_inputs; 
 
-  arena_allocator a;
-  set_system_allocator(&a);
-
-  fabrication_inputs fab_inputs = part_1_42_inputs(); //part_100_009_inputs(); //dice_2_inputs(); //part_1_42_inputs(); //part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
-  
   triangular_mesh mesh =
-    parse_stl(name, 0.0001);
+    parse_stl(info.stl_file_name, 0.0001);
 
-  //vtk_debug_mesh(mesh);
-
-  double part_1_2_scale_factor = 0.45;
-  double octagon_with_holes_short_scale_factor = 1.0; //0.15; //0.45;
-  double japan_contour_scale_factor = 0.4;
-  double dice_scale_factor = 0.7;
-  double part_100_013_scale_factor = 0.7;
-  double part_100_009_scale_factor = 1.0;
-  double part_1_42_scale_factor = 1.0;
-  double dice_2_scale_factor = 0.75;
-
-  auto scale_func = [part_100_009_scale_factor](const point p) {
-    return part_100_009_scale_factor*p;
+  auto scale_func = [info](const point p) {
+    return (info.scale_factor)*p;
   };
 
   mesh =
@@ -582,6 +570,29 @@ int main(int argc, char *argv[]) {
     vtk_debug_toolpaths(step);
 
   }
+}
+
+int main(int argc, char *argv[]) {
+
+  DBG_ASSERT(argc == 2);
+
+  string name = argv[1];
+  cout << "File Name = " << name << endl;
+
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  
+  //vtk_debug_mesh(mesh);
+
+  double part_1_2_scale_factor = 0.45;
+  double octagon_with_holes_short_scale_factor = 1.0; //0.15; //0.45;
+  double japan_contour_scale_factor = 0.4;
+  double dice_scale_factor = 0.7;
+  double part_100_013_scale_factor = 0.7;
+  double part_100_009_scale_factor = 1.0;
+  double part_1_42_scale_factor = 1.0;
+  double dice_2_scale_factor = 0.75;
 
   return EXIT_SUCCESS;
 }
