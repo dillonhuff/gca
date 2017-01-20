@@ -6,6 +6,8 @@
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
 
+#include <time.h>
+
 using namespace gca;
 
 std::vector<std::vector<cut*>>
@@ -499,6 +501,14 @@ struct test_info {
   string stl_file_name;
   fabrication_inputs fab_inputs;
   double scale_factor;
+
+  test_info(const std::string file_name,
+	    const fabrication_inputs& p_fab_inputs,
+	    const double p_scale_factor) :
+    stl_file_name(file_name),
+    fab_inputs(p_fab_inputs),
+    scale_factor(p_scale_factor) {}
+
 };
 
 //part_1_42_inputs(); //part_100_009_inputs(); //dice_2_inputs(); //part_1_42_inputs(); //part_100_013_inputs(); //part_100_009_inputs(); //part_1_29_inputs(); //dice_inputs(); //octagon_with_holes_short_inputs(); //current_fab_inputs(workpiece(1.75, 1.75, 2.5, ALUMINUM)); //octagon_with_holes_short_inputs(); //part_1_2_inputs();
@@ -526,8 +536,15 @@ void print_test_info(const test_info& info) {
 
   vtk_debug_mesh(mesh);
 
+  time_t start = time(0);
+
+
   fabrication_plan p =
     make_fabrication_plan(mesh, fab_inputs);
+
+  double seconds_since_start = difftime( time(0), start);
+
+  cout << "COMPUTE TIME = " << seconds_since_start << " seconds" << endl;
 
   double rapid_feed = 24.0;
   fab_plan_timing_info total_time;
@@ -545,10 +562,10 @@ void print_test_info(const test_info& info) {
   cout << "TOTAL Time Estimate" << endl;
   print_time_info(cout, total_time);
 
-  cout << "Programs" << endl;
+  // cout << "Programs" << endl;
 
-  cout.setf(ios::fixed, ios::floatfield);
-  cout.setf(ios::showpoint);
+  // cout.setf(ios::fixed, ios::floatfield);
+  // cout.setf(ios::showpoint);
 
   for (auto& step : p.steps()) {
     // point zero_pos = gui_select_part_zero(step);
@@ -567,7 +584,9 @@ void print_test_info(const test_info& info) {
 
     // visual_debug(step);
 
-    vtk_debug_toolpaths(step);
+    //vtk_debug_toolpaths(step);
+
+    cout << "step" << endl;
 
   }
 }
@@ -581,8 +600,6 @@ int main(int argc, char *argv[]) {
 
   arena_allocator a;
   set_system_allocator(&a);
-
-  
   //vtk_debug_mesh(mesh);
 
   double part_1_2_scale_factor = 0.45;
@@ -593,6 +610,15 @@ int main(int argc, char *argv[]) {
   double part_100_009_scale_factor = 1.0;
   double part_1_42_scale_factor = 1.0;
   double dice_2_scale_factor = 0.75;
+
+  //test_info part_info{name, part_1_42_inputs(), part_1_42_scale_factor};
+  //test_info part_info{name, dice_2_inputs(), dice_2_scale_factor};
+  //test_info part_info{name, part_100_013_inputs(), part_100_013_scale_factor};
+  //test_info part_info{name, octagon_with_holes_short_inputs(), octagon_with_holes_short_scale_factor};
+  //test_info part_info{name, part_1_2_inputs(), part_1_2_scale_factor};
+  test_info part_info{name, part_1_2_inputs(), 1.0}; //part_1_2_scale_factor};
+
+  print_test_info(part_info);
 
   return EXIT_SUCCESS;
 }

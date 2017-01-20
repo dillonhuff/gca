@@ -6,6 +6,24 @@
 
 namespace gca {
 
+  struct shared_edge {
+    index_t triangle_1;
+    index_t triangle_2;
+    edge e;
+  };
+
+  bool angle_eps(const shared_edge e,
+		 const triangular_mesh& m,
+		 const double angle,
+		 const double tol);
+
+  bool is_valley_edge(const shared_edge e,
+		      const triangular_mesh& m);
+
+  std::vector<shared_edge> all_shared_edges(const std::vector<index_t>& l_faces,
+					    const std::vector<index_t>& r_faces,
+					    const triangular_mesh& part);
+
   vector<oriented_polygon> mesh_bounds(const vector<index_t>& faces,
 				       const triangular_mesh& mesh);
 

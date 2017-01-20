@@ -1,97 +1,10 @@
 #include "geometry/extrusion.h"
 #include "geometry/surface.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "process_planning/mandatory_volumes.h"
 #include "synthesis/millability.h"
 
 namespace gca {
-
-
-  struct shared_edge {
-    index_t triangle_1;
-    index_t triangle_2;
-    edge e;
-  };
-
-  boost::optional<shared_edge>
-  common_edge(const index_t l,
-	      const index_t r,
-	      const triangular_mesh& part) {
-    auto tl = part.triangle_vertices(l);
-    auto tr = part.triangle_vertices(r);
-    std::vector<index_t> shared_verts;
-
-    for (unsigned i = 0; i < 3; i++) {
-      for (unsigned j = 0; j < 3; j++) {
-	if (tl.v[i] == tr.v[j]) {
-	  shared_verts.push_back(tl.v[i]);
-	}
-      }
-    }
-
-    DBG_ASSERT(shared_verts.size() < 3);
-
-    if (shared_verts.size() == 2) {
-      return shared_edge{l, r, edge(shared_verts[0], shared_verts[1])};
-    }
-
-    return boost::none;
-  }
-  
-  std::vector<shared_edge> all_shared_edges(const std::vector<index_t>& l_faces,
-					    const std::vector<index_t>& r_faces,
-					    const triangular_mesh& part) {
-    vector<shared_edge> edges;
-    for (auto l : l_faces) {
-      for (auto r : r_faces) {
-	auto ce = common_edge(l, r, part);
-	if (ce) {
-	  edges.push_back(*ce);
-	}
-      }
-    }
-    return edges;
-  }
-
-  index_t non_edge_vertex_1(const shared_edge e, const triangular_mesh& m) {
-    triangle_t t1 = m.triangle_vertices(e.triangle_1);
-    vector<index_t> all_verts{t1.v[0], t1.v[1], t1.v[2]};
-    vector<index_t> edge_verts{e.e.l, e.e.r};
-    subtract(all_verts, edge_verts);
-
-    DBG_ASSERT(all_verts.size() == 1);
-
-    return all_verts.front();
-  }
-
-
-  index_t non_edge_vertex_2(const shared_edge e, const triangular_mesh& m) {
-    triangle_t t1 = m.triangle_vertices(e.triangle_2);
-    vector<index_t> all_verts{t1.v[0], t1.v[1], t1.v[2]};
-    vector<index_t> edge_verts{e.e.l, e.e.r};
-    subtract(all_verts, edge_verts);
-
-    DBG_ASSERT(all_verts.size() == 1);
-
-    return all_verts.front();
-  }
-  
-  bool is_valley_edge(const shared_edge e,
-		      const triangular_mesh& m) {
-    point na = m.face_orientation(e.triangle_1);
-    point pa = m.vertex(non_edge_vertex_1(e, m));
-    point pb = m.vertex(non_edge_vertex_2(e, m));
-
-    return dot((pb - pa), na) > 0.0;
-  }
-
-  bool angle_eps(const shared_edge e,
-		 const triangular_mesh& m,
-		 const double angle,
-		 const double tol) {
-    point n1 = m.face_orientation(e.triangle_1);
-    point n2 = m.face_orientation(e.triangle_2);
-    return angle_eps(n1, n2, angle, tol);
-  }
 
   bool share_orthogonal_valley_edge(const surface& l, const surface& r) {
     vector<shared_edge> shared =

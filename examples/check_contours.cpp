@@ -13,6 +13,10 @@
 using namespace gca;
 using namespace std;
 
+void surface_plans(const triangular_mesh& m) {
+  
+}
+
 int main(int argc, char* argv[]) {
 
   DBG_ASSERT(argc == 2);
@@ -25,12 +29,15 @@ int main(int argc, char* argv[]) {
 
     auto mesh = parse_stl(n, 0.001);
 
-    box bounding = mesh.bounding_box();
+    surface_plans(mesh);
 
-    cout << "Bounding box = " << endl;
-    cout << bounding << endl;
-    
-    vtk_debug_mesh(mesh);
+    // box bounding = mesh.bounding_box();
+
+    // cout << "Bounding box = " << endl;
+    // cout << bounding << endl;
+
+    // vtk_debug_mesh(mesh);
+
     // point axis = part_axis(mesh);
     // point neg_axis = part_axis(mesh);
 
