@@ -10,6 +10,16 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
+    SECTION("Part 1 10 has 4 mandatory directions") {
+      auto mesh =
+	parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(10).stl", 0.0001);
+
+      surface_milling_constraints smc =
+	build_surface_milling_constraints(mesh);
+
+      REQUIRE(smc.hard_corner_groups().size() == 6);
+    }
+
     SECTION("Magnetic latch top is not millable") {
       auto mesh = parse_stl("./test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.0001);
 
