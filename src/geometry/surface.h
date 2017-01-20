@@ -229,7 +229,9 @@ namespace gca {
 
   point min_point_in_dir(const surface& mesh, const point dir);
   point max_point_in_dir(const surface& mesh, const point dir);
-  
+
+  bool share_orthogonal_valley_edge(const surface& l, const surface& r);
+
 }
 
 #endif

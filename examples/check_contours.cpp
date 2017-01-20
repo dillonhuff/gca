@@ -13,8 +13,24 @@
 using namespace gca;
 using namespace std;
 
-void surface_plans(const triangular_mesh& m) {
-  
+void surface_plans(const triangular_mesh& part) {
+  auto regions = const_orientation_regions(part);
+  vector<surface> const_surfs = inds_to_surfaces(regions, part);
+  vector<vector<surface> > surf_complexes =
+    connected_components_by_elems(const_surfs,
+				  [](const surface& l, const surface& r) {
+				    return share_orthogonal_valley_edge(l, r);
+				  });
+
+  delete_if(surf_complexes, [](const vector<surface>& surf_complex) {
+      return surf_complex.size() < 2;
+    });
+
+  cout << "# of ridge edge complexes = " << surf_complexes.size() << endl;
+
+  for (auto& s : surf_complexes) {
+    vtk_debug_highlight_inds(s);
+  }
 }
 
 int main(int argc, char* argv[]) {

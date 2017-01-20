@@ -407,5 +407,18 @@ namespace gca {
 			  const point dir) {
     return min_along(mesh.vertex_list(), dir);
   }
-  
+
+  bool share_orthogonal_valley_edge(const surface& l, const surface& r) {
+    vector<shared_edge> shared =
+      all_shared_edges(l.index_list(), r.index_list(), l.get_parent_mesh());
+    for (auto s : shared) {
+      if (is_valley_edge(s, l.get_parent_mesh()) &&
+	  angle_eps(s, l.get_parent_mesh(), 90.0, 0.5)) {
+	return true;
+      }
+    }
+
+    return false;
+  }
+
 }
