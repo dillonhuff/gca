@@ -172,6 +172,7 @@ SET(GCA_CPPS
 	./src/process_planning/feature_selection.cpp
 	./src/process_planning/job_planning.cpp
 	./src/process_planning/mandatory_volumes.cpp
+	./src/process_planning/surface_planning.cpp
 	./src/process_planning/tool_access.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/fabrication_plan.cpp
@@ -216,6 +217,7 @@ add_executable(manufacture-tests test/main_manufacture.cpp ${MANUFACTURE_TEST_FI
 target_link_libraries(manufacture-tests geometry utils gcode gprocess gca)
 
 SET(TEST_FILES test/main.cpp
+	       test/machinability_tests.cpp
 	       test/tool_access_tests.cpp
 	       test/feature_selection_tests.cpp
 	       test/rotation_tests.cpp

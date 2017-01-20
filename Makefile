@@ -2715,6 +2715,33 @@ src/process_planning/mandatory_volumes.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/mandatory_volumes.cpp.s
 .PHONY : src/process_planning/mandatory_volumes.cpp.s
 
+src/process_planning/surface_planning.o: src/process_planning/surface_planning.cpp.o
+
+.PHONY : src/process_planning/surface_planning.o
+
+# target to build an object file
+src/process_planning/surface_planning.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/surface_planning.cpp.o
+.PHONY : src/process_planning/surface_planning.cpp.o
+
+src/process_planning/surface_planning.i: src/process_planning/surface_planning.cpp.i
+
+.PHONY : src/process_planning/surface_planning.i
+
+# target to preprocess a source file
+src/process_planning/surface_planning.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/surface_planning.cpp.i
+.PHONY : src/process_planning/surface_planning.cpp.i
+
+src/process_planning/surface_planning.s: src/process_planning/surface_planning.cpp.s
+
+.PHONY : src/process_planning/surface_planning.s
+
+# target to generate assembly for a file
+src/process_planning/surface_planning.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/surface_planning.cpp.s
+.PHONY : src/process_planning/surface_planning.cpp.s
+
 src/process_planning/tool_access.o: src/process_planning/tool_access.cpp.o
 
 .PHONY : src/process_planning/tool_access.o
@@ -4092,6 +4119,36 @@ test/line_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.s
 .PHONY : test/line_tests.cpp.s
 
+test/machinability_tests.o: test/machinability_tests.cpp.o
+
+.PHONY : test/machinability_tests.o
+
+# target to build an object file
+test/machinability_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machinability_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/machinability_tests.cpp.o
+.PHONY : test/machinability_tests.cpp.o
+
+test/machinability_tests.i: test/machinability_tests.cpp.i
+
+.PHONY : test/machinability_tests.i
+
+# target to preprocess a source file
+test/machinability_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machinability_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/machinability_tests.cpp.i
+.PHONY : test/machinability_tests.cpp.i
+
+test/machinability_tests.s: test/machinability_tests.cpp.s
+
+.PHONY : test/machinability_tests.s
+
+# target to generate assembly for a file
+test/machinability_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/machinability_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/machinability_tests.cpp.s
+.PHONY : test/machinability_tests.cpp.s
+
 test/machine_state_tests.o: test/machine_state_tests.cpp.o
 
 .PHONY : test/machine_state_tests.o
@@ -5244,6 +5301,9 @@ help:
 	@echo "... src/process_planning/mandatory_volumes.o"
 	@echo "... src/process_planning/mandatory_volumes.i"
 	@echo "... src/process_planning/mandatory_volumes.s"
+	@echo "... src/process_planning/surface_planning.o"
+	@echo "... src/process_planning/surface_planning.i"
+	@echo "... src/process_planning/surface_planning.s"
 	@echo "... src/process_planning/tool_access.o"
 	@echo "... src/process_planning/tool_access.i"
 	@echo "... src/process_planning/tool_access.s"
@@ -5391,6 +5451,9 @@ help:
 	@echo "... test/line_tests.o"
 	@echo "... test/line_tests.i"
 	@echo "... test/line_tests.s"
+	@echo "... test/machinability_tests.o"
+	@echo "... test/machinability_tests.i"
+	@echo "... test/machinability_tests.s"
 	@echo "... test/machine_state_tests.o"
 	@echo "... test/machine_state_tests.i"
 	@echo "... test/machine_state_tests.s"
