@@ -1,10 +1,21 @@
 #pragma once
 
-#include <memory>
+#include <boost/graph/graph_traits.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <utility>
 
 #include "geometry/surface.h"
 
 namespace gca {
+
+  class surface_graph {
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS> graph;
+    typedef std::pair<int, int> graph_edge;
+
+    
+
+  };
 
   enum mill_process { FINISH_FACE_MILL,
 		      FINISH_PERIPHERAL_MILL,
