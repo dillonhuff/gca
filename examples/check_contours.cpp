@@ -53,8 +53,8 @@ std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_compl
       auto millable_faces = prismatic_millable_faces(s_n, m);
 
       millable_faces = sort_unique(millable_faces);
-      //if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
-      if (elems_equal(millable_faces, face_inds)) {
+      if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
+      //if (elems_equal(millable_faces, face_inds)) {
 	cout << "Viable direction = " << s_n << endl;
 	access_surfs.push_back(s);
       }
@@ -143,6 +143,8 @@ void visualize_proto_setups(const std::vector<proto_setup>& proto_setups) {
   if (proto_setups.size() == 0) { return; }
 
   for (auto& ps : proto_setups) {
+    cout << "setup access direction = " << ps.access_direction() << endl;
+
     vector<surface> surfs;
     for (auto& mc : ps.mandatory_complexes) {
       concat(surfs, mc);
@@ -159,13 +161,24 @@ assign_complexes_to_setups(const std::vector<surface>& locating_surfs,
 			   const std::vector<mandatory_complex>& mandatory_complexes) {
   std::vector<proto_setup> protos;
   for (auto& s : locating_surfs) {
-    protos.push_back(proto_setup{surface_plane(s), {}, {}, {}});
+    bool found_duplicate = false;
+
+    for (auto& ps : protos) {
+      if (angle_eps(ps.access_direction(), -1*normal(s), 0.0, 0.5)) {
+	found_duplicate = true;
+	break;
+      }
+    }
+
+    if (!found_duplicate) {
+      protos.push_back(proto_setup{surface_plane(s), {}, {}, {}});
+    }
   }
 
   for (auto& mc : mandatory_complexes) {
 
     bool found_setup = false;
-    for (auto& ps : protos) {
+    for (proto_setup& ps : protos) {
       if (angle_eps(ps.access_direction(), mc.legal_access_dirs.front(), 0.0, 0.5)) {
 	ps.mandatory_complexes.push_back(mc.surfs);
 	found_setup = true;
@@ -177,7 +190,15 @@ assign_complexes_to_setups(const std::vector<surface>& locating_surfs,
       return boost::none;
     }
   }
-  
+
+  unsigned num_complexes = 0;
+  for (auto& ps : protos) {
+    cout << "# of mandatory complexes = " << ps.mandatory_complexes.size() << endl;
+    num_complexes += ps.mandatory_complexes.size();
+  }
+
+  DBG_ASSERT(num_complexes == mandatory_complexes.size());
+
   return protos;
 }
 
@@ -201,6 +222,7 @@ void surface_plans(const triangular_mesh& part) {
 
   if (!proto_setups) {
     cout << "Unmillable: Mandatory setup that does not have a locating surface" << endl;
+    return;
   }
 
   cout << "MILLABLE!" << endl;
