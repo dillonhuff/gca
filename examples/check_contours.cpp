@@ -5,6 +5,7 @@
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
 #include "process_planning/axis_location.h"
+#include "synthesis/millability.h"
 #include "synthesis/visual_debug.h"
 #include "utils/algorithm.h"
 #include "system/file.h"
@@ -12,6 +13,43 @@
 
 using namespace gca;
 using namespace std;
+
+std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_complex) {
+  DBG_ASSERT(surf_complex.size() > 0);
+
+  const triangular_mesh& m = surf_complex.front().get_parent_mesh();
+
+  vector<surface> access_surfs;
+
+  std::vector<index_t> face_inds;
+  for (auto& s : surf_complex) {
+    concat(face_inds, s.index_list());
+  }
+  
+  for (auto& s : surf_complex) {
+    point s_n = normal(s);
+    cout << "Trying normal = " << s_n << endl;
+
+    vector<index_t> vert_or_horiz =
+      select(face_inds, [s_n, m](const index_t& i) {
+	  return all_parallel_to({i}, m, s_n, 1.0) ||
+	  all_orthogonal_to({i}, m, s_n, 1.0);
+	});
+
+    if (vert_or_horiz.size() == face_inds.size()) {
+      
+      auto millable_faces = prismatic_millable_faces(s_n, m);
+
+      if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
+	cout << "Viable direction = " << s_n << endl;
+	access_surfs.push_back(s);
+      }
+
+    }
+  }
+
+  return access_surfs;
+}
 
 void surface_plans(const triangular_mesh& part) {
   auto regions = const_orientation_regions(part);
@@ -26,9 +64,20 @@ void surface_plans(const triangular_mesh& part) {
       return surf_complex.size() < 2;
     });
 
-  cout << "# of ridge edge complexes = " << surf_complexes.size() << endl;
+  cout << "# of valley edge complexes = " << surf_complexes.size() << endl;
 
   for (auto& s : surf_complexes) {
+    vector<surface> access_surfaces =
+      find_access_surfaces(s);
+
+    if ((access_surfaces.size() == 0) || (access_surfaces.size() > 2)) {
+      cout << "Unmillable part" << endl;
+      break;
+    }
+
+    for (auto& s : access_surfaces) {
+      cout << "Viable normal = " << normal(s) << endl;
+    }
     vtk_debug_highlight_inds(s);
   }
 }

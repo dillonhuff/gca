@@ -13,8 +13,6 @@ namespace gca {
     typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS> graph;
     typedef std::pair<int, int> graph_edge;
 
-    
-
   };
 
   enum mill_process { FINISH_FACE_MILL,
