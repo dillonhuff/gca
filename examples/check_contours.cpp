@@ -51,7 +51,7 @@ std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_compl
   return access_surfs;
 }
 
-void surface_plans(const triangular_mesh& part) {
+void build_mandatory_complexes(const triangular_mesh& part) {
   auto regions = const_orientation_regions(part);
   vector<surface> const_surfs = inds_to_surfaces(regions, part);
   vector<vector<surface> > surf_complexes =
@@ -79,6 +79,28 @@ void surface_plans(const triangular_mesh& part) {
       cout << "Viable normal = " << normal(s) << endl;
     }
     vtk_debug_highlight_inds(s);
+  }
+}
+
+std::vector<surface>
+find_locating_surfaces(const triangular_mesh& part, const double surf_fraction) {
+  double sa = part.surface_area();
+  std::vector<surface> outer_surfs = outer_surfaces(part);
+
+  delete_if(outer_surfs,
+	    [surf_fraction, sa](const surface& s) {
+	      return (s.surface_area() / sa) < surf_fraction;
+	    });
+
+  return outer_surfs;
+}
+
+void surface_plans(const triangular_mesh& part) {
+  //build_mandatory_complexes(part);
+  vector<surface> locating_surfs = find_locating_surfaces(part, 0.05);
+
+  if (locating_surfs.size() > 0) {
+    vtk_debug_highlight_inds(locating_surfs);
   }
 }
 
