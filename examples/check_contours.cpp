@@ -122,16 +122,33 @@ struct proto_setup {
   
 };
 
+boost::optional<std::vector<proto_setup> >
+assign_complexes_to_setups(const std::vector<surface>& locating_surfs,
+			   const std::vector<mandatory_complex>& mandatory_complexes) {
+  return boost::none;
+}
+
 void surface_plans(const triangular_mesh& part) {
   vector<surface> locating_surfs = find_locating_surfaces(part, 0.005);
 
   if (locating_surfs.size() == 0) {
     cout << "Unmillable: No locating surfaces" << endl;
-    vtk_debug_highlight_inds(locating_surfs);
+    return;
   }
 
-  build_mandatory_complexes(part);
+  auto mandatory_complexes = build_mandatory_complexes(part);
 
+  if (!mandatory_complexes) {
+    cout << "Unmillable: Unreachable surface complex" << endl;
+    return;
+  }
+
+  boost::optional<std::vector<proto_setup> > proto_setups =
+    assign_complexes_to_setups(locating_surfs, *mandatory_complexes);
+
+  if (!proto_setups) {
+    cout << "Unmillable: Mandatory setup that does not have a locating surface" << endl;
+  }
 }
 
 int main(int argc, char* argv[]) {
