@@ -14,6 +14,17 @@
 using namespace gca;
 using namespace std;
 
+template<typename T>
+bool elems_equal(const std::vector<T>& x,
+		 const std::vector<T>& y) {
+  if (x.size() != y.size()) { return false; }
+
+  for (unsigned i = 0; i < x.size(); i++) {
+    if (x[i] != y[i]) { return false; }
+  }
+  return true;
+}
+
 std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_complex) {
   DBG_ASSERT(surf_complex.size() > 0);
 
@@ -25,6 +36,7 @@ std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_compl
   for (auto& s : surf_complex) {
     concat(face_inds, s.index_list());
   }
+  face_inds = sort_unique(face_inds);
   
   for (auto& s : surf_complex) {
     point s_n = normal(s);
@@ -40,7 +52,9 @@ std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_compl
       
       auto millable_faces = prismatic_millable_faces(s_n, m);
 
-      if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
+      millable_faces = sort_unique(millable_faces);
+      //if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
+      if (elems_equal(millable_faces, face_inds)) {
 	cout << "Viable direction = " << s_n << endl;
 	access_surfs.push_back(s);
       }
@@ -122,10 +136,49 @@ struct proto_setup {
   
 };
 
+
+void visualize_proto_setups(const std::vector<proto_setup>& proto_setups) {
+  cout << "# of proto setups = " << proto_setups.size() << endl;
+
+  if (proto_setups.size() == 0) { return; }
+
+  for (auto& ps : proto_setups) {
+    vector<surface> surfs;
+    for (auto& mc : ps.mandatory_complexes) {
+      concat(surfs, mc);
+    }
+
+    if (surfs.size() > 0) {
+      vtk_debug_highlight_inds(surfs);
+    }
+  }
+}
+
 boost::optional<std::vector<proto_setup> >
 assign_complexes_to_setups(const std::vector<surface>& locating_surfs,
 			   const std::vector<mandatory_complex>& mandatory_complexes) {
-  return boost::none;
+  std::vector<proto_setup> protos;
+  for (auto& s : locating_surfs) {
+    protos.push_back(proto_setup{surface_plane(s), {}, {}, {}});
+  }
+
+  for (auto& mc : mandatory_complexes) {
+
+    bool found_setup = false;
+    for (auto& ps : protos) {
+      if (angle_eps(ps.access_direction(), mc.legal_access_dirs.front(), 0.0, 0.5)) {
+	ps.mandatory_complexes.push_back(mc.surfs);
+	found_setup = true;
+	break;
+      }
+    }
+
+    if (!found_setup) {
+      return boost::none;
+    }
+  }
+  
+  return protos;
 }
 
 void surface_plans(const triangular_mesh& part) {
@@ -149,6 +202,9 @@ void surface_plans(const triangular_mesh& part) {
   if (!proto_setups) {
     cout << "Unmillable: Mandatory setup that does not have a locating surface" << endl;
   }
+
+  cout << "MILLABLE!" << endl;
+  visualize_proto_setups(*proto_setups);
 }
 
 int main(int argc, char* argv[]) {
