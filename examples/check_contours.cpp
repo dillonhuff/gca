@@ -51,7 +51,14 @@ std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_compl
   return access_surfs;
 }
 
-void build_mandatory_complexes(const triangular_mesh& part) {
+struct mandatory_complex {
+  vector<point> legal_access_dirs;
+  vector<surface> surfs;
+};
+
+boost::optional<std::vector<mandatory_complex> >
+build_mandatory_complexes(const triangular_mesh& part) {
+
   auto regions = const_orientation_regions(part);
   vector<surface> const_surfs = inds_to_surfaces(regions, part);
   vector<vector<surface> > surf_complexes =
@@ -66,20 +73,29 @@ void build_mandatory_complexes(const triangular_mesh& part) {
 
   cout << "# of valley edge complexes = " << surf_complexes.size() << endl;
 
+  std::vector<mandatory_complex> complexes;
+
   for (auto& s : surf_complexes) {
     vector<surface> access_surfaces =
       find_access_surfaces(s);
 
     if ((access_surfaces.size() == 0) || (access_surfaces.size() > 2)) {
       cout << "Unmillable part" << endl;
-      break;
+      return boost::none;
     }
 
+    vector<point> access_dirs;
     for (auto& s : access_surfaces) {
       cout << "Viable normal = " << normal(s) << endl;
+      access_dirs.push_back(normal(s));
     }
-    vtk_debug_highlight_inds(s);
+
+    complexes.push_back(mandatory_complex{access_dirs, s});
+
+    //    vtk_debug_highlight_inds(s);
   }
+
+  return complexes;
 }
 
 std::vector<surface>
@@ -95,13 +111,27 @@ find_locating_surfaces(const triangular_mesh& part, const double surf_fraction) 
   return outer_surfs;
 }
 
-void surface_plans(const triangular_mesh& part) {
-  //build_mandatory_complexes(part);
-  vector<surface> locating_surfs = find_locating_surfaces(part, 0.05);
+struct proto_setup {
+  plane locating_plane;
 
-  if (locating_surfs.size() > 0) {
+  vector<vector<surface> > mandatory_complexes;
+  vector<surface> mandatory_access;
+  vector<surface> unrestricted;
+
+  inline point access_direction() const { return -1*locating_plane.normal(); }
+  
+};
+
+void surface_plans(const triangular_mesh& part) {
+  vector<surface> locating_surfs = find_locating_surfaces(part, 0.005);
+
+  if (locating_surfs.size() == 0) {
+    cout << "Unmillable: No locating surfaces" << endl;
     vtk_debug_highlight_inds(locating_surfs);
   }
+
+  build_mandatory_complexes(part);
+
 }
 
 int main(int argc, char* argv[]) {
