@@ -5,6 +5,7 @@
 #include "feature_recognition/visual_debug.h"
 #include "geometry/mesh_operations.h"
 #include "geometry/vtk_debug.h"
+#include "process_planning/surface_planning.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/visual_debug.h"
@@ -65,6 +66,44 @@ namespace gca {
     double scale_factor;
     workpiece stock;
   };
+
+  struct surface_plan_case {
+    std::string part_path;
+    std::vector<int> acceptable_num_setups;
+  };
+
+  TEST_CASE("Surface based plans") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<surface_plan_case> planning_cases{
+      {"test/stl-files/onshape_parts/100-009 - Part 1.stl", {3}},
+	{"test/stl-files/onshape_parts//IL70 - Case - Case.stl", {2}},
+	  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
+	    {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
+	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
+		{"test/stl-files/OctagonWithHolesShort.stl", {8}},
+		  {"test/stl-files/CircleWithFilletAndSide.stl", {3}},
+		    {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
+		      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
+			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
+			  {"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
+			    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
+			      {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
+				};
+
+    for (auto& test_case : planning_cases) {
+
+      auto mesh = parse_stl(test_case.part_path, 0.001);
+
+      boost::optional<std::vector<proto_setup> > setups =
+	surface_plans(mesh);
+
+      REQUIRE(setups);
+      REQUIRE(elem(setups->size(), test_case.acceptable_num_setups));
+    }
+
+  }
 
   TEST_CASE("Manufacturable parts") {
     arena_allocator a;

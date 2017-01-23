@@ -265,19 +265,20 @@ namespace gca {
 
   }
 
-  void surface_plans(const triangular_mesh& part) {
+  boost::optional<std::vector<proto_setup> >
+  surface_plans(const triangular_mesh& part) {
     vector<surface> locating_surfs = find_locating_surfaces(part, 0.005);
 
     if (locating_surfs.size() == 0) {
       cout << "Unmillable: No locating surfaces" << endl;
-      return;
+      return boost::none;
     }
 
     auto mandatory_complexes = build_mandatory_complexes(part);
 
     if (!mandatory_complexes) {
       cout << "Unmillable: Unreachable surface complex" << endl;
-      return;
+      return boost::none;
     }
 
     boost::optional<std::vector<proto_setup> > proto_setups =
@@ -286,7 +287,7 @@ namespace gca {
 
     if (!proto_setups) {
       cout << "Unmillable: Mandatory setup that does not have a locating surface" << endl;
-      return;
+      return boost::none;
     }
 
     bool res = assign_surfaces_to_setups(part, *proto_setups);
@@ -298,12 +299,14 @@ namespace gca {
 
     if (!res) {
       cout << "Unmillable: Surface cannot be assigned to a setup" << endl;
-      return;
+      return boost::none;
     }
   
     cout << "MILLABLE!" << endl;
 
-    visualize_proto_setups(*proto_setups);
+    return *proto_setups;
+
+    //visualize_proto_setups(*proto_setups);
   }
 
 }

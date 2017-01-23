@@ -71,6 +71,7 @@ namespace gca {
   surface_milling_constraints
   build_surface_milling_constraints(const triangular_mesh& part);
 
-  void surface_plans(const triangular_mesh& part);
+  boost::optional<std::vector<proto_setup> >
+  surface_plans(const triangular_mesh& part);
 
 }
