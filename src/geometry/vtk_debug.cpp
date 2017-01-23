@@ -47,6 +47,41 @@ namespace gca {
  
     polyData->GetCellData()->SetScalars(colors);
   }
+
+  void highlight_cells(vtkSmartPointer<vtkPolyData> polyData,
+		       const std::vector<std::pair<std::vector<index_t >, color> >& inds) {
+    vtkSmartPointer<vtkUnsignedCharArray> colors = 
+      vtkSmartPointer<vtkUnsignedCharArray>::New();
+    colors->SetNumberOfComponents(3);
+    colors->SetName("Colors");
+ 
+    for(index_t i = 0; i < polyData->GetNumberOfCells(); i++) {
+      unsigned char color[3];
+
+      bool not_elem = true;
+      for (auto& ind_color_pair : inds) {
+	if (elem(i, ind_color_pair.first)) {
+	  auto& cl = ind_color_pair.second;
+
+	  color[0] = cl.red();
+	  color[1] = cl.green();
+	  color[2] = cl.blue();
+	  not_elem = false;
+	  break;
+	}
+      }
+	
+      if (not_elem) {
+	color[0] = 255;
+	color[1] = 255;
+	color[2] = 255;
+      }
+      
+      colors->InsertNextTupleValue(color);
+    }
+ 
+    polyData->GetCellData()->SetScalars(colors);
+  }
   
   vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData)
   {

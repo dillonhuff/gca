@@ -4,6 +4,7 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
 #include "geometry/mesh_operations.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "process_planning/surface_planning.h"
 #include "synthesis/fixture_analysis.h"
@@ -72,35 +73,87 @@ namespace gca {
     std::vector<int> acceptable_num_setups;
   };
 
+  bool share_non_fully_concave_edge(const surface& l, const surface& r) {
+    vector<shared_edge> shared =
+      all_shared_edges(l.index_list(), r.index_list(), l.get_parent_mesh());
+
+    for (auto s : shared) {
+      if (is_valley_edge(s, l.get_parent_mesh()) &&
+	  angle_eps(s, l.get_parent_mesh(), 90.0, 0.5)) {
+	return true;
+      }
+    }
+
+    return false;
+  }
+  
+  void visualize_non_concave_decomp(const triangular_mesh& part) {
+    auto regions = const_orientation_regions(part);
+    vector<surface> const_surfs = inds_to_surfaces(regions, part);
+    vector<vector<surface> > surf_complexes =
+      connected_components_by_elems(const_surfs,
+				    [](const surface& l, const surface& r) {
+				      return share_non_fully_concave_edge(l, r);
+				    });
+
+    
+    
+
+      
+    auto part_polydata = polydata_for_trimesh(part);
+
+    color white(255, 255, 255);
+
+    vector<pair<vector<index_t>,  color> > colors;
+    for (auto& sc : surf_complexes) {
+
+      vector<index_t> inds;
+      for (auto& s : sc) {
+	concat(inds, s.index_list());
+      }
+
+      color tp_color = random_color(white);
+      colors.push_back(std::make_pair(inds, tp_color));
+
+    }
+
+    highlight_cells(part_polydata, colors);    
+    visualize_actors({polydata_actor(part_polydata)});
+
+  }
+
   TEST_CASE("Surface based plans") {
     arena_allocator a;
     set_system_allocator(&a);
+
+    //{"test/stl-files/OctagonWithHolesShort.stl", {8}},    
 
     vector<surface_plan_case> planning_cases{
       {"test/stl-files/onshape_parts/100-009 - Part 1.stl", {3}},
 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
 	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
 	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
-	      {"test/stl-files/OctagonWithHolesShort.stl", {8}},
-		{"test/stl-files/CircleWithFilletAndSide.stl", {3}},
-		  {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
-		    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
-		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
-			{"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
-			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
-			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
-			      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl", {2}},
-				};
+	      {"test/stl-files/CircleWithFilletAndSide.stl", {3}},
+		{"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
+		  {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
+		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
+		      {"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
+			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
+			  {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
+			    {"test/stl-files/onshape_parts/IL70 - Case - Case.stl", {2}},
+			      };
 
     for (auto& test_case : planning_cases) {
 
       auto mesh = parse_stl(test_case.part_path, 0.001);
 
-      boost::optional<std::vector<proto_setup> > setups =
-	surface_plans(mesh);
+      visualize_non_concave_decomp(mesh);
 
-      REQUIRE(setups);
-      REQUIRE(elem(setups->size(), test_case.acceptable_num_setups));
+      // boost::optional<std::vector<proto_setup> > setups =
+      // 	surface_plans(mesh);
+
+      // REQUIRE(setups);
+      // REQUIRE(elem(setups->size(), test_case.acceptable_num_setups));
     }
 
   }

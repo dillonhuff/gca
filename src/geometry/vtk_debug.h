@@ -25,6 +25,9 @@ namespace gca {
     unsigned blue() const { return b; }
   };
 
+  void highlight_cells(vtkSmartPointer<vtkPolyData> polyData,
+		       const std::vector<std::pair<std::vector<index_t >, color> >& inds);
+  
   color random_color(const color mix);
 
   bool has_cell_normals(vtkPolyData* polydata);
