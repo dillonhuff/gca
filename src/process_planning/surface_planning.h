@@ -47,7 +47,30 @@ namespace gca {
     
   };
 
+  struct mandatory_complex {
+    vector<point> legal_access_dirs;
+    vector<surface> surfs;
+  };
+
+  struct proto_setup {
+    plane locating_plane;
+
+    vector<vector<surface> > mandatory_complexes;
+    vector<surface> mandatory_access;
+    vector<surface> unrestricted;
+
+    inline point access_direction() const { return -1*locating_plane.normal(); }
+
+    inline bool is_empty() const {
+      return (mandatory_complexes.size() == 0) &&
+	(mandatory_access.size() == 0) &&
+	(unrestricted.size() == 0);
+    }
+  };
+
   surface_milling_constraints
   build_surface_milling_constraints(const triangular_mesh& part);
+
+  void surface_plans(const triangular_mesh& part);
 
 }
