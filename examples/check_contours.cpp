@@ -150,6 +150,14 @@ void visualize_proto_setups(const std::vector<proto_setup>& proto_setups) {
       concat(surfs, mc);
     }
 
+    for (auto& c : ps.mandatory_access) {
+      surfs.push_back(c);
+    }
+
+    // for (auto& c : ps.unrestricted) {
+      surfs.push_back(c);
+    }
+    
     if (surfs.size() > 0) {
       vtk_debug_highlight_inds(surfs);
     }
@@ -202,6 +210,53 @@ assign_complexes_to_setups(const std::vector<surface>& locating_surfs,
   return protos;
 }
 
+void
+assign_surfaces_to_setups(const triangular_mesh& part,
+			  std::vector<proto_setup>& proto_setups) {
+  vector<index_t> inds = part.face_indexes();
+  for (auto& ps : proto_setups) {
+    for (auto& sc : ps.mandatory_complexes) {
+      for (auto& s : sc) {
+	subtract(inds, s.index_list());
+      }
+    }
+  }
+
+  if (inds.size() == 0) { return; }
+
+  auto inds_cpy = inds;
+  auto const_regions = normal_delta_regions(inds_cpy, part, 1.0);
+  std::vector<surface> flat_surfs = inds_to_surfaces(const_regions, part);
+
+  std::unordered_map<surface*, std::vector<proto_setup*> > surf_viz;
+  for (auto& ps : proto_setups) {
+
+    auto millable_inds = millable_faces(ps.access_direction(), part);
+
+    for (auto& s : flat_surfs) {
+      if (intersection(s.index_list(), millable_inds).size() == s.index_list().size()) {
+	map_insert(surf_viz, &s, &ps);
+      }
+    }
+  }
+
+  for (auto& sp : surf_viz) {
+    surface* s = sp.first;
+    vector<proto_setup*> setups = sp.second;
+    if (setups.size() == 0) {
+      cout << "Unmillable: Surface cannot be assigned to a setup" << endl;
+      vtk_debug_highlight_inds(*s);
+    }
+
+    if (setups.size() == 1) {
+      (setups.front())->mandatory_access.push_back(*s);
+      subtract(inds, s->index_list());
+    }
+  }
+
+  //vtk_debug_highlight_inds(inds, part);
+}
+
 void surface_plans(const triangular_mesh& part) {
   vector<surface> locating_surfs = find_locating_surfaces(part, 0.005);
 
@@ -220,12 +275,16 @@ void surface_plans(const triangular_mesh& part) {
   boost::optional<std::vector<proto_setup> > proto_setups =
     assign_complexes_to_setups(locating_surfs, *mandatory_complexes);
 
+
   if (!proto_setups) {
     cout << "Unmillable: Mandatory setup that does not have a locating surface" << endl;
     return;
   }
 
+  assign_surfaces_to_setups(part, *proto_setups);
+  
   cout << "MILLABLE!" << endl;
+
   visualize_proto_setups(*proto_setups);
 }
 
