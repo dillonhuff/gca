@@ -73,13 +73,12 @@ namespace gca {
     std::vector<int> acceptable_num_setups;
   };
 
-  bool share_non_fully_concave_edge(const surface& l, const surface& r) {
+  bool share_valley_edge(const surface& l, const surface& r) {
     vector<shared_edge> shared =
       all_shared_edges(l.index_list(), r.index_list(), l.get_parent_mesh());
 
     for (auto s : shared) {
-      if (is_valley_edge(s, l.get_parent_mesh()) &&
-	  angle_eps(s, l.get_parent_mesh(), 90.0, 0.5)) {
+      if (is_valley_edge(s, l.get_parent_mesh())) {
 	return true;
       }
     }
@@ -93,7 +92,7 @@ namespace gca {
     vector<vector<surface> > surf_complexes =
       connected_components_by_elems(const_surfs,
 				    [](const surface& l, const surface& r) {
-				      return share_non_fully_concave_edge(l, r);
+				      return share_valley_edge(l, r);
 				    });
 
     
