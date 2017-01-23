@@ -55,7 +55,7 @@ std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_compl
       millable_faces = sort_unique(millable_faces);
       if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
       //if (elems_equal(millable_faces, face_inds)) {
-	cout << "Viable direction = " << s_n << endl;
+	//	cout << "Viable direction = " << s_n << endl;
 	access_surfs.push_back(s);
       }
 
@@ -154,7 +154,7 @@ void visualize_proto_setups(const std::vector<proto_setup>& proto_setups) {
       surfs.push_back(c);
     }
 
-    // for (auto& c : ps.unrestricted) {
+    for (auto& c : ps.unrestricted) {
       surfs.push_back(c);
     }
     
@@ -210,7 +210,7 @@ assign_complexes_to_setups(const std::vector<surface>& locating_surfs,
   return protos;
 }
 
-void
+bool
 assign_surfaces_to_setups(const triangular_mesh& part,
 			  std::vector<proto_setup>& proto_setups) {
   vector<index_t> inds = part.face_indexes();
@@ -222,7 +222,7 @@ assign_surfaces_to_setups(const triangular_mesh& part,
     }
   }
 
-  if (inds.size() == 0) { return; }
+  if (inds.size() == 0) { return true; }
 
   auto inds_cpy = inds;
   auto const_regions = normal_delta_regions(inds_cpy, part, 1.0);
@@ -244,17 +244,27 @@ assign_surfaces_to_setups(const triangular_mesh& part,
     surface* s = sp.first;
     vector<proto_setup*> setups = sp.second;
     if (setups.size() == 0) {
-      cout << "Unmillable: Surface cannot be assigned to a setup" << endl;
-      vtk_debug_highlight_inds(*s);
+      return false;
     }
 
     if (setups.size() == 1) {
       (setups.front())->mandatory_access.push_back(*s);
       subtract(inds, s->index_list());
+    } else {
+      (setups.front())->mandatory_access.push_back(*s);
+      subtract(inds, s->index_list());
     }
   }
 
-  //vtk_debug_highlight_inds(inds, part);
+  if (inds.size() != 0) {
+    cout << "Extra inds? " << endl;
+    vtk_debug_highlight_inds(inds, part);
+
+    DBG_ASSERT(inds.size() == 0);
+  }
+
+  return true;
+
 }
 
 void surface_plans(const triangular_mesh& part) {
@@ -281,7 +291,12 @@ void surface_plans(const triangular_mesh& part) {
     return;
   }
 
-  assign_surfaces_to_setups(part, *proto_setups);
+  bool res = assign_surfaces_to_setups(part, *proto_setups);
+
+  if (!res) {
+    cout << "Unmillable: Surface cannot be assigned to a setup" << endl;
+    return;
+  }
   
   cout << "MILLABLE!" << endl;
 
