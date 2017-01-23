@@ -85,20 +85,14 @@ namespace gca {
 
     return false;
   }
-  
-  void visualize_non_concave_decomp(const triangular_mesh& part) {
-    auto regions = const_orientation_regions(part);
-    vector<surface> const_surfs = inds_to_surfaces(regions, part);
-    vector<vector<surface> > surf_complexes =
-      connected_components_by_elems(const_surfs,
-				    [](const surface& l, const surface& r) {
-				      return share_valley_edge(l, r);
-				    });
 
-    
-    
+  void
+  visualize_surface_decomp(const std::vector<std::vector<surface> >& surf_complexes)
+  {
+    if (surf_complexes.size() == 0) { return; }
 
-      
+    const auto& part = surf_complexes.front().front().get_parent_mesh();
+
     auto part_polydata = polydata_for_trimesh(part);
 
     color white(255, 255, 255);
@@ -119,6 +113,18 @@ namespace gca {
     highlight_cells(part_polydata, colors);    
     visualize_actors({polydata_actor(part_polydata)});
 
+  }
+
+  void visualize_non_concave_decomp(const triangular_mesh& part) {
+    auto regions = const_orientation_regions(part);
+    vector<surface> const_surfs = inds_to_surfaces(regions, part);
+    vector<vector<surface> > surf_complexes =
+      connected_components_by_elems(const_surfs,
+				    [](const surface& l, const surface& r) {
+				      return share_valley_edge(l, r);
+				    });
+
+    visualize_surface_decomp(surf_complexes);
   }
 
   TEST_CASE("Surface based plans") {
