@@ -93,8 +93,8 @@ build_mandatory_complexes(const triangular_mesh& part) {
     vector<surface> access_surfaces =
       find_access_surfaces(s);
 
-    if ((access_surfaces.size() == 0) || (access_surfaces.size() > 2)) {
-      cout << "Unmillable part" << endl;
+    if ((access_surfaces.size() == 0)) { // || (access_surfaces.size() > 2)) {
+      cout << "Unmillable part: " << access_surfaces.size() << " access surfs " << endl;
       return boost::none;
     }
 
@@ -133,7 +133,12 @@ struct proto_setup {
   vector<surface> unrestricted;
 
   inline point access_direction() const { return -1*locating_plane.normal(); }
-  
+
+  inline bool is_empty() const {
+    return (mandatory_complexes.size() == 0) &&
+      (mandatory_access.size() == 0) &&
+      (unrestricted.size() == 0);
+  }
 };
 
 
@@ -292,6 +297,11 @@ void surface_plans(const triangular_mesh& part) {
   }
 
   bool res = assign_surfaces_to_setups(part, *proto_setups);
+
+  delete_if(*proto_setups,
+	    [](const proto_setup& s) {
+	      return s.is_empty();
+	    });
 
   if (!res) {
     cout << "Unmillable: Surface cannot be assigned to a setup" << endl;
