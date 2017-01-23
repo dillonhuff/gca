@@ -78,18 +78,18 @@ namespace gca {
 
     vector<surface_plan_case> planning_cases{
       {"test/stl-files/onshape_parts/100-009 - Part 1.stl", {3}},
-	{"test/stl-files/onshape_parts//IL70 - Case - Case.stl", {2}},
-	  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
-	    {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
-	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
-		{"test/stl-files/OctagonWithHolesShort.stl", {8}},
-		  {"test/stl-files/CircleWithFilletAndSide.stl", {3}},
-		    {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
-		      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
-			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
-			  {"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
-			    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
-			      {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
+	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
+	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
+	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
+	      {"test/stl-files/OctagonWithHolesShort.stl", {8}},
+		{"test/stl-files/CircleWithFilletAndSide.stl", {3}},
+		  {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
+		    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
+		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
+			{"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
+			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
+			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
+			      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl", {2}},
 				};
 
     for (auto& test_case : planning_cases) {
