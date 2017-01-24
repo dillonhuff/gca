@@ -73,12 +73,21 @@ namespace gca {
     std::vector<int> acceptable_num_setups;
   };
 
-  bool share_valley_edge(const surface& l, const surface& r) {
+  double angle_between_normals(const shared_edge e,
+			       const triangular_mesh& m) {
+    point n1 = m.face_orientation(e.triangle_1);
+    point n2 = m.face_orientation(e.triangle_2);
+    return angle_between(n1, n2);
+  }
+  
+  bool share_non_fully_concave_edge(const surface& l, const surface& r) {
     vector<shared_edge> shared =
       all_shared_edges(l.index_list(), r.index_list(), l.get_parent_mesh());
 
     for (auto s : shared) {
       if (is_valley_edge(s, l.get_parent_mesh())) {
+	return true;
+      } else if (angle_between_normals(s, l.get_parent_mesh()) < 70.0) {
 	return true;
       }
     }
@@ -86,6 +95,15 @@ namespace gca {
     return false;
   }
 
+  color random_color_non_pastel(const color mix) {
+    unsigned red = rand() % 256;
+    unsigned green = rand() % 256;
+    unsigned blue = rand() % 256;
+
+    return color(red, green, blue);
+
+  }
+  
   void
   visualize_surface_decomp(const std::vector<std::vector<surface> >& surf_complexes)
   {
@@ -105,7 +123,7 @@ namespace gca {
 	concat(inds, s.index_list());
       }
 
-      color tp_color = random_color(white);
+      color tp_color = random_color_non_pastel(white);
       colors.push_back(std::make_pair(inds, tp_color));
 
     }
@@ -121,7 +139,7 @@ namespace gca {
     vector<vector<surface> > surf_complexes =
       connected_components_by_elems(const_surfs,
 				    [](const surface& l, const surface& r) {
-				      return share_valley_edge(l, r);
+				      return share_non_fully_concave_edge(l, r);
 				    });
 
     visualize_surface_decomp(surf_complexes);
