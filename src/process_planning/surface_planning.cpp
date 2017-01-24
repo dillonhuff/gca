@@ -327,7 +327,7 @@ namespace gca {
 
   struct direction_milling_info {
     point access_direction;
-    std::vector<mill_process> process;
+    std::vector<mill_process> processes;
   };
 
   struct process_info {
@@ -380,11 +380,11 @@ namespace gca {
 	  direction_milling_info acc_dir_info{access_dir, {FINISH_FREEFORM}};
 
 	  if (angle_eps(access_dir, normal(s), 0.0, 1.0)) {
-	    acc_dir_info.process.push_back(FINISH_FACE_MILL);
+	    acc_dir_info.processes.push_back(FINISH_FACE_MILL);
 	  }
 
 	  if (angle_eps(access_dir, normal(s), 90.0, 1.0)) {
-	    acc_dir_info.process.push_back(FINISH_PERIPHERAL_MILL);
+	    acc_dir_info.processes.push_back(FINISH_PERIPHERAL_MILL);
 	  }
 	  
 	  pi.dir_infos.push_back(acc_dir_info);
@@ -434,11 +434,111 @@ namespace gca {
     return info;
   }
 
+  bool process_usable_along(const point access_direction,
+			    const mill_process process,
+			    const process_info& info) {
+    for (auto& dir_info : info.dir_infos) {
+      if (angle_eps(access_direction, dir_info.access_direction, 0.0, 1.0)) {
+	if (elem(process, dir_info.processes)) { return true; }
+      }
+    }
+
+    return false;
+  }
+
+  bool peripheral_millable_along(surface* s,
+				 const point access_direction,
+				 const surface_info& surf_info) {
+    DBG_ASSERT(surf_info.map.find(s) != end(surf_info.map));
+
+    const process_info& dir_inf = surf_info.map.find(s)->second;
+
+    return process_usable_along(access_direction, FINISH_PERIPHERAL_MILL, dir_inf);
+  }
+
+
+  int
+  number_of_non_freeform_access_directions(surface* s,
+					   const surface_info& surf_info) {
+    DBG_ASSERT(surf_info.map.find(s) != end(surf_info.map));
+
+    const process_info& dir_inf = surf_info.map.find(s)->second;
+
+    int nff = 0;
+    for (auto& d : dir_inf.dir_infos) {
+      if (d.processes.size() > 1) {
+	nff++;
+      }
+    }
+
+    return nff;
+  }
+
+  double profile_score(std::vector<surface*>& surfs,
+		       const surface_info& surf_info) {
+    double score = 0.0;
+
+    for (surface* s : surfs) {
+      int num_non_freeform_acc_dirs =
+	number_of_non_freeform_access_directions(s, surf_info);
+
+      DBG_ASSERT(num_non_freeform_acc_dirs > 0);
+
+      score += 1.0 / num_non_freeform_acc_dirs;
+    }
+
+    return score;
+  }
+
+  
+  std::vector<std::vector<surface*> >
+  find_profiles_along(const surface_info& surf_info,
+		      const std::vector<point>& acc_dirs) {
+    vector<vector<surface*> > profiles;
+
+    for (auto access_direction : acc_dirs) {
+      vector<surface*> profile;
+
+      for (auto& sp : surf_info.map) {
+	surface* s = sp.first;
+	if (peripheral_millable_along(s, access_direction, surf_info)) {
+	  profile.push_back(s);
+	}
+      }
+
+      profiles.push_back(profile);
+    }
+
+    return profiles;
+  }
+
   std::vector<surface> select_profile(const triangular_mesh& part) {
     auto surface_info = build_flat_surface_info(part);
-    auto access_dirs = find_access_dirs(part);
+    auto access_dirs = find_access_directions(part);
 
-    DBG_ASSERT(false);
+    vector<vector<surface*> > profiles =
+      find_profiles_along(surface_info, access_dirs);
+
+    DBG_ASSERT(profiles.size() > 0);
+
+    auto sf =
+      max_element(begin(profiles), end(profiles),
+		  [&surface_info](vector<surface*>& l,
+				  vector<surface*>& r) {
+		    return profile_score(l, surface_info) <
+		    profile_score(r, surface_info);
+		  });
+    vector<surface*> surfs = *sf;
+
+    // max_e(profiles, [&surface_info](vector<surface*>& surfs) {
+    // 	return profile_score(surfs, surface_info);
+    //   });
+
+    vector<surface> res;
+    for (surface* s : surfs) {
+      res.push_back(*s);
+    }
+    return res;
   }
 
 }
