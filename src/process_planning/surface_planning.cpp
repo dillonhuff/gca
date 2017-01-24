@@ -309,4 +309,19 @@ namespace gca {
     //visualize_proto_setups(*proto_setups);
   }
 
+  double simple_setup_cost(const proto_setup& setup) {
+    DBG_ASSERT(false);
+  }
+
+  double simple_setup_score(const std::vector<proto_setup>& setups) {
+    double setup_penalty = 100.0;
+    double cost = setups.size()*setup_penalty;
+
+    for (auto& s : setups) {
+      cost += simple_setup_cost(s);
+    }
+
+    return cost;
+  }
+
 }

@@ -107,6 +107,8 @@ namespace gca {
   void
   visualize_surface_decomp(const std::vector<std::vector<surface> >& surf_complexes)
   {
+
+    cout << "# of surfaces = " << surf_complexes.size() << endl;
     if (surf_complexes.size() == 0) { return; }
 
     const auto& part = surf_complexes.front().front().get_parent_mesh();
@@ -123,7 +125,7 @@ namespace gca {
 	concat(inds, s.index_list());
       }
 
-      color tp_color = random_color_non_pastel(white);
+      color tp_color = random_color(white);
       colors.push_back(std::make_pair(inds, tp_color));
 
     }
