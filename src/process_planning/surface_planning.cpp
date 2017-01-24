@@ -395,11 +395,7 @@ namespace gca {
     return inf_map;
   }
 
-  surface_info_map build_surface_millability_info(surface_info& info) {
-    DBG_ASSERT(info.surfs.size() > 0);
-
-    const auto& mesh = info.surfs.front().get_parent_mesh();
-
+  vector<point> find_access_directions(const triangular_mesh& mesh) {
     vector<surface> locating_surfs = find_locating_surfaces(mesh, 0.005);
     vector<point> access_dirs;
     for (auto& s : locating_surfs) {
@@ -410,6 +406,17 @@ namespace gca {
 	access_dirs.push_back(normal(s));
       }
     }
+
+    return access_dirs;
+  }
+
+  
+  surface_info_map build_surface_millability_info(surface_info& info) {
+    DBG_ASSERT(info.surfs.size() > 0);
+
+    const auto& mesh = info.surfs.front().get_parent_mesh();
+
+    vector<point> access_dirs = find_access_directions(mesh);
 
     cout << "# of access dirs = " << access_dirs.size() << endl;
 
@@ -429,6 +436,8 @@ namespace gca {
 
   std::vector<surface> select_profile(const triangular_mesh& part) {
     auto surface_info = build_flat_surface_info(part);
+    auto access_dirs = find_access_dirs(part);
+
     DBG_ASSERT(false);
   }
 
