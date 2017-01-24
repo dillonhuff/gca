@@ -74,4 +74,6 @@ namespace gca {
   boost::optional<std::vector<proto_setup> >
   surface_plans(const triangular_mesh& part);
 
+  std::vector<surface> select_profile(const triangular_mesh& part);
+
 }

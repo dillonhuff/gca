@@ -304,9 +304,10 @@ namespace gca {
   
     cout << "MILLABLE!" << endl;
 
+    visualize_proto_setups(*proto_setups);
+
     return *proto_setups;
 
-    //visualize_proto_setups(*proto_setups);
   }
 
   double simple_setup_cost(const proto_setup& setup) {
@@ -322,6 +323,113 @@ namespace gca {
     }
 
     return cost;
+  }
+
+  struct direction_milling_info {
+    point access_direction;
+    std::vector<mill_process> process;
+  };
+
+  struct process_info {
+    std::vector<direction_milling_info> dir_infos;
+  };
+
+  typedef std::unordered_map<surface*, process_info> surface_info_map;
+
+  struct surface_info {
+    std::vector<surface> surfs;
+    surface_info_map map;
+
+    surface_info(const std::vector<surface>& p_surfs) :
+      surfs(p_surfs) {}
+
+  };
+
+  template<typename T, typename EqualityTest>
+  bool elem_by(const T& e, const std::vector<T>& vals, EqualityTest eq) {
+
+    for (auto& v : vals) {
+      if (eq(e, v)) { return true; }
+    }
+
+    return false;
+  }
+
+  surface_info_map
+  access_map_info(std::vector<surface>& surfs,
+		  const std::vector<point>& access_dirs) {
+    DBG_ASSERT(surfs.size() > 0);
+
+    const auto& part = surfs.front().get_parent_mesh();
+
+    surface_info_map inf_map;
+
+    for (surface& s : surfs) {
+      inf_map[&s] = {{}};
+    }
+
+    for (auto& access_dir : access_dirs) {
+      auto millable_inds = millable_faces(access_dir, part);
+    
+      for (auto& sp : inf_map) {
+	surface& s = *(sp.first);
+	process_info& pi = sp.second;
+
+	if (intersection(s.index_list(), millable_inds).size() ==
+	    s.index_list().size()) {
+	  direction_milling_info acc_dir_info{access_dir, {FINISH_FREEFORM}};
+
+	  if (angle_eps(access_dir, normal(s), 0.0, 1.0)) {
+	    acc_dir_info.process.push_back(FINISH_FACE_MILL);
+	  }
+
+	  if (angle_eps(access_dir, normal(s), 90.0, 1.0)) {
+	    acc_dir_info.process.push_back(FINISH_PERIPHERAL_MILL);
+	  }
+	  
+	  pi.dir_infos.push_back(acc_dir_info);
+	}
+      }
+    }
+
+    return inf_map;
+  }
+
+  surface_info_map build_surface_millability_info(surface_info& info) {
+    DBG_ASSERT(info.surfs.size() > 0);
+
+    const auto& mesh = info.surfs.front().get_parent_mesh();
+
+    vector<surface> locating_surfs = find_locating_surfaces(mesh, 0.005);
+    vector<point> access_dirs;
+    for (auto& s : locating_surfs) {
+      if (!elem_by(normal(s), access_dirs,
+		   [](const point n, const point m) {
+		     return angle_eps(n, m, 0.0, 1.0);
+		   })) {
+	access_dirs.push_back(normal(s));
+      }
+    }
+
+    cout << "# of access dirs = " << access_dirs.size() << endl;
+
+    return access_map_info(info.surfs, access_dirs);
+  }
+
+  surface_info build_flat_surface_info(const triangular_mesh& part) {
+    auto regions = const_orientation_regions(part);
+    vector<surface> const_surfs = inds_to_surfaces(regions, part);
+
+    surface_info info(const_surfs);
+
+    info.map = build_surface_millability_info(info);
+
+    return info;
+  }
+
+  std::vector<surface> select_profile(const triangular_mesh& part) {
+    auto surface_info = build_flat_surface_info(part);
+    DBG_ASSERT(false);
   }
 
 }
