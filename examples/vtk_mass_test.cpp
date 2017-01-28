@@ -9,12 +9,98 @@ struct list_trimesh {
   std::vector<point> vertexes;
 };
 
+struct assigned_vertices {
+  index_t total_verts;
+  std::vector<point> vertices;
+  std::unordered_map<const point*, index_t > vertex_map;
+
+  void assign_vertex(const point* p) {
+    vertex_map[p] = total_verts;
+    vertices.push_back(*p);
+    total_verts++;
+  }
+
+};
+
 index_t find_index(point p, std::vector<point>& vertices, double tolerance) {
   for (unsigned i = 0; i < vertices.size(); i++) {
     if (within_eps(p, vertices[i], tolerance)) { return i; }
   }
   vertices.push_back(p);
   return vertices.size() - 1;
+}
+
+#define EPSILON 0.0001
+
+class nearby_callback : public octree<std::vector<const point*> >::Callback {
+public:
+  std::vector<const point*> nearby;
+  const point* p0;
+  double R;
+
+  nearby_callback(const point* p_p0, const double p_R) : p0(p_p0), R(p_R) {}
+
+  virtual bool operator()(const double min[3],
+			  const double max[3],
+			  std::vector<const point*>& n)
+  {
+    point pmin(min[0], min[1], min[2]), pmax(max[0], max[1], max[2]);
+    double cellSizeSq = ((pmax - pmin).len()) * ((pmax - pmin).len());
+    double maxDist = (sqrtf(cellSizeSq) * 0.5f) + R + EPSILON;
+        
+    point center = 0.5*(pmin + pmax);
+    point vectCenter = center - *p0; //->pos;
+    double distCenterSq = vectCenter.len()*vectCenter.len(); //vectCenter.lengthsq();
+    if (distCenterSq > maxDist * maxDist)
+      return false; // Too far; don't subdivide cell.
+        
+    // Iterate through particles in this cell.
+    vector<const point*>::const_iterator it = n.begin();
+    for (; it != n.end(); it++)
+      {
+	const point* p = *it;
+	if (p == p0)
+	  continue;
+	point pp0pos = (*p - *p0); //.lengthsq();
+	double dsq = pp0pos.len()*pp0pos.len();
+	// If particle is within the radius, increment counter.
+	if (dsq <= R * R) {
+	  nearby.push_back(p);
+	}
+      }
+
+    // Subdivide cell if needed.
+    return true;
+  }
+};
+
+index_t find_index(const point* p,
+		   assigned_vertices& vertex_map,
+		   octree<std::vector<const point*> >& pt_tree,
+		   double tolerance) {
+  nearby_callback call(p, 2.0*tolerance);
+
+  pt_tree.traverse(&call);
+
+  //cout << "# of nearby points = " << call.nearby.size() << endl;
+
+  for (const point* pt : call.nearby) {
+    auto nb = vertex_map.vertex_map.find(pt);
+    if (nb != end(vertex_map.vertex_map)) {
+      return nb->second;
+    }
+  }
+
+  vertex_map.assign_vertex(p);
+
+  return vertex_map.total_verts;
+
+  //  DBG_ASSERT(false);
+  // for (unsigned i = 0; i < vertices.size(); i++) {
+  //   if (within_eps(p, vertices[i], tolerance)) { return i; }
+  // }
+  // vertices.push_back(p);
+  // return vertices.size() - 1;
 }
 
 double min_in_dir(const point n, const std::vector<triangle>& triangles) {
@@ -67,30 +153,37 @@ fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
   double min[3] = {bb.x_min - eps, bb.y_min - eps, bb.z_min - eps};
   double max[3] = {bb.x_max + eps, bb.y_max + eps, bb.z_max + eps};
   double cellsize[3] = {0.1, 0.1, 0.1};
-  octree<std::vector<point> > pt_tree(min, max, cellsize);
+  octree<std::vector<const point*> > pt_tree(min, max, cellsize);
 
   cout << "Building octree" << endl;
-  for (auto t : triangles) {
-    for (auto v : {t.v1, t.v2, t.v3}) {
-      double pos[3] = {v.x, v.y, v.z};
-      vector<point>& nearby = pt_tree.getCell(pos);
-      nearby.push_back(v);
+
+  for (const triangle& t : triangles) {
+
+    for (const point* v : {&(t.v1), &(t.v2), &(t.v3)}) {
+      double pos[3] = {v->x, v->y, v->z};
+      vector<const point*>& nearby = pt_tree.getCell(pos);
+      nearby.push_back(&(t.v1));
     }
+
   }
 
   cout << "Built octree" << endl;
 
+  assigned_vertices vertex_map{0, {}, {}};
+
   std::vector<triangle_t> vertex_triangles;
-  for (auto t : triangles) {
-    auto v1i = find_index(t.v1, vertices, tolerance);
-    auto v2i = find_index(t.v2, vertices, tolerance);
-    auto v3i = find_index(t.v3, vertices, tolerance);
+  for (const triangle& t : triangles) {
+    auto v1i = find_index(&(t.v1), vertex_map, pt_tree, tolerance);
+    auto v2i = find_index(&(t.v2), vertex_map, pt_tree, tolerance);
+    auto v3i = find_index(&(t.v3), vertex_map, pt_tree, tolerance);
     triangle_t tr;
     tr.v[0] = v1i;
     tr.v[1] = v2i;
     tr.v[2] = v3i;
     vertex_triangles.push_back(tr);
   }
+
+  vertices = vertex_map.vertices;
 
   return vertex_triangles;
 }
@@ -101,8 +194,6 @@ list_trimesh build_list_trimesh(const std::vector<triangle>& triangles,
 				const double tolerance) {
   std::vector<point> vertices;
 
-    
-
   auto vertex_triangles =
     fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
 
@@ -110,32 +201,10 @@ list_trimesh build_list_trimesh(const std::vector<triangle>& triangles,
   transform(begin(triangles), end(triangles), begin(face_orientations),
 	    [](const triangle t) { return t.normal; });
     
-  // delete_duplicate_triangles(vertex_triangles, vertices, face_orientations);    
-  // delete_degenerate_triangles(vertex_triangles, vertices, face_orientations);
-  // delete_hanging_triangles(vertex_triangles, vertices, face_orientations);
-
   cout << "# of triangles left = " << vertex_triangles.size() << endl;
 
   if (vertex_triangles.size() == 0) { return {}; }
 
-  // check_degenerate_triangles(vertex_triangles, vertices);
-  // check_non_manifold_triangles(vertex_triangles, vertices);
-
-  // auto initial_comps =
-  //   connected_components_by(vertex_triangles, [](const triangle_t l, const triangle_t r)
-  // 			   { return share_edge(l, r); });
-
-  // for (vector<unsigned>& comp_inds : initial_comps) {
-  //   if (!winding_orders_are_consistent(comp_inds,
-  // 					 vertex_triangles,
-  // 					 vertices,
-  // 					 face_orientations)) {
-  // 	for (auto i : comp_inds) {
-  // 	  vertex_triangles[i] = flip_winding_order(vertex_triangles[i]);
-  // 	}
-  //   }
-  // }
-    
   return list_trimesh{vertex_triangles, vertices};
 }
 
@@ -156,6 +225,13 @@ int main(int argc, char *argv[]) {
   list_trimesh m = build_list_trimesh(data.triangles, 0.0001);
 
   cout << "Number of triangles in mesh = " << m.tris.size() << endl;
+  cout << "Number of vertices in mesh  = " << m.vertexes.size() << endl;
+
+  int max_verts = 3*m.tris.size();
+  int diff = max_verts - m.vertexes.size();
+
+  cout << "Max possible verts          = " << max_verts << endl;
+  cout << "Difference                  = " << diff << endl;
 
   vtk_debug_triangles(data.triangles);
 
