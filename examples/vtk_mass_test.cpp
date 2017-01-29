@@ -208,6 +208,10 @@ index_t find_index(const point* p,
 
   pt_tree.traverse(&call);
 
+  for (const point* pt : call.nearby) {
+    DBG_ASSERT(within_eps(*pt, *p, 2.0*tolerance));
+  }
+
   //cout << "# of nearby points = " << call.nearby.size() << endl;
 
   for (const point* pt : call.nearby) {
@@ -271,11 +275,8 @@ box bounding_box(const std::vector<triangle>& triangles) {
   return box(x_min, x_max, y_min, y_max, z_min, z_max);
 }
 
-std::vector<triangle_t>
-fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
-				       std::vector<point>& vertices,
-				       double tolerance) {
-
+octree<std::vector<const point*> >
+build_vertex_octree(const std::vector<triangle>& triangles) {
   box bb = bounding_box(triangles);
 
   cout << "Bounding box of assembly = " << bb << endl;
@@ -286,8 +287,6 @@ fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
   double cellsize[3] = {0.1, 0.1, 0.1};
   octree<std::vector<const point*> > pt_tree(min, max, cellsize);
 
-  cout << "Building octree" << endl;
-
   for (const triangle& t : triangles) {
 
     for (const point* v : {&(t.v1), &(t.v2), &(t.v3)}) {
@@ -297,6 +296,20 @@ fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
     }
 
   }
+
+
+  return pt_tree;
+}
+
+std::vector<triangle_t>
+fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
+				       std::vector<point>& vertices,
+				       double tolerance) {
+
+  cout << "Building octree" << endl;
+
+  octree<std::vector<const point*> >  pt_tree =
+    build_vertex_octree(triangles);
 
   cout << "Built octree" << endl;
 
