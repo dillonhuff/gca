@@ -9,6 +9,49 @@ struct list_trimesh {
   std::vector<point> vertexes;
 };
 
+template<typename F>
+std::vector<unsigned>
+next_connected_component(std::vector<unsigned> face_inds,
+			 F neighbors) {
+  return {};
+}
+
+std::vector<std::vector<unsigned> >
+connected_components(const list_trimesh& m) {
+  std::vector<std::vector<unsigned> > comps;
+
+  std::unordered_map<index_t, std::vector<unsigned> > trimap;
+  //  for (const triangle_t& t : m.tris) {
+  for (unsigned j = 0; j < m.tris.size(); j++) {
+    const triangle_t& t = m.tris[j];
+    for (unsigned i = 0; i < 3; i++) {
+      map_insert(trimap, t.v[i], j);
+    }
+  }
+    //  }
+
+  auto neighbors = [&trimap, m](const unsigned& tri) {
+    vector<unsigned> nbs;
+    const triangle_t& t = m.tris[tri];
+
+    for (unsigned i = 0; i < 3; i++) {
+      concat(nbs, map_find(t.v[i], trimap));
+    }
+
+    sort_unique(nbs);
+
+    return nbs;
+    
+  };
+
+  vector<unsigned> face_inds = inds(m.vertexes);
+  while (face_inds.size() > 0) {
+    comps.push_back(next_connected_component(face_inds, neighbors));
+  }
+
+  return comps;
+}
+
 struct assigned_vertices {
   index_t total_verts;
   std::vector<point> vertices;
@@ -49,10 +92,10 @@ public:
     double maxDist = (sqrtf(cellSizeSq) * 0.5f) + R + EPSILON;
         
     point center = 0.5*(pmin + pmax);
-    point vectCenter = center - *p0; //->pos;
-    double distCenterSq = vectCenter.len()*vectCenter.len(); //vectCenter.lengthsq();
+    point vectCenter = center - *p0;
+    double distCenterSq = vectCenter.len()*vectCenter.len();
     if (distCenterSq > maxDist * maxDist)
-      return false; // Too far; don't subdivide cell.
+      return false;
         
     // Iterate through particles in this cell.
     vector<const point*>::const_iterator it = n.begin();
@@ -232,6 +275,11 @@ int main(int argc, char *argv[]) {
 
   cout << "Max possible verts          = " << max_verts << endl;
   cout << "Difference                  = " << diff << endl;
+
+  std::vector<std::vector<unsigned> > ccs =
+    connected_components(m);
+
+  cout << "# of connected components = " << ccs.size() << endl;
 
   vtk_debug_triangles(data.triangles);
 
