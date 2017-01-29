@@ -11,37 +11,71 @@ struct list_trimesh {
 
 template<typename F>
 std::vector<unsigned>
-next_connected_component(std::set<unsigned> face_inds,
+next_connected_component(std::set<unsigned>& face_inds,
 			 F neighbors) {
-  unsigned first = face_inds.front();
-  std::deque next{first};
-  face_inds.erase(first);
-  return {};
+
+  DBG_ASSERT(face_inds.size() > 0);
+
+  unsigned first = *(face_inds.begin());
+  std::deque<unsigned> next;
+  next.push_front(first);
+
+  vector<unsigned> comp;
+
+  set<unsigned> already_added{first};
+
+  while (next.size() > 0) {
+    unsigned to_use = next.back();
+    next.pop_back();
+    comp.push_back(to_use);
+
+    DBG_ASSERT(face_inds.find(to_use) != end(face_inds));
+
+    face_inds.erase(to_use);
+
+    for (unsigned i : neighbors(to_use)) {
+      if (already_added.find(i) == end(already_added)) {
+	next.push_front(i);
+	already_added.insert(i);
+      }
+    }
+  }
+
+  std::cout << "Got component of size " << comp.size() << endl;
+
+  return comp;
 }
 
 std::vector<std::vector<unsigned> >
 connected_components(const list_trimesh& m) {
   std::vector<std::vector<unsigned> > comps;
 
+  cout << "Building trimap" << endl;
+
   std::unordered_map<index_t, std::vector<unsigned> > trimap;
-  //  for (const triangle_t& t : m.tris) {
+
   for (unsigned j = 0; j < m.tris.size(); j++) {
     const triangle_t& t = m.tris[j];
     for (unsigned i = 0; i < 3; i++) {
       map_insert(trimap, t.v[i], j);
     }
   }
-    //  }
+
+  cout << "Done building trimap" << endl;
 
   auto neighbors = [&trimap, m](const unsigned& tri) {
     vector<unsigned> nbs;
     const triangle_t& t = m.tris[tri];
 
     for (unsigned i = 0; i < 3; i++) {
-      concat(nbs, map_find(t.v[i], trimap));
+      for (unsigned j : map_find(t.v[i], trimap)) {
+	if (j != tri) {
+	  nbs.push_back(j);
+	}
+      }
     }
 
-    sort_unique(nbs);
+    nbs = sort_unique(nbs);
 
     return nbs;
     
@@ -50,6 +84,7 @@ connected_components(const list_trimesh& m) {
   auto finds = inds(m.tris);
   std::set<unsigned> face_inds(begin(finds), end(finds));
   while (face_inds.size() > 0) {
+    cout << "Creating component" << endl;
     comps.push_back(next_connected_component(face_inds, neighbors));
   }
 
@@ -284,6 +319,15 @@ int main(int argc, char *argv[]) {
     connected_components(m);
 
   cout << "# of connected components = " << ccs.size() << endl;
+
+  unsigned total_inds = 0;
+  for (auto& c : ccs) {
+    total_inds += c.size();
+  }
+
+  cout << "total # of triangles in components =" << total_inds << endl;
+
+  DBG_ASSERT(total_inds = data.triangles.size());
 
   vtk_debug_triangles(data.triangles);
 
