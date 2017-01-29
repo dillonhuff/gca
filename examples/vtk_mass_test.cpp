@@ -1,4 +1,13 @@
+#include <vtkCellData.h>
+#include <vtkCellArray.h>
+#include <vtkLine.h>
+#include <vtkPolyDataNormals.h>
+#include <vtkPolygon.h>
+#include <vtkTriangle.h>
+#include <vtkTriangleFilter.h>
+
 #include "geometry/octree.h"
+#include "geometry/vtk_debug.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"
 
@@ -8,6 +17,40 @@ struct list_trimesh {
   std::vector<triangle_t> tris;
   std::vector<point> vertexes;
 };
+
+vtkSmartPointer<vtkPolyData> polydata_for_list_trimesh(const list_trimesh& mesh) {
+    vtkSmartPointer<vtkPoints> points =
+      vtkSmartPointer<vtkPoints>::New();
+
+    // TODO: Does i++ matter here?
+		      for (auto p : mesh.vertexes) {
+      points->InsertNextPoint(p.x, p.y, p.z);
+    }
+
+    vtkSmartPointer<vtkCellArray> triangles =
+      vtkSmartPointer<vtkCellArray>::New();
+
+    for (auto t : mesh.tris) {
+      vtkSmartPointer<vtkTriangle> triangle =
+	vtkSmartPointer<vtkTriangle>::New();
+
+      triangle->GetPointIds()->SetId(0, t.v[0]);
+      triangle->GetPointIds()->SetId(1, t.v[1]);
+      triangle->GetPointIds()->SetId(2, t.v[2]);
+
+      triangles->InsertNextCell(triangle);    
+    }
+
+    // Create a polydata object
+    vtkSmartPointer<vtkPolyData> polyData =
+      vtkSmartPointer<vtkPolyData>::New();
+ 
+    // Add the geometry and topology to the polydata
+    polyData->SetPoints(points);
+    polyData->SetPolys(triangles);
+
+    return polyData;
+  }
 
 template<typename F>
 std::vector<unsigned>
@@ -246,7 +289,7 @@ fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
     for (const point* v : {&(t.v1), &(t.v2), &(t.v3)}) {
       double pos[3] = {v->x, v->y, v->z};
       vector<const point*>& nearby = pt_tree.getCell(pos);
-      nearby.push_back(&(t.v1));
+      nearby.push_back(v);
     }
 
   }
@@ -317,6 +360,8 @@ int main(int argc, char *argv[]) {
   cout << "Max possible verts          = " << max_verts << endl;
   cout << "Difference                  = " << diff << endl;
 
+  visualize_actors({polydata_actor(polydata_for_list_trimesh(m))});
+  
   std::vector<std::vector<unsigned> > ccs =
     connected_components(m);
 
