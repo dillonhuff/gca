@@ -51,6 +51,46 @@ vtkSmartPointer<vtkPolyData> polydata_for_list_trimesh(const list_trimesh& mesh)
     return polyData;
   }
 
+void highlight_cells(vtkSmartPointer<vtkPolyData> polyData,
+		     const std::vector<unsigned>& inds) {
+  vtkSmartPointer<vtkUnsignedCharArray> colors = 
+    vtkSmartPointer<vtkUnsignedCharArray>::New();
+  colors->SetNumberOfComponents(3);
+  colors->SetName("Colors");
+ 
+  for(unsigned i = 0; i < polyData->GetNumberOfCells(); i++) {
+    unsigned char color[3];
+    if (elem(i, inds)) {
+      color[0] = 200;
+      color[1] = 0;
+      color[2] = 0;
+    } else {
+      color[0] = 0;
+      color[1] = 0;
+      color[2] = 200;
+	
+    }
+
+    colors->InsertNextTupleValue(color);
+  }
+ 
+  polyData->GetCellData()->SetScalars(colors);
+}
+
+vtkSmartPointer<vtkActor>
+highlighted_surface_actor(const std::vector<unsigned>& inds,
+			  const list_trimesh& mesh) {
+  auto poly_data = polydata_for_list_trimesh(mesh);
+  highlight_cells(poly_data, inds);
+  return polydata_actor(poly_data);
+}
+
+void vtk_debug_highlight_inds(const std::vector<unsigned>& inds,
+			      const list_trimesh& mesh) {
+  auto surface_act = highlighted_surface_actor(inds, mesh);
+  visualize_actors({surface_act});
+}
+
 template<typename F>
 std::vector<unsigned>
 next_connected_component(std::set<unsigned>& face_inds,
@@ -228,7 +268,7 @@ index_t find_index(const point* p,
 
   vertex_map.assign_vertex(p);
 
-  return vertex_map.total_verts;
+  return vertex_map.total_verts - 1;
 
   //  DBG_ASSERT(false);
   // for (unsigned i = 0; i < vertices.size(); i++) {
@@ -324,10 +364,26 @@ fill_vertex_triangles_no_winding_check(const std::vector<triangle>& triangles,
     tr.v[0] = v1i;
     tr.v[1] = v2i;
     tr.v[2] = v3i;
+
+    point new_v1 = vertex_map.vertices[tr.v[0]];
+    bool v1_close = within_eps(new_v1, t.v1, tolerance);
+    if (!v1_close) {
+      cout << "Original v1           = " << new_v1 << endl;
+      cout << "Computed v1           = " << t.v1 << endl;
+      cout << "Distance between them = " << (new_v1 - t.v1).len() << endl;
+
+      DBG_ASSERT( v1_close );
+    }
+
+    DBG_ASSERT( within_eps(vertex_map.vertices[tr.v[1]], t.v2, tolerance) );
+    DBG_ASSERT( within_eps(vertex_map.vertices[tr.v[2]], t.v3, tolerance) );
+
     vertex_triangles.push_back(tr);
   }
 
-  vertices = vertex_map.vertices;
+  for (auto& p : vertex_map.vertices) {
+    vertices.push_back(p);
+  }
 
   return vertex_triangles;
 }
@@ -381,9 +437,13 @@ int main(int argc, char *argv[]) {
     total_inds += c.size();
   }
 
-  cout << "total # of triangles in components =" << total_inds << endl;
+  cout << "total # of triangles in components = " << total_inds << endl;
 
-  DBG_ASSERT(total_inds = data.triangles.size());
+  DBG_ASSERT(total_inds == data.triangles.size());
+
+  for (auto& cc : ccs) {
+    vtk_debug_highlight_inds(cc, m);
+  }
 
   vtk_debug_triangles(data.triangles);
 
