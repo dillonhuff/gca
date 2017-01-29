@@ -169,7 +169,9 @@ index_t find_index(const point* p,
   for (const point* pt : call.nearby) {
     auto nb = vertex_map.vertex_map.find(pt);
     if (nb != end(vertex_map.vertex_map)) {
-      return nb->second;
+      if (within_eps(*(nb->first), *p)) {
+	return nb->second;
+      }
     }
   }
 
