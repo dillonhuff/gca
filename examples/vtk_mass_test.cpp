@@ -11,8 +11,11 @@ struct list_trimesh {
 
 template<typename F>
 std::vector<unsigned>
-next_connected_component(std::vector<unsigned> face_inds,
+next_connected_component(std::set<unsigned> face_inds,
 			 F neighbors) {
+  unsigned first = face_inds.front();
+  std::deque next{first};
+  face_inds.erase(first);
   return {};
 }
 
@@ -44,7 +47,8 @@ connected_components(const list_trimesh& m) {
     
   };
 
-  vector<unsigned> face_inds = inds(m.vertexes);
+  auto finds = inds(m.tris);
+  std::set<unsigned> face_inds(begin(finds), end(finds));
   while (face_inds.size() > 0) {
     comps.push_back(next_connected_component(face_inds, neighbors));
   }
