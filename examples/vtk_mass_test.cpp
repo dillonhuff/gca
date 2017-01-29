@@ -22,7 +22,6 @@ vtkSmartPointer<vtkPolyData> polydata_for_list_trimesh(const list_trimesh& mesh)
     vtkSmartPointer<vtkPoints> points =
       vtkSmartPointer<vtkPoints>::New();
 
-    // TODO: Does i++ matter here?
 		      for (auto p : mesh.vertexes) {
       points->InsertNextPoint(p.x, p.y, p.z);
     }
@@ -140,6 +139,8 @@ struct assigned_vertices {
   std::unordered_map<const point*, index_t > vertex_map;
 
   void assign_vertex(const point* p) {
+    DBG_ASSERT(vertex_map.find(p) == end(vertex_map));
+
     vertex_map[p] = total_verts;
     vertices.push_back(*p);
     total_verts++;
@@ -211,11 +212,14 @@ index_t find_index(const point* p,
 
   for (const point* pt : call.nearby) {
     auto nb = vertex_map.vertex_map.find(pt);
-    if (nb != end(vertex_map.vertex_map)) {
-      if (within_eps(*(nb->first), *p)) {
-	return nb->second;
-      }
+
+    if ((nb != end(vertex_map.vertex_map)) &&
+	within_eps(*(nb->first), *p, tolerance)) {
+
+      return nb->second;
+
     }
+
   }
 
   vertex_map.assign_vertex(p);
@@ -323,14 +327,6 @@ list_trimesh build_list_trimesh(const std::vector<triangle>& triangles,
 
   auto vertex_triangles =
     fill_vertex_triangles_no_winding_check(triangles, vertices, tolerance);
-
-  std::vector<point> face_orientations(triangles.size());
-  transform(begin(triangles), end(triangles), begin(face_orientations),
-	    [](const triangle t) { return t.normal; });
-    
-  cout << "# of triangles left = " << vertex_triangles.size() << endl;
-
-  if (vertex_triangles.size() == 0) { return {}; }
 
   return list_trimesh{vertex_triangles, vertices};
 }
