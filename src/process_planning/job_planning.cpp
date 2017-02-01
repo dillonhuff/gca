@@ -72,7 +72,7 @@ namespace gca {
 
     //vtk_debug_meshes({m, part});
 
-    exact_volume mesh_nef = trimesh_to_nef_polyhedron(m);
+    exact_volume mesh_nef(m); // = trimesh_to_nef_polyhedron(m);
 
     DBG_ASSERT(mesh_nef.is_simple());
 
@@ -88,7 +88,7 @@ namespace gca {
 
     //vtk_debug_meshes({m, part});
 
-    exact_volume mesh_nef = trimesh_to_nef_polyhedron(m);
+    exact_volume mesh_nef(m); // = trimesh_to_nef_polyhedron(m);
 
     DBG_ASSERT(mesh_nef.is_simple());
 
@@ -136,12 +136,12 @@ namespace gca {
 
     auto res = m;
     for (auto f : features) {
-      exact_volume f_nef =
-	trimesh_to_nef_polyhedron(feature_mesh(*f, 0.0000001 /*1*/, 1.0, 0.000001));
+      exact_volume f_nef(feature_mesh(*f, 0.0000001 /*1*/, 1.0, 0.000001)); // =
+	//trimesh_to_nef_polyhedron(feature_mesh(*f, 0.0000001 /*1*/, 1.0, 0.000001));
 
-      for (auto it = f_nef.volumes_begin(); it != f_nef.volumes_end(); it++) {
-	cout << "VOLUME" << endl;
-      }
+      // for (auto it = f_nef.volumes_begin(); it != f_nef.volumes_end(); it++) {
+      // 	cout << "VOLUME" << endl;
+      // }
 
       res = (res - f_nef).regularization();
       
@@ -177,18 +177,18 @@ namespace gca {
 
     cout << "Ending feature mesh" << endl;
     
-    auto feature_nef = trimesh_to_nef_polyhedron(mesh);
+    exact_volume feature_nef(mesh); // = trimesh_to_nef_polyhedron(mesh);
     feature_nef = stock_nef.intersection(feature_nef);
 
     cout << "Got undilated feature mesh" << endl;
 
-    double vol = volume(nef_to_single_trimesh(feature_nef));
+    double vol = volume(feature_nef.to_single_trimesh()); //nef_to_single_trimesh(feature_nef));
 
     //	TODO: Refine the dilation tolerance, it may not matter but
     //	best to be safe
     triangular_mesh dilated_mesh = feature_mesh(f, 0.00005, 0.05, 0.0); //0.000005, 0.05, 0.0);
 
-    return volume_info{vol, feature_nef, trimesh_to_nef_polyhedron(dilated_mesh)};
+    return volume_info{vol, feature_nef, exact_volume(dilated_mesh)}; //trimesh_to_nef_polyhedron(dilated_mesh)};
   }
 
   volume_info
@@ -199,7 +199,7 @@ namespace gca {
     // TODO: Refine this to include feature normal etc.
     bool exact_match = false;
     for (auto& s : to_subtract) {
-      auto nef_meshes = nef_polyhedron_to_trimeshes(s);
+      auto nef_meshes = s.to_trimeshes(); //nef_polyhedron_to_trimeshes(s);
       double nef_volume = 0.0;
       for (auto& nef_mesh : nef_meshes) {
 	nef_volume += volume(nef_mesh);
@@ -226,18 +226,18 @@ namespace gca {
     if (!res.is_simple()) {
       cout << "Result of subtraction is not simple!" << endl;
       cout << "Initial volume to clip" << endl;
-      vtk_debug_meshes(nef_polyhedron_to_trimeshes(inf.remaining_volume));
+      vtk_debug_meshes(inf.remaining_volume.to_trimeshes()); //nef_polyhedron_to_trimeshes(inf.remaining_volume));
 
       for (auto& nf : to_subtract) {
 	cout << "Nef subtracted" << endl;
-	vtk_debug_meshes(nef_polyhedron_to_trimeshes(nf));
+	vtk_debug_meshes(nf.to_trimeshes()); //nef_polyhedron_to_trimeshes(nf));
       }
 
       DBG_ASSERT(false);
     }
 
     double new_volume = 0.0;
-    for (auto& m : nef_polyhedron_to_trimeshes(res)) {
+    for (auto& m : res.to_trimeshes()) { //nef_polyhedron_to_trimeshes(res)) {
       new_volume += volume(m);
     }
 
@@ -264,15 +264,15 @@ namespace gca {
     if (!res.is_simple()) {
       cout << "Result of subtraction is not simple!" << endl;
       cout << "Initial volume to clip" << endl;
-      vtk_debug_meshes(nef_polyhedron_to_trimeshes(inf.remaining_volume));
+      vtk_debug_meshes(inf.remaining_volume.to_trimeshes()); //nef_polyhedron_to_trimeshes(inf.remaining_volume));
 
       for (auto& nf : to_subtract) {
 	cout << "Nef subtracted" << endl;
-	vtk_debug_meshes(nef_polyhedron_to_trimeshes(nf));
+	vtk_debug_meshes(nf.to_trimeshes()); //nef_polyhedron_to_trimeshes(nf));
       }
     }
     double new_volume = 0.0;
-    for (auto& m : nef_polyhedron_to_trimeshes(res)) {
+    for (auto& m : res.to_trimeshes()) { //nef_polyhedron_to_trimeshes(res)) {
       new_volume += volume(m);
     }
 
@@ -290,7 +290,8 @@ namespace gca {
     for (auto d : dir_info) {
       auto decomp = d.decomp;
       for (feature* f : collect_features(decomp)) {
-	m[f] = initial_volume_info(*f, stock_nef);
+	m.insert(std::make_pair(f, initial_volume_info(*f, stock_nef)));
+	//	m[f] = initial_volume_info(*f, stock_nef);
       }
     }
 
@@ -304,7 +305,7 @@ namespace gca {
 		   const std::vector<tool>& tools,
 		   feature_decomposition* decomp) {
     auto& feat_nef = vol_info.remaining_volume;
-    vector<triangular_mesh> meshes = nef_polyhedron_to_trimeshes(feat_nef);
+    vector<triangular_mesh> meshes = feat_nef.to_trimeshes(); //nef_polyhedron_to_trimeshes(feat_nef);
 
     vector<feature*> clipped_features;
     for (auto& feature_mesh : meshes) {
@@ -353,7 +354,9 @@ namespace gca {
       // Do not subtract the selected decomposition, those
       // features are being removed anyway
       if (elem(f, feats_left) && !elem(f, feats_to_sub)) {
-	volume_inf[f] = update_volume_info(info_pair.second, to_subtract);
+	volume_inf.erase(f);
+	volume_inf.insert(std::make_pair(f, update_volume_info(info_pair.second, to_subtract)));
+	//volume_inf[f] = update_volume_info(info_pair.second, to_subtract);
       }
     }
   }
@@ -603,7 +606,7 @@ namespace gca {
 					   surf.s.index_list(),
 					   surf.s.get_parent_mesh(),
 					   n);
-      auto meshes = nef_polyhedron_to_trimeshes(intersected);
+      auto meshes = intersected.to_trimeshes(); //nef_polyhedron_to_trimeshes(intersected);
       double vol = 0.0;
       for (auto& mesh : meshes) {
 	vol += volume(mesh);
@@ -642,7 +645,7 @@ namespace gca {
     for (auto& mandatory : mandatories) {
 
       for (auto& mv : mandatory) {
-	exact_volume mv_nef = trimesh_to_nef_polyhedron(mv.volume);
+	exact_volume mv_nef(mv.volume); // = trimesh_to_nef_polyhedron(mv.volume);
 
 	for (auto& feature_volume_info : volume_inf) {
 	  feature* f = feature_volume_info.first;
@@ -674,7 +677,7 @@ namespace gca {
 
       vtk_debug_feature(*f);
 
-      vtk_debug_meshes(nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
+      vtk_debug_meshes(vol_data.remaining_volume.to_trimeshes()); //nef_polyhedron_to_trimeshes(vol_data.remaining_volume));
 
     }
     vtk_debug_features(features);
@@ -699,7 +702,7 @@ namespace gca {
     vector<triangular_mesh> mesh_complex;
     for (auto& nef : nefs) {
       concat(mesh_complex,
-	     nef_polyhedron_to_trimeshes(nef));
+	     nef.to_trimeshes()); //nef_polyhedron_to_trimeshes(nef));
     }
 
     vtk_debug_meshes(mesh_complex);
@@ -723,8 +726,9 @@ namespace gca {
     }
 
     for (auto& m : mandatory_group) {
-      auto mesh_nef = trimesh_to_nef_polyhedron(m.volume);
-      vol_info[&m] = volume_info{volume(m.volume), mesh_nef, mesh_nef};
+      exact_volume mesh_nef(m.volume); // = trimesh_to_nef_polyhedron(m.volume);
+      vol_info.insert(std::make_pair(&m, volume_info{volume(m.volume), mesh_nef, mesh_nef}));
+      //vol_info[&m] = volume_info{volume(m.volume), mesh_nef, mesh_nef};
       clip_dirs[&m] = clip_dir_list;
     }
   }
@@ -795,7 +799,7 @@ namespace gca {
     vector<triangular_mesh> to_sub_meshes;
     for (auto& mv : mandatory_vols) {
       to_sub.push_back(map_find(mv, mandatory_info.mandatory_info).dilated_mesh);
-      concat(to_sub_meshes, nef_polyhedron_to_trimeshes(to_sub.back()));
+      concat(to_sub_meshes, to_sub.back().to_trimeshes()); //nef_polyhedron_to_trimeshes(to_sub.back()));
     }
 
     //vtk_debug_meshes(to_sub_meshes);
@@ -804,15 +808,17 @@ namespace gca {
       volume_info& feature_info = volume_inf.find(f)->second; //map_find(f, volume_inf);
       auto mesh_complex = to_sub_meshes;
       concat(mesh_complex,
-	     nef_polyhedron_to_trimeshes(feature_info.remaining_volume));
+	     feature_info.remaining_volume.to_trimeshes()); //nef_polyhedron_to_trimeshes(feature_info.remaining_volume));
 
       
 
       cout << "Feature volume before adjustment = " << feature_info.volume << endl;
 
       //vtk_debug_meshes(mesh_complex);
-      
-      volume_inf[f] = update_volume_info(feature_info, to_sub);
+
+      volume_inf.erase(f);
+      volume_inf.insert(std::make_pair(f, update_volume_info(feature_info, to_sub)));
+      // volume_inf[f] = update_volume_info(feature_info, to_sub);
       cout << "Feature volume after adjustment = " << feature_info.volume << endl;
     }
 
@@ -879,15 +885,18 @@ namespace gca {
 	}
 
 	cout << "Clipping feature normal = " << n << endl;
-	cout << "Volume before clipping = " << mandatory_info.mandatory_info[f].volume << endl;
+	//cout << "Volume before clipping = " << mandatory_info.mandatory_info[f].volume << endl;
 
 	cout << "Clipping nefs = " << endl;
 	//vtk_debug_nef_polyhedra(to_subtract);
-	
-	mandatory_info.mandatory_info[f] =
-	  update_clipped_volume_info(info_pair.second, to_subtract);
 
-	cout << "Volume after clipping = " << mandatory_info.mandatory_info[f].volume << endl;
+	mandatory_info.mandatory_info.erase(f);
+	mandatory_info.mandatory_info.insert(std::make_pair(f, update_clipped_volume_info(info_pair.second, to_subtract)));
+
+	// mandatory_info.mandatory_info[f] =
+	//   update_clipped_volume_info(info_pair.second, to_subtract);
+
+	//cout << "Volume after clipping = " << mandatory_info.mandatory_info[f].volume << endl;
       }
     }
   }
@@ -904,7 +913,7 @@ namespace gca {
     visualize_initial_features(dir_info);
 #endif
 
-    exact_volume stock_nef = trimesh_to_nef_polyhedron(stock);
+    exact_volume stock_nef(stock); // = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
 
@@ -922,7 +931,7 @@ namespace gca {
       cout << "Trying direction " << normal(info.decomp) << endl;
 
       cout << "In loop getting current stock" << endl;
-      auto current_stock = nef_to_single_trimesh(stock_nef);
+      auto current_stock = stock_nef.to_single_trimesh(); //nef_to_single_trimesh(stock_nef);
       cout << "In loop got current stock" << endl;
 
       point n = normal(info.decomp);
@@ -1000,7 +1009,7 @@ namespace gca {
 	  clear_mandatory_features(n, mandatory_info);
 
 	  cout << "Just before in loop nef to trimesh" << endl;
-	  current_stock = nef_to_single_trimesh(stock_nef);
+	  current_stock = stock_nef.to_single_trimesh(); //nef_to_single_trimesh(stock_nef);
 	  cout << "Just after in loop nef to trimesh" << endl;
 
 	  double stock_volume = volume(current_stock);
@@ -1019,7 +1028,7 @@ namespace gca {
     }
 
     cout << "Done with loop getting current stock" << endl;
-    auto current_stock = nef_to_single_trimesh(stock_nef);
+    auto current_stock = stock_nef.to_single_trimesh(); //nef_to_single_trimesh(stock_nef);
     cout << "Done with loop got current stock" << endl;
 
     double stock_volume = volume(current_stock);
@@ -1046,7 +1055,7 @@ namespace gca {
       if (!(within_eps(mandatory_vol.second.volume, 0, 0.0001))) {
 	cout << "ERROR: Mandatory volume not fully cut" << endl;
 	cout << "Remaining volume = " << mandatory_vol.second.volume << endl;
-	vtk_debug_meshes(nef_polyhedron_to_trimeshes(mandatory_vol.second.remaining_volume));
+	vtk_debug_meshes(mandatory_vol.second.remaining_volume.to_trimeshes()); //nef_polyhedron_to_trimeshes(mandatory_vol.second.remaining_volume));
 
 	DBG_ASSERT(within_eps(mandatory_vol.second.volume, 0, 0.0001));
       }

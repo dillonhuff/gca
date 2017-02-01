@@ -35,6 +35,8 @@ namespace gca {
     std::vector<triangular_mesh> to_trimeshes() const;
     triangular_mesh to_single_trimesh() const;
     triangular_mesh to_single_merged_trimesh() const;
+
+    bool is_simple() const;
   };
 
   exact_volume operator-(const exact_volume& l, const exact_volume& r);

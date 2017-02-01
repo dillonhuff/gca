@@ -568,5 +568,9 @@ namespace gca {
     return l.difference(r);
   }
 
+  bool exact_volume::is_simple() const {
+    return (impl->nef).is_simple();
+  }
+
 
 }
