@@ -532,20 +532,20 @@ namespace gca {
   
   exact_volume exact_volume::difference(const exact_volume& other) const {
     Nef_polyhedron n = impl->nef - other.impl->nef;
-    volume_impl* impl = new volume_impl(n);
-    return exact_volume(impl);
+    volume_impl* imp = new volume_impl(n);
+    return exact_volume(imp);
   }
 
   exact_volume exact_volume::intersection(const exact_volume& other) const {
     Nef_polyhedron n = (impl->nef).intersection(other.impl->nef);
-    volume_impl* impl = new volume_impl(n);
-    return exact_volume(impl);
+    volume_impl* imp = new volume_impl(n);
+    return exact_volume(imp);
   }
 
   exact_volume exact_volume::regularization() const {
     Nef_polyhedron n = (impl->nef).regularization();
-    volume_impl* impl = new volume_impl(n);
-    return exact_volume(impl);
+    volume_impl* imp = new volume_impl(n);
+    return exact_volume(imp);
   }
   
   exact_volume::~exact_volume() {

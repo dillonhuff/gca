@@ -177,8 +177,8 @@ namespace gca {
 
     cout << "Ending feature mesh" << endl;
     
-    exact_volume feature_nef(mesh); // = trimesh_to_nef_polyhedron(mesh);
-    feature_nef = stock_nef.intersection(feature_nef);
+    exact_volume start_feature_nef(mesh); // = trimesh_to_nef_polyhedron(mesh);
+    exact_volume feature_nef = stock_nef.intersection(start_feature_nef);
 
     cout << "Got undilated feature mesh" << endl;
 
