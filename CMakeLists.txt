@@ -141,9 +141,7 @@ SET(GCA_HEADERS
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/backend/toolpath_generation.h
 	    ./src/synthesis/millability.h
-	    ./src/synthesis/tool.h
 	    ./src/synthesis/vice.h
-	    ./src/synthesis/tool.h
 	    ./src/synthesis/workpiece.h
 	    ./src/synthesis/fixture_analysis.h
 	    ./src/synthesis/workpiece_clipping.h
@@ -160,6 +158,7 @@ SET(GCA_CPPS
 	./src/backend/operation_name.cpp
 	./src/backend/timing.cpp
 	./src/backend/toolpath_generation.cpp
+	./src/backend/tool.cpp
 	./src/feature_recognition/chamfer_detection.cpp
 	./src/feature_recognition/freeform_surface_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
@@ -192,7 +191,6 @@ SET(GCA_CPPS
 	 ./src/synthesis/toolpath.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
-	 ./src/synthesis/tool.cpp
 	 ./src/synthesis/vice.cpp
 	 ./src/synthesis/visual_debug.cpp
 	 ./src/system/settings.cpp

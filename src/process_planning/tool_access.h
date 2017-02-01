@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "feature_recognition/feature_decomposition.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 
 namespace gca {
 

@@ -1,5 +1,5 @@
 #include "geometry/surface.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 
 namespace gca {
 

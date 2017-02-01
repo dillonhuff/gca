@@ -15,7 +15,7 @@
 #include "synthesis/face_clipping.h"
 #include "synthesis/jaw_cutout.h"
 #include "synthesis/millability.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 #include "backend/toolpath_generation.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece_clipping.h"

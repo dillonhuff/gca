@@ -1392,6 +1392,33 @@ src/backend/timing.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/timing.cpp.s
 .PHONY : src/backend/timing.cpp.s
 
+src/backend/tool.o: src/backend/tool.cpp.o
+
+.PHONY : src/backend/tool.o
+
+# target to build an object file
+src/backend/tool.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/tool.cpp.o
+.PHONY : src/backend/tool.cpp.o
+
+src/backend/tool.i: src/backend/tool.cpp.i
+
+.PHONY : src/backend/tool.i
+
+# target to preprocess a source file
+src/backend/tool.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/tool.cpp.i
+.PHONY : src/backend/tool.cpp.i
+
+src/backend/tool.s: src/backend/tool.cpp.s
+
+.PHONY : src/backend/tool.s
+
+# target to generate assembly for a file
+src/backend/tool.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/tool.cpp.s
+.PHONY : src/backend/tool.cpp.s
+
 src/backend/toolpath_generation.o: src/backend/toolpath_generation.cpp.o
 
 .PHONY : src/backend/toolpath_generation.o
@@ -3254,33 +3281,6 @@ src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
 src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
-
-src/synthesis/tool.o: src/synthesis/tool.cpp.o
-
-.PHONY : src/synthesis/tool.o
-
-# target to build an object file
-src/synthesis/tool.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.o
-.PHONY : src/synthesis/tool.cpp.o
-
-src/synthesis/tool.i: src/synthesis/tool.cpp.i
-
-.PHONY : src/synthesis/tool.i
-
-# target to preprocess a source file
-src/synthesis/tool.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.i
-.PHONY : src/synthesis/tool.cpp.i
-
-src/synthesis/tool.s: src/synthesis/tool.cpp.s
-
-.PHONY : src/synthesis/tool.s
-
-# target to generate assembly for a file
-src/synthesis/tool.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/tool.cpp.s
-.PHONY : src/synthesis/tool.cpp.s
 
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
 
@@ -5184,6 +5184,9 @@ help:
 	@echo "... src/backend/timing.o"
 	@echo "... src/backend/timing.i"
 	@echo "... src/backend/timing.s"
+	@echo "... src/backend/tool.o"
+	@echo "... src/backend/tool.i"
+	@echo "... src/backend/tool.s"
 	@echo "... src/backend/toolpath_generation.o"
 	@echo "... src/backend/toolpath_generation.i"
 	@echo "... src/backend/toolpath_generation.s"
@@ -5391,9 +5394,6 @@ help:
 	@echo "... src/synthesis/shapes_to_toolpaths.o"
 	@echo "... src/synthesis/shapes_to_toolpaths.i"
 	@echo "... src/synthesis/shapes_to_toolpaths.s"
-	@echo "... src/synthesis/tool.o"
-	@echo "... src/synthesis/tool.i"
-	@echo "... src/synthesis/tool.s"
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"

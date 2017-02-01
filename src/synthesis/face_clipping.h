@@ -2,7 +2,7 @@
 #define GCA_FACE_CLIPPING_H
 
 #include "synthesis/fixture_analysis.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece_clipping.h"
 

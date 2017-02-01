@@ -5,7 +5,7 @@
 #include "geometry/surface.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/clipping_plan.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 #include "synthesis/vice.h"
 #include "synthesis/workpiece.h"
 

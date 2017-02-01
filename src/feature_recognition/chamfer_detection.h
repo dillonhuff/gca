@@ -1,7 +1,7 @@
 #pragma once
 
 #include "geometry/triangular_mesh.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 
 namespace gca {
 

@@ -4,7 +4,7 @@
 #include "gcode/gcode_program.h"
 #include "geometry/rigid_arrangement.h"
 #include "synthesis/vice.h"
-#include "synthesis/tool.h"
+#include "backend/tool.h"
 #include "backend/toolpath.h"
 #include "synthesis/workpiece.h"
 
