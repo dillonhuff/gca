@@ -135,11 +135,11 @@ namespace gca {
     return all_clamp_orientations(surfs);
   }
   
-  Nef_polyhedron clip_nef(const Nef_polyhedron& part_nef,
+  exact_volume clip_nef(const exact_volume& part_nef,
 			  const plane vice_top_plane) {
     point n = -1*vice_top_plane.normal();
 
-    auto part = nef_to_single_trimesh(part_nef);
+    auto part = part_nef.to_single_trimesh(); //nef_to_single_trimesh(part_nef);
     polygon_3 hull = convex_hull_2D(part.vertex_list(),
 				    n,
 				    0.0);
@@ -161,7 +161,7 @@ namespace gca {
     // cout << "Clipper and clippee" << endl;
     // vtk_debug_meshes({part, m});
     
-    auto clip_nef = trimesh_to_nef_polyhedron(m);
+    auto clip_nef = exact_volume(m); //trimesh_to_nef_polyhedron(m);
     auto cut_parts_nef = part_nef - clip_nef;
 
     //    DBG_ASSERT(cut_parts.size() == 1);
@@ -170,17 +170,17 @@ namespace gca {
   }
 
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const Nef_polyhedron& part_nef,
+  all_stable_orientations_box(const exact_volume& part_nef,
 			      const vice& v,
 			      const point n) {
 
-    auto part = nef_to_single_trimesh(part_nef);
+    auto part = part_nef.to_single_trimesh(); //nef_to_single_trimesh(part_nef);
     
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
     plane vice_top_plane(-1*n, vice_pl_pt);
 
-    Nef_polyhedron cut_parts_nef = clip_nef(part_nef, vice_top_plane);
-    auto cut_part = nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front();
+    exact_volume cut_parts_nef = clip_nef(part_nef, vice_top_plane);
+    auto cut_part = cut_parts_nef.to_single_merged_trimesh(); //nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front();
 
     // cout << "Result of clipping" << endl;
     // vector<triangular_mesh> subs{m};
@@ -208,10 +208,10 @@ namespace gca {
   }
 
   std::vector<std::pair<clamp_orientation, homogeneous_transform>>
-  all_stable_orientations_with_side_transforms(const Nef_polyhedron& part_nef,
+  all_stable_orientations_with_side_transforms(const exact_volume& part_nef,
 					       const vice& v,
 					       const point n) {
-    auto part = nef_to_single_trimesh(part_nef);
+    auto part = part_nef.to_single_trimesh(); //nef_to_single_trimesh(part_nef);
     polygon_3 hull = convex_hull_2D(part.vertex_list(), n, 0.0);
 
     point vice_pl_pt = min_point_in_dir(part, n) + v.jaw_height()*n;
@@ -233,12 +233,12 @@ namespace gca {
     // cout << "Clipper and clippee" << endl;
     // vtk_debug_meshes({part, m});
 
-    auto clip_nef = trimesh_to_nef_polyhedron(m);
+    auto clip_nef = exact_volume(m); //trimesh_to_nef_polyhedron(m);
     auto cut_parts_nef = part_nef - clip_nef;
 
     //    DBG_ASSERT(cut_parts.size() == 1);
 
-    auto cut_part = nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front(); nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
+    auto cut_part = cut_parts_nef.to_single_merged_trimesh(); //nef_to_single_merged_trimesh(cut_parts_nef); //cut_parts.front(); nef_to_single_trimesh(cut_parts_nef); //cut_parts.front();
 
     // cout << "Result of clipping" << endl;
     // vector<triangular_mesh> subs{m};

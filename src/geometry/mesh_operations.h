@@ -22,10 +22,11 @@ namespace gca {
     struct volume_impl;
     volume_impl* impl;
 
+  public:
     exact_volume(const triangular_mesh& mesh);
     exact_volume(volume_impl* impl);
 
-    exact_volume subtract(const exact_volume& other) const;
+    exact_volume difference(const exact_volume& other) const;
     exact_volume intersection(const exact_volume& other) const;
     exact_volume regularization() const;
 
@@ -36,7 +37,7 @@ namespace gca {
     triangular_mesh to_single_merged_trimesh() const;
   };
 
-  exact_volume subtract(const exact_volume& l, const exact_volume& r);
+  exact_volume operator-(const exact_volume& l, const exact_volume& r);
   
   std::vector<oriented_polygon>
   mesh_cross_section(const triangular_mesh& m,

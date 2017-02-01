@@ -63,8 +63,8 @@ namespace gca {
     return fixture_setup(m, f, pockets);
   }
 
-  Nef_polyhedron
-  subtract_surface(const Nef_polyhedron& stock_nef,
+  exact_volume
+  subtract_surface(const exact_volume& stock_nef,
 		   const std::vector<index_t>& surf,
 		   const triangular_mesh& part,
 		   const point n) {
@@ -72,15 +72,15 @@ namespace gca {
 
     //vtk_debug_meshes({m, part});
 
-    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
+    exact_volume mesh_nef = trimesh_to_nef_polyhedron(m);
 
     DBG_ASSERT(mesh_nef.is_simple());
 
     return stock_nef - mesh_nef;
   }
 
-  Nef_polyhedron
-  intersect_surface(const Nef_polyhedron& stock_nef,
+  exact_volume
+  intersect_surface(const exact_volume& stock_nef,
 		    const std::vector<index_t>& surf,
 		    const triangular_mesh& part,
 		    const point n) {
@@ -88,15 +88,15 @@ namespace gca {
 
     //vtk_debug_meshes({m, part});
 
-    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
+    exact_volume mesh_nef = trimesh_to_nef_polyhedron(m);
 
     DBG_ASSERT(mesh_nef.is_simple());
 
     return stock_nef.intersection(mesh_nef);
   }
   
-  Nef_polyhedron
-  subtract_chamfers(const Nef_polyhedron& stock_nef,
+  exact_volume
+  subtract_chamfers(const exact_volume& stock_nef,
 		    const std::vector<chamfer>& chamfers,
 		    const triangular_mesh& part,
 		    const point n) {
@@ -104,7 +104,7 @@ namespace gca {
       return stock_nef;
     }
 
-    Nef_polyhedron final_nef = stock_nef;
+    exact_volume final_nef = stock_nef;
     for (auto& s : chamfers) {
 
       final_nef = subtract_surface(final_nef, s.faces, part, n);
@@ -113,8 +113,8 @@ namespace gca {
     return final_nef;
   }
 
-  Nef_polyhedron
-  subtract_freeforms(const Nef_polyhedron& stock_nef,
+  exact_volume
+  subtract_freeforms(const exact_volume& stock_nef,
 		     const std::vector<freeform_surface>& chamfers,
 		     const triangular_mesh& part,
 		     const point n) {
@@ -122,7 +122,7 @@ namespace gca {
       return stock_nef;
     }
 
-    Nef_polyhedron final_nef = stock_nef;
+    exact_volume final_nef = stock_nef;
     for (auto& s : chamfers) {
       final_nef = subtract_surface(final_nef, s.s.index_list(), part, n);
     }
@@ -130,13 +130,13 @@ namespace gca {
     return final_nef;
   }
   
-  Nef_polyhedron
-  subtract_features(const Nef_polyhedron& m,
+  exact_volume
+  subtract_features(const exact_volume& m,
 		    const std::vector<feature*>& features) {
 
     auto res = m;
     for (auto f : features) {
-      Nef_polyhedron f_nef =
+      exact_volume f_nef =
 	trimesh_to_nef_polyhedron(feature_mesh(*f, 0.0000001 /*1*/, 1.0, 0.000001));
 
       for (auto it = f_nef.volumes_begin(); it != f_nef.volumes_end(); it++) {
@@ -154,15 +154,15 @@ namespace gca {
   struct volume_info {
     double volume;
 
-    Nef_polyhedron remaining_volume;
+    exact_volume remaining_volume;
 
-    Nef_polyhedron dilated_mesh;
+    exact_volume dilated_mesh;
   };
 
   typedef std::unordered_map<feature*, volume_info> volume_info_map;
 
   volume_info initial_volume_info(const feature& f,
-				  const Nef_polyhedron& stock_nef) {
+				  const exact_volume& stock_nef) {
     cout << "Starting feature mesh" << endl;
     cout << "Feature depth  = " << f.depth() << endl;
     cout << "Feature normal = " << f.normal() << endl;
@@ -193,7 +193,7 @@ namespace gca {
 
   volume_info
   update_clipped_volume_info(const volume_info& inf,
-			     const std::vector<Nef_polyhedron>& to_subtract) {
+			     const std::vector<exact_volume>& to_subtract) {
     if (within_eps(inf.volume, 0.0)) { return inf; }
 
     // TODO: Refine this to include feature normal etc.
@@ -216,7 +216,7 @@ namespace gca {
 
     cout << "Starting subtractions" << endl;
 
-    Nef_polyhedron res = inf.remaining_volume;
+    exact_volume res = inf.remaining_volume;
     for (auto s : to_subtract) {
       res = res - s;
     }
@@ -249,12 +249,12 @@ namespace gca {
 
   volume_info
   update_volume_info(const volume_info& inf,
-		     const std::vector<Nef_polyhedron>& to_subtract) {
+		     const std::vector<exact_volume>& to_subtract) {
     if (inf.volume == 0.0) { return inf; }
 
     cout << "Starting subtractions" << endl;
 
-    Nef_polyhedron res = inf.remaining_volume;
+    exact_volume res = inf.remaining_volume;
     for (auto s : to_subtract) {
       res = res - s;
     }
@@ -284,7 +284,7 @@ namespace gca {
   
   volume_info_map
   initial_volume_info(const std::vector<direction_process_info>& dir_info,
-		      const Nef_polyhedron& stock_nef) {
+		      const exact_volume& stock_nef) {
     volume_info_map m;
 
     for (auto d : dir_info) {
@@ -337,7 +337,7 @@ namespace gca {
       concat(feats_left, collect_features(d.decomp));
     }
 
-    vector<Nef_polyhedron> to_subtract;
+    vector<exact_volume> to_subtract;
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
 
@@ -519,7 +519,7 @@ namespace gca {
 
   boost::optional<std::pair<fixture, homogeneous_transform> >
   find_next_fixture(feature_decomposition* decomp,
-		    Nef_polyhedron& stock_nef,
+		    exact_volume& stock_nef,
 		    const triangular_mesh& current_stock,
 		    const point n,
 		    const fixtures& f) {
@@ -554,7 +554,7 @@ namespace gca {
 
   boost::optional<std::pair<fixture, homogeneous_transform> >
   find_next_fixture_side_vice(feature_decomposition* decomp,
-			      Nef_polyhedron& stock_nef,
+			      exact_volume& stock_nef,
 			      const triangular_mesh& current_stock,
 			      const point n,
 			      const fixtures& f) {
@@ -594,7 +594,7 @@ namespace gca {
   // TODO: Track freeform surface volumes the same way other feature
   // volumes are tracked. This feels heavy handed
   std::vector<freeform_surface>
-  select_needed_freeform_surfaces(const Nef_polyhedron& current_stock,
+  select_needed_freeform_surfaces(const exact_volume& current_stock,
 				  const std::vector<freeform_surface>& surfs,
 				  const point n) {
     vector<freeform_surface> needed_surfs;
@@ -642,7 +642,7 @@ namespace gca {
     for (auto& mandatory : mandatories) {
 
       for (auto& mv : mandatory) {
-	Nef_polyhedron mv_nef = trimesh_to_nef_polyhedron(mv.volume);
+	exact_volume mv_nef = trimesh_to_nef_polyhedron(mv.volume);
 
 	for (auto& feature_volume_info : volume_inf) {
 	  feature* f = feature_volume_info.first;
@@ -695,7 +695,7 @@ namespace gca {
     vtk_debug_features(init_features);
   }
 
-  void vtk_debug_nef_polyhedra(const std::vector<Nef_polyhedron>& nefs) {
+  void vtk_debug_nef_polyhedra(const std::vector<exact_volume>& nefs) {
     vector<triangular_mesh> mesh_complex;
     for (auto& nef : nefs) {
       concat(mesh_complex,
@@ -740,11 +740,11 @@ namespace gca {
     return mandatory_volume_info{vol_info, clip_dirs};
   }
 
-  Nef_polyhedron
-  subtract_mandatory_volumes(const Nef_polyhedron& current_stock,
+  exact_volume
+  subtract_mandatory_volumes(const exact_volume& current_stock,
 			     const point n,
 			     mandatory_volume_info& mandatory_info) {
-    Nef_polyhedron result = current_stock;
+    exact_volume result = current_stock;
     for (auto& mv : mandatory_info.mandatory_info) {
       if (angle_eps(mv.first->direction, n, 0.0, 0.5)) {
 	cout << "Subtracting mandatory volume" << endl;
@@ -791,7 +791,7 @@ namespace gca {
 
     if (mandatory_vols.size() == 0) { return feats_to_sub; }
 
-    vector<Nef_polyhedron> to_sub;
+    vector<exact_volume> to_sub;
     vector<triangular_mesh> to_sub_meshes;
     for (auto& mv : mandatory_vols) {
       to_sub.push_back(map_find(mv, mandatory_info.mandatory_info).dilated_mesh);
@@ -852,7 +852,7 @@ namespace gca {
 			 mandatory_volume_info& mandatory_info) {
     if (feats_to_sub.size() == 0) { return; }
 
-    vector<Nef_polyhedron> to_subtract;
+    vector<exact_volume> to_subtract;
     for (auto f : feats_to_sub) {
       volume_info f_info = map_find(f, volume_inf);
 
@@ -904,7 +904,7 @@ namespace gca {
     visualize_initial_features(dir_info);
 #endif
 
-    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+    exact_volume stock_nef = trimesh_to_nef_polyhedron(stock);
 
     volume_info_map volume_inf = initial_volume_info(dir_info, stock_nef);
 

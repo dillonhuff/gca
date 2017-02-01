@@ -119,7 +119,7 @@ namespace gca {
 			  const vice& v);
 
   std::vector<clamp_orientation>
-  all_stable_orientations_box(const Nef_polyhedron& part,
+  all_stable_orientations_box(const exact_volume& part,
 			      const vice& v,
 			      const point n);
   
@@ -168,7 +168,7 @@ namespace gca {
   point part_zero_position(const clamp_orientation& clamp_orient);
 
   std::vector<std::pair<clamp_orientation, homogeneous_transform>>
-  all_stable_orientations_with_side_transforms(const Nef_polyhedron& part_nef,
+  all_stable_orientations_with_side_transforms(const exact_volume& part_nef,
 					       const vice& v,
 					       const point n);
 

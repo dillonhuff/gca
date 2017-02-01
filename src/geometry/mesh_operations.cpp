@@ -530,7 +530,7 @@ namespace gca {
     impl = p_impl;
   }
   
-  exact_volume exact_volume::subtract(const exact_volume& other) const {
+  exact_volume exact_volume::difference(const exact_volume& other) const {
     Nef_polyhedron n = impl->nef - other.impl->nef;
     volume_impl* impl = new volume_impl(n);
     return exact_volume(impl);
@@ -562,6 +562,10 @@ namespace gca {
 
   triangular_mesh exact_volume::to_single_merged_trimesh() const {
     return nef_to_single_merged_trimesh(impl->nef);
+  }
+
+  exact_volume operator-(const exact_volume& l, const exact_volume& r) {
+    return l.difference(r);
   }
 
 
