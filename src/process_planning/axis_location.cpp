@@ -266,6 +266,22 @@ namespace gca {
     return dirs;
   }
 
+  void
+  tag_freeform_surfaces(std::vector<direction_info>& norms,
+			std::vector<index_t>& all_millable_faces,
+			const triangular_mesh& part) {
+    for (direction_info& n : norms) {
+      n.search_for_freeform_features = true;
+
+      concat(all_millable_faces, millable_faces(n.dir, part));
+      all_millable_faces = sort_unique(all_millable_faces);
+
+      if (all_millable_faces.size() == part.face_indexes().size()) {
+	break;
+      }
+    }
+  }
+
   std::vector<direction_info>
   select_cut_directions(const triangular_mesh& stock,
 			const triangular_mesh& part,
@@ -362,16 +378,8 @@ namespace gca {
 
     // Need to search for freeform surfaces
     if (all_millable_faces.size() != part.face_indexes().size()) {
-      for (direction_info& n : norms) {
-	n.search_for_freeform_features = true;
 
-	concat(all_millable_faces, millable_faces(n.dir, part));
-	all_millable_faces = sort_unique(all_millable_faces);
-
-	if (all_millable_faces.size() == part.face_indexes().size()) {
-	  break;
-	}
-      }
+      tag_freeform_surfaces(norms, all_millable_faces, part);
     }
 
 
