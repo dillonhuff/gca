@@ -17,6 +17,26 @@ namespace gca {
   typedef Polyhedron::HalfedgeDS             HalfedgeDS;
   typedef CGAL::Nef_polyhedron_3<Kernel>  Nef_polyhedron;
   typedef Nef_polyhedron::Plane_3 Plane_3;
+
+  class exact_volume {
+    struct volume_impl;
+    volume_impl* impl;
+
+    exact_volume(const triangular_mesh& mesh);
+    exact_volume(volume_impl* impl);
+
+    exact_volume subtract(const exact_volume& other) const;
+    exact_volume intersection(const exact_volume& other) const;
+    exact_volume regularization() const;
+
+    ~exact_volume();
+
+    std::vector<triangular_mesh> to_trimeshes() const;
+    triangular_mesh to_single_trimesh() const;
+    triangular_mesh to_single_merged_trimesh() const;
+  };
+
+  exact_volume subtract(const exact_volume& l, const exact_volume& r);
   
   std::vector<oriented_polygon>
   mesh_cross_section(const triangular_mesh& m,

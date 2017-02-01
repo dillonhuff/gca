@@ -514,4 +514,55 @@ namespace gca {
     return make_merged_mesh(tris, 1e-20);
   }
 
+  struct exact_volume::volume_impl {
+    Nef_polyhedron nef;
+
+    volume_impl(const Nef_polyhedron& p_nef)
+      : nef(p_nef) {}
+
+  };
+
+  exact_volume::exact_volume(const triangular_mesh& mesh) {
+    impl = new volume_impl(trimesh_to_nef_polyhedron(mesh));
+  }
+
+  exact_volume::exact_volume(volume_impl* p_impl) {
+    impl = p_impl;
+  }
+  
+  exact_volume exact_volume::subtract(const exact_volume& other) const {
+    Nef_polyhedron n = impl->nef - other.impl->nef;
+    volume_impl* impl = new volume_impl(n);
+    return exact_volume(impl);
+  }
+
+  exact_volume exact_volume::intersection(const exact_volume& other) const {
+    Nef_polyhedron n = (impl->nef).intersection(other.impl->nef);
+    volume_impl* impl = new volume_impl(n);
+    return exact_volume(impl);
+  }
+
+  exact_volume exact_volume::regularization() const {
+    Nef_polyhedron n = (impl->nef).regularization();
+    volume_impl* impl = new volume_impl(n);
+    return exact_volume(impl);
+  }
+  
+  exact_volume::~exact_volume() {
+    delete impl;
+  }
+
+  std::vector<triangular_mesh> exact_volume::to_trimeshes() const {
+    return nef_polyhedron_to_trimeshes(impl->nef);
+  }
+
+  triangular_mesh exact_volume::to_single_trimesh() const {
+    return nef_to_single_trimesh(impl->nef);
+  }
+
+  triangular_mesh exact_volume::to_single_merged_trimesh() const {
+    return nef_to_single_merged_trimesh(impl->nef);
+  }
+
+
 }
