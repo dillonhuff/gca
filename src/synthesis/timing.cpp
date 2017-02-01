@@ -1,4 +1,4 @@
-#include "backend/timing.h"
+#include "synthesis/timing.h"
 
 namespace gca {
 

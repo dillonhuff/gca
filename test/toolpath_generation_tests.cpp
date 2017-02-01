@@ -3,7 +3,7 @@
 #include "backend/face_toolpaths.h"
 #include "backend/feedrate_optimization.h"
 #include "backend/freeform_toolpaths.h"
-#include "backend/timing.h"
+#include "synthesis/timing.h"
 #include "feature_recognition/visual_debug.h"
 #include "geometry/offset.h"
 #include "geometry/rotation.h"

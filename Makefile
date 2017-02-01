@@ -1365,33 +1365,6 @@ src/backend/operation_name.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.s
 .PHONY : src/backend/operation_name.cpp.s
 
-src/backend/timing.o: src/backend/timing.cpp.o
-
-.PHONY : src/backend/timing.o
-
-# target to build an object file
-src/backend/timing.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/timing.cpp.o
-.PHONY : src/backend/timing.cpp.o
-
-src/backend/timing.i: src/backend/timing.cpp.i
-
-.PHONY : src/backend/timing.i
-
-# target to preprocess a source file
-src/backend/timing.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/timing.cpp.i
-.PHONY : src/backend/timing.cpp.i
-
-src/backend/timing.s: src/backend/timing.cpp.s
-
-.PHONY : src/backend/timing.s
-
-# target to generate assembly for a file
-src/backend/timing.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/timing.cpp.s
-.PHONY : src/backend/timing.cpp.s
-
 src/backend/tool.o: src/backend/tool.cpp.o
 
 .PHONY : src/backend/tool.o
@@ -3281,6 +3254,33 @@ src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
 src/synthesis/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.s
 .PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
+
+src/synthesis/timing.o: src/synthesis/timing.cpp.o
+
+.PHONY : src/synthesis/timing.o
+
+# target to build an object file
+src/synthesis/timing.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/timing.cpp.o
+.PHONY : src/synthesis/timing.cpp.o
+
+src/synthesis/timing.i: src/synthesis/timing.cpp.i
+
+.PHONY : src/synthesis/timing.i
+
+# target to preprocess a source file
+src/synthesis/timing.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/timing.cpp.i
+.PHONY : src/synthesis/timing.cpp.i
+
+src/synthesis/timing.s: src/synthesis/timing.cpp.s
+
+.PHONY : src/synthesis/timing.s
+
+# target to generate assembly for a file
+src/synthesis/timing.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/timing.cpp.s
+.PHONY : src/synthesis/timing.cpp.s
 
 src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
 
@@ -5181,9 +5181,6 @@ help:
 	@echo "... src/backend/operation_name.o"
 	@echo "... src/backend/operation_name.i"
 	@echo "... src/backend/operation_name.s"
-	@echo "... src/backend/timing.o"
-	@echo "... src/backend/timing.i"
-	@echo "... src/backend/timing.s"
 	@echo "... src/backend/tool.o"
 	@echo "... src/backend/tool.i"
 	@echo "... src/backend/tool.s"
@@ -5394,6 +5391,9 @@ help:
 	@echo "... src/synthesis/shapes_to_toolpaths.o"
 	@echo "... src/synthesis/shapes_to_toolpaths.i"
 	@echo "... src/synthesis/shapes_to_toolpaths.s"
+	@echo "... src/synthesis/timing.o"
+	@echo "... src/synthesis/timing.i"
+	@echo "... src/synthesis/timing.s"
 	@echo "... src/synthesis/toolpath.o"
 	@echo "... src/synthesis/toolpath.i"
 	@echo "... src/synthesis/toolpath.s"

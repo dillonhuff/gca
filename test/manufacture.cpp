@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "backend/timing.h"
+#include "synthesis/timing.h"
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
 #include "geometry/mesh_operations.h"

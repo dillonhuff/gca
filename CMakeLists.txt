@@ -122,7 +122,6 @@ SET(GCA_HEADERS
 	./src/backend/operation.h
 	./src/backend/operation_name.h
 	./src/backend/feedrate_optimization.h
-	./src/backend/timing.h
 	./src/process_planning/feature_to_pocket.h
 	./src/process_planning/feature_selection.h
 	./src/process_planning/axis_location.h
@@ -156,7 +155,6 @@ SET(GCA_CPPS
 	./src/backend/freeform_toolpaths.cpp
 	./src/backend/operation.cpp
 	./src/backend/operation_name.cpp
-	./src/backend/timing.cpp
 	./src/backend/toolpath_generation.cpp
 	./src/backend/tool.cpp
 	./src/feature_recognition/chamfer_detection.cpp
@@ -197,7 +195,8 @@ SET(GCA_CPPS
 	 ./src/system/file.cpp
 	 ./src/system/json.cpp
 	 ./src/system/parse_stl.cpp
-	 ./src/dxflib/dl_dxf.cpp
+	./src/synthesis/timing.cpp
+	./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)
 
 add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
