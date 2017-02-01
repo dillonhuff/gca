@@ -6,7 +6,7 @@
 #include "backend/operation_name.h"
 #include "gcode/cut.h"
 #include "geometry/polyline.h"
-#include "synthesis/shape_layout.h"
+#include "backend/cut_params.h"
 #include "backend/tool.h"
 
 namespace gca {
