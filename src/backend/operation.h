@@ -10,7 +10,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
-#include "synthesis/material.h"
+#include "backend/material.h"
 #include "backend/toolpath.h"
 #include "utils/check.h"
 

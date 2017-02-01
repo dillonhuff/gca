@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "synthesis/material.h"
+#include "backend/material.h"
 #include "utils/check.h"
 
 namespace gca {

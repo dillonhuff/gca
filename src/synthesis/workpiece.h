@@ -2,7 +2,7 @@
 #define GCA_WORKPIECE_H
 
 #include "geometry/point.h"
-#include "synthesis/material.h"
+#include "backend/material.h"
 
 namespace gca {
 
