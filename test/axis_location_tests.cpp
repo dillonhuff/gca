@@ -21,7 +21,14 @@ namespace gca {
     vector<direction_info> norms =
       select_cut_directions(stock, part, inputs.f, inputs.tools);
     
-    
+    unsigned num_freeform_dirs = 0;
+    for (auto n : norms) {
+      if (n.search_for_freeform_features) {
+	num_freeform_dirs++;
+      }
+    }
+
+    REQUIRE(num_freeform_dirs == 1);
   }
 
 }

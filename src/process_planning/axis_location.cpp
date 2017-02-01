@@ -266,20 +266,53 @@ namespace gca {
     return dirs;
   }
 
+  unsigned
+  freeform_millable_left(const std::vector<index_t>& all_millable_faces,
+			 const triangular_mesh& part,
+			 const direction_info& norm) {
+
+    vector<index_t> freeform_millable_faces =
+      non_prismatic_millable_faces(norm.dir, part);
+
+    subtract(freeform_millable_faces, all_millable_faces);
+
+    return freeform_millable_faces.size();
+  }
+
   void
   tag_freeform_surfaces(std::vector<direction_info>& norms,
 			std::vector<index_t>& all_millable_faces,
 			const triangular_mesh& part) {
-    for (direction_info& n : norms) {
+
+    while (all_millable_faces.size() != part.face_indexes().size()) {
+      auto n_it =
+	max_element(begin(norms),
+		    end(norms),
+		    [part, all_millable_faces](const direction_info& l,
+					       const direction_info& r) {
+		      return freeform_millable_left(all_millable_faces, part, l) <
+		      freeform_millable_left(all_millable_faces, part, r);
+	  });
+
+      direction_info& n = *n_it;
       n.search_for_freeform_features = true;
+      concat(all_millable_faces,
+	     non_prismatic_millable_faces(n_it->dir, part));
 
-      concat(all_millable_faces, millable_faces(n.dir, part));
       all_millable_faces = sort_unique(all_millable_faces);
-
-      if (all_millable_faces.size() == part.face_indexes().size()) {
-	break;
-      }
     }
+
+    // for (direction_info& n : norms) {
+      
+    //   n.search_for_freeform_features = true;
+
+    //   concat(all_millable_faces, millable_faces(n.dir, part));
+    //   all_millable_faces = sort_unique(all_millable_faces);
+
+    //   if (all_millable_faces.size() == part.face_indexes().size()) {
+    // 	break;
+    //   }
+    // }
   }
 
   std::vector<direction_info>
