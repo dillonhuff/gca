@@ -4,7 +4,7 @@
 #include "gcode/cut.h"
 #include "gcode/gcode_program.h"
 #include "geometry/polyline.h"
-#include "synthesis/shape_layout.h"
+#include "backend/cut_params.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "backend/toolpath.h"
 #include "utils/algorithm.h"
