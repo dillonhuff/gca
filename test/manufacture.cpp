@@ -151,79 +151,79 @@ namespace gca {
     std::string part_path;
   };
 
-  TEST_CASE("Surface based plans") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Surface based plans") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    vector<two_setup_plan_case> planning_cases{
-      {"test/stl-files/onshape_parts/100-009 - Part 1.stl"},
-	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl"},
-	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl"},
-	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl"},
-	      {"test/stl-files/onshape_parts/100-013 - Part 1.stl"},
-		{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl"},
-		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl"},
-		    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"},
-		      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl"},
-			};
+  //   vector<two_setup_plan_case> planning_cases{
+  //     {"test/stl-files/onshape_parts/100-009 - Part 1.stl"},
+  // 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl"},
+  // 	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl"},
+  // 	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl"},
+  // 	      {"test/stl-files/onshape_parts/100-013 - Part 1.stl"},
+  // 		{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl"},
+  // 		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl"},
+  // 		    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"},
+  // 		      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl"},
+  // 			};
 
-    for (auto& test_case : planning_cases) {
+  //   for (auto& test_case : planning_cases) {
 
-      auto mesh = parse_stl(test_case.part_path, 0.001);
+  //     auto mesh = parse_stl(test_case.part_path, 0.001);
 
-      //boost::optional<point> cut_axis = find_cut_axis(mesh);
+  //     //boost::optional<point> cut_axis = find_cut_axis(mesh);
 
-      // if (cut_axis) {
-      // 	cout << "Cut axis = " << *cut_axis << endl;
-      // }
+  //     // if (cut_axis) {
+  //     // 	cout << "Cut axis = " << *cut_axis << endl;
+  //     // }
 
-      // vector<surface> surfs = select_profile(mesh);
-      // vtk_debug_highlight_inds(surfs);
+  //     // vector<surface> surfs = select_profile(mesh);
+  //     // vtk_debug_highlight_inds(surfs);
 
-    }
+  //   }
 
-  }
+  // }
 
-  TEST_CASE("Surface based plans") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Surface based plans") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    vector<surface_plan_case> planning_cases{
-      {"test/stl-files/onshape_parts/100-009 - Part 1.stl", {3}},
-	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
-	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
-	    {"test/stl-files/OctagonWithHolesShort.stl", {8}},
-	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
-		{"test/stl-files/CircleWithFilletAndSide.stl", {3}},
-		  {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
-		    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
-		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
-			{"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
-			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
-			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
-			      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl", {2}},
-				};
+  //   vector<surface_plan_case> planning_cases{
+  //     {"test/stl-files/onshape_parts/100-009 - Part 1.stl", {3}},
+  // 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
+  // 	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
+  // 	    {"test/stl-files/OctagonWithHolesShort.stl", {8}},
+  // 	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
+  // 		{"test/stl-files/CircleWithFilletAndSide.stl", {3}},
+  // 		  {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
+  // 		    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
+  // 		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
+  // 			{"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
+  // 			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
+  // 			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
+  // 			      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl", {2}},
+  // 				};
 
-    for (auto& test_case : planning_cases) {
+  //   for (auto& test_case : planning_cases) {
 
-      auto mesh = parse_stl(test_case.part_path, 0.001);
+  //     auto mesh = parse_stl(test_case.part_path, 0.001);
 
-      vector<surface> surfs = select_profile(mesh);
-      vtk_debug_highlight_inds(surfs);
+  //     vector<surface> surfs = select_profile(mesh);
+  //     vtk_debug_highlight_inds(surfs);
 
-      //visualize_non_concave_decomp(mesh);
+  //     //visualize_non_concave_decomp(mesh);
 
-      // boost::optional<std::vector<proto_setup> > setups =
-      // 	surface_plans(mesh);
+  //     // boost::optional<std::vector<proto_setup> > setups =
+  //     // 	surface_plans(mesh);
 
-      //REQUIRE(setups);
+  //     //REQUIRE(setups);
 
-      //cout << "# of setups in plan = " << (*setups).size() << endl;
+  //     //cout << "# of setups in plan = " << (*setups).size() << endl;
 
-	// REQUIRE(elem(setups->size(), test_case.acceptable_num_setups));
-    }
+  // 	// REQUIRE(elem(setups->size(), test_case.acceptable_num_setups));
+  //   }
 
-  }
+  // }
 
   TEST_CASE("Manufacturable parts") {
     arena_allocator a;

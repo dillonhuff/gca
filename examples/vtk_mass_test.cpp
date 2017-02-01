@@ -9,6 +9,7 @@
 #include "geometry/octree.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/visual_debug.h"
+#include "system/file.h"
 #include "system/parse_stl.h"
 
 using namespace gca;
@@ -401,7 +402,7 @@ list_trimesh build_list_trimesh(const std::vector<triangle>& triangles,
 }
 
 
-int main(int argc, char *argv[]) {
+int old_main(int argc, char *argv[]) {
   DBG_ASSERT(argc == 2);
 
   string name = argv[1];
@@ -414,7 +415,7 @@ int main(int argc, char *argv[]) {
 
   cout << "# of triangles = " << data.triangles.size() << endl;
 
-  list_trimesh m = build_list_trimesh(data.triangles, 0.0001);
+  list_trimesh m = build_list_trimesh(data.triangles, 0.00001);
 
   cout << "Number of triangles in mesh = " << m.tris.size() << endl;
   cout << "Number of vertices in mesh  = " << m.vertexes.size() << endl;
@@ -447,4 +448,35 @@ int main(int argc, char *argv[]) {
 
   vtk_debug_triangles(data.triangles);
 
+  return 0;
+}
+
+int main(int argc, char *argv[]) {
+  DBG_ASSERT(argc == 2);
+
+  string name = argv[1];
+  cout << "File Name = " << name << endl;
+
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  vector<triangle> triangles;
+  auto check_mesh = [&triangles](const std::string& n) {
+    cout << "Reading = " << n << endl;
+
+    stl_data data = parse_stl(n);
+
+    triangular_mesh m = parse_stl(n, 0.0001);
+    cout << "# of triangles in topological mesh = " << m.face_indexes().size() << endl;
+    cout << "# of triangles = " << data.triangles.size() << endl;
+
+    concat(triangles, data.triangles);
+
+    //vtk_debug_triangles(data.triangles);
+  };
+
+  read_dir(argv[1], check_mesh);
+
+  vtk_debug_triangles(triangles);
+  
 }
