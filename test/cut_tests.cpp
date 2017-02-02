@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 #include "gcode/lexer.h"
-#include "synthesis/align_blade.h"
+#include "backend/align_blade.h"
 #include "synthesis/cut_to_gcode.h"
 #include "backend/output.h"
 #include "gcode/safe_move.h"

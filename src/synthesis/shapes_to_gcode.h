@@ -1,7 +1,7 @@
 #ifndef GCA_DXF_TO_GCODE_H
 #define GCA_DXF_TO_GCODE_H
 
-#include "synthesis/align_blade.h"
+#include "backend/align_blade.h"
 #include "backend/output.h"
 #include "synthesis/shape_layout.h"
 #include "backend/toolpath.h"

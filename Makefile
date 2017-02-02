@@ -1176,6 +1176,33 @@ src/analysis/utils.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/utils.cpp.s
 .PHONY : src/analysis/utils.cpp.s
 
+src/backend/align_blade.o: src/backend/align_blade.cpp.o
+
+.PHONY : src/backend/align_blade.o
+
+# target to build an object file
+src/backend/align_blade.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/align_blade.cpp.o
+.PHONY : src/backend/align_blade.cpp.o
+
+src/backend/align_blade.i: src/backend/align_blade.cpp.i
+
+.PHONY : src/backend/align_blade.i
+
+# target to preprocess a source file
+src/backend/align_blade.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/align_blade.cpp.i
+.PHONY : src/backend/align_blade.cpp.i
+
+src/backend/align_blade.s: src/backend/align_blade.cpp.s
+
+.PHONY : src/backend/align_blade.s
+
+# target to generate assembly for a file
+src/backend/align_blade.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/align_blade.cpp.s
+.PHONY : src/backend/align_blade.cpp.s
+
 src/backend/chamfer_operation.o: src/backend/chamfer_operation.cpp.o
 
 .PHONY : src/backend/chamfer_operation.o
@@ -2849,33 +2876,6 @@ src/simulators/sim_mill.s: src/simulators/sim_mill.cpp.s
 src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
-
-src/synthesis/align_blade.o: src/synthesis/align_blade.cpp.o
-
-.PHONY : src/synthesis/align_blade.o
-
-# target to build an object file
-src/synthesis/align_blade.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/align_blade.cpp.o
-.PHONY : src/synthesis/align_blade.cpp.o
-
-src/synthesis/align_blade.i: src/synthesis/align_blade.cpp.i
-
-.PHONY : src/synthesis/align_blade.i
-
-# target to preprocess a source file
-src/synthesis/align_blade.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/align_blade.cpp.i
-.PHONY : src/synthesis/align_blade.cpp.i
-
-src/synthesis/align_blade.s: src/synthesis/align_blade.cpp.s
-
-.PHONY : src/synthesis/align_blade.s
-
-# target to generate assembly for a file
-src/synthesis/align_blade.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/align_blade.cpp.s
-.PHONY : src/synthesis/align_blade.cpp.s
 
 src/synthesis/clamp_orientation.o: src/synthesis/clamp_orientation.cpp.o
 
@@ -5160,6 +5160,9 @@ help:
 	@echo "... src/analysis/utils.o"
 	@echo "... src/analysis/utils.i"
 	@echo "... src/analysis/utils.s"
+	@echo "... src/backend/align_blade.o"
+	@echo "... src/backend/align_blade.i"
+	@echo "... src/backend/align_blade.s"
 	@echo "... src/backend/chamfer_operation.o"
 	@echo "... src/backend/chamfer_operation.i"
 	@echo "... src/backend/chamfer_operation.s"
@@ -5346,9 +5349,6 @@ help:
 	@echo "... src/simulators/sim_mill.o"
 	@echo "... src/simulators/sim_mill.i"
 	@echo "... src/simulators/sim_mill.s"
-	@echo "... src/synthesis/align_blade.o"
-	@echo "... src/synthesis/align_blade.i"
-	@echo "... src/synthesis/align_blade.s"
 	@echo "... src/synthesis/clamp_orientation.o"
 	@echo "... src/synthesis/clamp_orientation.i"
 	@echo "... src/synthesis/clamp_orientation.s"
