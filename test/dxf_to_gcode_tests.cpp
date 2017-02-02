@@ -8,7 +8,7 @@
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/shapes_to_toolpaths.h"
 #include "synthesis/dxf_reader.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 #include "system/settings.h"
 
 namespace gca {

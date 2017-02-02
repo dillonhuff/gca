@@ -7,7 +7,7 @@
 
 
 #include "gcode/parser.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 
 using namespace gca;
 

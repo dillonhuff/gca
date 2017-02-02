@@ -17,7 +17,7 @@
 #include "simulators/sim_mill.h"
 #include "gcode/cut.h"
 #include "synthesis/cut_to_gcode.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 #include "utils/algorithm.h"
 #include "utils/arena_allocator.h"
 #include "system/file.h"

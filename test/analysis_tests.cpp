@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "synthesis/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 
 namespace gca {
 

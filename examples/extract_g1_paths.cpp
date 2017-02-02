@@ -7,7 +7,7 @@
 
 #include "gcode/parser.h"
 #include "synthesis/align_blade.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 
 using namespace gca;
 using namespace std;

@@ -136,7 +136,6 @@ SET(GCA_HEADERS
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
-	    ./src/synthesis/output.h
 	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/backend/toolpath_generation.h
 	    ./src/synthesis/millability.h
@@ -155,6 +154,7 @@ SET(GCA_CPPS
 	./src/backend/freeform_toolpaths.cpp
 	./src/backend/operation.cpp
 	./src/backend/operation_name.cpp
+	./src/backend/output.cpp
 	./src/backend/toolpath_generation.cpp
 	./src/backend/tool.cpp
 	./src/feature_recognition/chamfer_detection.cpp
@@ -177,7 +177,6 @@ SET(GCA_CPPS
 	./src/synthesis/face_clipping.cpp
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
-	 ./src/synthesis/output.cpp
 	 ./src/synthesis/align_blade.cpp
 	 ./src/synthesis/dxf_reader.cpp
 	 ./src/synthesis/shapes_to_gcode.cpp

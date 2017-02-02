@@ -5,7 +5,7 @@
 #include "gcode/lexer.h"
 #include "synthesis/align_blade.h"
 #include "synthesis/cut_to_gcode.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 #include "gcode/safe_move.h"
 #include "system/settings.h"
 

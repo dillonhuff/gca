@@ -1365,6 +1365,33 @@ src/backend/operation_name.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.s
 .PHONY : src/backend/operation_name.cpp.s
 
+src/backend/output.o: src/backend/output.cpp.o
+
+.PHONY : src/backend/output.o
+
+# target to build an object file
+src/backend/output.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.o
+.PHONY : src/backend/output.cpp.o
+
+src/backend/output.i: src/backend/output.cpp.i
+
+.PHONY : src/backend/output.i
+
+# target to preprocess a source file
+src/backend/output.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.i
+.PHONY : src/backend/output.cpp.i
+
+src/backend/output.s: src/backend/output.cpp.s
+
+.PHONY : src/backend/output.s
+
+# target to generate assembly for a file
+src/backend/output.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.s
+.PHONY : src/backend/output.cpp.s
+
 src/backend/tool.o: src/backend/tool.cpp.o
 
 .PHONY : src/backend/tool.o
@@ -3146,33 +3173,6 @@ src/synthesis/millability.s: src/synthesis/millability.cpp.s
 src/synthesis/millability.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/millability.cpp.s
 .PHONY : src/synthesis/millability.cpp.s
-
-src/synthesis/output.o: src/synthesis/output.cpp.o
-
-.PHONY : src/synthesis/output.o
-
-# target to build an object file
-src/synthesis/output.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/output.cpp.o
-.PHONY : src/synthesis/output.cpp.o
-
-src/synthesis/output.i: src/synthesis/output.cpp.i
-
-.PHONY : src/synthesis/output.i
-
-# target to preprocess a source file
-src/synthesis/output.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/output.cpp.i
-.PHONY : src/synthesis/output.cpp.i
-
-src/synthesis/output.s: src/synthesis/output.cpp.s
-
-.PHONY : src/synthesis/output.s
-
-# target to generate assembly for a file
-src/synthesis/output.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/output.cpp.s
-.PHONY : src/synthesis/output.cpp.s
 
 src/synthesis/schedule_cuts.o: src/synthesis/schedule_cuts.cpp.o
 
@@ -5181,6 +5181,9 @@ help:
 	@echo "... src/backend/operation_name.o"
 	@echo "... src/backend/operation_name.i"
 	@echo "... src/backend/operation_name.s"
+	@echo "... src/backend/output.o"
+	@echo "... src/backend/output.i"
+	@echo "... src/backend/output.s"
 	@echo "... src/backend/tool.o"
 	@echo "... src/backend/tool.i"
 	@echo "... src/backend/tool.s"
@@ -5379,9 +5382,6 @@ help:
 	@echo "... src/synthesis/millability.o"
 	@echo "... src/synthesis/millability.i"
 	@echo "... src/synthesis/millability.s"
-	@echo "... src/synthesis/output.o"
-	@echo "... src/synthesis/output.i"
-	@echo "... src/synthesis/output.s"
 	@echo "... src/synthesis/schedule_cuts.o"
 	@echo "... src/synthesis/schedule_cuts.i"
 	@echo "... src/synthesis/schedule_cuts.s"

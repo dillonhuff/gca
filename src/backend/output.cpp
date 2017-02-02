@@ -2,7 +2,7 @@
 
 #include "gcode/circular_arc.h"
 #include "gcode/linear_cut.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 #include "gcode/safe_move.h"
 
 namespace gca {

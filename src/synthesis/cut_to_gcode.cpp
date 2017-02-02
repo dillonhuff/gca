@@ -3,7 +3,7 @@
 #include "gcode/circular_arc.h"
 #include "gcode/safe_move.h"
 #include "synthesis/cut_to_gcode.h"
-#include "synthesis/output.h"
+#include "backend/output.h"
 #include "utils/algorithm.h"
 
 namespace gca {
