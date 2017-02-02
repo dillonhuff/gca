@@ -149,6 +149,7 @@ SET(GCA_HEADERS
 SET(GCA_CPPS
 	./src/backend/align_blade.cpp
 	./src/backend/chamfer_operation.cpp
+	./src/backend/cut_to_gcode.cpp
 	./src/backend/drilled_hole_operation.cpp
 	./src/backend/face_toolpaths.cpp
 	./src/backend/feedrate_optimization.cpp
@@ -181,7 +182,6 @@ SET(GCA_CPPS
 	 ./src/synthesis/dxf_reader.cpp
 	 ./src/synthesis/shapes_to_gcode.cpp
 	 ./src/synthesis/shapes_to_toolpaths.cpp
-	 ./src/synthesis/cut_to_gcode.cpp
 	 ./src/synthesis/contour_planning.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp

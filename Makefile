@@ -1230,6 +1230,33 @@ src/backend/chamfer_operation.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.s
 .PHONY : src/backend/chamfer_operation.cpp.s
 
+src/backend/cut_to_gcode.o: src/backend/cut_to_gcode.cpp.o
+
+.PHONY : src/backend/cut_to_gcode.o
+
+# target to build an object file
+src/backend/cut_to_gcode.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/cut_to_gcode.cpp.o
+.PHONY : src/backend/cut_to_gcode.cpp.o
+
+src/backend/cut_to_gcode.i: src/backend/cut_to_gcode.cpp.i
+
+.PHONY : src/backend/cut_to_gcode.i
+
+# target to preprocess a source file
+src/backend/cut_to_gcode.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/cut_to_gcode.cpp.i
+.PHONY : src/backend/cut_to_gcode.cpp.i
+
+src/backend/cut_to_gcode.s: src/backend/cut_to_gcode.cpp.s
+
+.PHONY : src/backend/cut_to_gcode.s
+
+# target to generate assembly for a file
+src/backend/cut_to_gcode.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/cut_to_gcode.cpp.s
+.PHONY : src/backend/cut_to_gcode.cpp.s
+
 src/backend/drilled_hole_operation.o: src/backend/drilled_hole_operation.cpp.o
 
 .PHONY : src/backend/drilled_hole_operation.o
@@ -2930,33 +2957,6 @@ src/synthesis/contour_planning.s: src/synthesis/contour_planning.cpp.s
 src/synthesis/contour_planning.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/contour_planning.cpp.s
 .PHONY : src/synthesis/contour_planning.cpp.s
-
-src/synthesis/cut_to_gcode.o: src/synthesis/cut_to_gcode.cpp.o
-
-.PHONY : src/synthesis/cut_to_gcode.o
-
-# target to build an object file
-src/synthesis/cut_to_gcode.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/cut_to_gcode.cpp.o
-.PHONY : src/synthesis/cut_to_gcode.cpp.o
-
-src/synthesis/cut_to_gcode.i: src/synthesis/cut_to_gcode.cpp.i
-
-.PHONY : src/synthesis/cut_to_gcode.i
-
-# target to preprocess a source file
-src/synthesis/cut_to_gcode.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/cut_to_gcode.cpp.i
-.PHONY : src/synthesis/cut_to_gcode.cpp.i
-
-src/synthesis/cut_to_gcode.s: src/synthesis/cut_to_gcode.cpp.s
-
-.PHONY : src/synthesis/cut_to_gcode.s
-
-# target to generate assembly for a file
-src/synthesis/cut_to_gcode.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/cut_to_gcode.cpp.s
-.PHONY : src/synthesis/cut_to_gcode.cpp.s
 
 src/synthesis/dxf_reader.o: src/synthesis/dxf_reader.cpp.o
 
@@ -5166,6 +5166,9 @@ help:
 	@echo "... src/backend/chamfer_operation.o"
 	@echo "... src/backend/chamfer_operation.i"
 	@echo "... src/backend/chamfer_operation.s"
+	@echo "... src/backend/cut_to_gcode.o"
+	@echo "... src/backend/cut_to_gcode.i"
+	@echo "... src/backend/cut_to_gcode.s"
 	@echo "... src/backend/drilled_hole_operation.o"
 	@echo "... src/backend/drilled_hole_operation.i"
 	@echo "... src/backend/drilled_hole_operation.s"
@@ -5355,9 +5358,6 @@ help:
 	@echo "... src/synthesis/contour_planning.o"
 	@echo "... src/synthesis/contour_planning.i"
 	@echo "... src/synthesis/contour_planning.s"
-	@echo "... src/synthesis/cut_to_gcode.o"
-	@echo "... src/synthesis/cut_to_gcode.i"
-	@echo "... src/synthesis/cut_to_gcode.s"
 	@echo "... src/synthesis/dxf_reader.o"
 	@echo "... src/synthesis/dxf_reader.i"
 	@echo "... src/synthesis/dxf_reader.s"

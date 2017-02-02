@@ -2,7 +2,7 @@
 
 #include "gcode/circular_arc.h"
 #include "gcode/safe_move.h"
-#include "synthesis/cut_to_gcode.h"
+#include "backend/cut_to_gcode.h"
 #include "backend/output.h"
 #include "utils/algorithm.h"
 

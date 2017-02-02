@@ -4,7 +4,7 @@
 
 #include "gcode/lexer.h"
 #include "backend/align_blade.h"
-#include "synthesis/cut_to_gcode.h"
+#include "backend/cut_to_gcode.h"
 #include "backend/output.h"
 #include "gcode/safe_move.h"
 #include "system/settings.h"
