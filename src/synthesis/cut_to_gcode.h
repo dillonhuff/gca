@@ -3,7 +3,7 @@
 
 #include "gcode/lexer.h"
 #include "gcode/cut.h"
-#include "synthesis/shape_layout.h"
+#include "backend/shape_layout.h"
 
 namespace gca {
 

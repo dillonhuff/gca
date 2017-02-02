@@ -4,7 +4,7 @@
 #include "dxflib/dl_dxf.h"
 #include "dxflib/dl_creationadapter.h"
 #include "gcode/linear_cut.h"
-#include "synthesis/shape_layout.h"
+#include "backend/shape_layout.h"
 
 namespace gca {
 

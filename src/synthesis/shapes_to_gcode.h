@@ -3,7 +3,7 @@
 
 #include "backend/align_blade.h"
 #include "backend/output.h"
-#include "synthesis/shape_layout.h"
+#include "backend/shape_layout.h"
 #include "backend/toolpath.h"
 
 namespace gca {

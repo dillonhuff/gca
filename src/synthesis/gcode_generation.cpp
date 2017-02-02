@@ -3,7 +3,7 @@
 #include "gcode/linear_cut.h"
 #include "synthesis/cut_to_gcode.h"
 #include "synthesis/gcode_generation.h"
-#include "synthesis/shape_layout.h"
+#include "backend/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "utils/algorithm.h"
 

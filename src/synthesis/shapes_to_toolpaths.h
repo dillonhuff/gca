@@ -2,7 +2,7 @@
 #define GCA_SHAPES_TO_TOOLPATHS_H
 
 #include "geometry/polyline.h"
-#include "synthesis/shape_layout.h"
+#include "backend/shape_layout.h"
 #include "backend/toolpath.h"
 
 namespace gca {

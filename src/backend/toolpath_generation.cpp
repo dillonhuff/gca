@@ -11,7 +11,7 @@
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "synthesis/gcode_generation.h"
-#include "synthesis/shape_layout.h"
+#include "backend/shape_layout.h"
 #include "synthesis/shapes_to_gcode.h"
 #include "backend/toolpath_generation.h"
 #include "utils/algorithm.h"
