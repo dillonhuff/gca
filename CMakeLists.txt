@@ -118,33 +118,7 @@ SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
 add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})
 target_link_libraries(gprocess gcode geometry utils)
 
-SET(GCA_HEADERS
-	./src/backend/operation.h
-	./src/backend/operation_name.h
-	./src/backend/feedrate_optimization.h
-	./src/process_planning/feature_to_pocket.h
-	./src/process_planning/feature_selection.h
-	./src/process_planning/axis_location.h
-	./src/process_planning/job_planning.h
-	./src/feature_recognition/feature_decomposition.h
-	./src/feature_recognition/visual_debug.h
-	./src/synthesis/clamp_orientation.h
-	./src/synthesis/visual_debug.h
-	./src/synthesis/jaw_cutout.h
-	./src/synthesis/clipping_plan.h
-	    ./src/synthesis/mesh_to_gcode.h
-	    ./src/synthesis/contour_planning.h
-	    ./src/synthesis/face_clipping.h
-	    ./src/backend/toolpath_generation.h
-	    ./src/synthesis/millability.h
-	    ./src/synthesis/vice.h
-	    ./src/synthesis/workpiece.h
-	    ./src/synthesis/fixture_analysis.h
-	    ./src/synthesis/workpiece_clipping.h
-	    ./src/system/json.h
-	    ./src/system/parse_stl.h)
-
-SET(GCA_CPPS
+SET(BACKEND_CPPS
 	./src/backend/align_blade.cpp
 	./src/backend/chamfer_operation.cpp
 	./src/backend/cut_to_gcode.cpp
@@ -159,7 +133,34 @@ SET(GCA_CPPS
 	./src/backend/shapes_to_gcode.cpp
 	./src/backend/shapes_to_toolpaths.cpp
 	./src/backend/toolpath_generation.cpp
-	./src/backend/tool.cpp
+	./src/backend/tool.cpp)
+
+add_library(backend ${BACKEND_CPPS})
+target_link_libraries(backend gprocess gcode geometry utils)
+
+SET(GCA_HEADERS
+	./src/process_planning/feature_to_pocket.h
+	./src/process_planning/feature_selection.h
+	./src/process_planning/axis_location.h
+	./src/process_planning/job_planning.h
+	./src/feature_recognition/feature_decomposition.h
+	./src/feature_recognition/visual_debug.h
+	./src/synthesis/clamp_orientation.h
+	./src/synthesis/visual_debug.h
+	./src/synthesis/jaw_cutout.h
+	./src/synthesis/clipping_plan.h
+	    ./src/synthesis/mesh_to_gcode.h
+	    ./src/synthesis/contour_planning.h
+	    ./src/synthesis/face_clipping.h
+	    ./src/synthesis/millability.h
+	    ./src/synthesis/vice.h
+	    ./src/synthesis/workpiece.h
+	    ./src/synthesis/fixture_analysis.h
+	    ./src/synthesis/workpiece_clipping.h
+	    ./src/system/json.h
+	    ./src/system/parse_stl.h)
+
+SET(GCA_CPPS
 	./src/feature_recognition/chamfer_detection.cpp
 	./src/feature_recognition/freeform_surface_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
@@ -197,18 +198,17 @@ SET(GCA_CPPS
 	 ./src/dxflib/dl_writer_ascii.cpp)
 
 add_library(gca ${GCA_HEADERS} ${GCA_CPPS})
-target_link_libraries(gca gcode geometry utils gprocess)
+target_link_libraries(gca backend gcode geometry utils gprocess)
 
 SET(BACKEND_TEST_FILES test/toolpath_generation_tests.cpp)
-#//		       test/freeform_toolpath_tests.cpp)
 
 add_executable(backend-tests test/main_backend.cpp ${BACKEND_TEST_FILES})
-target_link_libraries(backend-tests geometry utils gcode gprocess gca)
+target_link_libraries(backend-tests geometry utils gcode gprocess gca backend)
 
 SET(MANUFACTURE_TEST_FILES test/manufacture.cpp)
 
 add_executable(manufacture-tests test/main_manufacture.cpp ${MANUFACTURE_TEST_FILES})
-target_link_libraries(manufacture-tests geometry utils gcode gprocess gca)
+target_link_libraries(manufacture-tests geometry utils gcode gprocess gca backend)
 
 SET(TEST_FILES test/main.cpp
 	       test/axis_location_tests.cpp
@@ -258,59 +258,59 @@ SET(TEST_FILES test/main.cpp
 	       ${BACKEND_TEST_FILES})
 
 add_executable(non-manufacture-tests ${TEST_FILES})
-target_link_libraries(non-manufacture-tests geometry utils gcode gprocess gca)
+target_link_libraries(non-manufacture-tests geometry utils gcode gprocess gca backend)
 
 add_executable(all-tests ${TEST_FILES} ${MANUFACTURE_TEST_FILES})
-target_link_libraries(all-tests geometry utils gcode gprocess gca)
+target_link_libraries(all-tests geometry utils gcode gprocess gca backend)
 
 add_executable(json-mesh examples/json_mesh.cpp)
-target_link_libraries(json-mesh geometry utils gcode gprocess gca)
+target_link_libraries(json-mesh geometry utils gcode gprocess gca backend)
 
 add_executable(json-plan examples/json_plan.cpp)
-target_link_libraries(json-plan geometry utils gcode gprocess gca)
+target_link_libraries(json-plan geometry utils gcode gprocess gca backend)
 
 add_executable(stl-parse examples/stl_parse.cpp)
-target_link_libraries(stl-parse geometry utils gcode gprocess gca)
+target_link_libraries(stl-parse geometry utils gcode gprocess gca backend)
 
 add_executable(plate-cutter examples/plate_cutter.cpp)
-target_link_libraries(plate-cutter geometry utils gcode gprocess gca)
+target_link_libraries(plate-cutter geometry utils gcode gprocess gca backend)
 
 add_executable(feature-decomp examples/feature_decomp.cpp)
-target_link_libraries(feature-decomp geometry utils gcode gprocess gca)
+target_link_libraries(feature-decomp geometry utils gcode gprocess gca backend)
 
 add_executable(ublas examples/ublas.cpp)
-target_link_libraries(ublas geometry utils gcode gprocess gca)
+target_link_libraries(ublas geometry utils gcode gprocess gca backend)
 
 add_executable(check-contours examples/check_contours.cpp)
-target_link_libraries(check-contours geometry utils gcode gprocess gca)
+target_link_libraries(check-contours geometry utils gcode gprocess gca backend)
 
 add_executable(vtk-mass examples/vtk_mass_test.cpp)
-target_link_libraries(vtk-mass geometry utils gcode gprocess gca)
+target_link_libraries(vtk-mass geometry utils gcode gprocess gca backend)
 
 add_executable(scale-down-mesh examples/scale_down_mesh.cpp)
-target_link_libraries(scale-down-mesh geometry utils gcode gprocess gca)
+target_link_libraries(scale-down-mesh geometry utils gcode gprocess gca backend)
 
 add_executable(debug-test examples/debug_test.cpp)
-target_link_libraries(debug-test geometry utils gcode gprocess gca)
+target_link_libraries(debug-test geometry utils gcode gprocess gca backend)
 
 add_executable(nef-test examples/nef_test.cpp)
-target_link_libraries(nef-test geometry utils gcode gprocess gca)
+target_link_libraries(nef-test geometry utils gcode gprocess gca backend)
 
 add_executable(tri-test examples/tri_test.cpp)
-target_link_libraries(tri-test geometry utils gcode gprocess gca)
+target_link_libraries(tri-test geometry utils gcode gprocess gca backend)
 
 add_executable(parse-iges examples/parse_iges.cpp)
-target_link_libraries(parse-iges geometry utils gcode gprocess gca)
+target_link_libraries(parse-iges geometry utils gcode gprocess gca backend)
 
 #/Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 find_package( OpenCV REQUIRED )
 
 add_executable(engraving examples/engraving.cpp)
-target_link_libraries(engraving geometry utils gcode gprocess gca ${OpenCV_LIBS})
+target_link_libraries(engraving geometry utils gcode gprocess gca backend ${OpenCV_LIBS})
 
 add_executable(camaster-test examples/camaster_test.cpp)
-target_link_libraries(camaster-test geometry utils gcode gprocess gca ${OpenCV_LIBS})
+target_link_libraries(camaster-test geometry utils gcode gprocess gca backend ${OpenCV_LIBS})
 
 ######### VTK Example ##########
 
@@ -318,16 +318,16 @@ target_link_libraries(camaster-test geometry utils gcode gprocess gca ${OpenCV_L
 # /opt/local/bin/cmake -DVTK_DIR:PATH=/Users/dillon/Downloads/VTK-build/ -DCMAKE_BUILD_TYPE=Debug . 
 
 add_executable(AddCell MACOSX_BUNDLE examples/AddCell)
-target_link_libraries(AddCell geometry utils gcode gprocess gca)
+target_link_libraries(AddCell geometry utils gcode gprocess gca backend)
 
 add_executable(surface-test MACOSX_BUNDLE examples/surface_test.cpp)
-target_link_libraries(surface-test geometry utils gcode gprocess gca)
+target_link_libraries(surface-test geometry utils gcode gprocess gca backend)
 
 add_executable(interact-test MACOSX_BUNDLE examples/DataAnimationSubclass.cpp)
-target_link_libraries(interact-test geometry utils gcode gprocess gca)
+target_link_libraries(interact-test geometry utils gcode gprocess gca backend)
 
 add_executable(cut-rect MACOSX_BUNDLE examples/cut_rect.cpp)
-target_link_libraries(cut-rect geometry utils gcode gprocess gca)
+target_link_libraries(cut-rect geometry utils gcode gprocess gca backend)
 
 if(VTK_LIBRARIES)
   target_link_libraries(AddCell ${VTK_LIBRARIES})

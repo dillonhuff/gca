@@ -280,6 +280,19 @@ ublas/fast:
 .PHONY : ublas/fast
 
 #=============================================================================
+# Target rules for targets named backend
+
+# Build rule for target.
+backend: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 backend
+.PHONY : backend
+
+# fast build rule for target.
+backend/fast:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/build
+.PHONY : backend/fast
+
+#=============================================================================
 # Target rules for targets named json-mesh
 
 # Build rule for target.
@@ -319,32 +332,6 @@ plate-cutter/fast:
 .PHONY : plate-cutter/fast
 
 #=============================================================================
-# Target rules for targets named manufacture-tests
-
-# Build rule for target.
-manufacture-tests: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 manufacture-tests
-.PHONY : manufacture-tests
-
-# fast build rule for target.
-manufacture-tests/fast:
-	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/build
-.PHONY : manufacture-tests/fast
-
-#=============================================================================
-# Target rules for targets named all-tests
-
-# Build rule for target.
-all-tests: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 all-tests
-.PHONY : all-tests
-
-# fast build rule for target.
-all-tests/fast:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/build
-.PHONY : all-tests/fast
-
-#=============================================================================
 # Target rules for targets named backend-tests
 
 # Build rule for target.
@@ -369,6 +356,32 @@ json-plan: cmake_check_build_system
 json-plan/fast:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/build
 .PHONY : json-plan/fast
+
+#=============================================================================
+# Target rules for targets named manufacture-tests
+
+# Build rule for target.
+manufacture-tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 manufacture-tests
+.PHONY : manufacture-tests
+
+# fast build rule for target.
+manufacture-tests/fast:
+	$(MAKE) -f CMakeFiles/manufacture-tests.dir/build.make CMakeFiles/manufacture-tests.dir/build
+.PHONY : manufacture-tests/fast
+
+#=============================================================================
+# Target rules for targets named all-tests
+
+# Build rule for target.
+all-tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 all-tests
+.PHONY : all-tests
+
+# fast build rule for target.
+all-tests/fast:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/build
+.PHONY : all-tests/fast
 
 #=============================================================================
 # Target rules for targets named feature-decomp
@@ -1182,7 +1195,7 @@ src/backend/align_blade.o: src/backend/align_blade.cpp.o
 
 # target to build an object file
 src/backend/align_blade.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/align_blade.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/align_blade.cpp.o
 .PHONY : src/backend/align_blade.cpp.o
 
 src/backend/align_blade.i: src/backend/align_blade.cpp.i
@@ -1191,7 +1204,7 @@ src/backend/align_blade.i: src/backend/align_blade.cpp.i
 
 # target to preprocess a source file
 src/backend/align_blade.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/align_blade.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/align_blade.cpp.i
 .PHONY : src/backend/align_blade.cpp.i
 
 src/backend/align_blade.s: src/backend/align_blade.cpp.s
@@ -1200,7 +1213,7 @@ src/backend/align_blade.s: src/backend/align_blade.cpp.s
 
 # target to generate assembly for a file
 src/backend/align_blade.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/align_blade.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/align_blade.cpp.s
 .PHONY : src/backend/align_blade.cpp.s
 
 src/backend/chamfer_operation.o: src/backend/chamfer_operation.cpp.o
@@ -1209,7 +1222,7 @@ src/backend/chamfer_operation.o: src/backend/chamfer_operation.cpp.o
 
 # target to build an object file
 src/backend/chamfer_operation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/chamfer_operation.cpp.o
 .PHONY : src/backend/chamfer_operation.cpp.o
 
 src/backend/chamfer_operation.i: src/backend/chamfer_operation.cpp.i
@@ -1218,7 +1231,7 @@ src/backend/chamfer_operation.i: src/backend/chamfer_operation.cpp.i
 
 # target to preprocess a source file
 src/backend/chamfer_operation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/chamfer_operation.cpp.i
 .PHONY : src/backend/chamfer_operation.cpp.i
 
 src/backend/chamfer_operation.s: src/backend/chamfer_operation.cpp.s
@@ -1227,7 +1240,7 @@ src/backend/chamfer_operation.s: src/backend/chamfer_operation.cpp.s
 
 # target to generate assembly for a file
 src/backend/chamfer_operation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/chamfer_operation.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/chamfer_operation.cpp.s
 .PHONY : src/backend/chamfer_operation.cpp.s
 
 src/backend/cut_to_gcode.o: src/backend/cut_to_gcode.cpp.o
@@ -1236,7 +1249,7 @@ src/backend/cut_to_gcode.o: src/backend/cut_to_gcode.cpp.o
 
 # target to build an object file
 src/backend/cut_to_gcode.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/cut_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/cut_to_gcode.cpp.o
 .PHONY : src/backend/cut_to_gcode.cpp.o
 
 src/backend/cut_to_gcode.i: src/backend/cut_to_gcode.cpp.i
@@ -1245,7 +1258,7 @@ src/backend/cut_to_gcode.i: src/backend/cut_to_gcode.cpp.i
 
 # target to preprocess a source file
 src/backend/cut_to_gcode.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/cut_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/cut_to_gcode.cpp.i
 .PHONY : src/backend/cut_to_gcode.cpp.i
 
 src/backend/cut_to_gcode.s: src/backend/cut_to_gcode.cpp.s
@@ -1254,7 +1267,7 @@ src/backend/cut_to_gcode.s: src/backend/cut_to_gcode.cpp.s
 
 # target to generate assembly for a file
 src/backend/cut_to_gcode.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/cut_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/cut_to_gcode.cpp.s
 .PHONY : src/backend/cut_to_gcode.cpp.s
 
 src/backend/drilled_hole_operation.o: src/backend/drilled_hole_operation.cpp.o
@@ -1263,7 +1276,7 @@ src/backend/drilled_hole_operation.o: src/backend/drilled_hole_operation.cpp.o
 
 # target to build an object file
 src/backend/drilled_hole_operation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/drilled_hole_operation.cpp.o
 .PHONY : src/backend/drilled_hole_operation.cpp.o
 
 src/backend/drilled_hole_operation.i: src/backend/drilled_hole_operation.cpp.i
@@ -1272,7 +1285,7 @@ src/backend/drilled_hole_operation.i: src/backend/drilled_hole_operation.cpp.i
 
 # target to preprocess a source file
 src/backend/drilled_hole_operation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/drilled_hole_operation.cpp.i
 .PHONY : src/backend/drilled_hole_operation.cpp.i
 
 src/backend/drilled_hole_operation.s: src/backend/drilled_hole_operation.cpp.s
@@ -1281,7 +1294,7 @@ src/backend/drilled_hole_operation.s: src/backend/drilled_hole_operation.cpp.s
 
 # target to generate assembly for a file
 src/backend/drilled_hole_operation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/drilled_hole_operation.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/drilled_hole_operation.cpp.s
 .PHONY : src/backend/drilled_hole_operation.cpp.s
 
 src/backend/face_toolpaths.o: src/backend/face_toolpaths.cpp.o
@@ -1290,7 +1303,7 @@ src/backend/face_toolpaths.o: src/backend/face_toolpaths.cpp.o
 
 # target to build an object file
 src/backend/face_toolpaths.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/face_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/face_toolpaths.cpp.o
 .PHONY : src/backend/face_toolpaths.cpp.o
 
 src/backend/face_toolpaths.i: src/backend/face_toolpaths.cpp.i
@@ -1299,7 +1312,7 @@ src/backend/face_toolpaths.i: src/backend/face_toolpaths.cpp.i
 
 # target to preprocess a source file
 src/backend/face_toolpaths.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/face_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/face_toolpaths.cpp.i
 .PHONY : src/backend/face_toolpaths.cpp.i
 
 src/backend/face_toolpaths.s: src/backend/face_toolpaths.cpp.s
@@ -1308,7 +1321,7 @@ src/backend/face_toolpaths.s: src/backend/face_toolpaths.cpp.s
 
 # target to generate assembly for a file
 src/backend/face_toolpaths.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/face_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/face_toolpaths.cpp.s
 .PHONY : src/backend/face_toolpaths.cpp.s
 
 src/backend/feedrate_optimization.o: src/backend/feedrate_optimization.cpp.o
@@ -1317,7 +1330,7 @@ src/backend/feedrate_optimization.o: src/backend/feedrate_optimization.cpp.o
 
 # target to build an object file
 src/backend/feedrate_optimization.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/feedrate_optimization.cpp.o
 .PHONY : src/backend/feedrate_optimization.cpp.o
 
 src/backend/feedrate_optimization.i: src/backend/feedrate_optimization.cpp.i
@@ -1326,7 +1339,7 @@ src/backend/feedrate_optimization.i: src/backend/feedrate_optimization.cpp.i
 
 # target to preprocess a source file
 src/backend/feedrate_optimization.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/feedrate_optimization.cpp.i
 .PHONY : src/backend/feedrate_optimization.cpp.i
 
 src/backend/feedrate_optimization.s: src/backend/feedrate_optimization.cpp.s
@@ -1335,7 +1348,7 @@ src/backend/feedrate_optimization.s: src/backend/feedrate_optimization.cpp.s
 
 # target to generate assembly for a file
 src/backend/feedrate_optimization.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/feedrate_optimization.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/feedrate_optimization.cpp.s
 .PHONY : src/backend/feedrate_optimization.cpp.s
 
 src/backend/freeform_toolpaths.o: src/backend/freeform_toolpaths.cpp.o
@@ -1344,7 +1357,7 @@ src/backend/freeform_toolpaths.o: src/backend/freeform_toolpaths.cpp.o
 
 # target to build an object file
 src/backend/freeform_toolpaths.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/freeform_toolpaths.cpp.o
 .PHONY : src/backend/freeform_toolpaths.cpp.o
 
 src/backend/freeform_toolpaths.i: src/backend/freeform_toolpaths.cpp.i
@@ -1353,7 +1366,7 @@ src/backend/freeform_toolpaths.i: src/backend/freeform_toolpaths.cpp.i
 
 # target to preprocess a source file
 src/backend/freeform_toolpaths.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/freeform_toolpaths.cpp.i
 .PHONY : src/backend/freeform_toolpaths.cpp.i
 
 src/backend/freeform_toolpaths.s: src/backend/freeform_toolpaths.cpp.s
@@ -1362,7 +1375,7 @@ src/backend/freeform_toolpaths.s: src/backend/freeform_toolpaths.cpp.s
 
 # target to generate assembly for a file
 src/backend/freeform_toolpaths.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/freeform_toolpaths.cpp.s
 .PHONY : src/backend/freeform_toolpaths.cpp.s
 
 src/backend/gcode_generation.o: src/backend/gcode_generation.cpp.o
@@ -1371,7 +1384,7 @@ src/backend/gcode_generation.o: src/backend/gcode_generation.cpp.o
 
 # target to build an object file
 src/backend/gcode_generation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/gcode_generation.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/gcode_generation.cpp.o
 .PHONY : src/backend/gcode_generation.cpp.o
 
 src/backend/gcode_generation.i: src/backend/gcode_generation.cpp.i
@@ -1380,7 +1393,7 @@ src/backend/gcode_generation.i: src/backend/gcode_generation.cpp.i
 
 # target to preprocess a source file
 src/backend/gcode_generation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/gcode_generation.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/gcode_generation.cpp.i
 .PHONY : src/backend/gcode_generation.cpp.i
 
 src/backend/gcode_generation.s: src/backend/gcode_generation.cpp.s
@@ -1389,7 +1402,7 @@ src/backend/gcode_generation.s: src/backend/gcode_generation.cpp.s
 
 # target to generate assembly for a file
 src/backend/gcode_generation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/gcode_generation.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/gcode_generation.cpp.s
 .PHONY : src/backend/gcode_generation.cpp.s
 
 src/backend/operation.o: src/backend/operation.cpp.o
@@ -1398,7 +1411,7 @@ src/backend/operation.o: src/backend/operation.cpp.o
 
 # target to build an object file
 src/backend/operation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/operation.cpp.o
 .PHONY : src/backend/operation.cpp.o
 
 src/backend/operation.i: src/backend/operation.cpp.i
@@ -1407,7 +1420,7 @@ src/backend/operation.i: src/backend/operation.cpp.i
 
 # target to preprocess a source file
 src/backend/operation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/operation.cpp.i
 .PHONY : src/backend/operation.cpp.i
 
 src/backend/operation.s: src/backend/operation.cpp.s
@@ -1416,7 +1429,7 @@ src/backend/operation.s: src/backend/operation.cpp.s
 
 # target to generate assembly for a file
 src/backend/operation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/operation.cpp.s
 .PHONY : src/backend/operation.cpp.s
 
 src/backend/operation_name.o: src/backend/operation_name.cpp.o
@@ -1425,7 +1438,7 @@ src/backend/operation_name.o: src/backend/operation_name.cpp.o
 
 # target to build an object file
 src/backend/operation_name.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/operation_name.cpp.o
 .PHONY : src/backend/operation_name.cpp.o
 
 src/backend/operation_name.i: src/backend/operation_name.cpp.i
@@ -1434,7 +1447,7 @@ src/backend/operation_name.i: src/backend/operation_name.cpp.i
 
 # target to preprocess a source file
 src/backend/operation_name.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/operation_name.cpp.i
 .PHONY : src/backend/operation_name.cpp.i
 
 src/backend/operation_name.s: src/backend/operation_name.cpp.s
@@ -1443,7 +1456,7 @@ src/backend/operation_name.s: src/backend/operation_name.cpp.s
 
 # target to generate assembly for a file
 src/backend/operation_name.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/operation_name.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/operation_name.cpp.s
 .PHONY : src/backend/operation_name.cpp.s
 
 src/backend/output.o: src/backend/output.cpp.o
@@ -1452,7 +1465,7 @@ src/backend/output.o: src/backend/output.cpp.o
 
 # target to build an object file
 src/backend/output.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/output.cpp.o
 .PHONY : src/backend/output.cpp.o
 
 src/backend/output.i: src/backend/output.cpp.i
@@ -1461,7 +1474,7 @@ src/backend/output.i: src/backend/output.cpp.i
 
 # target to preprocess a source file
 src/backend/output.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/output.cpp.i
 .PHONY : src/backend/output.cpp.i
 
 src/backend/output.s: src/backend/output.cpp.s
@@ -1470,7 +1483,7 @@ src/backend/output.s: src/backend/output.cpp.s
 
 # target to generate assembly for a file
 src/backend/output.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/output.cpp.s
 .PHONY : src/backend/output.cpp.s
 
 src/backend/shapes_to_gcode.o: src/backend/shapes_to_gcode.cpp.o
@@ -1479,7 +1492,7 @@ src/backend/shapes_to_gcode.o: src/backend/shapes_to_gcode.cpp.o
 
 # target to build an object file
 src/backend/shapes_to_gcode.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_gcode.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_gcode.cpp.o
 .PHONY : src/backend/shapes_to_gcode.cpp.o
 
 src/backend/shapes_to_gcode.i: src/backend/shapes_to_gcode.cpp.i
@@ -1488,7 +1501,7 @@ src/backend/shapes_to_gcode.i: src/backend/shapes_to_gcode.cpp.i
 
 # target to preprocess a source file
 src/backend/shapes_to_gcode.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_gcode.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_gcode.cpp.i
 .PHONY : src/backend/shapes_to_gcode.cpp.i
 
 src/backend/shapes_to_gcode.s: src/backend/shapes_to_gcode.cpp.s
@@ -1497,7 +1510,7 @@ src/backend/shapes_to_gcode.s: src/backend/shapes_to_gcode.cpp.s
 
 # target to generate assembly for a file
 src/backend/shapes_to_gcode.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_gcode.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_gcode.cpp.s
 .PHONY : src/backend/shapes_to_gcode.cpp.s
 
 src/backend/shapes_to_toolpaths.o: src/backend/shapes_to_toolpaths.cpp.o
@@ -1506,7 +1519,7 @@ src/backend/shapes_to_toolpaths.o: src/backend/shapes_to_toolpaths.cpp.o
 
 # target to build an object file
 src/backend/shapes_to_toolpaths.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_toolpaths.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_toolpaths.cpp.o
 .PHONY : src/backend/shapes_to_toolpaths.cpp.o
 
 src/backend/shapes_to_toolpaths.i: src/backend/shapes_to_toolpaths.cpp.i
@@ -1515,7 +1528,7 @@ src/backend/shapes_to_toolpaths.i: src/backend/shapes_to_toolpaths.cpp.i
 
 # target to preprocess a source file
 src/backend/shapes_to_toolpaths.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_toolpaths.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_toolpaths.cpp.i
 .PHONY : src/backend/shapes_to_toolpaths.cpp.i
 
 src/backend/shapes_to_toolpaths.s: src/backend/shapes_to_toolpaths.cpp.s
@@ -1524,7 +1537,7 @@ src/backend/shapes_to_toolpaths.s: src/backend/shapes_to_toolpaths.cpp.s
 
 # target to generate assembly for a file
 src/backend/shapes_to_toolpaths.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_toolpaths.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_toolpaths.cpp.s
 .PHONY : src/backend/shapes_to_toolpaths.cpp.s
 
 src/backend/tool.o: src/backend/tool.cpp.o
@@ -1533,7 +1546,7 @@ src/backend/tool.o: src/backend/tool.cpp.o
 
 # target to build an object file
 src/backend/tool.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/tool.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/tool.cpp.o
 .PHONY : src/backend/tool.cpp.o
 
 src/backend/tool.i: src/backend/tool.cpp.i
@@ -1542,7 +1555,7 @@ src/backend/tool.i: src/backend/tool.cpp.i
 
 # target to preprocess a source file
 src/backend/tool.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/tool.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/tool.cpp.i
 .PHONY : src/backend/tool.cpp.i
 
 src/backend/tool.s: src/backend/tool.cpp.s
@@ -1551,7 +1564,7 @@ src/backend/tool.s: src/backend/tool.cpp.s
 
 # target to generate assembly for a file
 src/backend/tool.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/tool.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/tool.cpp.s
 .PHONY : src/backend/tool.cpp.s
 
 src/backend/toolpath_generation.o: src/backend/toolpath_generation.cpp.o
@@ -1560,7 +1573,7 @@ src/backend/toolpath_generation.o: src/backend/toolpath_generation.cpp.o
 
 # target to build an object file
 src/backend/toolpath_generation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/toolpath_generation.cpp.o
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/toolpath_generation.cpp.o
 .PHONY : src/backend/toolpath_generation.cpp.o
 
 src/backend/toolpath_generation.i: src/backend/toolpath_generation.cpp.i
@@ -1569,7 +1582,7 @@ src/backend/toolpath_generation.i: src/backend/toolpath_generation.cpp.i
 
 # target to preprocess a source file
 src/backend/toolpath_generation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/toolpath_generation.cpp.i
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/toolpath_generation.cpp.i
 .PHONY : src/backend/toolpath_generation.cpp.i
 
 src/backend/toolpath_generation.s: src/backend/toolpath_generation.cpp.s
@@ -1578,7 +1591,7 @@ src/backend/toolpath_generation.s: src/backend/toolpath_generation.cpp.s
 
 # target to generate assembly for a file
 src/backend/toolpath_generation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/toolpath_generation.cpp.s
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/toolpath_generation.cpp.s
 .PHONY : src/backend/toolpath_generation.cpp.s
 
 src/checkers/block_rate_checker.o: src/checkers/block_rate_checker.cpp.o
@@ -4899,8 +4912,8 @@ test/toolpath_generation_tests.o: test/toolpath_generation_tests.cpp.o
 
 # target to build an object file
 test/toolpath_generation_tests.cpp.o:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.o
 	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.o
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/toolpath_generation_tests.cpp.o
 .PHONY : test/toolpath_generation_tests.cpp.o
 
@@ -4910,8 +4923,8 @@ test/toolpath_generation_tests.i: test/toolpath_generation_tests.cpp.i
 
 # target to preprocess a source file
 test/toolpath_generation_tests.cpp.i:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.i
 	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.i
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/toolpath_generation_tests.cpp.i
 .PHONY : test/toolpath_generation_tests.cpp.i
 
@@ -4921,8 +4934,8 @@ test/toolpath_generation_tests.s: test/toolpath_generation_tests.cpp.s
 
 # target to generate assembly for a file
 test/toolpath_generation_tests.cpp.s:
-	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.s
 	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/toolpath_generation_tests.cpp.s
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/toolpath_generation_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/toolpath_generation_tests.cpp.s
 .PHONY : test/toolpath_generation_tests.cpp.s
 
@@ -5066,13 +5079,14 @@ help:
 	@echo "... check-contours"
 	@echo "... vtk-mass"
 	@echo "... ublas"
+	@echo "... backend"
 	@echo "... json-mesh"
 	@echo "... tri-test"
 	@echo "... plate-cutter"
-	@echo "... manufacture-tests"
-	@echo "... all-tests"
 	@echo "... backend-tests"
 	@echo "... json-plan"
+	@echo "... manufacture-tests"
+	@echo "... all-tests"
 	@echo "... feature-decomp"
 	@echo "... gprocess"
 	@echo "... nef-test"
