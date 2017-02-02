@@ -1,7 +1,7 @@
 // #include "geometry/vtk_debug.h"
 // #include "synthesis/contour_planning.h"
 // #include "synthesis/fixture_analysis.h"
-// #include "synthesis/gcode_generation.h"
+// #include "backend/gcode_generation.h"
 // #include "system/parse_stl.h"
 
 // using namespace gca;

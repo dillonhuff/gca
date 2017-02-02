@@ -1,7 +1,7 @@
 #include "synthesis/timing.h"
 #include "geometry/vtk_utils.h"
 #include "synthesis/clamp_orientation.h"
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/visual_debug.h"
 #include "system/parse_stl.h"

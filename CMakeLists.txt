@@ -132,7 +132,6 @@ SET(GCA_HEADERS
 	./src/synthesis/visual_debug.h
 	./src/synthesis/jaw_cutout.h
 	./src/synthesis/clipping_plan.h
-	./src/synthesis/gcode_generation.h
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
@@ -153,6 +152,7 @@ SET(GCA_CPPS
 	./src/backend/face_toolpaths.cpp
 	./src/backend/feedrate_optimization.cpp
 	./src/backend/freeform_toolpaths.cpp
+	./src/backend/gcode_generation.cpp
 	./src/backend/operation.cpp
 	./src/backend/operation_name.cpp
 	./src/backend/output.cpp
@@ -178,7 +178,6 @@ SET(GCA_CPPS
 	./src/synthesis/fabrication_plan.cpp
 	./src/synthesis/jaw_cutout.cpp
 	./src/synthesis/face_clipping.cpp
-	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/dxf_reader.cpp
 	 ./src/synthesis/contour_planning.cpp

@@ -1,6 +1,6 @@
 #include "geometry/triangular_mesh.h"
 #include "synthesis/fixture_analysis.h"
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "backend/shapes_to_gcode.h"
 #include "backend/toolpath_generation.h"

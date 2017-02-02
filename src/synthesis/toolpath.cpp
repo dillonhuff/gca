@@ -1,4 +1,4 @@
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "backend/toolpath.h"
 
 namespace gca {

@@ -10,7 +10,7 @@
 #include "geometry/offset.h"
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "backend/shape_layout.h"
 #include "backend/shapes_to_gcode.h"
 #include "backend/toolpath_generation.h"

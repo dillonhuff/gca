@@ -10,7 +10,7 @@
 #include "geometry/vtk_utils.h"
 #include "simulators/sim_mill.h"
 #include "synthesis/fabrication_plan.h"
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "synthesis/millability.h"
 #include "backend/toolpath_generation.h"
 #include "synthesis/visual_debug.h"

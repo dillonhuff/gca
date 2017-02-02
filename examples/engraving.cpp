@@ -10,7 +10,7 @@
 #include "feature_recognition/feature_decomposition.h"
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/feature_to_pocket.h"
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "utils/check.h"
 
 using namespace gca;

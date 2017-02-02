@@ -1365,6 +1365,33 @@ src/backend/freeform_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/freeform_toolpaths.cpp.s
 .PHONY : src/backend/freeform_toolpaths.cpp.s
 
+src/backend/gcode_generation.o: src/backend/gcode_generation.cpp.o
+
+.PHONY : src/backend/gcode_generation.o
+
+# target to build an object file
+src/backend/gcode_generation.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/gcode_generation.cpp.o
+.PHONY : src/backend/gcode_generation.cpp.o
+
+src/backend/gcode_generation.i: src/backend/gcode_generation.cpp.i
+
+.PHONY : src/backend/gcode_generation.i
+
+# target to preprocess a source file
+src/backend/gcode_generation.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/gcode_generation.cpp.i
+.PHONY : src/backend/gcode_generation.cpp.i
+
+src/backend/gcode_generation.s: src/backend/gcode_generation.cpp.s
+
+.PHONY : src/backend/gcode_generation.s
+
+# target to generate assembly for a file
+src/backend/gcode_generation.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/gcode_generation.cpp.s
+.PHONY : src/backend/gcode_generation.cpp.s
+
 src/backend/operation.o: src/backend/operation.cpp.o
 
 .PHONY : src/backend/operation.o
@@ -3119,33 +3146,6 @@ src/synthesis/fixture_analysis.s: src/synthesis/fixture_analysis.cpp.s
 src/synthesis/fixture_analysis.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/fixture_analysis.cpp.s
 .PHONY : src/synthesis/fixture_analysis.cpp.s
-
-src/synthesis/gcode_generation.o: src/synthesis/gcode_generation.cpp.o
-
-.PHONY : src/synthesis/gcode_generation.o
-
-# target to build an object file
-src/synthesis/gcode_generation.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.o
-.PHONY : src/synthesis/gcode_generation.cpp.o
-
-src/synthesis/gcode_generation.i: src/synthesis/gcode_generation.cpp.i
-
-.PHONY : src/synthesis/gcode_generation.i
-
-# target to preprocess a source file
-src/synthesis/gcode_generation.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.i
-.PHONY : src/synthesis/gcode_generation.cpp.i
-
-src/synthesis/gcode_generation.s: src/synthesis/gcode_generation.cpp.s
-
-.PHONY : src/synthesis/gcode_generation.s
-
-# target to generate assembly for a file
-src/synthesis/gcode_generation.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/gcode_generation.cpp.s
-.PHONY : src/synthesis/gcode_generation.cpp.s
 
 src/synthesis/jaw_cutout.o: src/synthesis/jaw_cutout.cpp.o
 
@@ -5181,6 +5181,9 @@ help:
 	@echo "... src/backend/freeform_toolpaths.o"
 	@echo "... src/backend/freeform_toolpaths.i"
 	@echo "... src/backend/freeform_toolpaths.s"
+	@echo "... src/backend/gcode_generation.o"
+	@echo "... src/backend/gcode_generation.i"
+	@echo "... src/backend/gcode_generation.s"
 	@echo "... src/backend/operation.o"
 	@echo "... src/backend/operation.i"
 	@echo "... src/backend/operation.s"
@@ -5376,9 +5379,6 @@ help:
 	@echo "... src/synthesis/fixture_analysis.o"
 	@echo "... src/synthesis/fixture_analysis.i"
 	@echo "... src/synthesis/fixture_analysis.s"
-	@echo "... src/synthesis/gcode_generation.o"
-	@echo "... src/synthesis/gcode_generation.i"
-	@echo "... src/synthesis/gcode_generation.s"
 	@echo "... src/synthesis/jaw_cutout.o"
 	@echo "... src/synthesis/jaw_cutout.i"
 	@echo "... src/synthesis/jaw_cutout.s"

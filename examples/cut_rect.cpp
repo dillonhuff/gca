@@ -3,7 +3,7 @@
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/freeform_surface_detection.h"
 #include "synthesis/clamp_orientation.h"
-#include "synthesis/gcode_generation.h"
+#include "backend/gcode_generation.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/visual_debug.h"
 #include "backend/toolpath_generation.h"
