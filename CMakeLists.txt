@@ -157,6 +157,7 @@ SET(GCA_CPPS
 	./src/backend/operation.cpp
 	./src/backend/operation_name.cpp
 	./src/backend/output.cpp
+	./src/backend/shapes_to_toolpaths.cpp
 	./src/backend/toolpath_generation.cpp
 	./src/backend/tool.cpp
 	./src/feature_recognition/chamfer_detection.cpp
@@ -181,7 +182,6 @@ SET(GCA_CPPS
 	./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/dxf_reader.cpp
 	 ./src/synthesis/shapes_to_gcode.cpp
-	 ./src/synthesis/shapes_to_toolpaths.cpp
 	 ./src/synthesis/contour_planning.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp

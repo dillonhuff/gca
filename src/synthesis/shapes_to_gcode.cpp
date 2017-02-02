@@ -7,7 +7,7 @@
 #include "gcode/safe_move.h"
 #include "synthesis/schedule_cuts.h"
 #include "synthesis/shapes_to_gcode.h"
-#include "synthesis/shapes_to_toolpaths.h"
+#include "backend/shapes_to_toolpaths.h"
 
 using namespace std;
 

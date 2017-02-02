@@ -4,7 +4,7 @@
 #include "geometry/polyline.h"
 #include "gcode/circular_arc.h"
 #include "gcode/linear_cut.h"
-#include "synthesis/shapes_to_toolpaths.h"
+#include "backend/shapes_to_toolpaths.h"
 #include "geometry/spline_sampling.h"
 #include "backend/toolpath_generation.h"
 #include "utils/algorithm.h"

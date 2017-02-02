@@ -1446,6 +1446,33 @@ src/backend/output.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.s
 .PHONY : src/backend/output.cpp.s
 
+src/backend/shapes_to_toolpaths.o: src/backend/shapes_to_toolpaths.cpp.o
+
+.PHONY : src/backend/shapes_to_toolpaths.o
+
+# target to build an object file
+src/backend/shapes_to_toolpaths.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_toolpaths.cpp.o
+.PHONY : src/backend/shapes_to_toolpaths.cpp.o
+
+src/backend/shapes_to_toolpaths.i: src/backend/shapes_to_toolpaths.cpp.i
+
+.PHONY : src/backend/shapes_to_toolpaths.i
+
+# target to preprocess a source file
+src/backend/shapes_to_toolpaths.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_toolpaths.cpp.i
+.PHONY : src/backend/shapes_to_toolpaths.cpp.i
+
+src/backend/shapes_to_toolpaths.s: src/backend/shapes_to_toolpaths.cpp.s
+
+.PHONY : src/backend/shapes_to_toolpaths.s
+
+# target to generate assembly for a file
+src/backend/shapes_to_toolpaths.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_toolpaths.cpp.s
+.PHONY : src/backend/shapes_to_toolpaths.cpp.s
+
 src/backend/tool.o: src/backend/tool.cpp.o
 
 .PHONY : src/backend/tool.o
@@ -3227,33 +3254,6 @@ src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
 src/synthesis/shapes_to_gcode.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_gcode.cpp.s
 .PHONY : src/synthesis/shapes_to_gcode.cpp.s
-
-src/synthesis/shapes_to_toolpaths.o: src/synthesis/shapes_to_toolpaths.cpp.o
-
-.PHONY : src/synthesis/shapes_to_toolpaths.o
-
-# target to build an object file
-src/synthesis/shapes_to_toolpaths.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.o
-.PHONY : src/synthesis/shapes_to_toolpaths.cpp.o
-
-src/synthesis/shapes_to_toolpaths.i: src/synthesis/shapes_to_toolpaths.cpp.i
-
-.PHONY : src/synthesis/shapes_to_toolpaths.i
-
-# target to preprocess a source file
-src/synthesis/shapes_to_toolpaths.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.i
-.PHONY : src/synthesis/shapes_to_toolpaths.cpp.i
-
-src/synthesis/shapes_to_toolpaths.s: src/synthesis/shapes_to_toolpaths.cpp.s
-
-.PHONY : src/synthesis/shapes_to_toolpaths.s
-
-# target to generate assembly for a file
-src/synthesis/shapes_to_toolpaths.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_toolpaths.cpp.s
-.PHONY : src/synthesis/shapes_to_toolpaths.cpp.s
 
 src/synthesis/timing.o: src/synthesis/timing.cpp.o
 
@@ -5190,6 +5190,9 @@ help:
 	@echo "... src/backend/output.o"
 	@echo "... src/backend/output.i"
 	@echo "... src/backend/output.s"
+	@echo "... src/backend/shapes_to_toolpaths.o"
+	@echo "... src/backend/shapes_to_toolpaths.i"
+	@echo "... src/backend/shapes_to_toolpaths.s"
 	@echo "... src/backend/tool.o"
 	@echo "... src/backend/tool.i"
 	@echo "... src/backend/tool.s"
@@ -5388,9 +5391,6 @@ help:
 	@echo "... src/synthesis/shapes_to_gcode.o"
 	@echo "... src/synthesis/shapes_to_gcode.i"
 	@echo "... src/synthesis/shapes_to_gcode.s"
-	@echo "... src/synthesis/shapes_to_toolpaths.o"
-	@echo "... src/synthesis/shapes_to_toolpaths.i"
-	@echo "... src/synthesis/shapes_to_toolpaths.s"
 	@echo "... src/synthesis/timing.o"
 	@echo "... src/synthesis/timing.i"
 	@echo "... src/synthesis/timing.s"

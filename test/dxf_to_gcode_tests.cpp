@@ -6,7 +6,7 @@
 #include "checkers/forbidden_tool_checker.h"
 #include "checkers/unsafe_spindle_checker.h"
 #include "synthesis/shapes_to_gcode.h"
-#include "synthesis/shapes_to_toolpaths.h"
+#include "backend/shapes_to_toolpaths.h"
 #include "synthesis/dxf_reader.h"
 #include "backend/output.h"
 #include "system/settings.h"
