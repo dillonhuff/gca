@@ -136,7 +136,6 @@ SET(GCA_HEADERS
 	    ./src/synthesis/mesh_to_gcode.h
 	    ./src/synthesis/contour_planning.h
 	    ./src/synthesis/face_clipping.h
-	    ./src/synthesis/shapes_to_gcode.h
 	    ./src/backend/toolpath_generation.h
 	    ./src/synthesis/millability.h
 	    ./src/synthesis/vice.h
@@ -157,6 +156,7 @@ SET(GCA_CPPS
 	./src/backend/operation.cpp
 	./src/backend/operation_name.cpp
 	./src/backend/output.cpp
+	./src/backend/shapes_to_gcode.cpp
 	./src/backend/shapes_to_toolpaths.cpp
 	./src/backend/toolpath_generation.cpp
 	./src/backend/tool.cpp
@@ -181,7 +181,6 @@ SET(GCA_CPPS
 	./src/synthesis/gcode_generation.cpp
 	./src/synthesis/mesh_to_gcode.cpp
 	 ./src/synthesis/dxf_reader.cpp
-	 ./src/synthesis/shapes_to_gcode.cpp
 	 ./src/synthesis/contour_planning.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp

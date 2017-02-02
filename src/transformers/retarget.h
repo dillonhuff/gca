@@ -6,7 +6,7 @@
 #include "analysis/gcode_to_cuts.h"
 #include "gcode/lexer.h"
 #include "gcode/cut.h"
-#include "synthesis/shapes_to_gcode.h"
+#include "backend/shapes_to_gcode.h"
 
 namespace gca {
 

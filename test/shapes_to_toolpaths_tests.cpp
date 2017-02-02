@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "utils/arena_allocator.h"
 #include "gcode/linear_cut.h"
-#include "synthesis/shapes_to_gcode.h"
+#include "backend/shapes_to_gcode.h"
 #include "backend/shapes_to_toolpaths.h"
 
 namespace gca {

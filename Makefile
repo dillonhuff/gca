@@ -1446,6 +1446,33 @@ src/backend/output.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/output.cpp.s
 .PHONY : src/backend/output.cpp.s
 
+src/backend/shapes_to_gcode.o: src/backend/shapes_to_gcode.cpp.o
+
+.PHONY : src/backend/shapes_to_gcode.o
+
+# target to build an object file
+src/backend/shapes_to_gcode.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_gcode.cpp.o
+.PHONY : src/backend/shapes_to_gcode.cpp.o
+
+src/backend/shapes_to_gcode.i: src/backend/shapes_to_gcode.cpp.i
+
+.PHONY : src/backend/shapes_to_gcode.i
+
+# target to preprocess a source file
+src/backend/shapes_to_gcode.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_gcode.cpp.i
+.PHONY : src/backend/shapes_to_gcode.cpp.i
+
+src/backend/shapes_to_gcode.s: src/backend/shapes_to_gcode.cpp.s
+
+.PHONY : src/backend/shapes_to_gcode.s
+
+# target to generate assembly for a file
+src/backend/shapes_to_gcode.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/backend/shapes_to_gcode.cpp.s
+.PHONY : src/backend/shapes_to_gcode.cpp.s
+
 src/backend/shapes_to_toolpaths.o: src/backend/shapes_to_toolpaths.cpp.o
 
 .PHONY : src/backend/shapes_to_toolpaths.o
@@ -3227,33 +3254,6 @@ src/synthesis/schedule_cuts.s: src/synthesis/schedule_cuts.cpp.s
 src/synthesis/schedule_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/schedule_cuts.cpp.s
 .PHONY : src/synthesis/schedule_cuts.cpp.s
-
-src/synthesis/shapes_to_gcode.o: src/synthesis/shapes_to_gcode.cpp.o
-
-.PHONY : src/synthesis/shapes_to_gcode.o
-
-# target to build an object file
-src/synthesis/shapes_to_gcode.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_gcode.cpp.o
-.PHONY : src/synthesis/shapes_to_gcode.cpp.o
-
-src/synthesis/shapes_to_gcode.i: src/synthesis/shapes_to_gcode.cpp.i
-
-.PHONY : src/synthesis/shapes_to_gcode.i
-
-# target to preprocess a source file
-src/synthesis/shapes_to_gcode.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_gcode.cpp.i
-.PHONY : src/synthesis/shapes_to_gcode.cpp.i
-
-src/synthesis/shapes_to_gcode.s: src/synthesis/shapes_to_gcode.cpp.s
-
-.PHONY : src/synthesis/shapes_to_gcode.s
-
-# target to generate assembly for a file
-src/synthesis/shapes_to_gcode.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/shapes_to_gcode.cpp.s
-.PHONY : src/synthesis/shapes_to_gcode.cpp.s
 
 src/synthesis/timing.o: src/synthesis/timing.cpp.o
 
@@ -5190,6 +5190,9 @@ help:
 	@echo "... src/backend/output.o"
 	@echo "... src/backend/output.i"
 	@echo "... src/backend/output.s"
+	@echo "... src/backend/shapes_to_gcode.o"
+	@echo "... src/backend/shapes_to_gcode.i"
+	@echo "... src/backend/shapes_to_gcode.s"
 	@echo "... src/backend/shapes_to_toolpaths.o"
 	@echo "... src/backend/shapes_to_toolpaths.i"
 	@echo "... src/backend/shapes_to_toolpaths.s"
@@ -5388,9 +5391,6 @@ help:
 	@echo "... src/synthesis/schedule_cuts.o"
 	@echo "... src/synthesis/schedule_cuts.i"
 	@echo "... src/synthesis/schedule_cuts.s"
-	@echo "... src/synthesis/shapes_to_gcode.o"
-	@echo "... src/synthesis/shapes_to_gcode.i"
-	@echo "... src/synthesis/shapes_to_gcode.s"
 	@echo "... src/synthesis/timing.o"
 	@echo "... src/synthesis/timing.i"
 	@echo "... src/synthesis/timing.s"

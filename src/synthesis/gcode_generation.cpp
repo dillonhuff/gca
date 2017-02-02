@@ -4,7 +4,7 @@
 #include "backend/cut_to_gcode.h"
 #include "synthesis/gcode_generation.h"
 #include "backend/shape_layout.h"
-#include "synthesis/shapes_to_gcode.h"
+//#include "synthesis/shapes_to_gcode.h"
 #include "utils/algorithm.h"
 
 namespace gca {

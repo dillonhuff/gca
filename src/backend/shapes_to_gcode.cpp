@@ -2,11 +2,9 @@
 #include <numeric>
 #include <sstream>
 
-#include "synthesis/dxf_reader.h"
 #include "backend/cut_to_gcode.h"
 #include "gcode/safe_move.h"
-#include "synthesis/schedule_cuts.h"
-#include "synthesis/shapes_to_gcode.h"
+#include "backend/shapes_to_gcode.h"
 #include "backend/shapes_to_toolpaths.h"
 
 using namespace std;

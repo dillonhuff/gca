@@ -1,6 +1,6 @@
 #include "analysis/extract_cuts.h"
 #include "catch.hpp"
-#include "synthesis/shapes_to_gcode.h"
+#include "backend/shapes_to_gcode.h"
 #include "synthesis/dxf_reader.h"
 #include "backend/output.h"
 

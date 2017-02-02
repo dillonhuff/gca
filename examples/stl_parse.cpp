@@ -2,7 +2,7 @@
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/gcode_generation.h"
 #include "synthesis/mesh_to_gcode.h"
-#include "synthesis/shapes_to_gcode.h"
+#include "backend/shapes_to_gcode.h"
 #include "backend/toolpath_generation.h"
 #include "synthesis/visual_debug.h"
 #include "utils/algorithm.h"
