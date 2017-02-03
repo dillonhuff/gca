@@ -1567,6 +1567,33 @@ src/backend/tool.cpp.s:
 	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/tool.cpp.s
 .PHONY : src/backend/tool.cpp.s
 
+src/backend/toolpath.o: src/backend/toolpath.cpp.o
+
+.PHONY : src/backend/toolpath.o
+
+# target to build an object file
+src/backend/toolpath.cpp.o:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/toolpath.cpp.o
+.PHONY : src/backend/toolpath.cpp.o
+
+src/backend/toolpath.i: src/backend/toolpath.cpp.i
+
+.PHONY : src/backend/toolpath.i
+
+# target to preprocess a source file
+src/backend/toolpath.cpp.i:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/toolpath.cpp.i
+.PHONY : src/backend/toolpath.cpp.i
+
+src/backend/toolpath.s: src/backend/toolpath.cpp.s
+
+.PHONY : src/backend/toolpath.s
+
+# target to generate assembly for a file
+src/backend/toolpath.cpp.s:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/toolpath.cpp.s
+.PHONY : src/backend/toolpath.cpp.s
+
 src/backend/toolpath_generation.o: src/backend/toolpath_generation.cpp.o
 
 .PHONY : src/backend/toolpath_generation.o
@@ -3294,33 +3321,6 @@ src/synthesis/timing.s: src/synthesis/timing.cpp.s
 src/synthesis/timing.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/timing.cpp.s
 .PHONY : src/synthesis/timing.cpp.s
-
-src/synthesis/toolpath.o: src/synthesis/toolpath.cpp.o
-
-.PHONY : src/synthesis/toolpath.o
-
-# target to build an object file
-src/synthesis/toolpath.cpp.o:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.o
-.PHONY : src/synthesis/toolpath.cpp.o
-
-src/synthesis/toolpath.i: src/synthesis/toolpath.cpp.i
-
-.PHONY : src/synthesis/toolpath.i
-
-# target to preprocess a source file
-src/synthesis/toolpath.cpp.i:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.i
-.PHONY : src/synthesis/toolpath.cpp.i
-
-src/synthesis/toolpath.s: src/synthesis/toolpath.cpp.s
-
-.PHONY : src/synthesis/toolpath.s
-
-# target to generate assembly for a file
-src/synthesis/toolpath.cpp.s:
-	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/synthesis/toolpath.cpp.s
-.PHONY : src/synthesis/toolpath.cpp.s
 
 src/synthesis/vice.o: src/synthesis/vice.cpp.o
 
@@ -5216,6 +5216,9 @@ help:
 	@echo "... src/backend/tool.o"
 	@echo "... src/backend/tool.i"
 	@echo "... src/backend/tool.s"
+	@echo "... src/backend/toolpath.o"
+	@echo "... src/backend/toolpath.i"
+	@echo "... src/backend/toolpath.s"
 	@echo "... src/backend/toolpath_generation.o"
 	@echo "... src/backend/toolpath_generation.i"
 	@echo "... src/backend/toolpath_generation.s"
@@ -5408,9 +5411,6 @@ help:
 	@echo "... src/synthesis/timing.o"
 	@echo "... src/synthesis/timing.i"
 	@echo "... src/synthesis/timing.s"
-	@echo "... src/synthesis/toolpath.o"
-	@echo "... src/synthesis/toolpath.i"
-	@echo "... src/synthesis/toolpath.s"
 	@echo "... src/synthesis/vice.o"
 	@echo "... src/synthesis/vice.i"
 	@echo "... src/synthesis/vice.s"

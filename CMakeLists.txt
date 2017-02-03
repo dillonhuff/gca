@@ -133,6 +133,7 @@ SET(BACKEND_CPPS
 	./src/backend/shapes_to_gcode.cpp
 	./src/backend/shapes_to_toolpaths.cpp
 	./src/backend/toolpath_generation.cpp
+	./src/backend/toolpath.cpp
 	./src/backend/tool.cpp)
 
 add_library(backend ${BACKEND_CPPS})
@@ -184,7 +185,6 @@ SET(GCA_CPPS
 	 ./src/synthesis/contour_planning.cpp
 	 ./src/synthesis/workpiece_clipping.cpp
 	 ./src/synthesis/schedule_cuts.cpp
-	 ./src/synthesis/toolpath.cpp
 	 ./src/synthesis/fixture_analysis.cpp
 	 ./src/synthesis/millability.cpp
 	 ./src/synthesis/vice.cpp
