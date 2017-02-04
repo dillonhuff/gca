@@ -1,9 +1,17 @@
 #include <cmath>
 
+#include <vtkPolyData.h>
+#include <vtkSmartPointer.h>
+
+#include <vtkCellData.h>
+#include <vtkCellArray.h>
+#include <vtkVertex.h>
+
 #include "analysis/gcode_to_cuts.h"
 #include "catch.hpp"
 #include "utils/arena_allocator.h"
 #include "geometry/line.h"
+#include "geometry/vtk_debug.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
@@ -17,6 +25,37 @@
 namespace gca {
   
   double square(double d) { return d*d; }
+
+  void vtk_debug_depth_field(const depth_field& df) {
+    vtkSmartPointer<vtkPoints> points =
+      vtkSmartPointer<vtkPoints>::New();
+ 
+    vtkSmartPointer<vtkCellArray> vertices =
+      vtkSmartPointer<vtkCellArray>::New();
+    
+    for (int i = 0; i < df.num_x_elems; i++) {
+      for (int j = 0; j < df.num_y_elems; j++) {
+
+	auto id = points->InsertNextPoint(df.x_center(i),
+					  df.y_center(j),
+					  df.column_height(i, j));
+	vtkSmartPointer<vtkVertex> vertex = 
+	  vtkSmartPointer<vtkVertex>::New();
+
+	vertex->GetPointIds()->SetId(0, id);
+	vertices->InsertNextCell(vertex);
+      }
+    }
+ 
+    vtkSmartPointer<vtkPolyData> polydata =
+      vtkSmartPointer<vtkPolyData>::New();
+    polydata->SetPoints(points);
+    polydata->SetVerts(vertices);
+
+    auto pd_actor = polydata_actor(polydata);
+
+    visualize_actors({pd_actor});
+  }
 
   TEST_CASE("Mill simulator") {
     arena_allocator a;
@@ -146,11 +185,13 @@ namespace gca {
       auto mesh =
 	parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-      depth_field df = build_from_stl(mesh, 0.05);
+      depth_field df = build_from_stl(mesh, 0.01);
 
       box bb = mesh.bounding_box();
 
       cout << "df.z_max = " << df.z_max() << endl;
+
+      vtk_debug_depth_field(df);
 
       REQUIRE(df.z_max() < (bb.z_max + 0.0001));
 
