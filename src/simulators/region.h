@@ -12,7 +12,6 @@ namespace gca {
   class depth_field {
   protected:
     point origin;
-    point x_axis, y_axis;
     float* column_heights;
 
   public:
@@ -21,16 +20,16 @@ namespace gca {
     int num_x_elems, num_y_elems;
 
     depth_field(const point p_origin,
-		const point p_x_axis,
-		const point p_y_axis,
 		double x_w,
 		double y_w,
 		double z_w,
 		double xy_resolution) :
-      origin(p_origin), x_axis(p_x_axis), y_axis(p_y_axis),
+      origin(p_origin),
       resolution(xy_resolution), x_len(x_w), y_len(y_w),
       num_x_elems(x_w/static_cast<double>(xy_resolution)),
       num_y_elems(y_w/static_cast<double>(xy_resolution)) {
+
+      DBG_ASSERT(origin.z == 0.0);
 
       column_heights = static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
       for (int i = 0; i < num_x_elems; i++) {
@@ -40,13 +39,37 @@ namespace gca {
       }
     }
 
+    inline double x_min() const {
+      return origin.x;
+    }
+
+    inline double x_max() const {
+      return origin.x + x_len;
+    }
+
+    inline double y_min() const {
+      return origin.y;
+    }
+
+    inline double y_max() const {
+      return origin.y + y_len;
+    }
+
+    inline int x_index(double x) const {
+      return static_cast<int>(x / resolution);
+    }
+
+    inline int y_index(double y) const {
+      return static_cast<int>(y / resolution);
+    }
+    
     void set_height(double x_s, double x_e,
 		    double y_s, double y_e,
 		    double h) {
-      int first_x = static_cast<int>(x_s / resolution);
-      int last_x = static_cast<int>(x_e / resolution);
-      int first_y = static_cast<int>(y_s / resolution);
-      int last_y = static_cast<int>(y_e / resolution);
+      int first_x = x_index(x_s); //static_cast<int>(x_s / resolution);
+      int last_x = x_index(x_e); //static_cast<int>(x_e / resolution);
+      int first_y = y_index(y_s); //static_cast<int>(y_s / resolution);
+      int last_y = y_index(y_e); //static_cast<int>(y_e / resolution);
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  set_column_height(i, j, h);
@@ -82,19 +105,17 @@ namespace gca {
 	   double y_w,
 	   double z_w,
 	   double xy_resolution) :
-      r(point(0, 0, 0), point(1, 0, 0), point(0, 1, 0),
+      r(point(0, 0, 0),
 	x_w, y_w, z_w, xy_resolution),
       total_volume_removed(0),
       machine_x_offset(0), machine_y_offset(0), machine_z_offset(0) {}
     
     region(const point origin,
-	   const point x_axis,
-	   const point y_axis,
 	   double x_w,
 	   double y_w,
 	   double z_w,
 	   double xy_resolution) :
-      r(origin, x_axis, y_axis, x_w, y_w, z_w, xy_resolution),
+      r(origin, x_w, y_w, z_w, xy_resolution),
       total_volume_removed(0),
       machine_x_offset(0), machine_y_offset(0), machine_z_offset(0) {}
 
