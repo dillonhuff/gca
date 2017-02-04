@@ -66,10 +66,10 @@ namespace gca {
     void set_height(double x_s, double x_e,
 		    double y_s, double y_e,
 		    double h) {
-      int first_x = x_index(x_s); //static_cast<int>(x_s / resolution);
-      int last_x = x_index(x_e); //static_cast<int>(x_e / resolution);
-      int first_y = y_index(y_s); //static_cast<int>(y_s / resolution);
-      int last_y = y_index(y_e); //static_cast<int>(y_e / resolution);
+      int first_x = x_index(x_s);
+      int last_x = x_index(x_e);
+      int first_y = y_index(y_s);
+      int last_y = y_index(y_e);
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  set_column_height(i, j, h);
@@ -143,11 +143,12 @@ namespace gca {
 
     double update(point p, const mill_tool& t) {
       double volume_removed = 0.0;
-      int first_x = static_cast<int>(t.x_min(p) / r.resolution);
-      int last_x = static_cast<int>(t.x_max(p) / r.resolution) + 1;
-      int first_y = static_cast<int>(t.y_min(p) / r.resolution);
-      int last_y = static_cast<int>(t.y_max(p) / r.resolution) + 1;
 
+      int first_x = r.x_index(t.x_min(p));
+      int last_x = r.x_index(t.x_max(p)) + 1;
+      int first_y = r.y_index(t.y_min(p));
+      int last_y = r.y_index(t.y_max(p)) + 1;
+      
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 	  if (t.contains(p, r.resolution, i, j)) {
