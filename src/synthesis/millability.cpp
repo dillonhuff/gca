@@ -274,4 +274,83 @@ namespace gca {
     return vert_or_horiz;
   }
 
+  line build_segment(const int i,
+		     const int j,
+		     const depth_field& df,
+		     const box bb) {
+    point dir(0, 0, 1);
+
+    double ray_len = 2*bb.z_max;
+
+    point p(df.x_center(i), df.y_center(j), 0.0);
+
+    line l = test_segment(ray_len, dir, p);
+
+    return l;
+  }
+
+  void set_heights(depth_field& df,
+		   const triangular_mesh& part) {
+
+    point normal(0, 0, 1);
+
+    // vector<index_t> inds;
+    // vector<point> centroids(all_face_inds.size());
+    // transform(begin(all_face_inds), end(all_face_inds),
+    // 	      begin(centroids),
+    // 	      [&part](const index_t i) {
+    // 		triangle t = part.face_triangle(i);
+    // 		return t.centroid();
+    // 	      });
+
+    box bb = part.bounding_box();
+
+    double ray_len = 2*greater_than_diameter(normal, part.vertex_list());
+    // vector<line> segments = construct_test_segments(normal, centroids, ray_len);
+
+    auto all_face_inds = part.face_indexes();
+    // DBG_ASSERT(all_face_inds.size() == segments.size());
+    // DBG_ASSERT(centroids.size() == segments.size());
+    
+    for (int i = 0; i < df.num_x_elems; i++) {
+      for (int j = 0; j < df.num_y_elems; j++) {
+	auto test_segment = build_segment(i, j, df, bb);
+	vector<index_t> intersecting_faces = all_intersections(all_face_inds,
+							       part,
+							       test_segment);
+	if (intersecting_faces.size() > 0) {
+	  auto m_e = max_element(begin(intersecting_faces), end(intersecting_faces),
+				 [part, normal](const index_t l, const index_t r) {
+				   point cl = part.face_triangle(l).centroid();
+				   point cr = part.face_triangle(r).centroid();
+				   return signed_distance_along(cl, normal) <
+				   signed_distance_along(cr, normal);
+				 });
+	  index_t m = *m_e;
+	  df.set_column_height(i, j, part.face_triangle(m).centroid().z);
+
+	} else {
+	  df.set_column_height(i, j, 0.0);
+	}
+	
+      }
+    }
+
+  }
+
+  depth_field build_from_stl(const triangular_mesh& mesh,
+			     const double res) {
+    box bb = mesh.bounding_box();
+    double eps = 0.01;
+    point origin(bb.x_min - eps, bb.y_min - eps, 0.0);
+    double x_w = bb.x_len() + eps;
+    double y_w = bb.y_len() + eps;
+
+    depth_field df(origin, x_w, y_w, res);
+
+    set_heights(df, mesh);
+
+    return df;
+  }
+
 }

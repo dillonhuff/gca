@@ -7,10 +7,12 @@
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
+#include "synthesis/millability.h"
 #include "gcode/circular_arc.h"
 #include "gcode/linear_cut.h"
 #include "gcode/safe_move.h"
 #include "system/file.h"
+#include "system/parse_stl.h"
 
 namespace gca {
   
@@ -22,14 +24,14 @@ namespace gca {
 
     SECTION("Run empty program") {
       vector<cut*> lines;
-      region r(10, 10, 10, 0.01);
+      class region r(10, 10, 10, 0.01);
       cylindrical_bit t(1);
       double actual = simulate_mill(lines, r, t);
       REQUIRE(actual == 0.0);
     }
 
     SECTION("One G1 move down") {
-      region r(10, 10, 10, 0.01);
+      class region r(10, 10, 10, 0.01);
       r.r.set_height(0, 10, 0, 10, 10);
       r.set_machine_x_offset(5);
       r.set_machine_y_offset(5);
@@ -45,7 +47,7 @@ namespace gca {
     }
 
     SECTION("Simulation") {
-      region r(5, 5, 5, 0.01);
+      class region r(5, 5, 5, 0.01);
       r.set_machine_x_offset(1);
       r.set_machine_y_offset(3);
       double tool_diameter = 1.0;
@@ -85,7 +87,7 @@ namespace gca {
     }
 
     SECTION("Push down, then make a circle") {
-      region r(5, 5, 5, 0.005);
+      class region r(5, 5, 5, 0.005);
       r.r.set_height(0, 5, 0, 5, 4.0);
       r.set_machine_x_offset(0);
       r.set_machine_y_offset(0);
@@ -127,7 +129,7 @@ namespace gca {
     }
 
     SECTION("Safe move above the workpiece removes nothing") {
-      region r(5, 5, 5, 0.005);
+      class region r(5, 5, 5, 0.005);
       double z_max = 0.499;
       r.r.set_height(0, 5, 0, 5, z_max);
       r.set_machine_x_offset(0);
@@ -139,32 +141,39 @@ namespace gca {
       double volume_removed = update_cut(*c, r, t);
       REQUIRE(volume_removed == 0.0);
     }
+
+    SECTION("Build region from an STL") {
+      auto mesh =
+	parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+
+      depth_field df = build_from_stl(mesh, 0.05);
+
+      box bb = mesh.bounding_box();
+
+      cout << "df.z_max = " << df.z_max() << endl;
+
+      REQUIRE(df.z_max() < (bb.z_max + 0.0001));
+
+      REQUIRE(df.z_max() > (bb.z_min + 0.1));
+    }
+
+    SECTION("Inferring safe height") {
+      double tool_diameter = 0.125;
+      double tool_radius = tool_diameter / 2.0;
+      cylindrical_bit t(tool_diameter);
+      vector<vector<cut*>> paths{{}};
+      double safe_height = 2.5;
+      auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
+      paths.front().push_back(c1);
+      auto c2 = linear_cut::make(point(1, 2, 0.5), point(1, 2, -0.5));
+      paths.front().push_back(c2);
+      auto r = set_up_region(paths, tool_diameter);
+      double volume_removed = update_cut(*c1, r, t);
+      REQUIRE(volume_removed == 0.0);
+    }
+
+
   }
-
-  TEST_CASE("Inferring safe height") {
-    arena_allocator a;
-    set_system_allocator(&a);
-    
-    double tool_diameter = 0.125;
-    double tool_radius = tool_diameter / 2.0;
-    cylindrical_bit t(tool_diameter);
-    vector<vector<cut*>> paths{{}};
-    double safe_height = 2.5;
-    auto c1 = safe_move::make(point(1, 1, safe_height), point(1, 2, safe_height));
-    paths.front().push_back(c1);
-    auto c2 = linear_cut::make(point(1, 2, 0.5), point(1, 2, -0.5));
-    paths.front().push_back(c2);
-    auto r = set_up_region(paths, tool_diameter);
-    double volume_removed = update_cut(*c1, r, t);
-    REQUIRE(volume_removed == 0.0);
-  }
-
-  // TEST_CASE("Build region from an STL") {
-  //   auto mesh =
-  //     parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
-
-  //   depth_field df = build_from_stl(mesh);
-  // }
 
   // TEST_CASE("Vertical safe move does not remove material") {
   //   arena_allocator a;

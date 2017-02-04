@@ -3,6 +3,7 @@
 
 #include "geometry/surface.h"
 #include "geometry/triangular_mesh.h"
+#include "simulators/region.h"
 
 namespace gca {
 
@@ -24,7 +25,9 @@ namespace gca {
   std::vector<index_t>
   prismatic_millable_faces(const point n,
 			   const triangular_mesh& part);
-  
+
+  depth_field build_from_stl(const triangular_mesh& mesh,
+			     const double res);
 }
 
 #endif

@@ -22,7 +22,6 @@ namespace gca {
     depth_field(const point p_origin,
 		double x_w,
 		double y_w,
-		double z_w,
 		double xy_resolution) :
       origin(p_origin),
       resolution(xy_resolution), x_len(x_w), y_len(y_w),
@@ -31,7 +30,9 @@ namespace gca {
 
       DBG_ASSERT(origin.z == 0.0);
 
-      column_heights = static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
+      column_heights =
+	static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
+
       for (int i = 0; i < num_x_elems; i++) {
 	for (int j = 0; j < num_y_elems; j++) {
 	  set_column_height(i, j, 0);
@@ -39,6 +40,14 @@ namespace gca {
       }
     }
 
+    inline double x_center(const int i) const {
+      return x_min() + resolution*i + (resolution/2.0);
+    }
+
+    inline double y_center(const int i) const {
+      return y_min() + resolution*i + (resolution/2.0);
+    }
+    
     inline double x_min() const {
       return origin.x;
     }
@@ -53,6 +62,19 @@ namespace gca {
 
     inline double y_max() const {
       return origin.y + y_len;
+    }
+
+    double z_max() const {
+      auto max_it =
+	max_element(column_heights,
+		    column_heights + num_x_elems*num_y_elems,
+		    [](const float l, const float r) {
+		      return l < r;
+		    });
+
+      DBG_ASSERT(max_it);
+
+      return *max_it;
     }
 
     inline int x_index(double x) const {
@@ -106,7 +128,7 @@ namespace gca {
 	   double z_w,
 	   double xy_resolution) :
       r(point(0, 0, 0),
-	x_w, y_w, z_w, xy_resolution),
+	x_w, y_w, xy_resolution),
       total_volume_removed(0),
       machine_x_offset(0), machine_y_offset(0), machine_z_offset(0) {}
     
@@ -115,7 +137,7 @@ namespace gca {
 	   double y_w,
 	   double z_w,
 	   double xy_resolution) :
-      r(origin, x_w, y_w, z_w, xy_resolution),
+      r(origin, x_w, y_w, xy_resolution),
       total_volume_removed(0),
       machine_x_offset(0), machine_y_offset(0), machine_z_offset(0) {}
 
