@@ -28,10 +28,10 @@ namespace gca {
 
     int num_in_region = 0;
 
-    for (int i = 0; i < sim_region.num_x_elems; i++) {
-      for (int j = 0; j < sim_region.num_y_elems; j++) {
-	double r_x = sim_region.resolution*i;
-	double r_y = sim_region.resolution*j;
+    for (int i = 0; i < sim_region.r.num_x_elems; i++) {
+      for (int j = 0; j < sim_region.r.num_y_elems; j++) {
+	double r_x = sim_region.r.resolution*i;
+	double r_y = sim_region.r.resolution*j;
 
 	point dummy(r_x, r_y, 0.0);
 	point converted = sim_region.region_coords_to_machine_coords(dummy);
@@ -41,9 +41,9 @@ namespace gca {
 	if (bg::within(conv_pt, poly_2d)) {
 	  num_in_region++;
 	  volume_in_area +=
-	    sim_region.resolution *
-	    sim_region.resolution *
-	    (original_height - sim_region.column_height(i, j));
+	    sim_region.r.resolution *
+	    sim_region.r.resolution *
+	    (original_height - sim_region.r.column_height(i, j));
 	}
       }
     }

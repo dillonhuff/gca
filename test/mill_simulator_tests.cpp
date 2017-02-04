@@ -30,7 +30,7 @@ namespace gca {
 
     SECTION("One G1 move down") {
       region r(10, 10, 10, 0.01);
-      r.set_height(0, 10, 0, 10, 10);
+      r.r.set_height(0, 10, 0, 10, 10);
       r.set_machine_x_offset(5);
       r.set_machine_y_offset(5);
       double tool_diameter = 1.0;
@@ -53,7 +53,7 @@ namespace gca {
       
       SECTION("Move through whole workpiece") {
     	vector<cut*> lines{linear_cut::make(point(0, 0, 3), point(3, 0, 3))};
-      	r.set_height(2, 3, 2, 4, 5);
+      	r.r.set_height(2, 3, 2, 4, 5);
       	double actual = simulate_mill(lines, r, t);
       	double correct_volume = tool_diameter*2*1;
       	cout << "-- Correct: " << correct_volume << endl;
@@ -64,7 +64,7 @@ namespace gca {
       SECTION("Move through whole workpiece then move back and stop") {
     	vector<cut*> lines{linear_cut::make(point(0, 0, 3), point(3, 0, 3)),
     	    linear_cut::make(point(3, 0, 3), point(0, 0, 3))};
-      	r.set_height(2, 3, 2, 4, 5);
+      	r.r.set_height(2, 3, 2, 4, 5);
       	double actual = simulate_mill(lines, r, t);
       	double correct_volume = tool_diameter*2*1;
       	cout << "-- Correct: " << correct_volume << endl;
@@ -74,7 +74,7 @@ namespace gca {
 
       SECTION("Diagonal cut over nothing") {
     	vector<cut*> lines{linear_cut::make(point(0, 0, 3), point(3, -0.1, 3))};
-    	r.set_height(2, 3, 2, 4, 1);
+    	r.r.set_height(2, 3, 2, 4, 1);
     	double actual = simulate_mill(lines, r, t);
     	double correct_volume = 0.0;
     	cout << "-- Correct: " << correct_volume << endl;
@@ -86,7 +86,7 @@ namespace gca {
 
     SECTION("Push down, then make a circle") {
       region r(5, 5, 5, 0.005);
-      r.set_height(0, 5, 0, 5, 4.0);
+      r.r.set_height(0, 5, 0, 5, 4.0);
       r.set_machine_x_offset(0);
       r.set_machine_y_offset(0);
       double tool_diameter = 0.125;
@@ -129,7 +129,7 @@ namespace gca {
     SECTION("Safe move above the workpiece removes nothing") {
       region r(5, 5, 5, 0.005);
       double z_max = 0.499;
-      r.set_height(0, 5, 0, 5, z_max);
+      r.r.set_height(0, 5, 0, 5, z_max);
       r.set_machine_x_offset(0);
       r.set_machine_y_offset(0);
       double tool_diameter = 0.125;

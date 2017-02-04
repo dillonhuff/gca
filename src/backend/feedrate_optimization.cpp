@@ -20,10 +20,10 @@ namespace gca {
 
     auto poly_2d = to_boost_multipoly_2(mregion.machine_area);
 
-    for (int i = 0; i < r.num_x_elems; i++) {
-      for (int j = 0; j < r.num_y_elems; j++) {
-	double r_x = r.resolution*i;
-	double r_y = r.resolution*j;
+    for (int i = 0; i < r.r.num_x_elems; i++) {
+      for (int j = 0; j < r.r.num_y_elems; j++) {
+	double r_x = r.r.resolution*i;
+	double r_y = r.r.resolution*j;
 
 	point dummy(r_x, r_y, 0.0);
 	point converted = r.region_coords_to_machine_coords(dummy);
@@ -31,9 +31,9 @@ namespace gca {
 	bg::model::d2::point_xy<double> conv_pt(converted.x, converted.y);
 
 	if (bg::within(conv_pt, poly_2d)) {
-	  r.set_column_height(i, j, mregion.height()); //safe_region_point.z);
+	  r.r.set_column_height(i, j, mregion.height()); //safe_region_point.z);
 	} else {
-	  r.set_column_height(i, j, 0.0);
+	  r.r.set_column_height(i, j, 0.0);
 	}
       }
     }
