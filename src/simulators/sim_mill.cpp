@@ -45,7 +45,7 @@ namespace gca {
   void check_region_bounds(const point e, const region& r, const mill_tool& t) {
     if (!r.in_region(e, t)) {
       cout << e << " goes outside of region bounds" << endl;
-      cout << "Region height: " << r.height << endl;
+      //cout << "Region height: " << r.height << endl;
       cout << "Region x len: " << r.x_len << endl;
       cout << "Region y len: " << r.y_len << endl;
       cout << "Machine x offset: " << r.machine_x_offset << endl;
