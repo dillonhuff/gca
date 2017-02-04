@@ -56,11 +56,11 @@ namespace gca {
     }
 
     inline int x_index(double x) const {
-      return static_cast<int>(x / resolution);
+      return static_cast<int>((x - x_min()) / resolution);
     }
 
     inline int y_index(double y) const {
-      return static_cast<int>(y / resolution);
+      return static_cast<int>((y - y_min()) / resolution);
     }
     
     void set_height(double x_s, double x_e,
