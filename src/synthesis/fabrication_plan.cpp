@@ -2,12 +2,7 @@
 
 namespace gca {
 
-  fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims) { 
-    vice test_v = current_setup();
-    vice test_vice = top_jaw_origin_vice(test_v);
-
-    std::vector<plate_height> plates{0.48, 0.625, 0.7};
-    fixtures fixes(test_vice, plates);
+  std::vector<tool> current_tools() {
 
     tool t1(0.25, 3.0, 4, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.14);
@@ -71,6 +66,18 @@ namespace gca {
     t6.set_tool_number(4);
     
     vector<tool> tools{t1, t2, t3, t4, t5, t6};
+
+    return tools;
+  }
+
+  fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims) { 
+    vice test_v = current_setup();
+    vice test_vice = top_jaw_origin_vice(test_v);
+
+    std::vector<plate_height> plates{0.48, 0.625, 0.7};
+    fixtures fixes(test_vice, plates);
+
+    auto tools = current_tools();
 
     return fabrication_inputs(fixes, tools, workpiece_dims);
   }

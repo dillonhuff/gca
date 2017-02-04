@@ -12,10 +12,15 @@
 #include "utils/arena_allocator.h"
 #include "geometry/line.h"
 #include "geometry/vtk_debug.h"
+#include "process_planning/feature_to_pocket.h"
+#include "process_planning/tool_access.h"
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
 #include "synthesis/millability.h"
+#include "synthesis/fabrication_plan.h"
+#include "synthesis/mesh_to_gcode.h"
+#include "synthesis/visual_debug.h"
 #include "gcode/circular_arc.h"
 #include "gcode/linear_cut.h"
 #include "gcode/safe_move.h"
@@ -26,7 +31,8 @@ namespace gca {
   
   double square(double d) { return d*d; }
 
-  void vtk_debug_depth_field(const depth_field& df) {
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_depth_field(const depth_field& df) {
     vtkSmartPointer<vtkPoints> points =
       vtkSmartPointer<vtkPoints>::New();
  
@@ -52,7 +58,11 @@ namespace gca {
     polydata->SetPoints(points);
     polydata->SetVerts(vertices);
 
-    auto pd_actor = polydata_actor(polydata);
+    return polydata;
+  }
+
+  void vtk_debug_depth_field(const depth_field& df) {
+    auto pd_actor = polydata_actor(polydata_for_depth_field(df));
 
     visualize_actors({pd_actor});
   }
@@ -196,6 +206,23 @@ namespace gca {
       REQUIRE(df.z_max() < (bb.z_max + 0.0001));
 
       REQUIRE(df.z_max() > (bb.z_min + 0.1));
+
+      point n(0, 0, 1);
+      feature_decomposition* f =
+	build_feature_decomposition(mesh, n);
+
+      std::vector<tool> tools = current_tools();
+      auto acc_info = find_accessable_tools(f, tools);
+
+      vector<pocket> pockets = feature_pockets(*f, n, acc_info);
+      vector<toolpath> toolpaths = cut_secured_mesh(pockets, tools, ALUMINUM);
+
+      vector<vtkSmartPointer<vtkActor> > actors{polydata_actor(polydata_for_depth_field(df))};
+      for (auto& tp : toolpaths) {
+	actors.push_back(actor_for_toolpath(tp));
+      }
+
+      visualize_actors(actors);
     }
 
     SECTION("Inferring safe height") {

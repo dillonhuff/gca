@@ -25,6 +25,10 @@ namespace gca {
 					 const fabrication_inputs& inputs);
 
 
+  std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
+					 const std::vector<tool>& tools,
+					 const material& stock_material);
+  
   fabrication_plan
   fabrication_plan_for_fixture_plan(const fixture_plan& plan,
 				    const triangular_mesh& part_mesh,

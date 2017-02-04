@@ -106,6 +106,8 @@ namespace gca {
 
   fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims);
 
+  std::vector<tool> current_tools();
+
 }
 
 #endif
