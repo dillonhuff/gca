@@ -159,12 +159,12 @@ namespace gca {
     REQUIRE(volume_removed == 0.0);
   }
 
-  TEST_CASE("Build region from an STL") {
-    auto mesh =
-      parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+  // TEST_CASE("Build region from an STL") {
+  //   auto mesh =
+  //     parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-    depth_field df = build_from_stl(mesh);
-  }
+  //   depth_field df = build_from_stl(mesh);
+  // }
 
   // TEST_CASE("Vertical safe move does not remove material") {
   //   arena_allocator a;
