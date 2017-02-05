@@ -27,6 +27,10 @@ namespace gca {
 		  const homogeneous_transform& t,
 		  const tool_access_info& tool_info);
   
+  std::vector<pocket>
+  feature_pockets(const std::vector<feature*>& features,
+		  const tool_access_info& tool_info);
+
 }
 
 #endif

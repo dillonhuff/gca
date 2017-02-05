@@ -214,7 +214,11 @@ namespace gca {
       std::vector<tool> tools = current_tools();
       auto acc_info = find_accessable_tools(f, tools);
 
-      vector<pocket> pockets = feature_pockets(*f, n, acc_info);
+      vector<feature*> feats = collect_features(f);
+      reverse(begin(feats), end(feats));
+      feats.pop_back();
+
+      vector<pocket> pockets = feature_pockets(feats, acc_info); //*f, n, acc_info);
       vector<toolpath> toolpaths = cut_secured_mesh(pockets, tools, ALUMINUM);
 
       vector<vtkSmartPointer<vtkActor> > actors{polydata_actor(polydata_for_depth_field(df))};
