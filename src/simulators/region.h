@@ -40,6 +40,24 @@ namespace gca {
       }
     }
 
+    depth_field(const depth_field& other) :
+      origin(other.origin),
+      resolution(other.resolution), x_len(other.x_len), y_len(other.y_len),
+      num_x_elems(other.num_x_elems),
+      num_y_elems(other.num_y_elems) {
+
+      DBG_ASSERT(origin.z == 0.0);
+
+      column_heights =
+	static_cast<float*>(malloc(sizeof(float)*num_x_elems*num_y_elems));
+
+      for (int i = 0; i < num_x_elems; i++) {
+	for (int j = 0; j < num_y_elems; j++) {
+	  set_column_height(i, j, other.column_height(i, j));
+	}
+      }
+    }
+    
     inline point get_origin() const { return origin; }
 
     inline double x_center(const int i) const {
@@ -103,7 +121,7 @@ namespace gca {
     }
     
     ~depth_field() {
-      delete column_heights;
+      delete[] column_heights;
     }
 
     inline float column_height(int i, int j) const {
