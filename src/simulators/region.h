@@ -123,6 +123,11 @@ namespace gca {
     double total_volume_removed;
     double machine_x_offset, machine_y_offset, machine_z_offset;
 
+    region(const depth_field& p_r) :
+      r(p_r),
+      total_volume_removed(0),
+      machine_x_offset(0), machine_y_offset(0), machine_z_offset(0) {}
+    
     region(double x_w,
 	   double y_w,
 	   double z_w,
@@ -189,10 +194,11 @@ namespace gca {
     }
 
     inline bool in_region(point p, const mill_tool& t) const {
-      int first_x = static_cast<int>(t.x_min(p) / r.resolution);
-      int last_x = static_cast<int>(t.x_max(p) / r.resolution);
-      int first_y = static_cast<int>(t.y_min(p) / r.resolution);
-      int last_y = static_cast<int>(t.y_max(p) / r.resolution);
+
+      int first_x = r.x_index(t.x_min(p));
+      int last_x = r.x_index(t.x_max(p));
+      int first_y = r.y_index(t.y_min(p));
+      int last_y = r.y_index(t.y_max(p));
 
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {

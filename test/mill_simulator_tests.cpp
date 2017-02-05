@@ -195,8 +195,7 @@ namespace gca {
       auto mesh =
 	parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-            
-      workpiece wp(3.0, 3.0, 3.0, ALUMINUM);
+      workpiece wp(2.2, 2.2, 2.2, ALUMINUM);
 
       vector<surface> stable_surfaces = outer_surfaces(mesh);
       triangular_mesh stock = align_workpiece(stable_surfaces, wp);
@@ -221,10 +220,22 @@ namespace gca {
       auto acc_info = find_accessable_tools(f, tools);
 
       vector<feature*> feats = collect_features(f);
-      reverse(begin(feats), end(feats));
+      //reverse(begin(feats), end(feats));
 
       vector<pocket> pockets = feature_pockets(feats, acc_info); //*f, n, acc_info);
       vector<toolpath> toolpaths = cut_secured_mesh(pockets, tools, ALUMINUM);
+
+      class region r(df);
+      for (auto& tp : toolpaths) {
+	cylindrical_bit tl(tp.get_tool().cut_diameter());
+	//	auto cuts = tp.contiguous_cuts();
+
+	for (auto& cuts : tp.cuts_without_safe_moves()) {
+	  double m_rem = simulate_mill(cuts, r, tl);
+	  auto mesh_actor = polydata_actor(polydata_for_depth_field(df));
+	  visualize_actors({mesh_actor});
+	}
+      }
 
       auto mesh_actor = polydata_actor(polydata_for_depth_field(df));
       vector<vtkSmartPointer<vtkActor> > actors{mesh_actor};
