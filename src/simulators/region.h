@@ -40,6 +40,8 @@ namespace gca {
       }
     }
 
+    inline point get_origin() const { return origin; }
+
     inline double x_center(const int i) const {
       return x_min() + resolution*i + (resolution/2.0);
     }
@@ -79,6 +81,7 @@ namespace gca {
 
     inline int x_index(double x) const {
       return static_cast<int>((x - x_min()) / resolution);
+      //return static_cast<int>(x / resolution);
     }
 
     inline int y_index(double y) const {
@@ -178,7 +181,7 @@ namespace gca {
       
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
-	  if (t.contains(p, r.resolution, i, j) &&
+	  if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
 	      r.legal_column(i, j)) {
 	    double h = static_cast<double>(r.column_height(i, j));
 	    if (h > p.z) {
@@ -203,7 +206,7 @@ namespace gca {
 
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
-	  if (t.contains(p, r.resolution, i, j) && !r.legal_column(i, j)) {
+	  if (t.contains(p, r.get_origin(), r.resolution, i, j) && !r.legal_column(i, j)) {
 	    return false;
 	  }
 	}

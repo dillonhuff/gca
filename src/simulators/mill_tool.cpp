@@ -12,9 +12,9 @@ namespace gca {
     return val <= r;
   }
 
-  bool cylindrical_bit::contains(point p, double resolution, int i, int j) const {
-    double bl_corner_x = i*resolution;
-    double bl_corner_y = j*resolution;
+  bool cylindrical_bit::contains(point p, const point origin, double resolution, int i, int j) const {
+    double bl_corner_x = origin.x + i*resolution;
+    double bl_corner_y = origin.y + j*resolution;
     return in_circle(p, bl_corner_x, bl_corner_y);
   }
 
