@@ -195,9 +195,15 @@ namespace gca {
       auto mesh =
 	parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-      depth_field df = build_from_stl(mesh, 0.01);
+            
+      workpiece wp(3.0, 3.0, 3.0, ALUMINUM);
 
-      box bb = mesh.bounding_box();
+      vector<surface> stable_surfaces = outer_surfaces(mesh);
+      triangular_mesh stock = align_workpiece(stable_surfaces, wp);
+
+      depth_field df = build_from_stl(stock, 0.01);
+
+      box bb = stock.bounding_box();
 
       cout << "df.z_max = " << df.z_max() << endl;
 
@@ -209,19 +215,19 @@ namespace gca {
 
       point n(0, 0, 1);
       feature_decomposition* f =
-	build_feature_decomposition(mesh, n);
+	build_feature_decomposition(stock, mesh, n);
 
       std::vector<tool> tools = current_tools();
       auto acc_info = find_accessable_tools(f, tools);
 
       vector<feature*> feats = collect_features(f);
       reverse(begin(feats), end(feats));
-      feats.pop_back();
 
       vector<pocket> pockets = feature_pockets(feats, acc_info); //*f, n, acc_info);
       vector<toolpath> toolpaths = cut_secured_mesh(pockets, tools, ALUMINUM);
 
-      vector<vtkSmartPointer<vtkActor> > actors{polydata_actor(polydata_for_depth_field(df))};
+      auto mesh_actor = polydata_actor(polydata_for_depth_field(df));
+      vector<vtkSmartPointer<vtkActor> > actors{mesh_actor};
       for (auto& tp : toolpaths) {
 	actors.push_back(actor_for_toolpath(tp));
       }
