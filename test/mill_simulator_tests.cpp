@@ -228,13 +228,15 @@ namespace gca {
       class region r(df);
       for (auto& tp : toolpaths) {
 	cylindrical_bit tl(tp.get_tool().cut_diameter());
-	//	auto cuts = tp.contiguous_cuts();
 
 	for (auto& cuts : tp.cuts_without_safe_moves()) {
 	  double m_rem = simulate_mill(cuts, r, tl);
-	  auto mesh_actor = polydata_actor(polydata_for_depth_field(df));
-	  visualize_actors({mesh_actor});
 	}
+
+	auto tp_actor = actor_for_toolpath(tp);
+	auto mesh_actor = polydata_actor(polydata_for_depth_field(r.r));
+	visualize_actors({mesh_actor, tp_actor});
+	
       }
 
       auto mesh_actor = polydata_actor(polydata_for_depth_field(df));

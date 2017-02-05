@@ -178,7 +178,8 @@ namespace gca {
       
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
-	  if (t.contains(p, r.resolution, i, j)) {
+	  if (t.contains(p, r.resolution, i, j) &&
+	      r.legal_column(i, j)) {
 	    double h = static_cast<double>(r.column_height(i, j));
 	    if (h > p.z) {
 	      double z_diff = h - p.z;

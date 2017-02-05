@@ -63,9 +63,9 @@ namespace gca {
       double tp = static_cast<double>(i) / static_cast<double>(num_points);
       point e = r.machine_coords_to_region_coords(c.value_at(tp));
       //check_region_bounds(e, r, t)
-      if (r.in_region(e, t)) {
-	volume_removed += r.update(e, t);
-      }
+      //      if (r.in_region(e, t)) {
+      volume_removed += r.update(e, t);
+	//      }
     }
 
     return volume_removed;
