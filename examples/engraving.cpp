@@ -231,13 +231,13 @@ engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) 
 
   // Last resort: the feature as its outline
   oriented_polygon p(point(0, 0, 1), f.base().vertices());
-  pockets.push_back(trace_pocket(depths.second, depths.first, p));
+  pockets.push_back(trace_pocket(depths.second, depths.first, p, tools));
 
   for (unsigned i = 0; i < f.base().holes().size(); i++) {
     vector<point> h = f.base().hole(i);
 
     oriented_polygon hp(point(0, 0, 1), h);
-    pockets.push_back(trace_pocket(depths.second, depths.first, hp));
+    pockets.push_back(trace_pocket(depths.second, depths.first, hp, tools));
   }
   return pockets;
 }

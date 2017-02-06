@@ -184,12 +184,17 @@ namespace gca {
     double start_depth;
     double end_depth;
     oriented_polygon outline;
+    std::vector<tool> possible_tools;
 
   public:
     trace_pocket(const double p_start_depth,
-		const double p_end_depth,
-		const oriented_polygon& p_outline)
-      : start_depth(p_start_depth), end_depth(p_end_depth), outline(p_outline) {}
+		 const double p_end_depth,
+		 const oriented_polygon& p_outline,
+		 const std::vector<tool>& p_possible_tools)
+      : start_depth(p_start_depth),
+	end_depth(p_end_depth),
+	outline(p_outline),
+	possible_tools(p_possible_tools) {}
 
     const vector<oriented_polygon>& get_holes() const
     { DBG_ASSERT(false); }

@@ -88,12 +88,16 @@ namespace gca {
   std::vector<toolpath>
   trace_pocket::make_toolpaths(const material& stock_material,
 			       const double safe_z) const {
-    // tool t = select_tool(tools);
-    // auto params = calculate_cut_params(t, stock_material, pocket_type());
-    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
 
-    // return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
-    DBG_ASSERT(false);
+    tool t = select_tool(possible_tools);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+
+    return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
   }
 
   std::vector<toolpath>
@@ -1384,7 +1388,7 @@ namespace gca {
   std::vector<toolpath>
   contour::make_toolpaths(const material& stock_material,
 			  const double safe_z,
-			  const std::vector<tool>&) const {
+			  const std::vector<tool>& tools) const {
     if (possible_tools.size() == 0) {
       cout << "ERROR, no viable tools for pocket" << endl;
       DBG_ASSERT(possible_tools.size() > 0);

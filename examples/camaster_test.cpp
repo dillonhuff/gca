@@ -25,7 +25,7 @@ engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) 
   vector<pocket> pockets;
   auto depths = f.range_along(point(0, 0, 1));
   oriented_polygon p(point(0, 0, 1), f.base().vertices());
-  pockets.push_back(trace_pocket(depths.second, depths.first, p));
+  pockets.push_back(trace_pocket(depths.second, depths.first, p, tools));
 
   for (unsigned i = 0; i < f.base().holes().size(); i++) {//auto& h : f.base().holes()) {
     vector<point> h = f.base().hole(i);
@@ -35,7 +35,7 @@ engraving_pockets_for_feature(const std::vector<tool>& tools, const feature& f) 
     //    vtk_debug_ring(h);
 
     oriented_polygon hp(point(0, 0, 1), h);
-    pockets.push_back(trace_pocket(depths.second, depths.first, hp));
+    pockets.push_back(trace_pocket(depths.second, depths.first, hp, tools));
   }
   return pockets;
 }
