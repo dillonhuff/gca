@@ -74,26 +74,6 @@ namespace gca {
     return cut_move_parameters{feed, feed / t.num_flutes(), speed, cut_depth};
   }
 
-  // std::vector<toolpath>
-  // freeform_pocket::make_toolpaths(const material& stock_material,
-  // 				  const double safe_z,
-  // 				  const std::vector<tool>& tools) const {
-  //   tool t = select_tool(tools);
-  //   auto params = calculate_cut_params(t, stock_material, pocket_type());
-  //   auto pocket_paths = toolpath_lines(t, params.cut_depth);
-  //   return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
-  // }
-
-  // std::vector<toolpath>
-  // freeform_pocket::make_toolpaths(const material& stock_material,
-  // 				  const double safe_z) const {
-  //   // tool t = select_tool(tools);
-  //   // auto params = calculate_cut_params(t, stock_material, pocket_type());
-  //   // auto pocket_paths = toolpath_lines(t, params.cut_depth);
-  //   // return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
-  //   DBG_ASSERT(false);
-  // }
-  
   std::vector<toolpath>
   trace_pocket::make_toolpaths(const material& stock_material,
 			       const double safe_z,
@@ -119,7 +99,61 @@ namespace gca {
   std::vector<toolpath>
   face_pocket::make_toolpaths(const material& stock_material,
 			      const double safe_z) const {
-    DBG_ASSERT(false);
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
+
+    tool t = select_tool(possible_tools);
+
+    double feedrate = 30.0;
+    double spindle_speed = 2000;
+    double depth_of_cut = t.cut_diameter() / 10.0;
+    double width_of_cut = t.cut_diameter() / 4.0;
+    
+    face_parameters rough_params{depth_of_cut,
+	width_of_cut,
+	feedrate,
+	spindle_speed};
+    
+    double finish_height = 0.005;
+    double rough_start = get_start_depth();
+    double rough_end = get_end_depth() + finish_height;
+
+    DBG_ASSERT((rough_start - rough_end) > 0.0);
+
+    toolpath rough_tp = rough_face(rough_params,
+				   safe_z,
+				   rough_start,
+				   rough_end,
+				   build_clean_polygon_3(base.vertices()),
+				   t);
+
+    double finish_feedrate = 15.0;
+    double finish_spindle_speed = 2500;
+
+    double finish_depth_of_cut = finish_height + 0.001;
+    double finish_width_of_cut = t.cut_diameter() / 4.0;
+
+    double finish_start = rough_end;
+    double finish_end = get_end_depth();
+
+    // Finish should have exactly one pass
+    DBG_ASSERT((finish_start - finish_end) < finish_depth_of_cut);
+    
+    face_parameters finish_params{finish_depth_of_cut,
+	finish_width_of_cut,
+	finish_feedrate,
+	finish_spindle_speed};
+
+    toolpath finish_tp = rough_face(finish_params,
+				    safe_z,
+				    finish_start,
+				    finish_end,
+				    build_clean_polygon_3(base.vertices()),
+				    t);
+
+    return {rough_tp, finish_tp};
   }
   
   std::vector<toolpath>
@@ -212,25 +246,6 @@ namespace gca {
     return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
   }
   
-  // freeform_pocket::freeform_pocket(double start_depthp,
-  // 				   const std::vector<index_t>& basep,
-  // 				   const triangular_mesh* p_mesh) :
-  //   start_depth(start_depthp),
-  //   base_inds(basep),
-  //   mesh(p_mesh) {
-
-    
-  //   DBG_ASSERT(base_inds.size() > 0);
-
-  //   auto bounds = mesh_bounds(base_inds, base_mesh());
-
-  //   DBG_ASSERT(bounds.size() > 0);
-
-  //   boundary = extract_boundary(bounds);
-  //   holes = bounds;
-  // }
-
-
   std::pair<oriented_polygon, std::vector<oriented_polygon>>
   optimize_pocket_size(const std::vector<index_t> base,
 		       const triangular_mesh& mesh) {
@@ -695,125 +710,6 @@ namespace gca {
     return lines;
   }
 
-  // vector<polyline> finish_pocket(const freeform_pocket& pocket,
-  // 				 const tool& t,
-  // 				 const double cut_depth) {
-  //   auto holes = pocket.get_holes();
-  //   vector<oriented_polygon> offset_h;//(holes.size());
-  //   for (auto h : holes) {
-  //     concat(offset_h, exterior_offset(h, t.radius()));
-  //   }
-  //   auto i_off = interior_offset(pocket.get_boundary(), t.radius());
-  //   DBG_ASSERT(i_off.size() == 1);
-  //   oriented_polygon bound_poly = i_off.front();
-  //   vector<double> depths = cut_depths(pocket.get_start_depth(),
-  // 				       pocket.get_end_depth(),
-  // 				       cut_depth);
-  //   auto ls = finish_passes(offset_h, bound_poly, depths, t.radius());
-  //   vector<polyline> lines;
-  //   for (auto pl : ls) {
-  //     auto pts = drop_points_onto(vector<point>(begin(pl), end(pl)),
-  // 				  pocket.base_face_indexes(),
-  // 				  pocket.base_mesh(),
-  // 				  t);
-  //     if (pts.size() > 0) {
-  // 	lines.push_back(pts);
-  //     }
-  //   }
-  //   return lines;
-  // }
-
-  // vector<polyline> roughing_lines(const freeform_pocket& p,
-  // 				  const vector<triangle>& base,
-  // 				  const vector<oriented_polygon>& holes,
-  // 				  const oriented_polygon& boundary,
-  // 				  double last_level,
-  // 				  const tool& t) {
-  //   double sample_increment = t.radius();
-
-  //   vector<polyline> ls =
-  //     sample_lines_2d(boundary, sample_increment, sample_increment, last_level);
-
-  //   vector<polyline> lines;
-  //   for (auto l : ls) {
-  //     vector<point> toolpath_points =
-  // 	drop_points_onto_max(vector<point>(begin(l), end(l)),
-  // 			     p.base_face_indexes(),
-  // 			     p.base_mesh(),
-  // 			     last_level,
-  // 			     t);
-  //     if (toolpath_points.size() > 1) {
-  // 	lines.push_back(toolpath_points);
-  //     }
-  //   }
-
-  //   return lines;
-  // }
-
-  // vector<polyline> finish_base_lines(const freeform_pocket& p,
-  // 				     const tool& t,
-  // 				     const double cut_depth) {
-  //   auto holes = p.get_holes();
-  //   vector<oriented_polygon> offset_h;
-  //   for (auto h : holes) {
-  //     concat(offset_h, exterior_offset(h, t.radius()));
-  //   }
-    
-  //   auto i_off = interior_offset(p.get_boundary(), t.radius());
-  //   DBG_ASSERT(i_off.size() == 1);
-  //   oriented_polygon bound_poly = i_off.front();
-
-  //   vector<polyline> plines = roughing_lines(p,
-  // 					     p.base(),
-  // 					     offset_h,
-  // 					     bound_poly,
-  // 					     p.get_end_depth(),
-  // 					     t);
-
-  //   return plines;
-  // }
-
-  // vector<polyline> roughing_passes(const freeform_pocket& p,
-  // 				   const vector<oriented_polygon>& holes,
-  // 				   const oriented_polygon& boundary,
-  // 				   const vector<double>& depths,
-  // 				   const tool& t) {
-  //   vector<polyline> lines;
-  //   for (auto depth : depths) {
-  //     auto rough_level = roughing_lines(p, p.base(), holes, boundary, depth, t);
-  //     concat(lines, rough_level);
-  //   }
-  //   return lines;
-  // }
-
-  // vector<polyline> rough_pocket(const freeform_pocket& pocket,
-  // 				const tool& t,
-  // 				double cut_depth) {
-  //   auto holes = pocket.get_holes();
-  //   vector<oriented_polygon> offset_h;
-  //   for (auto h : holes) {
-  //     concat(offset_h, exterior_offset(h, t.radius()));
-  //   }
-    
-  //   auto i_off = interior_offset(pocket.get_boundary(), t.radius());
-  //   cout << "# of offset = " << i_off.size() << endl;
-
-  //   if (i_off.size() != 1) { return {}; }
-  //   oriented_polygon bound_poly = i_off.front();
-
-  //   vector<double> depths = cut_depths(pocket.get_start_depth(),
-  // 				       pocket.get_end_depth(),
-  // 				       cut_depth / 2.0);
-  //   // Leave the final level to the finishing pass
-  //   depths.pop_back();
-  //   vector<polyline> pocket_path = roughing_passes(pocket,
-  // 						   offset_h,
-  // 						   bound_poly,
-  // 						   depths,
-  // 						   t);
-  //   return pocket_path;
-  // }
-
   // TODO: Use tile vertical?
   std::vector<polyline>
   face_pocket::toolpath_lines(const tool& t,
@@ -840,28 +736,6 @@ namespace gca {
       { return l.diameter() < r.diameter(); }));
     return t;
   }
-
-  // tool
-  // freeform_pocket::select_tool(const std::vector<tool>& tools) const {
-  //   tool t = *(min_element(begin(tools), end(tools),
-  // 			   [](const tool& l, const tool& r)
-  //     { return l.diameter() < r.diameter(); }));
-  //   return t;
-  // }
-
-  // // TODO: Reintroduce this mesh cutting strategy when it is better
-  // // supported
-  // std::vector<polyline>
-  // freeform_pocket::toolpath_lines(const tool& t,
-  // 				  const double cut_depth) const {
-  //   // vector<polyline> pocket_path = rough_pocket(*this, t, cut_depth);
-  //   // auto finish_surface = finish_base_lines(*this, t, cut_depth);
-  //   // concat(pocket_path, finish_surface);
-  //   // auto finish_edges = finish_pocket(*this, t, cut_depth);
-  //   // concat(pocket_path, finish_edges);
-  //   // return pocket_path;
-  //   return {to_polyline(project(boundary, get_start_depth()))};
-  // }
 
   // TODO: Move these to somewhere else, they really dont belong here
   
@@ -1510,7 +1384,7 @@ namespace gca {
   std::vector<toolpath>
   contour::make_toolpaths(const material& stock_material,
 			  const double safe_z,
-			  const std::vector<tool>& tools) const {
+			  const std::vector<tool>&) const {
     if (possible_tools.size() == 0) {
       cout << "ERROR, no viable tools for pocket" << endl;
       DBG_ASSERT(possible_tools.size() > 0);
