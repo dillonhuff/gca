@@ -206,46 +206,46 @@ namespace gca {
 
       cout << "df.z_max = " << df.z_max() << endl;
 
-      vtk_debug_depth_field(df);
+      //vtk_debug_depth_field(df);
 
       REQUIRE(df.z_max() < (bb.z_max + 0.0001));
 
       REQUIRE(df.z_max() > (bb.z_min + 0.1));
 
-      point n(0, 0, 1);
-      feature_decomposition* f =
-	build_feature_decomposition(stock, mesh, n);
+      // point n(0, 0, 1);
+      // feature_decomposition* f =
+      // 	build_feature_decomposition(stock, mesh, n);
 
-      std::vector<tool> tools = current_tools();
-      auto acc_info = find_accessable_tools(f, tools);
+      // std::vector<tool> tools = current_tools();
+      // auto acc_info = find_accessable_tools(f, tools);
 
-      vector<feature*> feats = collect_features(f);
-      //reverse(begin(feats), end(feats));
+      // vector<feature*> feats = collect_features(f);
+      // //reverse(begin(feats), end(feats));
 
-      vector<pocket> pockets = feature_pockets(feats, acc_info); //*f, n, acc_info);
-      vector<toolpath> toolpaths = cut_secured_mesh(pockets, tools, ALUMINUM);
+      // vector<pocket> pockets = feature_pockets(feats, acc_info); //*f, n, acc_info);
+      // vector<toolpath> toolpaths = cut_secured_mesh(pockets, tools, ALUMINUM);
 
-      class region r(df);
-      for (auto& tp : toolpaths) {
-	cylindrical_bit tl(tp.get_tool().cut_diameter());
+      // class region r(df);
+      // for (auto& tp : toolpaths) {
+      // 	cylindrical_bit tl(tp.get_tool().cut_diameter());
 
-	for (auto& cuts : tp.cuts_without_safe_moves()) {
-	  double m_rem = simulate_mill(cuts, r, tl);
-	}
+      // 	for (auto& cuts : tp.cuts_without_safe_moves()) {
+      // 	  double m_rem = simulate_mill(cuts, r, tl);
+      // 	}
 
-	auto tp_actor = actor_for_toolpath(tp);
-	auto mesh_actor = polydata_actor(polydata_for_depth_field(r.r));
-	visualize_actors({mesh_actor, tp_actor});
+      // 	auto tp_actor = actor_for_toolpath(tp);
+      // 	auto mesh_actor = polydata_actor(polydata_for_depth_field(r.r));
+      // 	visualize_actors({mesh_actor, tp_actor});
 	
-      }
+      // }
 
-      auto mesh_actor = polydata_actor(polydata_for_depth_field(df));
-      vector<vtkSmartPointer<vtkActor> > actors{mesh_actor};
-      for (auto& tp : toolpaths) {
-	actors.push_back(actor_for_toolpath(tp));
-      }
+      // auto mesh_actor = polydata_actor(polydata_for_depth_field(df));
+      // vector<vtkSmartPointer<vtkActor> > actors{mesh_actor};
+      // for (auto& tp : toolpaths) {
+      // 	actors.push_back(actor_for_toolpath(tp));
+      // }
 
-      visualize_actors(actors);
+      // visualize_actors(actors);
     }
 
     SECTION("Inferring safe height") {
