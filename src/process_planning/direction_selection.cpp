@@ -29,6 +29,26 @@ namespace gca {
     }
   }
 
+  template<typename A, typename B>
+  B map_contains(const A& a, const std::unordered_map<A, B>& m) {
+    auto f = m.find(a);
+    if (f == std::end(m)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  template<typename A, typename B>
+  B map_find(const A& a, const std::map<A, B>& m) {
+    auto f = m.find(a);
+    if (f == std::end(m)) {
+      return false;
+    }
+
+    return true;
+  }
+  
   void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
 				 const std::vector<tool>& tools) {
     for (unsigned i = 0; i < dirs.size(); i++) {
@@ -45,8 +65,24 @@ namespace gca {
 	  clip_leaves(l, r);
 	  clip_leaves(r, l);
 
-	  dirs[i].tool_info = find_accessable_tools(l, tools);
-	  dirs[j].tool_info = find_accessable_tools(r, tools);
+	  for (feature* f : collect_features(dirs[i].decomp)) {
+	    if (!map_contains(f, dirs[i].tool_info)) {
+	      auto usable_tools =
+		accessable_tools_for_flat_features(*f, dirs[i].decomp, tools);
+	      map_insert(dirs[i].tool_info, f, usable_tools);
+	    }
+	  }
+
+	  for (feature* f : collect_features(dirs[j].decomp)) {
+	    if (!map_contains(f, dirs[j].tool_info)) {
+	      auto usable_tools =
+		accessable_tools_for_flat_features(*f, dirs[j].decomp, tools);
+	      map_insert(dirs[j].tool_info, f, usable_tools);
+	    }
+	  }
+	  
+	  //dirs[i].tool_info = find_accessable_tools(l, tools);
+	  //dirs[j].tool_info = find_accessable_tools(r, tools);
 
 	  break;
 	}

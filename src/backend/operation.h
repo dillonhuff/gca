@@ -42,10 +42,10 @@ namespace gca {
     double get_start_depth() const
     { return self_->get_start_depth(); }
 
-    std::vector<toolpath> make_toolpaths(const material& stock_material,
-					 const double safe_z,
-					 const std::vector<tool>& tools) const
-    { return self_->make_toolpaths(stock_material, safe_z, tools); }
+    // std::vector<toolpath> make_toolpaths(const material& stock_material,
+    // 					 const double safe_z,
+    // 					 const std::vector<tool>& tools) const
+    // { return self_->make_toolpaths(stock_material, safe_z, tools); }
     
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z) const

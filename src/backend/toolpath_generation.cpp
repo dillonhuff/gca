@@ -840,7 +840,7 @@ namespace gca {
     
     vector<toolpath> toolpaths;
     for (auto pocket : pockets) {
-      vector<toolpath> tps = pocket.make_toolpaths(stock_material, safe_z, tools);
+      vector<toolpath> tps = pocket.make_toolpaths(stock_material, safe_z); //, tools);
       concat(toolpaths, tps);
     }
 
