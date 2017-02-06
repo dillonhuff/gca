@@ -85,6 +85,16 @@ namespace gca {
   }
 
   std::vector<toolpath>
+  freeform_pocket::make_toolpaths(const material& stock_material,
+				  const double safe_z) const {
+    // tool t = select_tool(tools);
+    // auto params = calculate_cut_params(t, stock_material, pocket_type());
+    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
+    // return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+    DBG_ASSERT(false);
+  }
+  
+  std::vector<toolpath>
   trace_pocket::make_toolpaths(const material& stock_material,
 			       const double safe_z,
 			       const std::vector<tool>& tools) const {
@@ -93,6 +103,23 @@ namespace gca {
     auto pocket_paths = toolpath_lines(t, params.cut_depth);
 
     return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+  }
+
+  std::vector<toolpath>
+  trace_pocket::make_toolpaths(const material& stock_material,
+			       const double safe_z) const {
+    // tool t = select_tool(tools);
+    // auto params = calculate_cut_params(t, stock_material, pocket_type());
+    // auto pocket_paths = toolpath_lines(t, params.cut_depth);
+
+    // return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+    DBG_ASSERT(false);
+  }
+
+  std::vector<toolpath>
+  face_pocket::make_toolpaths(const material& stock_material,
+			      const double safe_z) const {
+    DBG_ASSERT(false);
   }
   
   std::vector<toolpath>
@@ -156,6 +183,22 @@ namespace gca {
   flat_pocket::make_toolpaths(const material& stock_material,
 			      const double safe_z,
 			      const std::vector<tool>& tools) const {
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
+
+    tool t = select_tool(possible_tools);
+    auto params = calculate_cut_params(t, stock_material, pocket_type());
+
+    auto pocket_paths = toolpath_lines(t, params.cut_depth);
+
+    return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
+  }
+
+  std::vector<toolpath>
+  flat_pocket::make_toolpaths(const material& stock_material,
+			      const double safe_z) const {
     if (possible_tools.size() == 0) {
       cout << "ERROR, no viable tools for pocket" << endl;
       DBG_ASSERT(possible_tools.size() > 0);
@@ -1489,4 +1532,28 @@ namespace gca {
     return machine_flat_region_with_contours(r, safe_z, tools);
   }
 
+  std::vector<toolpath>
+  contour::make_toolpaths(const material& stock_material,
+			  const double safe_z) const {
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
+
+    tool max_tool = max_e(possible_tools,
+			  [](const tool& t) { return t.cut_diameter(); });
+
+    polygon_3 safe_area = exterior_offset(get_boundary(), 3*max_tool.radius());
+
+    for (auto h : get_holes()) {
+      DBG_ASSERT(h.holes().size() == 0);
+
+      safe_area.add_hole(h.vertices());
+    }
+
+    flat_region r(safe_area, bp, get_start_depth(), get_end_depth(), stock_material);
+
+    return machine_flat_region_with_contours(r, safe_z, possible_tools);
+  }
+  
 }

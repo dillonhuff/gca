@@ -95,4 +95,23 @@ namespace gca {
 
   }
 
+  std::vector<toolpath>
+  drilled_hole_operation::make_toolpaths(const material& stock_material,
+					 const double safe_z) const {
+    DBG_ASSERT(t.type() == TWIST_DRILL);
+
+    drill_feeds fs = calculate_drill_feeds(stock_material, t);
+
+    vector<polyline> lines = toolpath_lines(t, 0.1);
+
+    return {toolpath(DRILLED_HOLE_POCKET,
+		     safe_z,
+		     fs.speed,
+		     fs.feed,
+		     fs.feed,
+		     t,
+		     lines)};
+
+  }
+  
 }

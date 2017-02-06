@@ -285,5 +285,33 @@ namespace gca {
     return {rough_tp, finish_tp};
   }
 
+  std::vector<toolpath>
+  freeform_operation::make_toolpaths(const material& stock_material,
+				     const double safe_z) const {
+    DBG_ASSERT(tools.size() > 0);
+
+    tool t = min_e(tools, [](const tool& t) { return t.cut_diameter(); });
+
+    double rough_stepover_fraction = 0.25;
+    double rough_depth_fraction = 0.1;
+    toolpath rough_tp =
+      freeform_rough_lines(surf.index_list(),
+			   surf.get_parent_mesh(),
+			   t,
+			   safe_z,
+			   rough_stepover_fraction,
+			   rough_depth_fraction);
+
+    double stepover_fraction = 0.01;
+    toolpath finish_tp =
+      freeform_finish_lines(surf.index_list(),
+			    surf.get_parent_mesh(),
+			    t,
+			    safe_z,
+			    stepover_fraction);
+
+    return {rough_tp, finish_tp};
+  }
+  
 
 }

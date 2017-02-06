@@ -46,6 +46,10 @@ namespace gca {
 					 const double safe_z,
 					 const std::vector<tool>& tools) const
     { return self_->make_toolpaths(stock_material, safe_z, tools); }
+    
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z) const
+    { return self_->make_toolpaths(stock_material, safe_z); }
 
     double volume() const
     { return self_->volume(); }
@@ -57,9 +61,13 @@ namespace gca {
       virtual pocket_name pocket_type() const = 0;
       virtual std::vector<toolpath>
       make_toolpaths(const material& stock_material,
+		     const double safe_z) const = 0;
+
+      virtual std::vector<toolpath>
+      make_toolpaths(const material& stock_material,
 		     const double safe_z,
 		     const std::vector<tool>& tools) const = 0;
-
+      
       virtual double get_end_depth() const = 0;
       virtual double get_start_depth() const = 0;
       virtual double volume() const = 0;
@@ -89,6 +97,11 @@ namespace gca {
 		     const std::vector<tool>& tools) const
       { return data_.make_toolpaths(stock_material, safe_z, tools); }
 
+      virtual std::vector<toolpath>
+      make_toolpaths(const material& stock_material,
+		     const double safe_z) const
+      { return data_.make_toolpaths(stock_material, safe_z); }
+      
       T data_;
     };
   

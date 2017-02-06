@@ -89,5 +89,21 @@ namespace gca {
 		     t,
 		     lines)};
   }
+
+  std::vector<toolpath>
+  chamfer_operation::make_toolpaths(const material& stock_material,
+				    const double safe_z) const {
+    DBG_ASSERT(t.type() == CHAMFER);
+
+    vector<polyline> lines = toolpath_lines(t, 0.1);
+
+    return {toolpath(CHAMFER_POCKET,
+		     safe_z,
+		     2000,
+		     5.0,
+		     2.5,
+		     t,
+		     lines)};
+  }
   
 }

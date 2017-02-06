@@ -41,6 +41,9 @@ namespace gca {
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
+
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -130,6 +133,9 @@ namespace gca {
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
+
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -185,6 +191,9 @@ namespace gca {
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
+
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z) const;
     
     inline double get_start_depth() const { return start_depth; }
 
@@ -234,6 +243,9 @@ namespace gca {
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
+
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z) const;
     
     tool select_tool(const std::vector<tool>& tools) const;
 
@@ -270,6 +282,9 @@ namespace gca {
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
+
+    std::vector<toolpath> make_toolpaths(const material& stock_material,
+					 const double safe_z) const;
     
     tool select_tool(const std::vector<tool>& tools) const;
 
