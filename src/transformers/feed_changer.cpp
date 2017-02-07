@@ -9,8 +9,8 @@ namespace gca {
     for (auto bp : p) {
       block b;
       for (auto t : bp) {
-	if (t.tp() == ICODE && t.c == 'F' && *(t.v) == *initial_feedrate)
-	  { t.v = new_feedrate; }
+	if (t.tp() == ICODE && t.c == 'F' && t.get_value() == *initial_feedrate)
+	  { t.set_value_ptr(new_feedrate); } //t.v = new_feedrate; }
 	b.push_back(t);
       }
       np.push_back(b);

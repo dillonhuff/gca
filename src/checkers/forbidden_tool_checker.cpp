@@ -10,7 +10,7 @@ namespace gca {
       for (auto w : b) {
 	if (w.tp() == ICODE &&
 	    w.c == 'T') {
-	  int i = static_cast<ilit*>(w.v)->v;
+	  int i = static_cast<ilit*>(w.get_value_ptr())->v;
 	  if (find(permitted_tools.begin(), permitted_tools.end(), i) == permitted_tools.end())
 	    { num_warns++; }
 	}

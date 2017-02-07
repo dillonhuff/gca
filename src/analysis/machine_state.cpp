@@ -26,8 +26,8 @@ namespace gca {
   void set_negative_tool_height_comp(machine_state& r, block& b) {
     r.tool_height_comp = TOOL_HEIGHT_COMP_NEGATIVE;
     const token* h = find_icode('H', b);
-    assert(h);
-    assert(h->v->is_ilit());
+    DBG_ASSERT(h);
+    DBG_ASSERT(h->v->is_ilit());
     ilit* sr = static_cast<ilit*>(h->v);
     r.tool_height_value = ilit::make(sr->v);
     b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
@@ -40,7 +40,7 @@ namespace gca {
       h = find_icode('D', b);
     }
     if (h) {
-      assert(h->v->is_ilit());
+      DBG_ASSERT(h->v->is_ilit());
       ilit* sr = static_cast<ilit*>(h->v);
       r.tool_radius_value = ilit::make(sr->v);
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
@@ -54,7 +54,7 @@ namespace gca {
       h = find_icode('D', b);
     }
     if (h) {
-      assert(h->v->is_ilit());
+      DBG_ASSERT(h->v->is_ilit());
       ilit* sr = static_cast<ilit*>(h->v);
       r.tool_radius_value = ilit::make(sr->v);
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(h)), b.end());
@@ -72,7 +72,7 @@ namespace gca {
   void update_m_codes(block& b, machine_state& r) {
     const token* m = find_icode('M', b);
     while (m != NULL) {
-      assert(m->v->is_ilit());
+      DBG_ASSERT(m->v->is_ilit());
       ilit* sr = static_cast<ilit*>(m->v);
       switch (sr->v) {
       case 0:
@@ -91,7 +91,7 @@ namespace gca {
 	r.spindle_setting = SPINDLE_OFF;
 	break;
       case 6:
-	assert(r.last_referenced_tool->is_ilit());
+	DBG_ASSERT(r.last_referenced_tool->is_ilit());
 	r.active_tool = r.last_referenced_tool;
 	break;
       case 7:
@@ -110,7 +110,7 @@ namespace gca {
 	break;
       default:
 	cout << "Unhandled word: " << *m << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(m)), b.end());
       m = find_icode('M', b);
@@ -120,7 +120,7 @@ namespace gca {
   void update_g_codes(block& b, machine_state& r) {
     const token* g = find_icode('G', b);
     while (g != NULL) {
-      assert(g->v->is_ilit());
+      DBG_ASSERT(g->v->is_ilit());
       ilit* sr = static_cast<ilit*>(g->v);
       switch(sr->v) {
       case 0:
@@ -203,7 +203,7 @@ namespace gca {
 	break;
       default:
 	cout << "Unsupported g instruction: " << *g << endl;
-	assert(false);
+	DBG_ASSERT(false);
       }
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(g)), b.end());
       g = find_icode('G', b);
@@ -221,7 +221,7 @@ namespace gca {
 	ilit* fr = static_cast<ilit*>(f->v);
 	l = ilit::make(fr->v);
       } else {
-	assert(false);
+	DBG_ASSERT(false);
       }
       b.erase(remove_if(b.begin(), b.end(), cmp_token_to(f)), b.end());
       return l;
@@ -260,7 +260,7 @@ namespace gca {
     update_g_codes(b, r);
     if (b.size() > 0) {
       cout << "Not all instructions in the block were processed: " << b << endl;
-      assert(false);
+      DBG_ASSERT(false);
     }
     return r;
   }
@@ -406,7 +406,7 @@ namespace gca {
     } else if (s == SPINDLE_COUNTERCLOCKWISE) {
       out << "SPINDLE_COUNTERCLOCKWISE";
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
     return out;
   }
@@ -435,7 +435,7 @@ namespace gca {
     } else if (s == CANNED_CYCLE_85_MOVE) {
       out << "CANNED_CYCLE_85_MOVE";
     } else {
-      assert(false);
+      DBG_ASSERT(false);
     }
     return out;
   }
@@ -452,7 +452,7 @@ namespace gca {
       out << "G54_COORD_SYSTEM";
       break;
     default:
-      assert(false);
+      DBG_ASSERT(false);
     }
     return out;
   }
@@ -479,7 +479,7 @@ namespace gca {
       stream << "TOOL_RADIUS_COMP_RIGHT";
       break;
     default:
-      assert(false);
+      DBG_ASSERT(false);
     }
     return stream;
   }
@@ -499,7 +499,7 @@ namespace gca {
       stream << "TOOL_HEIGHT_COMP_POSITIVE";
       break;
     default:
-      assert(false);
+      DBG_ASSERT(false);
     }
     return stream;
   }

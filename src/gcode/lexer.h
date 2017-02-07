@@ -25,7 +25,9 @@ namespace gca {
     token_type ttp;
     string text;
     char c;
+
     value* v;
+
     int line_no;
 
     token(const token& x) :
@@ -65,6 +67,10 @@ namespace gca {
 	stream << c << *v;
       }
     }
+
+    const value& get_value() { return *v; }
+    value* get_value_ptr() { return v; }
+    void set_value_ptr(value* vptr) { v = vptr; }
   };
   
   typedef vector<token> block;
