@@ -541,4 +541,41 @@ namespace gca {
     return res;
   }
 
+  boost::optional<point> find_cut_axis(const triangular_mesh& part) {
+    return point(0, 0, 1);
+  }
+
+
+  axial_surface_decomposition
+  axial_decomposition(const point axis, const std::vector<surface>& surfs) {
+    if (surfs.size() == 0) { return {}; }
+
+    const auto& mesh = surfs.front().get_parent_mesh();
+
+    vector<surface> positive;
+    vector<surface> negative;
+    vector<surface> mixed;
+
+    vector<index_t> positive_millable = millable_faces(axis, mesh);
+    sort(begin(positive_millable), end(positive_millable));
+
+    vector<index_t> negative_millable = millable_faces(-1*axis, mesh);
+    sort(begin(negative_millable), end(negative_millable));
+    
+    for (auto s : surfs) {
+      bool pos = s.contained_by_sorted(positive_millable);
+      bool neg = s.contained_by_sorted(negative_millable);
+
+      if (pos && neg) {
+	mixed.push_back(s);
+      } else if (pos) {
+	positive.push_back(s);
+      } else if (neg) {
+	negative.push_back(s);
+      }
+    }
+
+    return axial_surface_decomposition{positive, negative, mixed};
+  }
+
 }

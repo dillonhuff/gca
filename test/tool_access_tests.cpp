@@ -88,19 +88,8 @@ namespace gca {
     REQUIRE(tool_info[base].size() == 3);
     
   }
-  
-  TEST_CASE("Nested Thru holes") {
-    arena_allocator a;
-    set_system_allocator(&a);
 
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1InchWithNestedThruHoles.stl", 0.001);
-
-    point n(0, 0, 1);
-
-    auto f = build_feature_decomposition(mesh, n);
-
-    REQUIRE(f->num_levels() == 4);
-
+  std::vector<tool> nested_thru_hole_tools() {
     tool t1(0.30, 3.0, 2, HSS, FLAT_NOSE);
     t1.set_cut_diameter(0.3);
     t1.set_cut_length(0.4);
@@ -122,6 +111,23 @@ namespace gca {
     t2.set_holder_length(2.5);
     
     vector<tool> tools{t1, t2};
+
+    return tools;
+  }
+
+  TEST_CASE("Nested Thru holes") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1InchWithNestedThruHoles.stl", 0.001);
+
+    point n(0, 0, 1);
+
+    auto f = build_feature_decomposition(mesh, n);
+
+    REQUIRE(f->num_levels() == 4);
+
+    vector<tool> tools = nested_thru_hole_tools();
 
     tool_access_info tool_info = find_accessable_tools(f, tools);
 

@@ -11,7 +11,21 @@ using namespace std;
 
 namespace gca {
 
+  enum val_type {
+    VAL_TYPE_OMITTED = 0,
+    VAL_TYPE_LIT,
+    VAL_TYPE_ILIT,
+    VAL_TYPE_VAR,
+  };
+
+  union val {
+    double lit;
+    int ilit_or_var;
+  };
+
   class value {
+  protected:
+    
   public:
 
     virtual inline bool is_omitted() const { return false; }

@@ -163,20 +163,27 @@ namespace gca {
   	      {"test/stl-files/onshape_parts/100-013 - Part 1.stl"},
   		{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl"},
   		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl"},
-  		    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"},
-  		      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl"},
+  		    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"}
   			};
 
     for (auto& test_case : planning_cases) {
 
       auto mesh = parse_stl(test_case.part_path, 0.001);
 
-      // boost::optional<point> cut_axis = find_cut_axis(mesh);
+      boost::optional<point> cut_axis = find_cut_axis(mesh);
 
-      // if (cut_axis) {
-      // 	cout << "Cut axis = " << *cut_axis << endl;
-      // }
+      if (!cut_axis) {
+	continue;
+      }
 
+      auto regions = const_orientation_regions(mesh);
+      vector<surface> const_surfs = inds_to_surfaces(regions, mesh);
+      
+      axial_surface_decomposition sfs =
+	axial_decomposition(*cut_axis, const_surfs);
+
+      visualize_surface_decomp({sfs.positive, sfs.negative, sfs.mixed});
+      
       // vector<surface> surfs = select_profile(mesh);
       // vtk_debug_highlight_inds(surfs);
 
