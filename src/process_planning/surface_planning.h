@@ -76,8 +76,6 @@ namespace gca {
 
   std::vector<surface> select_profile(const triangular_mesh& part);
 
-  boost::optional<point> find_cut_axis(const triangular_mesh& part);
-
   struct axial_surface_decomposition {
     std::vector<surface> positive;
     std::vector<surface> negative;
@@ -86,5 +84,15 @@ namespace gca {
 
   axial_surface_decomposition
   axial_decomposition(const point axis, const std::vector<surface>& surf);
+
+  struct major_axis_decomp {
+    std::vector<plane> axes;
+    point major_axis;
+    axial_surface_decomposition decomp;
+  };
+
+  boost::optional<major_axis_decomp>
+  find_cut_axis(const triangular_mesh& part);
+
   
 }

@@ -43,56 +43,10 @@ namespace gca {
     return surfs;
   }
 
-  std::vector<plane> max_area_basis(const std::vector<surface>& surfaces) {
-    DBG_ASSERT(surfaces.size() > 0);
-    
-    vector<surface> sorted_part_surfaces = surfaces;
-    sort(begin(sorted_part_surfaces), end(sorted_part_surfaces),
-	 [](const surface& l, const surface& r)
-	 { return l.surface_area() > r.surface_area(); });
-    
-    vector<surface> basis =
-      take_basis(sorted_part_surfaces,
-		 [](const surface& l, const surface& r)
-		 { return within_eps(angle_between(normal(l), normal(r)), 90, 2.0); },
-		 2);
-
-    vector<plane> planes;
-    for (auto s : basis) {
-      cout << "surface normal = " << normal(s) << endl;
-      //vtk_debug_highlight_inds(s);
-      planes.push_back(plane(normal(s), s.face_triangle(s.front()).v1));
-    }
-
-    point third_vec = cross(planes[0].normal(), planes[1].normal());
-    const triangular_mesh& m = surfaces.front().get_parent_mesh();
-    point third_pt = max_point_in_dir(m, third_vec);
-
-    planes.push_back(plane(third_vec, third_pt));
-
-    return planes;
-  }
-
-  bool right_handed(const std::vector<plane>& planes) {
-    DBG_ASSERT(planes.size() == 3);
-
-    double d = cross(planes[0].normal(), planes[1].normal()).dot(planes[2].normal());
-    return d > 0.0;
-  }
-
-  std::vector<plane> set_right_handed(const std::vector<plane>& basis) {
-    if (right_handed(basis)) { return basis; }
-    vector<plane> rh_basis = basis;
-    plane tmp = rh_basis[0];
-    rh_basis[0] = rh_basis[1];
-    rh_basis[1] = tmp;
-    DBG_ASSERT(right_handed(rh_basis));
-    return rh_basis;
-  }
-
   // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
+
     DBG_ASSERT(part_surfaces.size() > 0);
 
     const triangular_mesh& part = part_surfaces.front().get_parent_mesh();

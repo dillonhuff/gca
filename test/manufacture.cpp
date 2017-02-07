@@ -170,23 +170,16 @@ namespace gca {
 
       auto mesh = parse_stl(test_case.part_path, 0.001);
 
-      boost::optional<point> cut_axis = find_cut_axis(mesh);
+      auto cut_axis = find_cut_axis(mesh);
 
       if (!cut_axis) {
 	continue;
       }
 
-      auto regions = const_orientation_regions(mesh);
-      vector<surface> const_surfs = inds_to_surfaces(regions, mesh);
-      
-      axial_surface_decomposition sfs =
-	axial_decomposition(*cut_axis, const_surfs);
+      const auto& sfs = cut_axis->decomp;
 
       visualize_surface_decomp({sfs.positive, sfs.negative, sfs.mixed});
       
-      // vector<surface> surfs = select_profile(mesh);
-      // vtk_debug_highlight_inds(surfs);
-
     }
 
   }

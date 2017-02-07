@@ -541,8 +541,16 @@ namespace gca {
     return res;
   }
 
-  boost::optional<point> find_cut_axis(const triangular_mesh& part) {
-    return point(0, 0, 1);
+  boost::optional<major_axis_decomp> find_cut_axis(const triangular_mesh& part) {
+    auto part_surfaces = outer_surfaces(part);
+    vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
+
+    auto regions = const_orientation_regions(part);
+    vector<surface> const_surfs = inds_to_surfaces(regions, part);
+
+    point axis = part_planes.front().normal();
+
+    return major_axis_decomp{part_planes, axis, axial_decomposition(axis, const_surfs)};
   }
 
 

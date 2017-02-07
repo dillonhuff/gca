@@ -232,6 +232,8 @@ namespace gca {
 
   bool share_orthogonal_valley_edge(const surface& l, const surface& r);
 
+  std::vector<plane> max_area_basis(const std::vector<surface>& surfaces);
+
 }
 
 #endif

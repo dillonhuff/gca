@@ -62,6 +62,8 @@ namespace gca {
 
   double distance_to(const plane pl, const point p);
 
+  bool right_handed(const std::vector<plane>& planes);
+  std::vector<plane> set_right_handed(const std::vector<plane>& basis);
   
 }
 

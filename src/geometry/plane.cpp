@@ -60,5 +60,22 @@ namespace gca {
   double distance_to(const plane pl, const point p) {
     return dot(pl.normal(), pl.pt() - p);
   }
-  
+
+  bool right_handed(const std::vector<plane>& planes) {
+    DBG_ASSERT(planes.size() == 3);
+
+    double d = cross(planes[0].normal(), planes[1].normal()).dot(planes[2].normal());
+    return d > 0.0;
+  }
+
+  std::vector<plane> set_right_handed(const std::vector<plane>& basis) {
+    if (right_handed(basis)) { return basis; }
+    vector<plane> rh_basis = basis;
+    plane tmp = rh_basis[0];
+    rh_basis[0] = rh_basis[1];
+    rh_basis[1] = tmp;
+    DBG_ASSERT(right_handed(rh_basis));
+    return rh_basis;
+  }
+
 }
