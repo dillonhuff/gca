@@ -72,6 +72,8 @@ namespace gca {
     }
     face_inds = sort_unique(face_inds);
 
+    vector<point> already_tried;
+
     vector<surface> access_surfs;
   
     for (auto& s : surf_complex) {
@@ -85,6 +87,14 @@ namespace gca {
 	continue;
       }
 
+      if (any_of(already_tried, [s_n](const point l) {
+	    return angle_eps(s_n, l, 0.0, 1.0);
+	  })) {
+	continue;
+      }
+
+      already_tried.push_back(s_n);
+      
       vector<index_t> vert_or_horiz =
 	select(face_inds, [s_n, m](const index_t& i) {
 	    return all_parallel_to({i}, m, s_n, 1.0) ||
