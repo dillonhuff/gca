@@ -541,9 +541,15 @@ namespace gca {
     return res;
   }
 
+  unsigned num_surfaces(const axial_surface_decomposition& ax) {
+    return ax.positive.size() + ax.negative.size() + ax.mixed.size();
+  }
+
   boost::optional<major_axis_decomp> find_cut_axis(const triangular_mesh& part) {
     auto mandatories = build_mandatory_complexes(part);
     if (!mandatories) { return boost::none; }
+
+    cout << "Starting to find const regions" << endl;
 
     auto regions = const_orientation_regions(part);
     vector<surface> const_surfs = inds_to_surfaces(regions, part);
@@ -556,28 +562,53 @@ namespace gca {
 	} else {
 	  delete_if(common_dirs, [m](const point p) {
 	      for (auto& dir : m.legal_access_dirs) {
-		if (angle_eps(p, dir, 0.0, 0.5)) { return true; }
+		if (angle_eps(p, dir, 0.0, 0.5)) { return false; }
 	      }
-	      return false;
+	      return true;
 	    });
 	}
 	
       }
 
       if (common_dirs.size() == 0) {
+	cout << "No common dirs!" << endl;
 	return boost::none;
       } else {
-	point axis = common_dirs.front();
-	// Add part planes for this case
-	return major_axis_decomp{{}, axis, axial_decomposition(axis, const_surfs)};
+	for (auto& axis : common_dirs) {
+	  cout << "Trying common dir = " << axis << endl;
+	  auto ad = axial_decomposition(axis, const_surfs);
+	  if (num_surfaces(ad) == const_surfs.size()) {
+	    // Add part planes for this case
+	    return major_axis_decomp{{}, axis, ad};
+	  }
+	}
+
+	cout << "No common dir covers the whole part!" << endl;
+	return boost::none;
       }
     }
 
     auto part_surfaces = outer_surfaces(part);
     vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
 
-    point axis = part_planes.front().normal();
-    return major_axis_decomp{part_planes, axis, axial_decomposition(axis, const_surfs)};
+    for (auto& ax_plane : part_planes) {
+      point axis = ax_plane.normal();
+      auto ad = axial_decomposition(axis, const_surfs);
+
+      if (num_surfaces(ad) == const_surfs.size()) {
+	// Add part planes for this case
+	return major_axis_decomp{part_planes,
+	    axis,
+	    axial_decomposition(axis, const_surfs)};
+      }
+
+    }
+
+    cout << "No viable direction at all!" << endl;
+    return boost::none;
+    
+    // point axis = part_planes.front().normal();
+    // return major_axis_decomp{part_planes, axis, axial_decomposition(axis, const_surfs)};
   }
 
 

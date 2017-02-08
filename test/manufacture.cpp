@@ -164,11 +164,11 @@ namespace gca {
 	      {"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1)},
 		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1)},
 		  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", point(0, 0, 1)},
-		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", point(0, 0, 1)},
-		      {"test/stl-files/onshape_parts/100-013 - Part 1.stl", point(0, 0, 1)},
-			{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", point(0, 0, 1)},
-			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0)},
-			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0)}
+		    
+		    {"test/stl-files/onshape_parts/100-013 - Part 1.stl", point(0, 0, 1)},
+		      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", point(0, 0, 1)},
+			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0)},
+			  {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0)}
     };
 
     for (auto& test_case : planning_cases) {
