@@ -149,6 +149,7 @@ namespace gca {
 
   struct two_setup_plan_case {
     std::string part_path;
+    point expected_axis;
   };
 
   TEST_CASE("Surface based plans") {
@@ -156,15 +157,19 @@ namespace gca {
     set_system_allocator(&a);
 
     vector<two_setup_plan_case> planning_cases{
-      {"test/stl-files/onshape_parts/100-009 - Part 1.stl"},
-  	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl"},
-  	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl"},
-  	    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl"},
-  	      {"test/stl-files/onshape_parts/100-013 - Part 1.stl"},
-  		{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl"},
-  		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl"},
-  		    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"}
-  			};
+      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl", point(1, 0, 0)},
+	{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0)},
+	  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl", point(0, 0, 1)},
+	    {"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0)},
+	      {"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1)},
+		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1)},
+		  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", point(0, 0, 1)},
+		    {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", point(0, 0, 1)},
+		      {"test/stl-files/onshape_parts/100-013 - Part 1.stl", point(0, 0, 1)},
+			{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", point(0, 0, 1)},
+			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0)},
+			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0)}
+    };
 
     for (auto& test_case : planning_cases) {
 
@@ -172,14 +177,20 @@ namespace gca {
 
       auto cut_axis = find_cut_axis(mesh);
 
-      if (!cut_axis) {
-	continue;
-      }
+      REQUIRE(cut_axis);
 
       const auto& sfs = cut_axis->decomp;
 
+      cout << "Expected axis = " << test_case.expected_axis << endl;
+      cout << "Actual axis   = " << cut_axis->major_axis << endl;
+
       visualize_surface_decomp({sfs.positive, sfs.negative, sfs.mixed});
-      
+
+      bool correct_axis =
+	angle_eps(cut_axis->major_axis, test_case.expected_axis, 0.0, 0.05) ||
+	angle_eps(cut_axis->major_axis, -1*(test_case.expected_axis), 0.0, 0.05);
+
+      REQUIRE(correct_axis);
     }
 
   }

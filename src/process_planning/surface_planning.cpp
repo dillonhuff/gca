@@ -542,14 +542,41 @@ namespace gca {
   }
 
   boost::optional<major_axis_decomp> find_cut_axis(const triangular_mesh& part) {
-    auto part_surfaces = outer_surfaces(part);
-    vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
+    auto mandatories = build_mandatory_complexes(part);
+    if (!mandatories) { return boost::none; }
 
     auto regions = const_orientation_regions(part);
     vector<surface> const_surfs = inds_to_surfaces(regions, part);
+    
+    if ((*mandatories).size() > 0) {
+      vector<point> common_dirs;
+      for (auto m : *mandatories) {
+	if (common_dirs.size() == 0) {
+	  concat(common_dirs, m.legal_access_dirs);
+	} else {
+	  delete_if(common_dirs, [m](const point p) {
+	      for (auto& dir : m.legal_access_dirs) {
+		if (angle_eps(p, dir, 0.0, 0.5)) { return true; }
+	      }
+	      return false;
+	    });
+	}
+	
+      }
+
+      if (common_dirs.size() == 0) {
+	return boost::none;
+      } else {
+	point axis = common_dirs.front();
+	// Add part planes for this case
+	return major_axis_decomp{{}, axis, axial_decomposition(axis, const_surfs)};
+      }
+    }
+
+    auto part_surfaces = outer_surfaces(part);
+    vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
 
     point axis = part_planes.front().normal();
-
     return major_axis_decomp{part_planes, axis, axial_decomposition(axis, const_surfs)};
   }
 
