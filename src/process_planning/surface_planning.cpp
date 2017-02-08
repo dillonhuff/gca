@@ -40,22 +40,50 @@ namespace gca {
     return true;
   }
 
-  std::vector<surface> find_access_surfaces(const std::vector<surface>& surf_complex) {
+  template<typename A, typename F>
+  bool any_of(const A& container, F f) {
+    return any_of(begin(container), end(container), f);
+  }
+
+  std::vector<surface>
+  find_locating_surfaces(const triangular_mesh& part, const double surf_fraction) {
+    double sa = part.surface_area();
+    std::vector<surface> outer_surfs = outer_surfaces(part);
+
+    delete_if(outer_surfs,
+	      [surf_fraction, sa](const surface& s) {
+		return (s.surface_area() / sa) < surf_fraction;
+	      });
+
+    return outer_surfs;
+  }
+
+  std::vector<surface>
+  find_access_surfaces(const std::vector<surface>& surf_complex,
+		       const std::vector<point>& possible_normals) {
     DBG_ASSERT(surf_complex.size() > 0);
 
     const triangular_mesh& m = surf_complex.front().get_parent_mesh();
 
-    vector<surface> access_surfs;
 
     std::vector<index_t> face_inds;
     for (auto& s : surf_complex) {
       concat(face_inds, s.index_list());
     }
     face_inds = sort_unique(face_inds);
+
+    vector<surface> access_surfs;
   
     for (auto& s : surf_complex) {
       point s_n = normal(s);
+
       cout << "Trying normal = " << s_n << endl;
+
+      if (!any_of(possible_normals, [s_n](const point l) {
+	    return angle_eps(s_n, l, 0.0, 1.0);
+	  })) {
+	continue;
+      }
 
       vector<index_t> vert_or_horiz =
 	select(face_inds, [s_n, m](const index_t& i) {
@@ -69,8 +97,6 @@ namespace gca {
 
 	millable_faces = sort_unique(millable_faces);
 	if (intersection(millable_faces, face_inds).size() == face_inds.size()) {
-	  //if (elems_equal(millable_faces, face_inds)) {
-	  //	cout << "Viable direction = " << s_n << endl;
 	  access_surfs.push_back(s);
 	}
 
@@ -99,9 +125,15 @@ namespace gca {
 
     std::vector<mandatory_complex> complexes;
 
+    vector<surface> outer_surfs = outer_surfaces(part);
+    vector<point> usable_normals;
+    for (auto s : outer_surfs) {
+      usable_normals.push_back(normal(s));
+    }
+
     for (auto& s : surf_complexes) {
       vector<surface> access_surfaces =
-	find_access_surfaces(s);
+	find_access_surfaces(s, usable_normals);
 
       if ((access_surfaces.size() == 0)) { // || (access_surfaces.size() > 2)) {
 	cout << "Unmillable part: " << access_surfaces.size() << " access surfs " << endl;
@@ -120,19 +152,6 @@ namespace gca {
     }
 
     return complexes;
-  }
-
-  std::vector<surface>
-  find_locating_surfaces(const triangular_mesh& part, const double surf_fraction) {
-    double sa = part.surface_area();
-    std::vector<surface> outer_surfs = outer_surfaces(part);
-
-    delete_if(outer_surfs,
-	      [surf_fraction, sa](const surface& s) {
-		return (s.surface_area() / sa) < surf_fraction;
-	      });
-
-    return outer_surfs;
   }
 
   void visualize_proto_setups(const std::vector<proto_setup>& proto_setups) {
@@ -607,9 +626,6 @@ namespace gca {
 
     cout << "No viable direction at all!" << endl;
     return boost::none;
-    
-    // point axis = part_planes.front().normal();
-    // return major_axis_decomp{part_planes, axis, axial_decomposition(axis, const_surfs)};
   }
 
 
