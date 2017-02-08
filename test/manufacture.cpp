@@ -151,23 +151,24 @@ namespace gca {
   struct two_setup_plan_case {
     std::string part_path;
     point expected_axis;
+    double scale_factor;
   };
 
   vector<two_setup_plan_case> two_setup_cases() {
-    vector<two_setup_plan_case> planning_cases{
-      {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl", point(1, 0, 0)},
-	{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0)},
-	  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl", point(0, 0, 1)},
-	    {"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0)},
-	      {"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1)},
-		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1)},
-		  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", point(0, 0, 1)},
+    vector<two_setup_plan_case> planning_cases;
+    planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl", point(1, 0, 0), 0.05});
+    // 	{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0)},
+    // 	  {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl", point(0, 0, 1)},
+    // 	    {"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0)},
+    // 	      {"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1)},
+    // 		{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1)},
+    // 		  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", point(0, 0, 1)},
 		    
-		    {"test/stl-files/onshape_parts/100-013 - Part 1.stl", point(0, 0, 1)},
-		      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", point(0, 0, 1)},
-			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0)},
-			  {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0)}
-    };
+    // 		    {"test/stl-files/onshape_parts/100-013 - Part 1.stl", point(0, 0, 1)},
+    // 		      {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", point(0, 0, 1)},
+    // 			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0)},
+    // 			  {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0)}
+    // };
 
     return planning_cases;
   }
@@ -180,8 +181,14 @@ namespace gca {
 
     for (auto& test_case : planning_cases) {
 
-      auto mesh = parse_stl(test_case.part_path, 0.001);
+      auto mesh =
+	parse_and_scale_stl(test_case.part_path, test_case.scale_factor, 0.001);
+      box bounding = mesh.bounding_box();
 
+      cout << "X length = " << bounding.x_len() << endl;
+      cout << "Y length = " << bounding.y_len() << endl;
+      cout << "Z length = " << bounding.z_len() << endl;
+      
       auto cut_axis = find_cut_axis(mesh);
 
       REQUIRE(cut_axis);
