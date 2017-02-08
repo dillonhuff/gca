@@ -153,10 +153,7 @@ namespace gca {
     point expected_axis;
   };
 
-  TEST_CASE("Surface based plans") {
-    arena_allocator a;
-    set_system_allocator(&a);
-
+  vector<two_setup_plan_case> two_setup_cases() {
     vector<two_setup_plan_case> planning_cases{
       {"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl", point(1, 0, 0)},
 	{"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0)},
@@ -171,6 +168,15 @@ namespace gca {
 			{"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0)},
 			  {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0)}
     };
+
+    return planning_cases;
+  }
+
+  TEST_CASE("Surface based plans") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<two_setup_plan_case> planning_cases = two_setup_cases();
 
     for (auto& test_case : planning_cases) {
 
