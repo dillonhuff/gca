@@ -70,15 +70,19 @@ namespace gca {
     return tools;
   }
 
-  fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims) { 
+  fixtures current_fixtures() {
     vice test_v = current_setup();
     vice test_vice = top_jaw_origin_vice(test_v);
 
     std::vector<plate_height> plates{0.48, 0.625, 0.7};
     fixtures fixes(test_vice, plates);
 
-    auto tools = current_tools();
+    return fixes;
+  }
 
+  fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims) { 
+    auto tools = current_tools();
+    fixtures fixes = current_fixtures();
     return fabrication_inputs(fixes, tools, workpiece_dims);
   }
 

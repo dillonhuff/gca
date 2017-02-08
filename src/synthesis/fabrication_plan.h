@@ -108,6 +108,8 @@ namespace gca {
 
   std::vector<tool> current_tools();
 
+  fixtures current_fixtures();
+
 }
 
 #endif

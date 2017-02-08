@@ -6,6 +6,7 @@
 #include "geometry/mesh_operations.h"
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
+#include "process_planning/major_axis_fixturing.h"
 #include "process_planning/surface_planning.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
@@ -191,6 +192,14 @@ namespace gca {
 	angle_eps(cut_axis->major_axis, -1*(test_case.expected_axis), 0.0, 0.05);
 
       REQUIRE(correct_axis);
+
+      fixtures fixes = current_fixtures();
+      axis_fixture axis_fix =
+	build_axis_fixture(fixes, *cut_axis);
+
+      REQUIRE(axis_fix.positive);
+      REQUIRE(axis_fix.negative);
+
     }
 
   }

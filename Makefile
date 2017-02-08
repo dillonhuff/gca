@@ -2890,6 +2890,33 @@ src/process_planning/job_planning.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/job_planning.cpp.s
 .PHONY : src/process_planning/job_planning.cpp.s
 
+src/process_planning/major_axis_fixturing.o: src/process_planning/major_axis_fixturing.cpp.o
+
+.PHONY : src/process_planning/major_axis_fixturing.o
+
+# target to build an object file
+src/process_planning/major_axis_fixturing.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/major_axis_fixturing.cpp.o
+.PHONY : src/process_planning/major_axis_fixturing.cpp.o
+
+src/process_planning/major_axis_fixturing.i: src/process_planning/major_axis_fixturing.cpp.i
+
+.PHONY : src/process_planning/major_axis_fixturing.i
+
+# target to preprocess a source file
+src/process_planning/major_axis_fixturing.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/major_axis_fixturing.cpp.i
+.PHONY : src/process_planning/major_axis_fixturing.cpp.i
+
+src/process_planning/major_axis_fixturing.s: src/process_planning/major_axis_fixturing.cpp.s
+
+.PHONY : src/process_planning/major_axis_fixturing.s
+
+# target to generate assembly for a file
+src/process_planning/major_axis_fixturing.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/major_axis_fixturing.cpp.s
+.PHONY : src/process_planning/major_axis_fixturing.cpp.s
+
 src/process_planning/mandatory_volumes.o: src/process_planning/mandatory_volumes.cpp.o
 
 .PHONY : src/process_planning/mandatory_volumes.o
@@ -5363,6 +5390,9 @@ help:
 	@echo "... src/process_planning/job_planning.o"
 	@echo "... src/process_planning/job_planning.i"
 	@echo "... src/process_planning/job_planning.s"
+	@echo "... src/process_planning/major_axis_fixturing.o"
+	@echo "... src/process_planning/major_axis_fixturing.i"
+	@echo "... src/process_planning/major_axis_fixturing.s"
 	@echo "... src/process_planning/mandatory_volumes.o"
 	@echo "... src/process_planning/mandatory_volumes.i"
 	@echo "... src/process_planning/mandatory_volumes.s"
