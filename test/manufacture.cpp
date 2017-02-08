@@ -184,7 +184,7 @@ namespace gca {
       cout << "Expected axis = " << test_case.expected_axis << endl;
       cout << "Actual axis   = " << cut_axis->major_axis << endl;
 
-      visualize_surface_decomp({sfs.positive, sfs.negative, sfs.mixed});
+      //visualize_surface_decomp({sfs.positive, sfs.negative, sfs.mixed});
 
       bool correct_axis =
 	angle_eps(cut_axis->major_axis, test_case.expected_axis, 0.0, 0.05) ||

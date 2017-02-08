@@ -562,7 +562,8 @@ namespace gca {
 	} else {
 	  delete_if(common_dirs, [m](const point p) {
 	      for (auto& dir : m.legal_access_dirs) {
-		if (angle_eps(p, dir, 0.0, 0.5)) { return false; }
+		if (angle_eps(p, dir, 0.0, 0.5) ||
+		    angle_eps(p, -1*dir, 0.0, 0.5)) { return false; }
 	      }
 	      return true;
 	    });
