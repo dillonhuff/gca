@@ -179,7 +179,7 @@ namespace gca {
   vector<gca::two_setup_plan_case> two_setup_cases() {
     vector<gca::two_setup_plan_case> planning_cases;
 
-    planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl", point(1, 0, 0), 0.05});
+    planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl", point(1, 0, 0), 0.02});
 
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0), 0.05});
 

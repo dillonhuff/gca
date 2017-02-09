@@ -106,6 +106,7 @@ namespace gca {
     dir_fixture first_dir = *(axis_fix.positive);
     triangular_mesh stock = align_stock(cut_axis, first_dir, w);
     vector<fixture_setup> setups;
+    
     return fixture_plan(mesh(cut_axis), setups, w);
   }
 

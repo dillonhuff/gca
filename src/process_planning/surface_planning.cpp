@@ -574,6 +574,35 @@ namespace gca {
     return ax.positive.size() + ax.negative.size() + ax.mixed.size();
   }
 
+  std::vector<plane>
+  find_major_axes(const triangular_mesh& part,
+		  const point axis) {
+    auto part_surfaces = outer_surfaces(part);
+
+    surface major_surf = find_surface_by_normal(part_surfaces, axis);
+    vector<plane> part_planes;
+    part_planes.push_back(surface_plane(major_surf));
+
+    sort(begin(part_surfaces), end(part_surfaces),
+	 [](const surface& l, const surface& r)
+	 { return l.surface_area() > r.surface_area(); });
+
+    for (auto& s : part_surfaces) {
+      if (angle_eps(normal(s), normal(major_surf), 90, 1.0)) {
+	part_planes.push_back(surface_plane(s));
+	break;
+      }
+    }
+
+    point third_vec = cross(part_planes[0].normal(), part_planes[1].normal());
+    point third_pt = max_point_in_dir(part, third_vec);
+    plane third_plane(third_vec, third_pt);
+    part_planes.push_back(third_plane);
+    
+    part_planes = set_right_handed(part_planes);
+    return part_planes;
+  }
+
   boost::optional<major_axis_decomp> find_cut_axis(const triangular_mesh& part) {
     auto mandatories = build_mandatory_complexes(part);
     if (!mandatories) { return boost::none; }
@@ -609,7 +638,8 @@ namespace gca {
 	  auto ad = axial_decomposition(axis, const_surfs);
 	  if (num_surfaces(ad) == const_surfs.size()) {
 	    // Add part planes for this case
-	    return major_axis_decomp{{}, axis, ad};
+	    vector<plane> planes = find_major_axes(part, axis);
+	    return major_axis_decomp{planes, axis, ad};
 	  }
 	}
 
