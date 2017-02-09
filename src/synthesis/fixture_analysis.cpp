@@ -43,6 +43,37 @@ namespace gca {
     return surfs;
   }
 
+  vector<plane>
+  custom_offset_basis(const std::vector<plane>& part_planes,
+		      const std::vector<plane>& stock_planes,
+		      const std::vector<double>& margin_percentages,
+		      const triangular_mesh& part,
+		      const triangular_mesh& mesh) {
+
+    vector<plane> offset_basis;
+    for (unsigned i = 0; i < stock_planes.size(); i++) {
+      double stock_diam = diameter(stock_planes[i].normal(), mesh);
+      double part_diam = diameter(part_planes[i].normal(), part);
+
+      cout << "stock diam = " << stock_diam << endl;
+      cout << "part diam  = " << part_diam << endl;
+
+      if (!(stock_diam > part_diam)) {
+	cout << "stock_diam > part_diam" << endl;
+	cout << "stock_diam = " << stock_diam << endl;
+	cout << "part_diam  = " << part_diam << endl;
+	DBG_ASSERT(stock_diam > part_diam);
+      }
+
+      double margin = (stock_diam - part_diam) / 2.0;
+
+      cout << "margin = " << margin << endl;
+
+      offset_basis.push_back(stock_planes[i].flip().slide(margin));
+    }
+
+    return offset_basis;
+  }
 
   vector<plane>
   even_offset_basis(const std::vector<plane>& part_planes,
