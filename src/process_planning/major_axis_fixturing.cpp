@@ -1,4 +1,6 @@
 #include "process_planning/major_axis_fixturing.h"
+#include "synthesis/workpiece_clipping.h"
+#include "synthesis/visual_debug.h"
 
 namespace gca {
 
@@ -39,10 +41,6 @@ namespace gca {
     
   }
 
-  const triangular_mesh& mesh(const major_axis_decomp& d) {
-    return d.decomp.positive.front().get_parent_mesh();
-  }
-
   axis_fixture build_axis_fixture(const fixtures& f,
 				  const major_axis_decomp& d) {
     const triangular_mesh& m = mesh(d);
@@ -54,6 +52,28 @@ namespace gca {
       find_dir_fixture(f, -1*(d.major_axis), m);
 
     return axis_fixture{positive, negative};
+  }
+
+  triangular_mesh align_stock(const major_axis_decomp& cut_axis,
+			      const dir_fixture& first_dir,
+			      const workpiece w) {
+    const auto& part = mesh(cut_axis);
+    triangular_mesh m = stock_mesh(w);
+
+    vtk_debug_meshes({part, m});
+
+    return m;
+  }
+
+  fixture_plan
+  axis_fixture_plan(const major_axis_decomp& cut_axis,
+		    const axis_fixture& axis_fix,
+		    const workpiece w,
+		    const std::vector<tool>& tools) {
+    dir_fixture first_dir = *(axis_fix.positive);
+    triangular_mesh stock = align_stock(cut_axis, first_dir, w);
+    vector<fixture_setup> setups;
+    return fixture_plan(mesh(cut_axis), setups, w);
   }
 
 }

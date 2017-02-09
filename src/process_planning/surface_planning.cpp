@@ -671,4 +671,9 @@ namespace gca {
     return axial_surface_decomposition{positive, negative, mixed};
   }
 
+  const triangular_mesh& mesh(const major_axis_decomp& d) {
+    return d.decomp.positive.front().get_parent_mesh();
+  }
+
+
 }

@@ -195,8 +195,6 @@ namespace gca {
 		    
     planning_cases.push_back({"test/stl-files/onshape_parts/100-013 - Part 1.stl", point(0, 0, 1), 1.0});
 
-    //planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", point(0, 0, 1), 1.0});
-
     planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0), 0.5});
 
     planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", point(0, 1, 0), 1.0});
@@ -239,6 +237,15 @@ namespace gca {
       REQUIRE(axis_fix.positive);
       REQUIRE(axis_fix.negative);
 
+      vector<tool> tools = current_tools();
+      workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
+      fixture_plan fs =
+	axis_fixture_plan(*cut_axis, axis_fix, wp, tools);
+
+      REQUIRE(fs.fixtures().size() == 2);
+
+      fabrication_plan fp =
+	fabrication_plan_for_fixture_plan(fs, mesh, tools, wp);
     }
 
   }

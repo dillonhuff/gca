@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "geometry/surface.h"
+#include "synthesis/fixture_analysis.h"
 
 namespace gca {
 
@@ -94,5 +95,6 @@ namespace gca {
   boost::optional<major_axis_decomp>
   find_cut_axis(const triangular_mesh& part);
 
-  
+  const triangular_mesh& mesh(const major_axis_decomp& d);
+
 }
