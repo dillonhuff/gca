@@ -59,10 +59,43 @@ namespace gca {
 			      const workpiece w) {
     const auto& part = mesh(cut_axis);
     triangular_mesh m = stock_mesh(w);
+    vector<surface> sfs = outer_surfaces(m);
 
-    //vtk_debug_meshes({part, m});
+    DBG_ASSERT(sfs.size() > 0);
 
-    return m;
+    vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+    
+    vector<plane> part_planes = cut_axis.axes;
+
+    DBG_ASSERT(part_planes.size() == 3);
+
+    vector<double> margin_values;
+    for (auto& pl : part_planes) {
+      if (angle_eps(pl.normal(), cut_axis.major_axis, 0.0, 1.0)) {
+	margin_values.push_back(0.01);
+      } else {
+	margin_values.push_back(0.5);
+      }
+    }
+
+    auto t = custom_offset_transform(part_planes,
+				     stock_planes,
+				     margin_values,
+				     part,
+				     m);
+
+    DBG_ASSERT(t);
+
+    triangular_mesh aligned_stock = apply(*t, m);
+    
+    vtk_debug_meshes({part, aligned_stock});
+
+    box part_bb = part.bounding_box();
+    box aligned_bb = aligned_stock.bounding_box();
+
+    DBG_ASSERT(fits_inside(part_bb, aligned_bb));
+
+    return aligned_stock;
   }
 
   fixture_plan

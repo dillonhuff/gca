@@ -71,6 +71,13 @@ namespace gca {
   stable_surfaces_after_clipping(const triangular_mesh& part_mesh,
 				 const triangular_mesh& aligned_workpiece_mesh);
 
+  boost::optional<homogeneous_transform>
+  custom_offset_transform(const std::vector<plane>& part_planes,
+			  const std::vector<plane>& stock_planes,
+			  const std::vector<double>& margin_fractions,
+			  const triangular_mesh& part,
+			  const triangular_mesh& mesh);
+  
 }
 
 #endif

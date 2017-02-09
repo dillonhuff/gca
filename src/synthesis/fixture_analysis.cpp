@@ -46,7 +46,7 @@ namespace gca {
   vector<plane>
   custom_offset_basis(const std::vector<plane>& part_planes,
 		      const std::vector<plane>& stock_planes,
-		      const std::vector<double>& margin_percentages,
+		      const std::vector<double>& margin_fractions,
 		      const triangular_mesh& part,
 		      const triangular_mesh& mesh) {
 
@@ -65,7 +65,7 @@ namespace gca {
 	DBG_ASSERT(stock_diam > part_diam);
       }
 
-      double margin = (stock_diam - part_diam) / 2.0;
+      double margin = margin_fractions[i]*(stock_diam - part_diam);
 
       cout << "margin = " << margin << endl;
 
@@ -75,6 +75,22 @@ namespace gca {
     return offset_basis;
   }
 
+  boost::optional<homogeneous_transform>
+  custom_offset_transform(const std::vector<plane>& part_planes,
+			  const std::vector<plane>& stock_planes,
+			  const std::vector<double>& margin_fractions,
+			  const triangular_mesh& part,
+			  const triangular_mesh& mesh) {
+
+    vector<plane> offset_basis =
+      custom_offset_basis(part_planes, stock_planes, margin_fractions, part, mesh);
+
+    auto t = mate_planes(offset_basis[0], offset_basis[1], offset_basis[2],
+			 part_planes[0], part_planes[1], part_planes[2]);
+
+    return t;
+  }
+  
   vector<plane>
   even_offset_basis(const std::vector<plane>& part_planes,
 		    const std::vector<plane>& stock_planes,
@@ -154,34 +170,6 @@ namespace gca {
     for (auto b : basis) {
       cout << b.normal() << endl;
     }
-
-    // vector<plane> offset_basis =
-    //   even_offset_basis(part_planes, basis, part, mesh);
-
-    // vector<plane> offset_basis;
-    // for (unsigned i = 0; i < basis.size(); i++) {
-    //   double stock_diam = diameter(basis[i].normal(), mesh);
-    //   double part_diam = diameter(part_planes[i].normal(), part);
-
-    //   cout << "stock diam = " << stock_diam << endl;
-    //   cout << "part diam  = " << part_diam << endl;
-
-    //   if (!(stock_diam > part_diam)) {
-    // 	cout << "stock_diam > part_diam" << endl;
-    // 	cout << "stock_diam = " << stock_diam << endl;
-    // 	cout << "part_diam  = " << part_diam << endl;
-    // 	DBG_ASSERT(stock_diam > part_diam);
-    //   }
-
-    //   double margin = (stock_diam - part_diam) / 2.0;
-
-    //   cout << "margin = " << margin << endl;
-
-    //   offset_basis.push_back(basis[i].flip().slide(margin));
-    // }
-
-    // auto t = mate_planes(offset_basis[0], offset_basis[1], offset_basis[2],
-    // 			 part_planes[0], part_planes[1], part_planes[2]);
 
     boost::optional<homogeneous_transform> t =
       even_offset_transform(part_planes, basis, part, mesh);
