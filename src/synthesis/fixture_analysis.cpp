@@ -43,6 +43,39 @@ namespace gca {
     return surfs;
   }
 
+
+  vector<plane>
+  even_offset_basis(const std::vector<plane>& part_planes,
+		    const std::vector<plane>& stock_planes,
+		    const triangular_mesh& part,
+		    const triangular_mesh& mesh) {
+
+    vector<plane> offset_basis;
+    for (unsigned i = 0; i < stock_planes.size(); i++) {
+      double stock_diam = diameter(stock_planes[i].normal(), mesh);
+      double part_diam = diameter(part_planes[i].normal(), part);
+
+      cout << "stock diam = " << stock_diam << endl;
+      cout << "part diam  = " << part_diam << endl;
+
+      if (!(stock_diam > part_diam)) {
+	cout << "stock_diam > part_diam" << endl;
+	cout << "stock_diam = " << stock_diam << endl;
+	cout << "part_diam  = " << part_diam << endl;
+	DBG_ASSERT(stock_diam > part_diam);
+      }
+
+      double margin = (stock_diam - part_diam) / 2.0;
+
+      cout << "margin = " << margin << endl;
+
+      offset_basis.push_back(stock_planes[i].flip().slide(margin));
+    }
+
+    return offset_basis;
+}
+
+
   // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
@@ -74,28 +107,31 @@ namespace gca {
     for (auto b : basis) {
       cout << b.normal() << endl;
     }
+
+    vector<plane> offset_basis =
+      even_offset_basis(part_planes, basis, part, mesh);
     
-    vector<plane> offset_basis;
-    for (unsigned i = 0; i < basis.size(); i++) {
-      double stock_diam = diameter(basis[i].normal(), mesh);
-      double part_diam = diameter(part_planes[i].normal(), part);
+    // vector<plane> offset_basis;
+    // for (unsigned i = 0; i < basis.size(); i++) {
+    //   double stock_diam = diameter(basis[i].normal(), mesh);
+    //   double part_diam = diameter(part_planes[i].normal(), part);
 
-      cout << "stock diam = " << stock_diam << endl;
-      cout << "part diam  = " << part_diam << endl;
+    //   cout << "stock diam = " << stock_diam << endl;
+    //   cout << "part diam  = " << part_diam << endl;
 
-      if (!(stock_diam > part_diam)) {
-	cout << "stock_diam > part_diam" << endl;
-	cout << "stock_diam = " << stock_diam << endl;
-	cout << "part_diam  = " << part_diam << endl;
-	DBG_ASSERT(stock_diam > part_diam);
-      }
+    //   if (!(stock_diam > part_diam)) {
+    // 	cout << "stock_diam > part_diam" << endl;
+    // 	cout << "stock_diam = " << stock_diam << endl;
+    // 	cout << "part_diam  = " << part_diam << endl;
+    // 	DBG_ASSERT(stock_diam > part_diam);
+    //   }
 
-      double margin = (stock_diam - part_diam) / 2.0;
+    //   double margin = (stock_diam - part_diam) / 2.0;
 
-      cout << "margin = " << margin << endl;
+    //   cout << "margin = " << margin << endl;
 
-      offset_basis.push_back(basis[i].flip().slide(margin));
-    }
+    //   offset_basis.push_back(basis[i].flip().slide(margin));
+    // }
 
     auto t = mate_planes(offset_basis[0], offset_basis[1], offset_basis[2],
 			 part_planes[0], part_planes[1], part_planes[2]);
