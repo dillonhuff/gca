@@ -125,12 +125,19 @@ namespace gca {
       find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
 
     DBG_ASSERT(maybe_fix);
+
+    vector<feature*> feats = collect_features(f);
+    delete_if(feats, [tool_info](feature* f) {
+	return map_find(f, tool_info).size() == 0;
+      });
+
+    cout << "# of accessable features = " << feats.size() << endl;
     
     fixture_setup s =
       create_setup(maybe_fix->second,
 		   stock,
 		   part,
-		   collect_features(f),
+		   feats,
 		   maybe_fix->first,
 		   tool_info,
 		   {},
