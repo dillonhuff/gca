@@ -60,7 +60,7 @@ namespace gca {
     const auto& part = mesh(cut_axis);
     triangular_mesh m = stock_mesh(w);
 
-    vtk_debug_meshes({part, m});
+    //vtk_debug_meshes({part, m});
 
     return m;
   }

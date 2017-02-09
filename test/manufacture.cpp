@@ -237,15 +237,15 @@ namespace gca {
       REQUIRE(axis_fix.positive);
       REQUIRE(axis_fix.negative);
 
-      vector<tool> tools = current_tools();
-      workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
-      fixture_plan fs =
-	axis_fixture_plan(*cut_axis, axis_fix, wp, tools);
+      // vector<tool> tools = current_tools();
+      // workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
+      // fixture_plan fs =
+      // 	axis_fixture_plan(*cut_axis, axis_fix, wp, tools);
 
-      REQUIRE(fs.fixtures().size() == 2);
+      // REQUIRE(fs.fixtures().size() == 2);
 
-      fabrication_plan fp =
-	fabrication_plan_for_fixture_plan(fs, mesh, tools, wp);
+      // fabrication_plan fp =
+      // 	fabrication_plan_for_fixture_plan(fs, mesh, tools, wp);
     }
 
   }
