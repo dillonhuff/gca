@@ -24,6 +24,7 @@ namespace gca {
   fixture_plan
   axis_fixture_plan(const major_axis_decomp& cut_axis,
 		    const axis_fixture& axis_fix,
+		    const fixtures& fixes,
 		    const workpiece w,
 		    const std::vector<tool>& tools);
   

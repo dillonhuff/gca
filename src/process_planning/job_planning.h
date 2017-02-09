@@ -9,4 +9,22 @@ namespace gca {
 				       const fixtures& f,
 				       const std::vector<tool>& tools);
 
+  fixture_setup
+  create_setup(const homogeneous_transform& s_t,
+	       const triangular_mesh& wp_mesh,
+	       const triangular_mesh& part_mesh,
+	       const std::vector<feature*>& features,
+	       const fixture& f,
+	       const tool_access_info& tool_info,
+	       const std::vector<chamfer>& chamfers,
+	       const std::vector<freeform_surface>& freeforms);
+
+  boost::optional<std::pair<fixture, homogeneous_transform> >
+  find_next_fixture_side_vice(feature_decomposition* decomp,
+			      Nef_polyhedron& stock_nef,
+			      const triangular_mesh& current_stock,
+			      const point n,
+			      const fixtures& f);
+  
+  
 }

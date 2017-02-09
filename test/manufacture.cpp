@@ -240,7 +240,7 @@ namespace gca {
       vector<tool> tools = current_tools();
       workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
       fixture_plan fs =
-      	axis_fixture_plan(*cut_axis, axis_fix, wp, tools);
+      	axis_fixture_plan(*cut_axis, axis_fix, fixes, wp, tools);
 
       //REQUIRE(fs.fixtures().size() == 2);
 

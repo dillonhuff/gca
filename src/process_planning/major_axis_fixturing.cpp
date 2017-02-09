@@ -1,4 +1,7 @@
 #include "process_planning/major_axis_fixturing.h"
+
+#include "process_planning/job_planning.h"
+#include "process_planning/tool_access.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/visual_debug.h"
 
@@ -101,13 +104,41 @@ namespace gca {
   fixture_plan
   axis_fixture_plan(const major_axis_decomp& cut_axis,
 		    const axis_fixture& axis_fix,
+		    const fixtures& fixes,
 		    const workpiece w,
 		    const std::vector<tool>& tools) {
     dir_fixture first_dir = *(axis_fix.positive);
     triangular_mesh stock = align_stock(cut_axis, first_dir, w);
     vector<fixture_setup> setups;
+
+    point n = first_dir.orient.top_normal();
+    const auto& part = mesh(cut_axis);
+
+    feature_decomposition* f =
+      build_feature_decomposition(stock, part, n);
+
+    tool_access_info tool_info =
+      find_accessable_tools(f, tools);
+
+    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+    boost::optional<std::pair<fixture, homogeneous_transform>> maybe_fix =
+      find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
+
+    DBG_ASSERT(maybe_fix);
     
-    return fixture_plan(mesh(cut_axis), setups, w);
+    fixture_setup s =
+      create_setup(maybe_fix->second,
+		   stock,
+		   part,
+		   collect_features(f),
+		   maybe_fix->first,
+		   tool_info,
+		   {},
+		   {});
+
+    setups.push_back(s);
+    
+    return fixture_plan(part, setups, w);
   }
 
 }
