@@ -111,6 +111,48 @@ namespace gca {
   }
 
 
+  fixture_setup
+  build_second_setup(const triangular_mesh& part,
+		     const Nef_polyhedron& stock_nef,
+		     const dir_fixture& second_dir,
+		     const std::vector<tool>& tools) {
+    triangular_mesh stock = nef_to_single_trimesh(stock_nef);
+
+    vector<fixture_setup> setups;
+
+    point n = second_dir.orient.top_normal();
+
+    feature_decomposition* f =
+      build_feature_decomposition(stock, part, n);
+
+    tool_access_info tool_info =
+      find_accessable_tools(f, tools);
+
+    // Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+    // auto maybe_fix = find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
+    
+    // DBG_ASSERT(maybe_fix);
+
+    vector<feature*> feats = collect_features(f);
+    delete_if(feats, [tool_info](feature* f) {
+	return map_find(f, tool_info).size() == 0;
+      });
+
+    cout << "# of accessable features = " << feats.size() << endl;
+    
+    fixture_setup s =
+      create_setup(second_dir.placement,
+		   stock,
+		   part,
+		   feats,
+		   fixture(second_dir.orient, second_dir.v),
+		   tool_info,
+		   {},
+		   {});
+
+    return s;
+  }
+
   fixture_plan
   axis_fixture_plan(const major_axis_decomp& cut_axis,
 		    const axis_fixture& axis_fix,
@@ -118,6 +160,8 @@ namespace gca {
 		    const workpiece w,
 		    const std::vector<tool>& tools) {
     dir_fixture first_dir = *(axis_fix.positive);
+    dir_fixture second_dir = *(axis_fix.negative);
+
     triangular_mesh stock = align_stock(cut_axis, first_dir, w);
     vector<fixture_setup> setups;
 
@@ -130,8 +174,8 @@ namespace gca {
     tool_access_info tool_info =
       find_accessable_tools(f, tools);
 
-    boost::optional<std::pair<fixture, homogeneous_transform>> maybe_fix =
-      find_next_fixture_side_vice(f, stock, n, fixes);
+    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+    auto maybe_fix = find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
     
     DBG_ASSERT(maybe_fix);
 
@@ -153,7 +197,14 @@ namespace gca {
 		   {});
 
     setups.push_back(s);
-    
+
+    stock_nef = subtract_features(stock_nef, feats);
+
+    fixture_setup second =
+      build_second_setup(part, stock_nef, second_dir, tools);
+
+    setups.push_back(second);
+
     return fixture_plan(part, setups, w);
   }
 

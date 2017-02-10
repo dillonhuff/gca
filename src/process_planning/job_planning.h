@@ -26,5 +26,9 @@ namespace gca {
 			      const point n,
 			      const fixtures& f);
   
+
+  Nef_polyhedron
+  subtract_features(const Nef_polyhedron& m,
+		    const std::vector<feature*>& features);
   
 }
