@@ -154,28 +154,6 @@ namespace gca {
     double scale_factor;
   };
 
-      // {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 0.4, wp},      
-      // {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 0.5, wp},
-
-
-      // {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 1.0, wp},
-      // 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 0.5, wp},
-
-	
-      // 	  {"test/stl-files/OctagonWithHolesShort.stl", 1.0, wp},
-      // 	    {"test/stl-files/CircleWithFilletAndSide.stl", 1.0, wp},
-      // 	      {"test/stl-files/onshape_parts/100-013 - Part 1.stl", 0.7, wp},
-
-      // 		{"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", 0.65, wp},
-
-      // 		  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", 0.5, wp},
-      // 		    {"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", 0.45, wp},
-      // 		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", 0.5, wp},
-      // 			{"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", 1.0, wp},
-
-			      
-      // 			  };
-
   vector<gca::two_setup_plan_case> two_setup_cases() {
     vector<gca::two_setup_plan_case> planning_cases;
 
@@ -242,7 +220,7 @@ namespace gca {
       fixture_plan fs =
       	axis_fixture_plan(*cut_axis, axis_fix, fixes, wp, tools);
 
-      //REQUIRE(fs.fixtures().size() == 2);
+      REQUIRE(fs.fixtures().size() == 2);
 
       fabrication_plan fp =
       	fabrication_plan_for_fixture_plan(fs, mesh, tools, wp);

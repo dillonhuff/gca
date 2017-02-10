@@ -91,7 +91,7 @@ namespace gca {
 
     triangular_mesh aligned_stock = apply(*t, m);
     
-    vtk_debug_meshes({part, aligned_stock});
+    //vtk_debug_meshes({part, aligned_stock});
 
     box part_bb = part.bounding_box();
     box aligned_bb = aligned_stock.bounding_box();
@@ -100,6 +100,16 @@ namespace gca {
 
     return aligned_stock;
   }
+
+  boost::optional<std::pair<fixture, homogeneous_transform> >
+  find_next_fixture_side_vice(feature_decomposition* f,
+			      const triangular_mesh& stock,
+			      const point n,
+			      const fixtures& fixes) {
+    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+    return find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
+  }
+
 
   fixture_plan
   axis_fixture_plan(const major_axis_decomp& cut_axis,
@@ -120,10 +130,9 @@ namespace gca {
     tool_access_info tool_info =
       find_accessable_tools(f, tools);
 
-    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     boost::optional<std::pair<fixture, homogeneous_transform>> maybe_fix =
-      find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
-
+      find_next_fixture_side_vice(f, stock, n, fixes);
+    
     DBG_ASSERT(maybe_fix);
 
     vector<feature*> feats = collect_features(f);
