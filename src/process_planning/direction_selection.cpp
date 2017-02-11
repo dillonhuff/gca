@@ -5,7 +5,6 @@
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/prismatic_feature_utils.h"
 #include "feature_recognition/visual_debug.h"
-#include "process_planning/axis_location.h"
 #include "process_planning/direction_selection.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/mandatory_volumes.h"

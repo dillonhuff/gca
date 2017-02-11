@@ -30,5 +30,17 @@ namespace gca {
   Nef_polyhedron
   subtract_features(const Nef_polyhedron& m,
 		    const std::vector<feature*>& features);
+
+  Nef_polyhedron
+  subtract_chamfers(const Nef_polyhedron& stock_nef,
+		    const std::vector<chamfer>& chamfers,
+		    const triangular_mesh& part,
+		    const point n);
   
+  Nef_polyhedron
+  subtract_freeforms(const Nef_polyhedron& stock_nef,
+		     const std::vector<freeform_surface>& chamfers,
+		     const triangular_mesh& part,
+		     const point n);
+
 }

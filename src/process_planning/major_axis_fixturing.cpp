@@ -146,9 +146,11 @@ namespace gca {
 
     point n = second_dir.orient.top_normal();
 
+    direction_process_info df =
+      build_direction_info(stock, part, {}, direction_info{n, true}, tools);
     feature_decomposition* f =
-      build_feature_decomposition(stock, part, n);
-
+      df.decomp; //build_feature_decomposition(stock, part, n);
+    
     tool_access_info tool_info =
       find_accessable_tools(f, tools);
 
@@ -166,10 +168,12 @@ namespace gca {
 		   feats,
 		   fixture(second_dir.orient, second_dir.v),
 		   tool_info,
-		   {},
-		   {});
+		   df.chamfer_surfaces,
+		   df.freeform_surfaces);
 
     stock_nef = subtract_features(stock_nef, feats);
+    stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
+    stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
 
     test_stock_volume(stock_nef, part);
 
@@ -191,8 +195,10 @@ namespace gca {
     point n = first_dir.orient.top_normal();
     const auto& part = mesh(cut_axis);
 
+    direction_process_info df =
+      build_direction_info(stock, part, {}, direction_info{n, true}, tools);
     feature_decomposition* f =
-      build_feature_decomposition(stock, part, n);
+      df.decomp; //build_feature_decomposition(stock, part, n);
 
     tool_access_info tool_info =
       find_accessable_tools(f, tools);
@@ -216,12 +222,14 @@ namespace gca {
 		   feats,
 		   maybe_fix->first,
 		   tool_info,
-		   {},
-		   {});
+		   df.chamfer_surfaces,
+		   df.freeform_surfaces);
 
     setups.push_back(s);
 
     stock_nef = subtract_features(stock_nef, feats);
+    stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
+    stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
 
     fixture_setup second =
       build_second_setup(part, stock_nef, second_dir, tools);
