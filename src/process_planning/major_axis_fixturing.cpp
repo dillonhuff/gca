@@ -111,9 +111,33 @@ namespace gca {
   }
 
 
+  void test_stock_volume(const Nef_polyhedron& stock_nef,
+			 const triangular_mesh& part) {
+    auto current_stock = nef_to_single_trimesh(stock_nef);
+    cout << "Done with loop got current stock" << endl;
+
+    double part_volume = volume(part);
+
+    double stock_volume = volume(current_stock);
+    double volume_ratio = part_volume / stock_volume;
+
+    cout << "Part volume              = " << part_volume << endl;
+    cout << "Final stock volume       = " << stock_volume << endl;
+    cout << "Final part / stock       = " << volume_ratio << endl;
+
+    // TODO: Tighten this tolerance once edge features are supported
+    if (volume_ratio <= 0.99) {
+
+      vtk_debug_mesh(part);
+      vtk_debug_mesh(current_stock);
+
+      DBG_ASSERT(false);
+    }
+  }
+      
   fixture_setup
   build_second_setup(const triangular_mesh& part,
-		     const Nef_polyhedron& stock_nef,
+		     Nef_polyhedron& stock_nef,
 		     const dir_fixture& second_dir,
 		     const std::vector<tool>& tools) {
     triangular_mesh stock = nef_to_single_trimesh(stock_nef);
@@ -127,11 +151,6 @@ namespace gca {
 
     tool_access_info tool_info =
       find_accessable_tools(f, tools);
-
-    // Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
-    // auto maybe_fix = find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
-    
-    // DBG_ASSERT(maybe_fix);
 
     vector<feature*> feats = collect_features(f);
     delete_if(feats, [tool_info](feature* f) {
@@ -149,6 +168,10 @@ namespace gca {
 		   tool_info,
 		   {},
 		   {});
+
+    stock_nef = subtract_features(stock_nef, feats);
+
+    test_stock_volume(stock_nef, part);
 
     return s;
   }
@@ -181,7 +204,7 @@ namespace gca {
 
     vector<feature*> feats = collect_features(f);
     delete_if(feats, [tool_info](feature* f) {
-	return map_find(f, tool_info).size() == 0;
+    	return map_find(f, tool_info).size() == 0;
       });
 
     cout << "# of accessable features = " << feats.size() << endl;

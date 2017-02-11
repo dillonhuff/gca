@@ -10,7 +10,11 @@ namespace gca {
 					  const std::vector<tool>& tools) {
 
     if (tools.size() == 0) {
+      pair<double, double> feature_range = f.range_along(f.normal());
       cout << "ERROR: No available tools for feature" << endl;
+      cout << "Feature depth = " << f.depth() << endl;
+      cout << "Max along " << f.normal() << " = " << feature_range.second << endl;
+      cout << "Min along normal " << f.normal() << " = " << feature_range.first << endl;
       vtk_debug_feature(f);
       DBG_ASSERT(tools.size() > 0);
     }

@@ -180,6 +180,24 @@ namespace gca {
     return planning_cases;
   }
 
+  std::vector<tool> long_tools() {
+    auto tools = current_tools();
+
+    tool long_tool(0.125, 3.0, 4, HSS, FLAT_NOSE);
+    long_tool.set_cut_diameter(0.5);
+    long_tool.set_cut_length(1.25);
+
+    long_tool.set_shank_diameter(0.6);
+    long_tool.set_shank_length(0.18);
+
+    long_tool.set_holder_diameter(1.8);
+    long_tool.set_holder_length(3.0);
+
+    tools.push_back(long_tool);
+    
+    return tools;
+  }
+
   TEST_CASE("Surface based plans") {
     arena_allocator a;
     set_system_allocator(&a);
@@ -215,7 +233,7 @@ namespace gca {
       REQUIRE(axis_fix.positive);
       REQUIRE(axis_fix.negative);
 
-      vector<tool> tools = current_tools();
+      vector<tool> tools = long_tools();
       workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
       fixture_plan fs =
       	axis_fixture_plan(*cut_axis, axis_fix, fixes, wp, tools);
