@@ -1,5 +1,5 @@
 #include "process_planning/major_axis_fixturing.h"
-
+#include "process_planning/feature_selection.h"
 #include "process_planning/job_planning.h"
 #include "process_planning/tool_access.h"
 #include "synthesis/workpiece_clipping.h"
@@ -159,6 +159,14 @@ namespace gca {
 	return map_find(f, tool_info).size() == 0;
       });
 
+    fixture fix(second_dir.orient, second_dir.v);
+    auto unreachable_feats =
+      unreachable_features(feats, fix);
+
+    delete_if(feats, [&unreachable_feats](feature *f) {
+	return elem(f, unreachable_feats);
+      });
+    
     cout << "# of accessable features = " << feats.size() << endl;
     
     fixture_setup s =
@@ -166,7 +174,7 @@ namespace gca {
 		   stock,
 		   part,
 		   feats,
-		   fixture(second_dir.orient, second_dir.v),
+		   fix,
 		   tool_info,
 		   df.chamfer_surfaces,
 		   df.freeform_surfaces);
@@ -219,8 +227,15 @@ namespace gca {
     	return map_find(f, tool_info).size() == 0;
       });
 
-    cout << "# of accessable features = " << feats.size() << endl;
+    auto unreachable_feats =
+      unreachable_features(feats, maybe_fix->first);
+
+    delete_if(feats, [&unreachable_feats](feature *f) {
+	return elem(f, unreachable_feats);
+      });
     
+    cout << "# of accessable features = " << feats.size() << endl;
+
     fixture_setup s =
       create_setup(maybe_fix->second,
 		   stock,

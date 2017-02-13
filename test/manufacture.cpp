@@ -157,10 +157,9 @@ namespace gca {
   vector<gca::two_setup_plan_case> two_setup_cases() {
     vector<gca::two_setup_plan_case> planning_cases;
 
-    //Failing, a freeform surface is not being cut
+    // Was failing, but that seems to have been a problem with boolean operations
     planning_cases.push_back({"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1), 1.0});
 
-    // Failing due to no handling for drilling
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0), 0.5});
     
     planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1), 0.4});
@@ -269,9 +268,9 @@ namespace gca {
       fabrication_plan fp =
       	fabrication_plan_for_fixture_plan(fs, mesh, tools, wp);
 
-      // for (auto& fs : fp.steps()) {
-      // 	visual_debug(fs);
-      // }
+      for (auto& fs : fp.steps()) {
+      	visual_debug(fs);
+      }
     }
 
   }
