@@ -134,7 +134,23 @@ namespace gca {
       DBG_ASSERT(false);
     }
   }
-      
+
+  void clean_features(std::vector<feature*>& feats,
+		      const fixture& fix,
+		      const tool_access_info& tool_info) {
+    delete_if(feats, [tool_info](feature* f) {
+	return map_find(f, tool_info).size() == 0;
+      });
+
+    auto unreachable_feats =
+      unreachable_features(feats, fix);
+
+    delete_if(feats, [&unreachable_feats](feature *f) {
+	return elem(f, unreachable_feats);
+      });
+
+  }
+
   fixture_setup
   build_second_setup(const triangular_mesh& part,
 		     Nef_polyhedron& stock_nef,
@@ -148,24 +164,14 @@ namespace gca {
 
     direction_process_info df =
       build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    feature_decomposition* f =
-      df.decomp; //build_feature_decomposition(stock, part, n);
+    feature_decomposition* f = df.decomp;
     
     tool_access_info tool_info = df.tool_info;
-      //find_accessable_tools(f, tools);
-
-    vector<feature*> feats = collect_features(f);
-    delete_if(feats, [tool_info](feature* f) {
-	return map_find(f, tool_info).size() == 0;
-      });
 
     fixture fix(second_dir.orient, second_dir.v);
-    auto unreachable_feats =
-      unreachable_features(feats, fix);
 
-    delete_if(feats, [&unreachable_feats](feature *f) {
-	return elem(f, unreachable_feats);
-      });
+    vector<feature*> feats = collect_features(f);
+    clean_features(feats, fix, tool_info);
     
     cout << "# of accessable features = " << feats.size() << endl;
     
@@ -211,11 +217,9 @@ namespace gca {
 
     direction_process_info df =
       build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    feature_decomposition* f =
-      df.decomp; //build_feature_decomposition(stock, part, n);
+    feature_decomposition* f = df.decomp;
 
     tool_access_info& tool_info = df.tool_info;
-    //      find_accessable_tools(f, tools);
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     auto maybe_fix = find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
@@ -223,16 +227,18 @@ namespace gca {
     DBG_ASSERT(maybe_fix);
 
     vector<feature*> feats = collect_features(f);
-    delete_if(feats, [tool_info](feature* f) {
-    	return map_find(f, tool_info).size() == 0;
-      });
+    clean_features(feats, maybe_fix->first, tool_info);
 
-    auto unreachable_feats =
-      unreachable_features(feats, maybe_fix->first);
+    // delete_if(feats, [tool_info](feature* f) {
+    // 	return map_find(f, tool_info).size() == 0;
+    //   });
 
-    delete_if(feats, [&unreachable_feats](feature *f) {
-	return elem(f, unreachable_feats);
-      });
+    // auto unreachable_feats =
+    //   unreachable_features(feats, maybe_fix->first);
+
+    // delete_if(feats, [&unreachable_feats](feature *f) {
+    // 	return elem(f, unreachable_feats);
+    //   });
     
     cout << "# of accessable features = " << feats.size() << endl;
 
