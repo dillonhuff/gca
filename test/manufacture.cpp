@@ -157,6 +157,10 @@ namespace gca {
   vector<gca::two_setup_plan_case> two_setup_cases() {
     vector<gca::two_setup_plan_case> planning_cases;
 
+
+    // Failing due to no handling for drilling
+    planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0), 0.5});
+    
     planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1), 0.4});
 
     planning_cases.push_back({"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", point(0, 0, 1), 1.0});
@@ -175,10 +179,6 @@ namespace gca {
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0), 0.05});
 
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl", point(0, 0, 1), 0.45});
-
-    // Failing due to no handling for drilling
-    //planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0), 0.5});
-
 
     return planning_cases;
   }
@@ -207,8 +207,20 @@ namespace gca {
     long_tool.set_holder_diameter(1.8);
     long_tool.set_holder_length(3.0);
 
+    tool drill(0.1, 3.0, 4, HSS, TWIST_DRILL);
+    drill.set_cut_diameter(0.06717);
+    drill.set_cut_length(2.0);
+
+    drill.set_shank_diameter(3.0 / 8.0);
+    drill.set_shank_length(0.1);
+
+    drill.set_holder_diameter(2.0);
+    drill.set_holder_length(2.5);
+    drill.set_tool_number(3);
+    
     tools.push_back(t6);
     tools.push_back(long_tool);
+    tools.push_back(drill);
     
     return tools;
   }
@@ -264,47 +276,6 @@ namespace gca {
     }
 
   }
-
-  // TEST_CASE("Surface based plans") {
-  //   arena_allocator a;
-  //   set_system_allocator(&a);
-
-  //   vector<surface_plan_case> planning_cases{
-  //     {"test/stl-files/onshape_parts/100-009 - Part 1.stl", {3}},
-  // 	{"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", {2}},
-  // 	  {"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", {2}},
-  // 	    {"test/stl-files/OctagonWithHolesShort.stl", {8}},
-  // 	      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", {2}},
-  // 		{"test/stl-files/CircleWithFilletAndSide.stl", {3}},
-  // 		  {"test/stl-files/onshape_parts/100-013 - Part 1.stl", {3}},
-  // 		    {"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl", {2}},
-  // 		      {"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl", {6}},
-  // 			{"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl", {2}},
-  // 			  {"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", {2}},
-  // 			    {"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl", {2}},
-  // 			      {"test/stl-files/onshape_parts/IL70 - Case - Case.stl", {2}},
-  // 				};
-
-  //   for (auto& test_case : planning_cases) {
-
-  //     auto mesh = parse_stl(test_case.part_path, 0.001);
-
-  //     vector<surface> surfs = select_profile(mesh);
-  //     vtk_debug_highlight_inds(surfs);
-
-  //     //visualize_non_concave_decomp(mesh);
-
-  //     // boost::optional<std::vector<proto_setup> > setups =
-  //     // 	surface_plans(mesh);
-
-  //     //REQUIRE(setups);
-
-  //     //cout << "# of setups in plan = " << (*setups).size() << endl;
-
-  // 	// REQUIRE(elem(setups->size(), test_case.acceptable_num_setups));
-  //   }
-
-  // }
 
   TEST_CASE("Manufacturable parts") {
     arena_allocator a;

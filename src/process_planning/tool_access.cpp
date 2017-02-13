@@ -279,7 +279,6 @@ namespace gca {
       }
     }
 
-    //if (t.type() != FLAT_NOSE && t.type() != BALL_NOSE) { return false; }
     if (t.type() != FLAT_NOSE) { return false; }
 
     return can_access_flat_feature_with_tool(f, t, decomp);

@@ -488,7 +488,7 @@ namespace gca {
   polygon_3
   make_contour_bound(const polygon_3& bound,
 		     const tool& t) {
-    auto bound_p = bound;
+    auto bound_p = project(bound, 0.0); //bound;
     bound_p.correct_winding_order(point(0, 0, 1));
 
     // TODO: Really should use bounding box polygon instead
