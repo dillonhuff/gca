@@ -151,8 +151,8 @@ namespace gca {
     feature_decomposition* f =
       df.decomp; //build_feature_decomposition(stock, part, n);
     
-    tool_access_info tool_info =
-      find_accessable_tools(f, tools);
+    tool_access_info tool_info = df.tool_info;
+      //find_accessable_tools(f, tools);
 
     vector<feature*> feats = collect_features(f);
     delete_if(feats, [tool_info](feature* f) {
@@ -214,8 +214,8 @@ namespace gca {
     feature_decomposition* f =
       df.decomp; //build_feature_decomposition(stock, part, n);
 
-    tool_access_info tool_info =
-      find_accessable_tools(f, tools);
+    tool_access_info& tool_info = df.tool_info;
+    //      find_accessable_tools(f, tools);
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     auto maybe_fix = find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
