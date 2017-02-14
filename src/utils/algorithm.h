@@ -525,7 +525,58 @@ namespace gca {
   void sort_gt(std::vector<T>& e, F f) {
     std::sort(begin(e), end(e), [f](const T& l, const T& r) { return f(l) > f(r); });
   }
-  
+
+  template<typename A, typename B>
+  bool contains_key(const A& a, const std::unordered_map<A, B>& m) {
+    auto f = m.find(a);
+    if (f == std::end(m)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  template<typename A, typename B>
+  bool contains_key(const A& a, const std::map<A, B>& m) {
+    auto f = m.find(a);
+    if (f == std::end(m)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  template<typename T>
+  bool elems_equal(const std::vector<T>& x,
+		   const std::vector<T>& y) {
+    if (x.size() != y.size()) { return false; }
+
+    for (unsigned i = 0; i < x.size(); i++) {
+      if (x[i] != y[i]) { return false; }
+    }
+    return true;
+  }
+
+  template<typename A, typename F>
+  bool any_of(const A& container, F f) {
+    return any_of(begin(container), end(container), f);
+  }
+
+  template<typename A, typename F>
+  bool all_of(const A& container, F f) {
+    return all_of(begin(container), end(container), f);
+  }
+
+  template<typename T, typename EqualityTest>
+  bool elem_by(const T& e, const std::vector<T>& vals, EqualityTest eq) {
+
+    for (auto& v : vals) {
+      if (eq(e, v)) { return true; }
+    }
+
+    return false;
+  }
+
 }
 
 #endif

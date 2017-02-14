@@ -28,26 +28,6 @@ namespace gca {
     }
   }
 
-  template<typename A, typename B>
-  bool map_contains(const A& a, const std::unordered_map<A, B>& m) {
-    auto f = m.find(a);
-    if (f == std::end(m)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  template<typename A, typename B>
-  bool map_contains(const A& a, const std::map<A, B>& m) {
-    auto f = m.find(a);
-    if (f == std::end(m)) {
-      return false;
-    }
-
-    return true;
-  }
-  
   void clip_top_and_bottom_pairs(std::vector<direction_process_info>& dirs,
 				 const std::vector<tool>& tools) {
     for (unsigned i = 0; i < dirs.size(); i++) {
@@ -65,7 +45,7 @@ namespace gca {
 	  clip_leaves(r, l);
 
 	  for (feature* f : collect_features(dirs[i].decomp)) {
-	    if (!map_contains(f, dirs[i].tool_info)) {
+	    if (!contains_key(f, dirs[i].tool_info)) {
 	      std::vector<tool> usable_tools =
 		accessable_tools_for_flat_feature(*f, dirs[i].decomp, tools);
 	      dirs[i].tool_info[f] = usable_tools;
@@ -73,7 +53,7 @@ namespace gca {
 	  }
 
 	  for (feature* f : collect_features(dirs[j].decomp)) {
-	    if (!map_contains(f, dirs[j].tool_info)) {
+	    if (!contains_key(f, dirs[j].tool_info)) {
 	      std::vector<tool> usable_tools =
 		accessable_tools_for_flat_feature(*f, dirs[j].decomp, tools);
 	      dirs[j].tool_info[f] = usable_tools;

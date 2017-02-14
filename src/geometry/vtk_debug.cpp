@@ -121,6 +121,17 @@ namespace gca {
 
     return actor;
   }
+
+  void
+  visualize_polydatas(const std::vector<vtkSmartPointer<vtkPolyData> >& pds) {
+    std::vector<vtkSmartPointer<vtkActor> > actors;
+
+    for (auto& pd : pds) {
+      actors.push_back(polydata_actor(pd));
+    }
+
+    visualize_actors(actors);
+  }
   
   void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& actors)
   {

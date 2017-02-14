@@ -29,22 +29,6 @@ namespace gca {
     return surface_milling_constraints(surf_complexes);
   }
 
-  template<typename T>
-  bool elems_equal(const std::vector<T>& x,
-		   const std::vector<T>& y) {
-    if (x.size() != y.size()) { return false; }
-
-    for (unsigned i = 0; i < x.size(); i++) {
-      if (x[i] != y[i]) { return false; }
-    }
-    return true;
-  }
-
-  template<typename A, typename F>
-  bool any_of(const A& container, F f) {
-    return any_of(begin(container), end(container), f);
-  }
-
   std::vector<surface>
   find_locating_surfaces(const triangular_mesh& part, const double surf_fraction) {
     double sa = part.surface_area();
@@ -373,16 +357,6 @@ namespace gca {
       surfs(p_surfs) {}
 
   };
-
-  template<typename T, typename EqualityTest>
-  bool elem_by(const T& e, const std::vector<T>& vals, EqualityTest eq) {
-
-    for (auto& v : vals) {
-      if (eq(e, v)) { return true; }
-    }
-
-    return false;
-  }
 
   surface_info_map
   access_map_info(std::vector<surface>& surfs,

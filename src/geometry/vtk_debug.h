@@ -39,7 +39,8 @@ namespace gca {
   void debug_print_polydata(vtkPolyData* polydata);
 
   vtkSmartPointer<vtkActor> polydata_actor(vtkSmartPointer<vtkPolyData> polyData);
-  void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& actors);
+  void visualize_actors(const std::vector<vtkSmartPointer<vtkActor> >& pds);
+  void visualize_polydatas(const std::vector<vtkSmartPointer<vtkPolyData> >& actors);
 
   void vtk_debug_triangles(const std::vector<triangle>& mesh);
   void vtk_debug_highlight_inds(const std::vector<index_t>& inds,

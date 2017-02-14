@@ -229,17 +229,6 @@ namespace gca {
     vector<feature*> feats = collect_features(f);
     clean_features(feats, maybe_fix->first, tool_info);
 
-    // delete_if(feats, [tool_info](feature* f) {
-    // 	return map_find(f, tool_info).size() == 0;
-    //   });
-
-    // auto unreachable_feats =
-    //   unreachable_features(feats, maybe_fix->first);
-
-    // delete_if(feats, [&unreachable_feats](feature *f) {
-    // 	return elem(f, unreachable_feats);
-    //   });
-    
     cout << "# of accessable features = " << feats.size() << endl;
 
     fixture_setup s =
