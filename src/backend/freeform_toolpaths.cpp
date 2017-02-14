@@ -1,6 +1,7 @@
 #include <opencamlib/pathdropcutter.hpp>
 #include <opencamlib/batchdropcutter.hpp>
 #include <opencamlib/ballcutter.hpp>
+#include <opencamlib/cylcutter.hpp>
 
 #include "backend/freeform_toolpaths.h"
 #include "geometry/offset.h"
@@ -93,23 +94,22 @@ namespace gca {
 
     return lines;
   }
-  
+
   polyline
   drop_polyline(const double z_min,
-		const triangular_mesh& mesh,
+		const std::vector<triangle>& triangles,
 		const polyline& init_line,
 		const tool& t) {
+
     DBG_ASSERT(t.type() == BALL_NOSE);
 
     ocl::STLSurf surf;
-    for (auto t : mesh.triangle_list()) {
+    for (auto t : triangles) {
       surf.addTriangle(ocl::Triangle(ocl::Point(t.v1.x, t.v1.y, t.v1.z),
 				     ocl::Point(t.v2.x, t.v2.y, t.v2.z),
 				     ocl::Point(t.v3.x, t.v3.y, t.v3.z)));
 
     }
-
-    ocl::BallCutter ballCut(t.cut_diameter(), t.cut_length());
 
     ocl::BatchDropCutter pdc;
     for (auto& p : init_line) {
@@ -118,7 +118,14 @@ namespace gca {
     }
 
     pdc.setSTL(surf);
-    pdc.setCutter(&ballCut);
+
+    if (t.type() == BALL_NOSE) {
+      ocl::BallCutter ballCut(t.cut_diameter(), t.cut_length());
+      pdc.setCutter(&ballCut);
+    } else if (t.type() == FLAT_NOSE) {
+      ocl::CylCutter millCut(t.cut_diameter(), t.cut_length());
+      pdc.setCutter(&millCut);
+    }
   
     pdc.run();
 
@@ -131,6 +138,14 @@ namespace gca {
     }
     
     return final_pts;
+  }
+  
+  polyline
+  drop_polyline(const double z_min,
+		const triangular_mesh& mesh,
+		const polyline& init_line,
+		const tool& t) {
+    return drop_polyline(z_min, mesh.triangle_list(), init_line, t);
   }
   
   std::vector<polyline>
