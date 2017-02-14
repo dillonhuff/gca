@@ -202,12 +202,6 @@ namespace gca {
 
     point n = second_dir.orient.top_normal();
 
-    // direction_process_info df =
-    //   build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    //feature_decomposition* f = df.decomp;
-    
-    //tool_access_info tool_info = df.tool_info;
-
     fixture fix(second_dir.orient, second_dir.v);
 
     // TODO: Add access testing
@@ -224,9 +218,6 @@ namespace gca {
 		   fix,
 		   chamfers,
 		   freeform_surfs);
-
-    // df.chamfer_surfaces,
-		   // df.freeform_surfaces);
 
     return s;
   }
@@ -255,12 +246,6 @@ namespace gca {
     vector<freeform_surface> freeform_surfs;
     freeform_surfs = freeform_surface_regions(part, n, tools);
     
-    // direction_process_info df =
-    //   build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    // feature_decomposition* f = df.decomp;
-
-    // tool_access_info& tool_info = df.tool_info;
-
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     double depth = signed_distance_along(slice_plane.pt(), slice_plane.normal());
     auto maybe_fix = find_next_fixture_side_vice(depth, stock_nef, stock, n, fixes);
@@ -276,8 +261,6 @@ namespace gca {
 		   maybe_fix->first,
 		   chamfers,
 		   freeform_surfs);
-		   // df.chamfer_surfaces,
-		   // df.freeform_surfaces);
 
     setups.push_back(s);
 
