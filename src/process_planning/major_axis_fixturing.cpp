@@ -220,10 +220,10 @@ namespace gca {
 		   df.chamfer_surfaces,
 		   df.freeform_surfaces);
     
-    vector<feature*> feats = collect_features(f);
-    clean_features(feats, fix, tool_info);
+    // vector<feature*> feats = collect_features(f);
+    // clean_features(feats, fix, tool_info);
     
-    cout << "# of accessable features = " << feats.size() << endl;
+    // cout << "# of accessable features = " << feats.size() << endl;
 
     // fixture_setup s =
     //   create_setup(second_dir.placement,
@@ -280,10 +280,10 @@ namespace gca {
     
     DBG_ASSERT(maybe_fix);
 
-    vector<feature*> feats = collect_features(f);
-    clean_features(feats, maybe_fix->first, tool_info);
+    // vector<feature*> feats = collect_features(f);
+    // clean_features(feats, maybe_fix->first, tool_info);
 
-    cout << "# of accessable features = " << feats.size() << endl;
+    // cout << "# of accessable features = " << feats.size() << endl;
 
     fixture_setup s =
       create_setup(maybe_fix->second,
