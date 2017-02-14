@@ -72,7 +72,7 @@ namespace gca {
       virtual double get_start_depth() const = 0;
       virtual double volume() const = 0;
 
-      virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const = 0;
+      // virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const = 0;
       virtual concept_t* copy_() const = 0;
     };
 
@@ -83,8 +83,8 @@ namespace gca {
 
       virtual concept_t* copy_() const { return new model<T>(*this); }
 
-      virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
-      { return data_.toolpath_lines(t, cut_depth); }
+      // virtual std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const
+      // { return data_.toolpath_lines(t, cut_depth); }
 
       double get_end_depth() const { return data_.get_end_depth(); }
       double get_start_depth() const { return data_.get_start_depth(); }

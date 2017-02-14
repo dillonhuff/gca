@@ -132,6 +132,7 @@ SET(BACKEND_CPPS
 	./src/backend/output.cpp
 	./src/backend/shapes_to_gcode.cpp
 	./src/backend/shapes_to_toolpaths.cpp
+	./src/backend/slice_roughing_operation.cpp
 	./src/backend/toolpath_generation.cpp
 	./src/backend/toolpath.cpp
 	./src/backend/tool.cpp)

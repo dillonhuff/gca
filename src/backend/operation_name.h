@@ -11,6 +11,7 @@ namespace gca {
     TRACE_POCKET,
     CHAMFER_POCKET,
     DRILLED_HOLE_POCKET,
+    SLICE_ROUGHING_POCKET
   };
 
   std::ostream& operator<<(std::ostream& out, const pocket_name p);

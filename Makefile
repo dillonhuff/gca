@@ -1540,6 +1540,33 @@ src/backend/shapes_to_toolpaths.cpp.s:
 	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/shapes_to_toolpaths.cpp.s
 .PHONY : src/backend/shapes_to_toolpaths.cpp.s
 
+src/backend/slice_roughing_operation.o: src/backend/slice_roughing_operation.cpp.o
+
+.PHONY : src/backend/slice_roughing_operation.o
+
+# target to build an object file
+src/backend/slice_roughing_operation.cpp.o:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/slice_roughing_operation.cpp.o
+.PHONY : src/backend/slice_roughing_operation.cpp.o
+
+src/backend/slice_roughing_operation.i: src/backend/slice_roughing_operation.cpp.i
+
+.PHONY : src/backend/slice_roughing_operation.i
+
+# target to preprocess a source file
+src/backend/slice_roughing_operation.cpp.i:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/slice_roughing_operation.cpp.i
+.PHONY : src/backend/slice_roughing_operation.cpp.i
+
+src/backend/slice_roughing_operation.s: src/backend/slice_roughing_operation.cpp.s
+
+.PHONY : src/backend/slice_roughing_operation.s
+
+# target to generate assembly for a file
+src/backend/slice_roughing_operation.cpp.s:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/slice_roughing_operation.cpp.s
+.PHONY : src/backend/slice_roughing_operation.cpp.s
+
 src/backend/tool.o: src/backend/tool.cpp.o
 
 .PHONY : src/backend/tool.o
@@ -5240,6 +5267,9 @@ help:
 	@echo "... src/backend/shapes_to_toolpaths.o"
 	@echo "... src/backend/shapes_to_toolpaths.i"
 	@echo "... src/backend/shapes_to_toolpaths.s"
+	@echo "... src/backend/slice_roughing_operation.o"
+	@echo "... src/backend/slice_roughing_operation.i"
+	@echo "... src/backend/slice_roughing_operation.s"
 	@echo "... src/backend/tool.o"
 	@echo "... src/backend/tool.i"
 	@echo "... src/backend/tool.s"

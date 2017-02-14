@@ -1,4 +1,5 @@
 #include "backend/chamfer_operation.h"
+#include "backend/slice_roughing_operation.h"
 #include "backend/freeform_toolpaths.h"
 #include "process_planning/major_axis_fixturing.h"
 #include "process_planning/feature_selection.h"
@@ -202,11 +203,19 @@ namespace gca {
     return s;
   }
 
+  plane apply(const homogeneous_transform& t, const plane pl) {
+    return plane(apply(t, pl.normal()), apply(t, pl.pt()));
+  }
+
+  
+
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
 	       const triangular_mesh& wp_mesh,
 	       const triangular_mesh& part_mesh,
 	       const plane slice_plane,
+	       const std::vector<tool>& tools,
+	       const fixture& f,
 	       const std::vector<chamfer>& chamfers,
 	       const std::vector<freeform_surface>& freeforms) {
 
@@ -218,8 +227,8 @@ namespace gca {
 
     auto rotated_plane = apply(s_t, slice_plane);
 
-    vector<pocket> pockets{slice_roughing_operation(part, rotated_plane)};
-    // = feature_pockets(features, s_t, tool_info);
+    vector<pocket> pockets{slice_roughing_operation(rotated_plane, part, tools)};
+
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
     }
@@ -272,7 +281,8 @@ namespace gca {
       create_setup(maybe_fix->second,
 		   stock,
 		   part,
-		   rough,
+		   slice_plane,
+		   tools,
 		   maybe_fix->first,
 		   df.chamfer_surfaces,
 		   df.freeform_surfaces);
