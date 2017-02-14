@@ -204,7 +204,7 @@ namespace gca {
   }
 
   plane apply(const homogeneous_transform& t, const plane pl) {
-    return plane(apply(t, pl.normal()), apply(t, pl.pt()));
+    return plane(times_3(t.first, pl.normal()), apply(t, pl.pt()));
   }
 
   

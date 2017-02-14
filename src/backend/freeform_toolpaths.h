@@ -62,4 +62,11 @@ namespace gca {
 		       const double stepover_fraction,
 		       const double depth_fraction);
 
+  vector<polyline>
+  freeform_zig(const triangular_mesh& mesh,
+	       const tool& t,
+	       const double safe_z,
+	       const double z_min,
+	       const double stepover_fraction);
+  
 }

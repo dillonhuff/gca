@@ -101,8 +101,6 @@ namespace gca {
 		const polyline& init_line,
 		const tool& t) {
 
-    DBG_ASSERT(t.type() == BALL_NOSE);
-
     ocl::STLSurf surf;
     for (auto t : triangles) {
       surf.addTriangle(ocl::Triangle(ocl::Point(t.v1.x, t.v1.y, t.v1.z),
@@ -153,8 +151,6 @@ namespace gca {
 		 const triangular_mesh& mesh,
 		 const vector<polyline>& init_lines,
 		 const tool& t) {
-    DBG_ASSERT(t.type() == BALL_NOSE);
-
     vector<polyline> dropped;
     for (auto& l : init_lines) {
       dropped.push_back(drop_polyline(z_min, mesh, l, t));
@@ -199,6 +195,58 @@ namespace gca {
     return lines;
   }
 
+  
+  polygon_3 box_bound(const triangular_mesh& mesh) {
+    box bb = mesh.bounding_box();
+
+    point p1(bb.x_min, bb.y_min, bb.z_min);
+    point p2(bb.x_max, bb.y_min, bb.z_min);
+    point p3(bb.x_max, bb.y_max, bb.z_min);
+    point p4(bb.x_min, bb.y_max, bb.z_min);
+
+    vector<point> pts{p1, p2, p3, p4};
+    polygon_3 poly = build_clean_polygon_3(pts);
+    poly.correct_winding_order(point(0, 0, 1));
+
+    return poly;
+  }
+
+  vector<polyline>
+  freeform_zig(const triangular_mesh& mesh,
+	       const tool& t,
+	       const double safe_z,
+	       const double z_min,
+	       const double stepover_fraction) {
+
+    //vtk_debug_highlight_inds(inds, mesh);
+
+    // auto inds_cpy = inds;
+    // vector<oriented_polygon> bounds = mesh_bounds(inds_cpy, mesh);
+    // vector<vector<point> > rings;
+    // for (auto& b : bounds) {
+    //   rings.push_back(b.vertices());
+    // }
+
+    // vector<polygon_3> polys =
+    //   surface_boundary_polygons(inds, mesh); //arrange_rings(rings);
+
+    // //vtk_debug_polygons(polys);
+
+    // DBG_ASSERT(polys.size() == 1);
+
+    // polygon_3 surface_bound = polys.front();
+
+    // DBG_ASSERT(surface_bound.holes().size() == 0);
+
+    polygon_3 surface_bound = box_bound(mesh);
+    
+    vector<polyline> init_lines =
+      zig_lines_sampled_y(surface_bound, {}, t, stepover_fraction);
+    vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
+
+    return lines;
+  }
+  
   toolpath
   freeform_finish_lines(const std::vector<index_t>& inds,
 			const triangular_mesh& mesh,
