@@ -154,60 +154,9 @@ namespace gca {
 
   }
 
-  fixture_setup
-  build_second_setup(const triangular_mesh& part,
-		     Nef_polyhedron& stock_nef,
-		     const dir_fixture& second_dir,
-		     const std::vector<tool>& tools) {
-    triangular_mesh stock = nef_to_single_trimesh(stock_nef);
-
-    vector<fixture_setup> setups;
-
-    point n = second_dir.orient.top_normal();
-
-    direction_process_info df =
-      build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    feature_decomposition* f = df.decomp;
-    
-    tool_access_info tool_info = df.tool_info;
-
-    fixture fix(second_dir.orient, second_dir.v);
-
-    vector<feature*> feats = collect_features(f);
-    clean_features(feats, fix, tool_info);
-    
-    cout << "# of accessable features = " << feats.size() << endl;
-    
-    fixture_setup s =
-      create_setup(second_dir.placement,
-		   stock,
-		   part,
-		   feats,
-		   fix,
-		   tool_info,
-		   df.chamfer_surfaces,
-		   df.freeform_surfaces);
-
-    // vector<surface> sfs;
-    // for (auto& fs : df.freeform_surfaces) {
-    //   sfs.push_back(fs.s);
-    // }
-    // vtk_debug_highlight_inds(sfs);
-
-    stock_nef = subtract_features(stock_nef, feats);
-    stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
-    stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
-
-    test_stock_volume(stock_nef, part);
-
-    return s;
-  }
-
   plane apply(const homogeneous_transform& t, const plane pl) {
     return plane(times_3(t.first, pl.normal()), apply(t, pl.pt()));
   }
-
-  
 
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
@@ -240,7 +189,67 @@ namespace gca {
 
     return fixture_setup(m, f, pockets);
   }
-  
+
+  fixture_setup
+  build_second_setup(const plane slice_plane,
+		     const triangular_mesh& part,
+		     Nef_polyhedron& stock_nef,
+		     const dir_fixture& second_dir,
+		     const std::vector<tool>& tools) {
+    triangular_mesh stock = nef_to_single_trimesh(stock_nef);
+
+    vector<fixture_setup> setups;
+
+    point n = second_dir.orient.top_normal();
+
+    direction_process_info df =
+      build_direction_info(stock, part, {}, direction_info{n, true}, tools);
+    feature_decomposition* f = df.decomp;
+    
+    tool_access_info tool_info = df.tool_info;
+
+    fixture fix(second_dir.orient, second_dir.v);
+
+    fixture_setup s =
+      create_setup(second_dir.placement,
+		   stock,
+		   part,
+		   slice_plane,
+		   tools,
+		   fix,
+		   df.chamfer_surfaces,
+		   df.freeform_surfaces);
+    
+    vector<feature*> feats = collect_features(f);
+    clean_features(feats, fix, tool_info);
+    
+    cout << "# of accessable features = " << feats.size() << endl;
+
+    
+    // fixture_setup s =
+    //   create_setup(second_dir.placement,
+    // 		   stock,
+    // 		   part,
+    // 		   feats,
+    // 		   fix,
+    // 		   tool_info,
+    // 		   df.chamfer_surfaces,
+    // 		   df.freeform_surfaces);
+
+    // vector<surface> sfs;
+    // for (auto& fs : df.freeform_surfaces) {
+    //   sfs.push_back(fs.s);
+    // }
+    // vtk_debug_highlight_inds(sfs);
+
+    stock_nef = subtract_features(stock_nef, feats);
+    stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
+    stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
+
+    test_stock_volume(stock_nef, part);
+
+    return s;
+  }
 
   fixture_plan
   axis_fixture_plan(const major_axis_decomp& cut_axis,
@@ -307,7 +316,7 @@ namespace gca {
     // vtk_debug_mesh(nef_to_single_trimesh(stock_nef));
 
     fixture_setup second =
-      build_second_setup(part, stock_nef, second_dir, tools);
+      build_second_setup(slice_plane.flip(), part, stock_nef, second_dir, tools);
 
     setups.push_back(second);
 
