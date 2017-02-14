@@ -1,3 +1,5 @@
+#include "backend/chamfer_operation.h"
+#include "backend/freeform_toolpaths.h"
 #include "process_planning/major_axis_fixturing.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/job_planning.h"
@@ -200,6 +202,37 @@ namespace gca {
     return s;
   }
 
+  fixture_setup
+  create_setup(const homogeneous_transform& s_t,
+	       const triangular_mesh& wp_mesh,
+	       const triangular_mesh& part_mesh,
+	       const plane slice_plane,
+	       const std::vector<chamfer>& chamfers,
+	       const std::vector<freeform_surface>& freeforms) {
+
+    auto aligned = apply(s_t, wp_mesh);
+    auto part = apply(s_t, part_mesh);
+
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+    triangular_mesh* pm = new (allocate<triangular_mesh>()) triangular_mesh(part);
+
+    auto rotated_plane = apply(s_t, slice_plane);
+
+    vector<pocket> pockets{slice_roughing_operation(part, rotated_plane)};
+    // = feature_pockets(features, s_t, tool_info);
+    for (auto& ch : chamfers) {
+      pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
+    }
+    for (auto& freeform : freeforms) {
+      surface rotated_surf(pm, freeform.s.index_list());
+      pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
+    }
+
+
+    return fixture_setup(m, f, pockets);
+  }
+  
+
   fixture_plan
   axis_fixture_plan(const major_axis_decomp& cut_axis,
 		    const axis_fixture& axis_fix,
@@ -214,6 +247,10 @@ namespace gca {
 
     point n = first_dir.orient.top_normal();
     const auto& part = mesh(cut_axis);
+
+    // NOTE: Assumes the base of the part is above the vice
+    point pt = min_point_in_dir(part, n);
+    plane slice_plane(n, pt);
 
     direction_process_info df =
       build_direction_info(stock, part, {}, direction_info{n, true}, tools);
@@ -235,9 +272,8 @@ namespace gca {
       create_setup(maybe_fix->second,
 		   stock,
 		   part,
-		   feats,
+		   rough,
 		   maybe_fix->first,
-		   tool_info,
 		   df.chamfer_surfaces,
 		   df.freeform_surfaces);
 
