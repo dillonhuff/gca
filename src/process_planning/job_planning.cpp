@@ -463,32 +463,10 @@ namespace gca {
   }
 
   boost::optional<double>
-  select_parallel_plate(feature_decomposition* decomp,
-			const triangular_mesh& current_stock,
-			const fixtures& f) {
-
-    DBG_ASSERT(decomp->num_children() == 1);
-
-    feature_decomposition* top = decomp->child(0);
-    vector<point> stock_ring = top->feature()->base().vertices();
-    polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
-
-    point n = normal(decomp);
-
-    // TODO: Should really make this max double value
-    double min_outer_depth = 1e25;
-
-    for (auto feat : collect_features(decomp)) {
-      if (is_outer(*feat, stock_polygon)) {
-	double feat_min = feat->min_distance_along(n);
-
-	if (feat_min < min_outer_depth) {
-	  min_outer_depth = feat_min;
-	}
-
-      }
-    }
-
+  select_plate_above(const double min_outer_depth,
+		     const point n,
+		     const triangular_mesh& current_stock,
+		     const fixtures& f) {
     vice v_pre = f.get_vice();
     double part_min = min_in_dir(current_stock, n);
 
@@ -515,6 +493,36 @@ namespace gca {
 			     { return p; });
 
     return max_plate;
+  }
+
+  boost::optional<double>
+  select_parallel_plate(feature_decomposition* decomp,
+			const triangular_mesh& current_stock,
+			const fixtures& f) {
+
+    DBG_ASSERT(decomp->num_children() == 1);
+
+    feature_decomposition* top = decomp->child(0);
+    vector<point> stock_ring = top->feature()->base().vertices();
+    polygon_3 stock_polygon = build_clean_polygon_3(stock_ring);
+
+    point n = normal(decomp);
+
+    // TODO: Should really make this max double value
+    double min_outer_depth = 1e25;
+
+    for (auto feat : collect_features(decomp)) {
+      if (is_outer(*feat, stock_polygon)) {
+	double feat_min = feat->min_distance_along(n);
+
+	if (feat_min < min_outer_depth) {
+	  min_outer_depth = feat_min;
+	}
+
+      }
+    }
+
+    return select_plate_above(min_outer_depth, n, current_stock, f);
   }
 
   boost::optional<std::pair<fixture, homogeneous_transform> >
@@ -553,20 +561,10 @@ namespace gca {
   }
 
   boost::optional<std::pair<fixture, homogeneous_transform> >
-  find_next_fixture_side_vice(feature_decomposition* decomp,
+  find_next_fixture_side_vice(const vice& v,
 			      Nef_polyhedron& stock_nef,
 			      const triangular_mesh& current_stock,
-			      const point n,
-			      const fixtures& f) {
-
-    boost::optional<double> par_plate =
-      select_parallel_plate(decomp, current_stock, f);
-
-    vice v = f.get_vice();
-    if (par_plate) {
-      v = vice(f.get_vice(), *par_plate);
-    }
-
+			      const point n) {
     vector<pair<clamp_orientation, homogeneous_transform>> orients =
       all_stable_orientations_with_side_transforms(stock_nef, v, n);
 
@@ -590,7 +588,47 @@ namespace gca {
 
     return boost::none;
   }
+  
+  boost::optional<std::pair<fixture, homogeneous_transform> >
+  find_next_fixture_side_vice(feature_decomposition* decomp,
+			      Nef_polyhedron& stock_nef,
+			      const triangular_mesh& current_stock,
+			      const point n,
+			      const fixtures& f) {
 
+    boost::optional<double> par_plate =
+      select_parallel_plate(decomp, current_stock, f);
+
+    
+    vice v = f.get_vice();
+    if (par_plate) {
+      v = vice(f.get_vice(), *par_plate);
+    }
+
+    return find_next_fixture_side_vice(v, stock_nef, current_stock, n);
+
+  }
+
+  boost::optional<std::pair<fixture, homogeneous_transform> >
+  find_next_fixture_side_vice(const double depth,
+			      Nef_polyhedron& stock_nef,
+			      const triangular_mesh& current_stock,
+			      const point n,
+			      const fixtures& f) {
+
+    boost::optional<double> par_plate =
+      select_plate_above(depth, n, current_stock, f);
+
+    
+    vice v = f.get_vice();
+    if (par_plate) {
+      v = vice(f.get_vice(), *par_plate);
+    }
+
+    return find_next_fixture_side_vice(v, stock_nef, current_stock, n);
+
+  }
+  
   // TODO: Track freeform surface volumes the same way other feature
   // volumes are tracked. This feels heavy handed
   std::vector<freeform_surface>

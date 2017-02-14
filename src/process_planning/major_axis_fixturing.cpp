@@ -202,14 +202,19 @@ namespace gca {
 
     point n = second_dir.orient.top_normal();
 
-    direction_process_info df =
-      build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    feature_decomposition* f = df.decomp;
+    // direction_process_info df =
+    //   build_direction_info(stock, part, {}, direction_info{n, true}, tools);
+    //feature_decomposition* f = df.decomp;
     
-    tool_access_info tool_info = df.tool_info;
+    //tool_access_info tool_info = df.tool_info;
 
     fixture fix(second_dir.orient, second_dir.v);
 
+    // TODO: Add access testing
+    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
+    vector<freeform_surface> freeform_surfs;
+    freeform_surfs = freeform_surface_regions(part, n, tools);
+    
     fixture_setup s =
       create_setup(second_dir.placement,
 		   stock,
@@ -217,35 +222,11 @@ namespace gca {
 		   slice_plane,
 		   tools,
 		   fix,
-		   df.chamfer_surfaces,
-		   df.freeform_surfaces);
-    
-    // vector<feature*> feats = collect_features(f);
-    // clean_features(feats, fix, tool_info);
-    
-    // cout << "# of accessable features = " << feats.size() << endl;
+		   chamfers,
+		   freeform_surfs);
 
-    // fixture_setup s =
-    //   create_setup(second_dir.placement,
-    // 		   stock,
-    // 		   part,
-    // 		   feats,
-    // 		   fix,
-    // 		   tool_info,
-    // 		   df.chamfer_surfaces,
-    // 		   df.freeform_surfaces);
-
-    // vector<surface> sfs;
-    // for (auto& fs : df.freeform_surfaces) {
-    //   sfs.push_back(fs.s);
-    // }
-    // vtk_debug_highlight_inds(sfs);
-
-    // stock_nef = subtract_features(stock_nef, feats);
-    // stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
-    // stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
-
-    // test_stock_volume(stock_nef, part);
+    // df.chamfer_surfaces,
+		   // df.freeform_surfaces);
 
     return s;
   }
@@ -269,21 +250,22 @@ namespace gca {
     point pt = min_point_in_dir(part, n);
     plane slice_plane(n, pt);
 
-    direction_process_info df =
-      build_direction_info(stock, part, {}, direction_info{n, true}, tools);
-    feature_decomposition* f = df.decomp;
+    // TODO: Add access testing
+    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
+    vector<freeform_surface> freeform_surfs;
+    freeform_surfs = freeform_surface_regions(part, n, tools);
+    
+    // direction_process_info df =
+    //   build_direction_info(stock, part, {}, direction_info{n, true}, tools);
+    // feature_decomposition* f = df.decomp;
 
-    tool_access_info& tool_info = df.tool_info;
+    // tool_access_info& tool_info = df.tool_info;
 
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
-    auto maybe_fix = find_next_fixture_side_vice(f, stock_nef, stock, n, fixes);
+    double depth = signed_distance_along(slice_plane.pt(), slice_plane.normal());
+    auto maybe_fix = find_next_fixture_side_vice(depth, stock_nef, stock, n, fixes);
     
     DBG_ASSERT(maybe_fix);
-
-    // vector<feature*> feats = collect_features(f);
-    // clean_features(feats, maybe_fix->first, tool_info);
-
-    // cout << "# of accessable features = " << feats.size() << endl;
 
     fixture_setup s =
       create_setup(maybe_fix->second,
@@ -292,27 +274,12 @@ namespace gca {
 		   slice_plane,
 		   tools,
 		   maybe_fix->first,
-		   df.chamfer_surfaces,
-		   df.freeform_surfaces);
+		   chamfers,
+		   freeform_surfs);
+		   // df.chamfer_surfaces,
+		   // df.freeform_surfaces);
 
     setups.push_back(s);
-
-    // stock_nef = subtract_features(stock_nef, feats);
-    // stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
-
-    // vector<surface> sfs;
-    // for (auto& fs : df.freeform_surfaces) {
-    //   sfs.push_back(fs.s);
-    // }
-    // if (sfs.size() > 0) {
-    //   vtk_debug_highlight_inds(sfs);
-    // }
-
-    // vtk_debug_mesh(nef_to_single_trimesh(stock_nef));
-    
-    // stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
-
-    // vtk_debug_mesh(nef_to_single_trimesh(stock_nef));
 
     fixture_setup second =
       build_second_setup(slice_plane.flip(), part, stock_nef, second_dir, tools);

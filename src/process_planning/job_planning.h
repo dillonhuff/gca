@@ -43,4 +43,11 @@ namespace gca {
 		     const triangular_mesh& part,
 		     const point n);
 
+  boost::optional<std::pair<fixture, homogeneous_transform> >
+  find_next_fixture_side_vice(const double depth,
+			      Nef_polyhedron& stock_nef,
+			      const triangular_mesh& current_stock,
+			      const point n,
+			      const fixtures& f);
+  
 }

@@ -178,7 +178,7 @@ namespace gca {
 
     feature_decomposition* decomp = build_feature_decomposition(stock, meshes, n.dir);
     tool_access_info info = find_accessable_tools(decomp, tools);
-    vector<chamfer> chamfers = chamfer_regions(part, n.dir, tools);
+o    vector<chamfer> chamfers = chamfer_regions(part, n.dir, tools);
     vector<freeform_surface> freeform_surfs;
     if (n.search_for_freeform_features) {
       freeform_surfs = freeform_surface_regions(part, n.dir, tools);
