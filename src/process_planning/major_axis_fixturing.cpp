@@ -225,7 +225,6 @@ namespace gca {
     
     cout << "# of accessable features = " << feats.size() << endl;
 
-    
     // fixture_setup s =
     //   create_setup(second_dir.placement,
     // 		   stock,
@@ -242,11 +241,11 @@ namespace gca {
     // }
     // vtk_debug_highlight_inds(sfs);
 
-    stock_nef = subtract_features(stock_nef, feats);
-    stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
-    stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
+    // stock_nef = subtract_features(stock_nef, feats);
+    // stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
+    // stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
 
-    test_stock_volume(stock_nef, part);
+    // test_stock_volume(stock_nef, part);
 
     return s;
   }
@@ -298,8 +297,8 @@ namespace gca {
 
     setups.push_back(s);
 
-    stock_nef = subtract_features(stock_nef, feats);
-    stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
+    // stock_nef = subtract_features(stock_nef, feats);
+    // stock_nef = subtract_chamfers(stock_nef, df.chamfer_surfaces, part, n);
 
     // vector<surface> sfs;
     // for (auto& fs : df.freeform_surfaces) {
@@ -311,7 +310,7 @@ namespace gca {
 
     // vtk_debug_mesh(nef_to_single_trimesh(stock_nef));
     
-    stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
+    // stock_nef = subtract_freeforms(stock_nef, df.freeform_surfaces, part, n);
 
     // vtk_debug_mesh(nef_to_single_trimesh(stock_nef));
 
