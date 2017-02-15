@@ -158,25 +158,29 @@ namespace gca {
     return plane(times_3(t.first, pl.normal()), apply(t, pl.pt()));
   }
 
+  struct slice_setup {
+    const triangular_mesh& wp_mesh;
+    const triangular_mesh& part_mesh;
+    const plane slice_plane;
+    const std::vector<tool>& tools;
+  };
+
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
-	       const triangular_mesh& wp_mesh,
-	       const triangular_mesh& part_mesh,
-	       const plane slice_plane,
-	       const std::vector<tool>& tools,
+	       const slice_setup& slice_setup,
 	       const fixture& f,
 	       const std::vector<chamfer>& chamfers,
 	       const std::vector<freeform_surface>& freeforms) {
 
-    auto aligned = apply(s_t, wp_mesh);
-    auto part = apply(s_t, part_mesh);
+    auto aligned = apply(s_t, slice_setup.wp_mesh);
+    auto part = apply(s_t, slice_setup.part_mesh);
 
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     triangular_mesh* pm = new (allocate<triangular_mesh>()) triangular_mesh(part);
 
-    auto rotated_plane = apply(s_t, slice_plane);
+    auto rotated_plane = apply(s_t, slice_setup.slice_plane);
 
-    vector<pocket> pockets{slice_roughing_operation(rotated_plane, part, tools)};
+    vector<pocket> pockets{slice_roughing_operation(rotated_plane, part, slice_setup.tools)};
 
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
@@ -211,10 +215,10 @@ namespace gca {
     
     fixture_setup s =
       create_setup(second_dir.placement,
-		   stock,
-		   part,
-		   slice_plane,
-		   tools,
+		   slice_setup{stock,
+		       part,
+		       slice_plane,
+		       tools},
 		   fix,
 		   chamfers,
 		   freeform_surfs);
@@ -241,23 +245,23 @@ namespace gca {
     point pt = min_point_in_dir(part, n);
     plane slice_plane(n, pt);
 
-    // TODO: Add access testing
-    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
-    vector<freeform_surface> freeform_surfs;
-    freeform_surfs = freeform_surface_regions(part, n, tools);
-    
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     double depth = signed_distance_along(slice_plane.pt(), slice_plane.normal());
     auto maybe_fix = find_next_fixture_side_vice(depth, stock_nef, stock, n, fixes);
     
     DBG_ASSERT(maybe_fix);
 
+    // TODO: Add access testing
+    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
+    vector<freeform_surface> freeform_surfs;
+    freeform_surfs = freeform_surface_regions(part, n, tools);
+    
     fixture_setup s =
       create_setup(maybe_fix->second,
-		   stock,
-		   part,
-		   slice_plane,
-		   tools,
+		   slice_setup{stock,
+		       part,
+		       slice_plane,
+		       tools},
 		   maybe_fix->first,
 		   chamfers,
 		   freeform_surfs);
