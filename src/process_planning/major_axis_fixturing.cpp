@@ -197,17 +197,12 @@ namespace gca {
   fixture_setup
   build_second_setup(const plane slice_plane,
 		     const triangular_mesh& part,
-		     Nef_polyhedron& stock_nef,
+		     const triangular_mesh& stock,
 		     const dir_fixture& second_dir,
 		     const std::vector<tool>& tools) {
-    triangular_mesh stock = nef_to_single_trimesh(stock_nef);
-
-    vector<fixture_setup> setups;
-
-    point n = second_dir.orient.top_normal();
-
     fixture fix(second_dir.orient, second_dir.v);
 
+    point n = second_dir.orient.top_normal();
     // TODO: Add access testing
     vector<chamfer> chamfers = chamfer_regions(part, n, tools);
     vector<freeform_surface> freeform_surfs;
@@ -238,10 +233,10 @@ namespace gca {
     triangular_mesh stock = align_stock(cut_axis, first_dir, w);
     vector<fixture_setup> setups;
 
-    point n = first_dir.orient.top_normal();
     const auto& part = mesh(cut_axis);
 
     // NOTE: Assumes the base of the part is above the vice
+    point n = first_dir.orient.top_normal();
     point pt = min_point_in_dir(part, n);
     plane slice_plane(n, pt);
 
@@ -269,7 +264,7 @@ namespace gca {
     setups.push_back(s);
 
     fixture_setup second =
-      build_second_setup(slice_plane.flip(), part, stock_nef, second_dir, tools);
+      build_second_setup(slice_plane.flip(), part, stock, second_dir, tools);
 
     setups.push_back(second);
 
