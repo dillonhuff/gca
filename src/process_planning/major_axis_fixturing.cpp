@@ -190,8 +190,12 @@ namespace gca {
       pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
     }
 
+    rigid_arrangement r;
+    r.insert("part", *m);
+    r.insert("final-part", *pm);
 
-    return fixture_setup(m, f, pockets);
+
+    return fixture_setup(r, f, pockets);
   }
 
   fixture_setup

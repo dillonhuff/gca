@@ -148,6 +148,6 @@ namespace gca {
       update_table(UNKNOWN_COORD_SYSTEM, position(15.0, 0.0, 0.0), c);
       REQUIRE(t == c);
     }
-    
+
   }
 }

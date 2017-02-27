@@ -268,9 +268,9 @@ namespace gca {
       fabrication_plan fp =
       	fabrication_plan_for_fixture_plan(fs, mesh, tools, wp);
 
-      // for (auto& fs : fp.steps()) {
-      // 	visual_debug(fs);
-      // }
+      for (auto& fs : fp.steps()) {
+      	visual_debug(fs);
+      }
     }
 
   }
