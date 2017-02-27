@@ -244,10 +244,6 @@ namespace gca {
     fixture_setup s =
       create_setup(second_dir.placement,
 		   rough_ops,
-		   // slice_setup{stock,
-		   //     part,
-		   //     slice_plane,
-		   //     tools},
 		   fix,
 		   finish_ops);
 
@@ -286,10 +282,6 @@ namespace gca {
     fixture_setup s =
       create_setup(maybe_fix->second,
 		   rough_ops,
-		   // slice_setup{stock,
-		   //     part,
-		   //     slice_plane,
-		   //     tools},
 		   maybe_fix->first,
 		   finish_ops);
 
