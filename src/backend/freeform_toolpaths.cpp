@@ -131,7 +131,9 @@ namespace gca {
 
     auto pts = pdc.getCLPoints();
     std::cout << "# of clpoints = " << pts.size() << std::endl;
-    for (auto pt : pts) {
+    //    for (auto pt : pts) {
+    for (unsigned i = 0; i < pts.size(); i++) {
+      auto pt = pts[i];
       final_pts.push_back(point(pt.x, pt.y, pt.z));
     }
     
