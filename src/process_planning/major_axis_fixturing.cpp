@@ -208,6 +208,18 @@ namespace gca {
     return fixture_setup(r, f, pockets);
   }
 
+  finishing_operations
+  build_finishing_ops(const triangular_mesh& part,
+		      const point n,
+		      const std::vector<tool>& tools) {
+    // TODO: Add access testing
+    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
+    vector<freeform_surface> freeform_surfs;
+    freeform_surfs = freeform_surface_regions(part, n, tools);
+
+    return finishing_operations{chamfers, freeform_surfs, {}, {}};
+  }
+
   fixture_setup
   build_second_setup(const plane slice_plane,
 		     const triangular_mesh& part,
@@ -217,10 +229,8 @@ namespace gca {
     fixture fix(second_dir.orient, second_dir.v);
 
     point n = second_dir.orient.top_normal();
-    // TODO: Add access testing
-    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
-    vector<freeform_surface> freeform_surfs;
-    freeform_surfs = freeform_surface_regions(part, n, tools);
+    finishing_operations finish_ops =
+      build_finishing_ops(part, n, tools);
     
     fixture_setup s =
       create_setup(second_dir.placement,
@@ -229,7 +239,8 @@ namespace gca {
 		       slice_plane,
 		       tools},
 		   fix,
-		   finishing_operations{chamfers, freeform_surfs, {}, {}});
+		   finish_ops);
+		   ///		   finishing_operations{chamfers, freeform_surfs, {}, {}});
 
     return s;
   }
@@ -260,9 +271,11 @@ namespace gca {
     DBG_ASSERT(maybe_fix);
 
     // TODO: Add access testing
-    vector<chamfer> chamfers = chamfer_regions(part, n, tools);
-    vector<freeform_surface> freeform_surfs;
-    freeform_surfs = freeform_surface_regions(part, n, tools);
+    // vector<chamfer> chamfers = chamfer_regions(part, n, tools);
+    // vector<freeform_surface> freeform_surfs;
+    // freeform_surfs = freeform_surface_regions(part, n, tools);
+    finishing_operations finish_ops =
+      build_finishing_ops(part, n, tools);
     
     fixture_setup s =
       create_setup(maybe_fix->second,
@@ -271,7 +284,8 @@ namespace gca {
 		       slice_plane,
 		       tools},
 		   maybe_fix->first,
-		   finishing_operations{chamfers, freeform_surfs, {}, {}});
+		   finish_ops);
+    //finishing_operations{chamfers, freeform_surfs, {}, {}});
 
     setups.push_back(s);
 
