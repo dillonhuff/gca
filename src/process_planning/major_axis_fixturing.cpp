@@ -1,6 +1,7 @@
 #include "backend/chamfer_operation.h"
 #include "backend/slice_roughing_operation.h"
 #include "backend/freeform_toolpaths.h"
+#include "feature_recognition/vertical_wall.h"
 #include "process_planning/major_axis_fixturing.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/job_planning.h"
@@ -165,12 +166,21 @@ namespace gca {
     const std::vector<tool>& tools;
   };
 
+  struct finishing_operations {
+    std::vector<chamfer> chamfers;
+    std::vector<freeform_surface> freeforms;
+    std::vector<feature> flat_surfaces;
+    std::vector<vertical_wall> vertical_surfaces;
+  };
+
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
 	       const slice_setup& slice_setup,
 	       const fixture& f,
-	       const std::vector<chamfer>& chamfers,
-	       const std::vector<freeform_surface>& freeforms) {
+	       const finishing_operations& finishing_ops) {
+
+    auto chamfers = finishing_ops.chamfers;
+    auto freeforms = finishing_ops.freeforms;
 
     auto aligned = apply(s_t, slice_setup.wp_mesh);
     auto part = apply(s_t, slice_setup.part_mesh);
@@ -219,8 +229,7 @@ namespace gca {
 		       slice_plane,
 		       tools},
 		   fix,
-		   chamfers,
-		   freeform_surfs);
+		   finishing_operations{chamfers, freeform_surfs, {}, {}});
 
     return s;
   }
@@ -262,8 +271,7 @@ namespace gca {
 		       slice_plane,
 		       tools},
 		   maybe_fix->first,
-		   chamfers,
-		   freeform_surfs);
+		   finishing_operations{chamfers, freeform_surfs, {}, {}});
 
     setups.push_back(s);
 

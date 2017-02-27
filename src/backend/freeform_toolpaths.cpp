@@ -183,7 +183,6 @@ namespace gca {
   
     pdc.run();
 
-    //vector<point> final_pts;
     vector<polyline> dropped;
 
     auto pts = pdc.getCLPoints();
@@ -207,12 +206,6 @@ namespace gca {
     
     return dropped;
 
-    // vector<polyline> dropped;
-    // for (auto& l : init_lines) {
-    //   dropped.push_back(drop_polyline(z_min, mesh, l, t));
-    // }
-
-    // return dropped;
   }
 
   vector<polyline>

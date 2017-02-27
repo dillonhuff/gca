@@ -1945,6 +1945,33 @@ src/feature_recognition/prismatic_feature_utils.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/prismatic_feature_utils.cpp.s
 .PHONY : src/feature_recognition/prismatic_feature_utils.cpp.s
 
+src/feature_recognition/vertical_wall.o: src/feature_recognition/vertical_wall.cpp.o
+
+.PHONY : src/feature_recognition/vertical_wall.o
+
+# target to build an object file
+src/feature_recognition/vertical_wall.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/vertical_wall.cpp.o
+.PHONY : src/feature_recognition/vertical_wall.cpp.o
+
+src/feature_recognition/vertical_wall.i: src/feature_recognition/vertical_wall.cpp.i
+
+.PHONY : src/feature_recognition/vertical_wall.i
+
+# target to preprocess a source file
+src/feature_recognition/vertical_wall.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/vertical_wall.cpp.i
+.PHONY : src/feature_recognition/vertical_wall.cpp.i
+
+src/feature_recognition/vertical_wall.s: src/feature_recognition/vertical_wall.cpp.s
+
+.PHONY : src/feature_recognition/vertical_wall.s
+
+# target to generate assembly for a file
+src/feature_recognition/vertical_wall.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/vertical_wall.cpp.s
+.PHONY : src/feature_recognition/vertical_wall.cpp.s
+
 src/feature_recognition/visual_debug.o: src/feature_recognition/visual_debug.cpp.o
 
 .PHONY : src/feature_recognition/visual_debug.o
@@ -5312,6 +5339,9 @@ help:
 	@echo "... src/feature_recognition/prismatic_feature_utils.o"
 	@echo "... src/feature_recognition/prismatic_feature_utils.i"
 	@echo "... src/feature_recognition/prismatic_feature_utils.s"
+	@echo "... src/feature_recognition/vertical_wall.o"
+	@echo "... src/feature_recognition/vertical_wall.i"
+	@echo "... src/feature_recognition/vertical_wall.s"
 	@echo "... src/feature_recognition/visual_debug.o"
 	@echo "... src/feature_recognition/visual_debug.i"
 	@echo "... src/feature_recognition/visual_debug.s"
