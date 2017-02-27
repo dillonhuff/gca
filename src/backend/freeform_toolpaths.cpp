@@ -145,6 +145,7 @@ namespace gca {
 		const triangular_mesh& mesh,
 		const polyline& init_line,
 		const tool& t) {
+    
     return drop_polyline(z_min, mesh.triangle_list(), init_line, t);
   }
   
@@ -153,12 +154,65 @@ namespace gca {
 		 const triangular_mesh& mesh,
 		 const vector<polyline>& init_lines,
 		 const tool& t) {
-    vector<polyline> dropped;
-    for (auto& l : init_lines) {
-      dropped.push_back(drop_polyline(z_min, mesh, l, t));
+
+    ocl::STLSurf surf;
+    for (auto t : mesh.triangle_list()) {
+      surf.addTriangle(ocl::Triangle(ocl::Point(t.v1.x, t.v1.y, t.v1.z),
+				     ocl::Point(t.v2.x, t.v2.y, t.v2.z),
+				     ocl::Point(t.v3.x, t.v3.y, t.v3.z)));
+
     }
 
+    ocl::BatchDropCutter pdc;
+    for (auto& init_line : init_lines) {
+      for (auto& p : init_line) {
+	ocl::CLPoint cl_pt(p.x, p.y, z_min);
+	pdc.appendPoint(cl_pt);
+      }
+    }
+
+    pdc.setSTL(surf);
+
+    if (t.type() == BALL_NOSE) {
+      ocl::BallCutter ballCut(t.cut_diameter(), t.cut_length());
+      pdc.setCutter(&ballCut);
+    } else if (t.type() == FLAT_NOSE) {
+      ocl::CylCutter millCut(t.cut_diameter(), t.cut_length());
+      pdc.setCutter(&millCut);
+    }
+  
+    pdc.run();
+
+    //vector<point> final_pts;
+    vector<polyline> dropped;
+
+    auto pts = pdc.getCLPoints();
+    std::cout << "# of clpoints = " << pts.size() << std::endl;
+
+    unsigned total = 0;
+    for (unsigned i = 0; i < init_lines.size(); i++) {
+      vector<point> final_pts;
+
+      for (unsigned j = 0; j < init_lines[i].num_points(); j++) {
+
+	auto pt = pts[total];
+	final_pts.push_back(point(pt.x, pt.y, pt.z));
+
+	total++;
+      }
+
+      dropped.push_back(polyline(final_pts));
+
+    }
+    
     return dropped;
+
+    // vector<polyline> dropped;
+    // for (auto& l : init_lines) {
+    //   dropped.push_back(drop_polyline(z_min, mesh, l, t));
+    // }
+
+    // return dropped;
   }
 
   vector<polyline>
