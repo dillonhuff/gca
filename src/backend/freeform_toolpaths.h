@@ -68,5 +68,14 @@ namespace gca {
 	       const double safe_z,
 	       const double z_min,
 	       const double stepover_fraction);
+
+  vector<polyline>
+  freeform_zig(const polygon_3& surface_bound,
+	       const triangular_mesh& mesh,
+	       const tool& t,
+	       const double safe_z,
+	       const double z_min,
+	       const double stepover_fraction);
+  
   
 }

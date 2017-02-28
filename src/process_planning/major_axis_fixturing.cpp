@@ -190,7 +190,7 @@ namespace gca {
 
     auto rotated_plane = apply(s_t, slice_setup.slice_plane);
 
-    vector<pocket> pockets{slice_roughing_operation(rotated_plane, part, slice_setup.tools)};
+    vector<pocket> pockets{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
 
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));

@@ -33,5 +33,6 @@ namespace gca {
   oriented_polygon max_area_outline(const std::vector<index_t>& inds,
 				    const triangular_mesh& m);
 
+  polygon_3 box_bound(const triangular_mesh& mesh);
   
 }

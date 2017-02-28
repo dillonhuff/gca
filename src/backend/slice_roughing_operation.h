@@ -10,15 +10,17 @@ namespace gca {
   class slice_roughing_operation {
   protected:
     // TODO: Absurdly inefficient to store this as a value but it will do for now
+    triangular_mesh workpiece;
     triangular_mesh mesh;
     plane pl;
     std::vector<tool> tools;
 
   public:
     slice_roughing_operation(const plane pl_p,
+			     const triangular_mesh& workpiece_p,
 			     const triangular_mesh& mesh_p,
 			     const std::vector<tool>& t_p) :
-      pl(pl_p), mesh(mesh_p), tools(t_p) {
+      pl(pl_p), workpiece(workpiece_p), mesh(mesh_p), tools(t_p) {
 
       if (!(angle_eps(pl.normal(), point(0, 0, 1), 0.0, 0.5))) {
 	cout << "pl.normal() = " << pl.normal() << endl;

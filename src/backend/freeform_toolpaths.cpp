@@ -209,6 +209,20 @@ namespace gca {
   }
 
   vector<polyline>
+  freeform_zig(const polygon_3& surface_bound,
+	       const triangular_mesh& mesh,
+	       const tool& t,
+	       const double safe_z,
+	       const double z_min,
+	       const double stepover_fraction) {
+    vector<polyline> init_lines =
+      zig_lines_sampled_y(surface_bound, {}, t, stepover_fraction);
+    vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
+
+    return lines;
+  }
+  
+  vector<polyline>
   freeform_zig(const std::vector<index_t>& inds,
 	       const triangular_mesh& mesh,
 	       const tool& t,
@@ -236,28 +250,13 @@ namespace gca {
 
     DBG_ASSERT(surface_bound.holes().size() == 0);
 
+    return freeform_zig(surface_bound, mesh, t, safe_z, z_min, stepover_fraction);
     
-    vector<polyline> init_lines =
-      zig_lines_sampled_y(surface_bound, {}, t, stepover_fraction);
-    vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
+    // vector<polyline> init_lines =
+    //   zig_lines_sampled_y(surface_bound, {}, t, stepover_fraction);
+    // vector<polyline> lines = drop_polylines(z_min, mesh, init_lines, t);
 
-    return lines;
-  }
-
-  
-  polygon_3 box_bound(const triangular_mesh& mesh) {
-    box bb = mesh.bounding_box();
-
-    point p1(bb.x_min, bb.y_min, bb.z_min);
-    point p2(bb.x_max, bb.y_min, bb.z_min);
-    point p3(bb.x_max, bb.y_max, bb.z_min);
-    point p4(bb.x_min, bb.y_max, bb.z_min);
-
-    vector<point> pts{p1, p2, p3, p4};
-    polygon_3 poly = build_clean_polygon_3(pts);
-    poly.correct_winding_order(point(0, 0, 1));
-
-    return poly;
+    // return lines;
   }
 
   vector<polyline>

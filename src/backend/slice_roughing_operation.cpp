@@ -1,6 +1,7 @@
 #include "backend/slice_roughing_operation.h"
 
 #include "backend/freeform_toolpaths.h"
+#include "geometry/triangular_mesh_utils.h"
 
 namespace gca {
 
@@ -37,8 +38,12 @@ namespace gca {
 
     double stepover_fraction = 0.25;
 
+    polygon_3 surface_bound = box_bound(workpiece);
+
+    DBG_ASSERT(surface_bound.holes().size() == 0);
+    
     vector<polyline> lines =
-      freeform_zig(mesh, t, safe_z, z_min, stepover_fraction);
+      freeform_zig(surface_bound, mesh, t, safe_z, z_min, stepover_fraction);
 
     return {toolpath(FREEFORM_POCKET,
 		     safe_z,
