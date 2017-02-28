@@ -43,7 +43,8 @@ namespace gca {
     DBG_ASSERT(surface_bound.holes().size() == 0);
     
     vector<polyline> lines =
-      freeform_zig(surface_bound, mesh, t, safe_z, z_min, stepover_fraction);
+      waterline(mesh, t, z_min, stepover_fraction);
+      //freeform_zig(surface_bound, mesh, t, safe_z, z_min, stepover_fraction);
 
     return {toolpath(FREEFORM_POCKET,
 		     safe_z,

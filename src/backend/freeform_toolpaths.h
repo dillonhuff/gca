@@ -76,6 +76,11 @@ namespace gca {
 	       const double safe_z,
 	       const double z_min,
 	       const double stepover_fraction);
+
+  vector<polyline> waterline(const triangular_mesh& part,
+			     const tool& t,
+			     const double z_min,
+			     const double stepover_fraction);
   
   
 }

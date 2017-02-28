@@ -1,9 +1,11 @@
+#include "backend/freeform_toolpaths.h"
+
 #include <opencamlib/pathdropcutter.hpp>
 #include <opencamlib/batchdropcutter.hpp>
 #include <opencamlib/ballcutter.hpp>
 #include <opencamlib/cylcutter.hpp>
+#include <opencamlib/waterline.hpp>
 
-#include "backend/freeform_toolpaths.h"
 #include "geometry/offset.h"
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
@@ -425,4 +427,45 @@ namespace gca {
   }
   
 
+  vector<polyline> waterline(const triangular_mesh& mesh,
+			     const tool& t,
+			     const double z_min,
+			     const double stepover_fraction) {
+
+    ocl::STLSurf surf;
+    for (auto t : mesh.triangle_list()) {
+      surf.addTriangle(ocl::Triangle(ocl::Point(t.v1.x, t.v1.y, t.v1.z),
+				     ocl::Point(t.v2.x, t.v2.y, t.v2.z),
+				     ocl::Point(t.v3.x, t.v3.y, t.v3.z)));
+
+    }
+
+    ocl::Waterline wl;
+
+    wl.setSTL(surf);
+    wl.setZ(z_min);
+    wl.setSampling(stepover_fraction*t.cut_diameter());
+
+    if (t.type() == BALL_NOSE) {
+      ocl::BallCutter ballCut(t.cut_diameter(), t.cut_length());
+      wl.setCutter(&ballCut);
+    } else if (t.type() == FLAT_NOSE) {
+      ocl::CylCutter millCut(t.cut_diameter(), t.cut_length());
+      wl.setCutter(&millCut);
+    }
+
+    wl.run();
+
+    vector<polyline> lines;
+    for (auto& lp : wl.getLoops()) {
+      vector<point> pts;
+      for (auto& pt : lp) {
+	pts.push_back(point(pt.x, pt.y, pt.z));
+      }
+      lines.push_back(pts);
+    }
+
+    return lines;
+  }
+  
 }
