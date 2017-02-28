@@ -444,7 +444,7 @@ namespace gca {
 
     wl.setSTL(surf);
     wl.setZ(z_min);
-    wl.setSampling(stepover_fraction*t.cut_diameter());
+    wl.setSampling(0.1*stepover_fraction*t.cut_diameter());
 
     if (t.type() == BALL_NOSE) {
       ocl::BallCutter ballCut(t.cut_diameter(), t.cut_length());
