@@ -169,8 +169,8 @@ namespace gca {
   struct finishing_operations {
     std::vector<chamfer> chamfers;
     std::vector<freeform_surface> freeforms;
-    std::vector<feature> flat_surfaces;
-    std::vector<vertical_wall> vertical_surfaces;
+    feature_decomposition* decomp;
+    tool_access_info access_info;
   };
 
   fixture_setup
@@ -209,7 +209,8 @@ namespace gca {
   }
 
   finishing_operations
-  build_finishing_ops(const triangular_mesh& part,
+  build_finishing_ops(const triangular_mesh& stock,
+		      const triangular_mesh& part,
 		      const point n,
 		      const std::vector<tool>& tools) {
     // TODO: Add access testing
@@ -239,7 +240,7 @@ namespace gca {
 
     slice_setup rough_ops = build_roughing_ops(stock, part, slice_plane, tools);
     finishing_operations finish_ops =
-      build_finishing_ops(part, n, tools);
+      build_finishing_ops(stock, part, n, tools);
     
     fixture_setup s =
       create_setup(second_dir.placement,
@@ -277,7 +278,7 @@ namespace gca {
 
     slice_setup rough_ops = build_roughing_ops(stock, part, slice_plane, tools);
     finishing_operations finish_ops =
-      build_finishing_ops(part, n, tools);
+      build_finishing_ops(stock, part, n, tools);
     
     fixture_setup s =
       create_setup(maybe_fix->second,
