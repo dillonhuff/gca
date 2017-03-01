@@ -114,6 +114,9 @@ namespace gca {
     tool select_tool(const std::vector<tool>& tools) const;
     std::vector<polyline> toolpath_lines(const tool& t, const double cut_depth) const;
 
+    std::vector<toolpath> make_finish_toolpaths(const material& stock_material,
+						const double safe_z);
+    
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z,
 					 const std::vector<tool>& tools) const;
@@ -172,6 +175,9 @@ namespace gca {
 
     std::vector<toolpath> make_toolpaths(const material& stock_material,
 					 const double safe_z) const;
+
+    toolpath make_finish_toolpath(const material& stock_material,
+				  const double safe_z) const;
     
     tool select_tool(const std::vector<tool>& tools) const;
 
@@ -319,6 +325,11 @@ namespace gca {
   machine_flat_region_with_contours(const flat_region& r,
 				    const double safe_z,
 				    const std::vector<tool>& tools);
+
+  std::vector<toolpath>
+  finish_flat_region_with_contours(const flat_region& r,
+				   const double safe_z,
+				   const std::vector<tool>& all_tools);
   
   boost_linestring_2 to_boost_linestring(const polyline& pl);
 

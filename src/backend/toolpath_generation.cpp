@@ -100,6 +100,42 @@ namespace gca {
     return {toolpath(pocket_type(), safe_z, params.speed, params.feed, params.plunge_feed, t, pocket_paths)};
   }
 
+  toolpath
+  face_pocket::make_finish_toolpath(const material& stock_material,
+				    const double safe_z) const {
+    double finish_height = 0.005;
+    double rough_start = get_start_depth();
+    double rough_end = get_end_depth() + finish_height;
+
+    tool t = select_tool(possible_tools);
+
+    double finish_feedrate = 15.0;
+    double finish_spindle_speed = 2500;
+
+    double finish_depth_of_cut = finish_height + 0.001;
+    double finish_width_of_cut = t.cut_diameter() / 4.0;
+
+    double finish_start = rough_end;
+    double finish_end = get_end_depth();
+
+    // Finish should have exactly one pass
+    DBG_ASSERT((finish_start - finish_end) < finish_depth_of_cut);
+    
+    face_parameters finish_params{finish_depth_of_cut,
+	finish_width_of_cut,
+	finish_feedrate,
+	finish_spindle_speed};
+
+    toolpath finish_tp = rough_face(finish_params,
+				    safe_z,
+				    finish_start,
+				    finish_end,
+				    build_clean_polygon_3(base.vertices()),
+				    t);
+
+    return {finish_tp};
+  }
+  
   std::vector<toolpath>
   face_pocket::make_toolpaths(const material& stock_material,
 			      const double safe_z) const {
@@ -934,6 +970,30 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
+  std::vector<toolpath>
+  contour::make_finish_toolpaths(const material& stock_material,
+				 const double safe_z) {
+    if (possible_tools.size() == 0) {
+      cout << "ERROR, no viable tools for pocket" << endl;
+      DBG_ASSERT(possible_tools.size() > 0);
+    }
+
+    tool max_tool = max_e(possible_tools,
+			  [](const tool& t) { return t.cut_diameter(); });
+
+    polygon_3 safe_area = exterior_offset(get_boundary(), 3*max_tool.radius());
+
+    for (auto h : get_holes()) {
+      DBG_ASSERT(h.holes().size() == 0);
+
+      safe_area.add_hole(h.vertices());
+    }
+
+    flat_region r(safe_area, bp, get_start_depth(), get_end_depth(), stock_material);
+
+    return finish_flat_region_with_contours(r, safe_z, possible_tools);
+  }
+  
   std::vector<polyline>
   contour::toolpath_lines(const tool& t, const double cut_depth) const {
     vector<polyline> face_template;
@@ -1409,11 +1469,25 @@ namespace gca {
       all_paths.push_back(finishing_path);
     }
     
-    double emco_hp = 0.737;
-    double aluminum_unit_hp = 0.3;
+    // double emco_hp = 0.737;
+    // double aluminum_unit_hp = 0.3;
     //optimize_feedrates_by_MRR_simulation(r, all_paths, emco_hp, aluminum_unit_hp);
 
     return all_paths;
+  }
+
+  std::vector<toolpath>
+  finish_flat_region_with_contours(const flat_region& r,
+				   const double safe_z,
+				   const std::vector<tool>& all_tools) {
+    vector<tool> tools = filter_unneeded_small_tools(r, all_tools);
+
+    DBG_ASSERT(tools.size() > 0);
+
+    tool finish_tool = select_finishing_tool(r, tools);
+
+    toolpath finishing_path = finish_path(r, safe_z, finish_tool);
+    return {finishing_path};
   }
   
   std::vector<toolpath>

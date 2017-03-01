@@ -1,7 +1,9 @@
 #include "backend/chamfer_operation.h"
+#include "backend/drilled_hole_operation.h"
 #include "backend/slice_roughing_operation.h"
 #include "backend/freeform_toolpaths.h"
 #include "feature_recognition/vertical_wall.h"
+#include "feature_recognition/visual_debug.h"
 #include "process_planning/major_axis_fixturing.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
@@ -230,6 +232,101 @@ namespace gca {
     return fixture_setup(r, f, pockets);
   }
 
+  std::vector<toolpath>
+  finish_toolpaths_for_feature(const feature& f,
+			       const std::vector<tool>& tools,
+			       const material& stock_material,
+			       const double safe_z) {
+
+    if (tools.size() == 0) {
+      pair<double, double> feature_range = f.range_along(f.normal());
+      cout << "ERROR: No available tools for feature" << endl;
+      cout << "Feature depth = " << f.depth() << endl;
+      cout << "Max along " << f.normal() << " = " << feature_range.second << endl;
+      cout << "Min along normal " << f.normal() << " = " << feature_range.first << endl;
+      vtk_debug_feature(f);
+      DBG_ASSERT(tools.size() > 0);
+    }
+
+    labeled_polygon_3 base = f.base();
+    point n = base.normal();
+
+    if (!angle_eps(n, point(0, 0, 1), 0.0, 0.3)) {
+      double theta = angle_between(n, point(0, 0, 1));
+      cout << "base normal    = " << n << endl;
+      cout << "desired normal = " << point(0, 0, 1) << endl;
+      cout << "theta          = " << theta << endl;
+      
+      DBG_ASSERT(within_eps(theta, 0.0, 0.3));
+    }
+
+    DBG_ASSERT(f.depth() > 0.0);
+
+    double base_z = base.vertex(0).z;
+    double top_z = base_z + f.depth();
+
+    if (!(base_z < top_z)) {
+      cout << "base_z = " << base_z << endl;
+      cout << "top_z  = " << top_z << endl;
+      DBG_ASSERT(base_z < top_z);
+    }
+
+    point base_center = centroid(base.vertices());
+    for (auto t : tools) {
+      if (t.type() == TWIST_DRILL) {
+	point up_direction(0, 0, 1);
+	//DBG_ASSERT(false);
+	//return {drilled_hole_operation(f.depth(), base_center, up_direction, t)};
+	drilled_hole_operation drill_op(f.depth(), base_center, up_direction, t);
+	return drill_op.make_toolpaths(stock_material, safe_z);
+      }
+    }
+
+    oriented_polygon ob = to_oriented_polygon(base);
+
+    vector<oriented_polygon> holes;
+    for (auto h : base.holes()) {
+      auto hp = oriented_polygon(n, h);
+
+      holes.push_back(hp);
+    }
+
+    if (f.is_closed()) {
+      //DBG_ASSERT(false);
+      //return {flat_pocket(top_z, base_z, ob, holes, tools)};
+      flat_pocket pocket_op(top_z, base_z, ob, holes, tools);
+      return pocket_op.make_toolpaths(stock_material, safe_z);
+    } else {
+      DBG_ASSERT(!f.is_closed());
+
+      if (holes.size() == 0) {
+	face_pocket face(top_z, base_z, ob, tools);
+	return {face.make_finish_toolpath(stock_material, safe_z)};
+      }
+
+      //DBG_ASSERT(false);
+      //return {contour(top_z, base_z, base, tools)};
+      contour contour_op(top_z, base_z, base, tools);
+      return contour_op.make_finish_toolpaths(stock_material, safe_z);
+    }
+  }
+  
+  std::vector<toolpath>
+  finish_prismatic_features(std::vector<feature*>& features,
+			    const homogeneous_transform& t,
+			    const tool_access_info& tool_info,
+			    const material& stock_material,
+			    const double safe_z) {
+    vector<toolpath> toolpaths;
+    for (auto f : features) {
+      vector<tool> tools = map_find(f, tool_info);
+      concat(toolpaths, finish_toolpaths_for_feature(f->apply(t), tools, stock_material, safe_z));
+    }
+    
+    return toolpaths;
+  }
+
+
   fabrication_setup
   create_fab_setup(const homogeneous_transform& s_t,
 		   const slice_setup& slice_setup,
@@ -250,9 +347,15 @@ namespace gca {
 
     auto rotated_plane = apply(s_t, slice_setup.slice_plane);
 
-    vector<pocket> pockets =
-      feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
-    vector<toolpath> toolpaths = mill_pockets(pockets, stock_material);
+    // vector<pocket> pockets =
+    //   feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
+    vector<feature*> feats = finishing_ops.get_features();
+    vector<toolpath> toolpaths =
+      finish_prismatic_features(feats,
+				s_t,
+				finishing_ops.access_info,
+				stock_material,
+				safe_z);
     //{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
 
     for (auto& ch : chamfers) {
@@ -297,7 +400,7 @@ namespace gca {
       point n = slice_plane.normal();
       point base = slice_plane.pt();
 
-      return signed_distance_along(f->base().vertex(0), n) <
+      return signed_distance_along(f->base().vertex(0), n) + 0.001 <
       signed_distance_along(base, n);
     };
 
