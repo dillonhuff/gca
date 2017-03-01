@@ -181,6 +181,15 @@ namespace gca {
     }
   };
 
+  fabrication_setup
+  fixture_setup_to_fabrication_setup(fixture_setup& setup,
+				     const material& stock_material) {
+    auto toolpaths =
+      cut_secured_mesh(setup.pockets, stock_material);
+    return fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths);
+  }
+
+  
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
 	       const slice_setup& slice_setup,
@@ -220,6 +229,17 @@ namespace gca {
 
     return fixture_setup(r, f, pockets);
   }
+
+  fabrication_setup
+  create_fab_setup(const homogeneous_transform& s_t,
+		   const slice_setup& slice_setup,
+		   const fixture& f,
+		   finishing_operations& finishing_ops,
+		   const material& stock_material) {
+    auto fix_setup = create_setup(s_t, slice_setup, f, finishing_ops);
+    return fixture_setup_to_fabrication_setup(fix_setup, stock_material);
+  }
+  
 
   void delete_inaccessable_features(feature_decomposition* decomp,
 				    const tool_access_info& ti) {
@@ -285,12 +305,13 @@ namespace gca {
     return slice_setup{stock, part, slice_plane, tools};
   }
 
-  fixture_setup
+  fabrication_setup
   build_second_setup(const plane slice_plane,
 		     const triangular_mesh& part,
 		     const triangular_mesh& stock,
 		     const dir_fixture& second_dir,
-		     const std::vector<tool>& tools) {
+		     const std::vector<tool>& tools,
+		     const material& mat) {
     fixture fix(second_dir.orient, second_dir.v);
 
     point n = second_dir.orient.top_normal();
@@ -299,26 +320,73 @@ namespace gca {
     finishing_operations finish_ops =
       build_finishing_ops(stock, part, slice_plane, tools);
     
-    fixture_setup s =
-      create_setup(second_dir.placement,
-		   rough_ops,
-		   fix,
-		   finish_ops);
+    fabrication_setup s =
+      create_fab_setup(second_dir.placement,
+		       rough_ops,
+		       fix,
+		       finish_ops,
+		       mat);
 
     return s;
   }
 
-  fixture_plan
-  axis_fixture_plan(const major_axis_decomp& cut_axis,
-		    const axis_fixture& axis_fix,
-		    const fixtures& fixes,
-		    const workpiece w,
-		    const std::vector<tool>& tools) {
+  // fixture_plan
+  // axis_fixture_plan(const major_axis_decomp& cut_axis,
+  // 		    const axis_fixture& axis_fix,
+  // 		    const fixtures& fixes,
+  // 		    const workpiece w,
+  // 		    const std::vector<tool>& tools) {
+  //   dir_fixture first_dir = *(axis_fix.positive);
+  //   dir_fixture second_dir = *(axis_fix.negative);
+
+  //   triangular_mesh stock = align_stock(cut_axis, first_dir, w);
+  //   vector<fixture_setup> setups;
+
+  //   const auto& part = mesh(cut_axis);
+
+  //   // NOTE: Assumes the base of the part is above the vice
+  //   point n = first_dir.orient.top_normal();
+  //   point pt = min_point_in_dir(part, n);
+  //   plane slice_plane(n, pt);
+
+  //   Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+  //   double depth = signed_distance_along(slice_plane.pt(), slice_plane.normal());
+  //   auto maybe_fix = find_next_fixture_side_vice(depth, stock_nef, stock, n, fixes);
+    
+  //   DBG_ASSERT(maybe_fix);
+
+  //   slice_setup rough_ops = build_roughing_ops(stock, part, slice_plane, tools);
+  //   finishing_operations finish_ops =
+  //     build_finishing_ops(stock, part, slice_plane, tools);
+    
+  //   fixture_setup s =
+  //     create_setup(maybe_fix->second,
+  // 		   rough_ops,
+  // 		   maybe_fix->first,
+  // 		   finish_ops);
+
+  //   setups.push_back(s);
+
+  //   fixture_setup second =
+  //     build_second_setup(slice_plane.flip(), part, stock, second_dir, tools);
+
+  //   setups.push_back(second);
+
+  //   return fixture_plan(part, setups, w);
+  // }
+
+  fabrication_plan
+  axis_fabrication_plan(const major_axis_decomp& cut_axis,
+  			const axis_fixture& axis_fix,
+  			const fixtures& fixes,
+  			const workpiece w,
+  			const std::vector<tool>& tools) {
+
     dir_fixture first_dir = *(axis_fix.positive);
     dir_fixture second_dir = *(axis_fix.negative);
 
     triangular_mesh stock = align_stock(cut_axis, first_dir, w);
-    vector<fixture_setup> setups;
+    vector<fabrication_setup> setups;
 
     const auto& part = mesh(cut_axis);
 
@@ -337,53 +405,34 @@ namespace gca {
     finishing_operations finish_ops =
       build_finishing_ops(stock, part, slice_plane, tools);
     
-    fixture_setup s =
-      create_setup(maybe_fix->second,
-		   rough_ops,
-		   maybe_fix->first,
-		   finish_ops);
+    fabrication_setup s =
+      create_fab_setup(maybe_fix->second,
+		       rough_ops,
+		       maybe_fix->first,
+		       finish_ops,
+		       w.stock_material);
 
     setups.push_back(s);
 
-    fixture_setup second =
-      build_second_setup(slice_plane.flip(), part, stock, second_dir, tools);
+    fabrication_setup second =
+      build_second_setup(slice_plane.flip(), part, stock, second_dir, tools, w.stock_material);
 
     setups.push_back(second);
 
-    return fixture_plan(part, setups, w);
-  }
+    return fabrication_plan(setups); //fixture_plan(part, setups, w);
 
-  fabrication_setup
-  fixture_setup_to_fabrication_setup(fixture_setup& setup,
-				     const material& stock_material) {
-    auto toolpaths =
-      cut_secured_mesh(setup.pockets, stock_material);
-    return fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths);
-  }
+    // auto part = mesh(cut_axis);
+    // fixture_plan fs =
+    //   axis_fixture_plan(cut_axis, axis_fix, fixes, w, tools);
 
-  fabrication_plan
-  axis_fabrication_plan(const major_axis_decomp& cut_axis,
-  			const axis_fixture& axis_fix,
-  			const fixtures& fixes,
-  			const workpiece w,
-  			const std::vector<tool>& tools) {
-    auto part = mesh(cut_axis);
-    fixture_plan fs =
-      axis_fixture_plan(cut_axis, axis_fix, fixes, w, tools);
+    // vector<fabrication_setup> setups;
+    // for (fixture_setup step : fs.fixtures()) {
+    //   fabrication_setup fab_setup =
+    // 	fixture_setup_to_fabrication_setup(step, w.stock_material);
+    //   setups.push_back(fab_setup);
+    // }
 
-    vector<fabrication_setup> setups;
-    for (fixture_setup step : fs.fixtures()) {
-      fabrication_setup fab_setup =
-	fixture_setup_to_fabrication_setup(step, w.stock_material);
-      setups.push_back(fab_setup);
-    }
-
-    return fabrication_plan(setups);
-    // fabrication_plan fp =
-    //   fabrication_plan_for_fixture_plan(fs, part, tools, w);
-
-
-    //    return fp;
+    // return fabrication_plan(setups);
   }
   
 }
