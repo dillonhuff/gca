@@ -163,9 +163,15 @@ namespace gca {
     // Was failing, but that seems to have been a problem with boolean operations
     planning_cases.push_back({"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1), 1.0, wp});
 
+    wp = workpiece(1.0, 1.0, 1.0, ALUMINUM);
+
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0), 0.5, wp});
+
+    wp = workpiece(1.75, 1.75, 0.75, ALUMINUM);
     
     planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1), 0.4, wp});
+
+    wp = workpiece(1.75, 1.75, 2.5, ALUMINUM);
 
     planning_cases.push_back({"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", point(0, 0, 1), 1.0, wp});
 		    
@@ -262,7 +268,8 @@ namespace gca {
       REQUIRE(axis_fix.negative);
 
       vector<tool> tools = long_tools();
-      workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
+      //workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
+      workpiece wp = test_case.wp;
       fixture_plan fs =
       	axis_fixture_plan(*cut_axis, axis_fix, fixes, wp, tools);
 
