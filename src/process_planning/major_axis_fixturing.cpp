@@ -267,11 +267,11 @@ namespace gca {
     r.insert("part", *m);
     r.insert("final-part", *pm);
 
-    fixture_setup setup(r, f, pockets);
+    //fixture_setup setup(r, f, pockets);
 
     auto toolpaths =
-      cut_secured_mesh(setup.pockets, stock_material);
-    return fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths);
+      cut_secured_mesh(pockets, stock_material);
+    return fabrication_setup(r, f.v, toolpaths);
   }
   
 
