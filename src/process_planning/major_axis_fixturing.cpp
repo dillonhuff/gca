@@ -250,27 +250,28 @@ namespace gca {
 
     vector<pocket> pockets =
       feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
+    vector<toolpath> toolpaths = mill_pockets(pockets, stock_material);
     //{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
 
-    
-
     for (auto& ch : chamfers) {
-      pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
+      chamfer_operation ch_op(ch.faces, part, ch.t);
+      concat(toolpaths, mill_pockets({ch_op}, stock_material));
+      //      pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
     }
 
     for (auto& freeform : freeforms) {
       surface rotated_surf(pm, freeform.s.index_list());
-      pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
+      freeform_operation freeform_op(rotated_surf, freeform.tools);
+      //pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
+      concat(toolpaths, mill_pockets({freeform_op}, stock_material));
     }
 
     rigid_arrangement r;
     r.insert("part", *m);
     r.insert("final-part", *pm);
 
-    //fixture_setup setup(r, f, pockets);
-
-    auto toolpaths =
-      cut_secured_mesh(pockets, stock_material);
+    // auto toolpaths =
+    //   cut_secured_mesh(pockets, stock_material);
     return fabrication_setup(r, f.v, toolpaths);
   }
   
