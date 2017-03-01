@@ -44,6 +44,10 @@ namespace gca {
     std::vector<toolpath>
     make_toolpaths(const material& stock_material,
 		   const double safe_z) const;
+
+    toolpath
+    make_finish_toolpath(const material& stock_material,
+			 const double safe_z) const;
     
   };
   

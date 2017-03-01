@@ -246,6 +246,8 @@ namespace gca {
     triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
     triangular_mesh* pm = new (allocate<triangular_mesh>()) triangular_mesh(part);
 
+    double safe_z = max_in_dir(aligned, point(0, 0, 1)) + 0.2;
+
     auto rotated_plane = apply(s_t, slice_setup.slice_plane);
 
     vector<pocket> pockets =
@@ -256,22 +258,20 @@ namespace gca {
     for (auto& ch : chamfers) {
       chamfer_operation ch_op(ch.faces, part, ch.t);
       concat(toolpaths, mill_pockets({ch_op}, stock_material));
-      //      pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
     }
 
     for (auto& freeform : freeforms) {
       surface rotated_surf(pm, freeform.s.index_list());
       freeform_operation freeform_op(rotated_surf, freeform.tools);
-      //pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
-      concat(toolpaths, mill_pockets({freeform_op}, stock_material));
+      toolpath finish = freeform_op.make_finish_toolpath(stock_material, safe_z);
+      toolpaths.push_back(finish);
+      //concat(toolpaths, mill_pockets({freeform_op}, stock_material));
     }
 
     rigid_arrangement r;
     r.insert("part", *m);
     r.insert("final-part", *pm);
 
-    // auto toolpaths =
-    //   cut_secured_mesh(pockets, stock_material);
     return fabrication_setup(r, f.v, toolpaths);
   }
   
