@@ -7,6 +7,7 @@
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "process_planning/tool_access.h"
+#include "synthesis/mesh_to_gcode.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/visual_debug.h"
 
@@ -352,4 +353,21 @@ namespace gca {
     return fixture_plan(part, setups, w);
   }
 
+  fabrication_plan
+  axis_fabrication_plan(const major_axis_decomp& cut_axis,
+			const axis_fixture& axis_fix,
+			const fixtures& fixes,
+			const workpiece w,
+			const std::vector<tool>& tools) {
+    auto part = mesh(cut_axis);
+    fixture_plan fs =
+      axis_fixture_plan(cut_axis, axis_fix, fixes, w, tools);
+
+    fabrication_plan fp =
+      fabrication_plan_for_fixture_plan(fs, part, tools, w);
+
+
+    return fp;
+  }
+  
 }
