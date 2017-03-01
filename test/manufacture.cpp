@@ -172,6 +172,8 @@ namespace gca {
 
     planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl", point(1, 0, 0), 0.5, wp});
 
+    wp = workpiece(1.75, 1.75, 1.0, ALUMINUM);
+
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(33).stl", point(0, 0, 1), 0.45, wp});
 
     wp = workpiece(1.0, 1.0, 2.5, ALUMINUM);

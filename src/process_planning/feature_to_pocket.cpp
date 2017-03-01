@@ -31,13 +31,15 @@ namespace gca {
       DBG_ASSERT(within_eps(theta, 0.0, 0.3));
     }
 
+    DBG_ASSERT(f.depth() > 0.0);
+
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();
 
-    if (!(base_z > top_z)) {
+    if (!(base_z < top_z)) {
       cout << "base_z = " << base_z << endl;
       cout << "top_z  = " << top_z << endl;
-      DBG_ASSERT(base_z > top_z);
+      DBG_ASSERT(base_z < top_z);
     }
 
     point base_center = centroid(base.vertices());
@@ -128,7 +130,10 @@ namespace gca {
     vector<pocket> pockets;
     for (auto f : features) {
       vector<tool> tools = map_find(f, tool_info);
-      concat(pockets, pockets_for_feature(f->apply(rot), tools));
+      feature fr = f->apply(rot);
+
+      DBG_ASSERT(fr.depth() > 0.0);
+      concat(pockets, pockets_for_feature(fr, tools));
     }
     
     return pockets;
