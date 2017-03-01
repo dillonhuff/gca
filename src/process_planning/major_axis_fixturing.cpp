@@ -229,6 +229,12 @@ namespace gca {
     delete_nodes(decomp, no_tools);
   }
 
+  void check_feature_depths(feature_decomposition* decomp) {
+    for (auto& f : collect_features(decomp)) {
+      DBG_ASSERT(f->depth() > 0.0);
+    }
+  }
+
   finishing_operations
   build_finishing_ops(const triangular_mesh& stock,
 		      const triangular_mesh& part,
@@ -244,6 +250,8 @@ namespace gca {
 
     tool_access_info ti = find_accessable_tools(decomp, tools);
     delete_inaccessable_features(decomp, ti);
+
+    check_feature_depths(decomp);
 
     return finishing_operations{chamfers, freeform_surfs, decomp, ti};
   }

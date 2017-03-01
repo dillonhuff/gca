@@ -34,6 +34,12 @@ namespace gca {
     double base_z = base.vertex(0).z;
     double top_z = base_z + f.depth();
 
+    if (!(base_z > top_z)) {
+      cout << "base_z = " << base_z << endl;
+      cout << "top_z  = " << top_z << endl;
+      DBG_ASSERT(base_z > top_z);
+    }
+
     point base_center = centroid(base.vertices());
     for (auto t : tools) {
       if (t.type() == TWIST_DRILL) {
