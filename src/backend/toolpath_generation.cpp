@@ -124,7 +124,11 @@ namespace gca {
     double rough_start = get_start_depth();
     double rough_end = get_end_depth() + finish_height;
 
-    DBG_ASSERT((rough_start - rough_end) > 0.0);
+    if (!((rough_start - rough_end) > 0.0)) {
+      cout << "rough_start = " << rough_start << endl;
+      cout << "rough_end   = " << rough_end << endl;
+      DBG_ASSERT((rough_start - rough_end) > 0.0);
+    }
 
     toolpath rough_tp = rough_face(rough_params,
 				   safe_z,

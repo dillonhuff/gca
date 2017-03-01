@@ -4,6 +4,7 @@
 #include "feature_recognition/vertical_wall.h"
 #include "process_planning/major_axis_fixturing.h"
 #include "process_planning/feature_selection.h"
+#include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "process_planning/tool_access.h"
 #include "synthesis/workpiece_clipping.h"
@@ -171,13 +172,19 @@ namespace gca {
     std::vector<freeform_surface> freeforms;
     feature_decomposition* decomp;
     tool_access_info access_info;
+
+  public:
+
+    std::vector<feature*> get_features() {
+      return collect_features(decomp);
+    }
   };
 
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
 	       const slice_setup& slice_setup,
 	       const fixture& f,
-	       const finishing_operations& finishing_ops) {
+	       finishing_operations& finishing_ops) {
 
     auto chamfers = finishing_ops.chamfers;
     auto freeforms = finishing_ops.freeforms;
@@ -190,11 +197,16 @@ namespace gca {
 
     auto rotated_plane = apply(s_t, slice_setup.slice_plane);
 
-    vector<pocket> pockets{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
+    vector<pocket> pockets =
+      feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
+    //{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
+
+    
 
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
     }
+
     for (auto& freeform : freeforms) {
       surface rotated_surf(pm, freeform.s.index_list());
       pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
@@ -208,6 +220,15 @@ namespace gca {
     return fixture_setup(r, f, pockets);
   }
 
+  void delete_inaccessable_features(feature_decomposition* decomp,
+				    const tool_access_info& ti) {
+    auto no_tools = [ti](feature* f) {
+      return map_find(f, ti).size() == 0;
+    };
+
+    delete_nodes(decomp, no_tools);
+  }
+
   finishing_operations
   build_finishing_ops(const triangular_mesh& stock,
 		      const triangular_mesh& part,
@@ -218,7 +239,13 @@ namespace gca {
     vector<freeform_surface> freeform_surfs;
     freeform_surfs = freeform_surface_regions(part, n, tools);
 
-    return finishing_operations{chamfers, freeform_surfs, {}, {}};
+    feature_decomposition* decomp =
+      build_feature_decomposition(stock, part, n);
+
+    tool_access_info ti = find_accessable_tools(decomp, tools);
+    delete_inaccessable_features(decomp, ti);
+
+    return finishing_operations{chamfers, freeform_surfs, decomp, ti};
   }
 
   slice_setup build_roughing_ops(const triangular_mesh& stock,
