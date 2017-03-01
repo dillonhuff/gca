@@ -229,6 +229,24 @@ namespace gca {
     delete_nodes(decomp, no_tools);
   }
 
+  void delete_features_below_plane(feature_decomposition* decomp,
+				    const plane slice_plane) {
+    point n = slice_plane.normal();
+    point decomp_n = normal(decomp);
+
+    DBG_ASSERT(angle_eps(n, decomp_n, 0.0, 1.0));
+
+    auto below_plane = [slice_plane](feature* f) {
+      point n = slice_plane.normal();
+      point base = slice_plane.pt();
+
+      return signed_distance_along(f->base().vertex(0), n) <
+      signed_distance_along(base, n);
+    };
+
+    delete_nodes(decomp, below_plane);
+  }
+  
   void check_feature_depths(feature_decomposition* decomp) {
     for (auto& f : collect_features(decomp)) {
       DBG_ASSERT(f->depth() > 0.0);
@@ -238,8 +256,10 @@ namespace gca {
   finishing_operations
   build_finishing_ops(const triangular_mesh& stock,
 		      const triangular_mesh& part,
-		      const point n,
+		      const plane slice_plane,
 		      const std::vector<tool>& tools) {
+    point n = slice_plane.normal();
+
     // TODO: Add access testing
     vector<chamfer> chamfers = chamfer_regions(part, n, tools);
     vector<freeform_surface> freeform_surfs;
@@ -247,7 +267,8 @@ namespace gca {
 
     feature_decomposition* decomp =
       build_feature_decomposition(stock, part, n);
-
+    delete_features_below_plane(decomp, slice_plane);
+    
     tool_access_info ti = find_accessable_tools(decomp, tools);
     delete_inaccessable_features(decomp, ti);
 
@@ -275,7 +296,7 @@ namespace gca {
 
     slice_setup rough_ops = build_roughing_ops(stock, part, slice_plane, tools);
     finishing_operations finish_ops =
-      build_finishing_ops(stock, part, n, tools);
+      build_finishing_ops(stock, part, slice_plane, tools);
     
     fixture_setup s =
       create_setup(second_dir.placement,
@@ -313,7 +334,7 @@ namespace gca {
 
     slice_setup rough_ops = build_roughing_ops(stock, part, slice_plane, tools);
     finishing_operations finish_ops =
-      build_finishing_ops(stock, part, n, tools);
+      build_finishing_ops(stock, part, slice_plane, tools);
     
     fixture_setup s =
       create_setup(maybe_fix->second,
