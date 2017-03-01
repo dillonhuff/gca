@@ -257,7 +257,9 @@ namespace gca {
 
     for (auto& ch : chamfers) {
       chamfer_operation ch_op(ch.faces, part, ch.t);
-      concat(toolpaths, mill_pockets({ch_op}, stock_material));
+      std::vector<toolpath> finish = ch_op.make_toolpaths(stock_material, safe_z);
+      //concat(toolpaths, mill_pockets({ch_op},
+      concat(toolpaths, finish);
     }
 
     for (auto& freeform : freeforms) {
@@ -265,7 +267,6 @@ namespace gca {
       freeform_operation freeform_op(rotated_surf, freeform.tools);
       toolpath finish = freeform_op.make_finish_toolpath(stock_material, safe_z);
       toolpaths.push_back(finish);
-      //concat(toolpaths, mill_pockets({freeform_op}, stock_material));
     }
 
     rigid_arrangement r;
