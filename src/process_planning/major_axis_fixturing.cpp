@@ -236,8 +236,42 @@ namespace gca {
 		   const fixture& f,
 		   finishing_operations& finishing_ops,
 		   const material& stock_material) {
-    auto fix_setup = create_setup(s_t, slice_setup, f, finishing_ops);
-    return fixture_setup_to_fabrication_setup(fix_setup, stock_material);
+
+    auto chamfers = finishing_ops.chamfers;
+    auto freeforms = finishing_ops.freeforms;
+
+    auto aligned = apply(s_t, slice_setup.wp_mesh);
+    auto part = apply(s_t, slice_setup.part_mesh);
+
+    triangular_mesh* m = new (allocate<triangular_mesh>()) triangular_mesh(aligned);
+    triangular_mesh* pm = new (allocate<triangular_mesh>()) triangular_mesh(part);
+
+    auto rotated_plane = apply(s_t, slice_setup.slice_plane);
+
+    vector<pocket> pockets =
+      feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
+    //{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
+
+    
+
+    for (auto& ch : chamfers) {
+      pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
+    }
+
+    for (auto& freeform : freeforms) {
+      surface rotated_surf(pm, freeform.s.index_list());
+      pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
+    }
+
+    rigid_arrangement r;
+    r.insert("part", *m);
+    r.insert("final-part", *pm);
+
+    fixture_setup setup(r, f, pockets);
+
+    auto toolpaths =
+      cut_secured_mesh(setup.pockets, stock_material);
+    return fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths);
   }
   
 
