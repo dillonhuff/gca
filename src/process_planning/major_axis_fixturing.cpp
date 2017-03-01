@@ -353,21 +353,37 @@ namespace gca {
     return fixture_plan(part, setups, w);
   }
 
+  fabrication_setup
+  fixture_setup_to_fabrication_setup(fixture_setup& setup,
+				     const material& stock_material) {
+    auto toolpaths =
+      cut_secured_mesh(setup.pockets, stock_material);
+    return fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths);
+  }
+
   fabrication_plan
   axis_fabrication_plan(const major_axis_decomp& cut_axis,
-			const axis_fixture& axis_fix,
-			const fixtures& fixes,
-			const workpiece w,
-			const std::vector<tool>& tools) {
+  			const axis_fixture& axis_fix,
+  			const fixtures& fixes,
+  			const workpiece w,
+  			const std::vector<tool>& tools) {
     auto part = mesh(cut_axis);
     fixture_plan fs =
       axis_fixture_plan(cut_axis, axis_fix, fixes, w, tools);
 
-    fabrication_plan fp =
-      fabrication_plan_for_fixture_plan(fs, part, tools, w);
+    vector<fabrication_setup> setups;
+    for (fixture_setup step : fs.fixtures()) {
+      fabrication_setup fab_setup =
+	fixture_setup_to_fabrication_setup(step, w.stock_material);
+      setups.push_back(fab_setup);
+    }
+
+    return fabrication_plan(setups);
+    // fabrication_plan fp =
+    //   fabrication_plan_for_fixture_plan(fs, part, tools, w);
 
 
-    return fp;
+    //    return fp;
   }
   
 }

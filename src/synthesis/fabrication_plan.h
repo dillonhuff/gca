@@ -98,7 +98,7 @@ namespace gca {
 		     const std::vector<fabrication_plan*>& p_custom_fixes)
       : final_part(p_final_part), fab_steps(p_fab_steps), custom_fixes(p_custom_fixes) {}
 
-    const triangular_mesh* final_part_mesh() const { return final_part; }
+    //    const triangular_mesh* final_part_mesh() const { return final_part; }
     const std::vector<fabrication_setup>& steps() const { return fab_steps; }
     const std::vector<fabrication_plan*>& custom_fixtures() const
     { return custom_fixes; }

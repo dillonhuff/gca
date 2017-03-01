@@ -26,7 +26,6 @@ namespace gca {
 
 
   std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
-					 const std::vector<tool>& tools,
 					 const material& stock_material);
   
   fabrication_plan

@@ -858,8 +858,7 @@ namespace gca {
   }
 
   // TODO: Does pocket list need to be non-const?
-  vector<toolpath> mill_pockets(vector<pocket>& pockets,
-				const std::vector<tool>& tools,
+  vector<toolpath> mill_pockets(const vector<pocket>& pockets,
 				const material& stock_material) {
     DBG_ASSERT(pockets.size() > 0);
 

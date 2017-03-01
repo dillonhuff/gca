@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
   
   auto setup = fixture_setup(&mesh, f, pockets);
 
-  auto toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  auto toolpaths = mill_pockets(pockets, ALUMINUM);
 
   fabrication_setup step(mesh, test_v, toolpaths);
   // auto aligned = apply(t, wp_mesh);

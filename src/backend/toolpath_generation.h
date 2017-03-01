@@ -256,8 +256,7 @@ namespace gca {
 					  const double max,
 					  const tool& tool);
 
-  vector<toolpath> mill_pockets(vector<pocket>& pockets,
-				const std::vector<tool>& tools,
+  vector<toolpath> mill_pockets(const vector<pocket>& pockets,
 				const material& stock_material);
 
 

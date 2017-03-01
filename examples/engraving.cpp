@@ -335,7 +335,7 @@ mill_engraving_toolpaths(std::vector<feature>& features,
   vector<pocket> pockets = build_engraving_pockets(tools, features);
 
   cout << "Milling pockets" << endl;
-  vector<toolpath> toolpaths = mill_pockets(pockets, tools, BRASS);
+  vector<toolpath> toolpaths = mill_pockets(pockets, BRASS);
   cout << "Done milling pockets" << endl;
 
   return toolpaths;

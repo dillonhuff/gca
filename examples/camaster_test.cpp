@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
   vector<pocket> pockets = build_engraving_pockets(tools, features);
 
   cout << "Milling pockets" << endl;
-  vector<toolpath> toolpaths = mill_pockets(pockets, tools, ALUMINUM);
+  vector<toolpath> toolpaths = mill_pockets(pockets, ALUMINUM);
   cout << "Done milling pockets" << endl;
 
   int num_empty_toolpaths = 0;

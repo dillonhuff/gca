@@ -15,12 +15,10 @@ namespace gca {
   }
 
   std::vector<toolpath> cut_secured_mesh(vector<pocket>& pockets,
-					 const std::vector<tool>& tools,
 					 const material& stock_material) {
-    DBG_ASSERT(tools.size() > 0);
 
     vector<toolpath> toolpaths =
-      mill_pockets(pockets, tools, stock_material);
+      mill_pockets(pockets, stock_material);
 
     return toolpaths;
   }
@@ -53,7 +51,7 @@ namespace gca {
     vector<fabrication_setup> setups;
     for (auto setup : plan.fixtures()) {
       auto toolpaths =
-	cut_secured_mesh(setup.pockets, tools, w.stock_material);
+	cut_secured_mesh(setup.pockets, w.stock_material);
       setups.push_back(fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths));
     }
 
