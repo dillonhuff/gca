@@ -111,6 +111,7 @@ SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
 	 ./src/checkers/unsafe_spindle_checker.cpp
 	 ./src/checkers/block_rate_checker.cpp
 	 ./src/simulators/mill_tool.cpp
+	 ./src/simulators/visual_debug.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/transformers/feed_changer.cpp
 	 ./src/transformers/retarget.cpp)

@@ -1,15 +1,18 @@
+#include "process_planning/major_axis_fixturing.h"
+
 #include "backend/chamfer_operation.h"
 #include "backend/drilled_hole_operation.h"
 #include "backend/slice_roughing_operation.h"
 #include "backend/freeform_toolpaths.h"
 #include "feature_recognition/vertical_wall.h"
 #include "feature_recognition/visual_debug.h"
-#include "process_planning/major_axis_fixturing.h"
 #include "process_planning/feature_selection.h"
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "process_planning/tool_access.h"
+#include "simulators/visual_debug.h"
 #include "synthesis/mesh_to_gcode.h"
+#include "synthesis/millability.h"
 #include "synthesis/workpiece_clipping.h"
 #include "synthesis/visual_debug.h"
 
@@ -326,11 +329,37 @@ namespace gca {
     return toolpaths;
   }
 
+  depth_field
+  uniform_height_copy(const depth_field& other, const double z) {
+    depth_field cpy(other.get_origin(),
+		    other.x_len,
+		    other.y_len,
+		    other.resolution);
+
+      for (int i = 0; i < cpy.num_x_elems; i++) {
+	for (int j = 0; j < cpy.num_y_elems; j++) {
+	  cpy.set_column_height(i, j, z);
+	}
+      }
+
+    return cpy;
+  }
 
   std::vector<toolpath>
   roughing_toolpaths(const triangular_mesh& stock,
 		     const triangular_mesh& part,
 		     const std::vector<tool>& tools) {
+    double field_resolution = 0.1;
+    depth_field part_field = build_from_stl(part, field_resolution);
+
+    double stock_height = max_in_dir(stock, point(0, 0, 1));
+    depth_field initial_field = uniform_height_copy(part_field, stock_height);
+
+    tool max_rough = max_e(tools, [](const tool& t) { return t.cut_diameter(); });
+
+    vtk_debug_depth_field(initial_field);
+    vtk_debug_depth_field(part_field);
+
     return {};
   }
 

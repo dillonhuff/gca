@@ -3106,6 +3106,33 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
+src/simulators/visual_debug.o: src/simulators/visual_debug.cpp.o
+
+.PHONY : src/simulators/visual_debug.o
+
+# target to build an object file
+src/simulators/visual_debug.cpp.o:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/visual_debug.cpp.o
+.PHONY : src/simulators/visual_debug.cpp.o
+
+src/simulators/visual_debug.i: src/simulators/visual_debug.cpp.i
+
+.PHONY : src/simulators/visual_debug.i
+
+# target to preprocess a source file
+src/simulators/visual_debug.cpp.i:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/visual_debug.cpp.i
+.PHONY : src/simulators/visual_debug.cpp.i
+
+src/simulators/visual_debug.s: src/simulators/visual_debug.cpp.s
+
+.PHONY : src/simulators/visual_debug.s
+
+# target to generate assembly for a file
+src/simulators/visual_debug.cpp.s:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/visual_debug.cpp.s
+.PHONY : src/simulators/visual_debug.cpp.s
+
 src/synthesis/clamp_orientation.o: src/synthesis/clamp_orientation.cpp.o
 
 .PHONY : src/synthesis/clamp_orientation.o
@@ -5468,6 +5495,9 @@ help:
 	@echo "... src/simulators/sim_mill.o"
 	@echo "... src/simulators/sim_mill.i"
 	@echo "... src/simulators/sim_mill.s"
+	@echo "... src/simulators/visual_debug.o"
+	@echo "... src/simulators/visual_debug.i"
+	@echo "... src/simulators/visual_debug.s"
 	@echo "... src/synthesis/clamp_orientation.o"
 	@echo "... src/synthesis/clamp_orientation.i"
 	@echo "... src/synthesis/clamp_orientation.s"
