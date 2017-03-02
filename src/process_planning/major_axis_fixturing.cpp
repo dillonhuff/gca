@@ -345,6 +345,13 @@ namespace gca {
     return cpy;
   }
 
+  double drop_tool(const int i,
+		   const int j,
+		   const tool& t,
+		   const depth_field& part_field) {
+    return part_field.column_height(i, j);
+  }
+
   toolpath build_x_zig_path(const depth_field& part_field,
 			    const tool& t) {
     double safe_z = 10.0;
@@ -357,7 +364,7 @@ namespace gca {
 
       for (unsigned j = 0; j < part_field.num_y_elems; j++) {
 	double y_coord = part_field.y_coord(j);
-	double z_coord = part_field.column_height(i, j);
+	double z_coord = drop_tool(i, j, t, part_field); //part_field.column_height(i, j);
 
 	pts.push_back(point(x_coord, y_coord, z_coord));
       }
