@@ -97,6 +97,14 @@ namespace gca {
       return *max_it;
     }
 
+    inline double x_coord(const int i) const {
+      return get_origin().x + resolution*i;
+    }
+
+    inline double y_coord(const int i) const {
+      return get_origin().y + resolution*i;
+    }
+    
     inline int x_index(double x) const {
       return static_cast<int>((x - x_min()) / resolution);
       //return static_cast<int>(x / resolution);

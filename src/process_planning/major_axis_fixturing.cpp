@@ -336,13 +336,42 @@ namespace gca {
 		    other.y_len,
 		    other.resolution);
 
-      for (int i = 0; i < cpy.num_x_elems; i++) {
-	for (int j = 0; j < cpy.num_y_elems; j++) {
-	  cpy.set_column_height(i, j, z);
-	}
+    for (int i = 0; i < cpy.num_x_elems; i++) {
+      for (int j = 0; j < cpy.num_y_elems; j++) {
+	cpy.set_column_height(i, j, z);
       }
+    }
 
     return cpy;
+  }
+
+  toolpath build_x_zig_path(const depth_field& part_field,
+			    const tool& t) {
+    double safe_z = 10.0;
+
+    vector<polyline> lines;
+
+    for (unsigned i = 0; i < part_field.num_x_elems; i++) {
+      double x_coord = part_field.x_coord(i);
+      vector<point> pts;
+
+      for (unsigned j = 0; j < part_field.num_y_elems; j++) {
+	double y_coord = part_field.y_coord(j);
+	double z_coord = part_field.column_height(i, j);
+
+	pts.push_back(point(x_coord, y_coord, z_coord));
+      }
+      lines.push_back(pts);
+    }
+
+    return {toolpath(FREEFORM_POCKET,
+		     safe_z,
+		     2000,
+		     15.0,
+		     7.5,
+		     t,
+		     lines)};
+    
   }
 
   std::vector<toolpath>
@@ -357,10 +386,13 @@ namespace gca {
 
     tool max_rough = max_e(tools, [](const tool& t) { return t.cut_diameter(); });
 
-    vtk_debug_depth_field(initial_field);
-    vtk_debug_depth_field(part_field);
+    // vtk_debug_depth_field(initial_field);
+    // vtk_debug_depth_field(part_field);
 
-    return {};
+    toolpath max_rough_path =
+      build_x_zig_path(part_field, max_rough);
+
+    return {max_rough_path};
   }
 
   fabrication_setup
