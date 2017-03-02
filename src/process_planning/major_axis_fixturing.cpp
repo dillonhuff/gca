@@ -392,7 +392,10 @@ namespace gca {
 
 	pts.push_back(point(x_coord, y_coord, z_coord));
       }
-      lines.push_back(pts);
+
+      if (pts.size() > 1) {
+	lines.push_back(pts);
+      }
     }
 
     return {toolpath(FREEFORM_POCKET,

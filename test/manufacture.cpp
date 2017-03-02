@@ -160,6 +160,14 @@ namespace gca {
 
     workpiece wp(1.75, 1.75, 2.5, ALUMINUM);
 
+    wp = workpiece(1.0, 1.0, 1.0, ALUMINUM);
+
+    planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0), 0.5, wp});
+
+    wp = workpiece(1.75, 1.75, 0.75, ALUMINUM);
+    
+    planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1), 0.4, wp});
+
     wp = workpiece(1.5, 1.5, 1.0, ALUMINUM);
 
     planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 1(17).stl", point(0, 1, 0), 0.035, wp});
@@ -192,14 +200,6 @@ namespace gca {
     
     // Was failing, but that seems to have been a problem with boolean operations
     planning_cases.push_back({"test/stl-files/onshape_parts/100-009 - Part 1.stl", point(0, 0, 1), 1.0, wp});
-
-    wp = workpiece(1.0, 1.0, 1.0, ALUMINUM);
-
-    planning_cases.push_back({"test/stl-files/onshape_parts//Part Studio 1 - Part 2.stl", point(0, 1, 0), 0.5, wp});
-
-    wp = workpiece(1.75, 1.75, 0.75, ALUMINUM);
-    
-    planning_cases.push_back({"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", point(0, 0, 1), 0.4, wp});
 
     return planning_cases;
   }
