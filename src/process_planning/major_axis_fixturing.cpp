@@ -327,6 +327,13 @@ namespace gca {
   }
 
 
+  std::vector<toolpath>
+  roughing_toolpaths(const triangular_mesh& stock,
+		     const triangular_mesh& part,
+		     const std::vector<tool>& tools) {
+    return {};
+  }
+
   fabrication_setup
   create_fab_setup(const homogeneous_transform& s_t,
 		   const slice_setup& slice_setup,
@@ -347,21 +354,20 @@ namespace gca {
 
     auto rotated_plane = apply(s_t, slice_setup.slice_plane);
 
-    // vector<pocket> pockets =
-    //   feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
     vector<feature*> feats = finishing_ops.get_features();
-    vector<toolpath> toolpaths =
+    vector<toolpath> toolpaths = roughing_toolpaths(aligned, part, slice_setup.tools);
+    vector<toolpath> finish_toolpaths =
       finish_prismatic_features(feats,
 				s_t,
 				finishing_ops.access_info,
 				stock_material,
 				safe_z);
+    concat(toolpaths, finish_toolpaths);
     //{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
 
     for (auto& ch : chamfers) {
       chamfer_operation ch_op(ch.faces, part, ch.t);
       std::vector<toolpath> finish = ch_op.make_toolpaths(stock_material, safe_z);
-      //concat(toolpaths, mill_pockets({ch_op},
       concat(toolpaths, finish);
     }
 
@@ -469,51 +475,6 @@ namespace gca {
     return s;
   }
 
-  // fixture_plan
-  // axis_fixture_plan(const major_axis_decomp& cut_axis,
-  // 		    const axis_fixture& axis_fix,
-  // 		    const fixtures& fixes,
-  // 		    const workpiece w,
-  // 		    const std::vector<tool>& tools) {
-  //   dir_fixture first_dir = *(axis_fix.positive);
-  //   dir_fixture second_dir = *(axis_fix.negative);
-
-  //   triangular_mesh stock = align_stock(cut_axis, first_dir, w);
-  //   vector<fixture_setup> setups;
-
-  //   const auto& part = mesh(cut_axis);
-
-  //   // NOTE: Assumes the base of the part is above the vice
-  //   point n = first_dir.orient.top_normal();
-  //   point pt = min_point_in_dir(part, n);
-  //   plane slice_plane(n, pt);
-
-  //   Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
-  //   double depth = signed_distance_along(slice_plane.pt(), slice_plane.normal());
-  //   auto maybe_fix = find_next_fixture_side_vice(depth, stock_nef, stock, n, fixes);
-    
-  //   DBG_ASSERT(maybe_fix);
-
-  //   slice_setup rough_ops = build_roughing_ops(stock, part, slice_plane, tools);
-  //   finishing_operations finish_ops =
-  //     build_finishing_ops(stock, part, slice_plane, tools);
-    
-  //   fixture_setup s =
-  //     create_setup(maybe_fix->second,
-  // 		   rough_ops,
-  // 		   maybe_fix->first,
-  // 		   finish_ops);
-
-  //   setups.push_back(s);
-
-  //   fixture_setup second =
-  //     build_second_setup(slice_plane.flip(), part, stock, second_dir, tools);
-
-  //   setups.push_back(second);
-
-  //   return fixture_plan(part, setups, w);
-  // }
-
   fabrication_plan
   axis_fabrication_plan(const major_axis_decomp& cut_axis,
   			const axis_fixture& axis_fix,
@@ -558,20 +519,7 @@ namespace gca {
 
     setups.push_back(second);
 
-    return fabrication_plan(setups); //fixture_plan(part, setups, w);
-
-    // auto part = mesh(cut_axis);
-    // fixture_plan fs =
-    //   axis_fixture_plan(cut_axis, axis_fix, fixes, w, tools);
-
-    // vector<fabrication_setup> setups;
-    // for (fixture_setup step : fs.fixtures()) {
-    //   fabrication_setup fab_setup =
-    // 	fixture_setup_to_fabrication_setup(step, w.stock_material);
-    //   setups.push_back(fab_setup);
-    // }
-
-    // return fabrication_plan(setups);
+    return fabrication_plan(setups);
   }
   
 }
