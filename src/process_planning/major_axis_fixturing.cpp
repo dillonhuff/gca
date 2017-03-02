@@ -10,6 +10,7 @@
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "process_planning/tool_access.h"
+#include "simulators/mill_tool.h"
 #include "simulators/visual_debug.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/millability.h"
@@ -345,18 +346,40 @@ namespace gca {
     return cpy;
   }
 
-  double drop_tool(const int i,
-		   const int j,
-		   const tool& t,
-		   const depth_field& part_field) {
-    return part_field.column_height(i, j);
+  double drop_tool(const point p,
+		   const mill_tool& t,
+		   const depth_field& r) {
+
+    int first_x = r.x_index(t.x_min(p));
+    int last_x = r.x_index(t.x_max(p));
+    int first_y = r.y_index(t.y_min(p));
+    int last_y = r.y_index(t.y_max(p));
+
+    double highest = p.z;
+    for (int i = first_x; i < last_x; i++) {
+      for (int j = first_y; j < last_y; j++) {
+	if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
+	    r.legal_column(i, j)) {
+	  double test_pt = r.column_height(i, j);
+	  if (test_pt >= highest) {
+	    highest = test_pt;
+	  }
+	}
+      }
+    }
+
+    return highest;
   }
 
   toolpath build_x_zig_path(const depth_field& part_field,
 			    const tool& t) {
+
+    DBG_ASSERT(t.type() == FLAT_NOSE);
+
     double safe_z = 10.0;
 
     vector<polyline> lines;
+    cylindrical_bit mill_t(t.cut_diameter());
 
     for (unsigned i = 0; i < part_field.num_x_elems; i++) {
       double x_coord = part_field.x_coord(i);
@@ -364,7 +387,8 @@ namespace gca {
 
       for (unsigned j = 0; j < part_field.num_y_elems; j++) {
 	double y_coord = part_field.y_coord(j);
-	double z_coord = drop_tool(i, j, t, part_field); //part_field.column_height(i, j);
+	point pt(x_coord, y_coord, 0.0);
+	double z_coord = drop_tool(pt, mill_t, part_field); //part_field.column_height(i, j);
 
 	pts.push_back(point(x_coord, y_coord, z_coord));
       }
