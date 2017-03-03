@@ -420,16 +420,26 @@ namespace gca {
 
     vector<tool> flat_tools =
       select(tools, [](const tool& t) { return t.type() == FLAT_NOSE; });
-    tool max_rough =
-      max_e(flat_tools, [](const tool& t) { return t.cut_diameter(); });
 
-    vtk_debug_depth_field(initial_field);
-    vtk_debug_depth_field(part_field);
+    cout << "# of flat tools = " << flat_tools.size() << endl;
+    
+    DBG_ASSERT(flat_tools.size() > 0);
 
-    toolpath max_rough_path =
-      build_x_zig_path(part_field, max_rough);
+    sort_gt(flat_tools, [](const tool& t) { return t.cut_diameter(); });
 
-    return {max_rough_path};
+    // vtk_debug_depth_field(initial_field);
+    // vtk_debug_depth_field(part_field);
+
+    vector<toolpath> rough_paths;
+    for (auto& current_tool : flat_tools) {
+      toolpath max_rough_path =
+	build_x_zig_path(part_field, current_tool);
+      rough_paths.push_back(max_rough_path);
+    }
+
+    
+
+    return rough_paths;
   }
 
   fabrication_setup
