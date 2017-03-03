@@ -494,6 +494,11 @@ namespace gca {
     return layers;
   }
 
+  std::vector<std::vector<std::pair<int, int> > >
+  group_connected_lines(const std::vector<std::pair<int, int> >& pixels) {
+    
+  }
+
   toolpath
   toolpath_for_depth_layer(const depth_field& df,
 			   const depth_layer& dl,
@@ -501,15 +506,20 @@ namespace gca {
 
     vector<polyline> lines;
     for (auto& l : dl.pts) {
-      if (l.size() > 0) {
-	vector<point> drop_points;
-	for (auto& pt : l) {
-	  double x = df.x_coord(pt.first);
-	  double y = df.y_coord(pt.second);
-	  drop_points.push_back(point(x, y, dl.z_upper_bound));
-	}
+      auto connected_lines =
+	group_connected_lines(l);
 
-	lines.push_back(drop_points);
+      for (auto& pix_line : connected_lines) {
+	if (pix_line.size() > 0) {
+	  vector<point> drop_points;
+	  for (auto& pt : pix_line) {
+	    double x = df.x_coord(pt.first);
+	    double y = df.y_coord(pt.second);
+	    drop_points.push_back(point(x, y, dl.z_upper_bound));
+	  }
+
+	  lines.push_back(drop_points);
+	}
       }
     }
 
