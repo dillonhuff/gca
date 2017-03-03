@@ -421,6 +421,8 @@ namespace gca {
     double safe_z = 10.0;
 
     cylindrical_bit mill_t(t.cut_diameter());
+    cylindrical_bit shank_t(t.shank_diameter());
+    cylindrical_bit holder_t(t.holder_diameter());
 
     for (unsigned i = 0; i < part_field.num_x_elems; i++) {
       double x_coord = part_field.x_coord(i);
@@ -428,8 +430,19 @@ namespace gca {
 
       for (unsigned j = 0; j < part_field.num_y_elems; j++) {
 	double y_coord = part_field.y_coord(j);
-	point pt(x_coord, y_coord, part_field.column_height(i, j));
-	double z_coord = drop_tool(pt, mill_t, part_field);
+
+	point tool_pt(x_coord, y_coord, part_field.column_height(i, j));
+
+	double tool_z = drop_tool(tool_pt, mill_t, part_field);
+	double shank_z = drop_tool(tool_pt, shank_t, part_field);
+	double holder_z = drop_tool(tool_pt, holder_t, part_field);
+
+	double shank_z_bound = shank_z - t.cut_length();
+	double holder_z_bound = shank_z - t.cut_length() - t.shank_length();
+
+	vector<double> coords{tool_z, shank_z_bound, holder_z_bound};
+	double z_coord =
+	  max_e(coords, [](const double d) { return d; });
 
 	min_height_field.set_column_height(i, j, z_coord);
       }
