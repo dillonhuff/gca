@@ -501,7 +501,12 @@ namespace gca {
     vector<polyline> lines;
     for (auto& l : dl.pts) {
       if (l.size() > 0) {
-	lines.push_back(l);
+	vector<point> drop_points;
+	for (auto& pt : l) {
+	  drop_points.push_back(point(pt.x, pt.y, dl.z_upper_bound));
+	}
+
+	lines.push_back(drop_points);
       }
     }
 
