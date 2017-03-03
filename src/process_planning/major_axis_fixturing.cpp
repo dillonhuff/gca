@@ -496,7 +496,14 @@ namespace gca {
 
   std::vector<std::vector<std::pair<int, int> > >
   group_connected_lines(const std::vector<std::pair<int, int> >& pixels) {
-    
+    vector<vector<pair<int, int> > > lines;
+    auto y_adjacent = [](const pair<int, int>& l,
+			 const pair<int, int>& r) {
+      return (l.second + 1) == r.second;
+    };
+
+    split_by(pixels, lines, y_adjacent);
+    return lines;
   }
 
   toolpath
@@ -510,7 +517,7 @@ namespace gca {
 	group_connected_lines(l);
 
       for (auto& pix_line : connected_lines) {
-	if (pix_line.size() > 0) {
+	if (pix_line.size() > 1) {
 	  vector<point> drop_points;
 	  for (auto& pt : pix_line) {
 	    double x = df.x_coord(pt.first);
