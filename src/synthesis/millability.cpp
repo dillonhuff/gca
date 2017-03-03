@@ -341,6 +341,13 @@ namespace gca {
   depth_field build_from_stl(const triangular_mesh& mesh,
 			     const double res) {
     box bb = mesh.bounding_box();
+    return build_from_stl(bb, mesh, res);
+  }
+
+  depth_field build_from_stl(const box& bb,
+			     const triangular_mesh& mesh,
+			     const double res) {
+
     double eps = 2*res + 0.00001;
     point origin(bb.x_min - eps, bb.y_min - eps, 0.0);
     double x_w = bb.x_len() + 2*eps;
@@ -352,5 +359,7 @@ namespace gca {
 
     return df;
   }
+
+
 
 }

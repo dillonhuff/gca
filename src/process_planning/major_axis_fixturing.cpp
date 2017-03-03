@@ -575,7 +575,8 @@ namespace gca {
 		     const triangular_mesh& part,
 		     const std::vector<tool>& tools) {
     double field_resolution = 0.05;
-    depth_field part_field = build_from_stl(part, field_resolution);
+    depth_field part_field =
+      build_from_stl(stock.bounding_box(), part, field_resolution);
 
     double stock_height = max_in_dir(stock, point(0, 0, 1));
     depth_field current_heights = uniform_height_copy(part_field, stock_height);

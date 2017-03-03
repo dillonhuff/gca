@@ -26,6 +26,10 @@ namespace gca {
   prismatic_millable_faces(const point n,
 			   const triangular_mesh& part);
 
+  depth_field build_from_stl(const box& bb,
+			     const triangular_mesh& mesh,
+			     const double res);
+  
   depth_field build_from_stl(const triangular_mesh& mesh,
 			     const double res);
 }
