@@ -410,7 +410,7 @@ namespace gca {
 
   struct depth_layer {
     double z_min, z_max, z_upper_bound;
-    std::vector<std::vector<point> > pts;
+    std::vector<std::vector<std::pair<int, int> > > pts;
   };
 
   depth_field min_tool_height_field(const tool& t, const depth_field& part_field) {
@@ -444,17 +444,17 @@ namespace gca {
 			    const depth_field& df) {
     double z_min = max_z;
     double z_upper_bound = df.z_min() - 1.0;
-    vector<vector<point> > pts;
+    vector<vector<pair<int, int> > > pts;
     for (int i = 0; i < df.num_x_elems; i++) {
       double x = df.x_coord(i);
 
-      vector<point> y_pts;
+      vector<pair<int, int> > y_pts;
       for (int j = 0; j < df.num_y_elems; j++) {
 	double y = df.y_coord(j);
 	double z = df.column_height(i, j);
 
 	if (z < max_z) {
-	  y_pts.push_back(point(x, y, z));
+	  y_pts.push_back(make_pair(i, j));
 
 	  if (z > z_upper_bound) {
 	    z_upper_bound = z;
@@ -495,7 +495,8 @@ namespace gca {
   }
 
   toolpath
-  toolpath_for_depth_layer(const depth_layer& dl,
+  toolpath_for_depth_layer(const depth_field& df,
+			   const depth_layer& dl,
 			   const tool& t) {
 
     vector<polyline> lines;
@@ -503,7 +504,9 @@ namespace gca {
       if (l.size() > 0) {
 	vector<point> drop_points;
 	for (auto& pt : l) {
-	  drop_points.push_back(point(pt.x, pt.y, dl.z_upper_bound));
+	  double x = df.x_coord(pt.first);
+	  double y = df.y_coord(pt.second);
+	  drop_points.push_back(point(x, y, dl.z_upper_bound));
 	}
 
 	lines.push_back(drop_points);
@@ -531,7 +534,7 @@ namespace gca {
 
     vector<toolpath> toolpaths;
     for (auto& layer : depth_layers) {
-      toolpaths.push_back(toolpath_for_depth_layer(layer, current_tool));
+      toolpaths.push_back(toolpath_for_depth_layer(part_field, layer, current_tool));
     }
 
     return toolpaths;
