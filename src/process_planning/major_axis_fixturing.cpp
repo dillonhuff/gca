@@ -412,6 +412,13 @@ namespace gca {
   build_roughing_paths(const depth_field& part_field,
 		       depth_field& current_heights,
 		       const tool& current_tool) {
+    vector<depth_layer> depth_layers =
+      slice_depth_layers(current_tool, depth_field);
+
+    vector<toolpath> toolpaths;
+    for (auto& layer : depth_layers) {
+      toolpaths.push_back();
+    }
     toolpath max_rough_path =
       build_x_zig_path(part_field, current_tool);
 
