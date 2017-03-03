@@ -97,6 +97,19 @@ namespace gca {
       return *max_it;
     }
 
+    double z_min() const {
+      auto min_it =
+	min_element(column_heights,
+		    column_heights + num_x_elems*num_y_elems,
+		    [](const float l, const float r) {
+		      return l < r;
+		    });
+
+      DBG_ASSERT(min_it);
+
+      return *min_it;
+    }
+    
     inline double x_coord(const int i) const {
       return get_origin().x + resolution*i;
     }

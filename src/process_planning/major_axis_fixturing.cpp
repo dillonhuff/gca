@@ -409,7 +409,7 @@ namespace gca {
   }
 
   struct depth_layer {
-    double z_min, z_max;
+    double z_min, z_max, z_upper_bound;
     std::vector<std::vector<point> > pts;
   };
 
@@ -440,6 +440,41 @@ namespace gca {
     
   }
 
+  depth_layer collect_layer(const double max_z,
+			    const depth_field& df) {
+    double z_min = max_z;
+    double z_upper_bound = df.z_min() - 1.0;
+    vector<vector<point> > pts;
+    for (int i = 0; i < df.num_x_elems; i++) {
+      double x = df.x_coord(i);
+
+      vector<point> y_pts;
+      for (int j = 0; j < df.num_y_elems; j++) {
+	double y = df.y_coord(j);
+	double z = df.column_height(i, j);
+
+	if (z < max_z) {
+	  y_pts.push_back(point(x, y, z));
+
+	  if (z > z_upper_bound) {
+	    z_upper_bound = z;
+	  }
+
+	}
+
+	if (z < z_min) {
+	  z_min = z;
+	}
+      }
+
+      if (y_pts.size() > 1) {
+	pts.push_back(y_pts);
+      }
+    }
+
+    return depth_layer{z_min, max_z, z_upper_bound, pts};
+  }
+
   std::vector<depth_layer>
   slice_depth_layers(const tool& t,
 		     const double max_height,
@@ -447,7 +482,16 @@ namespace gca {
     DBG_ASSERT(max_height > part_field.z_max());
 
     depth_field d = min_tool_height_field(t, part_field);
-    return {};
+    double max_h = max_height;
+
+    vector<depth_layer> layers;
+    while (max_h > d.z_min()) {
+      depth_layer next = collect_layer(max_h, d);
+      layers.push_back(next);
+      max_h = next.z_upper_bound;
+    }
+
+    return layers;
   }
 
   toolpath
@@ -478,17 +522,14 @@ namespace gca {
     vector<depth_layer> depth_layers =
       slice_depth_layers(current_tool, max_height, part_field);
 
+    cout << "# of layers = " << depth_layers.size() << endl;
+
     vector<toolpath> toolpaths;
     for (auto& layer : depth_layers) {
       toolpaths.push_back(toolpath_for_depth_layer(layer, current_tool));
     }
 
     return toolpaths;
-
-    // toolpath max_rough_path =
-    //   build_x_zig_path(part_field, current_tool);
-
-    // return {max_rough_path};
   }
 
   std::vector<toolpath>
