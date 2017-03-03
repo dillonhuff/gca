@@ -408,21 +408,87 @@ namespace gca {
     
   }
 
+  struct depth_layer {
+    double z_min, z_max;
+    std::vector<std::vector<point> > pts;
+  };
+
+  depth_field min_tool_height_field(const tool& t, const depth_field& part_field) {
+    DBG_ASSERT(t.type() == FLAT_NOSE);
+
+    depth_field min_height_field(part_field);
+
+    double safe_z = 10.0;
+
+    cylindrical_bit mill_t(t.cut_diameter());
+
+    for (unsigned i = 0; i < part_field.num_x_elems; i++) {
+      double x_coord = part_field.x_coord(i);
+      vector<point> pts;
+
+      for (unsigned j = 0; j < part_field.num_y_elems; j++) {
+	double y_coord = part_field.y_coord(j);
+	point pt(x_coord, y_coord, part_field.column_height(i, j));
+	double z_coord = drop_tool(pt, mill_t, part_field);
+
+	min_height_field.set_column_height(i, j, z_coord);
+      }
+
+    }
+
+    return min_height_field;
+    
+  }
+
+  std::vector<depth_layer>
+  slice_depth_layers(const tool& t,
+		     const double max_height,
+		     const depth_field& part_field) {
+    DBG_ASSERT(max_height > part_field.z_max());
+
+    depth_field d = min_tool_height_field(t, part_field);
+    return {};
+  }
+
+  toolpath
+  toolpath_for_depth_layer(const depth_layer& dl,
+			   const tool& t) {
+
+    vector<polyline> lines;
+    for (auto& l : dl.pts) {
+      if (l.size() > 0) {
+	lines.push_back(l);
+      }
+    }
+
+    return {toolpath(FREEFORM_POCKET,
+		     dl.z_max,
+		     2000,
+		     15.0,
+		     7.5,
+		     t,
+		     lines)};
+    
+  }
+
   std::vector<toolpath>
   build_roughing_paths(const depth_field& part_field,
-		       depth_field& current_heights,
+		       const double max_height,
 		       const tool& current_tool) {
     vector<depth_layer> depth_layers =
-      slice_depth_layers(current_tool, depth_field);
+      slice_depth_layers(current_tool, max_height, part_field);
 
     vector<toolpath> toolpaths;
     for (auto& layer : depth_layers) {
-      toolpaths.push_back();
+      toolpaths.push_back(toolpath_for_depth_layer(layer, current_tool));
     }
-    toolpath max_rough_path =
-      build_x_zig_path(part_field, current_tool);
 
-    return {max_rough_path};
+    return toolpaths;
+
+    // toolpath max_rough_path =
+    //   build_x_zig_path(part_field, current_tool);
+
+    // return {max_rough_path};
   }
 
   std::vector<toolpath>
@@ -447,10 +513,11 @@ namespace gca {
     // vtk_debug_depth_field(current_heights);
     // vtk_debug_depth_field(part_field);
 
+    double z_max = current_heights.z_max();
     vector<toolpath> rough_paths;
     for (auto& current_tool : flat_tools) {
       vector<toolpath> max_toolpaths =
-	build_roughing_paths(part_field, current_heights, current_tool);
+	build_roughing_paths(part_field, z_max, current_tool);
       concat(rough_paths, max_toolpaths);
     }
 
