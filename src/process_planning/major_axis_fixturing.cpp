@@ -412,16 +412,19 @@ namespace gca {
   roughing_toolpaths(const triangular_mesh& stock,
 		     const triangular_mesh& part,
 		     const std::vector<tool>& tools) {
-    double field_resolution = 0.1;
+    double field_resolution = 0.05;
     depth_field part_field = build_from_stl(part, field_resolution);
 
     double stock_height = max_in_dir(stock, point(0, 0, 1));
     depth_field initial_field = uniform_height_copy(part_field, stock_height);
 
-    tool max_rough = max_e(tools, [](const tool& t) { return t.cut_diameter(); });
+    vector<tool> flat_tools =
+      select(tools, [](const tool& t) { return t.type() == FLAT_NOSE; });
+    tool max_rough =
+      max_e(flat_tools, [](const tool& t) { return t.cut_diameter(); });
 
-    // vtk_debug_depth_field(initial_field);
-    // vtk_debug_depth_field(part_field);
+    vtk_debug_depth_field(initial_field);
+    vtk_debug_depth_field(part_field);
 
     toolpath max_rough_path =
       build_x_zig_path(part_field, max_rough);
