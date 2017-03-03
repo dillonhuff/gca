@@ -409,6 +409,16 @@ namespace gca {
   }
 
   std::vector<toolpath>
+  build_roughing_paths(const depth_field& part_field,
+		       depth_field& current_heights,
+		       const tool& current_tool) {
+    toolpath max_rough_path =
+      build_x_zig_path(part_field, current_tool);
+
+    return {max_rough_path};
+  }
+
+  std::vector<toolpath>
   roughing_toolpaths(const triangular_mesh& stock,
 		     const triangular_mesh& part,
 		     const std::vector<tool>& tools) {
@@ -416,7 +426,7 @@ namespace gca {
     depth_field part_field = build_from_stl(part, field_resolution);
 
     double stock_height = max_in_dir(stock, point(0, 0, 1));
-    depth_field initial_field = uniform_height_copy(part_field, stock_height);
+    depth_field current_heights = uniform_height_copy(part_field, stock_height);
 
     vector<tool> flat_tools =
       select(tools, [](const tool& t) { return t.type() == FLAT_NOSE; });
@@ -427,17 +437,15 @@ namespace gca {
 
     sort_gt(flat_tools, [](const tool& t) { return t.cut_diameter(); });
 
-    // vtk_debug_depth_field(initial_field);
+    // vtk_debug_depth_field(current_heights);
     // vtk_debug_depth_field(part_field);
 
     vector<toolpath> rough_paths;
     for (auto& current_tool : flat_tools) {
-      toolpath max_rough_path =
-	build_x_zig_path(part_field, current_tool);
-      rough_paths.push_back(max_rough_path);
+      vector<toolpath> max_toolpaths =
+	build_roughing_paths(part_field, current_heights, current_tool);
+      concat(rough_paths, max_toolpaths);
     }
-
-    
 
     return rough_paths;
   }
