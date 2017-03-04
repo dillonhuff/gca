@@ -486,6 +486,7 @@ namespace gca {
   std::vector<depth_layer>
   slice_depth_layers(const tool& t,
 		     const double max_height,
+		     const depth_field& current_field,
 		     const depth_field& part_field) {
     DBG_ASSERT(max_height > part_field.z_max());
 
@@ -549,11 +550,12 @@ namespace gca {
   }
 
   std::vector<toolpath>
-  build_roughing_paths(const depth_field& part_field,
+  build_roughing_paths(const depth_field& current_field,
+		       const depth_field& part_field,
 		       const double max_height,
 		       const tool& current_tool) {
     vector<depth_layer> depth_layers =
-      slice_depth_layers(current_tool, max_height, part_field);
+      slice_depth_layers(current_tool, max_height, current_field, part_field);
 
     cout << "# of layers = " << depth_layers.size() << endl;
 
@@ -619,7 +621,7 @@ namespace gca {
     vector<toolpath> rough_paths;
     for (auto& current_tool : flat_tools) {
       vector<toolpath> max_toolpaths =
-	build_roughing_paths(part_field, z_max, current_tool);
+	build_roughing_paths(current_region.r, part_field, z_max, current_tool);
       simulate_toolpaths(current_region, max_toolpaths);
       concat(rough_paths, max_toolpaths);
     }
