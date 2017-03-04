@@ -598,7 +598,7 @@ namespace gca {
   roughing_toolpaths(const triangular_mesh& stock,
 		     const triangular_mesh& part,
 		     const std::vector<tool>& tools) {
-    double field_resolution = 0.05;
+    double field_resolution = 0.025;
     depth_field part_field =
       build_from_stl(stock.bounding_box(), part, field_resolution);
 
