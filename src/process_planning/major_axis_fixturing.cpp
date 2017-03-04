@@ -10,7 +10,7 @@
 #include "process_planning/feature_to_pocket.h"
 #include "process_planning/job_planning.h"
 #include "process_planning/tool_access.h"
-#include "simulators/mill_tool.h"
+#include "simulators/sim_mill.h"
 #include "simulators/visual_debug.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/millability.h"
@@ -194,7 +194,6 @@ namespace gca {
       cut_secured_mesh(setup.pockets, stock_material);
     return fabrication_setup(setup.arrangement(), setup.fix.v, toolpaths);
   }
-
   
   fixture_setup
   create_setup(const homogeneous_transform& s_t,
@@ -215,9 +214,6 @@ namespace gca {
 
     vector<pocket> pockets =
       feature_pockets(finishing_ops.get_features(), s_t, finishing_ops.access_info);
-    //{slice_roughing_operation(rotated_plane, *m, *pm, slice_setup.tools)};
-
-    
 
     for (auto& ch : chamfers) {
       pockets.push_back(chamfer_operation(ch.faces, part, ch.t));
@@ -231,7 +227,6 @@ namespace gca {
     rigid_arrangement r;
     r.insert("part", *m);
     r.insert("final-part", *pm);
-
 
     return fixture_setup(r, f, pockets);
   }
@@ -570,6 +565,31 @@ namespace gca {
     return toolpaths;
   }
 
+  double simulate_toolpath(class region& current_region,
+			   const toolpath& tp) {
+    double total_removed = 0.0;
+
+    tool active_tool = tp.get_tool();
+    cylindrical_bit mill_tool(active_tool.cut_diameter());
+
+    for (auto& cuts : tp.cuts_without_safe_moves()) {
+      total_removed += simulate_mill(cuts, current_region, mill_tool);
+    }
+
+    return total_removed;
+  }
+  
+  double simulate_toolpaths(class region& current_region,
+			    const std::vector<toolpath>& max_toolpaths) {
+    double total_removed = 0.0;
+
+    for (auto& tp : max_toolpaths) {
+      total_removed += simulate_toolpath(current_region, tp);
+    }
+
+    return total_removed;
+  }
+
   std::vector<toolpath>
   roughing_toolpaths(const triangular_mesh& stock,
 		     const triangular_mesh& part,
@@ -579,7 +599,6 @@ namespace gca {
       build_from_stl(stock.bounding_box(), part, field_resolution);
 
     double stock_height = max_in_dir(stock, point(0, 0, 1));
-    depth_field current_heights = uniform_height_copy(part_field, stock_height);
 
     vector<tool> flat_tools =
       select(tools, [](const tool& t) { return t.type() == FLAT_NOSE; });
@@ -593,13 +612,19 @@ namespace gca {
     // vtk_debug_depth_field(current_heights);
     // vtk_debug_depth_field(part_field);
 
+    depth_field current_heights = uniform_height_copy(part_field, stock_height);
+    class region current_region(current_heights);
+    
     double z_max = current_heights.z_max();
     vector<toolpath> rough_paths;
     for (auto& current_tool : flat_tools) {
       vector<toolpath> max_toolpaths =
 	build_roughing_paths(part_field, z_max, current_tool);
+      simulate_toolpaths(current_region, max_toolpaths);
       concat(rough_paths, max_toolpaths);
     }
+
+    vtk_debug_depth_field(current_region.r);
 
     return rough_paths;
   }
