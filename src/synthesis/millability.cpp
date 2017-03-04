@@ -290,7 +290,8 @@ namespace gca {
   }
 
   void set_heights(depth_field& df,
-		   const triangular_mesh& part) {
+		   const triangular_mesh& part,
+		   const double min_height) {
 
     point normal(0, 0, 1);
 
@@ -330,7 +331,7 @@ namespace gca {
 	  df.set_column_height(i, j, part.face_triangle(m).centroid().z);
 
 	} else {
-	  df.set_column_height(i, j, 0.0);
+	  df.set_column_height(i, j, min_height);
 	}
 	
       }
@@ -344,8 +345,10 @@ namespace gca {
     return build_from_stl(bb, mesh, res);
   }
 
+  
   depth_field build_from_stl(const box& bb,
 			     const triangular_mesh& mesh,
+			     const double min_height,
 			     const double res) {
 
     double eps = 2*res + 0.00001;
@@ -355,11 +358,16 @@ namespace gca {
 
     depth_field df(origin, x_w, y_w, res);
 
-    set_heights(df, mesh);
+    set_heights(df, mesh, min_height);
 
     return df;
   }
 
 
+  depth_field build_from_stl(const box& bb,
+			     const triangular_mesh& mesh,
+			     const double res) {
+    return build_from_stl(bb, mesh, 0.0, res);
+  }
 
 }

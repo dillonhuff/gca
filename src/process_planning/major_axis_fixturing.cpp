@@ -599,8 +599,9 @@ namespace gca {
 		     const triangular_mesh& part,
 		     const std::vector<tool>& tools) {
     double field_resolution = 0.025;
+    double min_value = min_in_dir(part, point(0, 0, 1));
     depth_field part_field =
-      build_from_stl(stock.bounding_box(), part, field_resolution);
+      build_from_stl(stock.bounding_box(), part, min_value, field_resolution);
 
     double stock_height = max_in_dir(stock, point(0, 0, 1));
 

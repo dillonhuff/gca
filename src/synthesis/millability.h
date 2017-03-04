@@ -32,6 +32,12 @@ namespace gca {
   
   depth_field build_from_stl(const triangular_mesh& mesh,
 			     const double res);
+
+  depth_field build_from_stl(const box& bb,
+			     const triangular_mesh& mesh,
+			     const double min_height,
+			     const double res);
+  
 }
 
 #endif
