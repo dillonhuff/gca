@@ -449,6 +449,7 @@ namespace gca {
   }
 
   depth_layer collect_layer(const double max_z,
+			    const depth_field& current_field,
 			    const depth_field& df) {
     double z_min = max_z;
     double z_upper_bound = df.z_min() - 1.0;
@@ -460,8 +461,9 @@ namespace gca {
       for (int j = 0; j < df.num_y_elems; j++) {
 	double y = df.y_coord(j);
 	double z = df.column_height(i, j);
+	double current_field_z = current_field.column_height(i, j);
 
-	if (z < max_z) {
+	if ((current_field_z > z) && (z < max_z)) {
 	  y_pts.push_back(make_pair(i, j));
 
 	  if (z > z_upper_bound) {
@@ -495,7 +497,7 @@ namespace gca {
 
     vector<depth_layer> layers;
     while (max_h > d.z_min()) {
-      depth_layer next = collect_layer(max_h, d);
+      depth_layer next = collect_layer(max_h, current_field, d);
       layers.push_back(next);
       max_h = next.z_upper_bound;
     }
