@@ -2215,6 +2215,33 @@ src/geometry/box.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/box.cpp.s
 .PHONY : src/geometry/box.cpp.s
 
+src/geometry/depth_field.o: src/geometry/depth_field.cpp.o
+
+.PHONY : src/geometry/depth_field.o
+
+# target to build an object file
+src/geometry/depth_field.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/depth_field.cpp.o
+.PHONY : src/geometry/depth_field.cpp.o
+
+src/geometry/depth_field.i: src/geometry/depth_field.cpp.i
+
+.PHONY : src/geometry/depth_field.i
+
+# target to preprocess a source file
+src/geometry/depth_field.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/depth_field.cpp.i
+.PHONY : src/geometry/depth_field.cpp.i
+
+src/geometry/depth_field.s: src/geometry/depth_field.cpp.s
+
+.PHONY : src/geometry/depth_field.s
+
+# target to generate assembly for a file
+src/geometry/depth_field.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/depth_field.cpp.s
+.PHONY : src/geometry/depth_field.cpp.s
+
 src/geometry/extern_triangulate.o: src/geometry/extern_triangulate.cpp.o
 
 .PHONY : src/geometry/extern_triangulate.o
@@ -5396,6 +5423,9 @@ help:
 	@echo "... src/geometry/box.o"
 	@echo "... src/geometry/box.i"
 	@echo "... src/geometry/box.s"
+	@echo "... src/geometry/depth_field.o"
+	@echo "... src/geometry/depth_field.i"
+	@echo "... src/geometry/depth_field.s"
 	@echo "... src/geometry/extern_triangulate.o"
 	@echo "... src/geometry/extern_triangulate.i"
 	@echo "... src/geometry/extern_triangulate.s"
