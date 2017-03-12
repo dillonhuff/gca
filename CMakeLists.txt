@@ -74,6 +74,24 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
 target_link_libraries(geometry utils ${CGAL_LIBRARIES} /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
+SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
+			test/rotation_tests.cpp
+			test/extrusion_tests.cpp
+			test/matrix_tests.cpp
+			test/surface_tests.cpp
+			test/polygon_tests.cpp
+			test/polyline_tests.cpp
+			test/triangle_tests.cpp
+			test/arc_tests.cpp
+			test/ring_tests.cpp
+			test/point_tests.cpp
+			test/line_tests.cpp
+			test/mesh_tests.cpp
+			test/spline_tests.cpp)
+			
+			
+
+
 SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h
 	    	  ./src/gcode/circular_arc.h
@@ -220,38 +238,24 @@ SET(TEST_FILES test/main.cpp
 	       test/machinability_tests.cpp
 	       test/tool_access_tests.cpp
 	       test/feature_selection_tests.cpp
-	       test/rotation_tests.cpp
 	       test/feature_recognition_tests.cpp
 	       test/rigid_arrangement_tests.cpp
 	       test/jaw_cutout_tests.cpp
-	       test/extrusion_tests.cpp
-	       test/plane_tests.cpp
 	       test/system_algorithm_tests.cpp
 	       test/contour_planning_tests.cpp
-	       test/surface_tests.cpp
-	       test/matrix_tests.cpp
 	       test/workpiece_alignment_tests.cpp
 	       test/fixture_analysis_tests.cpp
 	       test/millability_tests.cpp
-	       test/ring_tests.cpp
-	       test/polygon_tests.cpp
-	       test/polyline_tests.cpp
-	       test/triangle_tests.cpp
 	       test/retargeting_tests.cpp
-	       test/arc_tests.cpp
 	       test/lexer_tests.cpp
 	       test/position_table_tests.cpp
-	       test/point_tests.cpp
-	       test/line_tests.cpp
 	       test/unfold_tests.cpp
 	       test/circular_arc_tests.cpp
-	       test/mesh_tests.cpp
 	       test/checker_tests.cpp
 	       test/cut_tests.cpp
 	       test/mill_simulator_tests.cpp
 	       test/transformer_tests.cpp
 	       test/analysis_tests.cpp
-	       test/spline_tests.cpp
 	       test/dxf_to_gcode_tests.cpp
 	       test/shapes_to_toolpaths_tests.cpp
 	       test/cut_scheduling_tests.cpp
@@ -260,7 +264,8 @@ SET(TEST_FILES test/main.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp
 	       test/chamfer_detection_tests.cpp
-	       ${BACKEND_TEST_FILES})
+	       ${BACKEND_TEST_FILES}
+	       ${GEOMETRY_TEST_FILES})
 
 add_executable(non-manufacture-tests ${TEST_FILES})
 target_link_libraries(non-manufacture-tests geometry utils gcode gprocess gca backend)
