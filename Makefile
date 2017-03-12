@@ -2795,6 +2795,33 @@ src/geometry/trimesh_types.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/trimesh_types.cpp.s
 .PHONY : src/geometry/trimesh_types.cpp.s
 
+src/geometry/voxel_volume.o: src/geometry/voxel_volume.cpp.o
+
+.PHONY : src/geometry/voxel_volume.o
+
+# target to build an object file
+src/geometry/voxel_volume.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume.cpp.o
+.PHONY : src/geometry/voxel_volume.cpp.o
+
+src/geometry/voxel_volume.i: src/geometry/voxel_volume.cpp.i
+
+.PHONY : src/geometry/voxel_volume.i
+
+# target to preprocess a source file
+src/geometry/voxel_volume.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume.cpp.i
+.PHONY : src/geometry/voxel_volume.cpp.i
+
+src/geometry/voxel_volume.s: src/geometry/voxel_volume.cpp.s
+
+.PHONY : src/geometry/voxel_volume.s
+
+# target to generate assembly for a file
+src/geometry/voxel_volume.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume.cpp.s
+.PHONY : src/geometry/voxel_volume.cpp.s
+
 src/geometry/vtk_debug.o: src/geometry/vtk_debug.cpp.o
 
 .PHONY : src/geometry/vtk_debug.o
@@ -5246,6 +5273,39 @@ test/unfold_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/unfold_tests.cpp.s
 .PHONY : test/unfold_tests.cpp.s
 
+test/voxel_volume_tests.o: test/voxel_volume_tests.cpp.o
+
+.PHONY : test/voxel_volume_tests.o
+
+# target to build an object file
+test/voxel_volume_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/voxel_volume_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/voxel_volume_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/voxel_volume_tests.cpp.o
+.PHONY : test/voxel_volume_tests.cpp.o
+
+test/voxel_volume_tests.i: test/voxel_volume_tests.cpp.i
+
+.PHONY : test/voxel_volume_tests.i
+
+# target to preprocess a source file
+test/voxel_volume_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/voxel_volume_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/voxel_volume_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/voxel_volume_tests.cpp.i
+.PHONY : test/voxel_volume_tests.cpp.i
+
+test/voxel_volume_tests.s: test/voxel_volume_tests.cpp.s
+
+.PHONY : test/voxel_volume_tests.s
+
+# target to generate assembly for a file
+test/voxel_volume_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/voxel_volume_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/voxel_volume_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/voxel_volume_tests.cpp.s
+.PHONY : test/voxel_volume_tests.cpp.s
+
 test/workpiece_alignment_tests.o: test/workpiece_alignment_tests.cpp.o
 
 .PHONY : test/workpiece_alignment_tests.o
@@ -5569,6 +5629,9 @@ help:
 	@echo "... src/geometry/trimesh_types.o"
 	@echo "... src/geometry/trimesh_types.i"
 	@echo "... src/geometry/trimesh_types.s"
+	@echo "... src/geometry/voxel_volume.o"
+	@echo "... src/geometry/voxel_volume.i"
+	@echo "... src/geometry/voxel_volume.s"
 	@echo "... src/geometry/vtk_debug.o"
 	@echo "... src/geometry/vtk_debug.i"
 	@echo "... src/geometry/vtk_debug.s"
@@ -5821,6 +5884,9 @@ help:
 	@echo "... test/unfold_tests.o"
 	@echo "... test/unfold_tests.i"
 	@echo "... test/unfold_tests.s"
+	@echo "... test/voxel_volume_tests.o"
+	@echo "... test/voxel_volume_tests.i"
+	@echo "... test/voxel_volume_tests.s"
 	@echo "... test/workpiece_alignment_tests.o"
 	@echo "... test/workpiece_alignment_tests.i"
 	@echo "... test/workpiece_alignment_tests.s"

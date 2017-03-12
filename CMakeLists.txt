@@ -68,6 +68,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/trimesh_types.cpp
 	 ./src/geometry/homogeneous_transformation.cpp
 	 ./src/geometry/mesh_operations.cpp
+	 ./src/geometry/voxel_volume.cpp
 	 ./src/geometry/vtk_debug.cpp
 	 ./src/geometry/vtk_utils.cpp)
 
@@ -87,7 +88,8 @@ SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
 			test/point_tests.cpp
 			test/line_tests.cpp
 			test/mesh_tests.cpp
-			test/spline_tests.cpp)
+			test/spline_tests.cpp
+			test/voxel_volume_tests.cpp)
 			
 
 add_executable(geometry-tests test/main_geometry.cpp ${GEOMETRY_TEST_FILES})
