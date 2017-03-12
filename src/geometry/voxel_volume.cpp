@@ -7,6 +7,7 @@ namespace gca {
 			     const double y_len,
 			     const double z_len,
 			     const double resolution) {
+    
   }
   
 }
