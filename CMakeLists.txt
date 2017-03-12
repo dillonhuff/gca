@@ -90,6 +90,9 @@ SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
 			test/spline_tests.cpp)
 			
 
+add_executable(geometry-tests test/main_geometry.cpp ${GEOMETRY_TEST_FILES})
+target_link_libraries(geometry-tests geometry utils gca)
+
 SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h
 	    	  ./src/gcode/circular_arc.h

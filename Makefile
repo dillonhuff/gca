@@ -189,32 +189,6 @@ engraving/fast:
 .PHONY : engraving/fast
 
 #=============================================================================
-# Target rules for targets named geometry
-
-# Build rule for target.
-geometry: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 geometry
-.PHONY : geometry
-
-# fast build rule for target.
-geometry/fast:
-	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
-.PHONY : geometry/fast
-
-#=============================================================================
-# Target rules for targets named parse-iges
-
-# Build rule for target.
-parse-iges: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 parse-iges
-.PHONY : parse-iges
-
-# fast build rule for target.
-parse-iges/fast:
-	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/build
-.PHONY : parse-iges/fast
-
-#=============================================================================
 # Target rules for targets named debug-test
 
 # Build rule for target.
@@ -462,6 +436,19 @@ gcode/fast:
 .PHONY : gcode/fast
 
 #=============================================================================
+# Target rules for targets named geometry-tests
+
+# Build rule for target.
+geometry-tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry-tests
+.PHONY : geometry-tests
+
+# fast build rule for target.
+geometry-tests/fast:
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/build
+.PHONY : geometry-tests/fast
+
+#=============================================================================
 # Target rules for targets named stl-parse
 
 # Build rule for target.
@@ -473,6 +460,32 @@ stl-parse: cmake_check_build_system
 stl-parse/fast:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
 .PHONY : stl-parse/fast
+
+#=============================================================================
+# Target rules for targets named parse-iges
+
+# Build rule for target.
+parse-iges: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 parse-iges
+.PHONY : parse-iges
+
+# fast build rule for target.
+parse-iges/fast:
+	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/build
+.PHONY : parse-iges/fast
+
+#=============================================================================
+# Target rules for targets named geometry
+
+# Build rule for target.
+geometry: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry
+.PHONY : geometry
+
+# fast build rule for target.
+geometry/fast:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
+.PHONY : geometry/fast
 
 #=============================================================================
 # Target rules for targets named utils
@@ -3765,6 +3778,7 @@ test/arc_tests.o: test/arc_tests.cpp.o
 test/arc_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/arc_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/arc_tests.cpp.o
 .PHONY : test/arc_tests.cpp.o
 
 test/arc_tests.i: test/arc_tests.cpp.i
@@ -3775,6 +3789,7 @@ test/arc_tests.i: test/arc_tests.cpp.i
 test/arc_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/arc_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/arc_tests.cpp.i
 .PHONY : test/arc_tests.cpp.i
 
 test/arc_tests.s: test/arc_tests.cpp.s
@@ -3785,6 +3800,7 @@ test/arc_tests.s: test/arc_tests.cpp.s
 test/arc_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/arc_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/arc_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/arc_tests.cpp.s
 .PHONY : test/arc_tests.cpp.s
 
 test/axis_3_tests.o: test/axis_3_tests.cpp.o
@@ -4065,6 +4081,7 @@ test/extrusion_tests.o: test/extrusion_tests.cpp.o
 test/extrusion_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/extrusion_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/extrusion_tests.cpp.o
 .PHONY : test/extrusion_tests.cpp.o
 
 test/extrusion_tests.i: test/extrusion_tests.cpp.i
@@ -4075,6 +4092,7 @@ test/extrusion_tests.i: test/extrusion_tests.cpp.i
 test/extrusion_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/extrusion_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/extrusion_tests.cpp.i
 .PHONY : test/extrusion_tests.cpp.i
 
 test/extrusion_tests.s: test/extrusion_tests.cpp.s
@@ -4085,6 +4103,7 @@ test/extrusion_tests.s: test/extrusion_tests.cpp.s
 test/extrusion_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/extrusion_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/extrusion_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/extrusion_tests.cpp.s
 .PHONY : test/extrusion_tests.cpp.s
 
 test/feature_recognition_tests.o: test/feature_recognition_tests.cpp.o
@@ -4275,6 +4294,7 @@ test/line_tests.o: test/line_tests.cpp.o
 test/line_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/line_tests.cpp.o
 .PHONY : test/line_tests.cpp.o
 
 test/line_tests.i: test/line_tests.cpp.i
@@ -4285,6 +4305,7 @@ test/line_tests.i: test/line_tests.cpp.i
 test/line_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/line_tests.cpp.i
 .PHONY : test/line_tests.cpp.i
 
 test/line_tests.s: test/line_tests.cpp.s
@@ -4295,6 +4316,7 @@ test/line_tests.s: test/line_tests.cpp.s
 test/line_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/line_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/line_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/line_tests.cpp.s
 .PHONY : test/line_tests.cpp.s
 
 test/machinability_tests.o: test/machinability_tests.cpp.o
@@ -4414,6 +4436,33 @@ test/main_backend.cpp.s:
 	$(MAKE) -f CMakeFiles/backend-tests.dir/build.make CMakeFiles/backend-tests.dir/test/main_backend.cpp.s
 .PHONY : test/main_backend.cpp.s
 
+test/main_geometry.o: test/main_geometry.cpp.o
+
+.PHONY : test/main_geometry.o
+
+# target to build an object file
+test/main_geometry.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/main_geometry.cpp.o
+.PHONY : test/main_geometry.cpp.o
+
+test/main_geometry.i: test/main_geometry.cpp.i
+
+.PHONY : test/main_geometry.i
+
+# target to preprocess a source file
+test/main_geometry.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/main_geometry.cpp.i
+.PHONY : test/main_geometry.cpp.i
+
+test/main_geometry.s: test/main_geometry.cpp.s
+
+.PHONY : test/main_geometry.s
+
+# target to generate assembly for a file
+test/main_geometry.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/main_geometry.cpp.s
+.PHONY : test/main_geometry.cpp.s
+
 test/main_manufacture.o: test/main_manufacture.cpp.o
 
 .PHONY : test/main_manufacture.o
@@ -4479,6 +4528,7 @@ test/matrix_tests.o: test/matrix_tests.cpp.o
 test/matrix_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/matrix_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/matrix_tests.cpp.o
 .PHONY : test/matrix_tests.cpp.o
 
 test/matrix_tests.i: test/matrix_tests.cpp.i
@@ -4489,6 +4539,7 @@ test/matrix_tests.i: test/matrix_tests.cpp.i
 test/matrix_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/matrix_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/matrix_tests.cpp.i
 .PHONY : test/matrix_tests.cpp.i
 
 test/matrix_tests.s: test/matrix_tests.cpp.s
@@ -4499,6 +4550,7 @@ test/matrix_tests.s: test/matrix_tests.cpp.s
 test/matrix_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/matrix_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/matrix_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/matrix_tests.cpp.s
 .PHONY : test/matrix_tests.cpp.s
 
 test/mesh_tests.o: test/mesh_tests.cpp.o
@@ -4509,6 +4561,7 @@ test/mesh_tests.o: test/mesh_tests.cpp.o
 test/mesh_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/mesh_tests.cpp.o
 .PHONY : test/mesh_tests.cpp.o
 
 test/mesh_tests.i: test/mesh_tests.cpp.i
@@ -4519,6 +4572,7 @@ test/mesh_tests.i: test/mesh_tests.cpp.i
 test/mesh_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/mesh_tests.cpp.i
 .PHONY : test/mesh_tests.cpp.i
 
 test/mesh_tests.s: test/mesh_tests.cpp.s
@@ -4529,6 +4583,7 @@ test/mesh_tests.s: test/mesh_tests.cpp.s
 test/mesh_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/mesh_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/mesh_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/mesh_tests.cpp.s
 .PHONY : test/mesh_tests.cpp.s
 
 test/mesh_to_gcode_tests.o: test/mesh_to_gcode_tests.cpp.o
@@ -4629,6 +4684,7 @@ test/plane_tests.o: test/plane_tests.cpp.o
 test/plane_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/plane_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/plane_tests.cpp.o
 .PHONY : test/plane_tests.cpp.o
 
 test/plane_tests.i: test/plane_tests.cpp.i
@@ -4639,6 +4695,7 @@ test/plane_tests.i: test/plane_tests.cpp.i
 test/plane_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/plane_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/plane_tests.cpp.i
 .PHONY : test/plane_tests.cpp.i
 
 test/plane_tests.s: test/plane_tests.cpp.s
@@ -4649,6 +4706,7 @@ test/plane_tests.s: test/plane_tests.cpp.s
 test/plane_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/plane_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/plane_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/plane_tests.cpp.s
 .PHONY : test/plane_tests.cpp.s
 
 test/point_tests.o: test/point_tests.cpp.o
@@ -4659,6 +4717,7 @@ test/point_tests.o: test/point_tests.cpp.o
 test/point_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/point_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/point_tests.cpp.o
 .PHONY : test/point_tests.cpp.o
 
 test/point_tests.i: test/point_tests.cpp.i
@@ -4669,6 +4728,7 @@ test/point_tests.i: test/point_tests.cpp.i
 test/point_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/point_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/point_tests.cpp.i
 .PHONY : test/point_tests.cpp.i
 
 test/point_tests.s: test/point_tests.cpp.s
@@ -4679,6 +4739,7 @@ test/point_tests.s: test/point_tests.cpp.s
 test/point_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/point_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/point_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/point_tests.cpp.s
 .PHONY : test/point_tests.cpp.s
 
 test/polygon_tests.o: test/polygon_tests.cpp.o
@@ -4689,6 +4750,7 @@ test/polygon_tests.o: test/polygon_tests.cpp.o
 test/polygon_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polygon_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/polygon_tests.cpp.o
 .PHONY : test/polygon_tests.cpp.o
 
 test/polygon_tests.i: test/polygon_tests.cpp.i
@@ -4699,6 +4761,7 @@ test/polygon_tests.i: test/polygon_tests.cpp.i
 test/polygon_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polygon_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/polygon_tests.cpp.i
 .PHONY : test/polygon_tests.cpp.i
 
 test/polygon_tests.s: test/polygon_tests.cpp.s
@@ -4709,6 +4772,7 @@ test/polygon_tests.s: test/polygon_tests.cpp.s
 test/polygon_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polygon_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polygon_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/polygon_tests.cpp.s
 .PHONY : test/polygon_tests.cpp.s
 
 test/polyline_tests.o: test/polyline_tests.cpp.o
@@ -4719,6 +4783,7 @@ test/polyline_tests.o: test/polyline_tests.cpp.o
 test/polyline_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polyline_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polyline_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/polyline_tests.cpp.o
 .PHONY : test/polyline_tests.cpp.o
 
 test/polyline_tests.i: test/polyline_tests.cpp.i
@@ -4729,6 +4794,7 @@ test/polyline_tests.i: test/polyline_tests.cpp.i
 test/polyline_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polyline_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polyline_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/polyline_tests.cpp.i
 .PHONY : test/polyline_tests.cpp.i
 
 test/polyline_tests.s: test/polyline_tests.cpp.s
@@ -4739,6 +4805,7 @@ test/polyline_tests.s: test/polyline_tests.cpp.s
 test/polyline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/polyline_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/polyline_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/polyline_tests.cpp.s
 .PHONY : test/polyline_tests.cpp.s
 
 test/position_table_tests.o: test/position_table_tests.cpp.o
@@ -4839,6 +4906,7 @@ test/ring_tests.o: test/ring_tests.cpp.o
 test/ring_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/ring_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/ring_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/ring_tests.cpp.o
 .PHONY : test/ring_tests.cpp.o
 
 test/ring_tests.i: test/ring_tests.cpp.i
@@ -4849,6 +4917,7 @@ test/ring_tests.i: test/ring_tests.cpp.i
 test/ring_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/ring_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/ring_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/ring_tests.cpp.i
 .PHONY : test/ring_tests.cpp.i
 
 test/ring_tests.s: test/ring_tests.cpp.s
@@ -4859,6 +4928,7 @@ test/ring_tests.s: test/ring_tests.cpp.s
 test/ring_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/ring_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/ring_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/ring_tests.cpp.s
 .PHONY : test/ring_tests.cpp.s
 
 test/rotation_tests.o: test/rotation_tests.cpp.o
@@ -4869,6 +4939,7 @@ test/rotation_tests.o: test/rotation_tests.cpp.o
 test/rotation_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rotation_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/rotation_tests.cpp.o
 .PHONY : test/rotation_tests.cpp.o
 
 test/rotation_tests.i: test/rotation_tests.cpp.i
@@ -4879,6 +4950,7 @@ test/rotation_tests.i: test/rotation_tests.cpp.i
 test/rotation_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rotation_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/rotation_tests.cpp.i
 .PHONY : test/rotation_tests.cpp.i
 
 test/rotation_tests.s: test/rotation_tests.cpp.s
@@ -4889,6 +4961,7 @@ test/rotation_tests.s: test/rotation_tests.cpp.s
 test/rotation_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/rotation_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/rotation_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/rotation_tests.cpp.s
 .PHONY : test/rotation_tests.cpp.s
 
 test/shapes_to_toolpaths_tests.o: test/shapes_to_toolpaths_tests.cpp.o
@@ -4929,6 +5002,7 @@ test/spline_tests.o: test/spline_tests.cpp.o
 test/spline_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/spline_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/spline_tests.cpp.o
 .PHONY : test/spline_tests.cpp.o
 
 test/spline_tests.i: test/spline_tests.cpp.i
@@ -4939,6 +5013,7 @@ test/spline_tests.i: test/spline_tests.cpp.i
 test/spline_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/spline_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/spline_tests.cpp.i
 .PHONY : test/spline_tests.cpp.i
 
 test/spline_tests.s: test/spline_tests.cpp.s
@@ -4949,6 +5024,7 @@ test/spline_tests.s: test/spline_tests.cpp.s
 test/spline_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/spline_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/spline_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/spline_tests.cpp.s
 .PHONY : test/spline_tests.cpp.s
 
 test/surface_tests.o: test/surface_tests.cpp.o
@@ -4959,6 +5035,7 @@ test/surface_tests.o: test/surface_tests.cpp.o
 test/surface_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/surface_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/surface_tests.cpp.o
 .PHONY : test/surface_tests.cpp.o
 
 test/surface_tests.i: test/surface_tests.cpp.i
@@ -4969,6 +5046,7 @@ test/surface_tests.i: test/surface_tests.cpp.i
 test/surface_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/surface_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/surface_tests.cpp.i
 .PHONY : test/surface_tests.cpp.i
 
 test/surface_tests.s: test/surface_tests.cpp.s
@@ -4979,6 +5057,7 @@ test/surface_tests.s: test/surface_tests.cpp.s
 test/surface_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/surface_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/surface_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/surface_tests.cpp.s
 .PHONY : test/surface_tests.cpp.s
 
 test/system_algorithm_tests.o: test/system_algorithm_tests.cpp.o
@@ -5112,6 +5191,7 @@ test/triangle_tests.o: test/triangle_tests.cpp.o
 test/triangle_tests.cpp.o:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/triangle_tests.cpp.o
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/triangle_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/triangle_tests.cpp.o
 .PHONY : test/triangle_tests.cpp.o
 
 test/triangle_tests.i: test/triangle_tests.cpp.i
@@ -5122,6 +5202,7 @@ test/triangle_tests.i: test/triangle_tests.cpp.i
 test/triangle_tests.cpp.i:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/triangle_tests.cpp.i
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/triangle_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/triangle_tests.cpp.i
 .PHONY : test/triangle_tests.cpp.i
 
 test/triangle_tests.s: test/triangle_tests.cpp.s
@@ -5132,6 +5213,7 @@ test/triangle_tests.s: test/triangle_tests.cpp.s
 test/triangle_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/triangle_tests.cpp.s
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/triangle_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/triangle_tests.cpp.s
 .PHONY : test/triangle_tests.cpp.s
 
 test/unfold_tests.o: test/unfold_tests.cpp.o
@@ -5207,8 +5289,6 @@ help:
 	@echo "... AddCell"
 	@echo "... camaster-test"
 	@echo "... engraving"
-	@echo "... geometry"
-	@echo "... parse-iges"
 	@echo "... debug-test"
 	@echo "... scale-down-mesh"
 	@echo "... check-contours"
@@ -5229,7 +5309,10 @@ help:
 	@echo "... gca"
 	@echo "... rebuild_cache"
 	@echo "... gcode"
+	@echo "... geometry-tests"
 	@echo "... stl-parse"
+	@echo "... parse-iges"
+	@echo "... geometry"
 	@echo "... utils"
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
@@ -5660,6 +5743,9 @@ help:
 	@echo "... test/main_backend.o"
 	@echo "... test/main_backend.i"
 	@echo "... test/main_backend.s"
+	@echo "... test/main_geometry.o"
+	@echo "... test/main_geometry.i"
+	@echo "... test/main_geometry.s"
 	@echo "... test/main_manufacture.o"
 	@echo "... test/main_manufacture.i"
 	@echo "... test/main_manufacture.s"
