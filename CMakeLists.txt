@@ -89,8 +89,6 @@ SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
 			test/mesh_tests.cpp
 			test/spline_tests.cpp)
 			
-			
-
 
 SET(GCODE_HEADERS ./src/gcode/value.h
 	    	  ./src/gcode/gcode_program.h
