@@ -37,14 +37,12 @@ namespace gca {
     selectEnclosedPoints->SetSurfaceData(pd);
     selectEnclosedPoints->Update();
  
-    std::cout << "Point " << 0 << ": " << selectEnclosedPoints->IsInside(0) << std::endl;
-
     return selectEnclosedPoints->IsInside(0);
   }
 
   voxel_volume build_from_mesh(const triangular_mesh& m) {
     box bb = m.bounding_box();
-    double resolution = bb.x_len() / 20.0;
+    double resolution = bb.x_len() / 40.0;
 
     auto pd = polydata_for_trimesh(m);
 
