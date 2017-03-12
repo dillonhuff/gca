@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "geometry/voxel_volume.h"
+#include "geometry/vtk_debug.h"
 
 namespace gca {
 
@@ -17,6 +18,8 @@ namespace gca {
     vol.set_occupied(0, 0, 0);
 
     REQUIRE(vol.is_occupied(0, 0, 0));
+
+    vtk_debug_voxel_volume(vol);
   }
   
 }

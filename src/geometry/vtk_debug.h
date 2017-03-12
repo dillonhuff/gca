@@ -7,8 +7,10 @@
 #include <vtkPlaneSource.h>
 #include <vtkSmartPointer.h>
 
+#include "geometry/depth_field.h"
 #include "geometry/rigid_arrangement.h"
 #include "geometry/surface.h"
+#include "geometry/voxel_volume.h"
 
 namespace gca {
 
@@ -73,6 +75,16 @@ namespace gca {
 
   vtkSmartPointer<vtkActor>
   mesh_actor(const triangular_mesh& m);
+
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_depth_field(const depth_field& df);
+
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_voxel_volume(const voxel_volume& vv);
+  
+  void vtk_debug_depth_field(const depth_field& df);
+
+  void vtk_debug_voxel_volume(const voxel_volume& df);
   
 }
 

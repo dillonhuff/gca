@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/container/flat_set.hpp>
 
 #include "geometry/point.h"
@@ -23,8 +25,14 @@ namespace gca {
 
   class voxel_volume {
 
+  protected:
+
+    point origin;
+    double x_len, y_len, z_len;
+    double resolution;
+    int nx_elems, ny_elems, nz_elems;
+
     boost::container::flat_set<voxel> voxels;
-  
     
   public:
     voxel_volume(const point origin,
@@ -41,9 +49,56 @@ namespace gca {
       return voxels.find( voxel{x_i, y_i, z_i} ) != voxels.end();
     }
 
-
     inline void set_occupied(int x_i, int y_i, int z_i) {
       voxels.insert( voxel{x_i, y_i, z_i} );
+    }
+
+    inline double x_center(const int i) const {
+      return x_min() + resolution*i + (resolution/2.0);
+    }
+
+    inline double y_center(const int i) const {
+      return y_min() + resolution*i + (resolution/2.0);
+    }
+
+    inline double z_center(const int i) const {
+      return z_min() + resolution*i + (resolution/2.0);
+    }
+    
+    inline double x_min() const {
+      return origin.x;
+    }
+
+    inline double x_max() const {
+      return origin.x + x_len;
+    }
+
+    inline double y_min() const {
+      return origin.y;
+    }
+
+    inline double y_max() const {
+      return origin.y + y_len;
+    }
+
+    inline double z_min() const {
+      return origin.z;
+    }
+    
+    inline double z_max() const {
+      return origin.z + z_len;
+    }
+
+    inline int num_x_elems() const {
+      return nx_elems;
+    }
+
+    inline int num_y_elems() const {
+      return ny_elems;
+    }
+
+    inline int num_z_elems() const {
+      return nz_elems;
     }
     
   };
