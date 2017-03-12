@@ -2822,6 +2822,33 @@ src/geometry/voxel_volume.cpp.s:
 	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume.cpp.s
 .PHONY : src/geometry/voxel_volume.cpp.s
 
+src/geometry/voxel_volume_debug.o: src/geometry/voxel_volume_debug.cpp.o
+
+.PHONY : src/geometry/voxel_volume_debug.o
+
+# target to build an object file
+src/geometry/voxel_volume_debug.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume_debug.cpp.o
+.PHONY : src/geometry/voxel_volume_debug.cpp.o
+
+src/geometry/voxel_volume_debug.i: src/geometry/voxel_volume_debug.cpp.i
+
+.PHONY : src/geometry/voxel_volume_debug.i
+
+# target to preprocess a source file
+src/geometry/voxel_volume_debug.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume_debug.cpp.i
+.PHONY : src/geometry/voxel_volume_debug.cpp.i
+
+src/geometry/voxel_volume_debug.s: src/geometry/voxel_volume_debug.cpp.s
+
+.PHONY : src/geometry/voxel_volume_debug.s
+
+# target to generate assembly for a file
+src/geometry/voxel_volume_debug.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/geometry/voxel_volume_debug.cpp.s
+.PHONY : src/geometry/voxel_volume_debug.cpp.s
+
 src/geometry/vtk_debug.o: src/geometry/vtk_debug.cpp.o
 
 .PHONY : src/geometry/vtk_debug.o
@@ -5632,6 +5659,9 @@ help:
 	@echo "... src/geometry/voxel_volume.o"
 	@echo "... src/geometry/voxel_volume.i"
 	@echo "... src/geometry/voxel_volume.s"
+	@echo "... src/geometry/voxel_volume_debug.o"
+	@echo "... src/geometry/voxel_volume_debug.i"
+	@echo "... src/geometry/voxel_volume_debug.s"
 	@echo "... src/geometry/vtk_debug.o"
 	@echo "... src/geometry/vtk_debug.i"
 	@echo "... src/geometry/vtk_debug.s"

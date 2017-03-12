@@ -69,6 +69,7 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/homogeneous_transformation.cpp
 	 ./src/geometry/mesh_operations.cpp
 	 ./src/geometry/voxel_volume.cpp
+	 ./src/geometry/voxel_volume_debug.cpp
 	 ./src/geometry/vtk_debug.cpp
 	 ./src/geometry/vtk_utils.cpp)
 

@@ -1,7 +1,8 @@
 #include "catch.hpp"
 
 #include "geometry/voxel_volume.h"
-#include "geometry/vtk_debug.h"
+
+#include "geometry/voxel_volume_debug.h"
 
 namespace gca {
 
