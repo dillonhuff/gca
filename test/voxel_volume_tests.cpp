@@ -81,12 +81,12 @@ namespace gca {
   }
 
   TEST_CASE("Loading a model from an stl file") {
-    triangular_mesh m =
-      parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+    // triangular_mesh m =
+    //   parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-    voxel_volume vv = build_from_mesh(m);
+    // voxel_volume vv = build_from_mesh(m);
 
-    vtk_debug_voxel_volume(vv);
+    //vtk_debug_voxel_volume(vv);
   }
   
 }

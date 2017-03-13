@@ -3887,6 +3887,39 @@ test/axis_3_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_3_tests.cpp.s
 .PHONY : test/axis_3_tests.cpp.s
 
+test/axis_field_tests.o: test/axis_field_tests.cpp.o
+
+.PHONY : test/axis_field_tests.o
+
+# target to build an object file
+test/axis_field_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_field_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_field_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/axis_field_tests.cpp.o
+.PHONY : test/axis_field_tests.cpp.o
+
+test/axis_field_tests.i: test/axis_field_tests.cpp.i
+
+.PHONY : test/axis_field_tests.i
+
+# target to preprocess a source file
+test/axis_field_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_field_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_field_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/axis_field_tests.cpp.i
+.PHONY : test/axis_field_tests.cpp.i
+
+test/axis_field_tests.s: test/axis_field_tests.cpp.s
+
+.PHONY : test/axis_field_tests.s
+
+# target to generate assembly for a file
+test/axis_field_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/axis_field_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/axis_field_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/axis_field_tests.cpp.s
+.PHONY : test/axis_field_tests.cpp.s
+
 test/axis_location_tests.o: test/axis_location_tests.cpp.o
 
 .PHONY : test/axis_location_tests.o
@@ -5776,6 +5809,9 @@ help:
 	@echo "... test/axis_3_tests.o"
 	@echo "... test/axis_3_tests.i"
 	@echo "... test/axis_3_tests.s"
+	@echo "... test/axis_field_tests.o"
+	@echo "... test/axis_field_tests.i"
+	@echo "... test/axis_field_tests.s"
 	@echo "... test/axis_location_tests.o"
 	@echo "... test/axis_location_tests.i"
 	@echo "... test/axis_location_tests.s"

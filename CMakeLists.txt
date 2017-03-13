@@ -90,7 +90,8 @@ SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
 			test/line_tests.cpp
 			test/mesh_tests.cpp
 			test/spline_tests.cpp
-			test/voxel_volume_tests.cpp)
+			test/voxel_volume_tests.cpp
+			test/axis_field_tests.cpp)
 			
 
 add_executable(geometry-tests test/main_geometry.cpp ${GEOMETRY_TEST_FILES})
