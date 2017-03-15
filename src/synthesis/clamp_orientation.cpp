@@ -151,7 +151,6 @@ namespace gca {
 
     triangular_mesh m = extrude(plane_approx, big*n);
 
-
     // cout << "To be clipped" << endl;
     // vtk_debug_mesh(part);
 

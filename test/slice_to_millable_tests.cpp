@@ -8,58 +8,59 @@
 
 namespace gca {
 
-  void search_part_space(const triangular_mesh& m) {
-    auto sfc = build_surface_milling_constraints(m);
+  struct part_search_result {
+    Nef_polyhedron part_nef;
+  };
 
+  std::vector<part_search_result>
+  search_part_space(const Nef_polyhedron& part_nef) {
+    triangular_mesh m = nef_to_single_trimesh(part_nef);
+
+    auto sfc = build_surface_milling_constraints(m);
     vector<vector<surface> > corner_groups =
       sfc.hard_corner_groups();
 
     cout << "# of hard corner groups = " << corner_groups.size() << endl;
-    vtk_debug_mesh(m);
+    //vtk_debug_mesh(m);
 
     if (corner_groups.size() == 0) {
       cout << "No hard corner groups left" << endl;
-      vtk_debug_mesh(m);
-      return;
+      //vtk_debug_mesh(m);
+      return {{part_nef}};
     }
 
-    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
     for (auto& r : corner_groups) {
-      vtk_debug_highlight_inds(r);
+      //vtk_debug_highlight_inds(r);
 
       for (auto& s : r) {
 	plane p = surface_plane(s);
 	vtk_debug(m, p);
 
-	auto clipped_nef = clip_nef(mesh_nef, p.slide(0.0001));
-	auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	auto clipped_nef = clip_nef(part_nef, p.slide(0.0001));
+	//auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
 	//vtk_debug_meshes(clipped_meshes);
 
-	for (auto& m : clipped_meshes) {
-	  search_part_space(m);
-	}
+	auto res = search_part_space(clipped_nef);
 
-	clipped_nef = clip_nef(mesh_nef, p.flip().slide(0.0001));
-	clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	clipped_nef = clip_nef(part_nef, p.flip().slide(0.0001));
+	//clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
 	//vtk_debug_meshes(clipped_meshes);
 
-	for (auto& m : clipped_meshes) {
-	  search_part_space(m);
-	}
+	res = search_part_space(clipped_nef);
       }
     }
 
-
+    return {};
   }
 
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
       //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
       // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);
-      // parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
-      parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
 
-    search_part_space(m);
+    search_part_space(trimesh_to_nef_polyhedron(m));
 
   }
 
