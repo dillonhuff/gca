@@ -5081,6 +5081,36 @@ test/shapes_to_toolpaths_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/shapes_to_toolpaths_tests.cpp.s
 .PHONY : test/shapes_to_toolpaths_tests.cpp.s
 
+test/slice_to_millable_tests.o: test/slice_to_millable_tests.cpp.o
+
+.PHONY : test/slice_to_millable_tests.o
+
+# target to build an object file
+test/slice_to_millable_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/slice_to_millable_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/slice_to_millable_tests.cpp.o
+.PHONY : test/slice_to_millable_tests.cpp.o
+
+test/slice_to_millable_tests.i: test/slice_to_millable_tests.cpp.i
+
+.PHONY : test/slice_to_millable_tests.i
+
+# target to preprocess a source file
+test/slice_to_millable_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/slice_to_millable_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/slice_to_millable_tests.cpp.i
+.PHONY : test/slice_to_millable_tests.cpp.i
+
+test/slice_to_millable_tests.s: test/slice_to_millable_tests.cpp.s
+
+.PHONY : test/slice_to_millable_tests.s
+
+# target to generate assembly for a file
+test/slice_to_millable_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/slice_to_millable_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/slice_to_millable_tests.cpp.s
+.PHONY : test/slice_to_millable_tests.cpp.s
+
 test/spline_tests.o: test/spline_tests.cpp.o
 
 .PHONY : test/spline_tests.o
@@ -5926,6 +5956,9 @@ help:
 	@echo "... test/shapes_to_toolpaths_tests.o"
 	@echo "... test/shapes_to_toolpaths_tests.i"
 	@echo "... test/shapes_to_toolpaths_tests.s"
+	@echo "... test/slice_to_millable_tests.o"
+	@echo "... test/slice_to_millable_tests.i"
+	@echo "... test/slice_to_millable_tests.s"
 	@echo "... test/spline_tests.o"
 	@echo "... test/spline_tests.i"
 	@echo "... test/spline_tests.s"

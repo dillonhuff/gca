@@ -239,6 +239,7 @@ add_executable(manufacture-tests test/main_manufacture.cpp ${MANUFACTURE_TEST_FI
 target_link_libraries(manufacture-tests geometry utils gcode gprocess gca backend)
 
 SET(TEST_FILES test/main.cpp
+	       test/slice_to_millable_tests.cpp
 	       test/axis_location_tests.cpp
 	       test/machinability_tests.cpp
 	       test/tool_access_tests.cpp
