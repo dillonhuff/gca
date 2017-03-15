@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "geometry/vtk_debug.h"
+#include "geometry/vtk_utils.h"
 #include "process_planning/surface_planning.h"
 #include "system/parse_stl.h"
 
@@ -12,10 +13,16 @@ namespace gca {
 
     auto sfc = build_surface_milling_constraints(m);
 
-    for (auto& r : sfc.hard_corner_groups()) {
-      vtk_debug_highlight_inds(r);
+    vector<vector<surface> > corner_groups =
+      sfc.hard_corner_groups();
+
+    for (auto& r : corner_groups) {
+      for (auto& s : r ) {
+	plane p = surface_plane(s);
+	vtk_debug(m, p);
+      }
     }
-    
+
   }
 
 }
