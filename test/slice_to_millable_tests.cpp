@@ -10,7 +10,9 @@ namespace gca {
 
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
-      parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
 
     auto sfc = build_surface_milling_constraints(m);
 
