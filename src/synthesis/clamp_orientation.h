@@ -122,6 +122,9 @@ namespace gca {
   all_stable_orientations_box(const Nef_polyhedron& part,
 			      const vice& v,
 			      const point n);
+
+  Nef_polyhedron clip_nef(const Nef_polyhedron& part_nef,
+			  const plane vice_top_plane);
   
   std::vector<clamp_orientation>
   all_stable_orientations(const std::vector<const surface*>& surfaces,

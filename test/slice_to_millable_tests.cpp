@@ -4,6 +4,7 @@
 #include "geometry/vtk_utils.h"
 #include "process_planning/surface_planning.h"
 #include "system/parse_stl.h"
+#include "synthesis/clamp_orientation.h"
 
 namespace gca {
 
@@ -16,10 +17,22 @@ namespace gca {
     vector<vector<surface> > corner_groups =
       sfc.hard_corner_groups();
 
+    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
     for (auto& r : corner_groups) {
       for (auto& s : r ) {
 	plane p = surface_plane(s);
 	vtk_debug(m, p);
+
+	auto clipped_nef = clip_nef(mesh_nef, p);
+	auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	vtk_debug_meshes(clipped_meshes);
+
+
+	clipped_nef = clip_nef(mesh_nef, p.flip());
+	clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	vtk_debug_meshes(clipped_meshes);
+	
+	
       }
     }
 
