@@ -14,6 +14,9 @@ namespace gca {
     vector<vector<surface> > corner_groups =
       sfc.hard_corner_groups();
 
+    cout << "# of hard corner groups = " << corner_groups.size() << endl;
+    vtk_debug_mesh(m);
+
     if (corner_groups.size() == 0) {
       cout << "No hard corner groups left" << endl;
       vtk_debug_mesh(m);
@@ -22,13 +25,15 @@ namespace gca {
 
     Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(m);
     for (auto& r : corner_groups) {
-      for (auto& s : r ) {
+      vtk_debug_highlight_inds(r);
+
+      for (auto& s : r) {
 	plane p = surface_plane(s);
 	vtk_debug(m, p);
 
 	auto clipped_nef = clip_nef(mesh_nef, p.slide(0.0001));
 	auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	vtk_debug_meshes(clipped_meshes);
+	//vtk_debug_meshes(clipped_meshes);
 
 	for (auto& m : clipped_meshes) {
 	  search_part_space(m);
@@ -36,7 +41,7 @@ namespace gca {
 
 	clipped_nef = clip_nef(mesh_nef, p.flip().slide(0.0001));
 	clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	vtk_debug_meshes(clipped_meshes);
+	//vtk_debug_meshes(clipped_meshes);
 
 	for (auto& m : clipped_meshes) {
 	  search_part_space(m);
