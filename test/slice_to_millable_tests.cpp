@@ -12,7 +12,8 @@ namespace gca {
     triangular_mesh m =
       //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
       // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);
-      parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
+      // parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
 
     auto sfc = build_surface_milling_constraints(m);
 
@@ -25,12 +26,12 @@ namespace gca {
 	plane p = surface_plane(s);
 	vtk_debug(m, p);
 
-	auto clipped_nef = clip_nef(mesh_nef, p);
+	auto clipped_nef = clip_nef(mesh_nef, p.slide(0.0001));
 	auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
 	vtk_debug_meshes(clipped_meshes);
 
 
-	clipped_nef = clip_nef(mesh_nef, p.flip());
+	clipped_nef = clip_nef(mesh_nef, p.flip().slide(0.0001));
 	clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
 	vtk_debug_meshes(clipped_meshes);
 	
