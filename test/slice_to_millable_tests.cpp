@@ -12,6 +12,11 @@ namespace gca {
     Nef_polyhedron part_nef;
   };
 
+  bool is_rectilinear(const triangular_mesh& m,
+		      const std::vector<std::vector<surface> >& corner_groups) {
+    
+  }
+
   std::vector<part_search_result>
   search_part_space(const Nef_polyhedron& part_nef) {
     vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
@@ -28,6 +33,11 @@ namespace gca {
 
     cout << "# of hard corner groups = " << corner_groups.size() << endl;
     //vtk_debug_mesh(m);
+
+    if (is_rectilinear(m, corner_groups)) {
+      cout << "Rectilinear!" << endl;
+      return {{part_nef}};
+    }
 
     if (corner_groups.size() == 0) {
       cout << "No hard corner groups left" << endl;
