@@ -1,5 +1,7 @@
 #include "catch.hpp"
 
+#include <vtkProperty.h>
+
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
@@ -67,10 +69,15 @@ namespace gca {
     }
 
     auto lines_pd = polydata_for_polylines(lines);
-
     color_polydata(lines_pd, 0, 255, 0);
+    auto lines_act = polydata_actor(lines_pd);
+    lines_act->GetProperty()->SetLineWidth(10);
 
-    visualize_polydatas({lines_pd});
+    auto mesh_pd = polydata_for_trimesh(m);
+    color_polydata(mesh_pd, 255, 0, 0);
+    auto mesh_act = polydata_actor(mesh_pd);
+
+    visualize_actors({lines_act, mesh_act});
   }
 
   bool
@@ -81,9 +88,7 @@ namespace gca {
     // vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
 
     for (auto cg : corner_groups) {
-      auto surfs = find_access_surfaces(cg);
-      for (auto& s : surfs) {
-
+      for (auto& s : cg) {
 	vector<shared_edge> edges;
 	for (auto& other_s : cg ) {
 	  if (!s.contained_by(other_s)) {
