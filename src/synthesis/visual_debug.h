@@ -21,6 +21,9 @@ namespace gca {
   
   point gui_select_part_zero(const fabrication_setup& setup);
 
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_polylines(const std::vector<polyline>& polylines);
+  
 }
 
 #endif

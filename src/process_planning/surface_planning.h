@@ -95,6 +95,10 @@ namespace gca {
   boost::optional<major_axis_decomp>
   find_cut_axis(const triangular_mesh& part);
 
+  std::vector<surface>
+  find_access_surfaces(const std::vector<surface>& surf_complex,
+		       const std::vector<point>& possible_normals);
+  
   const triangular_mesh& mesh(const major_axis_decomp& d);
 
 }

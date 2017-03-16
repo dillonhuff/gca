@@ -1,10 +1,12 @@
 #include "catch.hpp"
 
+#include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
 #include "process_planning/surface_planning.h"
 #include "system/parse_stl.h"
 #include "synthesis/clamp_orientation.h"
+#include "synthesis/visual_debug.h"
 
 namespace gca {
 
@@ -46,13 +48,61 @@ namespace gca {
     return true;
   }
 
+  std::vector<surface> find_access_surfaces(const std::vector<surface>& cg) {
+    vector<point> norms;
+    for (auto& s : cg) {
+      norms.push_back(normal(s));
+    }
+
+    return find_access_surfaces(cg, norms);
+  }
+  
+  void vtk_debug_shared_edges(const std::vector<shared_edge>& edges,
+			      const triangular_mesh& m) {
+    vector<polyline> lines;
+    for (auto s : edges) {
+      point p1 = m.vertex(s.e.l);
+      point p2 = m.vertex(s.e.r);
+      lines.push_back(polyline({p1, p2}));
+    }
+
+    auto lines_pd = polydata_for_polylines(lines);
+
+    color_polydata(lines_pd, 0, 255, 0);
+
+    visualize_polydatas({lines_pd});
+  }
+
+  bool
+  solveable_by_filleting(const triangular_mesh& m,
+			 const std::vector<std::vector<surface> >& corner_groups) {
+    // vector<surface> sfs = outer_surfaces(m);
+    // DBG_ASSERT(sfs.size() > 0);
+    // vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+
+    for (auto cg : corner_groups) {
+      auto surfs = find_access_surfaces(cg);
+      for (auto& s : surfs) {
+
+	vector<shared_edge> edges;
+	for (auto& other_s : cg ) {
+	  if (!s.contained_by(other_s)) {
+	    auto new_edges = all_shared_edges(s.index_list(), other_s.index_list(), m);
+	    concat(edges, new_edges);
+	  }
+	}
+	vtk_debug_shared_edges(edges, m);
+
+      }
+    }
+
+    
+
+    return true;
+  }
+  
   bool is_rectilinear(const triangular_mesh& m,
 		      const std::vector<std::vector<surface> >& corner_groups) {
-    // vector<surface> sfs = outer_surfaces(m);
-
-    // DBG_ASSERT(sfs.size() > 0);
-
-    // vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
 
 
     if (all_corner_groups_millable(corner_groups)) {
@@ -78,6 +128,11 @@ namespace gca {
 
     cout << "# of hard corner groups = " << corner_groups.size() << endl;
     //vtk_debug_mesh(m);
+
+    if (solveable_by_filleting(m, corner_groups)) {
+      cout << "Solveable by filleting" << endl;
+      return {{part_nef}};
+    }
 
     if (is_rectilinear(m, corner_groups)) {
       cout << "Rectilinear!" << endl;
@@ -137,9 +192,9 @@ namespace gca {
 
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
-      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+      parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     auto res = search_part_space(trimesh_to_nef_polyhedron(m));
 

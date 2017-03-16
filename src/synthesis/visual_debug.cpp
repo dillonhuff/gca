@@ -62,13 +62,8 @@ namespace gca {
  
   }
 
-  vtkSmartPointer<vtkActor>
-  actor_for_toolpath(const toolpath& tp) {
-    return polydata_actor(polydata_for_toolpath(tp));
-  }
-  
   vtkSmartPointer<vtkPolyData>
-  polydata_for_toolpath(const toolpath& tp) {
+  polydata_for_polylines(const std::vector<polyline>& polylines) {
     // Create the polydata where we will store all the geometric data
     vtkSmartPointer<vtkPolyData> linesPolyData =
       vtkSmartPointer<vtkPolyData>::New();
@@ -85,7 +80,7 @@ namespace gca {
     // Add the lines to the polydata container
     linesPolyData->SetLines(lines);
 
-    for (auto& pl : tp.lines()) {
+    for (auto& pl : polylines) {
       auto num_points_so_far = linesPolyData->GetNumberOfPoints();
       append_polyline(num_points_so_far, linesPolyData, pts, lines, pl);
     }
@@ -93,6 +88,40 @@ namespace gca {
     cout << "# of lines = " << linesPolyData->GetNumberOfLines() << endl;
 
     return linesPolyData;
+  }
+  
+  vtkSmartPointer<vtkActor>
+  actor_for_toolpath(const toolpath& tp) {
+    return polydata_actor(polydata_for_toolpath(tp));
+  }
+
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_toolpath(const toolpath& tp) {
+    return polydata_for_polylines(tp.lines());
+    // // Create the polydata where we will store all the geometric data
+    // vtkSmartPointer<vtkPolyData> linesPolyData =
+    //   vtkSmartPointer<vtkPolyData>::New();
+ 
+    // // Create a vtkPoints container and store the points in it
+    // vtkSmartPointer<vtkPoints> pts =
+    //   vtkSmartPointer<vtkPoints>::New();
+
+    // // Add the points to the polydata container
+    // linesPolyData->SetPoints(pts);
+    // vtkSmartPointer<vtkCellArray> lines =
+    //   vtkSmartPointer<vtkCellArray>::New();
+
+    // // Add the lines to the polydata container
+    // linesPolyData->SetLines(lines);
+
+    // for (auto& pl : tp.lines()) {
+    //   auto num_points_so_far = linesPolyData->GetNumberOfPoints();
+    //   append_polyline(num_points_so_far, linesPolyData, pts, lines, pl);
+    // }
+
+    // cout << "# of lines = " << linesPolyData->GetNumberOfLines() << endl;
+
+    // return linesPolyData;
     
   }
 
