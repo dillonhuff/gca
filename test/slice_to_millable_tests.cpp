@@ -14,7 +14,13 @@ namespace gca {
 
   std::vector<part_search_result>
   search_part_space(const Nef_polyhedron& part_nef) {
-    triangular_mesh m = nef_to_single_trimesh(part_nef);
+    vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
+
+    if (ms.size() != 1) {
+      return {};
+    }
+
+    auto m = ms.front();
 
     auto sfc = build_surface_milling_constraints(m);
     vector<vector<surface> > corner_groups =
@@ -59,6 +65,9 @@ namespace gca {
       // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+
+      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     search_part_space(trimesh_to_nef_polyhedron(m));
 
