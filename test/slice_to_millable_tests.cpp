@@ -76,6 +76,7 @@ namespace gca {
     auto mesh_pd = polydata_for_trimesh(m);
     color_polydata(mesh_pd, 255, 0, 0);
     auto mesh_act = polydata_actor(mesh_pd);
+    mesh_act->GetProperty()->SetOpacity(0.2);
 
     visualize_actors({lines_act, mesh_act});
   }
@@ -93,6 +94,10 @@ namespace gca {
 	for (auto& other_s : cg ) {
 	  if (!s.contained_by(other_s)) {
 	    auto new_edges = all_shared_edges(s.index_list(), other_s.index_list(), m);
+	    delete_if(new_edges,
+		      [m](const shared_edge e) {
+			return !is_valley_edge(e, m) || !angle_eps(e, m, 90, 0.5);
+		      });
 	    concat(edges, new_edges);
 	  }
 	}
@@ -196,8 +201,8 @@ namespace gca {
       //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
-      //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
-      parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
       //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
