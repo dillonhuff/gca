@@ -90,41 +90,60 @@ namespace gca {
       return {{part_nef}};
     }
 
+    int num_planes = 0;
     for (auto& r : corner_groups) {
       //vtk_debug_highlight_inds(r);
 
-      for (auto& s : r) {
-	plane p = surface_plane(s);
-	vtk_debug(m, p);
+      if (!is_centralized(r)) {
+	num_planes += r.size();
+      }
+    }
 
-	auto clipped_nef = clip_nef(part_nef, p.slide(0.0001));
-	//auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	//vtk_debug_meshes(clipped_meshes);
+    cout << "Number of possible clipping planes = " << num_planes << endl;
 
-	auto res = search_part_space(clipped_nef);
+    DBG_ASSERT(false);
 
-	clipped_nef = clip_nef(part_nef, p.flip().slide(0.0001));
-	//clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	//vtk_debug_meshes(clipped_meshes);
+    for (auto& r : corner_groups) {
+      //vtk_debug_highlight_inds(r);
 
-	res = search_part_space(clipped_nef);
+      if (!is_centralized(r)) {
+	for (auto& s : r) {
+	  plane p = surface_plane(s);
+	  //vtk_debug(m, p);
+
+	  auto clipped_nef = clip_nef(part_nef, p.slide(0.0001));
+	  //auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	  //vtk_debug_meshes(clipped_meshes);
+
+	  auto res = search_part_space(clipped_nef);
+
+	  clipped_nef = clip_nef(part_nef, p.flip().slide(0.0001));
+	  //clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	  //vtk_debug_meshes(clipped_meshes);
+
+	  res = search_part_space(clipped_nef);
+	}
       }
     }
 
     return {};
   }
 
+  // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);  
+
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
       //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
-      // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);
+
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
       parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-    search_part_space(trimesh_to_nef_polyhedron(m));
+    auto res = search_part_space(trimesh_to_nef_polyhedron(m));
+
+    cout << "Size of result = " << res.size() << endl;
 
   }
 
