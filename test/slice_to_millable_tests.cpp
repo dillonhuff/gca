@@ -12,9 +12,54 @@ namespace gca {
     Nef_polyhedron part_nef;
   };
 
+  bool is_centralized(const std::vector<surface>& corner_group) {
+    int num_surfaces_with_ortho_multiple_ortho_connections = 0;
+
+    for (unsigned i = 0; i < corner_group.size(); i++) {
+      int num_ortho_connections = 0;
+      const surface& l = corner_group[i];
+      for (unsigned j = 0; j < corner_group.size(); j++) {
+	if (i != j) {
+	  const surface& r = corner_group[j];
+	  if (share_orthogonal_valley_edge(l, r)) {
+	    num_ortho_connections++;
+	  }
+	}
+      }
+
+      if (num_ortho_connections > 1) {
+	num_surfaces_with_ortho_multiple_ortho_connections++;
+      }
+    }
+
+    return num_surfaces_with_ortho_multiple_ortho_connections <= 1;
+  }
+
+  bool all_corner_groups_millable(const std::vector<std::vector<surface> >& corner_groups) {
+    for (auto& cg : corner_groups) {
+      if (cg.size() > 2) {
+	if (!is_centralized(cg)) {
+	  return false;
+	}
+      }
+    }
+    return true;
+  }
+
   bool is_rectilinear(const triangular_mesh& m,
 		      const std::vector<std::vector<surface> >& corner_groups) {
-    
+    // vector<surface> sfs = outer_surfaces(m);
+
+    // DBG_ASSERT(sfs.size() > 0);
+
+    // vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+
+
+    if (all_corner_groups_millable(corner_groups)) {
+      return true;
+    }
+
+    return false;
   }
 
   std::vector<part_search_result>
