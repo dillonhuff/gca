@@ -422,6 +422,14 @@ namespace gca {
     return {};
   }
 
+  bool is_deep(const feature& f, const double depth_factor) {
+    double area = base_area(f);
+    double area_sq = sqrt(area);
+    double depth = f.depth();
+
+    return depth > 4.0*area_sq;
+  }
+
   void check_deep_features(const triangular_mesh& m) {
     vector<surface> sfs = outer_surfaces(m);
     DBG_ASSERT(sfs.size() > 0);
@@ -452,7 +460,8 @@ namespace gca {
       auto fd = build_feature_decomposition(stock_mesh, m, d);
       vector<feature*> deep_internal_features = collect_features(fd);
       delete_if(deep_internal_features,
-		[](const feature* f) { return !(f->is_closed()); });
+		[](const feature* f) { return !(f->is_closed()) ||
+		    !is_deep(*f, 5.0); });
       vtk_debug_features(deep_internal_features);
     }
   }
@@ -467,7 +476,7 @@ namespace gca {
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     check_deep_features(m);
     
