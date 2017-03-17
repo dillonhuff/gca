@@ -218,7 +218,7 @@ namespace gca {
     return num_planes;
   }
 
-  std::vector<part_search_result>
+  std::vector<std::vector<part_search_result> >
   search_part_space(const Nef_polyhedron& part_nef) {
     vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
 
@@ -242,13 +242,13 @@ namespace gca {
 
     if (is_rectilinear(m, corner_groups)) {
       cout << "Rectilinear!" << endl;
-      return {{part_nef}};
+      return { {{part_nef}} };
     }
 
     if (corner_groups.size() == 0) {
       cout << "No hard corner groups left" << endl;
       //vtk_debug_mesh(m);
-      return {{part_nef}};
+      return { {{part_nef}} };
     }
 
     int num_planes = count_planes(corner_groups); //0;
@@ -280,9 +280,7 @@ namespace gca {
 	    cout << "Simlified corners! continuing" << endl;
 	  
 	    auto res_pos = search_part_space(clipped_nef_pos);
-
 	    auto res_neg = search_part_space(clipped_nef_neg);
-
 	  }
 
 	}
@@ -292,12 +290,9 @@ namespace gca {
     return {};
   }
 
-  // parse_stl("./test/stl-files/onshape_parts/SHUTTLEMODULE - SHUTTLEBODY.stl", 0.0001);  
-
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
       parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
-
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
