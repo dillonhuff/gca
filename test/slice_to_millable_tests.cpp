@@ -259,6 +259,12 @@ namespace gca {
 	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
 	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
 
+	    auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
+	    vtk_debug_meshes(clipped_meshes);
+
+	    clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
+	    vtk_debug_meshes(clipped_meshes);
+	  
 	  vector<triangular_mesh> pos_meshes =
 	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
 	  concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
@@ -267,14 +273,9 @@ namespace gca {
 
 	    cout << "Simlified corners! continuing" << endl;
 	  
-	    //auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	    //vtk_debug_meshes(clipped_meshes);
-
 	    auto res_pos = search_part_space(clipped_nef_pos);
 
 	    auto res_neg = search_part_space(clipped_nef_neg);
-	    //clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	    //vtk_debug_meshes(clipped_meshes);
 
 	  }
 
