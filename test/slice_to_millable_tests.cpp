@@ -20,22 +20,26 @@ namespace gca {
   class part_decomposition {
   };
 
-  class millable_shape : part_decomposition {
+  class millable_shape : public part_decomposition {
+  public:
     Nef_polyhedron shape;
+
+    millable_shape(const Nef_polyhedron& p_shape) :
+      shape(p_shape) {}
   };
 
-  class filleted : part_decomposition {
+  class filleted : public part_decomposition {
     triangular_mesh mesh;
     std::vector<shared_edge> edges_to_fillet;
   };
 
-  class plane_slice : part_decomposition {
+  class plane_slice : public part_decomposition {
     Nef_polyhedron shape;
     plane slice;
     std::vector<part_decomposition*> results;
   };
   
-  class unfinished_shape : part_decomposition {
+  class unfinished_shape : public part_decomposition {
     Nef_polyhedron shape;
   };
 
@@ -240,13 +244,33 @@ namespace gca {
     return num_planes;
   }
 
-  vector<part_decomposition*>
+  void reduce_solutions(std::vector<part_decomposition*>& possible_solutions) {
+  }
+
+  void
+  transfer_solved_decompositions(std::vector<part_decomposition*>& possible_solutions,
+				 std::vector<part_decomposition*>& solutions) {
+    
+  }
+  
+  std::vector<part_decomposition*>
   search_part_space(const Nef_polyhedron& part_nef) {
     vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
 
     if (ms.size() != 1) {
       return {};
     }
+
+    millable_shape* initial_part = new millable_shape(part_nef);
+    vector<part_decomposition*> possible_solutions{initial_part};
+    vector<part_decomposition*> solutions;
+
+    while (possible_solutions.size() > 0) {
+      reduce_solutions(possible_solutions);
+      transfer_solved_decompositions(possible_solutions, solutions);
+    }
+
+    return solutions;
 
     auto m = ms.front();
 
