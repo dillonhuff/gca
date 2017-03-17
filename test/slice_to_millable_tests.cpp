@@ -434,7 +434,10 @@ namespace gca {
 
     for (auto& d : dirs) {
       auto fd = build_feature_decomposition(m, d);
-      vtk_debug_feature_decomposition(fd);
+      vector<feature*> deep_internal_features = collect_features(fd);
+      delete_if(deep_internal_features,
+		[](const feature* f) { return !(f->is_closed()); });
+      vtk_debug_features(deep_internal_features);
     }
   }
 
@@ -443,12 +446,12 @@ namespace gca {
     set_system_allocator(&a);
 
     triangular_mesh m =
-      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     check_deep_features(m);
     
