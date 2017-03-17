@@ -8,6 +8,7 @@
 #include "process_planning/surface_planning.h"
 #include "system/parse_stl.h"
 #include "synthesis/clamp_orientation.h"
+#include "synthesis/millability.h"
 #include "synthesis/visual_debug.h"
 
 namespace gca {
@@ -114,6 +115,24 @@ namespace gca {
     visualize_actors({lines_act, mesh_act});
   }
 
+  bool all_surfaces_are_millable_from(const point dir,
+				      const std::vector<surface>& sfs) {
+    if (sfs.size() == 0) { return true; }
+
+    const triangular_mesh& m = sfs.front().get_parent_mesh();
+
+    vector<index_t> all_inds;
+    for (auto& s : sfs) {
+      concat(all_inds, s.index_list());
+    }
+    all_inds = sort_unique(all_inds);
+
+    auto millable_inds = millable_faces(dir, m);
+
+    return intersection(millable_inds, all_inds).size() == all_inds.size();
+  }
+				      
+
   bool
   solveable_by_filleting(const triangular_mesh& m,
 			 const std::vector<std::vector<surface> >& corner_groups) {
@@ -131,8 +150,11 @@ namespace gca {
       for (auto access_dir : dirs) {
 
 	if (!is_centralized(cg)) {
-	  vector<shared_edge> edges = edges_to_fillet(cg, m, access_dir);
-	  vtk_debug_shared_edges(edges, m);
+
+	  if (all_surfaces_are_millable_from(access_dir, cg)) {
+	    vector<shared_edge> edges = edges_to_fillet(cg, m, access_dir);
+	    vtk_debug_shared_edges(edges, m);
+	  }
 	}
 
       }
@@ -228,13 +250,13 @@ namespace gca {
 
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
-      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     auto res = search_part_space(trimesh_to_nef_polyhedron(m));
 
