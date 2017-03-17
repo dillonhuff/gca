@@ -174,6 +174,36 @@ namespace gca {
     return false;
   }
 
+  bool simplified_corners(const std::vector<std::vector<surface> >& corner_groups,
+			  const std::vector<triangular_mesh>& pos_meshes) {
+    int groups_after_cut = 0;
+
+    for (auto& m : pos_meshes) {
+      auto sfc = build_surface_milling_constraints(m);
+      vector<vector<surface> > mcgs =
+	sfc.hard_corner_groups();
+
+      for (auto& cg : mcgs) {
+	if (!is_centralized(cg)) {
+	  groups_after_cut++;
+	}
+      }
+
+    }
+
+    int groups_before = 0;
+    for (auto& cg : corner_groups) {
+      if (!is_centralized(cg)) {
+	groups_before++;
+      }
+    }
+
+    cout << "Decentralized groups before cut = " << groups_before << endl;
+    cout << "Decentralized groups after  cut = " << groups_after_cut << endl;
+
+    return groups_after_cut < groups_before;
+  }
+
   std::vector<part_search_result>
   search_part_space(const Nef_polyhedron& part_nef) {
     vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
@@ -191,10 +221,10 @@ namespace gca {
     cout << "# of hard corner groups = " << corner_groups.size() << endl;
     //vtk_debug_mesh(m);
 
-    if (solveable_by_filleting(m, corner_groups)) {
-      cout << "Solveable by filleting" << endl;
-      return {{part_nef}};
-    }
+    // if (solveable_by_filleting(m, corner_groups)) {
+    //   cout << "Solveable by filleting" << endl;
+    //   return {{part_nef}};
+    // }
 
     if (is_rectilinear(m, corner_groups)) {
       cout << "Rectilinear!" << endl;
@@ -218,27 +248,36 @@ namespace gca {
 
     cout << "Number of possible clipping planes = " << num_planes << endl;
 
-    DBG_ASSERT(false);
-
     for (auto& r : corner_groups) {
       //vtk_debug_highlight_inds(r);
 
       if (!is_centralized(r)) {
 	for (auto& s : r) {
 	  plane p = surface_plane(s);
-	  //vtk_debug(m, p);
+	  vtk_debug(m, p);
 
-	  auto clipped_nef = clip_nef(part_nef, p.slide(0.0001));
-	  //auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	  //vtk_debug_meshes(clipped_meshes);
+	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
+	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
 
-	  auto res = search_part_space(clipped_nef);
+	  vector<triangular_mesh> pos_meshes =
+	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
+	  concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
 
-	  clipped_nef = clip_nef(part_nef, p.flip().slide(0.0001));
-	  //clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
-	  //vtk_debug_meshes(clipped_meshes);
+	  if (simplified_corners(corner_groups, pos_meshes)) {
 
-	  res = search_part_space(clipped_nef);
+	    cout << "Simlified corners! continuing" << endl;
+	  
+	    //auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	    //vtk_debug_meshes(clipped_meshes);
+
+	    auto res_pos = search_part_space(clipped_nef_pos);
+
+	    auto res_neg = search_part_space(clipped_nef_neg);
+	    //clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef);
+	    //vtk_debug_meshes(clipped_meshes);
+
+	  }
+
 	}
       }
     }
@@ -254,9 +293,9 @@ namespace gca {
 
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
-      parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     auto res = search_part_space(trimesh_to_nef_polyhedron(m));
 
