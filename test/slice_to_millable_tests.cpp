@@ -21,15 +21,22 @@ namespace gca {
   };
 
   class millable_shape : part_decomposition {
+    Nef_polyhedron shape;
   };
 
   class filleted : part_decomposition {
+    triangular_mesh mesh;
+    std::vector<shared_edge> edges_to_fillet;
   };
 
   class plane_slice : part_decomposition {
+    Nef_polyhedron shape;
+    plane slice;
+    std::vector<part_decomposition*> results;
   };
   
   class unfinished_shape : part_decomposition {
+    Nef_polyhedron shape;
   };
 
   bool is_centralized(const std::vector<surface>& corner_group) {
