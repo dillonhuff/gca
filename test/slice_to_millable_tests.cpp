@@ -17,6 +17,21 @@ namespace gca {
     Nef_polyhedron part_nef;
   };
 
+  class part_decomposition {
+  };
+
+  class millable_shape : part_decomposition {
+  };
+
+  class filleted : part_decomposition {
+  };
+
+  class plane_slice : part_decomposition {
+  };
+  
+  class unfinished_shape : part_decomposition {
+  };
+
   bool is_centralized(const std::vector<surface>& corner_group) {
     int num_surfaces_with_ortho_multiple_ortho_connections = 0;
 
@@ -218,7 +233,7 @@ namespace gca {
     return num_planes;
   }
 
-  std::vector<std::vector<part_search_result> >
+  vector<part_decomposition*>
   search_part_space(const Nef_polyhedron& part_nef) {
     vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
 
@@ -242,13 +257,15 @@ namespace gca {
 
     if (is_rectilinear(m, corner_groups)) {
       cout << "Rectilinear!" << endl;
-      return { {{part_nef}} };
+      return {};
+      //return { {{part_nef}} };
     }
 
     if (corner_groups.size() == 0) {
       cout << "No hard corner groups left" << endl;
       //vtk_debug_mesh(m);
-      return { {{part_nef}} };
+      //return { {{part_nef}} };
+      return {};
     }
 
     int num_planes = count_planes(corner_groups); //0;
@@ -281,6 +298,7 @@ namespace gca {
 	  
 	    auto res_pos = search_part_space(clipped_nef_pos);
 	    auto res_neg = search_part_space(clipped_nef_neg);
+
 	  }
 
 	}
