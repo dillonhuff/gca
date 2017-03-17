@@ -5,6 +5,7 @@
 #include "geometry/triangular_mesh_utils.h"
 #include "geometry/vtk_debug.h"
 #include "geometry/vtk_utils.h"
+#include "feature_recognition/visual_debug.h"
 #include "process_planning/surface_planning.h"
 #include "system/parse_stl.h"
 #include "synthesis/clamp_orientation.h"
@@ -17,7 +18,15 @@ namespace gca {
     Nef_polyhedron part_nef;
   };
 
+  enum decomposition_type { MILLABLE_SHAPE,
+			    FILLETED_SHAPE,
+			    PLANE_SLICE,
+			    UNFINISHED_SHAPE };
+
   class part_decomposition {
+  public:
+    virtual decomposition_type decomp_type() const = 0;
+    virtual ~part_decomposition() {}
   };
 
   class millable_shape : public part_decomposition {
@@ -26,21 +35,40 @@ namespace gca {
 
     millable_shape(const Nef_polyhedron& p_shape) :
       shape(p_shape) {}
+
+    decomposition_type decomp_type() const { return MILLABLE_SHAPE; }
   };
 
   class filleted : public part_decomposition {
     triangular_mesh mesh;
     std::vector<shared_edge> edges_to_fillet;
+
+  public:
+    decomposition_type decomp_type() const { return FILLETED_SHAPE; }
   };
 
   class plane_slice : public part_decomposition {
     Nef_polyhedron shape;
     plane slice;
     std::vector<part_decomposition*> results;
+
+  public:
+    decomposition_type decomp_type() const { return PLANE_SLICE; }
+
+    const std::vector<part_decomposition*>& children() const { return results; }
+
   };
   
   class unfinished_shape : public part_decomposition {
     Nef_polyhedron shape;
+
+  public:
+
+    unfinished_shape(const Nef_polyhedron& p_shape) :
+      shape(p_shape) {}
+    
+    decomposition_type decomp_type() const { return UNFINISHED_SHAPE; }
+
   };
 
   bool is_centralized(const std::vector<surface>& corner_group) {
@@ -244,11 +272,58 @@ namespace gca {
     return num_planes;
   }
 
-  void reduce_solutions(std::vector<part_decomposition*>& possible_solutions) {
+  bool is_finished(part_decomposition const * const pd);
+  bool not_finished(part_decomposition const * const pd) {
+    return !is_finished(pd);
   }
 
-  bool is_finished(part_decomposition const * const part_decomposition) {
+  std::vector<part_decomposition*>
+  reduce_solution(part_decomposition* pd) {
+    DBG_ASSERT(pd->decomp_type() == PLANE_SLICE);
+
+    return {};
+  }
+
+  void reduce_solutions(std::vector<part_decomposition*>& possible_solutions) {
+    auto first_unfinished =
+      find_if(begin(possible_solutions), end(possible_solutions), not_finished);
+
+    if (first_unfinished == end(possible_solutions)) { return; }
+
+    part_decomposition* to_reduce = *first_unfinished;
+    remove(to_reduce, possible_solutions);
+
+    vector<part_decomposition*> reductions =
+      reduce_solution(to_reduce);
+    concat(possible_solutions, reductions);
+
+    delete to_reduce;
+  }
+
+  bool plane_slice_is_finished(plane_slice const * const pd) {
+
+    for (auto c : pd->children()) {
+      if (!is_finished(c)) {
+	return false;
+      }
+    }
+
     return true;
+  }
+
+  bool is_finished(part_decomposition const * const pd) {
+    switch (pd->decomp_type()) {
+    case MILLABLE_SHAPE:
+      return true;
+    case FILLETED_SHAPE:
+      return true;
+    case UNFINISHED_SHAPE:
+      return false;
+    case PLANE_SLICE:
+      return plane_slice_is_finished(static_cast<plane_slice const * const>(pd));
+    default:
+      DBG_ASSERT(false);
+    }
   }
 
   void
@@ -269,16 +344,16 @@ namespace gca {
       return {};
     }
 
-    millable_shape* initial_part = new millable_shape(part_nef);
-    vector<part_decomposition*> possible_solutions{initial_part};
-    vector<part_decomposition*> solutions;
+    // unfinished_shape* initial_part = new unfinished_shape(part_nef);
+    // vector<part_decomposition*> possible_solutions{initial_part};
+    // vector<part_decomposition*> solutions;
 
-    while (possible_solutions.size() > 0) {
-      reduce_solutions(possible_solutions);
-      transfer_solved_decompositions(possible_solutions, solutions);
-    }
+    // while (possible_solutions.size() > 0) {
+    //   reduce_solutions(possible_solutions);
+    //   transfer_solved_decompositions(possible_solutions, solutions);
+    // }
 
-    return solutions;
+    // return solutions;
 
     auto m = ms.front();
 
@@ -347,6 +422,38 @@ namespace gca {
     return {};
   }
 
+  void check_deep_features(const triangular_mesh& m) {
+    vector<surface> sfs = outer_surfaces(m);
+    DBG_ASSERT(sfs.size() > 0);
+    vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+    vector<point> dirs;
+    for (auto& p : stock_planes) {
+      dirs.push_back(p.normal());
+      dirs.push_back(-1*p.normal());
+    }
+
+    for (auto& d : dirs) {
+      auto fd = build_feature_decomposition(m, d);
+      vtk_debug_feature_decomposition(fd);
+    }
+  }
+
+  TEST_CASE("Check deep internal features") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    triangular_mesh m =
+      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+
+      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+
+    check_deep_features(m);
+    
+  }
+  
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
       parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
