@@ -247,10 +247,18 @@ namespace gca {
   void reduce_solutions(std::vector<part_decomposition*>& possible_solutions) {
   }
 
+  bool is_finished(part_decomposition const * const part_decomposition) {
+    return true;
+  }
+
   void
   transfer_solved_decompositions(std::vector<part_decomposition*>& possible_solutions,
 				 std::vector<part_decomposition*>& solutions) {
-    
+    auto new_solutions =
+      select(possible_solutions, is_finished);
+    delete_if(possible_solutions, is_finished);
+
+    concat(solutions, new_solutions);
   }
   
   std::vector<part_decomposition*>
@@ -352,6 +360,7 @@ namespace gca {
 
     cout << "Size of result = " << res.size() << endl;
 
+    REQUIRE(res.size() > 0);
   }
 
 }
