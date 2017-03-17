@@ -425,15 +425,31 @@ namespace gca {
   void check_deep_features(const triangular_mesh& m) {
     vector<surface> sfs = outer_surfaces(m);
     DBG_ASSERT(sfs.size() > 0);
-    vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
-    vector<point> dirs;
-    for (auto& p : stock_planes) {
-      dirs.push_back(p.normal());
-      dirs.push_back(-1*p.normal());
+
+    workpiece w(10, 10, 10, ALUMINUM);
+    auto stock_mesh = align_workpiece(sfs, w);
+
+    // vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+    // vector<point> dirs;
+    // for (auto& p : stock_planes) {
+    //   dirs.push_back(p.normal());
+    //   dirs.push_back(-1*p.normal());
+    // }
+
+    vector<surface> surfs = outer_surfaces(stock_mesh);
+
+    DBG_ASSERT(surfs.size() == 6);
+
+    vector<point> norms;
+    for (auto ax : surfs) {
+      point n = ax.face_orientation(ax.front());
+      norms.push_back(n);
     }
 
-    for (auto& d : dirs) {
-      auto fd = build_feature_decomposition(m, d);
+    DBG_ASSERT(norms.size() == 6);
+    
+    for (auto& d : norms) {
+      auto fd = build_feature_decomposition(stock_mesh, m, d);
       vector<feature*> deep_internal_features = collect_features(fd);
       delete_if(deep_internal_features,
 		[](const feature* f) { return !(f->is_closed()); });
@@ -446,7 +462,7 @@ namespace gca {
     set_system_allocator(&a);
 
     triangular_mesh m =
-      parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
       //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
