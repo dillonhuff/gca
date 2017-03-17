@@ -259,11 +259,11 @@ namespace gca {
 	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
 	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
 
-	    auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
-	    vtk_debug_meshes(clipped_meshes);
+	  auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
+	  vtk_debug_meshes(clipped_meshes);
 
-	    clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
-	    vtk_debug_meshes(clipped_meshes);
+	  clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
+	  vtk_debug_meshes(clipped_meshes);
 	  
 	  vector<triangular_mesh> pos_meshes =
 	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
