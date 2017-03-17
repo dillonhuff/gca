@@ -39,6 +39,39 @@ namespace gca {
     return num_surfaces_with_ortho_multiple_ortho_connections <= 1;
   }
 
+  std::vector<shared_edge>
+  edges_to_fillet(const std::vector<surface>& cg,
+		  const triangular_mesh& m,
+		  const point dir) {
+    vector<shared_edge> edges;
+
+    for (auto& s : cg) {
+      for (auto& other_s : cg ) {
+	if (!s.contained_by(other_s)) {
+	  auto new_edges = all_shared_edges(s.index_list(), other_s.index_list(), m);
+	  delete_if(new_edges,
+		    [m](const shared_edge e) {
+		      return !is_valley_edge(e, m) || !angle_eps(e, m, 90, 0.5);
+		    });
+
+	  delete_if(new_edges,
+		    [m, dir](const shared_edge e) {
+		      point start = m.vertex(e.e.l);
+		      point end = m.vertex(e.e.r);
+		      point diff = end - start;
+		      return !angle_eps(diff, dir, 180.0, 1.0) &&
+			!angle_eps(diff, dir, 0.0, 1.0);
+		    });
+
+	  concat(edges, new_edges);
+	}
+      }
+    }
+
+    return edges;
+    
+  }
+
   bool all_corner_groups_millable(const std::vector<std::vector<surface> >& corner_groups) {
     for (auto& cg : corner_groups) {
       if (cg.size() > 2) {
@@ -76,7 +109,7 @@ namespace gca {
     auto mesh_pd = polydata_for_trimesh(m);
     color_polydata(mesh_pd, 255, 0, 0);
     auto mesh_act = polydata_actor(mesh_pd);
-    mesh_act->GetProperty()->SetOpacity(0.2);
+    mesh_act->GetProperty()->SetOpacity(0.4);
 
     visualize_actors({lines_act, mesh_act});
   }
@@ -84,29 +117,26 @@ namespace gca {
   bool
   solveable_by_filleting(const triangular_mesh& m,
 			 const std::vector<std::vector<surface> >& corner_groups) {
-    // vector<surface> sfs = outer_surfaces(m);
-    // DBG_ASSERT(sfs.size() > 0);
-    // vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+    vector<surface> sfs = outer_surfaces(m);
+    DBG_ASSERT(sfs.size() > 0);
+    vector<plane> stock_planes = set_right_handed(max_area_basis(sfs));
+    vector<point> dirs;
+    for (auto& p : stock_planes) {
+      dirs.push_back(p.normal());
+      dirs.push_back(-1*p.normal());
+    }
 
     for (auto cg : corner_groups) {
-      for (auto& s : cg) {
-	vector<shared_edge> edges;
-	for (auto& other_s : cg ) {
-	  if (!s.contained_by(other_s)) {
-	    auto new_edges = all_shared_edges(s.index_list(), other_s.index_list(), m);
-	    delete_if(new_edges,
-		      [m](const shared_edge e) {
-			return !is_valley_edge(e, m) || !angle_eps(e, m, 90, 0.5);
-		      });
-	    concat(edges, new_edges);
-	  }
+
+      for (auto access_dir : dirs) {
+
+	if (!is_centralized(cg)) {
+	  vector<shared_edge> edges = edges_to_fillet(cg, m, access_dir);
+	  vtk_debug_shared_edges(edges, m);
 	}
-	vtk_debug_shared_edges(edges, m);
 
       }
     }
-
-    
 
     return true;
   }
@@ -198,10 +228,10 @@ namespace gca {
 
   TEST_CASE("Parsing that weird failing print object") {
     triangular_mesh m =
-      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
       //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
-      parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+      //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
       //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
