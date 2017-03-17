@@ -204,6 +204,20 @@ namespace gca {
     return groups_after_cut < groups_before;
   }
 
+
+  int count_planes(const std::vector<std::vector<surface> >& corner_groups) {
+    int num_planes = 0;
+    for (auto& r : corner_groups) {
+      //vtk_debug_highlight_inds(r);
+
+      if (!is_centralized(r)) {
+	num_planes += r.size();
+      }
+    }
+
+    return num_planes;
+  }
+
   std::vector<part_search_result>
   search_part_space(const Nef_polyhedron& part_nef) {
     vector<triangular_mesh> ms = nef_polyhedron_to_trimeshes(part_nef);
@@ -237,15 +251,7 @@ namespace gca {
       return {{part_nef}};
     }
 
-    int num_planes = 0;
-    for (auto& r : corner_groups) {
-      //vtk_debug_highlight_inds(r);
-
-      if (!is_centralized(r)) {
-	num_planes += r.size();
-      }
-    }
-
+    int num_planes = count_planes(corner_groups); //0;
     cout << "Number of possible clipping planes = " << num_planes << endl;
 
     for (auto& r : corner_groups) {
