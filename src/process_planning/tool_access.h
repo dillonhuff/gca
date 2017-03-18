@@ -21,5 +21,6 @@ namespace gca {
   accessable_tools_for_flat_feature(const feature& feat,
 				    feature_decomposition* f,
 				    const std::vector<tool>& tools);
-  
+
+  boost::optional<double> circle_diameter(const polygon_3& base);
 }

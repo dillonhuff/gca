@@ -7,6 +7,7 @@
 #include "geometry/vtk_utils.h"
 #include "feature_recognition/visual_debug.h"
 #include "process_planning/surface_planning.h"
+#include "process_planning/tool_access.h"
 #include "system/parse_stl.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/millability.h"
@@ -427,10 +428,10 @@ namespace gca {
     double area_sq = sqrt(area);
     double depth = f.depth();
 
-    return depth > 4.0*area_sq;
+    return depth > 2.0*area_sq;
   }
 
-  void check_deep_features(const triangular_mesh& m) {
+  std::vector<feature*> check_deep_features(const triangular_mesh& m) {
     vector<surface> sfs = outer_surfaces(m);
     DBG_ASSERT(sfs.size() > 0);
 
@@ -455,6 +456,8 @@ namespace gca {
     }
 
     DBG_ASSERT(norms.size() == 6);
+
+    vector<feature*> deep_features;
     
     for (auto& d : norms) {
       auto fd = build_feature_decomposition(stock_mesh, m, d);
@@ -462,8 +465,75 @@ namespace gca {
       delete_if(deep_internal_features,
 		[](const feature* f) { return !(f->is_closed()) ||
 		    !is_deep(*f, 5.0); });
-      vtk_debug_features(deep_internal_features);
+
+      delete_if(deep_internal_features,
+		[](const feature* f) {
+		  auto diam = circle_diameter(f->base());
+		  if (diam) { return true; }
+		  return false;
+		});
+
+      //vtk_debug_features(deep_internal_features);
+
+      concat(deep_features, deep_internal_features);
     }
+
+    return deep_features;
+  }
+
+  bool no_deep_features(const std::vector<triangular_mesh>& meshes) {
+    for (auto& m : meshes) {
+      auto feats = check_deep_features(m);
+      if (feats.size() > 0) {
+	cout << "Deep features!" << endl;
+	vtk_debug_features(feats);
+	return false;
+      }
+    }
+    return true;
+  }
+
+  bool solve_deep_features(const triangular_mesh& m) {
+
+    auto sfc = build_surface_milling_constraints(m);
+    vector<vector<surface> > corner_groups =
+      sfc.hard_corner_groups();
+
+    auto part_nef = trimesh_to_nef_polyhedron(m);
+    
+    for (auto& r : corner_groups) {
+      //vtk_debug_highlight_inds(r);
+
+      if (!is_centralized(r)) {
+	for (auto& s : r) {
+	  plane p = surface_plane(s);
+	  vtk_debug(m, p);
+
+	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
+	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
+
+	  auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
+	  vtk_debug_meshes(clipped_meshes);
+
+	  clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
+	  vtk_debug_meshes(clipped_meshes);
+
+	  vector<triangular_mesh> pos_meshes =
+	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
+	  concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
+
+	  if (no_deep_features(pos_meshes)) {
+	    cout << "Simlified corners! continuing" << endl;
+	    vtk_debug_meshes(pos_meshes);
+	    return true;
+	  }
+
+	}
+      }
+    }
+
+    return false;
+    
   }
 
   TEST_CASE("Check deep internal features") {
@@ -478,7 +548,11 @@ namespace gca {
 
       parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-    check_deep_features(m);
+    //check_deep_features(m);
+
+    bool res = solve_deep_features(m);
+
+    REQUIRE(res);
     
   }
   
