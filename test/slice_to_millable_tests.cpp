@@ -644,13 +644,40 @@ namespace gca {
     return {};
   }
 
-  vector<Nef_polyhedron> solve_deep_features(const triangular_mesh& m) {
+  bool deep_features_are_solved(const Nef_polyhedron& nef) {
+
+    cout << "About to convert nef" << endl;
+    auto ms = nef_polyhedron_to_trimeshes(nef);
+    cout << "Done converting to nef" << endl;
+
+    if (ms.size() > 1) {
+      if (total_deep_features(ms) == 0) {
+	return true; //solved.push_back(nef);
+      } else {
+	return false; //{};
+      }
+    } else {
+
+      auto m = ms.front();
+
+      auto deep_feats = check_deep_features(m);
+      if (deep_feats.size() == 0) {
+	return true; //solved.push_back(nef);
+      } else {
+	return false; //parts.push_back(nef);
+      }
+    }
+    
+  }
+
+  vector<vector<Nef_polyhedron> >
+  solve_deep_features(const triangular_mesh& m) {
 
     int num_deep_features = check_deep_features(m).size();
     auto part_nef = trimesh_to_nef_polyhedron(m);
 
     if (num_deep_features == 0) {
-      return {part_nef};
+      return { {part_nef} };
     }
 
     vector<Nef_polyhedron> parts{part_nef};
@@ -668,32 +695,16 @@ namespace gca {
       if (splits.size() == 0) { return {}; }
 
       for (auto& nef : splits) {
-	cout << "About to convert nef" << endl;
-	auto ms = nef_polyhedron_to_trimeshes(nef);
-	cout << "Done converting to nef" << endl;
-
-	if (ms.size() > 1) {
-	  if (total_deep_features(ms) == 0) {
-	    solved.push_back(nef);
-	  } else {
-	    return {};
-	  }
+	if (deep_features_are_solved(nef)) {
+	  solved.push_back(nef);
 	} else {
-
-	  auto m = ms.front();
-
-	  auto deep_feats = check_deep_features(m);
-	  if (deep_feats.size() == 0) {
-	    solved.push_back(nef);
-	  } else {
-	    parts.push_back(nef);
-	  }
+	  parts.push_back(nef);
 	}
 
       }
     }
 
-    return solved;
+    return {solved};
   }
 
   TEST_CASE("Check deep internal features") {
@@ -706,7 +717,7 @@ namespace gca {
 
       auto res = solve_deep_features(m);
 
-      REQUIRE(res.size() > 1);
+      REQUIRE(res.size() > 0);
     }
 
     SECTION("reversecameramount with one decomposition, multiple slices") {
@@ -715,7 +726,7 @@ namespace gca {
 
       auto res = solve_deep_features(m);
 
-      REQUIRE(res.size() > 1);
+      REQUIRE(res.size() > 0);
     }
 
     SECTION("artusite no deep features") {
@@ -725,6 +736,7 @@ namespace gca {
       auto res = solve_deep_features(m);
 
       REQUIRE(res.size() == 1);
+      REQUIRE(res.front().size() == 1);
     }
 
     SECTION("Rear slot, no deep features") {
@@ -734,6 +746,7 @@ namespace gca {
       auto res = solve_deep_features(m);
 
       REQUIRE(res.size() == 1);
+      REQUIRE(res.front().size() == 1);
     }
     
   }
