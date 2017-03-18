@@ -190,6 +190,11 @@ namespace gca {
 			      const triangular_mesh& m,
 			      const point n);
 
+  feature_decomposition*
+  build_min_feature_decomposition(const triangular_mesh& stock,
+				  const triangular_mesh& m,
+				  const point n);
+  
   oriented_polygon to_oriented_polygon(const labeled_polygon_3& p);
 
 }

@@ -78,6 +78,7 @@ namespace gca {
     return point(r_x, r_y, r_z);
   }
 
+  // TODO: Remove pointless n parameter, it is just the plane normal
   polygon_3 project_surface(const plane top,
 			    const std::vector<index_t>& s,
 			    const triangular_mesh& m,
@@ -127,6 +128,24 @@ namespace gca {
     return result_polys.front();
   }
 
+
+  polygon_3
+  min_virtual_surface_for_surface(const std::vector<index_t>& s,
+				  const triangular_mesh& m,
+				  const point n) {
+    DBG_ASSERT(s.size() > 0);
+
+    //vtk_debug_highlight_inds(s, m);
+
+    cout << "# of triangles initially = " << s.size() << endl;
+
+    auto raw_pts = vertexes_on_surface(s, m);
+    point min_pt = min_along(raw_pts, n);
+    plane base(n, min_pt);
+
+    return project_surface(base, s, m, n);
+  }
+  
   polygon_3
   virtual_surface_for_surface(const std::vector<index_t>& s,
 			      const triangular_mesh& m,
@@ -144,6 +163,26 @@ namespace gca {
     return project_surface(top, s, m, n);
   }
 
+  std::vector<polygon_3>
+  build_min_virtual_surfaces(const triangular_mesh& m,
+			     const std::vector<index_t>& indexes,
+			     const point n) {
+
+    auto surfs = const_orientation_regions(m);
+    auto not_vertical_or_horizontal =
+      not_vertical_or_horizontal_regions(m, surfs, n);
+
+    cout << "# of virtual surfaces = " << not_vertical_or_horizontal.size() << endl;
+
+    vector<polygon_3> polys;
+    for (auto s : not_vertical_or_horizontal) {
+      auto l = min_virtual_surface_for_surface(s, m, n);
+      polys.push_back(l);
+    }
+
+    return polys;
+  }
+  
   std::vector<polygon_3>
   build_virtual_surfaces(const triangular_mesh& m,
 			 const std::vector<index_t>& indexes,
@@ -164,6 +203,60 @@ namespace gca {
     return polys;
   }
 
+  std::vector<polygon_3>
+  min_horizontal_surfaces(const triangular_mesh& m, const point n) {
+    auto inds = m.face_indexes();
+
+    auto horiz_inds =
+      select(inds, [m, n](const index_t i)
+	     { return angle_eps(n, m.face_orientation(i), 0.0, 0.1); });
+
+    auto virtual_surfaces =
+      build_min_virtual_surfaces(m, inds, n);
+    
+    //vtk_debug_highlight_inds(horiz_inds, m);    
+
+    // TODO: Does angle matter now? It shouldnt
+    auto surfs = normal_delta_regions(horiz_inds, m, 3.0);
+
+    cout << "# of horizontal surfaces in " << n << " = " << surfs.size() << endl;
+    // for (auto s : surfs) {
+    //   vtk_debug_highlight_inds(s, m);
+    // }
+
+    const rotation r = rotate_from_to(n, point(0, 0, 1));
+    const rotation r_inv = inverse(r);
+
+    triangular_mesh mr = apply(r, m);
+
+    vector<polygon_3> surf_polys = virtual_surfaces;
+    for (auto s : surfs) {
+      DBG_ASSERT(s.size() > 0);
+
+      auto bounds = surface_boundary_polygons(s, mr);
+
+      DBG_ASSERT(bounds.size() == 1);
+
+      polygon_3 lp = apply(r_inv, bounds.front());
+      lp.correct_winding_order(n);
+
+      surf_polys.push_back(lp);
+    }
+
+    cout << "Got horizontal surfaces" << endl;
+
+    vector<polygon_3> cleaned_surf_polys;
+    for (auto& p : surf_polys) {
+      boost::optional<polygon_3> cleaned =
+	clean_polygon_for_offsetting_maybe(p);
+      if (cleaned) {
+	cleaned_surf_polys.push_back(*cleaned);
+      }
+    }
+
+    return cleaned_surf_polys;
+  }
+  
   std::vector<polygon_3>
   horizontal_surfaces(const triangular_mesh& m, const point n) {
     auto inds = m.face_indexes();
@@ -242,6 +335,23 @@ namespace gca {
   }
 
   surface_levels
+  initial_min_surface_levels(const std::vector<triangular_mesh>& meshes,
+			     const point n) {
+    vector<polygon_3> surf_polys;
+    for (auto& m : meshes) {
+      concat(surf_polys, min_horizontal_surfaces(m, n));
+    }
+
+    sort(begin(surf_polys), end(surf_polys),
+	 [n](const polygon_3& x, const polygon_3& y) {
+	   return max_distance_along(x.vertices(), n) <
+	     max_distance_along(y.vertices(), n);
+	 });
+
+    return build_surface_levels(surf_polys, n);
+  }
+
+  surface_levels
   initial_surface_levels(const std::vector<triangular_mesh>& meshes,
 			 const point n) {
     vector<polygon_3> surf_polys;
@@ -257,7 +367,7 @@ namespace gca {
 
     return build_surface_levels(surf_polys, n);
   }
-
+  
   labeled_polygon_3 initial_outline(const triangular_mesh& m,
 				    const point n) {
 
@@ -582,7 +692,45 @@ namespace gca {
 
     return decomp;
   }
+
+  feature_decomposition*
+  build_min_feature_decomposition(const triangular_mesh& stock,
+			      const std::vector<triangular_mesh>& meshes,
+			      const point n) {
+    triangular_mesh lowest = min_e(meshes, [n](const triangular_mesh& m) {
+	return min_distance_along(m.vertex_list(), n);
+      });
+    double base_depth = min_distance_along(lowest.vertex_list(), n);
+
+    labeled_polygon_3 init_outline = initial_outline(stock, n);
+
+    cout << "STARTING FEATURE DECOMPOSITION IN " << n << endl;
+
+    DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
+
+    surface_levels levels = initial_surface_levels(meshes, n);
+
+    check_level_sizes(levels);
+    check_level_depths(init_outline, levels);
+
+    feature_decomposition* decomp =
+      new (allocate<feature_decomposition>()) feature_decomposition();
+    decompose_volume(init_outline, levels, decomp, base_depth);
+
+    check_normals(decomp, n);
+
+    set_open_features(decomp);
+
+    return decomp;
+  }
   
+  feature_decomposition*
+  build_min_feature_decomposition(const triangular_mesh& stock,
+				  const triangular_mesh& m,
+				  const point n) {
+    vector<triangular_mesh> meshes{m};
+    return build_min_feature_decomposition(stock, meshes, n);
+  }
 
   feature_decomposition*
   build_feature_decomposition(const triangular_mesh& stock,

@@ -506,7 +506,7 @@ namespace gca {
     vector<feature*> deep_features;
     
     for (auto& d : norms) {
-      auto fd = build_feature_decomposition(stock_mesh, m, d);
+      auto fd = build_min_feature_decomposition(stock_mesh, m, d);
       vector<feature*> deep_internal_features = collect_features(fd);
       delete_if(deep_internal_features,
 		[](const feature* f) { return !(f->is_closed()) ||
