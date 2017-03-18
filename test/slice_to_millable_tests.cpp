@@ -463,9 +463,9 @@ namespace gca {
 
 	  if (depth > 2.0*d) {
 
-	    cout << "Depth = " << depth << endl;
-	    cout << "d     = " << d << endl;
-	    vtk_debug_polygons({hi, hj});
+	    // cout << "Depth = " << depth << endl;
+	    // cout << "d     = " << d << endl;
+	    // vtk_debug_polygons({hi, hj});
 
 
 	    return true;
@@ -549,14 +549,52 @@ namespace gca {
     return true;
   }
 
-  bool solve_deep_features(const triangular_mesh& m) {
+  int total_deep_features(const std::vector<triangular_mesh>& meshes) {
+    int total = 0;
 
+    for (auto& m : meshes) {
+      auto feats = check_deep_features(m);
+      total += feats.size();
+      if (feats.size() > 0) {
+	cout << "Deep features!" << endl;
+	vtk_debug_features(feats);
+      }
+    }
+
+    return total;
+  }
+  
+  std::vector<Nef_polyhedron>
+  split_away_deep_features(const Nef_polyhedron& part_nef) {
+
+    cout << "Entering split away deep features" << endl;
+
+    auto ms = nef_polyhedron_to_trimeshes(part_nef);
+
+    cout << "# of meshes = " << ms.size() << endl;
+
+    if (ms.size() > 1) { return {}; }
+
+    cout << "One mesh" << endl;
+
+    auto m = ms.front();
+
+    cout << "Now building surface constraints" << endl;
+    
     auto sfc = build_surface_milling_constraints(m);
     vector<vector<surface> > corner_groups =
       sfc.hard_corner_groups();
 
-    auto part_nef = trimesh_to_nef_polyhedron(m);
-    
+    cout << "Just before computing deep features" << endl;
+
+    int num_deep_features = check_deep_features(m).size();
+
+    cout << "# of deep features in initial part = " << num_deep_features << endl;
+
+    // This function should not be called unless the part
+    // has some deep features
+    DBG_ASSERT(num_deep_features > 0);
+
     for (auto& r : corner_groups) {
       //vtk_debug_highlight_inds(r);
 
@@ -568,6 +606,8 @@ namespace gca {
 	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
 	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
 
+	  cout << "Clipped both" << endl;
+
 	  auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
 	  vtk_debug_meshes(clipped_meshes);
 
@@ -578,13 +618,59 @@ namespace gca {
 	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
 	  concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
 
-	  if (no_deep_features(pos_meshes)) {
-	    cout << "Simlified corners! continuing" << endl;
-	    vtk_debug_meshes(pos_meshes);
-	    return true;
+	  int next_deep_feats = total_deep_features(pos_meshes);
+
+	  cout << "Computed # deep features = " << next_deep_feats << endl;
+
+	  if (next_deep_feats < num_deep_features) {
+	    return {clipped_nef_pos, clipped_nef_neg};
 	  }
 
+	  cout << "Done with iteration" << endl;
+
 	}
+      }
+    }
+
+    return {};
+  }
+
+  bool solve_deep_features(const triangular_mesh& m) {
+
+    int num_deep_features = check_deep_features(m).size();
+
+    if (num_deep_features == 0) {
+      return true;
+    }
+
+    auto part_nef = trimesh_to_nef_polyhedron(m);
+
+    vector<Nef_polyhedron> parts{part_nef};
+    vector<Nef_polyhedron> solved;
+
+    while (parts.size() > 0) {
+      const auto& next_nef = parts.back();
+      parts.pop_back();
+
+      vector<Nef_polyhedron> splits =
+	split_away_deep_features(next_nef);
+
+      // Part could not be simplified
+      if (splits.size() == 0) { return false; }
+
+      for (auto& nef : splits) {
+	auto ms = nef_polyhedron_to_trimeshes(nef);
+	if (ms.size() > 1) { return false; }
+
+	auto m = ms.front();
+
+	auto deep_feats = check_deep_features(m);
+	if (deep_feats.size() == 0) {
+	  solved.push_back(nef);
+	} else {
+	  parts.push_back(nef);
+	}
+
       }
     }
 
