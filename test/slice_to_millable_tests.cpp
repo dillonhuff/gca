@@ -542,7 +542,7 @@ namespace gca {
       auto feats = check_deep_features(m);
       if (feats.size() > 0) {
 	cout << "Deep features!" << endl;
-	vtk_debug_features(feats);
+	//vtk_debug_features(feats);
 	return false;
       }
     }
