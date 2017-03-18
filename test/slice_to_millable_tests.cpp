@@ -392,16 +392,16 @@ namespace gca {
       if (!is_centralized(r)) {
 	for (auto& s : r) {
 	  plane p = surface_plane(s);
-	  vtk_debug(m, p);
+	  //vtk_debug(m, p);
 
 	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
 	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
 
 	  auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
-	  vtk_debug_meshes(clipped_meshes);
+	  //vtk_debug_meshes(clipped_meshes);
 
 	  clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
-	  vtk_debug_meshes(clipped_meshes);
+	  //vtk_debug_meshes(clipped_meshes);
 	  
 	  vector<triangular_mesh> pos_meshes =
 	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
@@ -557,7 +557,7 @@ namespace gca {
       total += feats.size();
       if (feats.size() > 0) {
 	cout << "Deep features!" << endl;
-	vtk_debug_features(feats);
+	//vtk_debug_features(feats);
       }
     }
 
@@ -595,59 +595,63 @@ namespace gca {
     // has some deep features
     DBG_ASSERT(num_deep_features > 0);
 
+    vector<plane> possible_slice_planes;
+    
     for (auto& r : corner_groups) {
       //vtk_debug_highlight_inds(r);
 
       //      if (!is_centralized(r)) {
 	for (auto& s : r) {
 	  plane p = surface_plane(s);
-	  //vtk_debug(m, p);
-
-	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
-	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
-
-	  cout << "Clipped both" << endl;
-
-	  auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
-	  //vtk_debug_meshes(clipped_meshes);
-
-	  clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
-
-	  cout << "Negative meshes" << endl;
-	  //vtk_debug_meshes(clipped_meshes);
-
-	  vector<triangular_mesh> pos_meshes =
-	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
-	  concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
-
-	  cout << "Computing # of deep features" << endl;
-	  int next_deep_feats = total_deep_features(pos_meshes);
-
-	  cout << "Computed # deep features = " << next_deep_feats << endl;
-
-	  if (next_deep_feats < num_deep_features) {
-	    cout << "Reduced the number of features, returning" << endl;
-	    return {clipped_nef_pos, clipped_nef_neg};
-	  }
-
-	  cout << "Done with iteration" << endl;
-
+	  possible_slice_planes.push_back(p);
 	}
-	//      }
     }
+
+    for (auto p : possible_slice_planes) {
+      auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
+      auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
+
+      cout << "Clipped both" << endl;
+
+      auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
+      //vtk_debug_meshes(clipped_meshes);
+
+      clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
+
+      cout << "Negative meshes" << endl;
+      //vtk_debug_meshes(clipped_meshes);
+
+      vector<triangular_mesh> pos_meshes =
+	nef_polyhedron_to_trimeshes(clipped_nef_pos);
+      concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
+
+      cout << "Computing # of deep features" << endl;
+      int next_deep_feats = total_deep_features(pos_meshes);
+
+      cout << "Computed # deep features = " << next_deep_feats << endl;
+
+      if (next_deep_feats < num_deep_features) {
+	cout << "Reduced the number of features, returning" << endl;
+	return {clipped_nef_pos, clipped_nef_neg};
+      }
+
+      cout << "Done with iteration" << endl;
+
+    }
+	//      }
+    //    }
 
     return {};
   }
 
-  bool solve_deep_features(const triangular_mesh& m) {
+  vector<Nef_polyhedron> solve_deep_features(const triangular_mesh& m) {
 
     int num_deep_features = check_deep_features(m).size();
+    auto part_nef = trimesh_to_nef_polyhedron(m);
 
     if (num_deep_features == 0) {
-      return true;
+      return {part_nef};
     }
-
-    auto part_nef = trimesh_to_nef_polyhedron(m);
 
     vector<Nef_polyhedron> parts{part_nef};
     vector<Nef_polyhedron> solved;
@@ -660,9 +664,8 @@ namespace gca {
 
       parts.pop_back();
 
-      
       // Part could not be simplified
-      if (splits.size() == 0) { return false; }
+      if (splits.size() == 0) { return {}; }
 
       for (auto& nef : splits) {
 	cout << "About to convert nef" << endl;
@@ -673,7 +676,7 @@ namespace gca {
 	  if (total_deep_features(ms) == 0) {
 	    solved.push_back(nef);
 	  } else {
-	    return false;
+	    return {};
 	  }
 	} else {
 
@@ -690,7 +693,7 @@ namespace gca {
       }
     }
 
-    return true;
+    return solved;
   }
 
   TEST_CASE("Check deep internal features") {
@@ -701,36 +704,36 @@ namespace gca {
       triangular_mesh m =
 	parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
-      bool res = solve_deep_features(m);
+      auto res = solve_deep_features(m);
 
-      REQUIRE(res);
+      REQUIRE(res.size() > 1);
     }
 
     SECTION("reversecameramount with one decomposition, multiple slices") {
       triangular_mesh m =
 	parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-      bool res = solve_deep_features(m);
+      auto res = solve_deep_features(m);
 
-      REQUIRE(res);
+      REQUIRE(res.size() > 1);
     }
 
     SECTION("artusite no deep features") {
       triangular_mesh m =
 	parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
 
-      bool res = solve_deep_features(m);
+      auto res = solve_deep_features(m);
 
-      REQUIRE(res);
+      REQUIRE(res.size() == 1);
     }
 
     SECTION("Rear slot, no deep features") {
       triangular_mesh m =
 	parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      bool res = solve_deep_features(m);
+      auto res = solve_deep_features(m);
 
-      REQUIRE(res);
+      REQUIRE(res.size() == 1);
     }
     
   }
