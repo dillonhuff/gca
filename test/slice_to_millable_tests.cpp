@@ -601,7 +601,7 @@ namespace gca {
       //      if (!is_centralized(r)) {
 	for (auto& s : r) {
 	  plane p = surface_plane(s);
-	  vtk_debug(m, p);
+	  //vtk_debug(m, p);
 
 	  auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
 	  auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
@@ -609,12 +609,12 @@ namespace gca {
 	  cout << "Clipped both" << endl;
 
 	  auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
-	  vtk_debug_meshes(clipped_meshes);
+	  //vtk_debug_meshes(clipped_meshes);
 
 	  clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
 
 	  cout << "Negative meshes" << endl;
-	  vtk_debug_meshes(clipped_meshes);
+	  //vtk_debug_meshes(clipped_meshes);
 
 	  vector<triangular_mesh> pos_meshes =
 	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
@@ -697,19 +697,41 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    triangular_mesh m =
-      //parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
-      //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
-      //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
-      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+    SECTION("caliper with multiple decompositions") {
+      triangular_mesh m =
+	parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
-      parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+      bool res = solve_deep_features(m);
 
-    //check_deep_features(m);
+      REQUIRE(res);
+    }
 
-    bool res = solve_deep_features(m);
+    SECTION("reversecameramount with one decomposition, multiple slices") {
+      triangular_mesh m =
+	parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-    REQUIRE(res);
+      bool res = solve_deep_features(m);
+
+      REQUIRE(res);
+    }
+
+    SECTION("artusite no deep features") {
+      triangular_mesh m =
+	parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+
+      bool res = solve_deep_features(m);
+
+      REQUIRE(res);
+    }
+
+    SECTION("Rear slot, no deep features") {
+      triangular_mesh m =
+	parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+
+      bool res = solve_deep_features(m);
+
+      REQUIRE(res);
+    }
     
   }
   
