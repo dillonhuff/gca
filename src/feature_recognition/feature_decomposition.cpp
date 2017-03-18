@@ -495,19 +495,24 @@ namespace gca {
     if (levels.size() == 0) {
       double feature_depth = current_depth - base_depth;
 
-      DBG_ASSERT(feature_depth > 0.0);
+      //      DBG_ASSERT(feature_depth > 0.0);
 
-      point v = feature_depth*current_level.normal();
-      plane base_pl(current_level.normal(), current_level.vertex(0) - v);
+      if (feature_depth > 0.0) {
 
-      labeled_polygon_3 shifted = project_onto(base_pl, current_level);
+	point v = feature_depth*current_level.normal();
+	plane base_pl(current_level.normal(), current_level.vertex(0) - v);
 
-      feature* f = new (allocate<feature>()) feature(true, true, feature_depth, shifted);
-      feature_decomposition* child =
-    	new (allocate<feature_decomposition>()) feature_decomposition(f);
-      parent->add_child(child);
+	labeled_polygon_3 shifted = project_onto(base_pl, current_level);
 
-      return;
+	feature* f = new (allocate<feature>()) feature(true, true, feature_depth, shifted);
+	feature_decomposition* child =
+	  new (allocate<feature_decomposition>()) feature_decomposition(f);
+	parent->add_child(child);
+
+	return;
+      } else {
+	return;
+      }
     }
 
     const std::vector<labeled_polygon_3>& level_polys = levels.back();
