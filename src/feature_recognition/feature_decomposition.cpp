@@ -78,20 +78,10 @@ namespace gca {
     return point(r_x, r_y, r_z);
   }
 
-  polygon_3
-  virtual_surface_for_surface(const std::vector<index_t>& s,
-			      const triangular_mesh& m,
-			      const point n) {
-    DBG_ASSERT(s.size() > 0);
-
-    //vtk_debug_highlight_inds(s, m);
-
-    cout << "# of triangles initially = " << s.size() << endl;
-
-    auto raw_pts = vertexes_on_surface(s, m);
-    point max_pt = max_along(raw_pts, n);
-    plane top(n, max_pt);
-
+  polygon_3 project_surface(const plane top,
+			    const std::vector<index_t>& s,
+			    const triangular_mesh& m,
+			    const point n) {
     std::vector<polygon_3> ts;
     for (auto i : s) {
       triangle t = m.face_triangle(i);
@@ -135,6 +125,23 @@ namespace gca {
     }
 
     return result_polys.front();
+  }
+
+  polygon_3
+  virtual_surface_for_surface(const std::vector<index_t>& s,
+			      const triangular_mesh& m,
+			      const point n) {
+    DBG_ASSERT(s.size() > 0);
+
+    //vtk_debug_highlight_inds(s, m);
+
+    cout << "# of triangles initially = " << s.size() << endl;
+
+    auto raw_pts = vertexes_on_surface(s, m);
+    point max_pt = max_along(raw_pts, n);
+    plane top(n, max_pt);
+
+    return project_surface(top, s, m, n);
   }
 
   std::vector<polygon_3>
