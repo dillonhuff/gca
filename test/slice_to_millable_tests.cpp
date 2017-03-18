@@ -564,7 +564,7 @@ namespace gca {
     return total;
   }
   
-  std::vector<Nef_polyhedron>
+  std::vector<std::vector<Nef_polyhedron> >
   split_away_deep_features(const Nef_polyhedron& part_nef) {
 
     cout << "Entering split away deep features" << endl;
@@ -607,6 +607,7 @@ namespace gca {
 	}
     }
 
+    vector<vector<Nef_polyhedron> > productive_splits;
     for (auto p : possible_slice_planes) {
       auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
       auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
@@ -632,7 +633,11 @@ namespace gca {
 
       if (next_deep_feats < num_deep_features) {
 	cout << "Reduced the number of features, returning" << endl;
-	return {clipped_nef_pos, clipped_nef_neg};
+	//return {clipped_nef_pos, clipped_nef_neg};
+	vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_pos));
+	vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_neg));
+	
+	productive_splits.push_back({clipped_nef_pos, clipped_nef_neg});
       }
 
       cout << "Done with iteration" << endl;
@@ -641,7 +646,7 @@ namespace gca {
 	//      }
     //    }
 
-    return {};
+    return productive_splits;
   }
 
   bool deep_features_are_solved(const Nef_polyhedron& nef) {
@@ -690,13 +695,18 @@ namespace gca {
 
     DBG_ASSERT(f != end(next_partial_solution));
 
-    std::vector<Nef_polyhedron> next = split_away_deep_features(*f);
+    vector<vector<Nef_polyhedron> > next = split_away_deep_features(*f);
+
+    // Unsplittable part
+    if (next.size() == 0) { return {}; }
 
     next_partial_solution.erase(f);
 
-    concat(next, next_partial_solution);
+    for (auto& n : next) {
+      concat(n, next_partial_solution);
+    }
     
-    return {next};
+    return next;
   }
 
   vector<vector<Nef_polyhedron> >
