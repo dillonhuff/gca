@@ -670,6 +670,20 @@ namespace gca {
     
   }
 
+  bool deep_features_are_solved(const std::vector<Nef_polyhedron>& nefs) {
+    for (auto& n : nefs) {
+      if (!deep_features_are_solved(n)) {
+	return false;
+      }
+    }
+    return true;
+  }
+
+  vector<vector<Nef_polyhedron> >
+  splits_of_one_subpart(const std::vector<Nef_polyhedron>& next_partial_solution) {
+    return {};
+  }
+
   vector<vector<Nef_polyhedron> >
   solve_deep_features(const triangular_mesh& m) {
 
@@ -680,31 +694,38 @@ namespace gca {
       return { {part_nef} };
     }
 
-    vector<Nef_polyhedron> parts{part_nef};
-    vector<Nef_polyhedron> solved;
+    vector<vector<Nef_polyhedron> > parts{{part_nef}};
+    vector<vector<Nef_polyhedron> > solved;
 
     while (parts.size() > 0) {
-      const auto& next_nef = parts.back();
+      const auto& next_partial_solution = parts.back();
 
-      vector<Nef_polyhedron> splits =
-	split_away_deep_features(next_nef);
+      vector<vector<Nef_polyhedron> > splits =
+	splits_of_one_subpart(next_partial_solution);
 
       parts.pop_back();
 
-      // Part could not be simplified
+      // Partial solution contained a part that could not be simplified
       if (splits.size() == 0) { return {}; }
 
-      for (auto& nef : splits) {
-	if (deep_features_are_solved(nef)) {
-	  solved.push_back(nef);
+      for (auto& split : splits) {
+	if (deep_features_are_solved(split)) {
+	  solved.push_back(split);
 	} else {
-	  parts.push_back(nef);
+	  parts.push_back(split);
 	}
-
       }
+      // for (auto& nef : splits) {
+      // 	if (deep_features_are_solved(nef)) {
+      // 	  solved.push_back(nef);
+      // 	} else {
+      // 	  parts.push_back(nef);
+      // 	}
+
+      // }
     }
 
-    return {solved};
+    return solved;
   }
 
   TEST_CASE("Check deep internal features") {
