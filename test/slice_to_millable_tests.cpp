@@ -567,20 +567,20 @@ namespace gca {
   //   return true;
   // }
 
-  int total_deep_features(const std::vector<triangular_mesh>& meshes) {
-    int total = 0;
+  // int total_deep_features(const std::vector<triangular_mesh>& meshes) {
+  //   int total = 0;
 
-    for (auto& m : meshes) {
-      auto feats = check_deep_features(m);
-      total += feats.size();
-      if (feats.size() > 0) {
-	cout << "Deep features!" << endl;
-	//vtk_debug_features(feats);
-      }
-    }
+  //   for (auto& m : meshes) {
+  //     auto feats = check_deep_features(m);
+  //     total += feats.size();
+  //     if (feats.size() > 0) {
+  // 	cout << "Deep features!" << endl;
+  // 	//vtk_debug_features(feats);
+  //     }
+  //   }
 
-    return total;
-  }
+  //   return total;
+  // }
   
   std::vector<std::vector<part_split> >
   split_away_deep_features(const part_split& part_nef) {
@@ -632,7 +632,7 @@ namespace gca {
 
       cout << "Clipped both" << endl;
 
-      auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
+      //auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
       //vtk_debug_meshes(clipped_meshes);
 
       //clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
@@ -657,8 +657,8 @@ namespace gca {
       if (next_deep_feats < num_deep_features) {
 	cout << "Reduced the number of features, returning" << endl;
 	//return {clipped_nef_pos, clipped_nef_neg};
-	vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_pos));
-	vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_neg));
+	//vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_pos));
+	//vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_neg));
 	
 	productive_splits.push_back(new_split);
       }
@@ -720,7 +720,7 @@ namespace gca {
     DBG_ASSERT(f != end(next_partial_solution));
 
     cout << "TRYING TO SPLIT" << endl;
-    vtk_debug_meshes(nef_polyhedron_to_trimeshes(f->nef));
+    //vtk_debug_meshes(nef_polyhedron_to_trimeshes(f->nef));
 
     vector<vector<part_split> > next = split_away_deep_features(*f);
 
