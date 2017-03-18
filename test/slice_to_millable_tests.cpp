@@ -537,6 +537,24 @@ namespace gca {
     return deep_features;
   }
 
+  struct part_split {
+    Nef_polyhedron nef;
+    std::vector<feature*> deep_features;
+  };
+
+  part_split build_part_split(const triangular_mesh& m) {
+    auto fs = check_deep_features(m);
+    return {trimesh_to_nef_polyhedron(m), fs};
+  }
+
+  part_split build_part_split(const Nef_polyhedron& m) {
+    vector<feature*> fs;
+    for (auto& m : nef_polyhedron_to_trimeshes(m)) {
+      concat(fs, check_deep_features(m));
+    }
+    return {m, fs};
+  }
+  
   bool no_deep_features(const std::vector<triangular_mesh>& meshes) {
     for (auto& m : meshes) {
       auto feats = check_deep_features(m);
@@ -695,6 +713,9 @@ namespace gca {
 
     DBG_ASSERT(f != end(next_partial_solution));
 
+    cout << "TRYING TO SPLIT" << endl;
+    vtk_debug_meshes(nef_polyhedron_to_trimeshes(*f));
+
     vector<vector<Nef_polyhedron> > next = split_away_deep_features(*f);
 
     // Unsplittable part
@@ -740,14 +761,7 @@ namespace gca {
 	  parts.push_back(split);
 	}
       }
-      // for (auto& nef : splits) {
-      // 	if (deep_features_are_solved(nef)) {
-      // 	  solved.push_back(nef);
-      // 	} else {
-      // 	  parts.push_back(nef);
-      // 	}
 
-      // }
     }
 
     return solved;
@@ -757,18 +771,20 @@ namespace gca {
     arena_allocator a;
     set_system_allocator(&a);
 
-    SECTION("caliper with multiple decompositions") {
+    SECTION("reversecameramount with one decomposition, multiple slices") {
       triangular_mesh m =
-	parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+	parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
       auto res = solve_deep_features(m);
 
       REQUIRE(res.size() > 0);
     }
 
-    SECTION("reversecameramount with one decomposition, multiple slices") {
+    DBG_ASSERT(false);
+
+    SECTION("caliper with multiple decompositions") {
       triangular_mesh m =
-	parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+	parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
       auto res = solve_deep_features(m);
 
