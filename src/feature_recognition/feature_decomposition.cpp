@@ -708,7 +708,7 @@ namespace gca {
 
     DBG_ASSERT(within_eps(angle_between(init_outline.normal(), n), 0.0, 0.01));
 
-    surface_levels levels = initial_surface_levels(meshes, n);
+    surface_levels levels = initial_min_surface_levels(meshes, n);
 
     check_level_sizes(levels);
     check_level_depths(init_outline, levels);
