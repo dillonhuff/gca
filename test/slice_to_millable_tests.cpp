@@ -650,11 +650,13 @@ namespace gca {
 
     while (parts.size() > 0) {
       const auto& next_nef = parts.back();
-      parts.pop_back();
 
       vector<Nef_polyhedron> splits =
 	split_away_deep_features(next_nef);
 
+      parts.pop_back();
+
+      
       // Part could not be simplified
       if (splits.size() == 0) { return false; }
 
