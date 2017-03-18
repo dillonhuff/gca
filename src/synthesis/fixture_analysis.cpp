@@ -180,10 +180,10 @@ namespace gca {
 
     //vtk_debug_meshes({aligned_wp, part});
 
-    vector<triangular_mesh> to_sub{aligned_wp};
-    vector<triangular_mesh> res = boolean_difference(part, to_sub);
+    // vector<triangular_mesh> to_sub{aligned_wp};
+    // vector<triangular_mesh> res = boolean_difference(part, to_sub);
 
-    DBG_ASSERT(res.size() == 0);
+    // DBG_ASSERT(res.size() == 0);
 
     return aligned_wp;
   }

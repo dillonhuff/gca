@@ -612,17 +612,21 @@ namespace gca {
 	  vtk_debug_meshes(clipped_meshes);
 
 	  clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
+
+	  cout << "Negative meshes" << endl;
 	  vtk_debug_meshes(clipped_meshes);
 
 	  vector<triangular_mesh> pos_meshes =
 	    nef_polyhedron_to_trimeshes(clipped_nef_pos);
 	  concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
 
+	  cout << "Computing # of deep features" << endl;
 	  int next_deep_feats = total_deep_features(pos_meshes);
 
 	  cout << "Computed # deep features = " << next_deep_feats << endl;
 
 	  if (next_deep_feats < num_deep_features) {
+	    cout << "Reduced the number of features, returning" << endl;
 	    return {clipped_nef_pos, clipped_nef_neg};
 	  }
 
@@ -661,23 +665,32 @@ namespace gca {
       if (splits.size() == 0) { return false; }
 
       for (auto& nef : splits) {
+	cout << "About to convert nef" << endl;
 	auto ms = nef_polyhedron_to_trimeshes(nef);
-	if (ms.size() > 1) { return false; }
+	cout << "Done converting to nef" << endl;
 
-	auto m = ms.front();
-
-	auto deep_feats = check_deep_features(m);
-	if (deep_feats.size() == 0) {
-	  solved.push_back(nef);
+	if (ms.size() > 1) {
+	  if (total_deep_features(ms) == 0) {
+	    solved.push_back(nef);
+	  } else {
+	    return false;
+	  }
 	} else {
-	  parts.push_back(nef);
+
+	  auto m = ms.front();
+
+	  auto deep_feats = check_deep_features(m);
+	  if (deep_feats.size() == 0) {
+	    solved.push_back(nef);
+	  } else {
+	    parts.push_back(nef);
+	  }
 	}
 
       }
     }
 
-    return false;
-    
+    return true;
   }
 
   TEST_CASE("Check deep internal features") {
