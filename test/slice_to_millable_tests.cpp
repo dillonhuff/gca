@@ -680,8 +680,23 @@ namespace gca {
   }
 
   vector<vector<Nef_polyhedron> >
-  splits_of_one_subpart(const std::vector<Nef_polyhedron>& next_partial_solution) {
-    return {};
+  splits_of_one_subpart(const std::vector<Nef_polyhedron>& nps) {
+    vector<Nef_polyhedron> next_partial_solution = nps;
+    auto f = find_if(begin(next_partial_solution),
+		     end(next_partial_solution),
+		     [](const Nef_polyhedron& n) {
+		       return !deep_features_are_solved(n);
+		     });
+
+    DBG_ASSERT(f != end(next_partial_solution));
+
+    std::vector<Nef_polyhedron> next = split_away_deep_features(*f);
+
+    next_partial_solution.erase(f);
+
+    concat(next, next_partial_solution);
+    
+    return {next};
   }
 
   vector<vector<Nef_polyhedron> >
