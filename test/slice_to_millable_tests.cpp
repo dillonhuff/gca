@@ -555,17 +555,17 @@ namespace gca {
     return {m, fs};
   }
   
-  bool no_deep_features(const std::vector<triangular_mesh>& meshes) {
-    for (auto& m : meshes) {
-      auto feats = check_deep_features(m);
-      if (feats.size() > 0) {
-	cout << "Deep features!" << endl;
-	//vtk_debug_features(feats);
-	return false;
-      }
-    }
-    return true;
-  }
+  // bool no_deep_features(const std::vector<triangular_mesh>& meshes) {
+  //   for (auto& m : meshes) {
+  //     auto feats = check_deep_features(m);
+  //     if (feats.size() > 0) {
+  // 	cout << "Deep features!" << endl;
+  // 	//vtk_debug_features(feats);
+  // 	return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
   int total_deep_features(const std::vector<triangular_mesh>& meshes) {
     int total = 0;
@@ -582,12 +582,12 @@ namespace gca {
     return total;
   }
   
-  std::vector<std::vector<Nef_polyhedron> >
-  split_away_deep_features(const Nef_polyhedron& part_nef) {
+  std::vector<std::vector<part_split> >
+  split_away_deep_features(const part_split& part_nef) {
 
     cout << "Entering split away deep features" << endl;
 
-    auto ms = nef_polyhedron_to_trimeshes(part_nef);
+    auto ms = nef_polyhedron_to_trimeshes(part_nef.nef);
 
     cout << "# of meshes = " << ms.size() << endl;
 
@@ -605,7 +605,7 @@ namespace gca {
 
     cout << "Just before computing deep features" << endl;
 
-    int num_deep_features = check_deep_features(m).size();
+    int num_deep_features = part_nef.deep_features.size(); //check_deep_features(m).size();
 
     cout << "# of deep features in initial part = " << num_deep_features << endl;
 
@@ -625,27 +625,32 @@ namespace gca {
 	}
     }
 
-    vector<vector<Nef_polyhedron> > productive_splits;
+    vector<vector<part_split> > productive_splits;
     for (auto p : possible_slice_planes) {
-      auto clipped_nef_pos = clip_nef(part_nef, p.slide(0.0001));
-      auto clipped_nef_neg = clip_nef(part_nef, p.flip().slide(0.0001));
+      auto clipped_nef_pos = clip_nef(part_nef.nef, p.slide(0.0001));
+      auto clipped_nef_neg = clip_nef(part_nef.nef, p.flip().slide(0.0001));
 
       cout << "Clipped both" << endl;
 
       auto clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_pos);
       //vtk_debug_meshes(clipped_meshes);
 
-      clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
+      //clipped_meshes = nef_polyhedron_to_trimeshes(clipped_nef_neg);
 
-      cout << "Negative meshes" << endl;
+      //cout << "Negative meshes" << endl;
       //vtk_debug_meshes(clipped_meshes);
 
-      vector<triangular_mesh> pos_meshes =
-	nef_polyhedron_to_trimeshes(clipped_nef_pos);
-      concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
+      vector<part_split> new_split;
+      new_split.push_back(build_part_split(clipped_nef_pos));
+      new_split.push_back(build_part_split(clipped_nef_neg));
+
+      // vector<triangular_mesh> pos_meshes =
+      // 	nef_polyhedron_to_trimeshes(clipped_nef_pos);
+      // concat(pos_meshes, nef_polyhedron_to_trimeshes(clipped_nef_neg));
 
       cout << "Computing # of deep features" << endl;
-      int next_deep_feats = total_deep_features(pos_meshes);
+      int next_deep_feats = new_split[0].deep_features.size() +
+	new_split[1].deep_features.size(); //total_deep_features(pos_meshes);
 
       cout << "Computed # deep features = " << next_deep_feats << endl;
 
@@ -655,7 +660,7 @@ namespace gca {
 	vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_pos));
 	vtk_debug_meshes(nef_polyhedron_to_trimeshes(clipped_nef_neg));
 	
-	productive_splits.push_back({clipped_nef_pos, clipped_nef_neg});
+	productive_splits.push_back(new_split);
       }
 
       cout << "Done with iteration" << endl;
@@ -667,56 +672,57 @@ namespace gca {
     return productive_splits;
   }
 
-  bool deep_features_are_solved(const Nef_polyhedron& nef) {
+  // bool deep_features_are_solved(const Nef_polyhedron& nef) {
 
-    cout << "About to convert nef" << endl;
-    auto ms = nef_polyhedron_to_trimeshes(nef);
-    cout << "Done converting to nef" << endl;
+  //   cout << "About to convert nef" << endl;
+  //   auto ms = nef_polyhedron_to_trimeshes(nef);
+  //   cout << "Done converting to nef" << endl;
 
-    if (ms.size() > 1) {
-      if (total_deep_features(ms) == 0) {
-	return true; //solved.push_back(nef);
-      } else {
-	return false; //{};
-      }
-    } else {
+  //   if (ms.size() > 1) {
+  //     if (total_deep_features(ms) == 0) {
+  // 	return true; //solved.push_back(nef);
+  //     } else {
+  // 	return false; //{};
+  //     }
+  //   } else {
 
-      auto m = ms.front();
+  //     auto m = ms.front();
 
-      auto deep_feats = check_deep_features(m);
-      if (deep_feats.size() == 0) {
-	return true; //solved.push_back(nef);
-      } else {
-	return false; //parts.push_back(nef);
-      }
-    }
+  //     auto deep_feats = check_deep_features(m);
+  //     if (deep_feats.size() == 0) {
+  // 	return true; //solved.push_back(nef);
+  //     } else {
+  // 	return false; //parts.push_back(nef);
+  //     }
+  //   }
     
-  }
+  // }
 
-  bool deep_features_are_solved(const std::vector<Nef_polyhedron>& nefs) {
+  bool deep_features_are_solved(const std::vector<part_split>& nefs) {
     for (auto& n : nefs) {
-      if (!deep_features_are_solved(n)) {
+      //if (!deep_features_are_solved(n)) {
+      if (n.deep_features.size() > 0) {
 	return false;
       }
     }
     return true;
   }
 
-  vector<vector<Nef_polyhedron> >
-  splits_of_one_subpart(const std::vector<Nef_polyhedron>& nps) {
-    vector<Nef_polyhedron> next_partial_solution = nps;
+  vector<vector<part_split> >
+  splits_of_one_subpart(const std::vector<part_split>& nps) {
+    vector<part_split> next_partial_solution = nps;
     auto f = find_if(begin(next_partial_solution),
 		     end(next_partial_solution),
-		     [](const Nef_polyhedron& n) {
-		       return !deep_features_are_solved(n);
+		     [](const part_split& n) {
+		       return n.deep_features.size() > 0; //!deep_features_are_solved(n);
 		     });
 
     DBG_ASSERT(f != end(next_partial_solution));
 
     cout << "TRYING TO SPLIT" << endl;
-    vtk_debug_meshes(nef_polyhedron_to_trimeshes(*f));
+    vtk_debug_meshes(nef_polyhedron_to_trimeshes(f->nef));
 
-    vector<vector<Nef_polyhedron> > next = split_away_deep_features(*f);
+    vector<vector<part_split> > next = split_away_deep_features(*f);
 
     // Unsplittable part
     if (next.size() == 0) { return {}; }
@@ -730,23 +736,27 @@ namespace gca {
     return next;
   }
 
-  vector<vector<Nef_polyhedron> >
+  vector<vector<part_split> >
   solve_deep_features(const triangular_mesh& m) {
 
-    int num_deep_features = check_deep_features(m).size();
-    auto part_nef = trimesh_to_nef_polyhedron(m);
+    // int num_deep_features = check_deep_features(m).size();
+    // auto part_nef = trimesh_to_nef_polyhedron(m);
 
-    if (num_deep_features == 0) {
-      return { {part_nef} };
-    }
+    // if (num_deep_features == 0) {
+    //   return { {part_nef} };
+    // }
 
-    vector<vector<Nef_polyhedron> > parts{{part_nef}};
-    vector<vector<Nef_polyhedron> > solved;
+    auto m_split = build_part_split(m);
+
+    if (m_split.deep_features.size() == 0) { return {{m_split}}; }
+
+    vector<vector<part_split> > parts{{m_split}};
+    vector<vector<part_split> > solved;
 
     while (parts.size() > 0) {
       const auto& next_partial_solution = parts.back();
 
-      vector<vector<Nef_polyhedron> > splits =
+      vector<vector<part_split> > splits =
 	splits_of_one_subpart(next_partial_solution);
 
       parts.pop_back();
