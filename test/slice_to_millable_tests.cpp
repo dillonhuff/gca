@@ -598,7 +598,7 @@ namespace gca {
     for (auto& r : corner_groups) {
       //vtk_debug_highlight_inds(r);
 
-      if (!is_centralized(r)) {
+      //      if (!is_centralized(r)) {
 	for (auto& s : r) {
 	  plane p = surface_plane(s);
 	  vtk_debug(m, p);
@@ -629,7 +629,7 @@ namespace gca {
 	  cout << "Done with iteration" << endl;
 
 	}
-      }
+	//      }
     }
 
     return {};
