@@ -423,6 +423,20 @@ namespace gca {
     return {};
   }
 
+  double distance(const polygon_3& l, const polygon_3& r) {
+    double dist = 1e25;
+    for (auto lpt : l.vertices()) {
+      for (auto rpt : r.vertices()) {
+	double d = (lpt - rpt).len();
+	if (d < dist) {
+	  dist = d;
+	}
+      }
+    }
+
+    return dist;
+  }
+
   bool is_deep(const feature& f, const double depth_factor) {
     double area = base_area(f);
     double area_sq = sqrt(area);
@@ -431,6 +445,38 @@ namespace gca {
     return depth > 2.0*area_sq;
   }
 
+  bool is_deep_external(const feature& f, const double depth_factor) {
+    double depth = f.depth();
+
+    polygon_3 base = f.base();
+    auto base_holes = base.holes();
+
+    if (base_holes.size() == 0) { return false; }
+
+    for (unsigned i = 0; i < base_holes.size(); i++) {
+      polygon_3 hi = build_clean_polygon_3(base_holes[i]);
+      for (unsigned j = 0; j < base_holes.size(); j++) {
+	if (i != j) {
+	  polygon_3 hj = build_clean_polygon_3(base_holes[j]);
+
+	  double d = distance(hi, hj);
+
+	  if (depth > 2.0*d) {
+
+	    cout << "Depth = " << depth << endl;
+	    cout << "d     = " << d << endl;
+	    vtk_debug_polygons({hi, hj});
+
+
+	    return true;
+	  }
+	}
+      }
+    }
+
+    return false;
+  }
+  
   std::vector<feature*> check_deep_features(const triangular_mesh& m) {
     vector<surface> sfs = outer_surfaces(m);
     DBG_ASSERT(sfs.size() > 0);
@@ -476,6 +522,16 @@ namespace gca {
       //vtk_debug_features(deep_internal_features);
 
       concat(deep_features, deep_internal_features);
+
+      vector<feature*> deep_external_features = collect_features(fd);
+      delete_if(deep_external_features,
+		[](const feature* f) { return f->is_closed() ||
+		    !is_deep_external(*f, 5.0); });
+
+      //vtk_debug_features(deep_internal_features);
+
+      concat(deep_features, deep_external_features);
+
     }
 
     return deep_features;
