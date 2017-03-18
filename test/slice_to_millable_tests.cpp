@@ -581,6 +581,38 @@ namespace gca {
 
   //   return total;
   // }
+
+  void delete_duplicate_plans(std::vector<plane>& planes) {
+    bool deleted_one = true;
+
+    while (deleted_one) {
+      deleted_one = false;
+      for (unsigned i = 0; i < planes.size(); i++) {
+	for (unsigned j = 0; j < planes.size(); j++) {
+	  if (i != j) {
+	    point in = planes[i].normal();
+	    point jn = planes[j].normal();
+
+	    if (angle_eps(in, jn, 0.0, 1.0)) {
+	      point ipt = planes[i].pt();
+	      point jpt = planes[j].pt();
+	      point diff = ipt - jpt;
+
+	      if (angle_eps(diff, in, 90.0, 1.0)) {
+		planes.erase(begin(planes) + j);
+		deleted_one = true;
+		break;
+	      }
+	    }
+	  }
+	}
+
+	if (deleted_one) {
+	  break;
+	}
+      }
+    }
+  }
   
   std::vector<std::vector<part_split> >
   split_away_deep_features(const part_split& part_nef) {
@@ -624,6 +656,12 @@ namespace gca {
 	  possible_slice_planes.push_back(p);
 	}
     }
+
+    cout << "# slice planes before deleting = " << possible_slice_planes.size() << endl;
+
+    delete_duplicate_plans(possible_slice_planes);
+
+    cout << "# of slice planes = " << possible_slice_planes.size() << endl;
 
     vector<vector<part_split> > productive_splits;
     for (auto p : possible_slice_planes) {
@@ -754,6 +792,8 @@ namespace gca {
     vector<vector<part_split> > solved;
 
     while (parts.size() > 0) {
+      cout << "# of possible solutions left = " << parts.size() << endl;
+
       const auto& next_partial_solution = parts.back();
 
       vector<vector<part_split> > splits =
@@ -761,15 +801,19 @@ namespace gca {
 
       parts.pop_back();
 
-      // Partial solution contained a part that could not be simplified
-      if (splits.size() == 0) { return {}; }
+      // Partial solution could be simplified
+      if (splits.size() != 0) {
 
-      for (auto& split : splits) {
-	if (deep_features_are_solved(split)) {
-	  solved.push_back(split);
-	} else {
-	  parts.push_back(split);
+	for (auto& split : splits) {
+	  if (deep_features_are_solved(split)) {
+	    cout << "Found complete solution" << endl;
+	    solved.push_back(split);
+	  } else {
+	    parts.push_back(split);
+	  }
 	}
+      } else {
+	cout << "Removed unusable solution" << endl;
       }
 
     }
@@ -789,8 +833,6 @@ namespace gca {
 
       REQUIRE(res.size() > 0);
     }
-
-    DBG_ASSERT(false);
 
     SECTION("caliper with multiple decompositions") {
       triangular_mesh m =
