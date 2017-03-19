@@ -554,34 +554,17 @@ namespace gca {
     }
     return {m, fs};
   }
+
+  int total_deep_features(const std::vector<part_split>& meshes) {
+    int total = 0;
+
+    for (auto& m : meshes) {
+      total += m.deep_features.size();
+    }
+
+    return total;
+  }
   
-  // bool no_deep_features(const std::vector<triangular_mesh>& meshes) {
-  //   for (auto& m : meshes) {
-  //     auto feats = check_deep_features(m);
-  //     if (feats.size() > 0) {
-  // 	cout << "Deep features!" << endl;
-  // 	//vtk_debug_features(feats);
-  // 	return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  // int total_deep_features(const std::vector<triangular_mesh>& meshes) {
-  //   int total = 0;
-
-  //   for (auto& m : meshes) {
-  //     auto feats = check_deep_features(m);
-  //     total += feats.size();
-  //     if (feats.size() > 0) {
-  // 	cout << "Deep features!" << endl;
-  // 	//vtk_debug_features(feats);
-  //     }
-  //   }
-
-  //   return total;
-  // }
-
   void delete_duplicate_plans(std::vector<plane>& planes) {
     bool deleted_one = true;
 
@@ -710,32 +693,6 @@ namespace gca {
     return productive_splits;
   }
 
-  // bool deep_features_are_solved(const Nef_polyhedron& nef) {
-
-  //   cout << "About to convert nef" << endl;
-  //   auto ms = nef_polyhedron_to_trimeshes(nef);
-  //   cout << "Done converting to nef" << endl;
-
-  //   if (ms.size() > 1) {
-  //     if (total_deep_features(ms) == 0) {
-  // 	return true; //solved.push_back(nef);
-  //     } else {
-  // 	return false; //{};
-  //     }
-  //   } else {
-
-  //     auto m = ms.front();
-
-  //     auto deep_feats = check_deep_features(m);
-  //     if (deep_feats.size() == 0) {
-  // 	return true; //solved.push_back(nef);
-  //     } else {
-  // 	return false; //parts.push_back(nef);
-  //     }
-  //   }
-    
-  // }
-
   bool deep_features_are_solved(const std::vector<part_split>& nefs) {
     for (auto& n : nefs) {
       //if (!deep_features_are_solved(n)) {
@@ -768,6 +725,13 @@ namespace gca {
     next_partial_solution.erase(f);
 
     for (auto& n : next) {
+      cout << "# of deep features in split = " << total_deep_features(n) << endl;
+
+      for (auto& split : n) {
+	vtk_debug_meshes(nef_polyhedron_to_trimeshes(split.nef));
+	vtk_debug_features(split.deep_features);
+      }
+
       concat(n, next_partial_solution);
     }
     
