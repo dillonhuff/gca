@@ -15674,344 +15674,344 @@ struct behavior *b;
 /*                                                                           */
 /*****************************************************************************/
 
-// #ifdef TRILIBRARY
+#ifdef TRILIBRARY
 
-// #ifdef ANSI_DECLARATORS
-// void triangulate(char *triswitches, struct triangulateio *in,
-//                  struct triangulateio *out, struct triangulateio *vorout)
-// #else /* not ANSI_DECLARATORS */
-// void triangulate(triswitches, in, out, vorout)
-// char *triswitches;
-// struct triangulateio *in;
-// struct triangulateio *out;
-// struct triangulateio *vorout;
-// #endif /* not ANSI_DECLARATORS */
+#ifdef ANSI_DECLARATORS
+void triangulate(char *triswitches, struct triangulateio *in,
+                 struct triangulateio *out, struct triangulateio *vorout)
+#else /* not ANSI_DECLARATORS */
+void triangulate(triswitches, in, out, vorout)
+char *triswitches;
+struct triangulateio *in;
+struct triangulateio *out;
+struct triangulateio *vorout;
+#endif /* not ANSI_DECLARATORS */
 
-// #else /* not TRILIBRARY */
+#else /* not TRILIBRARY */
 
-// // #ifdef ANSI_DECLARATORS
-// // int main(int argc, char **argv)
-// // #else /* not ANSI_DECLARATORS */
-// // int main(argc, argv)
-// // int argc;
-// // char **argv;
-// // #endif /* not ANSI_DECLARATORS */
+#ifdef ANSI_DECLARATORS
+int main(int argc, char **argv)
+#else /* not ANSI_DECLARATORS */
+int main(argc, argv)
+int argc;
+char **argv;
+#endif /* not ANSI_DECLARATORS */
 
-// // #endif /* not TRILIBRARY */
+#endif /* not TRILIBRARY */
 
-// // {
-// //   struct mesh m;
-// //   struct behavior b;
-// //   REAL *holearray;                                        /* Array of holes. */
-// //   REAL *regionarray;   /* Array of regional attributes and area constraints. */
-// // #ifndef TRILIBRARY
-// //   FILE *polyfile;
-// // #endif /* not TRILIBRARY */
-// // #ifndef NO_TIMER
-// //   /* Variables for timing the performance of Triangle.  The types are */
-// //   /*   defined in sys/time.h.                                         */
-// //   struct timeval tv0, tv1, tv2, tv3, tv4, tv5, tv6;
-// //   struct timezone tz;
-// // #endif /* not NO_TIMER */
+{
+  struct mesh m;
+  struct behavior b;
+  REAL *holearray;                                        /* Array of holes. */
+  REAL *regionarray;   /* Array of regional attributes and area constraints. */
+#ifndef TRILIBRARY
+  FILE *polyfile;
+#endif /* not TRILIBRARY */
+#ifndef NO_TIMER
+  /* Variables for timing the performance of Triangle.  The types are */
+  /*   defined in sys/time.h.                                         */
+  struct timeval tv0, tv1, tv2, tv3, tv4, tv5, tv6;
+  struct timezone tz;
+#endif /* not NO_TIMER */
 
-// // #ifndef NO_TIMER
-// //   gettimeofday(&tv0, &tz);
-// // #endif /* not NO_TIMER */
+#ifndef NO_TIMER
+  gettimeofday(&tv0, &tz);
+#endif /* not NO_TIMER */
 
-// //   triangleinit(&m);
-// // #ifdef TRILIBRARY
-// //   parsecommandline(1, &triswitches, &b);
-// // #else /* not TRILIBRARY */
-// //   parsecommandline(argc, argv, &b);
-// // #endif /* not TRILIBRARY */
-// //   m.steinerleft = b.steiner;
+  triangleinit(&m);
+#ifdef TRILIBRARY
+  parsecommandline(1, &triswitches, &b);
+#else /* not TRILIBRARY */
+  parsecommandline(argc, argv, &b);
+#endif /* not TRILIBRARY */
+  m.steinerleft = b.steiner;
 
-// // #ifdef TRILIBRARY
-// //   transfernodes(&m, &b, in->pointlist, in->pointattributelist,
-// //                 in->pointmarkerlist, in->numberofpoints,
-// //                 in->numberofpointattributes);
-// // #else /* not TRILIBRARY */
-// //   readnodes(&m, &b, b.innodefilename, b.inpolyfilename, &polyfile);
-// // #endif /* not TRILIBRARY */
+#ifdef TRILIBRARY
+  transfernodes(&m, &b, in->pointlist, in->pointattributelist,
+                in->pointmarkerlist, in->numberofpoints,
+                in->numberofpointattributes);
+#else /* not TRILIBRARY */
+  readnodes(&m, &b, b.innodefilename, b.inpolyfilename, &polyfile);
+#endif /* not TRILIBRARY */
 
-// // #ifndef NO_TIMER
-// //   if (!b.quiet) {
-// //     gettimeofday(&tv1, &tz);
-// //   }
-// // #endif /* not NO_TIMER */
+#ifndef NO_TIMER
+  if (!b.quiet) {
+    gettimeofday(&tv1, &tz);
+  }
+#endif /* not NO_TIMER */
 
-// // #ifdef CDT_ONLY
-// //   m.hullsize = delaunay(&m, &b);                /* Triangulate the vertices. */
-// // #else /* not CDT_ONLY */
-// //   if (b.refine) {
-// //     /* Read and reconstruct a mesh. */
-// // #ifdef TRILIBRARY
-// //     m.hullsize = reconstruct(&m, &b, in->trianglelist,
-// //                              in->triangleattributelist, in->trianglearealist,
-// //                              in->numberoftriangles, in->numberofcorners,
-// //                              in->numberoftriangleattributes,
-// //                              in->segmentlist, in->segmentmarkerlist,
-// //                              in->numberofsegments);
-// // #else /* not TRILIBRARY */
-// //     m.hullsize = reconstruct(&m, &b, b.inelefilename, b.areafilename,
-// //                              b.inpolyfilename, polyfile);
-// // #endif /* not TRILIBRARY */
-// //   } else {
-// //     m.hullsize = delaunay(&m, &b);              /* Triangulate the vertices. */
-// //   }
-// // #endif /* not CDT_ONLY */
+#ifdef CDT_ONLY
+  m.hullsize = delaunay(&m, &b);                /* Triangulate the vertices. */
+#else /* not CDT_ONLY */
+  if (b.refine) {
+    /* Read and reconstruct a mesh. */
+#ifdef TRILIBRARY
+    m.hullsize = reconstruct(&m, &b, in->trianglelist,
+                             in->triangleattributelist, in->trianglearealist,
+                             in->numberoftriangles, in->numberofcorners,
+                             in->numberoftriangleattributes,
+                             in->segmentlist, in->segmentmarkerlist,
+                             in->numberofsegments);
+#else /* not TRILIBRARY */
+    m.hullsize = reconstruct(&m, &b, b.inelefilename, b.areafilename,
+                             b.inpolyfilename, polyfile);
+#endif /* not TRILIBRARY */
+  } else {
+    m.hullsize = delaunay(&m, &b);              /* Triangulate the vertices. */
+  }
+#endif /* not CDT_ONLY */
 
-// // #ifndef NO_TIMER
-// //   if (!b.quiet) {
-// //     gettimeofday(&tv2, &tz);
-// //     if (b.refine) {
-// //       printf("Mesh reconstruction");
-// //     } else {
-// //       printf("Delaunay");
-// //     }
-// //     printf(" milliseconds:  %ld\n", 1000l * (tv2.tv_sec - tv1.tv_sec) +
-// //            (tv2.tv_usec - tv1.tv_usec) / 1000l);
-// //   }
-// // #endif /* not NO_TIMER */
+#ifndef NO_TIMER
+  if (!b.quiet) {
+    gettimeofday(&tv2, &tz);
+    if (b.refine) {
+      printf("Mesh reconstruction");
+    } else {
+      printf("Delaunay");
+    }
+    printf(" milliseconds:  %ld\n", 1000l * (tv2.tv_sec - tv1.tv_sec) +
+           (tv2.tv_usec - tv1.tv_usec) / 1000l);
+  }
+#endif /* not NO_TIMER */
 
-// //   /* Ensure that no vertex can be mistaken for a triangular bounding */
-// //   /*   box vertex in insertvertex().                                 */
-// //   m.infvertex1 = (vertex) NULL;
-// //   m.infvertex2 = (vertex) NULL;
-// //   m.infvertex3 = (vertex) NULL;
+  /* Ensure that no vertex can be mistaken for a triangular bounding */
+  /*   box vertex in insertvertex().                                 */
+  m.infvertex1 = (vertex) NULL;
+  m.infvertex2 = (vertex) NULL;
+  m.infvertex3 = (vertex) NULL;
 
-// //   if (b.usesegments) {
-// //     m.checksegments = 1;                /* Segments will be introduced next. */
-// //     if (!b.refine) {
-// //       /* Insert PSLG segments and/or convex hull segments. */
-// // #ifdef TRILIBRARY
-// //       formskeleton(&m, &b, in->segmentlist,
-// //                    in->segmentmarkerlist, in->numberofsegments);
-// // #else /* not TRILIBRARY */
-// //       formskeleton(&m, &b, polyfile, b.inpolyfilename);
-// // #endif /* not TRILIBRARY */
-// //     }
-// //   }
+  if (b.usesegments) {
+    m.checksegments = 1;                /* Segments will be introduced next. */
+    if (!b.refine) {
+      /* Insert PSLG segments and/or convex hull segments. */
+#ifdef TRILIBRARY
+      formskeleton(&m, &b, in->segmentlist,
+                   in->segmentmarkerlist, in->numberofsegments);
+#else /* not TRILIBRARY */
+      formskeleton(&m, &b, polyfile, b.inpolyfilename);
+#endif /* not TRILIBRARY */
+    }
+  }
 
-// // #ifndef NO_TIMER
-// //   if (!b.quiet) {
-// //     gettimeofday(&tv3, &tz);
-// //     if (b.usesegments && !b.refine) {
-// //       printf("Segment milliseconds:  %ld\n",
-// //              1000l * (tv3.tv_sec - tv2.tv_sec) +
-// //              (tv3.tv_usec - tv2.tv_usec) / 1000l);
-// //     }
-// //   }
-// // #endif /* not NO_TIMER */
+#ifndef NO_TIMER
+  if (!b.quiet) {
+    gettimeofday(&tv3, &tz);
+    if (b.usesegments && !b.refine) {
+      printf("Segment milliseconds:  %ld\n",
+             1000l * (tv3.tv_sec - tv2.tv_sec) +
+             (tv3.tv_usec - tv2.tv_usec) / 1000l);
+    }
+  }
+#endif /* not NO_TIMER */
 
-// //   if (b.poly && (m.triangles.items > 0)) {
-// // #ifdef TRILIBRARY
-// //     holearray = in->holelist;
-// //     m.holes = in->numberofholes;
-// //     regionarray = in->regionlist;
-// //     m.regions = in->numberofregions;
-// // #else /* not TRILIBRARY */
-// //     readholes(&m, &b, polyfile, b.inpolyfilename, &holearray, &m.holes,
-// //               &regionarray, &m.regions);
-// // #endif /* not TRILIBRARY */
-// //     if (!b.refine) {
-// //       /* Carve out holes and concavities. */
-// //       carveholes(&m, &b, holearray, m.holes, regionarray, m.regions);
-// //     }
-// //   } else {
-// //     /* Without a PSLG, there can be no holes or regional attributes   */
-// //     /*   or area constraints.  The following are set to zero to avoid */
-// //     /*   an accidental free() later.                                  */
-// //     m.holes = 0;
-// //     m.regions = 0;
-// //   }
+  if (b.poly && (m.triangles.items > 0)) {
+#ifdef TRILIBRARY
+    holearray = in->holelist;
+    m.holes = in->numberofholes;
+    regionarray = in->regionlist;
+    m.regions = in->numberofregions;
+#else /* not TRILIBRARY */
+    readholes(&m, &b, polyfile, b.inpolyfilename, &holearray, &m.holes,
+              &regionarray, &m.regions);
+#endif /* not TRILIBRARY */
+    if (!b.refine) {
+      /* Carve out holes and concavities. */
+      carveholes(&m, &b, holearray, m.holes, regionarray, m.regions);
+    }
+  } else {
+    /* Without a PSLG, there can be no holes or regional attributes   */
+    /*   or area constraints.  The following are set to zero to avoid */
+    /*   an accidental free() later.                                  */
+    m.holes = 0;
+    m.regions = 0;
+  }
 
-// // #ifndef NO_TIMER
-// //   if (!b.quiet) {
-// //     gettimeofday(&tv4, &tz);
-// //     if (b.poly && !b.refine) {
-// //       printf("Hole milliseconds:  %ld\n", 1000l * (tv4.tv_sec - tv3.tv_sec) +
-// //              (tv4.tv_usec - tv3.tv_usec) / 1000l);
-// //     }
-// //   }
-// // #endif /* not NO_TIMER */
+#ifndef NO_TIMER
+  if (!b.quiet) {
+    gettimeofday(&tv4, &tz);
+    if (b.poly && !b.refine) {
+      printf("Hole milliseconds:  %ld\n", 1000l * (tv4.tv_sec - tv3.tv_sec) +
+             (tv4.tv_usec - tv3.tv_usec) / 1000l);
+    }
+  }
+#endif /* not NO_TIMER */
 
-// // #ifndef CDT_ONLY
-// //   if (b.quality && (m.triangles.items > 0)) {
-// //     enforcequality(&m, &b);           /* Enforce angle and area constraints. */
-// //   }
-// // #endif /* not CDT_ONLY */
+#ifndef CDT_ONLY
+  if (b.quality && (m.triangles.items > 0)) {
+    enforcequality(&m, &b);           /* Enforce angle and area constraints. */
+  }
+#endif /* not CDT_ONLY */
 
-// // #ifndef NO_TIMER
-// //   if (!b.quiet) {
-// //     gettimeofday(&tv5, &tz);
-// // #ifndef CDT_ONLY
-// //     if (b.quality) {
-// //       printf("Quality milliseconds:  %ld\n",
-// //              1000l * (tv5.tv_sec - tv4.tv_sec) +
-// //              (tv5.tv_usec - tv4.tv_usec) / 1000l);
-// //     }
-// // #endif /* not CDT_ONLY */
-// //   }
-// // #endif /* not NO_TIMER */
+#ifndef NO_TIMER
+  if (!b.quiet) {
+    gettimeofday(&tv5, &tz);
+#ifndef CDT_ONLY
+    if (b.quality) {
+      printf("Quality milliseconds:  %ld\n",
+             1000l * (tv5.tv_sec - tv4.tv_sec) +
+             (tv5.tv_usec - tv4.tv_usec) / 1000l);
+    }
+#endif /* not CDT_ONLY */
+  }
+#endif /* not NO_TIMER */
 
-// //   /* Calculate the number of edges. */
-// //   m.edges = (3l * m.triangles.items + m.hullsize) / 2l;
+  /* Calculate the number of edges. */
+  m.edges = (3l * m.triangles.items + m.hullsize) / 2l;
 
-// //   if (b.order > 1) {
-// //     highorder(&m, &b);       /* Promote elements to higher polynomial order. */
-// //   }
-// //   if (!b.quiet) {
-// //     printf("\n");
-// //   }
+  if (b.order > 1) {
+    highorder(&m, &b);       /* Promote elements to higher polynomial order. */
+  }
+  if (!b.quiet) {
+    printf("\n");
+  }
 
-// // #ifdef TRILIBRARY
-// //   if (b.jettison) {
-// //     out->numberofpoints = m.vertices.items - m.undeads;
-// //   } else {
-// //     out->numberofpoints = m.vertices.items;
-// //   }
-// //   out->numberofpointattributes = m.nextras;
-// //   out->numberoftriangles = m.triangles.items;
-// //   out->numberofcorners = (b.order + 1) * (b.order + 2) / 2;
-// //   out->numberoftriangleattributes = m.eextras;
-// //   out->numberofedges = m.edges;
-// //   if (b.usesegments) {
-// //     out->numberofsegments = m.subsegs.items;
-// //   } else {
-// //     out->numberofsegments = m.hullsize;
-// //   }
-// //   if (vorout != (struct triangulateio *) NULL) {
-// //     vorout->numberofpoints = m.triangles.items;
-// //     vorout->numberofpointattributes = m.nextras;
-// //     vorout->numberofedges = m.edges;
-// //   }
-// // #endif /* TRILIBRARY */
-// //   /* If not using iteration numbers, don't write a .node file if one was */
-// //   /*   read, because the original one would be overwritten!              */
-// //   if (b.nonodewritten || (b.noiterationnum && m.readnodefile)) {
-// //     if (!b.quiet) {
-// // #ifdef TRILIBRARY
-// //       printf("NOT writing vertices.\n");
-// // #else /* not TRILIBRARY */
-// //       printf("NOT writing a .node file.\n");
-// // #endif /* not TRILIBRARY */
-// //     }
-// //     numbernodes(&m, &b);         /* We must remember to number the vertices. */
-// //   } else {
-// //     /* writenodes() numbers the vertices too. */
-// // #ifdef TRILIBRARY
-// //     writenodes(&m, &b, &out->pointlist, &out->pointattributelist,
-// //                &out->pointmarkerlist);
-// // #else /* not TRILIBRARY */
-// //     writenodes(&m, &b, b.outnodefilename, argc, argv);
-// // #endif /* TRILIBRARY */
-// //   }
-// //   if (b.noelewritten) {
-// //     if (!b.quiet) {
-// // #ifdef TRILIBRARY
-// //       printf("NOT writing triangles.\n");
-// // #else /* not TRILIBRARY */
-// //       printf("NOT writing an .ele file.\n");
-// // #endif /* not TRILIBRARY */
-// //     }
-// //   } else {
-// // #ifdef TRILIBRARY
-// //     writeelements(&m, &b, &out->trianglelist, &out->triangleattributelist);
-// // #else /* not TRILIBRARY */
-// //     writeelements(&m, &b, b.outelefilename, argc, argv);
-// // #endif /* not TRILIBRARY */
-// //   }
-// //   /* The -c switch (convex switch) causes a PSLG to be written */
-// //   /*   even if none was read.                                  */
-// //   if (b.poly || b.convex) {
-// //     /* If not using iteration numbers, don't overwrite the .poly file. */
-// //     if (b.nopolywritten || b.noiterationnum) {
-// //       if (!b.quiet) {
-// // #ifdef TRILIBRARY
-// //         printf("NOT writing segments.\n");
-// // #else /* not TRILIBRARY */
-// //         printf("NOT writing a .poly file.\n");
-// // #endif /* not TRILIBRARY */
-// //       }
-// //     } else {
-// // #ifdef TRILIBRARY
-// //       writepoly(&m, &b, &out->segmentlist, &out->segmentmarkerlist);
-// //       out->numberofholes = m.holes;
-// //       out->numberofregions = m.regions;
-// //       if (b.poly) {
-// //         out->holelist = in->holelist;
-// //         out->regionlist = in->regionlist;
-// //       } else {
-// //         out->holelist = (REAL *) NULL;
-// //         out->regionlist = (REAL *) NULL;
-// //       }
-// // #else /* not TRILIBRARY */
-// //       writepoly(&m, &b, b.outpolyfilename, holearray, m.holes, regionarray,
-// //                 m.regions, argc, argv);
-// // #endif /* not TRILIBRARY */
-// //     }
-// //   }
-// // #ifndef TRILIBRARY
-// // #ifndef CDT_ONLY
-// //   if (m.regions > 0) {
-// //     trifree((VOID *) regionarray);
-// //   }
-// // #endif /* not CDT_ONLY */
-// //   if (m.holes > 0) {
-// //     trifree((VOID *) holearray);
-// //   }
-// //   if (b.geomview) {
-// //     writeoff(&m, &b, b.offfilename, argc, argv);
-// //   }
-// // #endif /* not TRILIBRARY */
-// //   if (b.edgesout) {
-// // #ifdef TRILIBRARY
-// //     writeedges(&m, &b, &out->edgelist, &out->edgemarkerlist);
-// // #else /* not TRILIBRARY */
-// //     writeedges(&m, &b, b.edgefilename, argc, argv);
-// // #endif /* not TRILIBRARY */
-// //   }
-// //   if (b.voronoi) {
-// // #ifdef TRILIBRARY
-// //     writevoronoi(&m, &b, &vorout->pointlist, &vorout->pointattributelist,
-// //                  &vorout->pointmarkerlist, &vorout->edgelist,
-// //                  &vorout->edgemarkerlist, &vorout->normlist);
-// // #else /* not TRILIBRARY */
-// //     writevoronoi(&m, &b, b.vnodefilename, b.vedgefilename, argc, argv);
-// // #endif /* not TRILIBRARY */
-// //   }
-// //   if (b.neighbors) {
-// // #ifdef TRILIBRARY
-// //     writeneighbors(&m, &b, &out->neighborlist);
-// // #else /* not TRILIBRARY */
-// //     writeneighbors(&m, &b, b.neighborfilename, argc, argv);
-// // #endif /* not TRILIBRARY */
-// //   }
+#ifdef TRILIBRARY
+  if (b.jettison) {
+    out->numberofpoints = m.vertices.items - m.undeads;
+  } else {
+    out->numberofpoints = m.vertices.items;
+  }
+  out->numberofpointattributes = m.nextras;
+  out->numberoftriangles = m.triangles.items;
+  out->numberofcorners = (b.order + 1) * (b.order + 2) / 2;
+  out->numberoftriangleattributes = m.eextras;
+  out->numberofedges = m.edges;
+  if (b.usesegments) {
+    out->numberofsegments = m.subsegs.items;
+  } else {
+    out->numberofsegments = m.hullsize;
+  }
+  if (vorout != (struct triangulateio *) NULL) {
+    vorout->numberofpoints = m.triangles.items;
+    vorout->numberofpointattributes = m.nextras;
+    vorout->numberofedges = m.edges;
+  }
+#endif /* TRILIBRARY */
+  /* If not using iteration numbers, don't write a .node file if one was */
+  /*   read, because the original one would be overwritten!              */
+  if (b.nonodewritten || (b.noiterationnum && m.readnodefile)) {
+    if (!b.quiet) {
+#ifdef TRILIBRARY
+      printf("NOT writing vertices.\n");
+#else /* not TRILIBRARY */
+      printf("NOT writing a .node file.\n");
+#endif /* not TRILIBRARY */
+    }
+    numbernodes(&m, &b);         /* We must remember to number the vertices. */
+  } else {
+    /* writenodes() numbers the vertices too. */
+#ifdef TRILIBRARY
+    writenodes(&m, &b, &out->pointlist, &out->pointattributelist,
+               &out->pointmarkerlist);
+#else /* not TRILIBRARY */
+    writenodes(&m, &b, b.outnodefilename, argc, argv);
+#endif /* TRILIBRARY */
+  }
+  if (b.noelewritten) {
+    if (!b.quiet) {
+#ifdef TRILIBRARY
+      printf("NOT writing triangles.\n");
+#else /* not TRILIBRARY */
+      printf("NOT writing an .ele file.\n");
+#endif /* not TRILIBRARY */
+    }
+  } else {
+#ifdef TRILIBRARY
+    writeelements(&m, &b, &out->trianglelist, &out->triangleattributelist);
+#else /* not TRILIBRARY */
+    writeelements(&m, &b, b.outelefilename, argc, argv);
+#endif /* not TRILIBRARY */
+  }
+  /* The -c switch (convex switch) causes a PSLG to be written */
+  /*   even if none was read.                                  */
+  if (b.poly || b.convex) {
+    /* If not using iteration numbers, don't overwrite the .poly file. */
+    if (b.nopolywritten || b.noiterationnum) {
+      if (!b.quiet) {
+#ifdef TRILIBRARY
+        printf("NOT writing segments.\n");
+#else /* not TRILIBRARY */
+        printf("NOT writing a .poly file.\n");
+#endif /* not TRILIBRARY */
+      }
+    } else {
+#ifdef TRILIBRARY
+      writepoly(&m, &b, &out->segmentlist, &out->segmentmarkerlist);
+      out->numberofholes = m.holes;
+      out->numberofregions = m.regions;
+      if (b.poly) {
+        out->holelist = in->holelist;
+        out->regionlist = in->regionlist;
+      } else {
+        out->holelist = (REAL *) NULL;
+        out->regionlist = (REAL *) NULL;
+      }
+#else /* not TRILIBRARY */
+      writepoly(&m, &b, b.outpolyfilename, holearray, m.holes, regionarray,
+                m.regions, argc, argv);
+#endif /* not TRILIBRARY */
+    }
+  }
+#ifndef TRILIBRARY
+#ifndef CDT_ONLY
+  if (m.regions > 0) {
+    trifree((VOID *) regionarray);
+  }
+#endif /* not CDT_ONLY */
+  if (m.holes > 0) {
+    trifree((VOID *) holearray);
+  }
+  if (b.geomview) {
+    writeoff(&m, &b, b.offfilename, argc, argv);
+  }
+#endif /* not TRILIBRARY */
+  if (b.edgesout) {
+#ifdef TRILIBRARY
+    writeedges(&m, &b, &out->edgelist, &out->edgemarkerlist);
+#else /* not TRILIBRARY */
+    writeedges(&m, &b, b.edgefilename, argc, argv);
+#endif /* not TRILIBRARY */
+  }
+  if (b.voronoi) {
+#ifdef TRILIBRARY
+    writevoronoi(&m, &b, &vorout->pointlist, &vorout->pointattributelist,
+                 &vorout->pointmarkerlist, &vorout->edgelist,
+                 &vorout->edgemarkerlist, &vorout->normlist);
+#else /* not TRILIBRARY */
+    writevoronoi(&m, &b, b.vnodefilename, b.vedgefilename, argc, argv);
+#endif /* not TRILIBRARY */
+  }
+  if (b.neighbors) {
+#ifdef TRILIBRARY
+    writeneighbors(&m, &b, &out->neighborlist);
+#else /* not TRILIBRARY */
+    writeneighbors(&m, &b, b.neighborfilename, argc, argv);
+#endif /* not TRILIBRARY */
+  }
 
-// //   if (!b.quiet) {
-// // #ifndef NO_TIMER
-// //     gettimeofday(&tv6, &tz);
-// //     printf("\nOutput milliseconds:  %ld\n",
-// //            1000l * (tv6.tv_sec - tv5.tv_sec) +
-// //            (tv6.tv_usec - tv5.tv_usec) / 1000l);
-// //     printf("Total running milliseconds:  %ld\n",
-// //            1000l * (tv6.tv_sec - tv0.tv_sec) +
-// //            (tv6.tv_usec - tv0.tv_usec) / 1000l);
-// // #endif /* not NO_TIMER */
+  if (!b.quiet) {
+#ifndef NO_TIMER
+    gettimeofday(&tv6, &tz);
+    printf("\nOutput milliseconds:  %ld\n",
+           1000l * (tv6.tv_sec - tv5.tv_sec) +
+           (tv6.tv_usec - tv5.tv_usec) / 1000l);
+    printf("Total running milliseconds:  %ld\n",
+           1000l * (tv6.tv_sec - tv0.tv_sec) +
+           (tv6.tv_usec - tv0.tv_usec) / 1000l);
+#endif /* not NO_TIMER */
 
-// //     statistics(&m, &b);
-//   }
+    statistics(&m, &b);
+  }
 
-// #ifndef REDUCED
-//   if (b.docheck) {
-//     checkmesh(&m, &b);
-//     checkdelaunay(&m, &b);
-//   }
-// #endif /* not REDUCED */
+#ifndef REDUCED
+  if (b.docheck) {
+    checkmesh(&m, &b);
+    checkdelaunay(&m, &b);
+  }
+#endif /* not REDUCED */
 
-//   triangledeinit(&m, &b);
-// #ifndef TRILIBRARY
-//   return 0;
-// #endif /* not TRILIBRARY */
-// }
+  triangledeinit(&m, &b);
+#ifndef TRILIBRARY
+  return 0;
+#endif /* not TRILIBRARY */
+}
