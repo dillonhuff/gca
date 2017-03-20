@@ -62,6 +62,8 @@ namespace gca {
   void debug_arrangement(const rigid_arrangement& a);
   void vtk_debug(const triangular_mesh& m, const plane pl);
 
+  vtkSmartPointer<vtkActor> plane_actor(vtkSmartPointer<vtkPlane> pl);
+
   void vtk_debug_ring(const std::vector<point>& pts);
 
   vtkSmartPointer<vtkActor> plane_actor(vtkSmartPointer<vtkPlane> pl);

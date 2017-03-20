@@ -42,9 +42,11 @@ namespace gca {
 
   voxel_volume build_from_mesh(const triangular_mesh& m) {
     box bb = m.bounding_box();
-    double resolution = bb.x_len() / 40.0;
+    double resolution = bb.x_len() / 20.0;
 
     auto pd = polydata_for_trimesh(m);
+
+    DBG_ASSERT(is_closed(pd));
 
     voxel_volume vv(min_point(bb), bb.x_len(), bb.y_len(), bb.z_len(), resolution);
 
@@ -81,12 +83,12 @@ namespace gca {
   }
 
   TEST_CASE("Loading a model from an stl file") {
-    // triangular_mesh m =
-    //   parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+    triangular_mesh m =
+      parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
 
-    // voxel_volume vv = build_from_mesh(m);
+    voxel_volume vv = build_from_mesh(m);
 
-    //vtk_debug_voxel_volume(vv);
+    vtk_debug_voxel_volume(vv);
   }
   
 }
