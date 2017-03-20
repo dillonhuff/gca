@@ -71,10 +71,13 @@ SET(GEOMETRY_CPPS ./src/geometry/point.cpp
 	 ./src/geometry/voxel_volume.cpp
 	 ./src/geometry/voxel_volume_debug.cpp
 	 ./src/geometry/vtk_debug.cpp
-	 ./src/geometry/vtk_utils.cpp)
+	 ./src/geometry/vtk_utils.cpp
+	 ./src/triangle_lib/triangle.cpp)
 
 add_library(geometry ${GEOMETRY_CPPS} ${GEOMETRY_HEADERS})
-target_link_libraries(geometry utils ${CGAL_LIBRARIES} /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
+target_link_libraries(geometry utils ${CGAL_LIBRARIES})
+
+# /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
 			test/rotation_tests.cpp
@@ -312,8 +315,8 @@ target_link_libraries(debug-test geometry utils gcode gprocess gca backend)
 add_executable(nef-test examples/nef_test.cpp)
 target_link_libraries(nef-test geometry utils gcode gprocess gca backend)
 
-add_executable(tri-test examples/tri_test.cpp)
-target_link_libraries(tri-test geometry utils gcode gprocess gca backend)
+# add_executable(tri-test examples/tri_test.cpp)
+# target_link_libraries(tri-test geometry utils gcode gprocess gca backend)
 
 add_executable(parse-iges examples/parse_iges.cpp)
 target_link_libraries(parse-iges geometry utils gcode gprocess gca backend)

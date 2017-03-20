@@ -19,9 +19,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
+//extern "C" {
+
+//}
+
 #include "triangle_lib/triangle.h"
-}
 
 namespace gca {
 
@@ -328,55 +330,55 @@ namespace gca {
   std::vector<triangle> triangulate_flat_3d(const polygon_3& p) {
     // DANGER: This was inserted to eliminate a link error in the GUI
     // version of our UIST paper. Restore once that is done!
-    DBG_ASSERT(false);
+    //DBG_ASSERT(false);
 
-    // struct triangulateio in, mid;
+    struct triangulateio in, mid;
 
-    // /* Define input points. */
+    /* Define input points. */
 
-    // set_points_and_segments(&in, p);
+    set_points_and_segments(&in, p);
 
-    // printf("Input point set:\n\n");
-    // //report(&in, 1, 0, 0, 0, 0, 0);
+    printf("Input point set:\n\n");
+    //report(&in, 1, 0, 0, 0, 0, 0);
 
-    // set_output(&mid);
+    set_output(&mid);
 
 
-    // /*   PSLG (p), preserve the convex hull (c), number everything from  */
-    // /*   zero (z), assign a regional attribute to each element (A), and  */
-    // /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
-    // /*   neighbor list (n).                                              */
+    /*   PSLG (p), preserve the convex hull (c), number everything from  */
+    /*   zero (z), assign a regional attribute to each element (A), and  */
+    /*   produce an edge list (e), a Voronoi diagram (v), and a triangle */
+    /*   neighbor list (n).                                              */
 
-    // char settings_2[] = "pczAen";
-    // triangulate(&(settings_2[0]), &in, &mid, NULL);
+    char settings_2[] = "pczAen";
+    triangulate(&(settings_2[0]), &in, &mid, NULL);
 
-    // printf("Initial triangulation:\n\n");
-    // //report(&mid, 1, 1, 1, 1, 1, 0);
+    printf("Initial triangulation:\n\n");
+    //report(&mid, 1, 1, 1, 1, 1, 0);
 
-    // DBG_ASSERT(mid.numberoftriangles > 0);
+    DBG_ASSERT(mid.numberoftriangles > 0);
 
-    // /* Free all allocated arrays, including those allocated by Triangle. */
+    /* Free all allocated arrays, including those allocated by Triangle. */
 
-    // vector<triangle> tris = trilib_to_tris(p, mid);
+    vector<triangle> tris = trilib_to_tris(p, mid);
 
-    // free(in.pointlist);
-    // free(in.pointattributelist);
-    // free(in.pointmarkerlist);
-    // free(in.regionlist);
+    free(in.pointlist);
+    free(in.pointattributelist);
+    free(in.pointmarkerlist);
+    free(in.regionlist);
 
-    // free(mid.pointlist);
-    // free(mid.pointattributelist);
-    // free(mid.pointmarkerlist);
-    // free(mid.trianglelist);
-    // free(mid.triangleattributelist);
+    free(mid.pointlist);
+    free(mid.pointattributelist);
+    free(mid.pointmarkerlist);
+    free(mid.trianglelist);
+    free(mid.triangleattributelist);
 
-    // free(mid.neighborlist);
-    // free(mid.segmentlist);
-    // free(mid.segmentmarkerlist);
-    // free(mid.edgelist);
-    // free(mid.edgemarkerlist);
+    free(mid.neighborlist);
+    free(mid.segmentlist);
+    free(mid.segmentmarkerlist);
+    free(mid.edgelist);
+    free(mid.edgemarkerlist);
 
-    // return tris;
+    return tris;
 
   }
 

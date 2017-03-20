@@ -189,6 +189,32 @@ engraving/fast:
 .PHONY : engraving/fast
 
 #=============================================================================
+# Target rules for targets named geometry
+
+# Build rule for target.
+geometry: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 geometry
+.PHONY : geometry
+
+# fast build rule for target.
+geometry/fast:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
+.PHONY : geometry/fast
+
+#=============================================================================
+# Target rules for targets named parse-iges
+
+# Build rule for target.
+parse-iges: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 parse-iges
+.PHONY : parse-iges
+
+# fast build rule for target.
+parse-iges/fast:
+	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/build
+.PHONY : parse-iges/fast
+
+#=============================================================================
 # Target rules for targets named debug-test
 
 # Build rule for target.
@@ -254,45 +280,6 @@ ublas/fast:
 .PHONY : ublas/fast
 
 #=============================================================================
-# Target rules for targets named backend
-
-# Build rule for target.
-backend: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 backend
-.PHONY : backend
-
-# fast build rule for target.
-backend/fast:
-	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/build
-.PHONY : backend/fast
-
-#=============================================================================
-# Target rules for targets named json-mesh
-
-# Build rule for target.
-json-mesh: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 json-mesh
-.PHONY : json-mesh
-
-# fast build rule for target.
-json-mesh/fast:
-	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/build
-.PHONY : json-mesh/fast
-
-#=============================================================================
-# Target rules for targets named tri-test
-
-# Build rule for target.
-tri-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tri-test
-.PHONY : tri-test
-
-# fast build rule for target.
-tri-test/fast:
-	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/build
-.PHONY : tri-test/fast
-
-#=============================================================================
 # Target rules for targets named plate-cutter
 
 # Build rule for target.
@@ -330,6 +317,32 @@ json-plan: cmake_check_build_system
 json-plan/fast:
 	$(MAKE) -f CMakeFiles/json-plan.dir/build.make CMakeFiles/json-plan.dir/build
 .PHONY : json-plan/fast
+
+#=============================================================================
+# Target rules for targets named backend
+
+# Build rule for target.
+backend: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 backend
+.PHONY : backend
+
+# fast build rule for target.
+backend/fast:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/build
+.PHONY : backend/fast
+
+#=============================================================================
+# Target rules for targets named json-mesh
+
+# Build rule for target.
+json-mesh: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 json-mesh
+.PHONY : json-mesh
+
+# fast build rule for target.
+json-mesh/fast:
+	$(MAKE) -f CMakeFiles/json-mesh.dir/build.make CMakeFiles/json-mesh.dir/build
+.PHONY : json-mesh/fast
 
 #=============================================================================
 # Target rules for targets named manufacture-tests
@@ -460,32 +473,6 @@ stl-parse: cmake_check_build_system
 stl-parse/fast:
 	$(MAKE) -f CMakeFiles/stl-parse.dir/build.make CMakeFiles/stl-parse.dir/build
 .PHONY : stl-parse/fast
-
-#=============================================================================
-# Target rules for targets named parse-iges
-
-# Build rule for target.
-parse-iges: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 parse-iges
-.PHONY : parse-iges
-
-# fast build rule for target.
-parse-iges/fast:
-	$(MAKE) -f CMakeFiles/parse-iges.dir/build.make CMakeFiles/parse-iges.dir/build
-.PHONY : parse-iges/fast
-
-#=============================================================================
-# Target rules for targets named geometry
-
-# Build rule for target.
-geometry: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 geometry
-.PHONY : geometry
-
-# fast build rule for target.
-geometry/fast:
-	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/build
-.PHONY : geometry/fast
 
 #=============================================================================
 # Target rules for targets named utils
@@ -931,33 +918,6 @@ examples/surface_test.s: examples/surface_test.cpp.s
 examples/surface_test.cpp.s:
 	$(MAKE) -f CMakeFiles/surface-test.dir/build.make CMakeFiles/surface-test.dir/examples/surface_test.cpp.s
 .PHONY : examples/surface_test.cpp.s
-
-examples/tri_test.o: examples/tri_test.cpp.o
-
-.PHONY : examples/tri_test.o
-
-# target to build an object file
-examples/tri_test.cpp.o:
-	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.o
-.PHONY : examples/tri_test.cpp.o
-
-examples/tri_test.i: examples/tri_test.cpp.i
-
-.PHONY : examples/tri_test.i
-
-# target to preprocess a source file
-examples/tri_test.cpp.i:
-	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.i
-.PHONY : examples/tri_test.cpp.i
-
-examples/tri_test.s: examples/tri_test.cpp.s
-
-.PHONY : examples/tri_test.s
-
-# target to generate assembly for a file
-examples/tri_test.cpp.s:
-	$(MAKE) -f CMakeFiles/tri-test.dir/build.make CMakeFiles/tri-test.dir/examples/tri_test.cpp.s
-.PHONY : examples/tri_test.cpp.s
 
 examples/ublas.o: examples/ublas.cpp.o
 
@@ -3767,6 +3727,33 @@ src/transformers/retarget.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/retarget.cpp.s
 .PHONY : src/transformers/retarget.cpp.s
 
+src/triangle_lib/triangle.o: src/triangle_lib/triangle.cpp.o
+
+.PHONY : src/triangle_lib/triangle.o
+
+# target to build an object file
+src/triangle_lib/triangle.cpp.o:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/triangle_lib/triangle.cpp.o
+.PHONY : src/triangle_lib/triangle.cpp.o
+
+src/triangle_lib/triangle.i: src/triangle_lib/triangle.cpp.i
+
+.PHONY : src/triangle_lib/triangle.i
+
+# target to preprocess a source file
+src/triangle_lib/triangle.cpp.i:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/triangle_lib/triangle.cpp.i
+.PHONY : src/triangle_lib/triangle.cpp.i
+
+src/triangle_lib/triangle.s: src/triangle_lib/triangle.cpp.s
+
+.PHONY : src/triangle_lib/triangle.s
+
+# target to generate assembly for a file
+src/triangle_lib/triangle.cpp.s:
+	$(MAKE) -f CMakeFiles/geometry.dir/build.make CMakeFiles/geometry.dir/src/triangle_lib/triangle.cpp.s
+.PHONY : src/triangle_lib/triangle.cpp.s
+
 src/utils/arena_allocator.o: src/utils/arena_allocator.cpp.o
 
 .PHONY : src/utils/arena_allocator.o
@@ -5439,17 +5426,18 @@ help:
 	@echo "... AddCell"
 	@echo "... camaster-test"
 	@echo "... engraving"
+	@echo "... geometry"
+	@echo "... parse-iges"
 	@echo "... debug-test"
 	@echo "... scale-down-mesh"
 	@echo "... check-contours"
 	@echo "... vtk-mass"
 	@echo "... ublas"
-	@echo "... backend"
-	@echo "... json-mesh"
-	@echo "... tri-test"
 	@echo "... plate-cutter"
 	@echo "... backend-tests"
 	@echo "... json-plan"
+	@echo "... backend"
+	@echo "... json-mesh"
 	@echo "... manufacture-tests"
 	@echo "... all-tests"
 	@echo "... feature-decomp"
@@ -5461,8 +5449,6 @@ help:
 	@echo "... gcode"
 	@echo "... geometry-tests"
 	@echo "... stl-parse"
-	@echo "... parse-iges"
-	@echo "... geometry"
 	@echo "... utils"
 	@echo "... examples/AddCell.o"
 	@echo "... examples/AddCell.i"
@@ -5512,9 +5498,6 @@ help:
 	@echo "... examples/surface_test.o"
 	@echo "... examples/surface_test.i"
 	@echo "... examples/surface_test.s"
-	@echo "... examples/tri_test.o"
-	@echo "... examples/tri_test.i"
-	@echo "... examples/tri_test.s"
 	@echo "... examples/ublas.o"
 	@echo "... examples/ublas.i"
 	@echo "... examples/ublas.s"
@@ -5827,6 +5810,9 @@ help:
 	@echo "... src/transformers/retarget.o"
 	@echo "... src/transformers/retarget.i"
 	@echo "... src/transformers/retarget.s"
+	@echo "... src/triangle_lib/triangle.o"
+	@echo "... src/triangle_lib/triangle.i"
+	@echo "... src/triangle_lib/triangle.s"
 	@echo "... src/utils/arena_allocator.o"
 	@echo "... src/utils/arena_allocator.i"
 	@echo "... src/utils/arena_allocator.s"
