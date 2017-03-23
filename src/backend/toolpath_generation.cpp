@@ -508,16 +508,6 @@ namespace gca {
     return res;
   }
 
-  vector<polygon_3> from_boost_multipoly_2(const boost_multipoly_2& p,
-					   const rotation& r,
-					   const double z_level) {
-    vector<polygon_3> polys;
-    for (auto pl : p) {
-      polys.push_back(apply(r, to_polygon_3(z_level, pl)));
-    }
-    return polys;
-  }
-  
   polyline to_polyline(const boost_linestring_2& l,
 		       const double z) {
     vector<point> pts;
@@ -1029,72 +1019,6 @@ namespace gca {
 		      const std::vector<polygon_3>& holes,
 		      const tool& t) {
     DBG_ASSERT(false);
-  }
-
-  std::vector<polygon_3>
-  polygon_intersection(const std::vector<polygon_3>& as,
-		       const std::vector<polygon_3>& bs) {
-    if (as.size() == 0 || bs.size() == 0) { return {}; }
-
-    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-    double z_level = as.front().vertices().front().z;
-
-    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
-    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
-    boost_multipoly_2 cp;
-    bg::intersection(ap, bp, cp);
-
-    return from_boost_multipoly_2(cp, r, z_level);
-  }
-
-  std::vector<polygon_3>
-  polygon_union(const std::vector<polygon_3>& as,
-		const std::vector<polygon_3>& bs) {
-    if (as.size() == 0 || bs.size() == 0) { return {}; }
-
-    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-    double z_level = as.front().vertices().front().z;
-
-    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
-    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
-    boost_multipoly_2 cp;
-    bg::union_(ap, bp, cp);
-
-    return from_boost_multipoly_2(cp, r, z_level);
-  }
-
-  bool
-  contains(const std::vector<polygon_3>& as,
-	   const std::vector<polygon_3>& bs) {
-    if (as.size() == 0 || bs.size() == 0) { return {}; }
-
-    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-    double z_level = as.front().vertices().front().z;
-
-    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
-    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
-
-    return bg::within(bp, ap);
-  }
-  
-  std::vector<polygon_3>
-  polygon_difference(const std::vector<polygon_3>& as,
-		     const std::vector<polygon_3>& bs) {
-    if (as.size() == 0 || bs.size() == 0) { return {}; }
-
-    const rotation r = rotate_from_to(as.front().normal(), point(0, 0, 1));
-    const rotation r_inv = inverse(r);
-    double z_level = as.front().vertices().front().z;
-
-    boost_multipoly_2 ap = to_boost_multipoly_2(r, as);
-    boost_multipoly_2 bp = to_boost_multipoly_2(r, bs);
-    boost_multipoly_2 cp;
-    bg::difference(ap, bp, cp);
-
-    return from_boost_multipoly_2(cp, r, z_level);
   }
   
   toolpath contour_cleanup_path(const std::vector<polygon_3>& remaining_area,

@@ -156,5 +156,25 @@ namespace gca {
   dilate_polygons(const std::vector<labeled_polygon_3>& polys, const double tol);
 
   int curve_count(const polygon_3& f);
+
+  // vector<polygon_3> from_boost_multipoly_2(const boost_multipoly_2& p,
+  // 					   const rotation& r,
+  // 					   const double z_level);
+  
+  std::vector<polygon_3>
+  polygon_difference(const std::vector<polygon_3>& as,
+		     const std::vector<polygon_3>& bs);
+
+  bool
+  contains(const std::vector<polygon_3>& as,
+	   const std::vector<polygon_3>& bs);
+
+  std::vector<polygon_3>
+  polygon_union(const std::vector<polygon_3>& as,
+		const std::vector<polygon_3>& bs);
+  
+  std::vector<polygon_3>
+  polygon_intersection(const std::vector<polygon_3>& as,
+		       const std::vector<polygon_3>& bs);
   
 }
