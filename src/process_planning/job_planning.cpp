@@ -59,8 +59,12 @@ namespace gca {
       pockets.push_back(freeform_operation(rotated_surf, freeform.tools));
     }
 
+    rigid_arrangement arr;
+    arr.insert("part", *m);
+    arr.insert("final-part", *pm);
 
-    return fixture_setup(m, f, pockets);
+
+    return fixture_setup(arr, f, pockets);
   }
 
   Nef_polyhedron
