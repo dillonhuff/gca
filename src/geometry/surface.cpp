@@ -451,4 +451,19 @@ namespace gca {
     return planes;
   }
 
+  bool share_non_fully_concave_edge(const surface& l, const surface& r) {
+    vector<shared_edge> shared =
+      all_shared_edges(l.index_list(), r.index_list(), l.get_parent_mesh());
+
+    for (auto s : shared) {
+      if (is_valley_edge(s, l.get_parent_mesh())) {
+	return true;
+      } else if (angle_between_normals(s, l.get_parent_mesh()) < 70.0) {
+	return true;
+      }
+    }
+
+    return false;
+  }
+  
 }

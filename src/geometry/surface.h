@@ -234,6 +234,8 @@ namespace gca {
 
   std::vector<plane> max_area_basis(const std::vector<surface>& surfaces);
 
+  bool share_non_fully_concave_edge(const surface& l, const surface& r);
+
 }
 
 #endif

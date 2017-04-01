@@ -76,5 +76,38 @@ namespace gca {
 
     return mesh;
   }
+
+  triangular_mesh parse_and_scale_box_stl(const std::string& part_path,
+					  const double max_dim,
+					  const double tol) {
+    auto mesh = parse_stl(part_path, tol);
+
+    box b = mesh.bounding_box();
+
+    vector<double> dims{b.x_len(), b.y_len(), b.z_len()};
+
+    double max_mesh_dim = max_e(dims, [](const double d) { return d; });
+    if (max_mesh_dim > max_dim) {
+      double scale_factor = max_dim / max_mesh_dim;
+
+      auto scale_func = [scale_factor](const point p) {
+	return scale_factor*p;
+      };
+
+      mesh =
+	mesh.apply_to_vertices(scale_func);
+
+    }
+
+    box scaled_bounds = mesh.bounding_box();
+
+    cout << "Scaled bounds " << endl;
+    cout << "X length = " << scaled_bounds.x_len() << endl;
+    cout << "Y length = " << scaled_bounds.y_len() << endl;
+    cout << "Z length = " << scaled_bounds.z_len() << endl;
+
+    return mesh;
+  }
+
   
 }

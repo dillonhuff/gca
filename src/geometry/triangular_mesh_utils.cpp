@@ -168,4 +168,11 @@ namespace gca {
     return poly;
   }
 
+  double angle_between_normals(const shared_edge e,
+			       const triangular_mesh& m) {
+    point n1 = m.face_orientation(e.triangle_1);
+    point n2 = m.face_orientation(e.triangle_2);
+    return angle_between(n1, n2);
+  }
+  
 }

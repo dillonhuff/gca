@@ -34,5 +34,8 @@ namespace gca {
 				    const triangular_mesh& m);
 
   polygon_3 box_bound(const triangular_mesh& mesh);
+
+  double angle_between_normals(const shared_edge e,
+			       const triangular_mesh& m);
   
 }

@@ -30,39 +30,6 @@ namespace gca {
   // 	"test/stl-files/onshape_parts//Part Studio 1 - Part 1(37).stl"
   //    
 
-
-  triangular_mesh parse_and_scale_box_stl(const std::string& part_path,
-					  const double max_dim,
-					  const double tol) {
-    auto mesh = parse_stl(part_path, tol);
-
-    box b = mesh.bounding_box();
-
-    vector<double> dims{b.x_len(), b.y_len(), b.z_len()};
-
-    double max_mesh_dim = max_e(dims, [](const double d) { return d; });
-    if (max_mesh_dim > max_dim) {
-      double scale_factor = max_dim / max_mesh_dim;
-
-      auto scale_func = [scale_factor](const point p) {
-	return scale_factor*p;
-      };
-
-      mesh =
-	mesh.apply_to_vertices(scale_func);
-
-    }
-
-    box scaled_bounds = mesh.bounding_box();
-
-    cout << "Scaled bounds " << endl;
-    cout << "X length = " << scaled_bounds.x_len() << endl;
-    cout << "Y length = " << scaled_bounds.y_len() << endl;
-    cout << "Z length = " << scaled_bounds.z_len() << endl;
-
-    return mesh;
-  }
-
   struct part_info {
     string path;
     double scale_factor;
@@ -73,28 +40,6 @@ namespace gca {
     std::string part_path;
     std::vector<int> acceptable_num_setups;
   };
-
-  double angle_between_normals(const shared_edge e,
-			       const triangular_mesh& m) {
-    point n1 = m.face_orientation(e.triangle_1);
-    point n2 = m.face_orientation(e.triangle_2);
-    return angle_between(n1, n2);
-  }
-  
-  bool share_non_fully_concave_edge(const surface& l, const surface& r) {
-    vector<shared_edge> shared =
-      all_shared_edges(l.index_list(), r.index_list(), l.get_parent_mesh());
-
-    for (auto s : shared) {
-      if (is_valley_edge(s, l.get_parent_mesh())) {
-	return true;
-      } else if (angle_between_normals(s, l.get_parent_mesh()) < 70.0) {
-	return true;
-      }
-    }
-
-    return false;
-  }
 
   color random_color_non_pastel(const color mix) {
     unsigned red = rand() % 256;
@@ -131,7 +76,7 @@ namespace gca {
 
     }
 
-    highlight_cells(part_polydata, colors);    
+    highlight_cells(part_polydata, colors);
     visualize_actors({polydata_actor(part_polydata)});
 
   }
@@ -147,6 +92,11 @@ namespace gca {
 
     visualize_surface_decomp(surf_complexes);
   }
+
+  struct surface_plan {
+    point access_direction;
+    std::vector<surface> surfs;
+  };
 
   struct two_setup_plan_case {
     std::string part_path;
@@ -246,6 +196,23 @@ namespace gca {
     return tools;
   }
 
+  TEST_CASE("Viz based plans") {
+    arena_allocator a;
+    set_system_allocator(&a);
+
+    vector<two_setup_plan_case> planning_cases = two_setup_cases();
+
+    for (auto& test_case : planning_cases) {
+
+      auto mesh =
+	parse_and_scale_stl(test_case.part_path, test_case.scale_factor, 0.001);
+
+      
+      visualize_non_concave_decomp(mesh);      
+    }
+
+  }
+  
   TEST_CASE("Surface based plans") {
     arena_allocator a;
     set_system_allocator(&a);

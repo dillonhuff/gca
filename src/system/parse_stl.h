@@ -21,6 +21,10 @@ namespace gca {
 				      const double scale_factor,
 				      const double tol);
 
+  triangular_mesh parse_and_scale_box_stl(const std::string& part_path,
+					  const double max_dim,
+					  const double tol);
+  
 }
 
 #endif
