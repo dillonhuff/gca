@@ -31,6 +31,10 @@ namespace gca {
       }
     }
 
+    bool connected(const l_index l, const r_index r) {
+      return elem(l, lefts_connected_to(r));
+    }
+
     void insert(const l_index l, const r_index r) {
       l_to_r[l].push_back(r);
       r_to_l[r].push_back(l);

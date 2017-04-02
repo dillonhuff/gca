@@ -9,9 +9,11 @@
 #include "process_planning/major_axis_fixturing.h"
 #include "process_planning/surface_planning.h"
 #include "synthesis/fixture_analysis.h"
+#include "synthesis/millability.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "synthesis/visual_debug.h"
 #include "utils/arena_allocator.h"
+#include "utils/relation.h"
 #include "system/parse_stl.h"
 
 namespace gca {
@@ -81,6 +83,23 @@ namespace gca {
 
   }
 
+  std::vector<surface>
+  non_concave_decomp(const triangular_mesh& part) {
+    auto regions = const_orientation_regions(part);
+    vector<surface> const_surfs = inds_to_surfaces(regions, part);
+    vector<vector<surface> > surf_complexes =
+      connected_components_by_elems(const_surfs,
+				    [](const surface& l, const surface& r) {
+				      return share_non_fully_concave_edge(l, r);
+				    });
+
+    vector<surface> surfs;
+    for (auto& sg : surf_complexes) {
+      surfs.push_back(merge_surfaces(sg));
+    }
+    return surfs;
+  }
+
   void visualize_non_concave_decomp(const triangular_mesh& part) {
     auto regions = const_orientation_regions(part);
     vector<surface> const_surfs = inds_to_surfaces(regions, part);
@@ -93,10 +112,59 @@ namespace gca {
     visualize_surface_decomp(surf_complexes);
   }
 
-  struct surface_plan {
+  struct surface_setup {
     point access_direction;
     std::vector<surface> surfs;
   };
+
+  struct surface_plan {
+    std::vector<surface_setup> setups;
+  };
+
+  std::vector<surface_plan>
+  ranked_surface_plans(const std::vector<surface>& surfs) {
+    if (surfs.size() == 0) { return {}; }
+
+    const auto& mesh = surfs.front().get_parent_mesh();
+
+    vector<surface> out_surfs = outer_surfaces(mesh);
+    vector<point> access_dirs;
+    for (auto& s : out_surfs) {
+      access_dirs.push_back(normal(s));
+    }
+
+    relation<surface, point> access_rel(surfs, access_dirs);
+    for (unsigned i = 0; i < access_dirs.size(); i++) {
+      vector<index_t> inds = millable_faces(access_dirs[i], mesh);
+      sort(begin(inds), end(inds));
+
+      for (unsigned surf_ind = 0; surf_ind < surfs.size(); surf_ind++) {
+	if ( surfs[surf_ind].contained_by_sorted(inds) ) {
+	  access_rel.insert(surf_ind, i);
+	}
+      }
+    }
+
+    vector<surface_setup> setups;
+    vector<unsigned> assigned;
+    for (unsigned i = 0; i < access_dirs.size(); i++) {
+      vector<surface> sfs;
+      point p = access_dirs[i];
+
+      surface_setup ss;
+
+      for (unsigned j = 0; j < surfs.size(); j++) {
+	if (!elem(j, assigned) && access_rel.connected(j, i)) {
+	  assigned.push_back(j);
+	  ss.surfs.push_back(surfs[j]);
+	}
+      }
+
+      setups.push_back(ss);
+    }
+
+    return {{setups}};
+  }
 
   struct two_setup_plan_case {
     std::string part_path;
@@ -207,8 +275,19 @@ namespace gca {
       auto mesh =
 	parse_and_scale_stl(test_case.part_path, test_case.scale_factor, 0.001);
 
-      
-      visualize_non_concave_decomp(mesh);      
+      vector<surface> surfs = non_concave_decomp(mesh);
+      vector<surface_plan> plans
+	= ranked_surface_plans(surfs);
+
+      for (auto& plan : plans) {
+	vector<vector<surface> > decomp;
+	for (auto& step : plan.setups) {
+	  //vtk_debug_highlight_inds(step.surfs);
+	  decomp.push_back(step.surfs);
+	}
+
+	visualize_surface_decomp(decomp);
+      }
     }
 
   }
