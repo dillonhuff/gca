@@ -160,7 +160,9 @@ namespace gca {
 	}
       }
 
-      setups.push_back(ss);
+      if (ss.surfs.size() > 0) {
+	setups.push_back(ss);
+      }
     }
 
     return {{setups}};
@@ -286,6 +288,7 @@ namespace gca {
 	  decomp.push_back(step.surfs);
 	}
 
+	cout << "# of setups in plan = " << plan.setups.size() << endl;
 	visualize_surface_decomp(decomp);
       }
     }
