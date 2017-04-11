@@ -31,7 +31,7 @@ namespace gca {
 	       return !angle_eps(normal(s), n, 90.0, 2.0);
 	     });
 
-    double field_resolution = 0.1;
+    double field_resolution = 0.05;
     double min_value = min_in_dir(m, point(0, 0, 1));
     depth_field part_field =
       build_from_stl(m.bounding_box(), m, min_value, field_resolution);
