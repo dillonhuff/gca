@@ -350,13 +350,25 @@ namespace gca {
     int first_y = r.y_index(t.y_min(p));
     int last_y = r.y_index(t.y_max(p));
 
+    const cylindrical_bit& ct =
+      static_cast<const cylindrical_bit&>(t);
+
     double highest = p.z;
     for (int i = first_x; i < last_x; i++) {
       for (int j = first_y; j < last_y; j++) {
 	if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
 	    r.legal_column(i, j)) {
+
+	  double test_x = r.x_coord(i);
+	  double test_y = r.y_coord(j);
+
+	  cout << "(" << test_x << ", " << test_y << ") is inside ";
+	  cout << p << " is tool with radius " << ct.radius;
+	  cout << " when tools is at point" << p << endl;
+	  
 	  double test_pt = r.column_height(i, j);
 	  if (test_pt >= highest) {
+	    
 	    highest = test_pt;
 	  }
 	}
@@ -416,8 +428,8 @@ namespace gca {
     //    double safe_z = 10.0;
 
     cylindrical_bit mill_t(t.cut_diameter());
-    cylindrical_bit shank_t(t.shank_diameter());
-    cylindrical_bit holder_t(t.holder_diameter());
+    // cylindrical_bit shank_t(t.shank_diameter());
+    // cylindrical_bit holder_t(t.holder_diameter());
 
     for (unsigned i = 0; i < part_field.num_x_elems; i++) {
       double x_coord = part_field.x_coord(i);
@@ -429,13 +441,13 @@ namespace gca {
 	point tool_pt(x_coord, y_coord, part_field.column_height(i, j));
 
 	double tool_z = drop_tool(tool_pt, mill_t, part_field);
-	double shank_z = drop_tool(tool_pt, shank_t, part_field);
-	double holder_z = drop_tool(tool_pt, holder_t, part_field);
+	// double shank_z = drop_tool(tool_pt, shank_t, part_field);
+	// double holder_z = drop_tool(tool_pt, holder_t, part_field);
 
-	double shank_z_bound = shank_z - t.cut_length();
-	double holder_z_bound = shank_z - t.cut_length() - t.shank_length();
+	// double shank_z_bound = shank_z - t.cut_length();
+	// double holder_z_bound = holder_z - t.cut_length() - t.shank_length();
 
-	vector<double> coords{tool_z, shank_z_bound, holder_z_bound};
+	vector<double> coords{tool_z}; //, shank_z_bound, holder_z_bound};
 	double z_coord =
 	  max_e(coords, [](const double d) { return d; });
 
