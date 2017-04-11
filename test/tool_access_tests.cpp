@@ -191,7 +191,7 @@ namespace gca {
 
     // Very thick, short tool
     tool t(0.14, 3.15, 2, HSS, FLAT_NOSE);
-    t.set_cut_diameter(0.5);
+    t.set_cut_diameter(0.25);
     t.set_cut_length(0.1);
 
     t.set_shank_diameter(0.5);
@@ -206,7 +206,7 @@ namespace gca {
     vtk_debug_highlight_inds(accessable_surfs);
   }
 
-  TEST_CASE("Depth map based access testing, very long tool") {
+  TEST_CASE("Long tool access") {
     auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
     // Ridiculous tool, only for testing

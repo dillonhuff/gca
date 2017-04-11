@@ -427,6 +427,9 @@ namespace gca {
 
     //    double safe_z = 10.0;
 
+    cout << "Called min_tool_height field" << endl;
+    cout << "t.cut_diameter() = " << t.cut_diameter() << endl;
+
     cylindrical_bit mill_t(t.cut_diameter());
     // cylindrical_bit shank_t(t.shank_diameter());
     // cylindrical_bit holder_t(t.holder_diameter());
