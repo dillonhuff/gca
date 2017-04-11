@@ -121,6 +121,14 @@ namespace gca {
     std::vector<surface_setup> setups;
   };
 
+  struct partial_plan {
+    const relation<surface, point>& access_rel;
+    std::vector<unsigned> surfs_left;
+    std::vector<unsigned> dirs_left;
+
+    surface_plan plan;
+  };
+
   std::vector<surface_plan>
   ranked_surface_plans(const std::vector<surface>& surfs) {
     if (surfs.size() == 0) { return {}; }

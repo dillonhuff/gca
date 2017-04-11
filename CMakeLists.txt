@@ -207,6 +207,7 @@ SET(GCA_CPPS
 	./src/process_planning/mandatory_volumes.cpp
 	./src/process_planning/surface_planning.cpp
 	./src/process_planning/tool_access.cpp
+	./src/process_planning/tool_access_depth_field.cpp
 	./src/synthesis/clamp_orientation.cpp
 	./src/synthesis/fabrication_plan.cpp
 	./src/synthesis/jaw_cutout.cpp

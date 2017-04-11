@@ -413,7 +413,7 @@ namespace gca {
 
     depth_field min_height_field(part_field);
 
-    double safe_z = 10.0;
+    //    double safe_z = 10.0;
 
     cylindrical_bit mill_t(t.cut_diameter());
     cylindrical_bit shank_t(t.shank_diameter());

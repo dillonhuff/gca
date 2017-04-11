@@ -1,5 +1,6 @@
 #pragma once
 
+#include "geometry/depth_field.h"
 #include "synthesis/clamp_orientation.h"
 #include "synthesis/fabrication_plan.h"
 #include "process_planning/surface_planning.h"
@@ -34,5 +35,7 @@ namespace gca {
 			const fixtures& fixes,
 			const workpiece w,
 			const std::vector<tool>& tools);
-  
+
+  depth_field min_tool_height_field(const tool& t, const depth_field& part_field);
+
 }
