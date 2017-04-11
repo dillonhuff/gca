@@ -37,5 +37,8 @@ namespace gca {
 
   double angle_between_normals(const shared_edge e,
 			       const triangular_mesh& m);
-  
+
+  polygon_3 surface_boundary_polygon(const vector<index_t>& faces,
+				     const triangular_mesh& mesh);
+
 }

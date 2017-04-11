@@ -70,6 +70,16 @@ namespace gca {
 
     return polys;
   }
+
+  polygon_3 surface_boundary_polygon(const vector<index_t>& faces,
+				     const triangular_mesh& mesh) {
+    auto ps = surface_boundary_polygons(faces, mesh);
+
+    DBG_ASSERT(ps.size() == 1);
+
+    return ps.front();
+  }
+
   
 
   boost::optional<shared_edge>
