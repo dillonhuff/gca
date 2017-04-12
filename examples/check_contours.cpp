@@ -13,6 +13,24 @@
 using namespace gca;
 using namespace std;
 
+void show_fillets(const triangular_mesh& part) {
+  auto regions = const_orientation_regions(part);
+  vector<surface> const_surfs = inds_to_surfaces(regions, part);
+
+  vector<vector<surface> > similar_size =
+    connected_components_by_elems(const_surfs,
+				 [](const surface& l, const surface& r) {
+				   if (!surfaces_share_edge(l, r)) {
+				     return false;
+				   }
+
+				   return (l.surface_area() < 5*r.surface_area()) &&
+				   (r.surface_area() < 5*l.surface_area());
+				 });
+
+  visualize_surface_decomp(similar_size);
+}
+
 int main(int argc, char* argv[]) {
 
   DBG_ASSERT(argc == 2);
@@ -25,7 +43,9 @@ int main(int argc, char* argv[]) {
 
     auto mesh = parse_stl(n, 0.001);
 
-    surface_plans(mesh);
+    show_fillets(mesh);
+
+    // surface_plans(mesh);
 
     // box bounding = mesh.bounding_box();
 

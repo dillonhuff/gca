@@ -82,6 +82,11 @@ namespace gca {
   
   void vtk_debug_depth_field(const depth_field& df);
 
+  color random_color_non_pastel(const color mix);
+
+  void
+  visualize_surface_decomp(const std::vector<std::vector<surface> >& surf_complexes);
+  
 }
 
 #endif

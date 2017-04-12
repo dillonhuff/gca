@@ -191,8 +191,8 @@ namespace gca {
 
     // Very thick, short tool
     tool t(0.14, 3.15, 2, HSS, FLAT_NOSE);
-    t.set_cut_diameter(0.25);
-    t.set_cut_length(0.1);
+    t.set_cut_diameter(0.125);
+    t.set_cut_length(0.5);
 
     t.set_shank_diameter(0.5);
     t.set_shank_length(0.1);

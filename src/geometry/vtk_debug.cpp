@@ -554,4 +554,44 @@ namespace gca {
   }
 
 
+  color random_color_non_pastel(const color mix) {
+    unsigned red = rand() % 256;
+    unsigned green = rand() % 256;
+    unsigned blue = rand() % 256;
+
+    return color(red, green, blue);
+
+  }
+
+  void
+  visualize_surface_decomp(const std::vector<std::vector<surface> >& surf_complexes)
+  {
+
+    cout << "# of surfaces = " << surf_complexes.size() << endl;
+    if (surf_complexes.size() == 0) { return; }
+
+    const auto& part = surf_complexes.front().front().get_parent_mesh();
+
+    auto part_polydata = polydata_for_trimesh(part);
+
+    color white(255, 255, 255);
+
+    vector<pair<vector<index_t>,  color> > colors;
+    for (auto& sc : surf_complexes) {
+
+      vector<index_t> inds;
+      for (auto& s : sc) {
+	concat(inds, s.index_list());
+      }
+
+      color tp_color = random_color(white);
+      colors.push_back(std::make_pair(inds, tp_color));
+
+    }
+
+    highlight_cells(part_polydata, colors);
+    visualize_actors({polydata_actor(part_polydata)});
+
+  }
+
 }
