@@ -584,7 +584,7 @@ namespace gca {
 	concat(inds, s.index_list());
       }
 
-      color tp_color = random_color(white);
+      color tp_color = random_color_non_pastel(white);
       colors.push_back(std::make_pair(inds, tp_color));
 
     }

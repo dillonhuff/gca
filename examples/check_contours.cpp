@@ -4,6 +4,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
+#include "geometry/triangular_mesh_utils.h"
 #include "process_planning/axis_location.h"
 #include "process_planning/surface_planning.h"
 #include "utils/algorithm.h"
@@ -20,12 +21,23 @@ void show_fillets(const triangular_mesh& part) {
   vector<vector<surface> > similar_size =
     connected_components_by_elems(const_surfs,
 				 [](const surface& l, const surface& r) {
-				   if (!surfaces_share_edge(l, r)) {
-				     return false;
-				   }
+				    vector<shared_edge> shared =
+				    all_shared_edges(l.index_list(),
+						     r.index_list(),
+						     l.get_parent_mesh());
 
-				   return (l.surface_area() < 5*r.surface_area()) &&
-				   (r.surface_area() < 5*l.surface_area());
+				    if (shared.size() == 0) { return false; }
+
+				    for (auto s : shared) {
+				      if (!is_valley_edge(s, l.get_parent_mesh()) &&
+					  angle_eps(s, l.get_parent_mesh(), 90.0, 5.0)) {
+					return false;
+				      }
+				    }
+				    
+
+				    return (l.surface_area() < 5*r.surface_area()) &&
+				    (r.surface_area() < 5*l.surface_area());
 				 });
 
   visualize_surface_decomp(similar_size);
