@@ -36,7 +36,17 @@ namespace gca {
 
 
     delete_if(similar_size, [](const vector<surface>& s) {
-	return s.size() == 1;
+	return s.size() < 2;
+      });
+
+    delete_if(similar_size, [](const vector<surface>& s) {
+	surface ms = merge_surfaces(s);
+	auto sbs =
+	  mesh_bounds(ms.index_list(), ms.get_parent_mesh());
+
+	//vtk_debug_polygons(sbs);
+
+	return sbs.size() > 1;
       });
 
     //visualize_surface_decomp(similar_size);
