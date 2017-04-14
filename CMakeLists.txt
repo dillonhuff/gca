@@ -192,6 +192,7 @@ SET(GCA_HEADERS
 
 SET(GCA_CPPS
 	./src/feature_recognition/chamfer_detection.cpp
+	./src/feature_recognition/fillet_detection.cpp
 	./src/feature_recognition/freeform_surface_detection.cpp
 	./src/feature_recognition/feature_decomposition.cpp
 	./src/feature_recognition/prismatic_feature.cpp
@@ -243,6 +244,7 @@ add_executable(manufacture-tests test/main_manufacture.cpp ${MANUFACTURE_TEST_FI
 target_link_libraries(manufacture-tests geometry utils gcode gprocess gca backend)
 
 SET(TEST_FILES test/main.cpp
+	       test/fillet_detection_tests.cpp
 	       test/slice_to_millable_tests.cpp
 	       test/axis_location_tests.cpp
 	       test/machinability_tests.cpp

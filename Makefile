@@ -1837,6 +1837,33 @@ src/feature_recognition/feature_decomposition.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/feature_decomposition.cpp.s
 .PHONY : src/feature_recognition/feature_decomposition.cpp.s
 
+src/feature_recognition/fillet_detection.o: src/feature_recognition/fillet_detection.cpp.o
+
+.PHONY : src/feature_recognition/fillet_detection.o
+
+# target to build an object file
+src/feature_recognition/fillet_detection.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/fillet_detection.cpp.o
+.PHONY : src/feature_recognition/fillet_detection.cpp.o
+
+src/feature_recognition/fillet_detection.i: src/feature_recognition/fillet_detection.cpp.i
+
+.PHONY : src/feature_recognition/fillet_detection.i
+
+# target to preprocess a source file
+src/feature_recognition/fillet_detection.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/fillet_detection.cpp.i
+.PHONY : src/feature_recognition/fillet_detection.cpp.i
+
+src/feature_recognition/fillet_detection.s: src/feature_recognition/fillet_detection.cpp.s
+
+.PHONY : src/feature_recognition/fillet_detection.s
+
+# target to generate assembly for a file
+src/feature_recognition/fillet_detection.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/feature_recognition/fillet_detection.cpp.s
+.PHONY : src/feature_recognition/fillet_detection.cpp.s
+
 src/feature_recognition/freeform_surface_detection.o: src/feature_recognition/freeform_surface_detection.cpp.o
 
 .PHONY : src/feature_recognition/freeform_surface_detection.o
@@ -4267,6 +4294,36 @@ test/feature_selection_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_selection_tests.cpp.s
 .PHONY : test/feature_selection_tests.cpp.s
 
+test/fillet_detection_tests.o: test/fillet_detection_tests.cpp.o
+
+.PHONY : test/fillet_detection_tests.o
+
+# target to build an object file
+test/fillet_detection_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fillet_detection_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fillet_detection_tests.cpp.o
+.PHONY : test/fillet_detection_tests.cpp.o
+
+test/fillet_detection_tests.i: test/fillet_detection_tests.cpp.i
+
+.PHONY : test/fillet_detection_tests.i
+
+# target to preprocess a source file
+test/fillet_detection_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fillet_detection_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fillet_detection_tests.cpp.i
+.PHONY : test/fillet_detection_tests.cpp.i
+
+test/fillet_detection_tests.s: test/fillet_detection_tests.cpp.s
+
+.PHONY : test/fillet_detection_tests.s
+
+# target to generate assembly for a file
+test/fillet_detection_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fillet_detection_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fillet_detection_tests.cpp.s
+.PHONY : test/fillet_detection_tests.cpp.s
+
 test/fixture_analysis_tests.o: test/fixture_analysis_tests.cpp.o
 
 .PHONY : test/fixture_analysis_tests.o
@@ -5627,6 +5684,9 @@ help:
 	@echo "... src/feature_recognition/feature_decomposition.o"
 	@echo "... src/feature_recognition/feature_decomposition.i"
 	@echo "... src/feature_recognition/feature_decomposition.s"
+	@echo "... src/feature_recognition/fillet_detection.o"
+	@echo "... src/feature_recognition/fillet_detection.i"
+	@echo "... src/feature_recognition/fillet_detection.s"
 	@echo "... src/feature_recognition/freeform_surface_detection.o"
 	@echo "... src/feature_recognition/freeform_surface_detection.i"
 	@echo "... src/feature_recognition/freeform_surface_detection.s"
@@ -5891,6 +5951,9 @@ help:
 	@echo "... test/feature_selection_tests.o"
 	@echo "... test/feature_selection_tests.i"
 	@echo "... test/feature_selection_tests.s"
+	@echo "... test/fillet_detection_tests.o"
+	@echo "... test/fillet_detection_tests.i"
+	@echo "... test/fillet_detection_tests.s"
 	@echo "... test/fixture_analysis_tests.o"
 	@echo "... test/fixture_analysis_tests.i"
 	@echo "... test/fixture_analysis_tests.s"

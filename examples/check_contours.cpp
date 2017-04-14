@@ -30,7 +30,7 @@ void show_fillets(const triangular_mesh& part) {
 
 				    for (auto s : shared) {
 				      if (!is_valley_edge(s, l.get_parent_mesh()) &&
-					  angle_eps(s, l.get_parent_mesh(), 90.0, 5.0)) {
+					  angle_eps(s, l.get_parent_mesh(), 90.0, 10.0)) {
 					return false;
 				      }
 				    }
@@ -40,7 +40,15 @@ void show_fillets(const triangular_mesh& part) {
 				    (r.surface_area() < 5*l.surface_area());
 				 });
 
-  visualize_surface_decomp(similar_size);
+  //visualize_surface_decomp(similar_size);
+  for (auto& sg : similar_size) {
+    cout << "NORMALS" << endl;
+    for (auto s : sg) {
+      cout << normal(s) << endl;
+    }
+    vtk_debug_highlight_inds(sg);
+  }
+
 }
 
 int main(int argc, char* argv[]) {
