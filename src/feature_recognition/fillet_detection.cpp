@@ -20,8 +20,8 @@ namespace gca {
       if (shared.size() == 0) { return false; }
 
       for (auto s : shared) {
-	if (!is_valley_edge(s, l.get_parent_mesh()) &&
-	    angle_eps(s, l.get_parent_mesh(), 90.0, 10.0)) {
+	//	if (!is_valley_edge(s, l.get_parent_mesh()) &&
+	if (angle_eps(s, l.get_parent_mesh(), 90.0, 10.0)) {
 	  return false;
 	}
       }
