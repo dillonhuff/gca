@@ -167,9 +167,9 @@ double estimate_cut_depth(const std::vector<cut*>& path) {
 
   delete_if(diffs, [](const double d) { return within_eps(d, 0.0, 1e-3); });
 
-  for (auto& d : diffs) {
-    cout << d << endl;
-  }
+  // for (auto& d : diffs) {
+  //   cout << d << endl;
+  // }
 
   double depth = accumulate(begin(diffs), end(diffs), 0.0);
   depth = depth / diffs.size();
@@ -184,9 +184,9 @@ void simulate_paths(vector<vector<cut*>>& paths,
   // TODO: Add proper tool diameter max checking
 
   double max_tool_diameter = 1.5;
-  auto r = set_up_region_conservative(paths, max_tool_diameter);
+  // auto r = set_up_region_conservative(paths, max_tool_diameter);
 
-  vtk_debug_depth_field(r.r);
+  // vtk_debug_depth_field(r.r);
 
   for (auto path : paths) {
     cout << "Looking up tool diameter" << endl;
@@ -209,57 +209,57 @@ void simulate_paths(vector<vector<cut*>>& paths,
     double cut_depth = estimate_cut_depth(path);
     cout << "cut depth estimate = " << cut_depth << endl;
 
-    for (auto c : path) {
-      double volume_removed = update_cut(*c, r, t);
-      double execution_time = cut_execution_time_minutes(c);
+    // for (auto c : path) {
+    //   double volume_removed = update_cut(*c, r, t);
+    //   double execution_time = cut_execution_time_minutes(c);
 
-      if (!within_eps(execution_time, 0.0)) {
+    //   if (!within_eps(execution_time, 0.0)) {
 
-	if (!c->is_safe_move()) {
-	  auto f = c->get_feedrate();
-	  auto sp = c->get_spindle_speed();
+    // 	if (!c->is_safe_move()) {
+    // 	  auto f = c->get_feedrate();
+    // 	  auto sp = c->get_spindle_speed();
 
-	  double cut_length = (c->get_end() - c->get_start()).len();
-	  double mrr = volume_removed / execution_time;
+    // 	  double cut_length = (c->get_end() - c->get_start()).len();
+    // 	  double mrr = volume_removed / execution_time;
 	  
-	  // cout << "Feedrate       = " << static_cast<lit*>(f)->v << endl;
-	  // cout << "Spindle speed  = " << static_cast<lit*>(sp)->v << endl;
-	  // cout << "Z start        = " << c->get_start().z << endl;
-	  // cout << "Z end        = " << c->get_end().z << endl;
+    // 	  // cout << "Feedrate       = " << static_cast<lit*>(f)->v << endl;
+    // 	  // cout << "Spindle speed  = " << static_cast<lit*>(sp)->v << endl;
+    // 	  // cout << "Z start        = " << c->get_start().z << endl;
+    // 	  // cout << "Z end        = " << c->get_end().z << endl;
 	  
-	  // cout << "Volume removed = " << volume_removed << endl;
-	  // cout << "Cut length     = " << cut_length << endl;
-	  // cout << "MRR            = " << mrr << endl;
+    // 	  // cout << "Volume removed = " << volume_removed << endl;
+    // 	  // cout << "Cut length     = " << cut_length << endl;
+    // 	  // cout << "MRR            = " << mrr << endl;
 
-	  mrrs.push_back(mrr);
-	}
+    // 	  mrrs.push_back(mrr);
+    // 	}
 
-	// if (c->is_safe_move()) {
-	//   cout << "SAFE MOVE WITH MRR = " << mrr << endl;
+    // 	// if (c->is_safe_move()) {
+    // 	//   cout << "SAFE MOVE WITH MRR = " << mrr << endl;
 	  
-	//   DBG_ASSERT(false);
-	// }
+    // 	//   DBG_ASSERT(false);
+    // 	// }
 
 
-      }
+    //   }
 
-    }
+    // }
 
-    vtk_debug_depth_field(r.r);
+    // vtk_debug_depth_field(r.r);
 
 
   }
 
-  auto mm = minmax_element(mrrs.begin(), mrrs.end());
-  auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
-  auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
+  // auto mm = minmax_element(mrrs.begin(), mrrs.end());
+  // auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
+  // auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
 
-  cout << "MRR STATS" << endl;
-  cout << "-----------------------------------------------------" << endl;
-  cout << "Average MRR so far  = "<< cut_average_mrr << endl;
-  cout << "Smallest MRR so far = " << *mm.first << endl;
-  cout << "Largest MRR so far  = " << *mm.second << endl;
-  cout << "-----------------------------------------------------" << endl;
+  // cout << "MRR STATS" << endl;
+  // cout << "-----------------------------------------------------" << endl;
+  // cout << "Average MRR so far  = "<< cut_average_mrr << endl;
+  // cout << "Smallest MRR so far = " << *mm.first << endl;
+  // cout << "Largest MRR so far  = " << *mm.second << endl;
+  // cout << "-----------------------------------------------------" << endl;
 }
 
 bool starts_with(string& value, string& prefix) {
@@ -335,5 +335,5 @@ int main(int argc, char** argv) {
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
 
   cout << "mrrs.size() = " << mrrs.size() << endl;
-  print_histogram(mrrs);
+  //print_histogram(mrrs);
 }
