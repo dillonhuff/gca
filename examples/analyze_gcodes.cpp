@@ -10,14 +10,15 @@
 #include "analysis/profiler.h"
 #include "analysis/unfold.h"
 #include "analysis/utils.h"
+#include "backend/cut_to_gcode.h"
+#include "backend/output.h"
 #include "checkers/block_rate_checker.h"
 #include "gcode/lexer.h"
 #include "geometry/box.h"
+#include "geometry/vtk_debug.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
 #include "gcode/cut.h"
-#include "backend/cut_to_gcode.h"
-#include "backend/output.h"
 #include "utils/algorithm.h"
 #include "utils/arena_allocator.h"
 #include "system/file.h"
@@ -152,13 +153,41 @@ void print_histogram(vector<T>& items) {
   }
 }
 
+double estimate_cut_depth(const std::vector<cut*>& path) {
+  vector<cut*> actual_cuts =
+    select(path, [](const cut* c) { return !c->is_safe_move(); });
+
+  if (path.size() < 2) { return -1.0; }
+
+  vector<double> diffs(actual_cuts.size() - 1);
+  apply_between(begin(actual_cuts), end(actual_cuts), begin(diffs),
+		[](const cut* l, const cut* r) {
+		  return fabs(l->get_end().z - r->get_end().z);
+		});
+
+  delete_if(diffs, [](const double d) { return within_eps(d, 0.0, 1e-3); });
+
+  for (auto& d : diffs) {
+    cout << d << endl;
+  }
+
+  double depth = accumulate(begin(diffs), end(diffs), 0.0);
+  depth = depth / diffs.size();
+
+  return depth;
+}
+
 void simulate_paths(vector<vector<cut*>>& paths,
 		    map<int, double>& tool_table,
 		    vector<double>& mrrs) {
   if (paths.size() == 0) { return; }
   // TODO: Add proper tool diameter max checking
+
   double max_tool_diameter = 1.5;
   auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+  vtk_debug_depth_field(r.r);
+
   for (auto path : paths) {
     cout << "Looking up tool diameter" << endl;
     auto c = *find_if(path.begin(), path.end(),
@@ -176,18 +205,55 @@ void simulate_paths(vector<vector<cut*>>& paths,
     double tool_diameter = tool_table[current_tool_no]; //0.125;
     cout << "Tool diameter = " << tool_diameter << endl;
     cylindrical_bit t = (tool_diameter);
+
+    double cut_depth = estimate_cut_depth(path);
+    cout << "cut depth estimate = " << cut_depth << endl;
+
     for (auto c : path) {
       double volume_removed = update_cut(*c, r, t);
       double execution_time = cut_execution_time_minutes(c);
+
       if (!within_eps(execution_time, 0.0)) {
-	double mrr = volume_removed / execution_time;
-	mrrs.push_back(mrr);
+
+	if (!c->is_safe_move()) {
+	  auto f = c->get_feedrate();
+	  auto sp = c->get_spindle_speed();
+
+	  double cut_length = (c->get_end() - c->get_start()).len();
+	  double mrr = volume_removed / execution_time;
+	  
+	  // cout << "Feedrate       = " << static_cast<lit*>(f)->v << endl;
+	  // cout << "Spindle speed  = " << static_cast<lit*>(sp)->v << endl;
+	  // cout << "Z start        = " << c->get_start().z << endl;
+	  // cout << "Z end        = " << c->get_end().z << endl;
+	  
+	  // cout << "Volume removed = " << volume_removed << endl;
+	  // cout << "Cut length     = " << cut_length << endl;
+	  // cout << "MRR            = " << mrr << endl;
+
+	  mrrs.push_back(mrr);
+	}
+
+	// if (c->is_safe_move()) {
+	//   cout << "SAFE MOVE WITH MRR = " << mrr << endl;
+	  
+	//   DBG_ASSERT(false);
+	// }
+
+
       }
+
     }
+
+    vtk_debug_depth_field(r.r);
+
+
   }
+
   auto mm = minmax_element(mrrs.begin(), mrrs.end());
   auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
   auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
+
   cout << "MRR STATS" << endl;
   cout << "-----------------------------------------------------" << endl;
   cout << "Average MRR so far  = "<< cut_average_mrr << endl;
@@ -222,7 +288,8 @@ map<int, double> infer_tool_table(const vector<block>& p) {
   vector<token> comments;
   for (auto b : p) {
     for (auto t : b) {
-      if (t.ttp == COMMENT) {
+      if ((t.ttp == PAREN_COMMENT) ||
+	  (t.ttp == BRACKET_COMMENT)) {
 	comments.push_back(t);
       }
     }
@@ -236,7 +303,7 @@ map<int, double> infer_tool_table(const vector<block>& p) {
 
 int main(int argc, char** argv) {
   if (argc != 2) {
-    cout << "Usage: print-knife-hacks <gcode file path>" << endl;
+    cout << "Usage: analyze-gcodes <directory path>" << endl;
     return 0;
   }
 
@@ -266,4 +333,7 @@ int main(int argc, char** argv) {
   time(&end);
   double seconds = difftime(end, start);
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
+
+  cout << "mrrs.size() = " << mrrs.size() << endl;
+  print_histogram(mrrs);
 }

@@ -27,13 +27,25 @@ int main(int argc, char* argv[]) {
 
   arena_allocator a;
   set_system_allocator(&a);
+
+  int total_blocks = 0;
   
-  auto check_mesh = [](const std::string& n) {
-    cout << "Reading = " << n << endl;
+  auto check_mesh = [&total_blocks](const std::string& n) {
 
-    auto mesh = parse_stl(n, 0.001);
+    if (!ends_with(n, "NCF")) {
+      return;
+    }
 
-    show_fillets(mesh);
+    vector<block> blks = lex_file(n);
+
+    cout << "# of blks = " << blks.size() << endl;
+    total_blocks += blks.size();
+
+    // cout << "Reading = " << n << endl;
+
+    // auto mesh = parse_stl(n, 0.001);
+
+    // show_fillets(mesh);
 
     // surface_plans(mesh);
 
@@ -60,6 +72,7 @@ int main(int argc, char* argv[]) {
     //    vtk_debug_feature_tree(f);
   };
 
-  read_dir(argv[1], check_mesh);
+  read_dir(argv[1], check_mesh, "NCF");
 
+  cout << "Total blocks = " << total_blocks << endl;
 }  

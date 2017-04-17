@@ -345,6 +345,19 @@ json-mesh/fast:
 .PHONY : json-mesh/fast
 
 #=============================================================================
+# Target rules for targets named analyze-gcodes
+
+# Build rule for target.
+analyze-gcodes: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 analyze-gcodes
+.PHONY : analyze-gcodes
+
+# fast build rule for target.
+analyze-gcodes/fast:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/build
+.PHONY : analyze-gcodes/fast
+
+#=============================================================================
 # Target rules for targets named manufacture-tests
 
 # Build rule for target.
@@ -540,6 +553,33 @@ examples/DataAnimationSubclass.s: examples/DataAnimationSubclass.cpp.s
 examples/DataAnimationSubclass.cpp.s:
 	$(MAKE) -f CMakeFiles/interact-test.dir/build.make CMakeFiles/interact-test.dir/examples/DataAnimationSubclass.cpp.s
 .PHONY : examples/DataAnimationSubclass.cpp.s
+
+examples/analyze_gcodes.o: examples/analyze_gcodes.cpp.o
+
+.PHONY : examples/analyze_gcodes.o
+
+# target to build an object file
+examples/analyze_gcodes.cpp.o:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.o
+.PHONY : examples/analyze_gcodes.cpp.o
+
+examples/analyze_gcodes.i: examples/analyze_gcodes.cpp.i
+
+.PHONY : examples/analyze_gcodes.i
+
+# target to preprocess a source file
+examples/analyze_gcodes.cpp.i:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.i
+.PHONY : examples/analyze_gcodes.cpp.i
+
+examples/analyze_gcodes.s: examples/analyze_gcodes.cpp.s
+
+.PHONY : examples/analyze_gcodes.s
+
+# target to generate assembly for a file
+examples/analyze_gcodes.cpp.s:
+	$(MAKE) -f CMakeFiles/analyze-gcodes.dir/build.make CMakeFiles/analyze-gcodes.dir/examples/analyze_gcodes.cpp.s
+.PHONY : examples/analyze_gcodes.cpp.s
 
 examples/camaster_test.o: examples/camaster_test.cpp.o
 
@@ -5522,6 +5562,7 @@ help:
 	@echo "... json-plan"
 	@echo "... backend"
 	@echo "... json-mesh"
+	@echo "... analyze-gcodes"
 	@echo "... manufacture-tests"
 	@echo "... all-tests"
 	@echo "... feature-decomp"
@@ -5540,6 +5581,9 @@ help:
 	@echo "... examples/DataAnimationSubclass.o"
 	@echo "... examples/DataAnimationSubclass.i"
 	@echo "... examples/DataAnimationSubclass.s"
+	@echo "... examples/analyze_gcodes.o"
+	@echo "... examples/analyze_gcodes.i"
+	@echo "... examples/analyze_gcodes.s"
 	@echo "... examples/camaster_test.o"
 	@echo "... examples/camaster_test.i"
 	@echo "... examples/camaster_test.s"

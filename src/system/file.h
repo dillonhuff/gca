@@ -32,6 +32,25 @@ namespace gca {
     }
   }
 
+  template<typename T>
+  void read_dir(const string& dir_name, T f, const std::string& ext) {
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir(dir_name.c_str())) != NULL) {
+      while ((ent = readdir(dir)) != NULL) {
+	string fname = ent->d_name;
+	if (fname != "." && fname != "..") {
+	  read_dir(dir_name + "/" + fname, f);
+	}
+      }
+      closedir(dir);
+    } else {
+      if (ends_with(dir_name, ext)) {
+	f(dir_name);
+      }
+    }
+  }
+  
 }
 
 #endif
