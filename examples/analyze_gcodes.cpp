@@ -20,6 +20,7 @@
 #include "simulators/sim_mill.h"
 #include "gcode/cut.h"
 #include "utils/algorithm.h"
+#include "utils/grouping.h"
 #include "utils/arena_allocator.h"
 #include "system/file.h"
 
@@ -357,6 +358,80 @@ void simulate_paths(vector<vector<cut*>>& paths,
   // cout << "-----------------------------------------------------" << endl;
 }
 
+struct operation_params {
+
+  int current_tool_no;
+  double tool_diameter;
+
+  double cut_depth;
+  double feedrate;
+  double spindle_speed;
+  double sfm;
+
+};
+
+std::vector<operation_params>
+program_operations(std::vector<std::vector<cut*> >& paths,
+		   map<int, double>& tool_table) {
+  if (paths.size() == 0) { return {}; }
+
+  vector<operation_params> ops;
+
+  for (auto path : paths) {
+    cout << "Looking up tool diameter" << endl;
+    auto c = *find_if(path.begin(), path.end(),
+		      [](const cut* c) { return !c->is_safe_move(); });
+    auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
+    if (!(tn->is_ilit())) {
+      cout << "ERROR" << endl;
+      cout << *c << endl;
+      cout << "Active tool = " << *(c->settings.active_tool) << endl;
+      assert(false);
+    }
+    auto tl = static_cast<ilit*>(tn);
+    int current_tool_no = tl->v;
+    double tool_diameter = tool_table[current_tool_no]; //0.125;
+    cylindrical_bit t = (tool_diameter);
+
+    double cut_depth = estimate_cut_depth_median(path);
+    double feedrate = estimate_feedrate_median(path);
+    double spindle_speed = estimate_spindle_speed_median(path);
+    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
+
+    operation_params op{current_tool_no,
+	tool_diameter,
+	cut_depth,
+	feedrate,
+	spindle_speed,
+	sfm};
+
+    ops.push_back(op);
+    
+    double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
+    double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
+    double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
+
+    cout << "--------------------------------------------------------" << endl;
+
+    cout << "current_tool_no = " << current_tool_no << endl;
+    cout << "Tool diameter = " << tool_diameter << endl << endl;
+
+    cout << "cut depth estimate = " << cut_depth << endl;
+    cout << "feedrate estimate = " << feedrate << endl;
+    cout << "spindle speed estimate = " << spindle_speed << endl << endl;
+    
+    cout << "implied sfm = " << sfm << endl;
+
+    cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
+    cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
+    cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
+    
+    cout << "--------------------------------------------------------" << endl;
+  }
+
+  return ops;
+}
+
 bool starts_with(string& value, string& prefix) {
   if (prefix.size() > value.size()) return false;
   auto res = std::mismatch(prefix.begin(), prefix.end(), value.begin());
@@ -409,26 +484,47 @@ int main(int argc, char** argv) {
   time_t start;
   time_t end;
   time(&start);
-  int num_paths;
-  vector<double> mrrs;
-  apply_to_gprograms(dir_name, [&num_paths, &mrrs](const vector<block>& p) {
+
+  //  int num_paths;
+
+  //vector<double> mrrs;
+
+  vector<operation_params> all_params;
+
+  apply_to_gprograms(dir_name, [&all_params](const vector<block>& p) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 	map<int, double> tt = infer_tool_table(p);
-	simulate_paths(paths, tt, mrrs);
+	vector<operation_params> prog_ops =
+	  program_operations(paths, tt);
+	concat(all_params, prog_ops);
+
+	//simulate_paths(paths, tt, mrrs);
       } else {
 	cout << "Could not process all paths: " << r << endl;
       }
     });
-  double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
-				   [](double mrr) { return mrr > 5.0; });;
-  cout << "# paths: " << num_paths << endl;
-  cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
-  time(&end);
-  double seconds = difftime(end, start);
-  cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
 
-  cout << "mrrs.size() = " << mrrs.size() << endl;
+  cout << "# of operations = " << all_params.size() << endl;
+
+  vector<vector<operation_params> > grouped =
+    group_by(all_params, [](const operation_params& l,
+			    const operation_params& r) {
+	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
+	     });
+
+
+  
+  
+
+  // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
+  // 				   [](double mrr) { return mrr > 5.0; });;
+  // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
+  // time(&end);
+  // double seconds = difftime(end, start);
+  // cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
+
+  // cout << "mrrs.size() = " << mrrs.size() << endl;
   //print_histogram(mrrs);
 }
