@@ -153,7 +153,79 @@ void print_histogram(vector<T>& items) {
   }
 }
 
-double estimate_cut_depth(const std::vector<cut*>& path) {
+double estimate_feedrate_median(const std::vector<cut*>& path) {
+  vector<cut*> actual_cuts =
+    select(path, [](const cut* c) { return !c->is_safe_move(); });
+
+  vector<double> feeds;
+  for (auto& c : path) {
+    feeds.push_back(static_cast<lit*>(c->get_feedrate())->v);
+  }
+
+  sort(begin(feeds), end(feeds));
+
+  int ind = feeds.size() / 2;
+
+  return feeds[ind];
+}
+
+double chip_load(const double feedrate_ipm,
+		 const double spindle_speed,
+		 const double num_flutes) {
+  return feedrate_ipm / (spindle_speed * num_flutes);
+}
+
+double surface_feet_per_minute(const double spindle_speed,
+			       const double tool_diameter_inches) {
+  double tool_diameter_feet = tool_diameter_inches / 12.0;
+  double tool_circumference_feet = M_PI*tool_diameter_feet;
+
+  return tool_circumference_feet * spindle_speed;
+}
+
+double estimate_spindle_speed_median(const std::vector<cut*>& path) {
+  vector<cut*> actual_cuts =
+    select(path, [](const cut* c) { return !c->is_safe_move(); });
+
+  vector<double> speeds;
+  for (auto& c : path) {
+    speeds.push_back(static_cast<lit*>(c->get_spindle_speed())->v);
+  }
+
+  sort(begin(speeds), end(speeds));
+
+  int ind = speeds.size() / 2;
+
+  return speeds[ind];
+}
+
+double estimate_cut_depth_median(const std::vector<cut*>& path) {
+  vector<cut*> actual_cuts =
+    select(path, [](const cut* c) { return !c->is_safe_move(); });
+
+  if (path.size() < 2) { return -1.0; }
+
+  vector<double> diffs(actual_cuts.size() - 1);
+  apply_between(begin(actual_cuts), end(actual_cuts), begin(diffs),
+		[](const cut* l, const cut* r) {
+		  return fabs(l->get_end().z - r->get_end().z);
+		});
+
+  delete_if(diffs, [](const double d) { return within_eps(d, 0.0, 1e-3); });
+
+  if (diffs.size() < 2) { return -1.0; }
+
+  // for (auto& d : diffs) {
+  //   cout << d << endl;
+  // }
+
+  sort(begin(diffs), end(diffs));
+
+  int ind = diffs.size() / 2;
+  return diffs[ind];
+}
+
+double estimate_cut_depth_mean(const std::vector<cut*>& path) {
   vector<cut*> actual_cuts =
     select(path, [](const cut* c) { return !c->is_safe_move(); });
 
@@ -201,13 +273,36 @@ void simulate_paths(vector<vector<cut*>>& paths,
     }
     auto tl = static_cast<ilit*>(tn);
     int current_tool_no = tl->v;
-    cout << "current_tool_no = " << current_tool_no << endl;
     double tool_diameter = tool_table[current_tool_no]; //0.125;
-    cout << "Tool diameter = " << tool_diameter << endl;
     cylindrical_bit t = (tool_diameter);
 
-    double cut_depth = estimate_cut_depth(path);
+    double cut_depth = estimate_cut_depth_median(path);
+    double feedrate = estimate_feedrate_median(path);
+    double spindle_speed = estimate_spindle_speed_median(path);
+    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
+
+    double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
+    double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
+    double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
+
+    cout << "--------------------------------------------------------" << endl;
+
+    cout << "current_tool_no = " << current_tool_no << endl;
+    cout << "Tool diameter = " << tool_diameter << endl << endl;
+
     cout << "cut depth estimate = " << cut_depth << endl;
+    cout << "feedrate estimate = " << feedrate << endl;
+    cout << "spindle speed estimate = " << spindle_speed << endl << endl;
+    
+    cout << "implied sfm = " << sfm << endl;
+
+    cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
+    cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
+    cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
+    
+    cout << "--------------------------------------------------------" << endl;
+
+    
 
     // for (auto c : path) {
     //   double volume_removed = update_cut(*c, r, t);
