@@ -23,7 +23,11 @@ namespace gca {
       while ((ent = readdir(dir)) != NULL) {
 	string fname = ent->d_name;
 	if (fname != "." && fname != "..") {
-	  read_dir(dir_name + "/" + fname, f);
+	  if (dir_name.back() != '/') {
+	    read_dir(dir_name + "/" + fname, f);
+	  } else {
+	    read_dir(dir_name + fname, f);
+	  }
 	}
       }
       closedir(dir);

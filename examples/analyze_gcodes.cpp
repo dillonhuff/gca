@@ -37,7 +37,7 @@ void apply_to_gprograms(const string& dn, F f) {
 		      std::istreambuf_iterator<char>());
       vector<block> p = lex_gprog(str);
       cout << "NUM BLOCKS: " << p.size() << endl;
-      f(p);
+      f(p, dir_name);
     }
   };
   read_dir(dn, func);
@@ -368,6 +368,17 @@ struct operation_params {
   double spindle_speed;
   double sfm;
 
+  double total_distance;
+  double cut_distance;
+
+  double total_time;
+  double cut_time;
+
+  std::string file_name;
+
+  double SFM() const {
+    return surface_feet_per_minute(spindle_speed, tool_diameter);
+  }
 };
 
 std::vector<operation_params>
@@ -393,6 +404,21 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     double tool_diameter = tool_table[current_tool_no]; //0.125;
     cylindrical_bit t = (tool_diameter);
 
+    double total_length_inches = 0.0;
+    double cut_length_inches = 0.0;
+
+    double total_time_seconds = execution_time_seconds(path);
+    double cut_time_seconds = 0.0;
+
+    for (auto& c : path) {
+      total_length_inches += c->length();
+
+      if (!c->is_safe_move()) {
+	cut_length_inches += c->length();
+	cut_time_seconds += cut_execution_time_seconds(c);
+      }
+    }
+
     double cut_depth = estimate_cut_depth_median(path);
     double feedrate = estimate_feedrate_median(path);
     double spindle_speed = estimate_spindle_speed_median(path);
@@ -403,7 +429,12 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 	cut_depth,
 	feedrate,
 	spindle_speed,
-	sfm};
+	sfm,
+	total_length_inches,
+	cut_length_inches,
+	total_time_seconds,
+	cut_time_seconds,
+	"UNKNOWN"};
 
     ops.push_back(op);
     
@@ -454,6 +485,50 @@ void add_tool(map<int, double>& tt, string& comment) {
   }
 }
 
+boost::optional<double> infer_program_length_feet(const vector<block>& p) {
+  vector<token> comments;
+  for (auto b : p) {
+    for (auto t : b) {
+      if ((t.ttp == PAREN_COMMENT) ||
+	  (t.ttp == BRACKET_COMMENT)) {
+	comments.push_back(t);
+      }
+    }
+  }
+
+  for (auto c : comments) {
+    auto comment = c.text;
+
+    string len_comment_start = "( FILE LENGTH ";
+    string len_comment_end = " FEET )";
+    if (starts_with(comment, len_comment_start) &&
+	ends_with(comment, len_comment_end)) {
+
+      cout << "Length comment is " << comment << endl;
+
+      // size_t i = -1;
+      // int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
+      // cout << "tool_no = " << tool_no << endl;
+      // DBG_ASSERT(i != -1);
+      
+      double len = stod(comment.substr(len_comment_start.size()));
+
+      cout << "length = " << len << endl;
+
+      //string rest = comment.substr(len_comment_start.size() + i);
+
+      //double tool_diameter = stod(rest);
+
+      //cout << "tool diameter = " << tool_diameter << endl;
+
+      return len;
+    }
+
+  }
+
+  return boost::none;
+}
+
 map<int, double> infer_tool_table(const vector<block>& p) {
   vector<token> comments;
   for (auto b : p) {
@@ -481,31 +556,57 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
-  time_t start;
-  time_t end;
-  time(&start);
+
+  // time_t start_time;
+  // time_t end_time;
+  // time(&start_time);
 
   //  int num_paths;
 
   //vector<double> mrrs;
 
   vector<operation_params> all_params;
+  int num_processed_blocks = 0;
+  int num_failed_blocks = 0;
 
-  apply_to_gprograms(dir_name, [&all_params](const vector<block>& p) {
+  apply_to_gprograms(dir_name, [&all_params, &num_processed_blocks, &num_failed_blocks](const vector<block>& p, const string& file_name) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
+	num_processed_blocks += p.size();
 	map<int, double> tt = infer_tool_table(p);
 	vector<operation_params> prog_ops =
 	  program_operations(paths, tt);
+
+	double program_length = 0.0;
+	for (auto& op : prog_ops) {
+	  program_length += op.total_distance;
+	}
+
+	cout << "Program length in feet = " << program_length / 12.0 << endl;
+	boost::optional<double> stated_len =
+	  infer_program_length_feet(p);
+
+	if (stated_len) {
+	  cout << "STATED program length in feet = " << *stated_len << endl;
+	}
+
+	for (auto& op : prog_ops) {
+	  op.file_name = file_name;
+	}
+
 	concat(all_params, prog_ops);
 
 	//simulate_paths(paths, tt, mrrs);
       } else {
 	cout << "Could not process all paths: " << r << endl;
+	num_failed_blocks += p.size();
       }
     });
 
+  cout << "# processed files = " << num_processed_blocks << endl;
+  cout << "# of failed files = " << num_failed_blocks << endl;
+  cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
   cout << "# of operations = " << all_params.size() << endl;
 
   vector<vector<operation_params> > grouped =
@@ -515,8 +616,44 @@ int main(int argc, char** argv) {
 	     });
 
 
-  
-  
+  cout << "# of tool groups = " << grouped.size() << endl;
+  for (auto& g : grouped) {
+    cout << "# of operations with diameter " << g.front().tool_diameter;
+    cout << " inches = " << g.size() << endl;
+
+    sort(begin(g), end(g), [](const operation_params& l,
+			      const operation_params& r) {
+	   return l.SFM() < r.SFM();
+	 });
+
+    // cout << "SURFACE FEET PER MINUTE" << endl;
+    // for (auto op : g) {
+    //   cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
+    //   cout << ", file = " << op.file_name << endl;
+    // }
+
+    auto similar_groups =
+      group_by(g, [](const operation_params& l,
+		     const operation_params& r) {
+		 return within_eps(l.SFM(), r.SFM(), 10.0) &&
+		 within_eps(l.cut_depth, r.cut_depth, 0.001);
+	       });
+
+    for (auto sim_group : similar_groups) {
+      if (sim_group.size() > 1) {
+
+	cout << endl << "&&&&&&&&&&&&&&&&&&& CLOSE SFM AND DOC &&&&&&&&&&&&&&&&&&&" << endl;
+	for (auto& op : sim_group) {
+	  cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
+	  cout << ", file = " << op.file_name << endl;
+	}
+      }
+    }
+
+    
+
+
+  }
 
   // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
   // 				   [](double mrr) { return mrr > 5.0; });;
