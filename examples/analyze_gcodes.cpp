@@ -169,8 +169,8 @@ double estimate_feedrate_median(const std::vector<cut*>& path) {
   return feeds[ind];
 }
 
-double chip_load(const double feedrate_ipm,
-		 const double spindle_speed,
+double chip_load(const double spindle_speed,
+		 const double feedrate_ipm,
 		 const double num_flutes) {
   return feedrate_ipm / (spindle_speed * num_flutes);
 }
