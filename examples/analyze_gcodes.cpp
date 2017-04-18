@@ -374,11 +374,18 @@ struct operation_params {
   double total_time;
   double cut_time;
 
+  double material_removed;
+
   std::string file_name;
 
   double SFM() const {
     return surface_feet_per_minute(spindle_speed, tool_diameter);
   }
+
+  double average_MRR() const {
+    return material_removed / cut_time;
+  }
+
 };
 
 std::vector<operation_params>
@@ -386,6 +393,11 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 		   map<int, double>& tool_table) {
   if (paths.size() == 0) { return {}; }
 
+  double max_tool_diameter = 1.5;
+  auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+  //vtk_debug_depth_field(r.r);
+  
   vector<operation_params> ops;
 
   for (auto path : paths) {
@@ -403,6 +415,16 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     int current_tool_no = tl->v;
     double tool_diameter = tool_table[current_tool_no]; //0.125;
     cylindrical_bit t = (tool_diameter);
+
+    double material_removed = 0.0;
+    for (auto c : path) {
+
+      // Assume no crashes since the program was submitted
+      if (!c->is_safe_move()) {
+	double volume_removed = update_cut(*c, r, t);
+	material_removed += volume_removed;
+      }
+    }
 
     double total_length_inches = 0.0;
     double cut_length_inches = 0.0;
@@ -434,6 +456,7 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 	cut_length_inches,
 	total_time_seconds,
 	cut_time_seconds,
+	material_removed,
 	"UNKNOWN"};
 
     ops.push_back(op);
@@ -450,6 +473,11 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     cout << "cut depth estimate = " << cut_depth << endl;
     cout << "feedrate estimate = " << feedrate << endl;
     cout << "spindle speed estimate = " << spindle_speed << endl << endl;
+
+    cout << "estimated material removed = " << op.material_removed << endl << endl;
+    cout << "cut length                 = " << op.cut_distance << endl << endl;
+    cout << "cut time                   = " << op.cut_time << endl << endl;
+    cout << "estimated average MRR      = " << op.average_MRR() << endl;
     
     cout << "implied sfm = " << sfm << endl;
 
@@ -579,8 +607,12 @@ int main(int argc, char** argv) {
 	  program_operations(paths, tt);
 
 	double program_length = 0.0;
+	double program_cut_length = 0.0;
+	double program_cut_time = 0.0;
 	for (auto& op : prog_ops) {
 	  program_length += op.total_distance;
+	  program_cut_length += op.cut_distance;
+	  program_cut_time += op.cut_time;
 	}
 
 	cout << "Program length in feet = " << program_length / 12.0 << endl;
@@ -623,32 +655,45 @@ int main(int argc, char** argv) {
 
     sort(begin(g), end(g), [](const operation_params& l,
 			      const operation_params& r) {
-	   return l.SFM() < r.SFM();
+	   return l.average_MRR() < r.average_MRR();
 	 });
 
+
+    cout << endl << "&&&&&&&&&& MRRS for Diam = " << g.front().tool_diameter << " &&&&&&&&&&" << endl;
+    for (auto& op : g) {
+
+      cout << "---------------------------------------" << endl;
+
+      cout << ", file = " << op.file_name << endl;      
+      cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
+      cout << ", material removed = " << op.material_removed << endl;
+      cout << "average MRR = " << op.average_MRR() << endl;
+    }
+    
     // cout << "SURFACE FEET PER MINUTE" << endl;
     // for (auto op : g) {
     //   cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
     //   cout << ", file = " << op.file_name << endl;
     // }
 
-    auto similar_groups =
-      group_by(g, [](const operation_params& l,
-		     const operation_params& r) {
-		 return within_eps(l.SFM(), r.SFM(), 10.0) &&
-		 within_eps(l.cut_depth, r.cut_depth, 0.001);
-	       });
+    // auto similar_groups =
+    //   group_by(g, [](const operation_params& l,
+    // 		     const operation_params& r) {
+    // 		 return within_eps(l.SFM(), r.SFM(), 10.0) &&
+    // 		 within_eps(l.cut_depth, r.cut_depth, 0.001);
+    // 	       });
 
-    for (auto sim_group : similar_groups) {
-      if (sim_group.size() > 1) {
+    // for (auto sim_group : similar_groups) {
+    //   if (sim_group.size() > 1) {
 
-	cout << endl << "&&&&&&&&&&&&&&&&&&& CLOSE SFM AND DOC &&&&&&&&&&&&&&&&&&&" << endl;
-	for (auto& op : sim_group) {
-	  cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
-	  cout << ", file = " << op.file_name << endl;
-	}
-      }
-    }
+    // 	cout << endl << "&&&&&&&&&&&&&&&&&&& CLOSE SFM AND DOC &&&&&&&&&&&&&&&&&&&" << endl;
+    // 	for (auto& op : sim_group) {
+    // 	  cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
+    // 	  cout << ", material removed = " << op.material_removed;
+    // 	  cout << ", file = " << op.file_name << endl;
+    // 	}
+    //   }
+    // }
 
     
 
