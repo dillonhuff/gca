@@ -641,9 +641,16 @@ int main(int argc, char** argv) {
   cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
   cout << "# of operations = " << all_params.size() << endl;
 
+
+  vector<operation_params> likely_rough_ops = all_params;
+  delete_if(likely_rough_ops,
+	    [](const operation_params& op) {
+	      return op.cut_depth < 0.0 || op.material_removed < 0.1;
+	    });
+  
   vector<vector<operation_params> > grouped =
-    group_by(all_params, [](const operation_params& l,
-			    const operation_params& r) {
+    group_by(likely_rough_ops, [](const operation_params& l,
+				  const operation_params& r) {
 	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
 	     });
 
