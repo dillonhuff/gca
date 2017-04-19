@@ -358,9 +358,16 @@ void simulate_paths(vector<vector<cut*>>& paths,
   // cout << "-----------------------------------------------------" << endl;
 }
 
+enum tool_end {
+  ROUGH_ENDMILL,
+  FINISH_ENDMILL,
+  BALL_ENDMILL
+};
+
 struct operation_params {
 
   int current_tool_no;
+  tool_end tool_end_type;
   double tool_diameter;
 
   double cut_depth;
@@ -447,6 +454,7 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
 
     operation_params op{current_tool_no,
+	ROUGH_ENDMILL,
 	tool_diameter,
 	cut_depth,
 	feedrate,
