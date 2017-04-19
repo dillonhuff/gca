@@ -647,6 +647,13 @@ int main(int argc, char** argv) {
 	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
 	     });
 
+  sort(begin(grouped), end(grouped), [](const std::vector<operation_params>& l,
+					const std::vector<operation_params>& r) {
+	 return l.front().tool_diameter < r.front().tool_diameter;
+       });
+
+  
+
 
   cout << "# of tool groups = " << grouped.size() << endl;
   for (auto& g : grouped) {
