@@ -27,6 +27,17 @@
 using namespace gca;
 using namespace std;
 
+enum tool_end {
+  ROUGH_ENDMILL,
+  FINISH_ENDMILL,
+  BALL_ENDMILL
+};
+
+struct tool_info {
+  tool_end tool_end_type;
+  double tool_diameter;
+};
+
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
   auto func = [&f](const string& dir_name) {
@@ -251,7 +262,7 @@ double estimate_cut_depth_mean(const std::vector<cut*>& path) {
 }
 
 void simulate_paths(vector<vector<cut*>>& paths,
-		    map<int, double>& tool_table,
+		    map<int, tool_info>& tool_table,
 		    vector<double>& mrrs) {
   if (paths.size() == 0) { return; }
   // TODO: Add proper tool diameter max checking
@@ -274,7 +285,7 @@ void simulate_paths(vector<vector<cut*>>& paths,
     }
     auto tl = static_cast<ilit*>(tn);
     int current_tool_no = tl->v;
-    double tool_diameter = tool_table[current_tool_no]; //0.125;
+    double tool_diameter = tool_table[current_tool_no].tool_diameter;
     cylindrical_bit t = (tool_diameter);
 
     double cut_depth = estimate_cut_depth_median(path);
@@ -358,11 +369,6 @@ void simulate_paths(vector<vector<cut*>>& paths,
   // cout << "-----------------------------------------------------" << endl;
 }
 
-enum tool_end {
-  ROUGH_ENDMILL,
-  FINISH_ENDMILL,
-  BALL_ENDMILL
-};
 
 struct operation_params {
 
@@ -397,7 +403,7 @@ struct operation_params {
 
 std::vector<operation_params>
 program_operations(std::vector<std::vector<cut*> >& paths,
-		   map<int, double>& tool_table) {
+		   map<int, tool_info>& tool_table) {
   if (paths.size() == 0) { return {}; }
 
   double max_tool_diameter = 1.5;
@@ -420,7 +426,8 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     }
     auto tl = static_cast<ilit*>(tn);
     int current_tool_no = tl->v;
-    double tool_diameter = tool_table[current_tool_no]; //0.125;
+    double tool_diameter = tool_table[current_tool_no].tool_diameter;
+    tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
     cylindrical_bit t = (tool_diameter);
 
     double material_removed = 0.0;
@@ -454,7 +461,7 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
 
     operation_params op{current_tool_no,
-	ROUGH_ENDMILL,
+	tool_end_type,
 	tool_diameter,
 	cut_depth,
 	feedrate,
@@ -505,7 +512,7 @@ bool starts_with(string& value, string& prefix) {
   return res.first == prefix.end();
 }
 
-void add_tool(map<int, double>& tt, string& comment) {
+void add_tool(map<int, tool_info>& tt, string& comment) {
   string tool_comment_start = "( TOOL ";
   if (starts_with(comment, tool_comment_start)) {
     cout << "Tool comment is " << comment << endl;
@@ -517,7 +524,8 @@ void add_tool(map<int, double>& tt, string& comment) {
     cout << "Rest of comment = " << rest << endl;
     double tool_diameter = stod(rest);
     cout << "tool diameter = " << tool_diameter << endl;
-    tt[tool_no] = tool_diameter;
+    tool_info tf{ROUGH_ENDMILL, tool_diameter};
+    tt[tool_no] = tf;
   }
 }
 
@@ -565,7 +573,7 @@ boost::optional<double> infer_program_length_feet(const vector<block>& p) {
   return boost::none;
 }
 
-map<int, double> infer_tool_table(const vector<block>& p) {
+map<int, tool_info> infer_tool_table(const vector<block>& p) {
   vector<token> comments;
   for (auto b : p) {
     for (auto t : b) {
@@ -575,7 +583,7 @@ map<int, double> infer_tool_table(const vector<block>& p) {
       }
     }
   }
-  map<int, double> tt;
+  map<int, tool_info> tt;
   for (auto c : comments) {
     add_tool(tt, c.text);
   }
@@ -610,7 +618,7 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 	num_processed_blocks += p.size();
-	map<int, double> tt = infer_tool_table(p);
+	map<int, tool_info> tt = infer_tool_table(p);
 	vector<operation_params> prog_ops =
 	  program_operations(paths, tt);
 
