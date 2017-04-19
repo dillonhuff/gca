@@ -33,6 +33,27 @@ enum tool_end {
   BALL_ENDMILL
 };
 
+std::ostream& operator<<(std::ostream& out, const tool_end l) {
+  switch (l) {
+
+  case ROUGH_ENDMILL:
+    out << "ROUGH_ENDMILL";
+    break;
+
+  case BALL_ENDMILL:
+    out << "BALL_ENDMILL";
+    break;
+
+  case FINISH_ENDMILL:
+    out << "FINISH_ENDMILL";
+    break;
+
+  default:
+    DBG_ASSERT(false);
+  }
+  return out;
+}
+
 struct tool_info {
   tool_end tool_end_type;
   double tool_diameter;
@@ -483,7 +504,8 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     cout << "--------------------------------------------------------" << endl;
 
     cout << "current_tool_no = " << current_tool_no << endl;
-    cout << "Tool diameter = " << tool_diameter << endl << endl;
+    cout << "Tool diameter = " << tool_diameter << endl;
+    cout << "Tool type     = " << op.tool_end_type << endl << endl;
 
     cout << "cut depth estimate = " << cut_depth << endl;
     cout << "feedrate estimate = " << feedrate << endl;
@@ -512,6 +534,27 @@ bool starts_with(string& value, string& prefix) {
   return res.first == prefix.end();
 }
 
+tool_end read_tool_end(std::string& comment) {
+  cout << "tool comment = " << comment << endl;
+
+  string r("ROUGH");
+  if (starts_with(comment, r)) {
+    return ROUGH_ENDMILL;
+  }
+
+  string f("FINISH");
+  if (starts_with(comment, f)) {
+    return FINISH_ENDMILL;
+  }
+
+  string b("BALL");
+  if (starts_with(comment, b)) {
+    return BALL_ENDMILL;
+  }
+
+  DBG_ASSERT(false);
+}
+
 void add_tool(map<int, tool_info>& tt, string& comment) {
   string tool_comment_start = "( TOOL ";
   if (starts_with(comment, tool_comment_start)) {
@@ -521,10 +564,16 @@ void add_tool(map<int, tool_info>& tt, string& comment) {
     cout << "tool_no = " << tool_no << endl;
     assert(i != -1);
     string rest = comment.substr(tool_comment_start.size() + i);
+
     cout << "Rest of comment = " << rest << endl;
-    double tool_diameter = stod(rest);
+
+    size_t j = -1;
+    double tool_diameter = stod(rest, &j);
+    string tool_comment = rest.substr(j + 1);
+    tool_end end = read_tool_end(tool_comment);
+    
     cout << "tool diameter = " << tool_diameter << endl;
-    tool_info tf{ROUGH_ENDMILL, tool_diameter};
+    tool_info tf{end, tool_diameter};
     tt[tool_no] = tf;
   }
 }
