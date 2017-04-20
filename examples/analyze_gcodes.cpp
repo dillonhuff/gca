@@ -30,7 +30,8 @@ using namespace std;
 enum tool_end {
   ROUGH_ENDMILL,
   FINISH_ENDMILL,
-  BALL_ENDMILL
+  BALL_ENDMILL,
+  DRILL_ENDMILL
 };
 
 std::ostream& operator<<(std::ostream& out, const tool_end l) {
@@ -46,6 +47,10 @@ std::ostream& operator<<(std::ostream& out, const tool_end l) {
 
   case FINISH_ENDMILL:
     out << "FINISH_ENDMILL";
+    break;
+
+  case DRILL_ENDMILL:
+    cout << "DRILL" << endl;
     break;
 
   default:
@@ -552,6 +557,11 @@ tool_end read_tool_end(std::string& comment) {
     return BALL_ENDMILL;
   }
 
+  string d("DRILL");
+  if (starts_with(comment, d)) {
+    return DRILL_ENDMILL;
+  }
+  
   DBG_ASSERT(false);
 }
 
@@ -650,9 +660,9 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  // time_t start_time;
-  // time_t end_time;
-  // time(&start_time);
+  time_t start_time;
+  time_t end_time;
+  time(&start_time);
 
   //  int num_paths;
 
@@ -710,7 +720,7 @@ int main(int argc, char** argv) {
   vector<operation_params> likely_rough_ops = all_params;
   delete_if(likely_rough_ops,
 	    [](const operation_params& op) {
-	      return op.cut_depth < 0.0 || op.material_removed < 0.1;
+	      return !(op.tool_end_type == ROUGH_ENDMILL); //op.cut_depth < 0.0 || op.material_removed < 0.1;
 	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
@@ -785,9 +795,9 @@ int main(int argc, char** argv) {
   // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
   // 				   [](double mrr) { return mrr > 5.0; });;
   // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
-  // time(&end);
-  // double seconds = difftime(end, start);
-  // cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
+  time(&end_time);
+  double seconds = difftime(end_time, start_time);
+  cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
 
   // cout << "mrrs.size() = " << mrrs.size() << endl;
   //print_histogram(mrrs);
