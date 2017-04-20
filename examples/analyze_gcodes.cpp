@@ -34,6 +34,7 @@ enum tool_end {
   BALL_ENDMILL,
   DRILL_ENDMILL,
   FACE_ENDMILL,
+  SPOT_DRILL_ENDMILL
 };
 
 std::ostream& operator<<(std::ostream& out, const tool_end l) {
@@ -57,6 +58,10 @@ std::ostream& operator<<(std::ostream& out, const tool_end l) {
 
   case FACE_ENDMILL:
     cout << "FACE" << endl;
+    break;
+
+  case SPOT_DRILL_ENDMILL:
+    cout << "SPOT DRILL" << endl;
     break;
     
   default:
@@ -595,6 +600,11 @@ tool_end read_tool_end(std::string& comment) {
     return DRILL_ENDMILL;
   }
 
+  string sd("SPOT DRILL");
+  if (starts_with(comment, d)) {
+    return SPOT_DRILL_ENDMILL;
+  }
+  
   string fc("FACE");
   if (starts_with(comment, fc)) {
     return FACE_ENDMILL;
