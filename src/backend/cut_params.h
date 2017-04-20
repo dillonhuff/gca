@@ -1,5 +1,6 @@
 #pragma once
 
+#include "geometry/point.h"
 #include "gcode/machine.h"
 
 namespace gca {
@@ -49,5 +50,12 @@ namespace gca {
     }
 
   };
-  
+
+  double chip_load(const double spindle_speed,
+		   const double feedrate_ipm,
+		   const double num_flutes);
+
+  double surface_feet_per_minute(const double spindle_speed,
+				 const double tool_diameter_inches);
+
 }

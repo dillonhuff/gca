@@ -35,7 +35,9 @@ enum tool_end {
   DRILL_ENDMILL,
   FACE_ENDMILL,
   SPOT_DRILL_ENDMILL,
-  COUNTERSINK_ENDMILL
+  COUNTERSINK_ENDMILL,
+  KEY_CUTTER_ENDMILL,
+  FLY_CUTTER_ENDMILL
 };
 
 std::ostream& operator<<(std::ostream& out, const tool_end l) {
@@ -67,6 +69,14 @@ std::ostream& operator<<(std::ostream& out, const tool_end l) {
 
   case COUNTERSINK_ENDMILL:
     cout << "COUNTERSINK" << endl;
+    break;
+
+  case KEY_CUTTER_ENDMILL:
+    cout << "KEY_CUTTER" << endl;
+    break;
+
+  case FLY_CUTTER_ENDMILL:
+    cout << "FLY_CUTTER" << endl;
     break;
     
   default:
@@ -221,20 +231,6 @@ double estimate_feedrate_median(const std::vector<cut*>& path) {
   int ind = feeds.size() / 2;
 
   return feeds[ind];
-}
-
-double chip_load(const double spindle_speed,
-		 const double feedrate_ipm,
-		 const double num_flutes) {
-  return feedrate_ipm / (spindle_speed * num_flutes);
-}
-
-double surface_feet_per_minute(const double spindle_speed,
-			       const double tool_diameter_inches) {
-  double tool_diameter_feet = tool_diameter_inches / 12.0;
-  double tool_circumference_feet = M_PI*tool_diameter_feet;
-
-  return tool_circumference_feet * spindle_speed;
 }
 
 double estimate_spindle_speed_median(const std::vector<cut*>& path) {
@@ -443,6 +439,39 @@ struct operation_params {
 
 };
 
+std::ostream& operator<<(std::ostream& out, const operation_params& op) {
+
+  double cl_2_flute = chip_load(op.spindle_speed, op.feedrate, 2);
+  double cl_4_flute = chip_load(op.spindle_speed, op.feedrate, 4);
+  double cl_6_flute = chip_load(op.spindle_speed, op.feedrate, 6);
+
+  out << "current_tool_no = " << op.current_tool_no << endl;
+  out << "Tool diameter = " << op.tool_diameter << endl;
+  out << "Tool type     = " << op.tool_end_type << endl << endl;
+
+  out << "cut depth estimate = " << op.cut_depth << endl;
+  out << "feedrate estimate = " << op.feedrate << endl;
+  out << "spindle speed estimate = " << op.spindle_speed << endl << endl;
+
+  out << "estimated material removed = " << op.material_removed << endl << endl;
+  out << "cut length                 = " << op.cut_distance << endl << endl;
+  out << "cut time                   = " << op.cut_time << endl << endl;
+  out << "estimated average MRR      = " << op.average_MRR() << endl;
+    
+  out << "implied sfm = " << op.SFM() << endl;
+
+  out << "implied CL for 2 flutes = " << cl_2_flute << endl;
+  out << "implied CL for 4 flutes = " << cl_4_flute << endl;
+  out << "implied CL for 6 flutes = " << cl_6_flute << endl;
+
+  return out;
+}
+
+struct op_replacement {
+  operation_params worse;
+  operation_params better;
+};
+
 std::vector<polyline> cuts_to_polylines(const std::vector<cut*>& cuts) {
   vector<point> points;
   for (auto& c : cuts) {
@@ -620,6 +649,16 @@ tool_end read_tool_end(std::string& comment) {
     return COUNTERSINK_ENDMILL;
   }
 
+  string fly("FLY CUTTER");
+  if (starts_with(comment, fly)) {
+    return FLY_CUTTER_ENDMILL;
+  }
+
+  string kc("KEY CUTTER");
+  if (starts_with(comment, kc)) {
+    return KEY_CUTTER_ENDMILL;
+  }
+  
   cout << "UNKNOWN TOOL COMMENT = " << comment << endl;
   return FINISH_ENDMILL;
 }
@@ -854,6 +893,36 @@ int main(int argc, char** argv) {
   // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
   // 				   [](double mrr) { return mrr > 5.0; });;
   // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
+
+  
+  vector<op_replacement> replacements;
+  for (auto& g : grouped) {
+    for (unsigned i = 0; i < g.size(); i++) {
+      for (unsigned j = i + 1; j < g.size(); j++) {
+	replacements.push_back({g[i], g[j]});
+      }
+    }
+  }
+
+  cout << "# of replacements = " << replacements.size() << endl;
+
+  auto replacement_rank =
+    [](const op_replacement l, const op_replacement r) {
+    return true;
+  };
+
+  sort(begin(replacements), end(replacements), replacement_rank);
+
+  cout << endl << "ALL REPLACEMENTS RANKED" << endl;
+  for (auto& rep : replacements) {
+    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl;
+    cout << "========== WORSE ==========" << endl;
+    cout << rep.worse << endl;
+    cout << "========== BETTER ==========" << endl;
+    cout << rep.better << endl;
+    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl << endl;
+  }
+
   time(&end_time);
   double seconds = difftime(end_time, start_time);
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;

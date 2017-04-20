@@ -150,6 +150,7 @@ SET(BACKEND_CPPS
 	./src/backend/align_blade.cpp
 	./src/backend/chamfer_operation.cpp
 	./src/backend/cut_to_gcode.cpp
+	./src/backend/cut_params.cpp
 	./src/backend/drilled_hole_operation.cpp
 	./src/backend/face_toolpaths.cpp
 	./src/backend/feedrate_optimization.cpp

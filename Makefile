@@ -1256,6 +1256,33 @@ src/backend/chamfer_operation.cpp.s:
 	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/chamfer_operation.cpp.s
 .PHONY : src/backend/chamfer_operation.cpp.s
 
+src/backend/cut_params.o: src/backend/cut_params.cpp.o
+
+.PHONY : src/backend/cut_params.o
+
+# target to build an object file
+src/backend/cut_params.cpp.o:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/cut_params.cpp.o
+.PHONY : src/backend/cut_params.cpp.o
+
+src/backend/cut_params.i: src/backend/cut_params.cpp.i
+
+.PHONY : src/backend/cut_params.i
+
+# target to preprocess a source file
+src/backend/cut_params.cpp.i:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/cut_params.cpp.i
+.PHONY : src/backend/cut_params.cpp.i
+
+src/backend/cut_params.s: src/backend/cut_params.cpp.s
+
+.PHONY : src/backend/cut_params.s
+
+# target to generate assembly for a file
+src/backend/cut_params.cpp.s:
+	$(MAKE) -f CMakeFiles/backend.dir/build.make CMakeFiles/backend.dir/src/backend/cut_params.cpp.s
+.PHONY : src/backend/cut_params.cpp.s
+
 src/backend/cut_to_gcode.o: src/backend/cut_to_gcode.cpp.o
 
 .PHONY : src/backend/cut_to_gcode.o
@@ -5659,6 +5686,9 @@ help:
 	@echo "... src/backend/chamfer_operation.o"
 	@echo "... src/backend/chamfer_operation.i"
 	@echo "... src/backend/chamfer_operation.s"
+	@echo "... src/backend/cut_params.o"
+	@echo "... src/backend/cut_params.i"
+	@echo "... src/backend/cut_params.s"
 	@echo "... src/backend/cut_to_gcode.o"
 	@echo "... src/backend/cut_to_gcode.i"
 	@echo "... src/backend/cut_to_gcode.s"
