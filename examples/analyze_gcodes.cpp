@@ -442,7 +442,7 @@ std::vector<polyline> cuts_to_polylines(const std::vector<cut*>& cuts) {
     } else {
       double ind = 0;
       while (ind < 1) {
-	c->value_at(ind);
+	points.push_back(c->value_at(ind));
 	ind += 0.1;
       }
       points.push_back(c->get_end());
