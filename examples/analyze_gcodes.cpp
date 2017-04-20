@@ -436,8 +436,17 @@ struct operation_params {
 std::vector<polyline> cuts_to_polylines(const std::vector<cut*>& cuts) {
   vector<point> points;
   for (auto& c : cuts) {
-    points.push_back(c->get_start());
-    points.push_back(c->get_end());
+    if (c->is_safe_move() || c->is_linear_cut()) {
+      points.push_back(c->get_start());
+      points.push_back(c->get_end());
+    } else {
+      double ind = 0;
+      while (ind < 1) {
+	c->value_at(ind);
+	ind += 0.1;
+      }
+      points.push_back(c->get_end());
+    }
   }
   return {{points}};
 }
