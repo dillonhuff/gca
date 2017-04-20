@@ -712,6 +712,8 @@ int main(int argc, char** argv) {
 	    [](const operation_params& op) {
 	      return op.cut_depth < 0.0 || op.material_removed < 0.1;
 	    });
+
+  cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
   
   vector<vector<operation_params> > grouped =
     group_by(likely_rough_ops, [](const operation_params& l,
@@ -744,8 +746,9 @@ int main(int argc, char** argv) {
       cout << "---------------------------------------" << endl;
 
       cout << ", file = " << op.file_name << endl;      
-      cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
-      cout << ", material removed = " << op.material_removed << endl;
+      cout << "Type = " << op.tool_end_type << ", Diam = " << op.tool_diameter << endl;
+      cout << "Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
+      cout << "Material removed = " << op.material_removed << endl;
       cout << "average MRR = " << op.average_MRR() << endl;
     }
     
