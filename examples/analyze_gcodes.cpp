@@ -601,7 +601,7 @@ tool_end read_tool_end(std::string& comment) {
   }
 
   string sd("SPOT DRILL");
-  if (starts_with(comment, d)) {
+  if (starts_with(comment, sd)) {
     return SPOT_DRILL_ENDMILL;
   }
   
