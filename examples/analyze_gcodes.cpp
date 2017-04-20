@@ -432,6 +432,12 @@ struct operation_params {
 
 };
 
+void vtk_debug_cuts(const std::vector<cut*>& cuts) {
+  vector<polyline> lines = cuts_to_polylines(cuts);
+  
+  DBG_ASSERT(false);
+}
+
 std::vector<operation_params>
 program_operations(std::vector<std::vector<cut*> >& paths,
 		   map<int, tool_info>& tool_table) {
@@ -441,6 +447,9 @@ program_operations(std::vector<std::vector<cut*> >& paths,
   auto r = set_up_region_conservative(paths, max_tool_diameter);
 
   //vtk_debug_depth_field(r.r);
+
+  auto all_cuts = concat_all(paths);
+  vtk_debug_cuts(all_cuts);
   
   vector<operation_params> ops;
 
