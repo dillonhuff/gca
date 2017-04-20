@@ -34,7 +34,8 @@ enum tool_end {
   BALL_ENDMILL,
   DRILL_ENDMILL,
   FACE_ENDMILL,
-  SPOT_DRILL_ENDMILL
+  SPOT_DRILL_ENDMILL,
+  COUNTERSINK_ENDMILL
 };
 
 std::ostream& operator<<(std::ostream& out, const tool_end l) {
@@ -61,7 +62,11 @@ std::ostream& operator<<(std::ostream& out, const tool_end l) {
     break;
 
   case SPOT_DRILL_ENDMILL:
-    cout << "SPOT DRILL" << endl;
+    cout << "SPOT_DRILL" << endl;
+    break;
+
+  case COUNTERSINK_ENDMILL:
+    cout << "COUNTERSINK" << endl;
     break;
     
   default:
@@ -472,8 +477,8 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 
   //vtk_debug_depth_field(r.r);
 
-  auto all_cuts = concat_all(paths);
-  vtk_debug_cuts(all_cuts);
+  //auto all_cuts = concat_all(paths);
+  //vtk_debug_cuts(all_cuts);
   
   vector<operation_params> ops;
 
@@ -609,8 +614,14 @@ tool_end read_tool_end(std::string& comment) {
   if (starts_with(comment, fc)) {
     return FACE_ENDMILL;
   }
-  
-  DBG_ASSERT(false);
+
+  string cs("COUNTERSINK");
+  if (starts_with(comment, cs)) {
+    return COUNTERSINK_ENDMILL;
+  }
+
+  cout << "UNKNOWN TOOL COMMENT = " << comment << endl;
+  return FINISH_ENDMILL;
 }
 
 void add_tool(map<int, tool_info>& tt, string& comment) {
