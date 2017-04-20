@@ -31,7 +31,8 @@ enum tool_end {
   ROUGH_ENDMILL,
   FINISH_ENDMILL,
   BALL_ENDMILL,
-  DRILL_ENDMILL
+  DRILL_ENDMILL,
+  FACE_ENDMILL,
 };
 
 std::ostream& operator<<(std::ostream& out, const tool_end l) {
@@ -53,6 +54,10 @@ std::ostream& operator<<(std::ostream& out, const tool_end l) {
     cout << "DRILL" << endl;
     break;
 
+  case FACE_ENDMILL:
+    cout << "FACE" << endl;
+    break;
+    
   default:
     DBG_ASSERT(false);
   }
@@ -560,6 +565,11 @@ tool_end read_tool_end(std::string& comment) {
   string d("DRILL");
   if (starts_with(comment, d)) {
     return DRILL_ENDMILL;
+  }
+
+  string fc("FACE");
+  if (starts_with(comment, fc)) {
+    return FACE_ENDMILL;
   }
   
   DBG_ASSERT(false);
