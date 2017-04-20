@@ -18,6 +18,7 @@
 #include "geometry/vtk_debug.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
+#include "synthesis/visual_debug.h"
 #include "gcode/cut.h"
 #include "utils/algorithm.h"
 #include "utils/grouping.h"
@@ -432,10 +433,19 @@ struct operation_params {
 
 };
 
+std::vector<polyline> cuts_to_polylines(const std::vector<cut*>& cuts) {
+  vector<point> points;
+  for (auto& c : cuts) {
+    points.push_back(c->get_start());
+    points.push_back(c->get_end());
+  }
+  return {{points}};
+}
+
 void vtk_debug_cuts(const std::vector<cut*>& cuts) {
   vector<polyline> lines = cuts_to_polylines(cuts);
-  
-  DBG_ASSERT(false);
+  auto pd = polydata_for_polylines(lines);
+  visualize_polydatas({pd});
 }
 
 std::vector<operation_params>
