@@ -24,6 +24,7 @@
 #include "utils/grouping.h"
 #include "utils/arena_allocator.h"
 #include "system/file.h"
+#include "system/json.h"
 
 using namespace gca;
 using namespace std;
@@ -40,49 +41,87 @@ enum tool_end {
   FLY_CUTTER_ENDMILL
 };
 
-std::ostream& operator<<(std::ostream& out, const tool_end l) {
+std::string to_string(const tool_end l) {
   switch (l) {
 
   case ROUGH_ENDMILL:
-    out << "ROUGH_ENDMILL";
-    break;
+    return "ROUGH_ENDMILL";
 
   case BALL_ENDMILL:
-    out << "BALL_ENDMILL";
-    break;
+    return "BALL_ENDMILL";
 
   case FINISH_ENDMILL:
-    out << "FINISH_ENDMILL";
-    break;
+    return "FINISH_ENDMILL";
 
   case DRILL_ENDMILL:
-    cout << "DRILL" << endl;
-    break;
+    return "DRILL";
 
   case FACE_ENDMILL:
-    cout << "FACE" << endl;
-    break;
+    return "FACE";
 
   case SPOT_DRILL_ENDMILL:
-    cout << "SPOT_DRILL" << endl;
-    break;
+    return "SPOT_DRILL";
 
   case COUNTERSINK_ENDMILL:
-    cout << "COUNTERSINK" << endl;
-    break;
+    return "COUNTERSINK";
 
   case KEY_CUTTER_ENDMILL:
-    cout << "KEY_CUTTER" << endl;
-    break;
+    return "KEY_CUTTER";
 
   case FLY_CUTTER_ENDMILL:
-    cout << "FLY_CUTTER" << endl;
-    break;
-    
+    return "FLY_CUTTER";
+
   default:
     DBG_ASSERT(false);
   }
+}
+
+std::ostream& operator<<(std::ostream& out, const tool_end l) {
+  out << to_string(l);
+
   return out;
+  // switch (l) {
+
+  // case ROUGH_ENDMILL:
+  //   out << "ROUGH_ENDMILL";
+  //   break;
+
+  // case BALL_ENDMILL:
+  //   out << "BALL_ENDMILL";
+  //   break;
+
+  // case FINISH_ENDMILL:
+  //   out << "FINISH_ENDMILL";
+  //   break;
+
+  // case DRILL_ENDMILL:
+  //   cout << "DRILL" << endl;
+  //   break;
+
+  // case FACE_ENDMILL:
+  //   cout << "FACE" << endl;
+  //   break;
+
+  // case SPOT_DRILL_ENDMILL:
+  //   cout << "SPOT_DRILL" << endl;
+  //   break;
+
+  // case COUNTERSINK_ENDMILL:
+  //   cout << "COUNTERSINK" << endl;
+  //   break;
+
+  // case KEY_CUTTER_ENDMILL:
+  //   cout << "KEY_CUTTER" << endl;
+  //   break;
+
+  // case FLY_CUTTER_ENDMILL:
+  //   cout << "FLY_CUTTER" << endl;
+  //   break;
+    
+  // default:
+  //   DBG_ASSERT(false);
+  // }
+  // return out;
 }
 
 struct tool_info {
@@ -438,6 +477,34 @@ struct operation_params {
   }
 
 };
+
+ptree encode_json(const operation_params& op) {
+  ptree p;
+  p.put("current_tool_no", op.current_tool_no);
+  p.put("tool_end_type", to_string(op.tool_end_type));
+  p.put("tool_diameter", op.tool_diameter);
+  p.put("cut_depth", op.cut_depth);
+
+  p.put("spindle_speed", op.spindle_speed);
+  // IS SFM parameter even needed?
+  p.put("sfm", op.sfm);
+
+  p.put("total_distance", op.total_distance);
+  p.put("cut_distance", op.cut_distance);
+
+  p.put("total_time", op.total_time);
+  p.put("cut_time", op.cut_time);
+
+  p.put("material_removed", op.material_removed);
+
+  p.put("file_name", op.file_name);
+  
+  // ptree tn;
+  // tn.put("", op.current_tool_no);
+  // p.add_child("current_tool_no", tn);
+  
+  return p;
+}
 
 std::ostream& operator<<(std::ostream& out, const operation_params& op) {
 
@@ -926,6 +993,15 @@ int main(int argc, char** argv) {
   time(&end_time);
   double seconds = difftime(end_time, start_time);
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
+
+  ptree all_params_json_arr = encode_json(all_params);
+
+  ptree all_params_json;
+  all_params_json.add_child("All params", all_params_json_arr);
+
+  cout << "ALL PARAMS AS JSON" << endl;
+  write_json(cout, all_params_json);
+  
 
   // cout << "mrrs.size() = " << mrrs.size() << endl;
   //print_histogram(mrrs);
