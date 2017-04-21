@@ -478,6 +478,33 @@ struct operation_params {
 
 };
 
+enum operation_type {
+  ROUGH_OPERATION,
+  FINISH_OPERATION,
+  OTHER_OPERATION
+};
+
+std::string to_string(const operation_type op_type) {
+  switch (op_type) {
+
+  case ROUGH_OPERATION:
+    return "ROUGH_OPERATION";
+
+  case FINISH_OPERATION:
+    return "FINISH_OPERATION";
+
+  case OTHER_OPERATION:
+    return "OTHER_OPERATION";
+  }
+
+  DBG_ASSERT(false);
+}
+
+struct labeled_operation_params {
+  operation_type op_type;
+  operation_params params;
+};
+
 ptree encode_json(const operation_params& op) {
   ptree p;
   p.put("current_tool_no", op.current_tool_no);
@@ -505,6 +532,17 @@ ptree encode_json(const operation_params& op) {
   // p.add_child("current_tool_no", tn);
   
   return p;
+}
+
+ptree encode_json(const labeled_operation_params& op) {
+  
+  ptree params = encode_json(op.params);
+
+  ptree enc;
+  enc.put("op_type", to_string(op.op_type));
+  enc.add_child("params", params);
+
+  return enc;
 }
 
 std::ostream& operator<<(std::ostream& out, const operation_params& op) {
@@ -942,6 +980,21 @@ int main(int argc, char** argv) {
     decode_params(json_ops.get_child("All params"));
 
   cout << "# of ops = " << all_params.size() << endl;
+
+  vector<labeled_operation_params> labeled_params;
+  for (auto& op : all_params) {
+    labeled_params.push_back({ROUGH_OPERATION, op});
+  }
+
+  ptree all_params_json;
+  ptree all_params_json_arr = encode_json(labeled_params);
+  all_params_json.add_child("All params", all_params_json_arr);
+
+  cout << "ALL PARAMS AS JSON" << endl;
+  write_json(cout, all_params_json);
+
+  return 0;
+  
   // for (auto& op : p) {
   //   cout << "-------------------------------------------------------------" << endl;
   //   cout << op << endl;
@@ -1019,7 +1072,8 @@ int main(int argc, char** argv) {
   delete_if(likely_rough_ops,
 	    [](const operation_params& op) {
 	      return !(op.tool_end_type == ROUGH_ENDMILL) ||
-		within_eps(op.tool_diameter, 0.0, 0.0001); //op.cut_depth < 0.0 || op.material_removed < 0.1;
+		within_eps(op.tool_diameter, 0.0, 0.0001) ||
+		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
 	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
@@ -1091,11 +1145,40 @@ int main(int argc, char** argv) {
 
   }
 
+  vector<operation_params> cached = likely_rough_ops;
+
+  auto voted_op_score =
+    [&cached](const operation_params& v) {
+    double score = 0.0;
+
+    for (auto& op : cached) {
+      double sfm_diff = fabs(op.SFM() - v.SFM());
+      double sfm_v = v.SFM();
+
+      if (sfm_diff <= 200.0) {
+	double mrr_diff = v.average_MRR() - op.average_MRR();
+
+	// NOTE: Add sfm weight later
+	score += mrr_diff;
+      }
+    }
+
+    return score;
+  };
+  sort_lt(likely_rough_ops, voted_op_score);
+
+  for (auto& op : likely_rough_ops) {
+    cout << "----------------------------------------------" << endl;
+    cout << op << endl;
+    cout << "SCORE = " << voted_op_score(op) << endl;
+  }
+
+  return 1;
+
   // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
   // 				   [](double mrr) { return mrr > 5.0; });;
   // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
 
-  
   vector<op_replacement> replacements;
   for (auto& g : grouped) {
     for (unsigned i = 0; i < g.size(); i++) {
@@ -1107,8 +1190,15 @@ int main(int argc, char** argv) {
 
   cout << "# of replacements = " << replacements.size() << endl;
 
+  delete_if(replacements, []
+	    (const op_replacement& l) {
+	      return fabs(l.better.SFM() - l.worse.SFM()) > 200.0;
+	    });
+
+  cout << "# of replacements with SFM diff < 200.0 = " << replacements.size() << endl;
+
   auto replacement_rank =
-    [](const op_replacement l, const op_replacement r) {
+    [](const op_replacement& l, const op_replacement& r) {
     return (l.better.average_MRR() - l.worse.average_MRR()) < (r.better.average_MRR() - r.worse.average_MRR());
   };
 
