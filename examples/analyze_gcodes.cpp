@@ -816,7 +816,46 @@ map<int, tool_info> infer_tool_table(const vector<block>& p) {
 }
 
 tool_end decode_tool_end_json(const ptree& p) {
-  return ROUGH_ENDMILL;
+  string tool_name = p.get<std::string>("");
+  cout << "Tool name = " << tool_name << endl;
+  if (tool_name == "ROUGH_ENDMILL") {
+    return ROUGH_ENDMILL;
+  }
+
+  if (tool_name == "BALL_ENDMILL") {
+    return BALL_ENDMILL;
+  }
+
+  if (tool_name == "FINISH_ENDMILL") {
+    return FINISH_ENDMILL;
+  }
+
+  if (tool_name == "SPOT_DRILL") {
+    return SPOT_DRILL_ENDMILL;
+  }
+
+  if (tool_name == "COUNTERSINK") {
+    return COUNTERSINK_ENDMILL;
+  }
+
+  if (tool_name == "DRILL") {
+    return DRILL_ENDMILL;
+  }
+
+  if (tool_name == "FACE") {
+    return FACE_ENDMILL;
+  }
+
+  if (tool_name == "KEY_CUTTER") {
+    return KEY_CUTTER_ENDMILL;
+  }
+
+  if (tool_name == "FLY_CUTTER") {
+    return FLY_CUTTER_ENDMILL;
+  }
+  
+  
+  DBG_ASSERT(false);
 }
 
 operation_params decode_json_params(const ptree& p) {
