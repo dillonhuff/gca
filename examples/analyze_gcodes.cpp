@@ -645,13 +645,13 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 	material_removed += volume_removed;
       } else {
 
-	double mat_removed_tol = 0.001;
+	double mat_removed_tol = 0.005;
 	if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
 	  cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
 	  cout << *c << endl;
 	  material_removed += volume_removed;
 
-	  DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
+	  //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
 	}
       }
     }
