@@ -895,19 +895,20 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  // ptree json_ops;
-  // read_json(dir_name, json_ops);
+  ptree json_ops;
+  read_json(dir_name, json_ops);
 
-  // vector<operation_params> p =
-  //   decode_params(json_ops.get_child("All params"));
+  vector<operation_params> p =
+    decode_params(json_ops.get_child("All params"));
 
-  // cout << "# of ops = " << p.size() << endl;
-  // for (auto& op : p) {
-  //   cout << op << endl;
-  // }
+  cout << "# of ops = " << p.size() << endl;
+  for (auto& op : p) {
+    cout << "-------------------------------------------------------------" << endl;
+    cout << op << endl;
+  }
 
-  // // Now start analyzing the trace
-  // return 0;
+  // Now start analyzing the trace
+  return 0;
 
   time_t start_time;
   time_t end_time;
