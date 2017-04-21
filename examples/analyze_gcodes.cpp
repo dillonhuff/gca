@@ -636,10 +636,6 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
     cylindrical_bit t = (tool_diameter);
 
-    cout << "TOOL END TYPE = " << tool_end_type << endl;
-    vtk_debug_cuts(path);
-
-    
     double material_removed = 0.0;
     for (auto c : path) {
 
@@ -665,6 +661,18 @@ program_operations(std::vector<std::vector<cut*> >& paths,
       }
     }
 
+    if (material_removed >= 10.0 && (tool_end_type != ROUGH_ENDMILL)) {
+      double cut_volume = material_removed / cut_length_inches;
+      cout << "TOOL END TYPE = " << tool_end_type << endl;
+      cout << "Material removed = " << material_removed << endl;
+      cout << "Material removed per inch of cut = " << cut_volume << endl;
+      vtk_debug_cuts(path);
+    }
+
+    
+    
+
+    
     double cut_depth = estimate_cut_depth_median(path);
     double feedrate = estimate_feedrate_median(path);
     double spindle_speed = estimate_spindle_speed_median(path);
@@ -1012,7 +1020,7 @@ int main(int argc, char** argv) {
   time_t end_time;
   time(&start_time);
 
-   int num_paths;
+  int num_paths;
 
   vector<double> mrrs;
 
@@ -1204,7 +1212,8 @@ int main(int argc, char** argv) {
 
   auto replacement_rank =
     [](const op_replacement& l, const op_replacement& r) {
-    return (l.better.average_MRR() - l.worse.average_MRR()) < (r.better.average_MRR() - r.worse.average_MRR());
+    return (l.better.average_MRR() - l.worse.average_MRR()) <
+    (r.better.average_MRR() - r.worse.average_MRR());
   };
 
   sort(begin(replacements), end(replacements), replacement_rank);
