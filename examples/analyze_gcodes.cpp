@@ -485,6 +485,7 @@ ptree encode_json(const operation_params& op) {
   p.put("tool_diameter", op.tool_diameter);
   p.put("cut_depth", op.cut_depth);
 
+  p.put("feedrate", op.feedrate);
   p.put("spindle_speed", op.spindle_speed);
   // IS SFM parameter even needed?
   p.put("sfm", op.sfm);
@@ -814,27 +815,62 @@ map<int, tool_info> infer_tool_table(const vector<block>& p) {
   return tt;
 }
 
+tool_end decode_tool_end_json(const ptree& p) {
+  return ROUGH_ENDMILL;
+}
+
 operation_params decode_json_params(const ptree& p) {
   int ctn = decode_json<int>(p.get_child("current_tool_no"));
+
   // p.put("tool_end_type", to_string(op.tool_end_type));
+  tool_end tet = decode_tool_end_json(p.get_child("tool_end_type"));
+
   // p.put("tool_diameter", op.tool_diameter);
+  double tool_diam = decode_json<double>(p.get_child("tool_diameter"));
+
   // p.put("cut_depth", op.cut_depth);
+  double cut_depth = decode_json<double>(p.get_child("cut_depth"));
 
   // p.put("spindle_speed", op.spindle_speed);
+  double spindle_speed = decode_json<double>(p.get_child("spindle_speed"));
+
   // // IS SFM parameter even needed?
   // p.put("sfm", op.sfm);
+  double sfm = decode_json<double>(p.get_child("sfm"));
 
   // p.put("total_distance", op.total_distance);
+  double total_distance = decode_json<double>(p.get_child("total_distance"));
+
   // p.put("cut_distance", op.cut_distance);
+  double cut_distance = decode_json<double>(p.get_child("cut_distance"));
 
   // p.put("total_time", op.total_time);
+  double total_time = decode_json<double>(p.get_child("total_time"));
+
   // p.put("cut_time", op.cut_time);
+  double cut_time = decode_json<double>(p.get_child("cut_time"));
 
   // p.put("material_removed", op.material_removed);
+  double material_removed = decode_json<double>(p.get_child("material_removed"));
 
   // p.put("file_name", op.file_name);
-  
-  return {};
+  string file_name = decode_json<string>(p.get_child("file_name"));
+
+  operation_params op{ctn,
+      tet,
+      tool_diam,
+      cut_depth,
+      feedrate,
+      spindle_speed,
+      sfm,
+      total_length_inches,
+      cut_length_inches,
+      total_time_seconds,
+      cut_time_seconds,
+      material_removed,
+      file_name};
+
+    return op;
 }
 
 std::vector<operation_params> decode_params(const ptree& p) {
