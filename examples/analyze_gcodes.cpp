@@ -513,6 +513,7 @@ std::ostream& operator<<(std::ostream& out, const operation_params& op) {
   double cl_4_flute = chip_load(op.spindle_speed, op.feedrate, 4);
   double cl_6_flute = chip_load(op.spindle_speed, op.feedrate, 6);
 
+  out << "File name = " << op.file_name << endl;
   out << "current_tool_no = " << op.current_tool_no << endl;
   out << "Tool diameter = " << op.tool_diameter << endl;
   out << "Tool type     = " << op.tool_end_type << endl << endl;
@@ -817,7 +818,7 @@ map<int, tool_info> infer_tool_table(const vector<block>& p) {
 
 tool_end decode_tool_end_json(const ptree& p) {
   string tool_name = p.get<std::string>("");
-  cout << "Tool name = " << tool_name << endl;
+
   if (tool_name == "ROUGH_ENDMILL") {
     return ROUGH_ENDMILL;
   }
@@ -937,17 +938,17 @@ int main(int argc, char** argv) {
   ptree json_ops;
   read_json(dir_name, json_ops);
 
-  vector<operation_params> p =
+  vector<operation_params> all_params =
     decode_params(json_ops.get_child("All params"));
 
-  cout << "# of ops = " << p.size() << endl;
-  for (auto& op : p) {
-    cout << "-------------------------------------------------------------" << endl;
-    cout << op << endl;
-  }
+  cout << "# of ops = " << all_params.size() << endl;
+  // for (auto& op : p) {
+  //   cout << "-------------------------------------------------------------" << endl;
+  //   cout << op << endl;
+  // }
 
   // Now start analyzing the trace
-  return 0;
+  //return 0;
 
   time_t start_time;
   time_t end_time;
@@ -957,67 +958,68 @@ int main(int argc, char** argv) {
 
   //vector<double> mrrs;
 
-  vector<operation_params> all_params;
-  int num_processed_blocks = 0;
-  int num_failed_blocks = 0;
+  // vector<operation_params> all_params;
+  // int num_processed_blocks = 0;
+  // int num_failed_blocks = 0;
 
-  apply_to_gprograms(dir_name, [&all_params, &num_processed_blocks, &num_failed_blocks](const vector<block>& p, const string& file_name) {
-      vector<vector<cut*>> paths;
-      auto r = gcode_to_cuts(p, paths);
-      if (r == GCODE_TO_CUTS_SUCCESS) {
-	num_processed_blocks += p.size();
-	map<int, tool_info> tt = infer_tool_table(p);
-	vector<operation_params> prog_ops =
-	  program_operations(paths, tt);
+  // apply_to_gprograms(dir_name, [&all_params, &num_processed_blocks, &num_failed_blocks](const vector<block>& p, const string& file_name) {
+  //     vector<vector<cut*>> paths;
+  //     auto r = gcode_to_cuts(p, paths);
+  //     if (r == GCODE_TO_CUTS_SUCCESS) {
+  // 	num_processed_blocks += p.size();
+  // 	map<int, tool_info> tt = infer_tool_table(p);
+  // 	vector<operation_params> prog_ops =
+  // 	  program_operations(paths, tt);
 
-	double program_length = 0.0;
-	double program_cut_length = 0.0;
-	double program_cut_time = 0.0;
-	for (auto& op : prog_ops) {
-	  program_length += op.total_distance;
-	  program_cut_length += op.cut_distance;
-	  program_cut_time += op.cut_time;
-	}
+  // 	double program_length = 0.0;
+  // 	double program_cut_length = 0.0;
+  // 	double program_cut_time = 0.0;
+  // 	for (auto& op : prog_ops) {
+  // 	  program_length += op.total_distance;
+  // 	  program_cut_length += op.cut_distance;
+  // 	  program_cut_time += op.cut_time;
+  // 	}
 
-	cout << "Program length in feet = " << program_length / 12.0 << endl;
-	boost::optional<double> stated_len =
-	  infer_program_length_feet(p);
+  // 	cout << "Program length in feet = " << program_length / 12.0 << endl;
+  // 	boost::optional<double> stated_len =
+  // 	  infer_program_length_feet(p);
 
-	if (stated_len) {
-	  cout << "STATED program length in feet = " << *stated_len << endl;
-	}
+  // 	if (stated_len) {
+  // 	  cout << "STATED program length in feet = " << *stated_len << endl;
+  // 	}
 
-	for (auto& op : prog_ops) {
-	  op.file_name = file_name;
-	}
+  // 	for (auto& op : prog_ops) {
+  // 	  op.file_name = file_name;
+  // 	}
 
-	concat(all_params, prog_ops);
+  // 	concat(all_params, prog_ops);
 
-	//simulate_paths(paths, tt, mrrs);
-      } else {
-	cout << "Could not process all paths: " << r << endl;
-	num_failed_blocks += p.size();
-      }
-    });
+  // 	//simulate_paths(paths, tt, mrrs);
+  //     } else {
+  // 	cout << "Could not process all paths: " << r << endl;
+  // 	num_failed_blocks += p.size();
+  //     }
+  //   });
 
-  cout << "# processed files = " << num_processed_blocks << endl;
-  cout << "# of failed files = " << num_failed_blocks << endl;
-  cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
-  cout << "# of operations = " << all_params.size() << endl;
+  // cout << "# processed files = " << num_processed_blocks << endl;
+  // cout << "# of failed files = " << num_failed_blocks << endl;
+  // cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
+  // cout << "# of operations = " << all_params.size() << endl;
 
 
-  ptree all_params_json_arr = encode_json(all_params);
+  // ptree all_params_json_arr = encode_json(all_params);
 
-  ptree all_params_json;
-  all_params_json.add_child("All params", all_params_json_arr);
+  // ptree all_params_json;
+  // all_params_json.add_child("All params", all_params_json_arr);
 
-  cout << "ALL PARAMS AS JSON" << endl;
-  write_json(cout, all_params_json);
+  // cout << "ALL PARAMS AS JSON" << endl;
+  // write_json(cout, all_params_json);
 
   vector<operation_params> likely_rough_ops = all_params;
   delete_if(likely_rough_ops,
 	    [](const operation_params& op) {
-	      return !(op.tool_end_type == ROUGH_ENDMILL); //op.cut_depth < 0.0 || op.material_removed < 0.1;
+	      return !(op.tool_end_type == ROUGH_ENDMILL) ||
+		within_eps(op.tool_diameter, 0.0, 0.0001); //op.cut_depth < 0.0 || op.material_removed < 0.1;
 	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
@@ -1107,7 +1109,7 @@ int main(int argc, char** argv) {
 
   auto replacement_rank =
     [](const op_replacement l, const op_replacement r) {
-    return true;
+    return (l.better.average_MRR() - l.worse.average_MRR()) < (r.better.average_MRR() - r.worse.average_MRR());
   };
 
   sort(begin(replacements), end(replacements), replacement_rank);
