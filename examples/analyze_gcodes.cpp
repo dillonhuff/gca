@@ -814,6 +814,37 @@ map<int, tool_info> infer_tool_table(const vector<block>& p) {
   return tt;
 }
 
+operation_params decode_json_params(const ptree& p) {
+  int ctn = decode_json<int>(p.get_child("current_tool_no"));
+  // p.put("tool_end_type", to_string(op.tool_end_type));
+  // p.put("tool_diameter", op.tool_diameter);
+  // p.put("cut_depth", op.cut_depth);
+
+  // p.put("spindle_speed", op.spindle_speed);
+  // // IS SFM parameter even needed?
+  // p.put("sfm", op.sfm);
+
+  // p.put("total_distance", op.total_distance);
+  // p.put("cut_distance", op.cut_distance);
+
+  // p.put("total_time", op.total_time);
+  // p.put("cut_time", op.cut_time);
+
+  // p.put("material_removed", op.material_removed);
+
+  // p.put("file_name", op.file_name);
+  
+  return {};
+}
+
+std::vector<operation_params> decode_params(const ptree& p) {
+  std::vector<operation_params> elems;
+  BOOST_FOREACH(const ptree::value_type& v, p.get_child("")) {
+    elems.push_back(decode_json_params(v.second));
+  }
+  return elems;
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -824,6 +855,15 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
+
+  ptree json_ops;
+  read_json(dir_name, json_ops);
+
+  vector<operation_params> p =
+    decode_params(json_ops.get_child("All params"));
+
+  // Now start analyzing the trace
+  return 0;
 
   time_t start_time;
   time_t end_time;
@@ -881,6 +921,14 @@ int main(int argc, char** argv) {
   cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
   cout << "# of operations = " << all_params.size() << endl;
 
+
+  ptree all_params_json_arr = encode_json(all_params);
+
+  ptree all_params_json;
+  all_params_json.add_child("All params", all_params_json_arr);
+
+  cout << "ALL PARAMS AS JSON" << endl;
+  write_json(cout, all_params_json);
 
   vector<operation_params> likely_rough_ops = all_params;
   delete_if(likely_rough_ops,
@@ -993,14 +1041,6 @@ int main(int argc, char** argv) {
   time(&end_time);
   double seconds = difftime(end_time, start_time);
   cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
-
-  ptree all_params_json_arr = encode_json(all_params);
-
-  ptree all_params_json;
-  all_params_json.add_child("All params", all_params_json_arr);
-
-  cout << "ALL PARAMS AS JSON" << endl;
-  write_json(cout, all_params_json);
   
 
   // cout << "mrrs.size() = " << mrrs.size() << endl;

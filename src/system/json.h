@@ -61,6 +61,12 @@ namespace gca {
   }
 
   template<>
+  inline int decode_json(const ptree& p) {
+    std::string s = p.get<std::string>("");
+    return std::stoi(s);
+  }
+  
+  template<>
   inline unsigned decode_json(const ptree& p) {
     std::string s = p.get<std::string>("");
     return std::stoul(s);
