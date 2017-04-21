@@ -832,6 +832,9 @@ operation_params decode_json_params(const ptree& p) {
   double cut_depth = decode_json<double>(p.get_child("cut_depth"));
 
   // p.put("spindle_speed", op.spindle_speed);
+  double feedrate = decode_json<double>(p.get_child("feedrate"));
+  
+  // p.put("spindle_speed", op.spindle_speed);
   double spindle_speed = decode_json<double>(p.get_child("spindle_speed"));
 
   // // IS SFM parameter even needed?
@@ -860,9 +863,7 @@ operation_params decode_json_params(const ptree& p) {
       tet,
       tool_diam,
       cut_depth,
-      // REINTRODUCE
-      //feedrate
-      0.0,
+      feedrate,
       spindle_speed,
       sfm,
       total_distance,
@@ -894,19 +895,19 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  ptree json_ops;
-  read_json(dir_name, json_ops);
+  // ptree json_ops;
+  // read_json(dir_name, json_ops);
 
-  vector<operation_params> p =
-    decode_params(json_ops.get_child("All params"));
+  // vector<operation_params> p =
+  //   decode_params(json_ops.get_child("All params"));
 
-  cout << "# of ops = " << p.size() << endl;
-  for (auto& op : p) {
-    cout << op << endl;
-  }
+  // cout << "# of ops = " << p.size() << endl;
+  // for (auto& op : p) {
+  //   cout << op << endl;
+  // }
 
-  // Now start analyzing the trace
-  return 0;
+  // // Now start analyzing the trace
+  // return 0;
 
   time_t start_time;
   time_t end_time;
