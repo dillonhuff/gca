@@ -854,19 +854,21 @@ operation_params decode_json_params(const ptree& p) {
   double material_removed = decode_json<double>(p.get_child("material_removed"));
 
   // p.put("file_name", op.file_name);
-  string file_name = decode_json<string>(p.get_child("file_name"));
+  string file_name = p.get<std::string>("file_name");
 
   operation_params op{ctn,
       tet,
       tool_diam,
       cut_depth,
-      feedrate,
+      // REINTRODUCE
+      //feedrate
+      0.0,
       spindle_speed,
       sfm,
-      total_length_inches,
-      cut_length_inches,
-      total_time_seconds,
-      cut_time_seconds,
+      total_distance,
+      cut_distance,
+      total_time,
+      cut_time,
       material_removed,
       file_name};
 
@@ -897,6 +899,11 @@ int main(int argc, char** argv) {
 
   vector<operation_params> p =
     decode_params(json_ops.get_child("All params"));
+
+  cout << "# of ops = " << p.size() << endl;
+  for (auto& op : p) {
+    cout << op << endl;
+  }
 
   // Now start analyzing the trace
   return 0;
