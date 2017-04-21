@@ -639,10 +639,20 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     double material_removed = 0.0;
     for (auto c : path) {
 
+      double volume_removed = update_cut(*c, r, t);      
       // Assume no crashes since the program was submitted
       if (!c->is_safe_move()) {
-	double volume_removed = update_cut(*c, r, t);
 	material_removed += volume_removed;
+      } else {
+
+	double mat_removed_tol = 0.001;
+	if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
+	  cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
+	  cout << *c << endl;
+	  material_removed += volume_removed;
+
+	  DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
+	}
       }
     }
 
@@ -661,17 +671,13 @@ program_operations(std::vector<std::vector<cut*> >& paths,
       }
     }
 
-    if (material_removed >= 10.0 && (tool_end_type != ROUGH_ENDMILL)) {
-      double cut_volume = material_removed / cut_length_inches;
-      cout << "TOOL END TYPE = " << tool_end_type << endl;
-      cout << "Material removed = " << material_removed << endl;
-      cout << "Material removed per inch of cut = " << cut_volume << endl;
-      vtk_debug_cuts(path);
-    }
-
-    
-    
-
+    // if (material_removed >= 10.0 && (tool_end_type != ROUGH_ENDMILL)) {
+    //   double cut_volume = material_removed / cut_length_inches;
+    //   cout << "TOOL END TYPE = " << tool_end_type << endl;
+    //   cout << "Material removed = " << material_removed << endl;
+    //   cout << "Material removed per inch of cut = " << cut_volume << endl;
+    //   vtk_debug_cuts(path);
+    // }
     
     double cut_depth = estimate_cut_depth_median(path);
     double feedrate = estimate_feedrate_median(path);
