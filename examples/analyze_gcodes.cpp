@@ -649,6 +649,7 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 	  double mat_removed_tol = 0.005;
 	  if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
 	    cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
+	    cout << "line # = " << c->get_line_number() << endl;
 	    cout << *c << endl;
 	    material_removed += volume_removed;
 
