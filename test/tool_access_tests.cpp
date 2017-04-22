@@ -186,44 +186,44 @@ namespace gca {
     REQUIRE(num_unreachable_features == 1);
   }
 
-  TEST_CASE("Depth map based access testing") {
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+  // TEST_CASE("Depth map based access testing") {
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-    // Very thick, short tool
-    tool t(0.14, 3.15, 2, HSS, FLAT_NOSE);
-    t.set_cut_diameter(0.125);
-    t.set_cut_length(0.5);
+  //   // Very thick, short tool
+  //   tool t(0.14, 3.15, 2, HSS, FLAT_NOSE);
+  //   t.set_cut_diameter(0.125);
+  //   t.set_cut_length(0.5);
 
-    t.set_shank_diameter(0.5);
-    t.set_shank_length(0.1);
+  //   t.set_shank_diameter(0.5);
+  //   t.set_shank_length(0.1);
 
-    t.set_holder_diameter(2.0);
-    t.set_holder_length(2.5);
+  //   t.set_holder_diameter(2.0);
+  //   t.set_holder_length(2.5);
     
-    vector<surface> accessable_surfs =
-      accessable_surfaces(mesh, t);
+  //   vector<surface> accessable_surfs =
+  //     accessable_surfaces(mesh, t);
 
-    vtk_debug_highlight_inds(accessable_surfs);
-  }
+  //   vtk_debug_highlight_inds(accessable_surfs);
+  // }
 
-  TEST_CASE("Long tool access") {
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+  // TEST_CASE("Long tool access") {
+  //   auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-    // Ridiculous tool, only for testing
-    tool t(0.14, 3.15, 2, HSS, FLAT_NOSE);
-    t.set_cut_diameter(0.01);
-    t.set_cut_length(5.0);
+  //   // Ridiculous tool, only for testing
+  //   tool t(0.14, 3.15, 2, HSS, FLAT_NOSE);
+  //   t.set_cut_diameter(0.01);
+  //   t.set_cut_length(5.0);
 
-    t.set_shank_diameter(0.5);
-    t.set_shank_length(0.1);
+  //   t.set_shank_diameter(0.5);
+  //   t.set_shank_length(0.1);
 
-    t.set_holder_diameter(2.0);
-    t.set_holder_length(2.5);
+  //   t.set_holder_diameter(2.0);
+  //   t.set_holder_length(2.5);
     
-    vector<surface> accessable_surfs =
-      accessable_surfaces(mesh, t);
+  //   vector<surface> accessable_surfs =
+  //     accessable_surfaces(mesh, t);
 
-    vtk_debug_highlight_inds(accessable_surfs);
-  }
+  //   vtk_debug_highlight_inds(accessable_surfs);
+  // }
 
 }

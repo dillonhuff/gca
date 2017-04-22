@@ -257,7 +257,7 @@ namespace gca {
 	}
 
 	cout << "# of setups in plan = " << plan.setups.size() << endl;
-	visualize_surface_decomp(decomp);
+	//visualize_surface_decomp(decomp);
       }
     }
 
@@ -305,9 +305,9 @@ namespace gca {
 
       REQUIRE(fp.steps().size() == 2);
 
-      for (auto& fs : fp.steps()) {
-      	visual_debug(fs);
-      }
+      // for (auto& fs : fp.steps()) {
+      // 	visual_debug(fs);
+      // }
     }
 
   }

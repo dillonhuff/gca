@@ -28,7 +28,7 @@ namespace gca {
     axis_field af =
       axis_field_for_mesh(m);
 
-    vtk_debug_axis_field(af);
+    //vtk_debug_axis_field(af);
   }
 
 }

@@ -630,7 +630,7 @@ namespace gca {
     sort_gt(flat_tools, [](const tool& t) { return t.cut_diameter(); });
 
     //vtk_debug_depth_field(current_heights);
-    vtk_debug_depth_field(part_field);
+    //vtk_debug_depth_field(part_field);
 
     depth_field current_heights = uniform_height_copy(part_field, stock_height);
     class region current_region(current_heights);

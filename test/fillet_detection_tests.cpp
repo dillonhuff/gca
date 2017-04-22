@@ -19,7 +19,7 @@ namespace gca {
       vector<vector<surface> > fillets =
 	detect_fillets(mesh);
 
-      visualize_surface_decomp(fillets);
+      //visualize_surface_decomp(fillets);
 
       REQUIRE(fillets.size() == 2);
     }
@@ -32,7 +32,7 @@ namespace gca {
       vector<vector<surface> > fillets =
 	detect_fillets(mesh);
 
-      visualize_surface_decomp(fillets);
+      //visualize_surface_decomp(fillets);
 
       REQUIRE(fillets.size() == 9);
     }

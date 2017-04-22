@@ -208,7 +208,7 @@ namespace gca {
 
 	  if (all_surfaces_are_millable_from(access_dir, cg)) {
 	    vector<shared_edge> edges = edges_to_fillet(cg, m, access_dir);
-	    vtk_debug_shared_edges(edges, m);
+	    //vtk_debug_shared_edges(edges, m);
 	  }
 	}
 
@@ -785,64 +785,64 @@ namespace gca {
     return solved;
   }
 
-  TEST_CASE("Check deep internal features") {
-    arena_allocator a;
-    set_system_allocator(&a);
+  // TEST_CASE("Check deep internal features") {
+  //   arena_allocator a;
+  //   set_system_allocator(&a);
 
-    SECTION("reversecameramount with one decomposition, multiple slices") {
-      triangular_mesh m =
-	parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+  //   SECTION("reversecameramount with one decomposition, multiple slices") {
+  //     triangular_mesh m =
+  // 	parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-      auto res = solve_deep_features(m);
+  //     auto res = solve_deep_features(m);
 
-      REQUIRE(res.size() > 0);
-    }
+  //     REQUIRE(res.size() > 0);
+  //   }
 
-    SECTION("caliper with multiple decompositions") {
-      triangular_mesh m =
-	parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+  //   SECTION("caliper with multiple decompositions") {
+  //     triangular_mesh m =
+  // 	parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
 
-      auto res = solve_deep_features(m);
+  //     auto res = solve_deep_features(m);
 
-      REQUIRE(res.size() > 0);
-    }
+  //     REQUIRE(res.size() > 0);
+  //   }
 
-    SECTION("artusite no deep features") {
-      triangular_mesh m =
-	parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+  //   SECTION("artusite no deep features") {
+  //     triangular_mesh m =
+  // 	parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
 
-      auto res = solve_deep_features(m);
+  //     auto res = solve_deep_features(m);
 
-      REQUIRE(res.size() == 1);
-      REQUIRE(res.front().size() == 1);
-    }
+  //     REQUIRE(res.size() == 1);
+  //     REQUIRE(res.front().size() == 1);
+  //   }
 
-    SECTION("Rear slot, no deep features") {
-      triangular_mesh m =
-	parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+  //   SECTION("Rear slot, no deep features") {
+  //     triangular_mesh m =
+  // 	parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      auto res = solve_deep_features(m);
+  //     auto res = solve_deep_features(m);
 
-      REQUIRE(res.size() == 1);
-      REQUIRE(res.front().size() == 1);
-    }
+  //     REQUIRE(res.size() == 1);
+  //     REQUIRE(res.front().size() == 1);
+  //   }
     
-  }
+  // }
   
-  TEST_CASE("Parsing that weird failing print object") {
-    triangular_mesh m =
-      parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
-      //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
-      //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
-      //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
+  // TEST_CASE("Parsing that weird failing print object") {
+  //   triangular_mesh m =
+  //     parse_stl("./test/stl-files/onshape_parts/caliperbedlevelingi3v2_fixed - Part 1.stl", 0.0001);
+  //     //parse_stl("./test/stl-files/onshape_parts/CTT-CM - Part 1.stl", 0.0001);
+  //     //parse_stl("./test/stl-files/onshape_parts/artusitestp1 - Part 1.stl", 0.0001);
+  //     //parse_stl("test/stl-files/onshape_parts/Rear Slot - Rear Slot.stl", 0.0001);
 
-      //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
+  //     //parse_stl("test/stl-files/onshape_parts/SmallReverseCameraMount - Part 1.stl", 0.0001);
 
-    auto res = search_part_space(trimesh_to_nef_polyhedron(m));
+  //   auto res = search_part_space(trimesh_to_nef_polyhedron(m));
 
-    cout << "Size of result = " << res.size() << endl;
+  //   cout << "Size of result = " << res.size() << endl;
 
-    REQUIRE(res.size() > 0);
-  }
+  //   REQUIRE(res.size() > 0);
+  // }
 
 }
