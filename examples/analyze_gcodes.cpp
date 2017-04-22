@@ -869,26 +869,78 @@ std::ostream& operator<<(std::ostream& out, const operation_range& op_range) {
   return out;
 }
 
+std::string extract_operation_name(const std::string& op) {
+  string rough_str(" ROUGHING )");
+  if (ends_with(op, rough_str)) {
+    return "ROUGHING";
+  }
+
+  string surfacing_str(" SURFACING )");
+  if (ends_with(op, surfacing_str)) {
+    return "SURFACING";
+  }
+
+  string holes_str(" HOLES )");
+  if (ends_with(op, holes_str)) {
+    return "HOLES";
+  }
+
+  string contour_str(" CONTOUR )");
+  if (ends_with(op, contour_str)) {
+    return "CONTOUR";
+  }
+  
+  cout << "UNRECOGNIZED OP STRING = " << op << endl;
+  return "UNKNOWN";
+}
+
 std::vector<operation_range> infer_operation_ranges(const vector<block>& p) {
   vector<token> comments;
+  string op_str("( OPERATION ");
+
   for (auto b : p) {
     for (auto t : b) {
-      if ((t.ttp == PAREN_COMMENT) ||
-	  (t.ttp == BRACKET_COMMENT)) {
+      if (((t.ttp == PAREN_COMMENT) ||
+	   (t.ttp == BRACKET_COMMENT)) &&
+	  starts_with(t.text, op_str)) {
 	comments.push_back(t);
       }
     }
   }
 
-  int current_position = -1;
-  string op_str("( OPERATION ");
-  for (auto c : comments) {
-    if (starts_with(c.text, op_str)) {
-      cout << "operation comment = " << c.text << " " << c.line_no << endl;
-    }
+  if (comments.size() < 1) {
+    return {};
   }
 
-  return {};
+  vector<operation_range> op_ranges;
+  string first_op_name = extract_operation_name(comments.front().text);
+
+  operation_range active{first_op_name, comments.front().line_no};
+
+  op_ranges.push_back(active);
+
+  for (unsigned i = 1; i < comments.size(); i++) {
+    token next_op_comment = comments[i];
+    string op_name = extract_operation_name(next_op_comment.text);
+    operation_range active{op_name, next_op_comment.line_no};
+
+    op_ranges.back().end_line = next_op_comment.line_no;
+
+    op_ranges.push_back(active);
+    
+  }
+
+  int last_line_no = p.back().back().line_no;
+  cout << "last line number = " << last_line_no << endl;
+  
+  op_ranges.back().end_line = last_line_no;
+
+  cout << "# of op ranges = " << op_ranges.size() << endl;
+  for (auto& op : op_ranges) {
+    cout << op << endl;
+  }
+
+  return op_ranges;
 }
 
 map<int, tool_info> infer_tool_table(const vector<block>& p) {
