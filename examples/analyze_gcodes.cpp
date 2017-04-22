@@ -1323,6 +1323,8 @@ int main(int argc, char** argv) {
     cout << "SCORE = " << voted_op_score(op) << endl;
   }
 
+  return 0;
+
   // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
   // 				   [](double mrr) { return mrr > 5.0; });;
   // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
