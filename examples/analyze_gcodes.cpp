@@ -1063,6 +1063,11 @@ operation_params decode_json_params(const ptree& p) {
   // p.put("file_name", op.file_name);
   string file_name = p.get<std::string>("file_name");
 
+  ptree range_pt = p.get_child("range");
+  operation_range range{range_pt.get<std::string>("name"),
+      range_pt.get<int>("start_line"),
+      range_pt.get<int>("end_line")};
+
   operation_params op{ctn,
       tet,
       tool_diam,
@@ -1075,7 +1080,8 @@ operation_params decode_json_params(const ptree& p) {
       total_time,
       cut_time,
       material_removed,
-      file_name};
+      file_name,
+      range};
 
     return op;
 }
@@ -1099,18 +1105,19 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  // ptree json_ops;
-  // read_json(dir_name, json_ops);
+  ptree json_ops;
+  read_json(dir_name, json_ops);
 
-  // vector<operation_params> all_params =
-  //   decode_params(json_ops.get_child("All params"));
+  vector<operation_params> read_params =
+    decode_params(json_ops.get_child("All params"));
 
-  // cout << "# of ops = " << all_params.size() << endl;
+  cout << "# of ops = " << read_params.size() << endl;
 
-  // vector<labeled_operation_params> labeled_params;
-  // for (auto& op : all_params) {
-  //   labeled_params.push_back({ROUGH_OPERATION, op});
-  // }
+  for (auto& op : read_params) {
+    cout << op << endl;
+  }
+
+  return 0;
 
   // ptree all_params_json;
   // ptree all_params_json_arr = encode_json(all_params);
