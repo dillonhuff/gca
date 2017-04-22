@@ -674,8 +674,15 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     auto path = path_op_pair.second;
 
     cout << "Looking up tool diameter" << endl;
-    auto c = *find_if(path.begin(), path.end(),
-		      [](const cut* c) { return !c->is_safe_move(); });
+    auto c_iter = find_if(path.begin(), path.end(),
+			  [](const cut* c) { return !c->is_safe_move(); });
+
+    if (c_iter == end(path)) {
+      break;
+    }
+
+    auto c = *c_iter;
+
     auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
     if (!(tn->is_ilit())) {
       cout << "ERROR" << endl;
