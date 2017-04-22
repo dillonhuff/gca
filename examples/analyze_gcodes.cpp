@@ -446,6 +446,10 @@ void simulate_paths(vector<vector<cut*>>& paths,
   // cout << "-----------------------------------------------------" << endl;
 }
 
+struct operation_range {
+  std::string name;
+  int start_line, end_line;
+};
 
 struct operation_params {
 
@@ -467,6 +471,8 @@ struct operation_params {
   double material_removed;
 
   std::string file_name;
+
+  operation_range range;
 
   double SFM() const {
     return surface_feet_per_minute(spindle_speed, tool_diameter);
@@ -545,6 +551,11 @@ ptree encode_json(const labeled_operation_params& op) {
   return enc;
 }
 
+std::ostream& operator<<(std::ostream& out, const operation_range& op_range) {
+  out << op_range.name << " START: " << op_range.start_line << ", END: " << op_range.end_line;
+  return out;
+}
+
 std::ostream& operator<<(std::ostream& out, const operation_params& op) {
 
   double cl_2_flute = chip_load(op.spindle_speed, op.feedrate, 2);
@@ -552,6 +563,7 @@ std::ostream& operator<<(std::ostream& out, const operation_params& op) {
   double cl_6_flute = chip_load(op.spindle_speed, op.feedrate, 6);
 
   out << "File name = " << op.file_name << endl;
+  out << "Operation range = " << op.range << endl;
   out << "current_tool_no = " << op.current_tool_no << endl;
   out << "Tool diameter = " << op.tool_diameter << endl;
   out << "Tool type     = " << op.tool_end_type << endl << endl;
@@ -605,7 +617,8 @@ void vtk_debug_cuts(const std::vector<cut*>& cuts) {
 
 std::vector<operation_params>
 program_operations(std::vector<std::vector<cut*> >& paths,
-		   map<int, tool_info>& tool_table) {
+		   map<int, tool_info>& tool_table,
+		   const std::vector<operation_range>& op_ranges) {
   if (paths.size() == 0) { return {}; }
 
   double max_tool_diameter = 1.5;
@@ -613,12 +626,39 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 
   //vtk_debug_depth_field(r.r);
 
-  //auto all_cuts = concat_all(paths);
+  auto all_cuts = concat_all(paths);
+
+  unsigned op_ind = 0;
+  auto active_op = op_ranges[0];
+
+  vector<pair<operation_range, vector<cut*> > > op_paths;
+  vector<cut*> current_path;
+
+  for (auto& cut : all_cuts) {
+    if (cut->get_line_number() >= active_op.end_line) {
+      op_paths.push_back( make_pair(active_op, current_path) );
+
+      op_ind++;
+      active_op = op_ranges[op_ind];
+
+      current_path = {cut};
+    } else {
+      current_path.push_back(cut);
+    }
+    
+  }
+
+  op_paths.push_back( make_pair(active_op, current_path) );
+
+  DBG_ASSERT(op_paths.size() == op_ranges.size());
+
   //vtk_debug_cuts(all_cuts);
   
   vector<operation_params> ops;
 
-  for (auto path : paths) {
+  for (auto path_op_pair : op_paths) {
+
+    auto path = path_op_pair.second;
 
     cout << "Looking up tool diameter" << endl;
     auto c = *find_if(path.begin(), path.end(),
@@ -699,36 +739,41 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 	total_time_seconds,
 	cut_time_seconds,
 	material_removed,
-	"UNKNOWN"};
+	"UNKNOWN",
+	path_op_pair.first};
 
     ops.push_back(op);
-    
-    double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
-    double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
-    double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
 
     cout << "--------------------------------------------------------" << endl;
-
-    cout << "current_tool_no = " << current_tool_no << endl;
-    cout << "Tool diameter = " << tool_diameter << endl;
-    cout << "Tool type     = " << op.tool_end_type << endl << endl;
-
-    cout << "cut depth estimate = " << cut_depth << endl;
-    cout << "feedrate estimate = " << feedrate << endl;
-    cout << "spindle speed estimate = " << spindle_speed << endl << endl;
-
-    cout << "estimated material removed = " << op.material_removed << endl << endl;
-    cout << "cut length                 = " << op.cut_distance << endl << endl;
-    cout << "cut time                   = " << op.cut_time << endl << endl;
-    cout << "estimated average MRR      = " << op.average_MRR() << endl;
-    
-    cout << "implied sfm = " << sfm << endl;
-
-    cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
-    cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
-    cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
-    
+    cout << op << endl;
     cout << "--------------------------------------------------------" << endl;
+    
+    // double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
+    // double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
+    // double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
+
+    // cout << "--------------------------------------------------------" << endl;
+
+    // cout << "current_tool_no = " << current_tool_no << endl;
+    // cout << "Tool diameter = " << tool_diameter << endl;
+    // cout << "Tool type     = " << op.tool_end_type << endl << endl;
+
+    // cout << "cut depth estimate = " << cut_depth << endl;
+    // cout << "feedrate estimate = " << feedrate << endl;
+    // cout << "spindle speed estimate = " << spindle_speed << endl << endl;
+
+    // cout << "estimated material removed = " << op.material_removed << endl << endl;
+    // cout << "cut length                 = " << op.cut_distance << endl << endl;
+    // cout << "cut time                   = " << op.cut_time << endl << endl;
+    // cout << "estimated average MRR      = " << op.average_MRR() << endl;
+    
+    // cout << "implied sfm = " << sfm << endl;
+
+    // cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
+    // cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
+    // cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
+    
+    // cout << "--------------------------------------------------------" << endl;
   }
 
   return ops;
@@ -857,16 +902,6 @@ boost::optional<double> infer_program_length_feet(const vector<block>& p) {
   }
 
   return boost::none;
-}
-
-struct operation_range {
-  std::string name;
-  int start_line, end_line;
-};
-
-std::ostream& operator<<(std::ostream& out, const operation_range& op_range) {
-  out << op_range.name << " START: " << op_range.start_line << ", END: " << op_range.end_line;
-  return out;
 }
 
 std::string extract_operation_name(const std::string& op) {
@@ -1109,14 +1144,6 @@ int main(int argc, char** argv) {
   // Now start analyzing the trace
   //return 0;
 
-  apply_to_gprograms(dir_name, [](const vector<block>& p, const string&) {
-      std::vector<operation_range> op_range =
-	infer_operation_ranges(p);
-      return;
-    });
-
-  return 0;
-
   time_t start_time;
   time_t end_time;
   time(&start_time);
@@ -1134,9 +1161,14 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
   	num_processed_blocks += p.size();
+
   	map<int, tool_info> tt = infer_tool_table(p);
-  	vector<operation_params> prog_ops =
-  	  program_operations(paths, tt);
+
+	std::vector<operation_range> op_ranges =
+	  infer_operation_ranges(p);
+
+	vector<operation_params> prog_ops =
+  	  program_operations(paths, tt, op_ranges);
 
   	double program_length = 0.0;
   	double program_cut_length = 0.0;
@@ -1185,7 +1217,8 @@ int main(int argc, char** argv) {
   vector<operation_params> likely_rough_ops = all_params;
   delete_if(likely_rough_ops,
 	    [](const operation_params& op) {
-	      return !(op.tool_end_type == ROUGH_ENDMILL) ||
+	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
+		(op.range.name != "ROUGHING") ||
 		within_eps(op.tool_diameter, 0.0, 0.0001) ||
 		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
 	    });
@@ -1286,8 +1319,6 @@ int main(int argc, char** argv) {
     cout << op << endl;
     cout << "SCORE = " << voted_op_score(op) << endl;
   }
-
-  return 1;
 
   // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
   // 				   [](double mrr) { return mrr > 5.0; });;
