@@ -1114,13 +1114,13 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  // ptree json_ops;
-  // read_json(dir_name, json_ops);
+  ptree json_ops;
+  read_json(dir_name, json_ops);
 
-  // vector<operation_params> read_params =
-  //   decode_params(json_ops.get_child("All params"));
+  vector<operation_params> read_params =
+    decode_params(json_ops.get_child("All params"));
 
-  // cout << "# of ops = " << read_params.size() << endl;
+  cout << "# of ops = " << read_params.size() << endl;
 
   // for (auto& op : read_params) {
   //   cout << op << endl;
@@ -1149,75 +1149,75 @@ int main(int argc, char** argv) {
   time_t end_time;
   time(&start_time);
 
-  int num_paths;
+  // int num_paths;
 
-  vector<double> mrrs;
+  // vector<double> mrrs;
 
-  vector<operation_params> all_params;
-  int num_processed_blocks = 0;
-  int num_failed_blocks = 0;
+  // vector<operation_params> all_params;
+  // int num_processed_blocks = 0;
+  // int num_failed_blocks = 0;
 
-  apply_to_gprograms(dir_name, [&all_params, &num_processed_blocks, &num_failed_blocks](const vector<block>& p, const string& file_name) {
-      vector<vector<cut*>> paths;
-      auto r = gcode_to_cuts(p, paths);
-      if (r == GCODE_TO_CUTS_SUCCESS) {
-  	num_processed_blocks += p.size();
+  // apply_to_gprograms(dir_name, [&all_params, &num_processed_blocks, &num_failed_blocks](const vector<block>& p, const string& file_name) {
+  //     vector<vector<cut*>> paths;
+  //     auto r = gcode_to_cuts(p, paths);
+  //     if (r == GCODE_TO_CUTS_SUCCESS) {
+  // 	num_processed_blocks += p.size();
 
-  	map<int, tool_info> tt = infer_tool_table(p);
+  // 	map<int, tool_info> tt = infer_tool_table(p);
 
-	std::vector<operation_range> op_ranges =
-	  infer_operation_ranges(p);
+  // 	std::vector<operation_range> op_ranges =
+  // 	  infer_operation_ranges(p);
 
-	vector<operation_params> prog_ops =
-  	  program_operations(paths, tt, op_ranges);
+  // 	vector<operation_params> prog_ops =
+  // 	  program_operations(paths, tt, op_ranges);
 
-  	double program_length = 0.0;
-  	double program_cut_length = 0.0;
-  	double program_cut_time = 0.0;
-  	for (auto& op : prog_ops) {
-  	  program_length += op.total_distance;
-  	  program_cut_length += op.cut_distance;
-  	  program_cut_time += op.cut_time;
-  	}
+  // 	double program_length = 0.0;
+  // 	double program_cut_length = 0.0;
+  // 	double program_cut_time = 0.0;
+  // 	for (auto& op : prog_ops) {
+  // 	  program_length += op.total_distance;
+  // 	  program_cut_length += op.cut_distance;
+  // 	  program_cut_time += op.cut_time;
+  // 	}
 
-  	cout << "Program length in feet = " << program_length / 12.0 << endl;
-  	boost::optional<double> stated_len =
-  	  infer_program_length_feet(p);
+  // 	cout << "Program length in feet = " << program_length / 12.0 << endl;
+  // 	boost::optional<double> stated_len =
+  // 	  infer_program_length_feet(p);
 
-  	if (stated_len) {
-  	  cout << "STATED program length in feet = " << *stated_len << endl;
-  	}
+  // 	if (stated_len) {
+  // 	  cout << "STATED program length in feet = " << *stated_len << endl;
+  // 	}
 
-  	for (auto& op : prog_ops) {
-  	  op.file_name = file_name;
-  	}
+  // 	for (auto& op : prog_ops) {
+  // 	  op.file_name = file_name;
+  // 	}
 
-  	concat(all_params, prog_ops);
+  // 	concat(all_params, prog_ops);
 
-  	//simulate_paths(paths, tt, mrrs);
-      } else {
-  	cout << "Could not process all paths: " << r << endl;
-  	num_failed_blocks += p.size();
-      }
-    });
+  // 	//simulate_paths(paths, tt, mrrs);
+  //     } else {
+  // 	cout << "Could not process all paths: " << r << endl;
+  // 	num_failed_blocks += p.size();
+  //     }
+  //   });
 
-  cout << "# processed files = " << num_processed_blocks << endl;
-  cout << "# of failed files = " << num_failed_blocks << endl;
-  cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
-  cout << "# of operations = " << all_params.size() << endl;
+  // cout << "# processed files = " << num_processed_blocks << endl;
+  // cout << "# of failed files = " << num_failed_blocks << endl;
+  // cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
+  // cout << "# of operations = " << all_params.size() << endl;
 
 
-  ptree all_params_json_arr = encode_json(all_params);
+  // ptree all_params_json_arr = encode_json(all_params);
 
-  ptree all_params_json;
-  all_params_json.add_child("All params", all_params_json_arr);
+  // ptree all_params_json;
+  // all_params_json.add_child("All params", all_params_json_arr);
 
-  cout << "ALL PARAMS AS JSON" << endl;
-  write_json(cout, all_params_json);
+  // cout << "ALL PARAMS AS JSON" << endl;
+  // write_json(cout, all_params_json);
 
-  return 0;
+  // return 0;
 
-  vector<operation_params> likely_rough_ops = all_params;
+  vector<operation_params> likely_rough_ops = read_params;
   delete_if(likely_rough_ops,
 	    [](const operation_params& op) {
 	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
