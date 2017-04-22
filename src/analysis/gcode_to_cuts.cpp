@@ -101,12 +101,15 @@ namespace gca {
     default:
       c = nullptr;
     }
+
     if (c != nullptr) {
       c->settings = extract_settings(current_state);
+      c->set_line_number(current_state.line_no);
       // c->set_spindle_speed(current_state.spindle_speed);
       // c->set_feedrate(current_state.feedrate);
       // c->settings.active_tool = current_state.active_tool;
     }
+
     return c;
   }
 

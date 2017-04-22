@@ -17,6 +17,7 @@ namespace gca {
   struct cut {
   protected:
     parametric_curve c;
+    int line_no;
     
   public:
     machine_settings settings;
@@ -33,12 +34,16 @@ namespace gca {
     inline double length() const { return (get_end() - get_start()).len(); }
     inline value* get_tool_number() const { return settings.active_tool; }
 
+    inline int get_line_number() const { return line_no; }
+
     inline void set_spindle_speed(value* v) { settings.spindle_speed = v; }
     inline void set_feedrate(value* v) { settings.feedrate = v; }
     inline void set_tool_number(value* v) { settings.active_tool = v; }
     inline void set_start(point p) { c = parametric_curve(line(p, get_end())); }
     inline void set_end(point p) { c = parametric_curve(line(get_start(), p)); }
-    
+
+    inline void set_line_number(const int i) { line_no = i; }
+
     virtual inline bool is_safe_move() const { return false; }
     virtual inline bool is_linear_cut() const { return false; }
     virtual inline bool is_circular_arc() const { return false; }
