@@ -859,6 +859,38 @@ boost::optional<double> infer_program_length_feet(const vector<block>& p) {
   return boost::none;
 }
 
+struct operation_range {
+  std::string name;
+  int start_line, end_line;
+};
+
+std::ostream& operator<<(std::ostream& out, const operation_range& op_range) {
+  out << op_range.name << " START: " << op_range.start_line << ", END: " << op_range.end_line;
+  return out;
+}
+
+std::vector<operation_range> infer_operation_ranges(const vector<block>& p) {
+  vector<token> comments;
+  for (auto b : p) {
+    for (auto t : b) {
+      if ((t.ttp == PAREN_COMMENT) ||
+	  (t.ttp == BRACKET_COMMENT)) {
+	comments.push_back(t);
+      }
+    }
+  }
+
+  int current_position = -1;
+  string op_str("( OPERATION ");
+  for (auto c : comments) {
+    if (starts_with(c.text, op_str)) {
+      cout << "operation comment = " << c.text << " " << c.line_no << endl;
+    }
+  }
+
+  return {};
+}
+
 map<int, tool_info> infer_tool_table(const vector<block>& p) {
   vector<token> comments;
   for (auto b : p) {
@@ -1024,6 +1056,14 @@ int main(int argc, char** argv) {
 
   // Now start analyzing the trace
   //return 0;
+
+  apply_to_gprograms(dir_name, [](const vector<block>& p, const string&) {
+      std::vector<operation_range> op_range =
+	infer_operation_ranges(p);
+      return;
+    });
+
+  return 0;
 
   time_t start_time;
   time_t end_time;
