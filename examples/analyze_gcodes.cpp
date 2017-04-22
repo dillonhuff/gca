@@ -511,6 +511,15 @@ struct labeled_operation_params {
   operation_params params;
 };
 
+ptree encode_json(const operation_range& op_range) {
+  ptree p;
+  p.put("name", op_range.name);
+  p.put("start_line", op_range.start_line);
+  p.put("end_line", op_range.end_line);
+
+  return p;
+}
+
 ptree encode_json(const operation_params& op) {
   ptree p;
   p.put("current_tool_no", op.current_tool_no);
@@ -532,6 +541,8 @@ ptree encode_json(const operation_params& op) {
   p.put("material_removed", op.material_removed);
 
   p.put("file_name", op.file_name);
+
+  p.push_back( make_pair("range", encode_json(op.range)) );
   
   // ptree tn;
   // tn.put("", op.current_tool_no);
@@ -748,32 +759,6 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     cout << op << endl;
     cout << "--------------------------------------------------------" << endl;
     
-    // double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
-    // double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
-    // double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
-
-    // cout << "--------------------------------------------------------" << endl;
-
-    // cout << "current_tool_no = " << current_tool_no << endl;
-    // cout << "Tool diameter = " << tool_diameter << endl;
-    // cout << "Tool type     = " << op.tool_end_type << endl << endl;
-
-    // cout << "cut depth estimate = " << cut_depth << endl;
-    // cout << "feedrate estimate = " << feedrate << endl;
-    // cout << "spindle speed estimate = " << spindle_speed << endl << endl;
-
-    // cout << "estimated material removed = " << op.material_removed << endl << endl;
-    // cout << "cut length                 = " << op.cut_distance << endl << endl;
-    // cout << "cut time                   = " << op.cut_time << endl << endl;
-    // cout << "estimated average MRR      = " << op.average_MRR() << endl;
-    
-    // cout << "implied sfm = " << sfm << endl;
-
-    // cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
-    // cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
-    // cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
-    
-    // cout << "--------------------------------------------------------" << endl;
   }
 
   return ops;
@@ -1128,7 +1113,7 @@ int main(int argc, char** argv) {
   // }
 
   // ptree all_params_json;
-  // ptree all_params_json_arr = encode_json(labeled_params);
+  // ptree all_params_json_arr = encode_json(all_params);
   // all_params_json.add_child("All params", all_params_json_arr);
 
   // cout << "ALL PARAMS AS JSON" << endl;
@@ -1206,13 +1191,15 @@ int main(int argc, char** argv) {
   cout << "# of operations = " << all_params.size() << endl;
 
 
-  // ptree all_params_json_arr = encode_json(all_params);
+  ptree all_params_json_arr = encode_json(all_params);
 
-  // ptree all_params_json;
-  // all_params_json.add_child("All params", all_params_json_arr);
+  ptree all_params_json;
+  all_params_json.add_child("All params", all_params_json_arr);
 
-  // cout << "ALL PARAMS AS JSON" << endl;
-  // write_json(cout, all_params_json);
+  cout << "ALL PARAMS AS JSON" << endl;
+  write_json(cout, all_params_json);
+
+  return 0;
 
   vector<operation_params> likely_rough_ops = all_params;
   delete_if(likely_rough_ops,
