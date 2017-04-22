@@ -632,6 +632,8 @@ program_operations(std::vector<std::vector<cut*> >& paths,
 		   const std::vector<operation_range>& op_ranges) {
   if (paths.size() == 0) { return {}; }
 
+  if (op_ranges.size() == 0) { return {}; }
+
   double max_tool_diameter = 1.5;
   auto r = set_up_region_conservative(paths, max_tool_diameter);
 
@@ -1105,19 +1107,19 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  ptree json_ops;
-  read_json(dir_name, json_ops);
+  // ptree json_ops;
+  // read_json(dir_name, json_ops);
 
-  vector<operation_params> read_params =
-    decode_params(json_ops.get_child("All params"));
+  // vector<operation_params> read_params =
+  //   decode_params(json_ops.get_child("All params"));
 
-  cout << "# of ops = " << read_params.size() << endl;
+  // cout << "# of ops = " << read_params.size() << endl;
 
-  for (auto& op : read_params) {
-    cout << op << endl;
-  }
+  // for (auto& op : read_params) {
+  //   cout << op << endl;
+  // }
 
-  return 0;
+  // return 0;
 
   // ptree all_params_json;
   // ptree all_params_json_arr = encode_json(all_params);
