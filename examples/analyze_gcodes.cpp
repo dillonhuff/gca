@@ -1227,7 +1227,18 @@ int main(int argc, char** argv) {
 	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
-  
+
+  sort_lt(likely_rough_ops, [](const operation_params& l) {
+      return l.average_MRR();
+    });
+
+  for (auto& op : likely_rough_ops) {
+    cout << endl << "-------------------------------------" << endl;
+    cout << op << endl;
+  }
+
+  return 0;
+
   vector<vector<operation_params> > grouped =
     group_by(likely_rough_ops, [](const operation_params& l,
 				  const operation_params& r) {
@@ -1238,9 +1249,6 @@ int main(int argc, char** argv) {
 					const std::vector<operation_params>& r) {
 	 return l.front().tool_diameter < r.front().tool_diameter;
        });
-
-  
-
 
   cout << "# of tool groups = " << grouped.size() << endl;
   for (auto& g : grouped) {
