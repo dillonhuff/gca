@@ -831,8 +831,31 @@ tool_end read_tool_end(std::string& comment) {
   return FINISH_ENDMILL;
 }
 
-void add_tool(map<int, tool_info>& tt, string& comment) {
+void add_tool_HAAS(map<int, tool_info>& tt, string& comment) {
   string tool_comment_start = "( TOOL ";
+  if (starts_with(comment, tool_comment_start)) {
+    cout << "Tool comment is " << comment << endl;
+    size_t i = -1;
+    int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
+    cout << "tool_no = " << tool_no << endl;
+    assert(i != -1);
+    string rest = comment.substr(tool_comment_start.size() + i);
+
+    cout << "Rest of comment = " << rest << endl;
+
+    size_t j = -1;
+    double tool_diameter = stod(rest, &j);
+    string tool_comment = rest.substr(j + 1);
+    tool_end end = read_tool_end(tool_comment);
+    
+    cout << "tool diameter = " << tool_diameter << endl;
+    tool_info tf{end, tool_diameter};
+    tt[tool_no] = tf;
+  }
+}
+
+void add_tool_GCA(map<int, tool_info>& tt, string& comment) {
+  string tool_comment_start = "(*** TOOL DIAMETER = ";
   if (starts_with(comment, tool_comment_start)) {
     cout << "Tool comment is " << comment << endl;
     size_t i = -1;
@@ -923,7 +946,7 @@ std::string extract_operation_name(const std::string& op) {
   return "UNKNOWN";
 }
 
-std::vector<operation_range> infer_operation_ranges(const vector<block>& p) {
+std::vector<operation_range> infer_operation_ranges_HAAS(const vector<block>& p) {
   vector<token> comments;
   string op_str("( OPERATION ");
 
@@ -972,7 +995,56 @@ std::vector<operation_range> infer_operation_ranges(const vector<block>& p) {
   return op_ranges;
 }
 
-map<int, tool_info> infer_tool_table(const vector<block>& p) {
+std::vector<operation_range> infer_operation_ranges_GCA(const vector<block>& p) {
+  vector<token> comments;
+  string op_str("(*** OPERATION = ");
+
+  for (auto b : p) {
+    for (auto t : b) {
+      if (((t.ttp == PAREN_COMMENT) ||
+	   (t.ttp == BRACKET_COMMENT)) &&
+	  starts_with(t.text, op_str)) {
+	comments.push_back(t);
+      }
+    }
+  }
+
+  if (comments.size() < 1) {
+    return {};
+  }
+
+  vector<operation_range> op_ranges;
+  string first_op_name = extract_operation_name(comments.front().text);
+
+  operation_range active{first_op_name, comments.front().line_no};
+
+  op_ranges.push_back(active);
+
+  for (unsigned i = 1; i < comments.size(); i++) {
+    token next_op_comment = comments[i];
+    string op_name = extract_operation_name(next_op_comment.text);
+    operation_range active{op_name, next_op_comment.line_no};
+
+    op_ranges.back().end_line = next_op_comment.line_no;
+
+    op_ranges.push_back(active);
+    
+  }
+
+  int last_line_no = p.back().back().line_no;
+  cout << "last line number = " << last_line_no << endl;
+  
+  op_ranges.back().end_line = last_line_no;
+
+  cout << "# of op ranges = " << op_ranges.size() << endl;
+  for (auto& op : op_ranges) {
+    cout << op << endl;
+  }
+
+  return op_ranges;
+}
+
+map<int, tool_info> infer_tool_table_HAAS(const vector<block>& p) {
   vector<token> comments;
   for (auto b : p) {
     for (auto t : b) {
@@ -984,7 +1056,24 @@ map<int, tool_info> infer_tool_table(const vector<block>& p) {
   }
   map<int, tool_info> tt;
   for (auto c : comments) {
-    add_tool(tt, c.text);
+    add_tool_HAAS(tt, c.text);
+  }
+  return tt;
+}
+
+map<int, tool_info> infer_tool_table_GCA(const vector<block>& p) {
+  vector<token> comments;
+  for (auto b : p) {
+    for (auto t : b) {
+      if ((t.ttp == PAREN_COMMENT) ||
+	  (t.ttp == BRACKET_COMMENT)) {
+	comments.push_back(t);
+      }
+    }
+  }
+  map<int, tool_info> tt;
+  for (auto c : comments) {
+    add_tool_GCA(tt, c.text);
   }
   return tt;
 }
@@ -1109,6 +1198,46 @@ void print_sfm_mrr_csv(const std::vector<operation_params>& likely_rough_ops) {
   }
 }
 
+void simulate_program_GCA(const vector<block>& p, const string& file_name) {
+  vector<vector<cut*>> paths;
+  auto r = gcode_to_cuts(p, paths);
+  if (r == GCODE_TO_CUTS_SUCCESS) {
+    map<int, tool_info> tt = infer_tool_table_GCA(p);
+
+    std::vector<operation_range> op_ranges =
+      infer_operation_ranges_GCA(p);
+
+    vector<operation_params> prog_ops =
+      program_operations(paths, tt, op_ranges);
+
+    // double program_length = 0.0;
+    // double program_cut_length = 0.0;
+    // double program_cut_time = 0.0;
+    // for (auto& op : prog_ops) {
+    //   program_length += op.total_distance;
+    //   program_cut_length += op.cut_distance;
+    //   program_cut_time += op.cut_time;
+    // }
+
+    // cout << "Program length in feet = " << program_length / 12.0 << endl;
+    // boost::optional<double> stated_len =
+    //   infer_program_length_feet(p);
+
+    // if (stated_len) {
+    //   cout << "STATED program length in feet = " << *stated_len << endl;
+    // }
+
+    for (auto& op : prog_ops) {
+      op.file_name = file_name;
+    }
+
+    //simulate_paths(paths, tt, mrrs);
+  } else {
+    cout << "Could not process all paths: " << r << endl;
+  }
+
+}
+
 void simulate_all_programs(const std::string& dir_name) {
   int num_paths;
 
@@ -1124,10 +1253,10 @@ void simulate_all_programs(const std::string& dir_name) {
       if (r == GCODE_TO_CUTS_SUCCESS) {
   	num_processed_blocks += p.size();
 
-  	map<int, tool_info> tt = infer_tool_table(p);
+  	map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
   	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges(p);
+  	  infer_operation_ranges_HAAS(p);
 
   	vector<operation_params> prog_ops =
   	  program_operations(paths, tt, op_ranges);
@@ -1188,6 +1317,16 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
+
+  std::ifstream t(dir_name);
+  std::string str((std::istreambuf_iterator<char>(t)),
+		  std::istreambuf_iterator<char>());
+  vector<block> p = lex_gprog(str);
+  cout << "NUM BLOCKS: " << p.size() << endl;
+  
+  simulate_program_GCA(p, dir_name);
+
+  return 0;
 
   ptree json_ops;
   read_json(dir_name, json_ops);
