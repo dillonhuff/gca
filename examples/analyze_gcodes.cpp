@@ -775,8 +775,8 @@ program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
 
 std::vector<operation_params>
 program_operations_GCA(std::vector<std::vector<cut*> >& paths,
-		   map<int, tool_info>& tool_table,
-		   const std::vector<operation_range>& op_ranges) {
+		       map<int, tool_info>& tool_table,
+		       const std::vector<operation_range>& op_ranges) {
   if (paths.size() == 0) { return {}; }
 
   if (op_ranges.size() == 0) { return {}; }
@@ -812,8 +812,9 @@ program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 
   DBG_ASSERT(op_paths.size() == op_ranges.size());
 
+  cout << "# of op ranges = " << op_ranges.size() << endl;
+
   //vtk_debug_cuts(all_cuts);
-  
   vector<operation_params> ops;
 
   for (auto path_op_pair : op_paths) {
@@ -825,7 +826,8 @@ program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			  [](const cut* c) { return !c->is_safe_move(); });
 
     if (c_iter == end(path)) {
-      break;
+      cout << "No cuts in operation" << endl;
+      continue;
     }
 
     auto c = *c_iter;
@@ -1388,6 +1390,8 @@ void simulate_program_GCA(const vector<block>& p, const string& file_name) {
     vector<operation_params> prog_ops =
       program_operations_GCA(paths, tt, op_ranges);
 
+    cout << "# of operations in program = " << prog_ops.size() << endl;
+    cout << "All operations in program" << endl;
     for (auto& op : prog_ops) {
       op.file_name = file_name;
 
