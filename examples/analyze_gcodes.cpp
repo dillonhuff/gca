@@ -627,7 +627,7 @@ void vtk_debug_cuts(const std::vector<cut*>& cuts) {
 }
 
 std::vector<operation_params>
-program_operations(std::vector<std::vector<cut*> >& paths,
+program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
 		   map<int, tool_info>& tool_table,
 		   const std::vector<operation_range>& op_ranges) {
   if (paths.size() == 0) { return {}; }
@@ -742,6 +742,146 @@ program_operations(std::vector<std::vector<cut*> >& paths,
     //   vtk_debug_cuts(path);
     // }
     
+    double cut_depth = estimate_cut_depth_median(path);
+    double feedrate = estimate_feedrate_median(path);
+    double spindle_speed = estimate_spindle_speed_median(path);
+    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
+
+    operation_params op{current_tool_no,
+	tool_end_type,
+	tool_diameter,
+	cut_depth,
+	feedrate,
+	spindle_speed,
+	sfm,
+	total_length_inches,
+	cut_length_inches,
+	total_time_seconds,
+	cut_time_seconds,
+	material_removed,
+	"UNKNOWN",
+	path_op_pair.first};
+
+    ops.push_back(op);
+
+    cout << "--------------------------------------------------------" << endl;
+    cout << op << endl;
+    cout << "--------------------------------------------------------" << endl;
+    
+  }
+
+  return ops;
+}
+
+std::vector<operation_params>
+program_operations_GCA(std::vector<std::vector<cut*> >& paths,
+		   map<int, tool_info>& tool_table,
+		   const std::vector<operation_range>& op_ranges) {
+  if (paths.size() == 0) { return {}; }
+
+  if (op_ranges.size() == 0) { return {}; }
+
+  double max_tool_diameter = 1.5;
+  auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+  //vtk_debug_depth_field(r.r);
+
+  auto all_cuts = concat_all(paths);
+
+  unsigned op_ind = 0;
+  auto active_op = op_ranges[0];
+
+  vector<pair<operation_range, vector<cut*> > > op_paths;
+  vector<cut*> current_path;
+
+  for (auto& cut : all_cuts) {
+    if (cut->get_line_number() >= active_op.end_line) {
+      op_paths.push_back( make_pair(active_op, current_path) );
+
+      op_ind++;
+      active_op = op_ranges[op_ind];
+
+      current_path = {cut};
+    } else {
+      current_path.push_back(cut);
+    }
+    
+  }
+
+  op_paths.push_back( make_pair(active_op, current_path) );
+
+  DBG_ASSERT(op_paths.size() == op_ranges.size());
+
+  //vtk_debug_cuts(all_cuts);
+  
+  vector<operation_params> ops;
+
+  for (auto path_op_pair : op_paths) {
+
+    auto path = path_op_pair.second;
+
+    cout << "Looking up tool diameter" << endl;
+    auto c_iter = find_if(path.begin(), path.end(),
+			  [](const cut* c) { return !c->is_safe_move(); });
+
+    if (c_iter == end(path)) {
+      break;
+    }
+
+    auto c = *c_iter;
+
+    //auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
+    // if (!(tn->is_ilit())) {
+    //   cout << "ERROR" << endl;
+    //   cout << *c << endl;
+    //   cout << "Active tool = " << *(c->settings.active_tool) << endl;
+    //   assert(false);
+    // }
+
+    //auto tl = static_cast<ilit*>(tn);
+    int current_tool_no = 3; //tl->v;
+    double tool_diameter = tool_table[current_tool_no].tool_diameter;
+    tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
+    cylindrical_bit t = (tool_diameter);
+
+    double material_removed = 0.0;
+    for (auto c : path) {
+
+      double volume_removed = update_cut(*c, r, t);      
+      // Assume no crashes since the program was submitted
+      if (!c->is_safe_move()) {
+	material_removed += volume_removed;
+      } else {
+
+	if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
+	  double mat_removed_tol = 0.005;
+	  if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
+	    cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
+	    cout << "line # = " << c->get_line_number() << endl;
+	    cout << *c << endl;
+	    material_removed += volume_removed;
+
+	    //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
+	  }
+	}
+      }
+    }
+
+    double total_length_inches = 0.0;
+    double cut_length_inches = 0.0;
+
+    double total_time_seconds = execution_time_seconds(path);
+    double cut_time_seconds = 0.0;
+
+    for (auto& c : path) {
+      total_length_inches += c->length();
+
+      if (!c->is_safe_move()) {
+	cut_length_inches += c->length();
+	cut_time_seconds += cut_execution_time_seconds(c);
+      }
+    }
+
     double cut_depth = estimate_cut_depth_median(path);
     double feedrate = estimate_feedrate_median(path);
     double spindle_speed = estimate_spindle_speed_median(path);
@@ -1072,8 +1212,46 @@ map<int, tool_info> infer_tool_table_GCA(const vector<block>& p) {
     }
   }
   map<int, tool_info> tt;
-  for (auto c : comments) {
-    add_tool_GCA(tt, c.text);
+  //for (auto c : comments) {
+  for (unsigned cnum = 0; cnum < comments.size(); cnum++) {
+    auto c = comments[cnum];
+
+    string comment = c.text;
+
+    string tool_comment_start = "(*** TOOL DIAMETER = ";
+    string tool_no_comment_start = "(*** TOOL NUMBER = ";
+    if (starts_with(comment, tool_comment_start)) {
+      cout << "Tool comment is " << comment << endl;
+      size_t i = -1;
+      double tool_diameter = stod(comment.substr(tool_comment_start.size()), &i);
+      cout << "tool_diameter = " << tool_diameter << endl;
+      DBG_ASSERT(i != -1);
+
+      unsigned num_comment_ind = cnum + 2;
+      token tool_no_comment = comments[num_comment_ind];
+
+      cout << "Tool number comment = " << tool_no_comment.text << endl;
+
+      DBG_ASSERT(starts_with(tool_no_comment.text, tool_no_comment_start));
+
+      i = -1;
+      int tool_no = stoi(tool_no_comment.text.substr(tool_no_comment_start.size()), &i);
+      cout << "tool_no = " << tool_no << endl;
+      DBG_ASSERT(i != -1);
+
+		 // string rest = comment.substr(tool_comment_start.size() + i);
+
+      // cout << "Rest of comment = " << rest << endl;
+
+      // size_t j = -1;
+      // double tool_diameter = stod(rest, &j);
+      // string tool_comment = rest.substr(j + 1);
+      // tool_end end = read_tool_end(tool_comment);
+    
+      // cout << "tool diameter = " << tool_diameter << endl;
+      tool_info tf{ROUGH_ENDMILL, tool_diameter};
+      tt[tool_no] = tf;
+    }
   }
   return tt;
 }
@@ -1208,27 +1386,13 @@ void simulate_program_GCA(const vector<block>& p, const string& file_name) {
       infer_operation_ranges_GCA(p);
 
     vector<operation_params> prog_ops =
-      program_operations(paths, tt, op_ranges);
-
-    // double program_length = 0.0;
-    // double program_cut_length = 0.0;
-    // double program_cut_time = 0.0;
-    // for (auto& op : prog_ops) {
-    //   program_length += op.total_distance;
-    //   program_cut_length += op.cut_distance;
-    //   program_cut_time += op.cut_time;
-    // }
-
-    // cout << "Program length in feet = " << program_length / 12.0 << endl;
-    // boost::optional<double> stated_len =
-    //   infer_program_length_feet(p);
-
-    // if (stated_len) {
-    //   cout << "STATED program length in feet = " << *stated_len << endl;
-    // }
+      program_operations_GCA(paths, tt, op_ranges);
 
     for (auto& op : prog_ops) {
       op.file_name = file_name;
+
+      cout << "----------------------------------------------" << endl;
+      cout << op << endl;
     }
 
     //simulate_paths(paths, tt, mrrs);
@@ -1259,7 +1423,7 @@ void simulate_all_programs(const std::string& dir_name) {
   	  infer_operation_ranges_HAAS(p);
 
   	vector<operation_params> prog_ops =
-  	  program_operations(paths, tt, op_ranges);
+  	  program_operations_HAAS(paths, tt, op_ranges);
 
   	double program_length = 0.0;
   	double program_cut_length = 0.0;
