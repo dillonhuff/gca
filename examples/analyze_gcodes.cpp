@@ -1390,13 +1390,22 @@ void simulate_program_GCA(const vector<block>& p, const string& file_name) {
     vector<operation_params> prog_ops =
       program_operations_GCA(paths, tt, op_ranges);
 
+    double aluminum_unit_hp = 0.4;
+    double spindle_hp = 0.7;
+
     cout << "# of operations in program = " << prog_ops.size() << endl;
     cout << "All operations in program" << endl;
     for (auto& op : prog_ops) {
       op.file_name = file_name;
 
-      cout << "----------------------------------------------" << endl;
-      cout << op << endl;
+      // cout << "----------------------------------------------" << endl;
+      // cout << op << endl;
+
+      double cut_power = (60*op.average_MRR()) * aluminum_unit_hp;
+      cout << "cut power for 6061 aluminum = " << cut_power << endl;
+      // if (cut_power > spindle_hp) {
+      // 	cout << "EXCEEDS SPINDLE POWER" << endl;
+      // }
     }
 
     //simulate_paths(paths, tt, mrrs);
