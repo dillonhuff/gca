@@ -1381,7 +1381,8 @@ void print_sfm_mrr_csv(const std::vector<operation_params>& likely_rough_ops) {
   }
 }
 
-void simulate_program_GCA(const vector<block>& p, const string& file_name) {
+std::vector<operation_params>
+simulate_program_GCA(const vector<block>& p, const string& file_name) {
   vector<vector<cut*>> paths;
   auto r = gcode_to_cuts(p, paths);
   if (r == GCODE_TO_CUTS_SUCCESS) {
@@ -1393,27 +1394,10 @@ void simulate_program_GCA(const vector<block>& p, const string& file_name) {
     vector<operation_params> prog_ops =
       program_operations_GCA(paths, tt, op_ranges);
 
-    // double aluminum_unit_hp = 0.4;
-    // double spindle_hp = 0.7;
-
-    cout << "# of operations in program = " << prog_ops.size() << endl;
-    cout << "All operations in program" << endl;
-    for (auto& op : prog_ops) {
-      op.file_name = file_name;
-
-      // cout << "----------------------------------------------" << endl;
-      // cout << op << endl;
-
-      cout << "cut MRR = " << op.average_MRR() << endl;
-
-      // if (cut_power > spindle_hp) {
-      // 	cout << "EXCEEDS SPINDLE POWER" << endl;
-      // }
-    }
-
-    //simulate_paths(paths, tt, mrrs);
+    return prog_ops;
   } else {
-    cout << "Could not process all paths: " << r << endl;
+    cout << "Could not parse operation " << r << endl;
+    return {};
   }
 
 }
@@ -1476,7 +1460,6 @@ void simulate_all_programs(const std::string& dir_name) {
   cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
   cout << "# of operations = " << all_params.size() << endl;
 
-
   ptree all_params_json_arr = encode_json(all_params);
 
   ptree all_params_json;
@@ -1498,13 +1481,67 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  std::ifstream t(dir_name);
-  std::string str((std::istreambuf_iterator<char>(t)),
-		  std::istreambuf_iterator<char>());
-  vector<block> p = lex_gprog(str);
-  cout << "NUM BLOCKS: " << p.size() << endl;
+  // std::ifstream t(dir_name);
+  // std::string str((std::istreambuf_iterator<char>(t)),
+  // 		  std::istreambuf_iterator<char>());
+  // vector<block> p = lex_gprog(str);
+  // cout << "NUM BLOCKS: " << p.size() << endl;
+
+  vector<operation_params> all_params;
+  // int num_processed_blocks = 0;
+  // int num_failed_blocks = 0;
+
+  apply_to_gprograms(dir_name, [&all_params](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+
+	auto prog_ops = simulate_program_GCA(p, file_name);
+	
+  	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+
+  	// std::vector<operation_range> op_ranges =
+  	//   infer_operation_ranges_HAAS(p);
+
+  	// vector<operation_params> prog_ops =
+  	//   program_operations_HAAS(paths, tt, op_ranges);
+
+  	// double program_length = 0.0;
+  	// double program_cut_length = 0.0;
+  	// double program_cut_time = 0.0;
+  	// for (auto& op : prog_ops) {
+  	//   program_length += op.total_distance;
+  	//   program_cut_length += op.cut_distance;
+  	//   program_cut_time += op.cut_time;
+  	// }
+
+  	// cout << "Program length in feet = " << program_length / 12.0 << endl;
+  	// boost::optional<double> stated_len =
+  	//   infer_program_length_feet(p);
+
+  	// if (stated_len) {
+  	//   cout << "STATED program length in feet = " << *stated_len << endl;
+  	// }
+
+  	// for (auto& op : prog_ops) {
+  	//   op.file_name = file_name;
+  	// }
+
+  	concat(all_params, prog_ops);
+
+  	//simulate_paths(paths, tt, mrrs);
+      } else {
+  	cout << "Could not process all paths: " << r << endl;
+      }
+    });
   
-  simulate_program_GCA(p, dir_name);
+  cout << "All MRRs of programs" << endl;
+
+  for (auto& op : all_params) {
+
+    cout << op.average_MRR() << endl;
+
+  }
 
   return 0;
 
