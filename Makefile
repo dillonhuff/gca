@@ -3281,6 +3281,33 @@ src/simulators/sim_mill.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/sim_mill.cpp.s
 .PHONY : src/simulators/sim_mill.cpp.s
 
+src/simulators/simulate_operations.o: src/simulators/simulate_operations.cpp.o
+
+.PHONY : src/simulators/simulate_operations.o
+
+# target to build an object file
+src/simulators/simulate_operations.cpp.o:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/simulate_operations.cpp.o
+.PHONY : src/simulators/simulate_operations.cpp.o
+
+src/simulators/simulate_operations.i: src/simulators/simulate_operations.cpp.i
+
+.PHONY : src/simulators/simulate_operations.i
+
+# target to preprocess a source file
+src/simulators/simulate_operations.cpp.i:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/simulate_operations.cpp.i
+.PHONY : src/simulators/simulate_operations.cpp.i
+
+src/simulators/simulate_operations.s: src/simulators/simulate_operations.cpp.s
+
+.PHONY : src/simulators/simulate_operations.s
+
+# target to generate assembly for a file
+src/simulators/simulate_operations.cpp.s:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/simulate_operations.cpp.s
+.PHONY : src/simulators/simulate_operations.cpp.s
+
 src/simulators/visual_debug.o: src/simulators/visual_debug.cpp.o
 
 .PHONY : src/simulators/visual_debug.o
@@ -5911,6 +5938,9 @@ help:
 	@echo "... src/simulators/sim_mill.o"
 	@echo "... src/simulators/sim_mill.i"
 	@echo "... src/simulators/sim_mill.s"
+	@echo "... src/simulators/simulate_operations.o"
+	@echo "... src/simulators/simulate_operations.i"
+	@echo "... src/simulators/simulate_operations.s"
 	@echo "... src/simulators/visual_debug.o"
 	@echo "... src/simulators/visual_debug.i"
 	@echo "... src/simulators/visual_debug.s"

@@ -10,6 +10,7 @@
 #include "simulators/mill_tool.h"
 #include "simulators/region.h"
 #include "simulators/sim_mill.h"
+#include "simulators/simulate_operations.h"
 #include "synthesis/millability.h"
 #include "synthesis/fabrication_plan.h"
 #include "synthesis/mesh_to_gcode.h"
@@ -221,6 +222,32 @@ namespace gca {
       REQUIRE(volume_removed == 0.0);
     }
 
+    SECTION("Simulation of real program with conservative region") {
+      string dir_name = "./gcode_samples/freeform_test_3.NCF";
+      std::ifstream t(dir_name);
+      std::string str((std::istreambuf_iterator<char>(t)),
+		      std::istreambuf_iterator<char>());
+      vector<block> p = lex_gprog(str);
+      cout << "NUM BLOCKS: " << p.size() << endl;
+
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+
+      num_processed_blocks += p.size();
+
+      map<int, tool_info> tt = infer_tool_table_HAAS(p);
+
+      std::vector<operation_range> op_ranges =
+	infer_operation_ranges_HAAS(p);
+
+      vector<operation_params> prog_ops =
+	program_operations_HAAS(paths, tt, op_ranges);
+
+      for (auto& op : prog_ops) {
+	REQUIRE(op.average_MRR() > 0.0);
+      }
+
+    }
 
   }
 
