@@ -347,14 +347,18 @@ namespace gca {
     string first_op_name = extract_operation_name(comments.front().text);
     int tool_no = extract_tool_number_GCA(tool_no_comments.front().text);
 
-    operation_range active{first_op_name, comments.front().line_no, tool_no};
+    operation_range active{first_op_name, comments.front().line_no, -1, tool_no};
 
     op_ranges.push_back(active);
 
     for (unsigned i = 1; i < comments.size(); i++) {
       token next_op_comment = comments[i];
+      token next_tool_no_comment = tool_no_comments[i];
+      
       string op_name = extract_operation_name(next_op_comment.text);
-      operation_range active{op_name, next_op_comment.line_no};
+      int tool_no = extract_tool_number_GCA(next_tool_no_comment.text);
+
+      operation_range active{op_name, next_op_comment.line_no, -1, tool_no};
 
       op_ranges.back().end_line = next_op_comment.line_no;
 
@@ -417,7 +421,7 @@ namespace gca {
   }
 
   std::ostream& operator<<(std::ostream& out, const operation_range& op_range) {
-    out << op_range.name << " START: " << op_range.start_line << ", END: " << op_range.end_line;
+    out << op_range.name << "TOOL NO: " << op_range.tool_number << ", " << " START: " << op_range.start_line << ", END: " << op_range.end_line;
     return out;
   }
 

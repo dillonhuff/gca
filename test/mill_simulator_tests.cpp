@@ -243,6 +243,9 @@ namespace gca {
     std::vector<operation_range> op_ranges =
       infer_operation_ranges_GCA(p);
 
+    REQUIRE(op_ranges[0].tool_number == 1);
+    REQUIRE(op_ranges[1].tool_number == 1);
+
     REQUIRE(op_ranges.size() == 2);
 
     vector<operation_params> prog_ops =
