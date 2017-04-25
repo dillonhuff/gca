@@ -565,13 +565,13 @@ void simulate_all_programs(const std::string& dir_name) {
   cout << "fraction processed = " << static_cast<double>(num_processed_blocks) / static_cast<double>(num_processed_blocks + num_failed_blocks) << endl;
   cout << "# of operations = " << all_params.size() << endl;
 
-  ptree all_params_json_arr = encode_json(all_params);
+  // ptree all_params_json_arr = encode_json(all_params);
 
-  ptree all_params_json;
-  all_params_json.add_child("All params", all_params_json_arr);
+  // ptree all_params_json;
+  // all_params_json.add_child("All params", all_params_json_arr);
 
-  cout << "ALL PARAMS AS JSON" << endl;
-  write_json(cout, all_params_json);
+  // cout << "ALL PARAMS AS JSON" << endl;
+  // write_json(cout, all_params_json);
 
 }
 

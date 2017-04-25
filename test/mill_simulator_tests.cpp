@@ -222,33 +222,42 @@ namespace gca {
       REQUIRE(volume_removed == 0.0);
     }
 
-    SECTION("Simulation of real program with conservative region") {
-      string dir_name = "./gcode_samples/freeform_test_3.NCF";
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
+  }
 
-      vector<vector<cut*>> paths;
-      auto r = gcode_to_cuts(p, paths);
+  TEST_CASE("Simulation of real program with conservative region") {
+    arena_allocator a;
+    set_system_allocator(&a);
 
-      map<int, tool_info> tt = infer_tool_table_HAAS(p);
+    string dir_name = "./gcode_samples/freeform_test_3.NCF";
+    std::ifstream t(dir_name);
+    std::string str((std::istreambuf_iterator<char>(t)),
+		    std::istreambuf_iterator<char>());
+    vector<block> p = lex_gprog(str);
+    cout << "NUM BLOCKS: " << p.size() << endl;
 
-      std::vector<operation_range> op_ranges =
-	infer_operation_ranges_HAAS(p);
+    vector<vector<cut*>> paths;
+    auto r = gcode_to_cuts(p, paths);
 
-      vector<operation_params> prog_ops =
-	program_operations_HAAS(paths, tt, op_ranges);
+    map<int, tool_info> tt = infer_tool_table_GCA(p);
 
-      for (auto& op : prog_ops) {
-	REQUIRE(op.average_MRR() > 0.0);
-      }
+    std::vector<operation_range> op_ranges =
+      infer_operation_ranges_GCA(p);
 
+    REQUIRE(op_ranges.size() == 2);
+
+    vector<operation_params> prog_ops =
+      program_operations_GCA(paths, tt, op_ranges);
+
+    REQUIRE(prog_ops.size() == 2);
+
+    for (auto& op : prog_ops) {
+      cout << "Operation mrr = " << op.average_MRR() << endl;
+      REQUIRE(op.average_MRR() > 0.0);
     }
 
   }
 
+  
   // TEST_CASE("Vertical safe move does not remove material") {
   //   arena_allocator a;
   //   set_system_allocator(&a);
