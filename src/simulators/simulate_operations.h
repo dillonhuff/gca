@@ -1,8 +1,12 @@
 #pragma once
 
 #include "backend/cut_params.h"
+#include "gcode/cut.h"
 #include "gcode/lexer.h"
 
+#include <map>
+
+#include <boost/optional.hpp>
 
 namespace gca {
 
@@ -18,7 +22,12 @@ namespace gca {
     FLY_CUTTER_ENDMILL
   };
 
-  
+
+  struct tool_info {
+    tool_end tool_end_type;
+    double tool_diameter;
+  };
+
   struct operation_range {
     std::string name;
     int start_line, end_line;
@@ -63,5 +72,37 @@ namespace gca {
     OTHER_OPERATION
   };
 
+
+  std::map<int, tool_info> infer_tool_table_GCA(const std::vector<block>& p);
+  std::map<int, tool_info> infer_tool_table_HAAS(const std::vector<block>& p);
+
+  boost::optional<double> infer_program_length_feet(const std::vector<block>& p);
+
+  std::vector<operation_range>
+  infer_operation_ranges_GCA(const std::vector<block>& p);
+
+  std::vector<operation_range>
+  infer_operation_ranges_HAAS(const std::vector<block>& p);
+
+  std::ostream& operator<<(std::ostream& out, const operation_range& op_range);
+  std::ostream& operator<<(std::ostream& out, const operation_params& op);
+
+  std::vector<operation_params>
+  program_operations_GCA(std::vector<std::vector<cut*> >& paths,
+			 map<int, tool_info>& tool_table,
+			 const std::vector<operation_range>& op_ranges);
+
+  std::vector<operation_params>
+  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
+			  map<int, tool_info>& tool_table,
+			  const std::vector<operation_range>& op_ranges);
+  
+  double estimate_feedrate_median(const std::vector<cut*>& path);
+
+  double estimate_spindle_speed_median(const std::vector<cut*>& path);
+
+  double estimate_cut_depth_median(const std::vector<cut*>& path);
+
+  double estimate_cut_depth_mean(const std::vector<cut*>& path);
   
 }

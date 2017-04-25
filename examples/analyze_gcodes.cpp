@@ -30,94 +30,6 @@
 using namespace gca;
 using namespace std;
 
-std::string to_string(const tool_end l) {
-  switch (l) {
-
-  case ROUGH_ENDMILL:
-    return "ROUGH_ENDMILL";
-
-  case BALL_ENDMILL:
-    return "BALL_ENDMILL";
-
-  case FINISH_ENDMILL:
-    return "FINISH_ENDMILL";
-
-  case DRILL_ENDMILL:
-    return "DRILL";
-
-  case FACE_ENDMILL:
-    return "FACE";
-
-  case SPOT_DRILL_ENDMILL:
-    return "SPOT_DRILL";
-
-  case COUNTERSINK_ENDMILL:
-    return "COUNTERSINK";
-
-  case KEY_CUTTER_ENDMILL:
-    return "KEY_CUTTER";
-
-  case FLY_CUTTER_ENDMILL:
-    return "FLY_CUTTER";
-
-  default:
-    DBG_ASSERT(false);
-  }
-}
-
-std::ostream& operator<<(std::ostream& out, const tool_end l) {
-  out << to_string(l);
-
-  return out;
-  // switch (l) {
-
-  // case ROUGH_ENDMILL:
-  //   out << "ROUGH_ENDMILL";
-  //   break;
-
-  // case BALL_ENDMILL:
-  //   out << "BALL_ENDMILL";
-  //   break;
-
-  // case FINISH_ENDMILL:
-  //   out << "FINISH_ENDMILL";
-  //   break;
-
-  // case DRILL_ENDMILL:
-  //   cout << "DRILL" << endl;
-  //   break;
-
-  // case FACE_ENDMILL:
-  //   cout << "FACE" << endl;
-  //   break;
-
-  // case SPOT_DRILL_ENDMILL:
-  //   cout << "SPOT_DRILL" << endl;
-  //   break;
-
-  // case COUNTERSINK_ENDMILL:
-  //   cout << "COUNTERSINK" << endl;
-  //   break;
-
-  // case KEY_CUTTER_ENDMILL:
-  //   cout << "KEY_CUTTER" << endl;
-  //   break;
-
-  // case FLY_CUTTER_ENDMILL:
-  //   cout << "FLY_CUTTER" << endl;
-  //   break;
-    
-  // default:
-  //   DBG_ASSERT(false);
-  // }
-  // return out;
-}
-
-struct tool_info {
-  tool_end tool_end_type;
-  double tool_diameter;
-};
-
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
   auto func = [&f](const string& dir_name) {
@@ -245,195 +157,113 @@ void print_histogram(vector<T>& items) {
   }
 }
 
-double estimate_feedrate_median(const std::vector<cut*>& path) {
-  vector<cut*> actual_cuts =
-    select(path, [](const cut* c) { return !c->is_safe_move(); });
+// void simulate_paths(vector<vector<cut*>>& paths,
+// 		    map<int, tool_info>& tool_table,
+// 		    vector<double>& mrrs) {
+//   if (paths.size() == 0) { return; }
+//   // TODO: Add proper tool diameter max checking
 
-  vector<double> feeds;
-  for (auto& c : path) {
-    feeds.push_back(static_cast<lit*>(c->get_feedrate())->v);
-  }
+//   double max_tool_diameter = 1.5;
+//   // auto r = set_up_region_conservative(paths, max_tool_diameter);
 
-  sort(begin(feeds), end(feeds));
+//   // vtk_debug_depth_field(r.r);
 
-  int ind = feeds.size() / 2;
+//   for (auto path : paths) {
+//     cout << "Looking up tool diameter" << endl;
+//     auto c = *find_if(path.begin(), path.end(),
+// 		       [](const cut* c) { return !c->is_safe_move(); });
+//     auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
+//     if (!(tn->is_ilit())) {
+//       cout << "ERROR" << endl;
+//       cout << *c << endl;
+//       cout << "Active tool = " << *(c->settings.active_tool) << endl;
+//       assert(false);
+//     }
+//     auto tl = static_cast<ilit*>(tn);
+//     int current_tool_no = tl->v;
+//     double tool_diameter = tool_table[current_tool_no].tool_diameter;
+//     cylindrical_bit t = (tool_diameter);
 
-  return feeds[ind];
-}
+//     double cut_depth = estimate_cut_depth_median(path);
+//     double feedrate = estimate_feedrate_median(path);
+//     double spindle_speed = estimate_spindle_speed_median(path);
+//     double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
 
-double estimate_spindle_speed_median(const std::vector<cut*>& path) {
-  vector<cut*> actual_cuts =
-    select(path, [](const cut* c) { return !c->is_safe_move(); });
+//     double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
+//     double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
+//     double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
 
-  vector<double> speeds;
-  for (auto& c : path) {
-    speeds.push_back(static_cast<lit*>(c->get_spindle_speed())->v);
-  }
+//     cout << "--------------------------------------------------------" << endl;
 
-  sort(begin(speeds), end(speeds));
+//     cout << "current_tool_no = " << current_tool_no << endl;
+//     cout << "Tool diameter = " << tool_diameter << endl << endl;
 
-  int ind = speeds.size() / 2;
-
-  return speeds[ind];
-}
-
-double estimate_cut_depth_median(const std::vector<cut*>& path) {
-  vector<cut*> actual_cuts =
-    select(path, [](const cut* c) { return !c->is_safe_move(); });
-
-  if (path.size() < 2) { return -1.0; }
-
-  vector<double> diffs(actual_cuts.size() - 1);
-  apply_between(begin(actual_cuts), end(actual_cuts), begin(diffs),
-		[](const cut* l, const cut* r) {
-		  return fabs(l->get_end().z - r->get_end().z);
-		});
-
-  delete_if(diffs, [](const double d) { return within_eps(d, 0.0, 1e-3); });
-
-  if (diffs.size() < 2) { return -1.0; }
-
-  // for (auto& d : diffs) {
-  //   cout << d << endl;
-  // }
-
-  sort(begin(diffs), end(diffs));
-
-  int ind = diffs.size() / 2;
-  return diffs[ind];
-}
-
-double estimate_cut_depth_mean(const std::vector<cut*>& path) {
-  vector<cut*> actual_cuts =
-    select(path, [](const cut* c) { return !c->is_safe_move(); });
-
-  if (path.size() < 2) { return -1.0; }
-
-  vector<double> diffs(actual_cuts.size() - 1);
-  apply_between(begin(actual_cuts), end(actual_cuts), begin(diffs),
-		[](const cut* l, const cut* r) {
-		  return fabs(l->get_end().z - r->get_end().z);
-		});
-
-  delete_if(diffs, [](const double d) { return within_eps(d, 0.0, 1e-3); });
-
-  // for (auto& d : diffs) {
-  //   cout << d << endl;
-  // }
-
-  double depth = accumulate(begin(diffs), end(diffs), 0.0);
-  depth = depth / diffs.size();
-
-  return depth;
-}
-
-void simulate_paths(vector<vector<cut*>>& paths,
-		    map<int, tool_info>& tool_table,
-		    vector<double>& mrrs) {
-  if (paths.size() == 0) { return; }
-  // TODO: Add proper tool diameter max checking
-
-  double max_tool_diameter = 1.5;
-  // auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-  // vtk_debug_depth_field(r.r);
-
-  for (auto path : paths) {
-    cout << "Looking up tool diameter" << endl;
-    auto c = *find_if(path.begin(), path.end(),
-		       [](const cut* c) { return !c->is_safe_move(); });
-    auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-    if (!(tn->is_ilit())) {
-      cout << "ERROR" << endl;
-      cout << *c << endl;
-      cout << "Active tool = " << *(c->settings.active_tool) << endl;
-      assert(false);
-    }
-    auto tl = static_cast<ilit*>(tn);
-    int current_tool_no = tl->v;
-    double tool_diameter = tool_table[current_tool_no].tool_diameter;
-    cylindrical_bit t = (tool_diameter);
-
-    double cut_depth = estimate_cut_depth_median(path);
-    double feedrate = estimate_feedrate_median(path);
-    double spindle_speed = estimate_spindle_speed_median(path);
-    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
-
-    double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
-    double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
-    double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
-
-    cout << "--------------------------------------------------------" << endl;
-
-    cout << "current_tool_no = " << current_tool_no << endl;
-    cout << "Tool diameter = " << tool_diameter << endl << endl;
-
-    cout << "cut depth estimate = " << cut_depth << endl;
-    cout << "feedrate estimate = " << feedrate << endl;
-    cout << "spindle speed estimate = " << spindle_speed << endl << endl;
+//     cout << "cut depth estimate = " << cut_depth << endl;
+//     cout << "feedrate estimate = " << feedrate << endl;
+//     cout << "spindle speed estimate = " << spindle_speed << endl << endl;
     
-    cout << "implied sfm = " << sfm << endl;
+//     cout << "implied sfm = " << sfm << endl;
 
-    cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
-    cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
-    cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
+//     cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
+//     cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
+//     cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
     
-    cout << "--------------------------------------------------------" << endl;
+//     cout << "--------------------------------------------------------" << endl;
 
     
 
-    // for (auto c : path) {
-    //   double volume_removed = update_cut(*c, r, t);
-    //   double execution_time = cut_execution_time_minutes(c);
+//     // for (auto c : path) {
+//     //   double volume_removed = update_cut(*c, r, t);
+//     //   double execution_time = cut_execution_time_minutes(c);
 
-    //   if (!within_eps(execution_time, 0.0)) {
+//     //   if (!within_eps(execution_time, 0.0)) {
 
-    // 	if (!c->is_safe_move()) {
-    // 	  auto f = c->get_feedrate();
-    // 	  auto sp = c->get_spindle_speed();
+//     // 	if (!c->is_safe_move()) {
+//     // 	  auto f = c->get_feedrate();
+//     // 	  auto sp = c->get_spindle_speed();
 
-    // 	  double cut_length = (c->get_end() - c->get_start()).len();
-    // 	  double mrr = volume_removed / execution_time;
+//     // 	  double cut_length = (c->get_end() - c->get_start()).len();
+//     // 	  double mrr = volume_removed / execution_time;
 	  
-    // 	  // cout << "Feedrate       = " << static_cast<lit*>(f)->v << endl;
-    // 	  // cout << "Spindle speed  = " << static_cast<lit*>(sp)->v << endl;
-    // 	  // cout << "Z start        = " << c->get_start().z << endl;
-    // 	  // cout << "Z end        = " << c->get_end().z << endl;
+//     // 	  // cout << "Feedrate       = " << static_cast<lit*>(f)->v << endl;
+//     // 	  // cout << "Spindle speed  = " << static_cast<lit*>(sp)->v << endl;
+//     // 	  // cout << "Z start        = " << c->get_start().z << endl;
+//     // 	  // cout << "Z end        = " << c->get_end().z << endl;
 	  
-    // 	  // cout << "Volume removed = " << volume_removed << endl;
-    // 	  // cout << "Cut length     = " << cut_length << endl;
-    // 	  // cout << "MRR            = " << mrr << endl;
+//     // 	  // cout << "Volume removed = " << volume_removed << endl;
+//     // 	  // cout << "Cut length     = " << cut_length << endl;
+//     // 	  // cout << "MRR            = " << mrr << endl;
 
-    // 	  mrrs.push_back(mrr);
-    // 	}
+//     // 	  mrrs.push_back(mrr);
+//     // 	}
 
-    // 	// if (c->is_safe_move()) {
-    // 	//   cout << "SAFE MOVE WITH MRR = " << mrr << endl;
+//     // 	// if (c->is_safe_move()) {
+//     // 	//   cout << "SAFE MOVE WITH MRR = " << mrr << endl;
 	  
-    // 	//   DBG_ASSERT(false);
-    // 	// }
+//     // 	//   DBG_ASSERT(false);
+//     // 	// }
 
 
-    //   }
+//     //   }
 
-    // }
+//     // }
 
-    // vtk_debug_depth_field(r.r);
+//     // vtk_debug_depth_field(r.r);
 
 
-  }
+//   }
 
-  // auto mm = minmax_element(mrrs.begin(), mrrs.end());
-  // auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
-  // auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
+//   // auto mm = minmax_element(mrrs.begin(), mrrs.end());
+//   // auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
+//   // auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
 
-  // cout << "MRR STATS" << endl;
-  // cout << "-----------------------------------------------------" << endl;
-  // cout << "Average MRR so far  = "<< cut_average_mrr << endl;
-  // cout << "Smallest MRR so far = " << *mm.first << endl;
-  // cout << "Largest MRR so far  = " << *mm.second << endl;
-  // cout << "-----------------------------------------------------" << endl;
-}
+//   // cout << "MRR STATS" << endl;
+//   // cout << "-----------------------------------------------------" << endl;
+//   // cout << "Average MRR so far  = "<< cut_average_mrr << endl;
+//   // cout << "Smallest MRR so far = " << *mm.first << endl;
+//   // cout << "Largest MRR so far  = " << *mm.second << endl;
+//   // cout << "-----------------------------------------------------" << endl;
+// }
 
 std::string to_string(const operation_type op_type) {
   switch (op_type) {
@@ -507,41 +337,6 @@ ptree encode_json(const labeled_operation_params& op) {
   return enc;
 }
 
-std::ostream& operator<<(std::ostream& out, const operation_range& op_range) {
-  out << op_range.name << " START: " << op_range.start_line << ", END: " << op_range.end_line;
-  return out;
-}
-
-std::ostream& operator<<(std::ostream& out, const operation_params& op) {
-
-  double cl_2_flute = chip_load(op.spindle_speed, op.feedrate, 2);
-  double cl_4_flute = chip_load(op.spindle_speed, op.feedrate, 4);
-  double cl_6_flute = chip_load(op.spindle_speed, op.feedrate, 6);
-
-  out << "File name = " << op.file_name << endl;
-  out << "Operation range = " << op.range << endl;
-  out << "current_tool_no = " << op.current_tool_no << endl;
-  out << "Tool diameter = " << op.tool_diameter << endl;
-  out << "Tool type     = " << op.tool_end_type << endl << endl;
-
-  out << "cut depth estimate = " << op.cut_depth << endl;
-  out << "feedrate estimate = " << op.feedrate << endl;
-  out << "spindle speed estimate = " << op.spindle_speed << endl << endl;
-
-  out << "estimated material removed = " << op.material_removed << endl << endl;
-  out << "cut length                 = " << op.cut_distance << endl << endl;
-  out << "cut time                   = " << op.cut_time << endl << endl;
-  out << "estimated average MRR      = " << op.average_MRR() << endl;
-    
-  out << "implied sfm = " << op.SFM() << endl;
-
-  out << "implied CL for 2 flutes = " << cl_2_flute << endl;
-  out << "implied CL for 4 flutes = " << cl_4_flute << endl;
-  out << "implied CL for 6 flutes = " << cl_6_flute << endl;
-
-  return out;
-}
-
 struct op_replacement {
   operation_params worse;
   operation_params better;
@@ -569,641 +364,6 @@ void vtk_debug_cuts(const std::vector<cut*>& cuts) {
   vector<polyline> lines = cuts_to_polylines(cuts);
   auto pd = polydata_for_polylines(lines);
   visualize_polydatas({pd});
-}
-
-std::vector<operation_params>
-program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
-		   map<int, tool_info>& tool_table,
-		   const std::vector<operation_range>& op_ranges) {
-  if (paths.size() == 0) { return {}; }
-
-  if (op_ranges.size() == 0) { return {}; }
-
-  double max_tool_diameter = 1.5;
-  auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-  //vtk_debug_depth_field(r.r);
-
-  auto all_cuts = concat_all(paths);
-
-  unsigned op_ind = 0;
-  auto active_op = op_ranges[0];
-
-  vector<pair<operation_range, vector<cut*> > > op_paths;
-  vector<cut*> current_path;
-
-  for (auto& cut : all_cuts) {
-    if (cut->get_line_number() >= active_op.end_line) {
-      op_paths.push_back( make_pair(active_op, current_path) );
-
-      op_ind++;
-      active_op = op_ranges[op_ind];
-
-      current_path = {cut};
-    } else {
-      current_path.push_back(cut);
-    }
-    
-  }
-
-  op_paths.push_back( make_pair(active_op, current_path) );
-
-  DBG_ASSERT(op_paths.size() == op_ranges.size());
-
-  //vtk_debug_cuts(all_cuts);
-  
-  vector<operation_params> ops;
-
-  for (auto path_op_pair : op_paths) {
-
-    auto path = path_op_pair.second;
-
-    cout << "Looking up tool diameter" << endl;
-    auto c_iter = find_if(path.begin(), path.end(),
-			  [](const cut* c) { return !c->is_safe_move(); });
-
-    if (c_iter == end(path)) {
-      break;
-    }
-
-    auto c = *c_iter;
-
-    auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-    if (!(tn->is_ilit())) {
-      cout << "ERROR" << endl;
-      cout << *c << endl;
-      cout << "Active tool = " << *(c->settings.active_tool) << endl;
-      assert(false);
-    }
-    auto tl = static_cast<ilit*>(tn);
-    int current_tool_no = tl->v;
-    double tool_diameter = tool_table[current_tool_no].tool_diameter;
-    tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
-    cylindrical_bit t = (tool_diameter);
-
-    double material_removed = 0.0;
-    for (auto c : path) {
-
-      double volume_removed = update_cut(*c, r, t);      
-      // Assume no crashes since the program was submitted
-      if (!c->is_safe_move()) {
-	material_removed += volume_removed;
-      } else {
-
-	if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
-	  double mat_removed_tol = 0.005;
-	  if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
-	    cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
-	    cout << "line # = " << c->get_line_number() << endl;
-	    cout << *c << endl;
-	    material_removed += volume_removed;
-
-	    //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
-	  }
-	}
-      }
-    }
-
-    double total_length_inches = 0.0;
-    double cut_length_inches = 0.0;
-
-    double total_time_seconds = execution_time_seconds(path);
-    double cut_time_seconds = 0.0;
-
-    for (auto& c : path) {
-      total_length_inches += c->length();
-
-      if (!c->is_safe_move()) {
-	cut_length_inches += c->length();
-	cut_time_seconds += cut_execution_time_seconds(c);
-      }
-    }
-
-    // if (material_removed >= 10.0 && (tool_end_type != ROUGH_ENDMILL)) {
-    //   double cut_volume = material_removed / cut_length_inches;
-    //   cout << "TOOL END TYPE = " << tool_end_type << endl;
-    //   cout << "Material removed = " << material_removed << endl;
-    //   cout << "Material removed per inch of cut = " << cut_volume << endl;
-    //   vtk_debug_cuts(path);
-    // }
-    
-    double cut_depth = estimate_cut_depth_median(path);
-    double feedrate = estimate_feedrate_median(path);
-    double spindle_speed = estimate_spindle_speed_median(path);
-    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
-
-    operation_params op{current_tool_no,
-	tool_end_type,
-	tool_diameter,
-	cut_depth,
-	feedrate,
-	spindle_speed,
-	sfm,
-	total_length_inches,
-	cut_length_inches,
-	total_time_seconds,
-	cut_time_seconds,
-	material_removed,
-	"UNKNOWN",
-	path_op_pair.first};
-
-    ops.push_back(op);
-
-    cout << "--------------------------------------------------------" << endl;
-    cout << op << endl;
-    cout << "--------------------------------------------------------" << endl;
-    
-  }
-
-  return ops;
-}
-
-std::vector<operation_params>
-program_operations_GCA(std::vector<std::vector<cut*> >& paths,
-		       map<int, tool_info>& tool_table,
-		       const std::vector<operation_range>& op_ranges) {
-  if (paths.size() == 0) { return {}; }
-
-  if (op_ranges.size() == 0) { return {}; }
-
-  double max_tool_diameter = 1.5;
-  auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-  //vtk_debug_depth_field(r.r);
-
-  auto all_cuts = concat_all(paths);
-
-  unsigned op_ind = 0;
-  auto active_op = op_ranges[0];
-
-  vector<pair<operation_range, vector<cut*> > > op_paths;
-  vector<cut*> current_path;
-
-  for (auto& cut : all_cuts) {
-    if (cut->get_line_number() >= active_op.end_line) {
-      op_paths.push_back( make_pair(active_op, current_path) );
-
-      op_ind++;
-      active_op = op_ranges[op_ind];
-
-      current_path = {cut};
-    } else {
-      current_path.push_back(cut);
-    }
-    
-  }
-
-  op_paths.push_back( make_pair(active_op, current_path) );
-
-  DBG_ASSERT(op_paths.size() == op_ranges.size());
-
-  cout << "# of op ranges = " << op_ranges.size() << endl;
-
-  //vtk_debug_cuts(all_cuts);
-  vector<operation_params> ops;
-
-  for (auto path_op_pair : op_paths) {
-
-    auto path = path_op_pair.second;
-
-    cout << "Looking up tool diameter" << endl;
-    auto c_iter = find_if(path.begin(), path.end(),
-			  [](const cut* c) { return !c->is_safe_move(); });
-
-    if (c_iter == end(path)) {
-      cout << "No cuts in operation" << endl;
-      continue;
-    }
-
-    auto c = *c_iter;
-
-    //auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-    // if (!(tn->is_ilit())) {
-    //   cout << "ERROR" << endl;
-    //   cout << *c << endl;
-    //   cout << "Active tool = " << *(c->settings.active_tool) << endl;
-    //   assert(false);
-    // }
-
-    //auto tl = static_cast<ilit*>(tn);
-    int current_tool_no = 3; //tl->v;
-    double tool_diameter = tool_table[current_tool_no].tool_diameter;
-    tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
-    cylindrical_bit t = (tool_diameter);
-
-    double material_removed = 0.0;
-    for (auto c : path) {
-
-      double volume_removed = update_cut(*c, r, t);      
-      // Assume no crashes since the program was submitted
-      if (!c->is_safe_move()) {
-	material_removed += volume_removed;
-      } else {
-
-	if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
-	  double mat_removed_tol = 0.005;
-	  if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
-	    cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
-	    cout << "line # = " << c->get_line_number() << endl;
-	    cout << *c << endl;
-	    material_removed += volume_removed;
-
-	    //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
-	  }
-	}
-      }
-
-    }
-
-    double total_length_inches = 0.0;
-    double cut_length_inches = 0.0;
-
-    double total_time_seconds = execution_time_seconds(path);
-    double cut_time_seconds = 0.0;
-
-    for (auto& c : path) {
-      total_length_inches += c->length();
-
-      if (!c->is_safe_move()) {
-	cut_length_inches += c->length();
-	cut_time_seconds += cut_execution_time_seconds(c);
-      }
-    }
-
-    // vtk_debug_depth_field(r.r);
-
-    double cut_depth = estimate_cut_depth_median(path);
-    double feedrate = estimate_feedrate_median(path);
-    double spindle_speed = estimate_spindle_speed_median(path);
-    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
-
-    operation_params op{current_tool_no,
-	tool_end_type,
-	tool_diameter,
-	cut_depth,
-	feedrate,
-	spindle_speed,
-	sfm,
-	total_length_inches,
-	cut_length_inches,
-	total_time_seconds,
-	cut_time_seconds,
-	material_removed,
-	"UNKNOWN",
-	path_op_pair.first};
-
-    ops.push_back(op);
-
-    cout << "--------------------------------------------------------" << endl;
-    cout << op << endl;
-    cout << "--------------------------------------------------------" << endl;
-    
-  }
-
-  return ops;
-}
-
-bool starts_with(string& value, string& prefix) {
-  if (prefix.size() > value.size()) return false;
-  auto res = std::mismatch(prefix.begin(), prefix.end(), value.begin());
-  return res.first == prefix.end();
-}
-
-tool_end read_tool_end(std::string& comment) {
-  cout << "tool comment = " << comment << endl;
-
-  string r("ROUGH");
-  if (starts_with(comment, r)) {
-    return ROUGH_ENDMILL;
-  }
-
-  string f("FINISH");
-  if (starts_with(comment, f)) {
-    return FINISH_ENDMILL;
-  }
-
-  string b("BALL");
-  if (starts_with(comment, b)) {
-    return BALL_ENDMILL;
-  }
-
-  string d("DRILL");
-  if (starts_with(comment, d)) {
-    return DRILL_ENDMILL;
-  }
-
-  string sd("SPOT DRILL");
-  if (starts_with(comment, sd)) {
-    return SPOT_DRILL_ENDMILL;
-  }
-  
-  string fc("FACE");
-  if (starts_with(comment, fc)) {
-    return FACE_ENDMILL;
-  }
-
-  string cs("COUNTERSINK");
-  if (starts_with(comment, cs)) {
-    return COUNTERSINK_ENDMILL;
-  }
-
-  string fly("FLY CUTTER");
-  if (starts_with(comment, fly)) {
-    return FLY_CUTTER_ENDMILL;
-  }
-
-  string kc("KEY CUTTER");
-  if (starts_with(comment, kc)) {
-    return KEY_CUTTER_ENDMILL;
-  }
-  
-  cout << "UNKNOWN TOOL COMMENT = " << comment << endl;
-  return FINISH_ENDMILL;
-}
-
-void add_tool_HAAS(map<int, tool_info>& tt, string& comment) {
-  string tool_comment_start = "( TOOL ";
-  if (starts_with(comment, tool_comment_start)) {
-    cout << "Tool comment is " << comment << endl;
-    size_t i = -1;
-    int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
-    cout << "tool_no = " << tool_no << endl;
-    assert(i != -1);
-    string rest = comment.substr(tool_comment_start.size() + i);
-
-    cout << "Rest of comment = " << rest << endl;
-
-    size_t j = -1;
-    double tool_diameter = stod(rest, &j);
-    string tool_comment = rest.substr(j + 1);
-    tool_end end = read_tool_end(tool_comment);
-    
-    cout << "tool diameter = " << tool_diameter << endl;
-    tool_info tf{end, tool_diameter};
-    tt[tool_no] = tf;
-  }
-}
-
-void add_tool_GCA(map<int, tool_info>& tt, string& comment) {
-  string tool_comment_start = "(*** TOOL DIAMETER = ";
-  if (starts_with(comment, tool_comment_start)) {
-    cout << "Tool comment is " << comment << endl;
-    size_t i = -1;
-    int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
-    cout << "tool_no = " << tool_no << endl;
-    assert(i != -1);
-    string rest = comment.substr(tool_comment_start.size() + i);
-
-    cout << "Rest of comment = " << rest << endl;
-
-    size_t j = -1;
-    double tool_diameter = stod(rest, &j);
-    string tool_comment = rest.substr(j + 1);
-    tool_end end = read_tool_end(tool_comment);
-    
-    cout << "tool diameter = " << tool_diameter << endl;
-    tool_info tf{end, tool_diameter};
-    tt[tool_no] = tf;
-  }
-}
-
-boost::optional<double> infer_program_length_feet(const vector<block>& p) {
-  vector<token> comments;
-  for (auto b : p) {
-    for (auto t : b) {
-      if ((t.ttp == PAREN_COMMENT) ||
-	  (t.ttp == BRACKET_COMMENT)) {
-	comments.push_back(t);
-      }
-    }
-  }
-
-  for (auto c : comments) {
-    auto comment = c.text;
-
-    string len_comment_start = "( FILE LENGTH ";
-    string len_comment_end = " FEET )";
-    if (starts_with(comment, len_comment_start) &&
-	ends_with(comment, len_comment_end)) {
-
-      cout << "Length comment is " << comment << endl;
-
-      // size_t i = -1;
-      // int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
-      // cout << "tool_no = " << tool_no << endl;
-      // DBG_ASSERT(i != -1);
-      
-      double len = stod(comment.substr(len_comment_start.size()));
-
-      cout << "length = " << len << endl;
-
-      //string rest = comment.substr(len_comment_start.size() + i);
-
-      //double tool_diameter = stod(rest);
-
-      //cout << "tool diameter = " << tool_diameter << endl;
-
-      return len;
-    }
-
-  }
-
-  return boost::none;
-}
-
-std::string extract_operation_name(const std::string& op) {
-  string rough_str(" ROUGHING )");
-  if (ends_with(op, rough_str)) {
-    return "ROUGHING";
-  }
-
-  string surfacing_str(" SURFACING )");
-  if (ends_with(op, surfacing_str)) {
-    return "SURFACING";
-  }
-
-  string holes_str(" HOLES )");
-  if (ends_with(op, holes_str)) {
-    return "HOLES";
-  }
-
-  string contour_str(" CONTOUR )");
-  if (ends_with(op, contour_str)) {
-    return "CONTOUR";
-  }
-  
-  cout << "UNRECOGNIZED OP STRING = " << op << endl;
-  return "UNKNOWN";
-}
-
-std::vector<operation_range> infer_operation_ranges_HAAS(const vector<block>& p) {
-  vector<token> comments;
-  string op_str("( OPERATION ");
-
-  for (auto b : p) {
-    for (auto t : b) {
-      if (((t.ttp == PAREN_COMMENT) ||
-	   (t.ttp == BRACKET_COMMENT)) &&
-	  starts_with(t.text, op_str)) {
-	comments.push_back(t);
-      }
-    }
-  }
-
-  if (comments.size() < 1) {
-    return {};
-  }
-
-  vector<operation_range> op_ranges;
-  string first_op_name = extract_operation_name(comments.front().text);
-
-  operation_range active{first_op_name, comments.front().line_no};
-
-  op_ranges.push_back(active);
-
-  for (unsigned i = 1; i < comments.size(); i++) {
-    token next_op_comment = comments[i];
-    string op_name = extract_operation_name(next_op_comment.text);
-    operation_range active{op_name, next_op_comment.line_no};
-
-    op_ranges.back().end_line = next_op_comment.line_no;
-
-    op_ranges.push_back(active);
-    
-  }
-
-  int last_line_no = p.back().back().line_no;
-  cout << "last line number = " << last_line_no << endl;
-  
-  op_ranges.back().end_line = last_line_no;
-
-  cout << "# of op ranges = " << op_ranges.size() << endl;
-  for (auto& op : op_ranges) {
-    cout << op << endl;
-  }
-
-  return op_ranges;
-}
-
-std::vector<operation_range> infer_operation_ranges_GCA(const vector<block>& p) {
-  vector<token> comments;
-  string op_str("(*** OPERATION = ");
-
-  for (auto b : p) {
-    for (auto t : b) {
-      if (((t.ttp == PAREN_COMMENT) ||
-	   (t.ttp == BRACKET_COMMENT)) &&
-	  starts_with(t.text, op_str)) {
-	comments.push_back(t);
-      }
-    }
-  }
-
-  if (comments.size() < 1) {
-    return {};
-  }
-
-  vector<operation_range> op_ranges;
-  string first_op_name = extract_operation_name(comments.front().text);
-
-  operation_range active{first_op_name, comments.front().line_no};
-
-  op_ranges.push_back(active);
-
-  for (unsigned i = 1; i < comments.size(); i++) {
-    token next_op_comment = comments[i];
-    string op_name = extract_operation_name(next_op_comment.text);
-    operation_range active{op_name, next_op_comment.line_no};
-
-    op_ranges.back().end_line = next_op_comment.line_no;
-
-    op_ranges.push_back(active);
-    
-  }
-
-  int last_line_no = p.back().back().line_no;
-  cout << "last line number = " << last_line_no << endl;
-  
-  op_ranges.back().end_line = last_line_no;
-
-  cout << "# of op ranges = " << op_ranges.size() << endl;
-  for (auto& op : op_ranges) {
-    cout << op << endl;
-  }
-
-  return op_ranges;
-}
-
-map<int, tool_info> infer_tool_table_HAAS(const vector<block>& p) {
-  vector<token> comments;
-  for (auto b : p) {
-    for (auto t : b) {
-      if ((t.ttp == PAREN_COMMENT) ||
-	  (t.ttp == BRACKET_COMMENT)) {
-	comments.push_back(t);
-      }
-    }
-  }
-  map<int, tool_info> tt;
-  for (auto c : comments) {
-    add_tool_HAAS(tt, c.text);
-  }
-  return tt;
-}
-
-map<int, tool_info> infer_tool_table_GCA(const vector<block>& p) {
-  vector<token> comments;
-  for (auto b : p) {
-    for (auto t : b) {
-      if ((t.ttp == PAREN_COMMENT) ||
-	  (t.ttp == BRACKET_COMMENT)) {
-	comments.push_back(t);
-      }
-    }
-  }
-  map<int, tool_info> tt;
-  //for (auto c : comments) {
-  for (unsigned cnum = 0; cnum < comments.size(); cnum++) {
-    auto c = comments[cnum];
-
-    string comment = c.text;
-
-    string tool_comment_start = "(*** TOOL DIAMETER = ";
-    string tool_no_comment_start = "(*** TOOL NUMBER = ";
-    if (starts_with(comment, tool_comment_start)) {
-      cout << "Tool comment is " << comment << endl;
-      size_t i = -1;
-      double tool_diameter = stod(comment.substr(tool_comment_start.size()), &i);
-      cout << "tool_diameter = " << tool_diameter << endl;
-      DBG_ASSERT(i != -1);
-
-      unsigned num_comment_ind = cnum + 2;
-      token tool_no_comment = comments[num_comment_ind];
-
-      cout << "Tool number comment = " << tool_no_comment.text << endl;
-
-      DBG_ASSERT(starts_with(tool_no_comment.text, tool_no_comment_start));
-
-      i = -1;
-      int tool_no = stoi(tool_no_comment.text.substr(tool_no_comment_start.size()), &i);
-      cout << "tool_no = " << tool_no << endl;
-      DBG_ASSERT(i != -1);
-
-		 // string rest = comment.substr(tool_comment_start.size() + i);
-
-      // cout << "Rest of comment = " << rest << endl;
-
-      // size_t j = -1;
-      // double tool_diameter = stod(rest, &j);
-      // string tool_comment = rest.substr(j + 1);
-      // tool_end end = read_tool_end(tool_comment);
-    
-      // cout << "tool diameter = " << tool_diameter << endl;
-      tool_info tf{ROUGH_ENDMILL, tool_diameter};
-      tt[tool_no] = tf;
-    }
-  }
-  return tt;
 }
 
 tool_end decode_tool_end_json(const ptree& p) {

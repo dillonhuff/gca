@@ -233,8 +233,6 @@ namespace gca {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
 
-      num_processed_blocks += p.size();
-
       map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
       std::vector<operation_range> op_ranges =
