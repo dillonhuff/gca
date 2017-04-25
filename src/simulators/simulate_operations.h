@@ -28,9 +28,11 @@ namespace gca {
     double tool_diameter;
   };
 
+  // TODO: Templatize the extra metadata?
   struct operation_range {
     std::string name;
     int start_line, end_line;
+    int tool_number;
   };
 
   struct operation_params {

@@ -35,7 +35,7 @@ namespace gca {
 
   
   // TODO: Move to string utility file
-  bool starts_with(string& value, string& prefix) {
+  bool starts_with(const string& value, const string& prefix) {
     if (prefix.size() > value.size()) return false;
     auto res = std::mismatch(prefix.begin(), prefix.end(), value.begin());
     return res.first == prefix.end();
@@ -118,28 +118,28 @@ namespace gca {
     }
   }
 
-  void add_tool_GCA(map<int, tool_info>& tt, string& comment) {
-    string tool_comment_start = "(*** TOOL DIAMETER = ";
-    if (starts_with(comment, tool_comment_start)) {
-      cout << "Tool comment is " << comment << endl;
-      size_t i = -1;
-      int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
-      cout << "tool_no = " << tool_no << endl;
-      assert(i != -1);
-      string rest = comment.substr(tool_comment_start.size() + i);
+  // void add_tool_GCA(map<int, tool_info>& tt, string& comment) {
+  //   string tool_comment_start = "(*** TOOL DIAMETER = ";
+  //   if (starts_with(comment, tool_comment_start)) {
+  //     cout << "Tool comment is " << comment << endl;
+  //     size_t i = -1;
+  //     int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
+  //     cout << "tool_no = " << tool_no << endl;
+  //     assert(i != -1);
+  //     string rest = comment.substr(tool_comment_start.size() + i);
 
-      cout << "Rest of comment = " << rest << endl;
+  //     cout << "Rest of comment = " << rest << endl;
 
-      size_t j = -1;
-      double tool_diameter = stod(rest, &j);
-      string tool_comment = rest.substr(j + 1);
-      tool_end end = read_tool_end(tool_comment);
+  //     size_t j = -1;
+  //     double tool_diameter = stod(rest, &j);
+  //     string tool_comment = rest.substr(j + 1);
+  //     tool_end end = read_tool_end(tool_comment);
     
-      cout << "tool diameter = " << tool_diameter << endl;
-      tool_info tf{end, tool_diameter};
-      tt[tool_no] = tf;
-    }
-  }
+  //     cout << "tool diameter = " << tool_diameter << endl;
+  //     tool_info tf{end, tool_diameter};
+  //     tt[tool_no] = tf;
+  //   }
+  // }
 
   
   map<int, tool_info> infer_tool_table_HAAS(const vector<block>& p) {
@@ -157,6 +157,21 @@ namespace gca {
       add_tool_HAAS(tt, c.text);
     }
     return tt;
+  }
+
+  int extract_tool_number_GCA(const std::string& text) {
+    string tool_no_comment_start = "(*** TOOL NUMBER = ";
+
+    cout << "Tool number comment = " << text << endl;
+
+    DBG_ASSERT(starts_with(text, tool_no_comment_start));
+
+    size_t i = -1;
+    int tool_no = stoi(text.substr(tool_no_comment_start.size()), &i);
+    cout << "tool_no = " << tool_no << endl;
+    DBG_ASSERT(i != -1);
+
+    return tool_no;
   }
 
   map<int, tool_info> infer_tool_table_GCA(const vector<block>& p) {
@@ -177,7 +192,6 @@ namespace gca {
       string comment = c.text;
 
       string tool_comment_start = "(*** TOOL DIAMETER = ";
-      string tool_no_comment_start = "(*** TOOL NUMBER = ";
       if (starts_with(comment, tool_comment_start)) {
 	cout << "Tool comment is " << comment << endl;
 	size_t i = -1;
@@ -188,15 +202,7 @@ namespace gca {
 	unsigned num_comment_ind = cnum + 2;
 	token tool_no_comment = comments[num_comment_ind];
 
-	cout << "Tool number comment = " << tool_no_comment.text << endl;
-
-	DBG_ASSERT(starts_with(tool_no_comment.text, tool_no_comment_start));
-
-	i = -1;
-	int tool_no = stoi(tool_no_comment.text.substr(tool_no_comment_start.size()), &i);
-	cout << "tool_no = " << tool_no << endl;
-	DBG_ASSERT(i != -1);
-
+	int tool_no = extract_tool_number_GCA(tool_no_comment.text);
 	// string rest = comment.substr(tool_comment_start.size() + i);
 
 	// cout << "Rest of comment = " << rest << endl;
@@ -311,17 +317,27 @@ namespace gca {
 
   std::vector<operation_range> infer_operation_ranges_GCA(const vector<block>& p) {
     vector<token> comments;
+    vector<token> tool_no_comments;
+
     string op_str("(*** OPERATION = ");
+    string tool_no_str("(*** TOOL NUMBER = ");
 
     for (auto b : p) {
       for (auto t : b) {
 	if (((t.ttp == PAREN_COMMENT) ||
-	     (t.ttp == BRACKET_COMMENT)) &&
-	    starts_with(t.text, op_str)) {
-	  comments.push_back(t);
+	     (t.ttp == BRACKET_COMMENT))) {
+	  if (starts_with(t.text, op_str)) {
+	    comments.push_back(t);
+	  }
+
+	  if (starts_with(t.text, tool_no_str)) {
+	    tool_no_comments.push_back(t);
+	  }
 	}
       }
     }
+
+    DBG_ASSERT(tool_no_comments.size() == comments.size());
 
     if (comments.size() < 1) {
       return {};
@@ -329,8 +345,9 @@ namespace gca {
 
     vector<operation_range> op_ranges;
     string first_op_name = extract_operation_name(comments.front().text);
+    int tool_no = extract_tool_number_GCA(tool_no_comments.front().text);
 
-    operation_range active{first_op_name, comments.front().line_no};
+    operation_range active{first_op_name, comments.front().line_no, tool_no};
 
     op_ranges.push_back(active);
 
@@ -649,7 +666,7 @@ namespace gca {
       // }
 
       //auto tl = static_cast<ilit*>(tn);
-      int current_tool_no = 3; //tl->v;
+      int current_tool_no = path_op_pair.first.tool_number; //3; //tl->v;
       double tool_diameter = tool_table[current_tool_no].tool_diameter;
       tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
       cylindrical_bit t = (tool_diameter);
