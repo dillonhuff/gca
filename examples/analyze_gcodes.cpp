@@ -867,6 +867,7 @@ program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 	  }
 	}
       }
+
     }
 
     double total_length_inches = 0.0;
@@ -883,6 +884,8 @@ program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 	cut_time_seconds += cut_execution_time_seconds(c);
       }
     }
+
+    // vtk_debug_depth_field(r.r);
 
     double cut_depth = estimate_cut_depth_median(path);
     double feedrate = estimate_feedrate_median(path);
