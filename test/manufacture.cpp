@@ -390,8 +390,10 @@ namespace gca {
 	increment(total_time, step_time);
       }
 
-      cout << "TOTAL TIME" << endl;
-      print_time_info(cout, total_time);
+      print_programs_no_TLC(p);
+
+      // cout << "TOTAL TIME" << endl;
+      // print_time_info(cout, total_time);
 
       // for (auto step : p.steps()) {
       // 	visual_debug(step);

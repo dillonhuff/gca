@@ -82,6 +82,10 @@ namespace gca {
 
   fabrication_inputs current_fab_inputs(const workpiece& workpiece_dims) { 
     auto tools = current_tools();
+    for (unsigned i = 0; i < tools.size(); i++) {
+      tools[i].set_tool_number(i);
+    }
+
     fixtures fixes = current_fixtures();
     return fabrication_inputs(fixes, tools, workpiece_dims);
   }

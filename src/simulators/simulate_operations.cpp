@@ -661,15 +661,6 @@ namespace gca {
 
       auto c = *c_iter;
 
-      //auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-      // if (!(tn->is_ilit())) {
-      //   cout << "ERROR" << endl;
-      //   cout << *c << endl;
-      //   cout << "Active tool = " << *(c->settings.active_tool) << endl;
-      //   assert(false);
-      // }
-
-      //auto tl = static_cast<ilit*>(tn);
       int current_tool_no = path_op_pair.first.tool_number; //3; //tl->v;
       double tool_diameter = tool_table[current_tool_no].tool_diameter;
       tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
