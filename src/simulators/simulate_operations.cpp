@@ -609,6 +609,10 @@ namespace gca {
 
   void sum_updates(const vector<grid_update>& new_updates,
 		   vector<grid_update>& total_updates) {
+
+    cout << "Total updates = " << total_updates.size() << endl;
+    cout << "New updates = " << new_updates.size() << endl;
+
     for (auto& new_up : new_updates) {
       bool found_update = false;
       for (auto& total_up : total_updates) {
@@ -698,6 +702,9 @@ namespace gca {
     //vtk_debug_cuts(all_cuts);
     vector<operation_params> ops;
 
+    int total_point_updates = 0;
+    int total_grid_updates = 0;
+
     for (auto path_op_pair : op_paths) {
 
       auto path = path_op_pair.second;
@@ -722,10 +729,14 @@ namespace gca {
       for (auto c : path) {
 
 	vector<point_update> updates = update_cut_with_logging(*c, r, t);
+	total_point_updates += updates.size();
+	for (auto& update : updates) {
+	  total_grid_updates += update.grid_updates.size();
+	}
 
-	double cut_depth = max_cut_depth_from_updates(updates);
+	// double cut_depth = max_cut_depth_from_updates(updates);
 
-	cout << "Cut depth from update = " << cut_depth << endl;
+	// cout << "Cut depth from update = " << cut_depth << endl;
 
 	double volume_removed = 0.0;
 	for (auto& update : updates) {
@@ -796,6 +807,9 @@ namespace gca {
       cout << "--------------------------------------------------------" << endl;
     
     }
+
+    cout << "total point updates = " << total_point_updates << endl;
+    cout << "total grid updates = " << total_grid_updates << endl;
 
     return ops;
   }
