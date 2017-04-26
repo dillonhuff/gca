@@ -602,6 +602,48 @@ namespace gca {
     return ops;
   }
 
+  bool same_grid_cell(const grid_update l,
+		      const grid_update r) {
+    return (l.x_ind == r.x_ind) && (l.y_ind == r.y_ind);
+  }
+
+  void sum_updates(const vector<grid_update>& new_updates,
+		   vector<grid_update>& total_updates) {
+    for (auto& new_up : new_updates) {
+      bool found_update = false;
+      for (auto& total_up : total_updates) {
+	if (same_grid_cell(new_up, total_up)) {
+	  found_update = true;
+	  total_up.height_diff += new_up.height_diff;
+	  break;
+	}
+      }
+
+      if (!found_update) {
+	total_updates.push_back(new_up);
+      }
+    }
+
+  }
+
+  double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
+    if (updates.size() == 0) { return -1; }
+    vector<grid_update> total_updates;
+    for (auto& update : updates) {
+      sum_updates(update.grid_updates, total_updates);
+    }
+
+    if (total_updates.size() == 0) {
+      return -1;
+    }
+    
+    grid_update largest_cut = max_e(total_updates, [](const grid_update& g) {
+	return g.height_diff;
+      });
+
+    return largest_cut.height_diff;
+  }
+
   double volume_removed_in_update(const double resolution,
 				  const point_update& update) {
     double volume_removed = 0.0;
@@ -680,10 +722,16 @@ namespace gca {
       for (auto c : path) {
 
 	vector<point_update> updates = update_cut_with_logging(*c, r, t);
+
+	double cut_depth = max_cut_depth_from_updates(updates);
+
+	cout << "Cut depth from update = " << cut_depth << endl;
+
 	double volume_removed = 0.0;
 	for (auto& update : updates) {
 	  volume_removed += volume_removed_in_update(r.r.resolution, update);
 	}
+
 	// Assume no crashes since the program was submitted
 	if (!c->is_safe_move()) {
 	  material_removed += volume_removed;
