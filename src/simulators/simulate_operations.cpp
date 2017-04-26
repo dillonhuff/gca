@@ -686,19 +686,23 @@ namespace gca {
     std::vector<point_update> updates;
   };
 
-  struct operation_log {
-    std::vector<cut_simulation_log> cuts;
+  struct operation_info {
     operation_range range;
     tool_info tool_inf;
+  };
+
+  struct operation_log {
+    std::vector<cut_simulation_log> cuts;
+    operation_info info;
   };
 
   operation_params
   build_operation_summary(const double sim_resolution,
 			  const operation_log& op_log) {
 
-    int current_tool_no = op_log.range.tool_number;
-    double tool_diameter = op_log.tool_inf.tool_diameter;
-    tool_end tool_end_type = op_log.tool_inf.tool_end_type;
+    int current_tool_no = op_log.info.range.tool_number;
+    double tool_diameter = op_log.info.tool_inf.tool_diameter;
+    tool_end tool_end_type = op_log.info.tool_inf.tool_end_type;
     cylindrical_bit t = (tool_diameter);
 
     double material_removed = 0.0;
@@ -772,15 +776,15 @@ namespace gca {
 	cut_time_seconds,
 	material_removed,
 	"UNKNOWN",
-	op_log.range};
+	op_log.info.range};
 
     return op;
   }
 
-  std::vector<pair<operation_range, vector<cut*> > >
-  segment_operations(std::vector<std::vector<cut*> >& paths,
-		     map<int, tool_info>& tool_table,
-		     const std::vector<operation_range>& op_ranges) {
+  std::vector<pair<operation_info, vector<cut*> > >
+  segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
+			 map<int, tool_info>& tool_table,
+			 const std::vector<operation_range>& op_ranges) {
     if (paths.size() == 0) { return {}; }
 
     if (op_ranges.size() == 0) { return {}; }
@@ -821,7 +825,7 @@ namespace gca {
 			 map<int, tool_info>& tool_table,
 			 const std::vector<operation_range>& op_ranges) {
 
-    auto op_paths = segment_operations(paths, tool_table, op_ranges);
+    auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
 
     if (op_paths.size() == 0) { return {}; }
 
@@ -852,9 +856,9 @@ namespace gca {
 
       auto c = *c_iter;
 
-      int current_tool_no = path_op_pair.first.tool_number; //3; //tl->v;
-      double tool_diameter = tool_table[current_tool_no].tool_diameter;
-      tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
+      int current_tool_no = path_op_pair.first.range.tool_number; //3; //tl->v;
+      double tool_diameter = path_op_pair.first.tool_inf.tool_diameter;
+      tool_end tool_end_type = path_op_pair.first.too_inf.tool_end_type;
       cylindrical_bit t = (tool_diameter);
 
       double material_removed = 0.0;
@@ -868,8 +872,7 @@ namespace gca {
       }
 
       operation_sim_log.push_back({cut_updates,
-	    path_op_pair.first,
-	      {tool_end_type, tool_diameter}});
+	    {path_op_pair.first, {tool_end_type, tool_diameter}}});
 
     }
 
