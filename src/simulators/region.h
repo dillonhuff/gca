@@ -10,6 +10,16 @@ using namespace std;
 
 namespace gca {
 
+  struct grid_update {
+    int x_ind, y_ind;
+    double height_diff;
+  };
+
+  struct point_update {
+    point cutter_location;
+    vector<grid_update> grid_updates;
+  };
+
   class region {
   public:
     depth_field r;
@@ -61,8 +71,10 @@ namespace gca {
       return total_volume_removed;
     }
 
-    double update(point p, const mill_tool& t) {
-      double volume_removed = 0.0;
+    point_update update_at_point(const point p, const mill_tool& t) {
+      //double volume_removed = 0.0;
+
+      vector<grid_update> grid_updates;
 
       int first_x = r.x_index(t.x_min(p));
       int last_x = r.x_index(t.x_max(p)) + 1;
@@ -77,14 +89,52 @@ namespace gca {
 	    if (h > p.z) {
 	      double z_diff = h - p.z;
 	      r.set_column_height(i, j, p.z);
-	      volume_removed += r.resolution*r.resolution*z_diff;
+
+	      grid_updates.push_back({i, j, z_diff});
+
+	      //volume_removed += r.resolution*r.resolution*z_diff;
 	    }
 	  }
 	}
       }
 
-      total_volume_removed += volume_removed;
+      // total_volume_removed += volume_removed;
+      // return volume_removed;
+
+      return point_update{p, grid_updates};
+    }
+
+    double update(point p, const mill_tool& t) {
+      point_update updates = update_at_point(p, t);
+      
+      double volume_removed = 0.0;
+      for (auto& g : updates.grid_updates) {
+	volume_removed += g.height_diff * r.resolution*r.resolution;
+      }
+
       return volume_removed;
+
+      // int first_x = r.x_index(t.x_min(p));
+      // int last_x = r.x_index(t.x_max(p)) + 1;
+      // int first_y = r.y_index(t.y_min(p));
+      // int last_y = r.y_index(t.y_max(p)) + 1;
+      
+      // for (int i = first_x; i < last_x; i++) {
+      // 	for (int j = first_y; j < last_y; j++) {
+      // 	  if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
+      // 	      r.legal_column(i, j)) {
+      // 	    double h = static_cast<double>(r.column_height(i, j));
+      // 	    if (h > p.z) {
+      // 	      double z_diff = h - p.z;
+      // 	      r.set_column_height(i, j, p.z);
+      // 	      volume_removed += r.resolution*r.resolution*z_diff;
+      // 	    }
+      // 	  }
+      // 	}
+      // }
+
+      // total_volume_removed += volume_removed;
+      // return volume_removed;
     }
 
     inline bool in_region(point p, const mill_tool& t) const {
