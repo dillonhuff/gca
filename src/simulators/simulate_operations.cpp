@@ -638,6 +638,29 @@ namespace gca {
       }
     }
 
+    sort(begin(total_updates), end(total_updates),
+	 [](const grid_update l, const grid_update& r) {
+	   if (l.cell.x_ind < r.cell.x_ind) { return true; }
+	   return l.cell.y_ind < r.cell.y_ind;
+      });
+
+    vector<vector<grid_update> > same_location_updates =
+      split_by(total_updates, [](const grid_update l, const grid_update r) {
+	  return l.cell == r.cell;
+	});
+
+    vector<grid_update> summed_updates;
+    for (auto& group : same_location_updates) {
+
+      grid_cell c = group.front().cell;
+      double total_height = 0.0;
+      for (auto& update : group) {
+	total_height += update.height_diff;
+      }
+
+      summed_updates.push_back({c, total_height});
+    }
+
     return total_updates;
   }
 
@@ -744,6 +767,7 @@ namespace gca {
 
 	double cut_depth = max_cut_depth_from_updates(updates);
 
+	
 	cout << "Cut depth from update = " << cut_depth << endl;
 
 	double volume_removed = 0.0;
