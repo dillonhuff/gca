@@ -3254,6 +3254,33 @@ src/simulators/mill_tool.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/mill_tool.cpp.s
 .PHONY : src/simulators/mill_tool.cpp.s
 
+src/simulators/region.o: src/simulators/region.cpp.o
+
+.PHONY : src/simulators/region.o
+
+# target to build an object file
+src/simulators/region.cpp.o:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/region.cpp.o
+.PHONY : src/simulators/region.cpp.o
+
+src/simulators/region.i: src/simulators/region.cpp.i
+
+.PHONY : src/simulators/region.i
+
+# target to preprocess a source file
+src/simulators/region.cpp.i:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/region.cpp.i
+.PHONY : src/simulators/region.cpp.i
+
+src/simulators/region.s: src/simulators/region.cpp.s
+
+.PHONY : src/simulators/region.s
+
+# target to generate assembly for a file
+src/simulators/region.cpp.s:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/region.cpp.s
+.PHONY : src/simulators/region.cpp.s
+
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
 
 .PHONY : src/simulators/sim_mill.o
@@ -5935,6 +5962,9 @@ help:
 	@echo "... src/simulators/mill_tool.o"
 	@echo "... src/simulators/mill_tool.i"
 	@echo "... src/simulators/mill_tool.s"
+	@echo "... src/simulators/region.o"
+	@echo "... src/simulators/region.i"
+	@echo "... src/simulators/region.s"
 	@echo "... src/simulators/sim_mill.o"
 	@echo "... src/simulators/sim_mill.i"
 	@echo "... src/simulators/sim_mill.s"

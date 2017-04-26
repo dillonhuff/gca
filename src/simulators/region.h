@@ -10,8 +10,16 @@ using namespace std;
 
 namespace gca {
 
-  struct grid_update {
+  struct grid_cell {
     int x_ind, y_ind;
+  };
+
+  inline bool operator==(const grid_cell l, const grid_cell r) {
+    return (l.x_ind == r.x_ind) && (l.y_ind == r.y_ind);
+  }
+
+  struct grid_update {
+    grid_cell cell;
     double height_diff;
   };
 
@@ -90,7 +98,7 @@ namespace gca {
 	      double z_diff = h - p.z;
 	      r.set_column_height(i, j, p.z);
 
-	      grid_updates.push_back({i, j, z_diff});
+	      grid_updates.push_back({{i, j}, z_diff});
 
 	      //volume_removed += r.resolution*r.resolution*z_diff;
 	    }

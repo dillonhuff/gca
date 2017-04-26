@@ -604,7 +604,7 @@ namespace gca {
 
   bool same_grid_cell(const grid_update l,
 		      const grid_update r) {
-    return (l.x_ind == r.x_ind) && (l.y_ind == r.y_ind);
+    return l.cell == r.cell; //return (l.x_ind == r.x_ind) && (l.y_ind == r.y_ind);
   }
 
   void sum_updates(const vector<grid_update>& new_updates,
@@ -630,12 +630,20 @@ namespace gca {
 
   }
 
-  double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
-    if (updates.size() == 0) { return -1; }
+  std::vector<grid_update> sum_updates(const std::vector<point_update>& updates) {
     vector<grid_update> total_updates;
     for (auto& update : updates) {
-      sum_updates(update.grid_updates, total_updates);
+      for (auto& gu : update.grid_updates) {
+	total_updates.push_back(gu);
+      }
     }
+
+    return total_updates;
+  }
+
+  double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
+    if (updates.size() == 0) { return -1; }
+    vector<grid_update> total_updates = sum_updates(updates);
 
     if (total_updates.size() == 0) {
       return -1;
