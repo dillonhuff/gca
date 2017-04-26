@@ -3,7 +3,7 @@
 
 #include "geometry/surface.h"
 #include "geometry/triangular_mesh.h"
-#include "simulators/region.h"
+#include "geometry/depth_field.h"
 
 namespace gca {
 

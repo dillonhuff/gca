@@ -610,8 +610,8 @@ namespace gca {
   void sum_updates(const vector<grid_update>& new_updates,
 		   vector<grid_update>& total_updates) {
 
-    cout << "Total updates = " << total_updates.size() << endl;
-    cout << "New updates = " << new_updates.size() << endl;
+    // cout << "Total updates = " << total_updates.size() << endl;
+    // cout << "New updates = " << new_updates.size() << endl;
 
     for (auto& new_up : new_updates) {
       bool found_update = false;
@@ -734,9 +734,9 @@ namespace gca {
 	  total_grid_updates += update.grid_updates.size();
 	}
 
-	// double cut_depth = max_cut_depth_from_updates(updates);
+	double cut_depth = max_cut_depth_from_updates(updates);
 
-	// cout << "Cut depth from update = " << cut_depth << endl;
+	cout << "Cut depth from update = " << cut_depth << endl;
 
 	double volume_removed = 0.0;
 	for (auto& update : updates) {
