@@ -689,6 +689,11 @@ namespace gca {
     return volume_removed;
   }
 
+  struct cut_simulation_log {
+    cut* c;
+    std::vector<point_update> updates;
+  };
+
   std::vector<operation_params>
   program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			 map<int, tool_info>& tool_table,
@@ -736,6 +741,7 @@ namespace gca {
     int total_point_updates = 0;
     int total_grid_updates = 0;
 
+    vector<vector<cut_simulation_log> > operation_sim_log;
     for (auto path_op_pair : op_paths) {
 
       auto path = path_op_pair.second;
@@ -757,9 +763,13 @@ namespace gca {
       cylindrical_bit t = (tool_diameter);
 
       double material_removed = 0.0;
+
+      vector<cut_simulation_log> operation_log;
       for (auto c : path) {
 
 	vector<point_update> updates = update_cut_with_logging(*c, r, t);
+	operation_log.push_back({c, updates});
+
 	total_point_updates += updates.size();
 	for (auto& update : updates) {
 	  total_grid_updates += update.grid_updates.size();
@@ -767,7 +777,6 @@ namespace gca {
 
 	double cut_depth = max_cut_depth_from_updates(updates);
 
-	
 	cout << "Cut depth from update = " << cut_depth << endl;
 
 	double volume_removed = 0.0;
@@ -794,6 +803,8 @@ namespace gca {
 	}
 
       }
+
+      operation_sim_log.push_back(operation_log);
 
       double total_length_inches = 0.0;
       double cut_length_inches = 0.0;
