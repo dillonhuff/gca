@@ -68,6 +68,22 @@ namespace gca {
     return volume_removed;
   }
 
+  vector<point_update>
+  update_cut_with_logging(const cut& c, region& r, const mill_tool& t) {
+    //double volume_removed = 0.0;
+    vector<point_update> updates;
+    double d = r.r.resolution;
+    int num_points = (c.length() / d) + 1;
+
+    for (int i = 0; i < num_points; i++) {
+      double tp = static_cast<double>(i) / static_cast<double>(num_points);
+      point e = r.machine_coords_to_region_coords(c.value_at(tp));
+      updates.push_back(r.update_at_point(e, t));
+    }
+
+    return updates;
+  }
+  
   double simulate_mill(const vector<cut*>& p, region& r, const mill_tool& t) {
     double volume_removed = 0.0;
 

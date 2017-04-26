@@ -14,6 +14,10 @@ namespace gca {
   class region set_up_region(const vector<vector<cut*>>& paths, double tool_diameter);
   class region set_up_region_conservative(const vector<vector<cut*>>& paths, double tool_diameter);
 
+  vector<point_update>
+  update_cut_with_logging(const cut& c, class region& r, const mill_tool& t);
+  
+
 }
 
 #endif

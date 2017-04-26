@@ -602,6 +602,16 @@ namespace gca {
     return ops;
   }
 
+  double volume_removed_in_update(const double resolution,
+				  const point_update& update) {
+    double volume_removed = 0.0;
+    for (auto& g : update.grid_updates) {
+      volume_removed += g.height_diff * resolution*resolution;
+    }
+
+    return volume_removed;
+  }
+
   std::vector<operation_params>
   program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			 map<int, tool_info>& tool_table,
@@ -669,7 +679,11 @@ namespace gca {
       double material_removed = 0.0;
       for (auto c : path) {
 
-	double volume_removed = update_cut(*c, r, t);      
+	vector<point_update> updates = update_cut_with_logging(*c, r, t);
+	double volume_removed = 0.0;
+	for (auto& update : updates) {
+	  volume_removed += volume_removed_in_update(r.r.resolution, update);
+	}
 	// Assume no crashes since the program was submitted
 	if (!c->is_safe_move()) {
 	  material_removed += volume_removed;
