@@ -694,6 +694,98 @@ namespace gca {
     std::vector<point_update> updates;
   };
 
+  struct operation_log {
+    std::vector<cut_simulation_log> cuts;
+    operation_range range;
+    tool_info tool_inf;
+  };
+
+  operation_params
+  build_operation_summary(const double sim_resolution,
+			  const operation_log& op_log) {
+
+    int current_tool_no = op_log.range.tool_number;
+    double tool_diameter = op_log.tool_inf.tool_diameter;
+    tool_end tool_end_type = op_log.tool_inf.tool_end_type;
+    cylindrical_bit t = (tool_diameter);
+
+    double material_removed = 0.0;
+
+    for (auto op : op_log.cuts) {
+      auto c = op.c;
+      auto updates = op.updates;
+
+      double volume_removed = 0.0;
+      for (auto& update : updates) {
+	volume_removed += volume_removed_in_update(sim_resolution, update);
+      }
+
+      // Assume no crashes since the program was submitted
+      if (!c->is_safe_move()) {
+	material_removed += volume_removed;
+      } else {
+
+	if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
+	  double mat_removed_tol = 0.005;
+	  if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
+	    cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
+	    cout << "line # = " << c->get_line_number() << endl;
+	    cout << *c << endl;
+	    material_removed += volume_removed;
+
+	    //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
+	  }
+	}
+      }
+
+    }
+
+    vector<cut*> path;
+    for (auto& op : op_log.cuts) {
+      path.push_back(op.c);
+    }
+
+    double total_length_inches = 0.0;
+    double cut_length_inches = 0.0;
+
+    double total_time_seconds = execution_time_seconds(path);
+    double cut_time_seconds = 0.0;
+
+    for (auto& c : path) {
+      total_length_inches += c->length();
+
+      if (!c->is_safe_move()) {
+	cut_length_inches += c->length();
+	cut_time_seconds += cut_execution_time_seconds(c);
+      }
+    }
+
+    // vtk_debug_depth_field(r.r);
+
+    double cut_depth = estimate_cut_depth_median(path);
+    double feedrate = estimate_feedrate_median(path);
+    double spindle_speed = estimate_spindle_speed_median(path);
+    double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
+
+    operation_params op{current_tool_no,
+	tool_end_type,
+	tool_diameter,
+	cut_depth,
+	feedrate,
+	spindle_speed,
+	sfm,
+	total_length_inches,
+	cut_length_inches,
+	total_time_seconds,
+	cut_time_seconds,
+	material_removed,
+	"UNKNOWN",
+	op_log.range};
+
+    return op;
+  }
+  
+
   std::vector<operation_params>
   program_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			 map<int, tool_info>& tool_table,
@@ -770,89 +862,89 @@ namespace gca {
 	vector<point_update> updates = update_cut_with_logging(*c, r, t);
 	operation_log.push_back({c, updates});
 
-	total_point_updates += updates.size();
-	for (auto& update : updates) {
-	  total_grid_updates += update.grid_updates.size();
-	}
+	// total_point_updates += updates.size();
+	// for (auto& update : updates) {
+	//   total_grid_updates += update.grid_updates.size();
+	// }
 
-	double cut_depth = max_cut_depth_from_updates(updates);
+	// double cut_depth = max_cut_depth_from_updates(updates);
 
-	cout << "Cut depth from update = " << cut_depth << endl;
+	// cout << "Cut depth from update = " << cut_depth << endl;
 
-	double volume_removed = 0.0;
-	for (auto& update : updates) {
-	  volume_removed += volume_removed_in_update(r.r.resolution, update);
-	}
+	// double volume_removed = 0.0;
+	// for (auto& update : updates) {
+	//   volume_removed += volume_removed_in_update(r.r.resolution, update);
+	// }
 
-	// Assume no crashes since the program was submitted
-	if (!c->is_safe_move()) {
-	  material_removed += volume_removed;
-	} else {
+	// // Assume no crashes since the program was submitted
+	// if (!c->is_safe_move()) {
+	//   material_removed += volume_removed;
+	// } else {
 
-	  if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
-	    double mat_removed_tol = 0.005;
-	    if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
-	      cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
-	      cout << "line # = " << c->get_line_number() << endl;
-	      cout << *c << endl;
-	      material_removed += volume_removed;
+	//   if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
+	//     double mat_removed_tol = 0.005;
+	//     if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
+	//       cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
+	//       cout << "line # = " << c->get_line_number() << endl;
+	//       cout << *c << endl;
+	//       material_removed += volume_removed;
 
-	      //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
-	    }
-	  }
-	}
+	//       //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
+	//     }
+	//   }
+	// }
 
       }
 
       operation_sim_log.push_back(operation_log);
 
-      double total_length_inches = 0.0;
-      double cut_length_inches = 0.0;
+      // double total_length_inches = 0.0;
+      // double cut_length_inches = 0.0;
 
-      double total_time_seconds = execution_time_seconds(path);
-      double cut_time_seconds = 0.0;
+      // double total_time_seconds = execution_time_seconds(path);
+      // double cut_time_seconds = 0.0;
 
-      for (auto& c : path) {
-	total_length_inches += c->length();
+      // for (auto& c : path) {
+      // 	total_length_inches += c->length();
 
-	if (!c->is_safe_move()) {
-	  cut_length_inches += c->length();
-	  cut_time_seconds += cut_execution_time_seconds(c);
-	}
-      }
+      // 	if (!c->is_safe_move()) {
+      // 	  cut_length_inches += c->length();
+      // 	  cut_time_seconds += cut_execution_time_seconds(c);
+      // 	}
+      // }
 
-      // vtk_debug_depth_field(r.r);
+      // // vtk_debug_depth_field(r.r);
 
-      double cut_depth = estimate_cut_depth_median(path);
-      double feedrate = estimate_feedrate_median(path);
-      double spindle_speed = estimate_spindle_speed_median(path);
-      double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
+      // double cut_depth = estimate_cut_depth_median(path);
+      // double feedrate = estimate_feedrate_median(path);
+      // double spindle_speed = estimate_spindle_speed_median(path);
+      // double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
 
-      operation_params op{current_tool_no,
-	  tool_end_type,
-	  tool_diameter,
-	  cut_depth,
-	  feedrate,
-	  spindle_speed,
-	  sfm,
-	  total_length_inches,
-	  cut_length_inches,
-	  total_time_seconds,
-	  cut_time_seconds,
-	  material_removed,
-	  "UNKNOWN",
-	  path_op_pair.first};
+      // operation_params op{current_tool_no,
+      // 	  tool_end_type,
+      // 	  tool_diameter,
+      // 	  cut_depth,
+      // 	  feedrate,
+      // 	  spindle_speed,
+      // 	  sfm,
+      // 	  total_length_inches,
+      // 	  cut_length_inches,
+      // 	  total_time_seconds,
+      // 	  cut_time_seconds,
+      // 	  material_removed,
+      // 	  "UNKNOWN",
+      // 	  path_op_pair.first};
 
-      ops.push_back(op);
+      // ops.push_back(op);
 
-      cout << "--------------------------------------------------------" << endl;
-      cout << op << endl;
-      cout << "--------------------------------------------------------" << endl;
+      // cout << "--------------------------------------------------------" << endl;
+      // cout << op << endl;
+      // cout << "--------------------------------------------------------" << endl;
     
     }
 
-    cout << "total point updates = " << total_point_updates << endl;
-    cout << "total grid updates = " << total_grid_updates << endl;
+    // cout << "total point updates = " << total_point_updates << endl;
+    // cout << "total grid updates = " << total_grid_updates << endl;
 
     return ops;
   }
