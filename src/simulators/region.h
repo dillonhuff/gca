@@ -28,6 +28,18 @@ namespace gca {
     vector<grid_update> grid_updates;
   };
 
+  inline bool same_grid_cell(const grid_update l,
+			     const grid_update r) {
+    return l.cell == r.cell;
+  }
+
+  std::vector<grid_update> sum_updates(const std::vector<point_update>& updates);
+
+  double max_cut_depth_from_updates(const std::vector<point_update>& updates);
+
+  double volume_removed_in_update(const double resolution,
+				  const point_update& update);
+  
   class region {
   public:
     depth_field r;

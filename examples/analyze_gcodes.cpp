@@ -601,15 +601,20 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	auto prog_ops = simulate_program_GCA(p, file_name);
+	//auto prog_ops = simulate_program_GCA(p, file_name);
 	
-  	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+  	map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
-  	// std::vector<operation_range> op_ranges =
-  	//   infer_operation_ranges_HAAS(p);
+  	std::vector<operation_range> op_ranges =
+  	  infer_operation_ranges_HAAS(p);
 
-  	// vector<operation_params> prog_ops =
-  	//   program_operations_HAAS(paths, tt, op_ranges);
+  	vector<operation_params> prog_ops =
+  	  program_operations_HAAS(paths, tt, op_ranges);
+
+	for (auto& op : prog_ops) {
+	  cout << "-------------------------------------------------" << endl;
+	  cout << op << endl;
+	}
 
   	// double program_length = 0.0;
   	// double program_cut_length = 0.0;
