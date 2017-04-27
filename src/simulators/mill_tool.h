@@ -38,6 +38,23 @@ namespace gca {
     virtual bool contains(point p, const point origin, double resolution, int i, int j) const;
     inline bool in_circle(point p, double x, double y) const;
   };
+
+  class ball_nosed : public mill_tool {
+  public:
+    double diameter;
+    double radius;
+  ball_nosed(double d) : diameter(d), radius(diameter/2.0) {}
+
+    virtual inline double x_min(point p) const { return p.x - radius; }
+    virtual inline double x_max(point p) const { return p.x + radius; }
+    virtual inline double y_min(point p) const { return p.y - radius; }
+    virtual inline double y_max(point p) const { return p.y + radius; }
+    
+
+    virtual bool contains(point p, const point origin, double resolution, int i, int j) const;
+    inline bool in_circle(point p, double x, double y) const;
+  };
+
 }
 
 #endif

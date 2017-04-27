@@ -483,12 +483,18 @@ namespace gca {
 
       int current_tool_no = op_info.range.tool_number;
       double tool_diameter = op_info.tool_inf.tool_diameter;
+
       tool_end tool_end_type = op_info.tool_inf.tool_end_type;
-      cylindrical_bit t = (tool_diameter);
+      mill_tool* t;
+      if (tool_end_type != BALL_ENDMILL) {
+	t = new cylindrical_bit(tool_diameter);
+      } else {
+	t = new ball_nosed(tool_diameter);
+      }
 
       std::vector<cut_simulation_log> cut_updates;
       for (auto c : path) {
-	vector<point_update> updates = update_cut_with_logging(*c, r, t);
+	vector<point_update> updates = update_cut_with_logging(*c, r, *t);
 	cut_updates.push_back({c, updates});
       }
 
