@@ -605,6 +605,26 @@ int num_unsafe_moves(const simulation_log& l) {
   return num_unsafe_G0s;
 }
 
+ptree
+encode_json(const operation_log& sim_log) {
+  ptree p;
+  return p;
+}
+
+ptree
+encode_json(const simulation_log& sim_log) {
+  ptree p;
+  p.put("resolution", sim_log.resolution);
+
+  ptree children;
+  for (auto& op : sim_log.operation_logs) {
+    children.push_back( make_pair("", encode_json(op)) );
+  }
+
+  p.add_child("operations", children);
+  return p;
+}
+
 void
 write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pairs) {
   ptree p;
@@ -613,6 +633,7 @@ write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pa
   for (auto& file_log_pair : file_log_pairs) {
     ptree c;
     c.put("name", file_log_pair.first);
+    c.add_child("log", encode_json(file_log_pair.second));
     children.push_back( make_pair("", c) );
   }
 
