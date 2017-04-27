@@ -8,6 +8,94 @@ using namespace std;
 
 namespace gca {
 
+
+  bool same_grid_cell(const grid_update l,
+		      const grid_update r) {
+    return l.cell == r.cell; //return (l.x_ind == r.x_ind) && (l.y_ind == r.y_ind);
+  }
+
+  void sum_updates(const vector<grid_update>& new_updates,
+		   vector<grid_update>& total_updates) {
+
+    // cout << "Total updates = " << total_updates.size() << endl;
+    // cout << "New updates = " << new_updates.size() << endl;
+
+    for (auto& new_up : new_updates) {
+      bool found_update = false;
+      for (auto& total_up : total_updates) {
+	if (same_grid_cell(new_up, total_up)) {
+	  found_update = true;
+	  total_up.height_diff += new_up.height_diff;
+	  break;
+	}
+      }
+
+      if (!found_update) {
+	total_updates.push_back(new_up);
+      }
+    }
+
+  }
+
+  std::vector<grid_update> sum_updates(const std::vector<point_update>& updates) {
+    vector<grid_update> total_updates;
+    for (auto& update : updates) {
+      for (auto& gu : update.grid_updates) {
+	total_updates.push_back(gu);
+      }
+    }
+
+    sort(begin(total_updates), end(total_updates),
+	 [](const grid_update l, const grid_update& r) {
+	   if (l.cell.x_ind < r.cell.x_ind) { return true; }
+	   return l.cell.y_ind < r.cell.y_ind;
+      });
+
+    vector<vector<grid_update> > same_location_updates =
+      split_by(total_updates, [](const grid_update l, const grid_update r) {
+	  return l.cell == r.cell;
+	});
+
+    vector<grid_update> summed_updates;
+    for (auto& group : same_location_updates) {
+
+      grid_cell c = group.front().cell;
+      double total_height = 0.0;
+      for (auto& update : group) {
+	total_height += update.height_diff;
+      }
+
+      summed_updates.push_back({c, total_height});
+    }
+
+    return total_updates;
+  }
+
+  double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
+    if (updates.size() == 0) { return -1; }
+    vector<grid_update> total_updates = sum_updates(updates);
+
+    if (total_updates.size() == 0) {
+      return -1;
+    }
+    
+    grid_update largest_cut = max_e(total_updates, [](const grid_update& g) {
+	return g.height_diff;
+      });
+
+    return largest_cut.height_diff;
+  }
+
+  double volume_removed_in_update(const double resolution,
+				  const point_update& update) {
+    double volume_removed = 0.0;
+    for (auto& g : update.grid_updates) {
+      volume_removed += g.height_diff * resolution*resolution;
+    }
+
+    return volume_removed;
+  }
+  
   std::string extract_operation_name(const std::string& op) {
     string rough_str(" ROUGHING )");
     if (ends_with(op, rough_str)) {
@@ -491,232 +579,6 @@ namespace gca {
     return op_paths;
   }
 
-  std::vector<operation_params>
-  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
-			  map<int, tool_info>& tool_table,
-			  const std::vector<operation_range>& op_ranges) {
-    if (paths.size() == 0) { return {}; }
-
-    if (op_ranges.size() == 0) { return {}; }
-
-    double max_tool_diameter = 1.5;
-    auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-    //vtk_debug_depth_field(r.r);
-
-    auto all_cuts = concat_all(paths);
-
-    unsigned op_ind = 0;
-    auto active_op = op_ranges[0];
-
-    vector<pair<operation_range, vector<cut*> > > op_paths =
-      segment_cuts(paths, op_ranges);
-    // vector<cut*> current_path;
-
-    // for (auto& cut : all_cuts) {
-    //   if (cut->get_line_number() >= active_op.end_line) {
-    // 	op_paths.push_back( make_pair(active_op, current_path) );
-
-    // 	op_ind++;
-    // 	active_op = op_ranges[op_ind];
-
-    // 	current_path = {cut};
-    //   } else {
-    // 	current_path.push_back(cut);
-    //   }
-    
-    // }
-
-    // op_paths.push_back( make_pair(active_op, current_path) );
-
-    // DBG_ASSERT(op_paths.size() == op_ranges.size());
-
-    //vtk_debug_cuts(all_cuts);
-  
-    vector<operation_params> ops;
-
-    for (auto path_op_pair : op_paths) {
-
-      auto path = path_op_pair.second;
-
-      cout << "Looking up tool diameter" << endl;
-      auto c_iter = find_if(path.begin(), path.end(),
-			    [](const cut* c) { return !c->is_safe_move(); });
-
-      if (c_iter == end(path)) {
-	break;
-      }
-
-      auto c = *c_iter;
-
-      auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-      if (!(tn->is_ilit())) {
-	cout << "ERROR" << endl;
-	cout << *c << endl;
-	cout << "Active tool = " << *(c->settings.active_tool) << endl;
-	assert(false);
-      }
-      auto tl = static_cast<ilit*>(tn);
-      int current_tool_no = tl->v;
-      double tool_diameter = tool_table[current_tool_no].tool_diameter;
-      tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
-      cylindrical_bit t = (tool_diameter);
-
-      double material_removed = 0.0;
-      for (auto c : path) {
-
-	double volume_removed = update_cut(*c, r, t);      
-	// Assume no crashes since the program was submitted
-	if (!c->is_safe_move()) {
-	  material_removed += volume_removed;
-	} else {
-
-	  if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
-	    double mat_removed_tol = 0.005;
-	    if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
-	      cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
-	      cout << "line # = " << c->get_line_number() << endl;
-	      cout << *c << endl;
-	      material_removed += volume_removed;
-
-	      //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
-	    }
-	  }
-	}
-      }
-
-      double total_length_inches = 0.0;
-      double cut_length_inches = 0.0;
-
-      double total_time_seconds = execution_time_seconds(path);
-      double cut_time_seconds = 0.0;
-
-      for (auto& c : path) {
-	total_length_inches += c->length();
-
-	if (!c->is_safe_move()) {
-	  cut_length_inches += c->length();
-	  cut_time_seconds += cut_execution_time_seconds(c);
-	}
-      }
-
-      double cut_depth = estimate_cut_depth_median(path);
-      double feedrate = estimate_feedrate_median(path);
-      double spindle_speed = estimate_spindle_speed_median(path);
-      double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
-
-      operation_params op{current_tool_no,
-	  tool_end_type,
-	  tool_diameter,
-	  cut_depth,
-	  feedrate,
-	  spindle_speed,
-	  sfm,
-	  total_length_inches,
-	  cut_length_inches,
-	  total_time_seconds,
-	  cut_time_seconds,
-	  material_removed,
-	  "UNKNOWN",
-	  path_op_pair.first};
-
-      ops.push_back(op);
-
-      cout << "--------------------------------------------------------" << endl;
-      cout << op << endl;
-      cout << "--------------------------------------------------------" << endl;
-    
-    }
-
-    return ops;
-  }
-
-  bool same_grid_cell(const grid_update l,
-		      const grid_update r) {
-    return l.cell == r.cell; //return (l.x_ind == r.x_ind) && (l.y_ind == r.y_ind);
-  }
-
-  void sum_updates(const vector<grid_update>& new_updates,
-		   vector<grid_update>& total_updates) {
-
-    // cout << "Total updates = " << total_updates.size() << endl;
-    // cout << "New updates = " << new_updates.size() << endl;
-
-    for (auto& new_up : new_updates) {
-      bool found_update = false;
-      for (auto& total_up : total_updates) {
-	if (same_grid_cell(new_up, total_up)) {
-	  found_update = true;
-	  total_up.height_diff += new_up.height_diff;
-	  break;
-	}
-      }
-
-      if (!found_update) {
-	total_updates.push_back(new_up);
-      }
-    }
-
-  }
-
-  std::vector<grid_update> sum_updates(const std::vector<point_update>& updates) {
-    vector<grid_update> total_updates;
-    for (auto& update : updates) {
-      for (auto& gu : update.grid_updates) {
-	total_updates.push_back(gu);
-      }
-    }
-
-    sort(begin(total_updates), end(total_updates),
-	 [](const grid_update l, const grid_update& r) {
-	   if (l.cell.x_ind < r.cell.x_ind) { return true; }
-	   return l.cell.y_ind < r.cell.y_ind;
-      });
-
-    vector<vector<grid_update> > same_location_updates =
-      split_by(total_updates, [](const grid_update l, const grid_update r) {
-	  return l.cell == r.cell;
-	});
-
-    vector<grid_update> summed_updates;
-    for (auto& group : same_location_updates) {
-
-      grid_cell c = group.front().cell;
-      double total_height = 0.0;
-      for (auto& update : group) {
-	total_height += update.height_diff;
-      }
-
-      summed_updates.push_back({c, total_height});
-    }
-
-    return total_updates;
-  }
-
-  double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
-    if (updates.size() == 0) { return -1; }
-    vector<grid_update> total_updates = sum_updates(updates);
-
-    if (total_updates.size() == 0) {
-      return -1;
-    }
-    
-    grid_update largest_cut = max_e(total_updates, [](const grid_update& g) {
-	return g.height_diff;
-      });
-
-    return largest_cut.height_diff;
-  }
-
-  double volume_removed_in_update(const double resolution,
-				  const point_update& update) {
-    double volume_removed = 0.0;
-    for (auto& g : update.grid_updates) {
-      volume_removed += g.height_diff * resolution*resolution;
-    }
-
-    return volume_removed;
-  }
 
   struct cut_simulation_log {
     cut* c;
@@ -732,6 +594,40 @@ namespace gca {
     std::vector<cut_simulation_log> cuts;
     operation_info info;
   };
+
+  std::vector<operation_log>
+  simulate_operations(class region& r,
+		      const std::vector<pair<operation_info, std::vector<cut*> > >& op_paths) {
+
+    if (op_paths.size() == 0) { return {}; }
+
+    //vtk_debug_depth_field(r.r);
+
+    //vtk_debug_cuts(all_cuts);
+
+    vector<operation_log> operation_sim_log;
+    for (auto path_op_pair : op_paths) {
+
+      operation_info op_info = path_op_pair.first;
+      auto path = path_op_pair.second;
+
+      int current_tool_no = op_info.range.tool_number;
+      double tool_diameter = op_info.tool_inf.tool_diameter;
+      tool_end tool_end_type = op_info.tool_inf.tool_end_type;
+      cylindrical_bit t = (tool_diameter);
+
+      std::vector<cut_simulation_log> cut_updates;
+      for (auto c : path) {
+	vector<point_update> updates = update_cut_with_logging(*c, r, t);
+	cut_updates.push_back({c, updates});
+      }
+
+      operation_sim_log.push_back({cut_updates, op_info});
+
+    }
+
+    return operation_sim_log;
+  }
 
   operation_params
   build_operation_summary(const double sim_resolution,
@@ -819,6 +715,192 @@ namespace gca {
   }
 
   std::vector<pair<operation_info, vector<cut*> > >
+  segment_operations_HAAS(std::vector<std::vector<cut*> >& paths,
+			  map<int, tool_info>& tool_table,
+			  const std::vector<operation_range>& op_ranges) {
+
+    cout << "# of op ranges = " << op_ranges.size() << endl;
+
+    auto op_paths = segment_cuts(paths, op_ranges);
+
+    vector<pair<operation_info, std::vector<cut*> > > op_info_path_pairs;
+    for (auto path_op_pair : op_paths) {
+
+      auto path = path_op_pair.second;
+
+      cout << "Looking up tool diameter" << endl;
+      auto c_iter = find_if(path.begin(), path.end(),
+			    [](const cut* c) { return !c->is_safe_move(); });
+
+      if (c_iter == end(path)) {
+	break;
+      }
+
+      auto c = *c_iter;
+
+      auto tn = c->settings.active_tool;
+      if (!(tn->is_ilit())) {
+	cout << "ERROR" << endl;
+	cout << *c << endl;
+	cout << "Active tool = " << *(c->settings.active_tool) << endl;
+	assert(false);
+      }
+
+      auto tl = static_cast<ilit*>(tn);
+      int current_tool_no = tl->v;
+      double tool_diameter = tool_table[current_tool_no].tool_diameter;
+      tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
+      cylindrical_bit t = (tool_diameter);
+
+      tool_info tool_info{tool_end_type, tool_diameter};
+      op_info_path_pairs.push_back( {{path_op_pair.first, tool_info}, path} );
+
+    }
+
+    return op_info_path_pairs;
+    
+  }
+  
+  std::vector<operation_params>
+  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
+			  map<int, tool_info>& tool_table,
+			  const std::vector<operation_range>& op_ranges) {
+
+    auto op_paths = segment_operations_HAAS(paths, tool_table, op_ranges);
+
+    double max_tool_diameter = 1.5;
+
+    auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+    std::vector<operation_log> operation_sim_log =
+      simulate_operations(r, op_paths);
+
+    vector<operation_params> ops;
+
+    for (auto& op_log : operation_sim_log) {
+      ops.push_back(build_operation_summary(r.r.resolution, op_log));
+    }
+
+    return ops;
+
+    // if (paths.size() == 0) { return {}; }
+
+    // if (op_ranges.size() == 0) { return {}; }
+
+    // double max_tool_diameter = 1.5;
+    // auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+    // //vtk_debug_depth_field(r.r);
+
+    // auto all_cuts = concat_all(paths);
+
+    // unsigned op_ind = 0;
+    // auto active_op = op_ranges[0];
+
+    // vector<pair<operation_range, vector<cut*> > > op_paths =
+    //   segment_cuts(paths, op_ranges);
+
+    // //vtk_debug_cuts(all_cuts);
+  
+    // vector<operation_params> ops;
+
+    // for (auto path_op_pair : op_paths) {
+
+    //   auto path = path_op_pair.second;
+
+    //   cout << "Looking up tool diameter" << endl;
+    //   auto c_iter = find_if(path.begin(), path.end(),
+    // 			    [](const cut* c) { return !c->is_safe_move(); });
+
+    //   if (c_iter == end(path)) {
+    // 	break;
+    //   }
+
+    //   auto c = *c_iter;
+
+    //   auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
+    //   if (!(tn->is_ilit())) {
+    // 	cout << "ERROR" << endl;
+    // 	cout << *c << endl;
+    // 	cout << "Active tool = " << *(c->settings.active_tool) << endl;
+    // 	assert(false);
+    //   }
+    //   auto tl = static_cast<ilit*>(tn);
+    //   int current_tool_no = tl->v;
+    //   double tool_diameter = tool_table[current_tool_no].tool_diameter;
+    //   tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
+    //   cylindrical_bit t = (tool_diameter);
+
+    //   double material_removed = 0.0;
+    //   for (auto c : path) {
+
+    // 	double volume_removed = update_cut(*c, r, t);      
+    // 	// Assume no crashes since the program was submitted
+    // 	if (!c->is_safe_move()) {
+    // 	  material_removed += volume_removed;
+    // 	} else {
+
+    // 	  if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
+    // 	    double mat_removed_tol = 0.005;
+    // 	    if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
+    // 	      cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
+    // 	      cout << "line # = " << c->get_line_number() << endl;
+    // 	      cout << *c << endl;
+    // 	      material_removed += volume_removed;
+
+    // 	      //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
+    // 	    }
+    // 	  }
+    // 	}
+    //   }
+
+    //   double total_length_inches = 0.0;
+    //   double cut_length_inches = 0.0;
+
+    //   double total_time_seconds = execution_time_seconds(path);
+    //   double cut_time_seconds = 0.0;
+
+    //   for (auto& c : path) {
+    // 	total_length_inches += c->length();
+
+    // 	if (!c->is_safe_move()) {
+    // 	  cut_length_inches += c->length();
+    // 	  cut_time_seconds += cut_execution_time_seconds(c);
+    // 	}
+    //   }
+
+    //   double cut_depth = estimate_cut_depth_median(path);
+    //   double feedrate = estimate_feedrate_median(path);
+    //   double spindle_speed = estimate_spindle_speed_median(path);
+    //   double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
+
+    //   operation_params op{current_tool_no,
+    // 	  tool_end_type,
+    // 	  tool_diameter,
+    // 	  cut_depth,
+    // 	  feedrate,
+    // 	  spindle_speed,
+    // 	  sfm,
+    // 	  total_length_inches,
+    // 	  cut_length_inches,
+    // 	  total_time_seconds,
+    // 	  cut_time_seconds,
+    // 	  material_removed,
+    // 	  "UNKNOWN",
+    // 	  path_op_pair.first};
+
+    //   ops.push_back(op);
+
+    //   cout << "--------------------------------------------------------" << endl;
+    //   cout << op << endl;
+    //   cout << "--------------------------------------------------------" << endl;
+    
+    // }
+
+    // return ops;
+  }
+
+  std::vector<pair<operation_info, vector<cut*> > >
   segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			 map<int, tool_info>& tool_table,
 			 const std::vector<operation_range>& op_ranges) {
@@ -843,40 +925,6 @@ namespace gca {
 
     return op_info_path_pairs;
     
-  }
-
-  std::vector<operation_log>
-  simulate_operations(class region& r,
-		      const std::vector<pair<operation_info, std::vector<cut*> > >& op_paths) {
-
-    if (op_paths.size() == 0) { return {}; }
-
-    //vtk_debug_depth_field(r.r);
-
-    //vtk_debug_cuts(all_cuts);
-
-    vector<operation_log> operation_sim_log;
-    for (auto path_op_pair : op_paths) {
-
-      operation_info op_info = path_op_pair.first;
-      auto path = path_op_pair.second;
-
-      int current_tool_no = op_info.range.tool_number;
-      double tool_diameter = op_info.tool_inf.tool_diameter;
-      tool_end tool_end_type = op_info.tool_inf.tool_end_type;
-      cylindrical_bit t = (tool_diameter);
-
-      std::vector<cut_simulation_log> cut_updates;
-      for (auto c : path) {
-	vector<point_update> updates = update_cut_with_logging(*c, r, t);
-	cut_updates.push_back({c, updates});
-      }
-
-      operation_sim_log.push_back({cut_updates, op_info});
-
-    }
-
-    return operation_sim_log;
   }
 
   std::vector<operation_params>
