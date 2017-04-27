@@ -596,20 +596,50 @@ int main(int argc, char** argv) {
   // int num_processed_blocks = 0;
   // int num_failed_blocks = 0;
 
-  apply_to_gprograms(dir_name, [&all_params](const vector<block>& p, const string& file_name) {
+  std::vector<pair<string, int> > files_to_unsafe_moves;
+
+  apply_to_gprograms(dir_name, [&all_params, &files_to_unsafe_moves](const vector<block>& p, const string& file_name) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	auto prog_ops = simulate_program_GCA(p, file_name);
+	//auto prog_ops = simulate_program_GCA(p, file_name);
 	
-  	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+  	map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
-  	// std::vector<operation_range> op_ranges =
-  	//   infer_operation_ranges_HAAS(p);
+  	std::vector<operation_range> op_ranges =
+  	  infer_operation_ranges_HAAS(p);
 
-  	// vector<operation_params> prog_ops =
-  	//   program_operations_HAAS(paths, tt, op_ranges);
+	simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
+
+	int num_unsafe_G0s = 0;
+
+	for (auto& op : l.operation_logs) {
+	  for (auto& cut_log : op.cuts) {
+	    cut* c = cut_log.c;
+	    const vector<point_update>& updates = cut_log.updates;
+	    vector<grid_update> total_updates =
+	      sum_updates(updates);
+
+	    if (c->is_safe_move() &&
+		!(is_vertical(c) && ( c->get_start().z < c->get_end().z ))) {
+
+	      double vol_removed =
+		volume_removed_in_updates(l.resolution, total_updates);
+
+	      if (vol_removed > 0.0001) {
+		cout << "Volume removed in safe move!" << endl;
+		cout << *c << endl;
+		cout << "Volume removed = " << vol_removed << endl;
+		cout << "Line number = " << c->get_line_number() << endl;
+		num_unsafe_G0s++;
+	      }
+	    }
+	  }
+	}
+
+	files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
+	
 
 	// for (auto& op : prog_ops) {
 	//   cout << "-------------------------------------------------" << endl;
@@ -637,13 +667,18 @@ int main(int argc, char** argv) {
   	//   op.file_name = file_name;
   	// }
 
-  	concat(all_params, prog_ops);
+  	//concat(all_params, prog_ops);
 
   	//simulate_paths(paths, tt, mrrs);
       } else {
   	cout << "Could not process all paths: " << r << endl;
       }
     });
+
+  cout << "Files unsafe moves" << endl;
+  for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
+    cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
+  }
   
   cout << "All MRRs of programs" << endl;
 

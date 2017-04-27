@@ -39,6 +39,10 @@ namespace gca {
 
   double volume_removed_in_update(const double resolution,
 				  const point_update& update);
+
+  double
+  volume_removed_in_updates(const double resolution,
+			    const std::vector<grid_update>& sum_updates);
   
   class region {
   public:

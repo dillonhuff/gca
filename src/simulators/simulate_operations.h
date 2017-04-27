@@ -3,6 +3,7 @@
 #include "backend/cut_params.h"
 #include "gcode/cut.h"
 #include "gcode/lexer.h"
+#include "simulators/region.h"
 
 #include <map>
 
@@ -74,7 +75,26 @@ namespace gca {
     OTHER_OPERATION
   };
 
+  struct cut_simulation_log {
+    cut* c;
+    std::vector<point_update> updates;
+  };
 
+  struct operation_info {
+    operation_range range;
+    tool_info tool_inf;
+  };
+
+  struct operation_log {
+    std::vector<cut_simulation_log> cuts;
+    operation_info info;
+  };
+
+  struct simulation_log {
+    double resolution;
+    std::vector<operation_log> operation_logs;
+  };
+  
   std::map<int, tool_info> infer_tool_table_GCA(const std::vector<block>& p);
   std::map<int, tool_info> infer_tool_table_HAAS(const std::vector<block>& p);
 
@@ -106,5 +126,10 @@ namespace gca {
   double estimate_cut_depth_median(const std::vector<cut*>& path);
 
   double estimate_cut_depth_mean(const std::vector<cut*>& path);
+
+  simulation_log
+  simulation_log_HAAS(std::vector<std::vector<cut*> >& paths,
+		      map<int, tool_info>& tool_table,
+		      const std::vector<operation_range>& op_ranges);
   
 }

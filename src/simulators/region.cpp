@@ -66,6 +66,18 @@ namespace gca {
 
     return volume_removed;
   }
+
+  double
+  volume_removed_in_updates(const double resolution,
+			    const std::vector<grid_update>& sum_updates) {
+    double volume_removed = 0.0;
+
+    for (auto& g : sum_updates) {
+      volume_removed += g.height_diff * resolution*resolution;
+    }
+
+    return volume_removed;
+  }
   
   
 }

@@ -449,22 +449,6 @@ namespace gca {
     return op_paths;
   }
 
-
-  struct cut_simulation_log {
-    cut* c;
-    std::vector<point_update> updates;
-  };
-
-  struct operation_info {
-    operation_range range;
-    tool_info tool_inf;
-  };
-
-  struct operation_log {
-    std::vector<cut_simulation_log> cuts;
-    operation_info info;
-  };
-
   std::vector<operation_log>
   simulate_operations(class region& r,
 		      const std::vector<pair<operation_info, std::vector<cut*> > >& op_paths) {
@@ -504,7 +488,7 @@ namespace gca {
 
     }
 
-    vtk_debug_depth_field(r.r);
+    //vtk_debug_depth_field(r.r);
 
     return operation_sim_log;
   }
@@ -639,11 +623,11 @@ namespace gca {
     return op_info_path_pairs;
     
   }
-  
-  std::vector<operation_params>
-  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
-			  map<int, tool_info>& tool_table,
-			  const std::vector<operation_range>& op_ranges) {
+
+  simulation_log
+  simulation_log_HAAS(std::vector<std::vector<cut*> >& paths,
+		      map<int, tool_info>& tool_table,
+		      const std::vector<operation_range>& op_ranges) {
 
     auto op_paths = segment_operations_HAAS(paths, tool_table, op_ranges);
 
@@ -654,10 +638,20 @@ namespace gca {
     std::vector<operation_log> operation_sim_log =
       simulate_operations(r, op_paths);
 
+    return {r.r.resolution, operation_sim_log};
+  }
+
+  std::vector<operation_params>
+  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
+			  map<int, tool_info>& tool_table,
+			  const std::vector<operation_range>& op_ranges) {
+
+    simulation_log sim_log = simulation_log_HAAS(paths, tool_table, op_ranges);
+    
     vector<operation_params> ops;
 
-    for (auto& op_log : operation_sim_log) {
-      ops.push_back(build_operation_summary(r.r.resolution, op_log));
+    for (auto& op_log : sim_log.operation_logs) {
+      ops.push_back(build_operation_summary(sim_log.resolution, op_log));
     }
 
     return ops;
