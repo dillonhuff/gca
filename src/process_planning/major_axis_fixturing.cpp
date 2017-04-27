@@ -356,7 +356,14 @@ namespace gca {
     double highest = p.z;
     for (int i = first_x; i < last_x; i++) {
       for (int j = first_y; j < last_y; j++) {
-	if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
+
+	double bl_corner_x = r.get_origin().x + i*r.resolution;
+	double bl_corner_y = r.get_origin().y + j*r.resolution;
+	double h = static_cast<double>(r.column_height(i, j));
+	point other_pt(bl_corner_x, bl_corner_y, h);
+
+	//if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
+	if (t.contains(p, other_pt) && 
 	    r.legal_column(i, j)) {
 
 	  // double test_x = r.x_coord(i);

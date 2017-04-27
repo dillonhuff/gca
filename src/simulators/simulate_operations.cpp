@@ -498,6 +498,8 @@ namespace gca {
 	cut_updates.push_back({c, updates});
       }
 
+      delete t;
+
       operation_sim_log.push_back({cut_updates, op_info});
 
     }

@@ -104,13 +104,13 @@ namespace gca {
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
 
-	  double bl_corner_x = origin.x + i*resolution;
-	  double bl_corner_y = origin.y + j*resolution;
+	  double bl_corner_x = r.get_origin().x + i*r.resolution;
+	  double bl_corner_y = r.get_origin().y + j*r.resolution;
 	  double h = static_cast<double>(r.column_height(i, j));
 	  point other_pt(bl_corner_x, bl_corner_y, h);
 	  
-	  if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
-	      r.legal_column(i, j)) {
+	  //	  if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
+	  if (t.contains(p, other_pt) && r.legal_column(i, j)) {
 	    //double h = static_cast<double>(r.column_height(i, j));
 	    //	    if (h > p.z) {
 	    double z_diff = h - p.z;
@@ -149,9 +149,18 @@ namespace gca {
 
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
-	  if (t.contains(p, r.get_origin(), r.resolution, i, j) && !r.legal_column(i, j)) {
-	    return false;
+
+	  double bl_corner_x = r.get_origin().x + i*r.resolution;
+	  double bl_corner_y = r.get_origin().y + j*r.resolution;
+	  double h = static_cast<double>(r.column_height(i, j));
+	  point other_pt(bl_corner_x, bl_corner_y, h);
+	  
+	  if (t.contains(p, other_pt) && !r.legal_column(i, j)) {
+	    return true;
 	  }
+	  // if (t.contains(p, r.get_origin(), r.resolution, i, j) && !r.legal_column(i, j)) {
+	  //   return false;
+	  // }
 	}
       }
 
