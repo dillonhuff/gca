@@ -660,8 +660,18 @@ encode_json(const cut_simulation_log& cut_log) {
   ptree p;
 
   ptree updates;
-  for (auto& pu : cut_log.updates) {
-    updates.push_back( make_pair("", encode_json(pu)) );
+
+  if (cut_log.updates.size() > 0) {
+    vector<grid_update> sum = sum_updates(cut_log.updates);
+    // Dummy cutter location
+    point start = cut_log.updates.front().cutter_location;
+    point_update all{start, sum};
+
+    updates.push_back( make_pair("", encode_json(all)) );
+    
+    // for (auto& pu : cut_log.updates) {
+    //   updates.push_back( make_pair("", encode_json(pu)) );
+    // }
   }
 
   p.add_child("updates", updates);
