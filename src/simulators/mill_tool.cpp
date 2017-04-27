@@ -37,17 +37,22 @@ namespace gca {
     return val <= r;
   }
 
-  bool ball_nosed::contains(point p, const point other_pt) const {
+  bool ball_nosed::contains(const point p, const point other_pt) const {
     if (!in_circle(p, other_pt.x, other_pt.y)) {
       return false;
     }
 
     point sphere_center = p + point(0, 0, radius);
-    double zsq = radius*radius - sphere_center.x*sphere_center.x -
-      sphere_center.y*sphere_center.y;
-    double z = sqrt(zsq);
 
-    return z < other_pt.z;
+    double xdiff = other_pt.x - sphere_center.x;
+    double ydiff = other_pt.y - sphere_center.y;
+    
+    //    double zh = other_pt.z - sphere_center.z;
+
+    double zsq = radius*radius - xdiff*xdiff - ydiff*ydiff;
+    double z = -1*sqrt(zsq);// + sphere_center.z;
+
+    return (sphere_center.z + z) < other_pt.z;
   }
   
 }

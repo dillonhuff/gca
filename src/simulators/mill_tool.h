@@ -20,7 +20,9 @@ namespace gca {
     virtual double x_max(point p) const { DBG_ASSERT(false); }
     virtual double y_min(point p) const { DBG_ASSERT(false); }
     virtual double y_max(point p) const { DBG_ASSERT(false); }
-    
+
+    virtual ~mill_tool() {
+    }
   };
 
   class cylindrical_bit : public mill_tool {
