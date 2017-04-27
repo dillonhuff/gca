@@ -781,10 +781,9 @@ namespace gca {
     return op;
   }
 
-  std::vector<pair<operation_info, vector<cut*> > >
-  segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
-			 map<int, tool_info>& tool_table,
-			 const std::vector<operation_range>& op_ranges) {
+  std::vector<pair<operation_range, vector<cut*> > >
+  segment_cuts(std::vector<std::vector<cut*> >& paths,
+	       const std::vector<operation_range>& op_ranges) {
     if (paths.size() == 0) { return {}; }
 
     if (op_ranges.size() == 0) { return {}; }
@@ -815,7 +814,17 @@ namespace gca {
 
     DBG_ASSERT(op_paths.size() == op_ranges.size());
 
+    return op_paths;
+  }
+
+  std::vector<pair<operation_info, vector<cut*> > >
+  segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
+			 map<int, tool_info>& tool_table,
+			 const std::vector<operation_range>& op_ranges) {
+
     cout << "# of op ranges = " << op_ranges.size() << endl;
+
+    auto op_paths = segment_cuts(paths, op_ranges);
 
     vector<pair<operation_info, std::vector<cut*> > > op_info_path_pairs;
     for (auto path_op_pair : op_paths) {
