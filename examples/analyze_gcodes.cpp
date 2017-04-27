@@ -605,6 +605,22 @@ int num_unsafe_moves(const simulation_log& l) {
   return num_unsafe_G0s;
 }
 
+void
+write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pairs) {
+  ptree p;
+
+  ptree children;
+  for (auto& file_log_pair : file_log_pairs) {
+    ptree c;
+    c.put("name", file_log_pair.first);
+    children.push_back( make_pair("", c) );
+  }
+
+  p.add_child("All-ops", children);
+
+  write_json(cout, p);
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -626,9 +642,9 @@ int main(int argc, char** argv) {
   // int num_processed_blocks = 0;
   // int num_failed_blocks = 0;
 
-  std::vector<pair<string, int> > files_to_unsafe_moves;
+  std::vector<pair<string, simulation_log> > files_to_simulation_logs;
 
-  apply_to_gprograms(dir_name, [&all_params, &files_to_unsafe_moves](const vector<block>& p, const string& file_name) {
+  apply_to_gprograms(dir_name, [&all_params, &files_to_simulation_logs](const vector<block>& p, const string& file_name) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
@@ -641,6 +657,8 @@ int main(int argc, char** argv) {
 	simulation_log prog_ops = simulation_log_GCA(paths, tt, op_ranges);
 
 	cout << "# of operations = " << prog_ops.operation_logs.size() << endl;
+
+	files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
 	
   	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
@@ -685,18 +703,20 @@ int main(int argc, char** argv) {
       }
     });
 
-  cout << "Files unsafe moves" << endl;
-  for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
-    cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
-  }
+  // cout << "Files unsafe moves" << endl;
+  // for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
+  //   cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
+  // }
   
-  cout << "All MRRs of programs" << endl;
+  // cout << "All MRRs of programs" << endl;
 
-  for (auto& op : all_params) {
+  // for (auto& op : all_params) {
 
-    cout << op.average_MRR() << endl;
+  //   cout << op.average_MRR() << endl;
 
-  }
+  // }
+
+  write_logs_to_json(files_to_simulation_logs);
 
   return 0;
 
