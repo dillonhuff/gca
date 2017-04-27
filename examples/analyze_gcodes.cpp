@@ -606,8 +606,25 @@ int num_unsafe_moves(const simulation_log& l) {
 }
 
 ptree
-encode_json(const operation_log& sim_log) {
+encode_json(const tool_info& op_info) {
   ptree p;
+  p.put("tool_end_type", op_info.tool_end_type);
+  p.put("tool_diameter", op_info.tool_diameter);
+  return p;
+}
+
+ptree
+encode_json(const operation_info& op_info) {
+  ptree p;
+  p.add_child("range", encode_json(op_info.range));
+  p.add_child("tool_inf", encode_json(op_info.tool_inf));
+  return p;
+}
+
+ptree
+encode_json(const operation_log& op_log) {
+  ptree p;
+  p.add_child("info", encode_json(op_log.info));
   return p;
 }
 
