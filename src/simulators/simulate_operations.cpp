@@ -471,7 +471,7 @@ namespace gca {
 
     if (op_paths.size() == 0) { return {}; }
 
-    vtk_debug_depth_field(r.r);
+    //vtk_debug_depth_field(r.r);
 
     //vtk_debug_cuts(all_cuts);
 
@@ -487,8 +487,7 @@ namespace gca {
       tool_end tool_end_type = op_info.tool_inf.tool_end_type;
       mill_tool* t;
       if (tool_end_type != BALL_ENDMILL) {
-	//t = new cylindrical_bit(tool_diameter);
-	t = new ball_nosed(tool_diameter);
+	t = new cylindrical_bit(tool_diameter);
       } else {
 	t = new ball_nosed(tool_diameter);
       }
