@@ -131,5 +131,15 @@ namespace gca {
   simulation_log_HAAS(std::vector<std::vector<cut*> >& paths,
 		      map<int, tool_info>& tool_table,
 		      const std::vector<operation_range>& op_ranges);
+
+  simulation_log
+  simulation_log_GCA(std::vector<std::vector<cut*> >& paths,
+		     map<int, tool_info>& tool_table,
+		     const std::vector<operation_range>& op_ranges);
+
+  std::vector<pair<operation_info, vector<cut*> > >
+  segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
+			 map<int, tool_info>& tool_table,
+			 const std::vector<operation_range>& op_ranges);
   
 }

@@ -641,6 +641,7 @@ namespace gca {
     return {r.r.resolution, operation_sim_log};
   }
 
+  
   std::vector<operation_params>
   program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
 			  map<int, tool_info>& tool_table,
@@ -773,6 +774,23 @@ namespace gca {
     // return ops;
   }
 
+  simulation_log
+  simulation_log_GCA(std::vector<std::vector<cut*> >& paths,
+		     map<int, tool_info>& tool_table,
+		     const std::vector<operation_range>& op_ranges) {
+
+    auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
+
+    double max_tool_diameter = 1.5;
+
+    auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+    std::vector<operation_log> operation_sim_log =
+      simulate_operations(r, op_paths);
+
+    return {r.r.resolution, operation_sim_log};
+  }
+  
   std::vector<pair<operation_info, vector<cut*> > >
   segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			 map<int, tool_info>& tool_table,
@@ -805,21 +823,22 @@ namespace gca {
 			 map<int, tool_info>& tool_table,
 			 const std::vector<operation_range>& op_ranges) {
 
-    auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
+    simulation_log l = simulation_log_GCA(paths, tool_table, op_ranges);
+    // auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
 
-    if (op_paths.size() == 0) { return {}; }
+    // if (op_paths.size() == 0) { return {}; }
 
-    double max_tool_diameter = 1.5;
+    // double max_tool_diameter = 1.5;
 
-    auto r = set_up_region_conservative(paths, max_tool_diameter);
+    // auto r = set_up_region_conservative(paths, max_tool_diameter);
 
-    std::vector<operation_log> operation_sim_log =
-      simulate_operations(r, op_paths);
+    // std::vector<operation_log> operation_sim_log =
+    //   simulate_operations(r, op_paths);
 
     vector<operation_params> ops;
 
-    for (auto& op_log : operation_sim_log) {
-      ops.push_back(build_operation_summary(r.r.resolution, op_log));
+    for (auto& op_log : l.operation_logs) {
+      ops.push_back(build_operation_summary(l.resolution, op_log));
     }
 
     return ops;

@@ -575,6 +575,36 @@ void simulate_all_programs(const std::string& dir_name) {
 
 }
 
+int num_unsafe_moves(const simulation_log& l) {
+  int num_unsafe_G0s = 0;
+
+  for (auto& op : l.operation_logs) {
+    for (auto& cut_log : op.cuts) {
+      cut* c = cut_log.c;
+      const vector<point_update>& updates = cut_log.updates;
+      vector<grid_update> total_updates =
+	sum_updates(updates);
+
+      if (c->is_safe_move() &&
+	  !(is_vertical(c) && ( c->get_start().z < c->get_end().z ))) {
+
+	double vol_removed =
+	  volume_removed_in_updates(l.resolution, total_updates);
+
+	if (vol_removed > 0.0001) {
+	  cout << "Volume removed in safe move!" << endl;
+	  cout << *c << endl;
+	  cout << "Volume removed = " << vol_removed << endl;
+	  cout << "Line number = " << c->get_line_number() << endl;
+	  num_unsafe_G0s++;
+	}
+      }
+    }
+  }
+
+  return num_unsafe_G0s;
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -603,44 +633,24 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	//auto prog_ops = simulate_program_GCA(p, file_name);
-	
-  	map<int, tool_info> tt = infer_tool_table_HAAS(p);
+	map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_HAAS(p);
-
-	simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
-
-	int num_unsafe_G0s = 0;
-
-	for (auto& op : l.operation_logs) {
-	  for (auto& cut_log : op.cuts) {
-	    cut* c = cut_log.c;
-	    const vector<point_update>& updates = cut_log.updates;
-	    vector<grid_update> total_updates =
-	      sum_updates(updates);
-
-	    if (c->is_safe_move() &&
-		!(is_vertical(c) && ( c->get_start().z < c->get_end().z ))) {
-
-	      double vol_removed =
-		volume_removed_in_updates(l.resolution, total_updates);
-
-	      if (vol_removed > 0.0001) {
-		cout << "Volume removed in safe move!" << endl;
-		cout << *c << endl;
-		cout << "Volume removed = " << vol_removed << endl;
-		cout << "Line number = " << c->get_line_number() << endl;
-		num_unsafe_G0s++;
-	      }
-	    }
-	  }
-	}
-
-	files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
+  	  infer_operation_ranges_GCA(p);
 	
+	simulation_log prog_ops = simulation_log_GCA(paths, tt, op_ranges);
 
+	cout << "# of operations = " << prog_ops.operation_logs.size() << endl;
+	
+  	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+
+  	// std::vector<operation_range> op_ranges =
+  	//   infer_operation_ranges_HAAS(p);
+
+	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
+
+	// files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
+	
 	// for (auto& op : prog_ops) {
 	//   cout << "-------------------------------------------------" << endl;
 	//   cout << op << endl;
