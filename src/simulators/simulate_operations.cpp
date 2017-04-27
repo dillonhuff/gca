@@ -861,17 +861,6 @@ namespace gca {
       operation_info op_info = path_op_pair.first;
       auto path = path_op_pair.second;
 
-      cout << "Looking up tool diameter" << endl;
-      auto c_iter = find_if(path.begin(), path.end(),
-			    [](const cut* c) { return !c->is_safe_move(); });
-
-      if (c_iter == end(path)) {
-	cout << "No cuts in operation" << endl;
-	continue;
-      }
-
-      auto c = *c_iter;
-
       int current_tool_no = op_info.range.tool_number; //3; //tl->v;
       double tool_diameter = op_info.tool_inf.tool_diameter;
       tool_end tool_end_type = op_info.tool_inf.tool_end_type;
