@@ -622,9 +622,45 @@ encode_json(const operation_info& op_info) {
 }
 
 ptree
+encode_json(const point_update& cut_log) {
+  ptree p;
+  p.add_child("cutter_location", encode_json(cut_log.cutter_location));
+
+  ptree grid_updates;
+  for (auto& g : cut_log.grid_updates) {
+    
+  }
+
+  p.add_child("grid_updates", grid_updates);
+
+  return p;
+}
+
+ptree
+encode_json(const cut_simulation_log& cut_log) {
+  ptree p;
+
+  ptree updates;
+  for (auto& pu : cut_log.updates) {
+    updates.push_back( make_pair("", encode_json(pu)) );
+  }
+
+  p.add_child("updates", updates);
+  return p;
+}
+
+ptree
 encode_json(const operation_log& op_log) {
   ptree p;
   p.add_child("info", encode_json(op_log.info));
+
+  ptree cuts;
+  for (auto& cut_log : op_log.cuts) {
+    cuts.push_back( make_pair("", encode_json(cut_log)) );
+  }
+
+  p.add_child("cuts", cuts);
+  
   return p;
 }
 
