@@ -1,5 +1,6 @@
 #include "simulators/simulate_operations.h"
 
+#include "geometry/vtk_debug.h"
 #include "simulators/sim_mill.h"
 #include "system/file.h"
 #include "utils/algorithm.h"
@@ -118,30 +119,6 @@ namespace gca {
     }
   }
 
-  // void add_tool_GCA(map<int, tool_info>& tt, string& comment) {
-  //   string tool_comment_start = "(*** TOOL DIAMETER = ";
-  //   if (starts_with(comment, tool_comment_start)) {
-  //     cout << "Tool comment is " << comment << endl;
-  //     size_t i = -1;
-  //     int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
-  //     cout << "tool_no = " << tool_no << endl;
-  //     assert(i != -1);
-  //     string rest = comment.substr(tool_comment_start.size() + i);
-
-  //     cout << "Rest of comment = " << rest << endl;
-
-  //     size_t j = -1;
-  //     double tool_diameter = stod(rest, &j);
-  //     string tool_comment = rest.substr(j + 1);
-  //     tool_end end = read_tool_end(tool_comment);
-    
-  //     cout << "tool diameter = " << tool_diameter << endl;
-  //     tool_info tf{end, tool_diameter};
-  //     tt[tool_no] = tf;
-  //   }
-  // }
-
-  
   map<int, tool_info> infer_tool_table_HAAS(const vector<block>& p) {
     vector<token> comments;
     for (auto b : p) {
@@ -203,14 +180,6 @@ namespace gca {
 	token tool_no_comment = comments[num_comment_ind];
 
 	int tool_no = extract_tool_number_GCA(tool_no_comment.text);
-	// string rest = comment.substr(tool_comment_start.size() + i);
-
-	// cout << "Rest of comment = " << rest << endl;
-
-	// size_t j = -1;
-	// double tool_diameter = stod(rest, &j);
-	// string tool_comment = rest.substr(j + 1);
-	// tool_end end = read_tool_end(tool_comment);
     
 	// cout << "tool diameter = " << tool_diameter << endl;
 	tool_info tf{ROUGH_ENDMILL, tool_diameter};
@@ -242,20 +211,9 @@ namespace gca {
 
 	cout << "Length comment is " << comment << endl;
 
-	// size_t i = -1;
-	// int tool_no = stoi(comment.substr(tool_comment_start.size()), &i);
-	// cout << "tool_no = " << tool_no << endl;
-	// DBG_ASSERT(i != -1);
-      
 	double len = stod(comment.substr(len_comment_start.size()));
 
 	cout << "length = " << len << endl;
-
-	//string rest = comment.substr(len_comment_start.size() + i);
-
-	//double tool_diameter = stod(rest);
-
-	//cout << "tool diameter = " << tool_diameter << endl;
 
 	return len;
       }
@@ -513,7 +471,7 @@ namespace gca {
 
     if (op_paths.size() == 0) { return {}; }
 
-    //vtk_debug_depth_field(r.r);
+    vtk_debug_depth_field(r.r);
 
     //vtk_debug_cuts(all_cuts);
 
@@ -537,6 +495,8 @@ namespace gca {
       operation_sim_log.push_back({cut_updates, op_info});
 
     }
+
+    vtk_debug_depth_field(r.r);
 
     return operation_sim_log;
   }
@@ -662,7 +622,6 @@ namespace gca {
       int current_tool_no = tl->v;
       double tool_diameter = tool_table[current_tool_no].tool_diameter;
       tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
-      cylindrical_bit t = (tool_diameter);
 
       tool_info tool_info{tool_end_type, tool_diameter};
       op_info_path_pairs.push_back( {{path_op_pair.first, tool_info}, path} );
