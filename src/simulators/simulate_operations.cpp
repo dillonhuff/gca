@@ -490,6 +490,7 @@ namespace gca {
 	t = new cylindrical_bit(tool_diameter);
       } else {
 	t = new ball_nosed(tool_diameter);
+	DBG_ASSERT(false);
       }
 
       std::vector<cut_simulation_log> cut_updates;
