@@ -103,17 +103,22 @@ namespace gca {
       
       for (int i = first_x; i < last_x; i++) {
 	for (int j = first_y; j < last_y; j++) {
+
+	  double bl_corner_x = origin.x + i*resolution;
+	  double bl_corner_y = origin.y + j*resolution;
+	  double h = static_cast<double>(r.column_height(i, j));
+	  point other_pt(bl_corner_x, bl_corner_y, h);
+	  
 	  if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
 	      r.legal_column(i, j)) {
-	    double h = static_cast<double>(r.column_height(i, j));
-	    if (h > p.z) {
-	      double z_diff = h - p.z;
-	      r.set_column_height(i, j, p.z);
-
-	      grid_updates.push_back({{i, j}, z_diff});
+	    //double h = static_cast<double>(r.column_height(i, j));
+	    //	    if (h > p.z) {
+	    double z_diff = h - p.z;
+	    r.set_column_height(i, j, p.z);
+	    grid_updates.push_back({{i, j}, z_diff});
 
 	      //volume_removed += r.resolution*r.resolution*z_diff;
-	    }
+	      //	    }
 	  }
 	}
       }
@@ -133,28 +138,6 @@ namespace gca {
       }
 
       return volume_removed;
-
-      // int first_x = r.x_index(t.x_min(p));
-      // int last_x = r.x_index(t.x_max(p)) + 1;
-      // int first_y = r.y_index(t.y_min(p));
-      // int last_y = r.y_index(t.y_max(p)) + 1;
-      
-      // for (int i = first_x; i < last_x; i++) {
-      // 	for (int j = first_y; j < last_y; j++) {
-      // 	  if (t.contains(p, r.get_origin(), r.resolution, i, j) &&
-      // 	      r.legal_column(i, j)) {
-      // 	    double h = static_cast<double>(r.column_height(i, j));
-      // 	    if (h > p.z) {
-      // 	      double z_diff = h - p.z;
-      // 	      r.set_column_height(i, j, p.z);
-      // 	      volume_removed += r.resolution*r.resolution*z_diff;
-      // 	    }
-      // 	  }
-      // 	}
-      // }
-
-      // total_volume_removed += volume_removed;
-      // return volume_removed;
     }
 
     inline bool in_region(point p, const mill_tool& t) const {
