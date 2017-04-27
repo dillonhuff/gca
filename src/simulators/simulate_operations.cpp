@@ -455,18 +455,12 @@ namespace gca {
     return out;
   }
 
-  std::vector<operation_params>
-  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
-			  map<int, tool_info>& tool_table,
-			  const std::vector<operation_range>& op_ranges) {
+  std::vector<pair<operation_range, vector<cut*> > >
+  segment_cuts(std::vector<std::vector<cut*> >& paths,
+	       const std::vector<operation_range>& op_ranges) {
     if (paths.size() == 0) { return {}; }
 
     if (op_ranges.size() == 0) { return {}; }
-
-    double max_tool_diameter = 1.5;
-    auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-    //vtk_debug_depth_field(r.r);
 
     auto all_cuts = concat_all(paths);
 
@@ -493,6 +487,49 @@ namespace gca {
     op_paths.push_back( make_pair(active_op, current_path) );
 
     DBG_ASSERT(op_paths.size() == op_ranges.size());
+
+    return op_paths;
+  }
+
+  std::vector<operation_params>
+  program_operations_HAAS(std::vector<std::vector<cut*> >& paths,
+			  map<int, tool_info>& tool_table,
+			  const std::vector<operation_range>& op_ranges) {
+    if (paths.size() == 0) { return {}; }
+
+    if (op_ranges.size() == 0) { return {}; }
+
+    double max_tool_diameter = 1.5;
+    auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+    //vtk_debug_depth_field(r.r);
+
+    auto all_cuts = concat_all(paths);
+
+    unsigned op_ind = 0;
+    auto active_op = op_ranges[0];
+
+    vector<pair<operation_range, vector<cut*> > > op_paths =
+      segment_cuts(paths, op_ranges);
+    // vector<cut*> current_path;
+
+    // for (auto& cut : all_cuts) {
+    //   if (cut->get_line_number() >= active_op.end_line) {
+    // 	op_paths.push_back( make_pair(active_op, current_path) );
+
+    // 	op_ind++;
+    // 	active_op = op_ranges[op_ind];
+
+    // 	current_path = {cut};
+    //   } else {
+    // 	current_path.push_back(cut);
+    //   }
+    
+    // }
+
+    // op_paths.push_back( make_pair(active_op, current_path) );
+
+    // DBG_ASSERT(op_paths.size() == op_ranges.size());
 
     //vtk_debug_cuts(all_cuts);
   
@@ -779,42 +816,6 @@ namespace gca {
 	op_log.info.range};
 
     return op;
-  }
-
-  std::vector<pair<operation_range, vector<cut*> > >
-  segment_cuts(std::vector<std::vector<cut*> >& paths,
-	       const std::vector<operation_range>& op_ranges) {
-    if (paths.size() == 0) { return {}; }
-
-    if (op_ranges.size() == 0) { return {}; }
-
-    auto all_cuts = concat_all(paths);
-
-    unsigned op_ind = 0;
-    auto active_op = op_ranges[0];
-
-    vector<pair<operation_range, vector<cut*> > > op_paths;
-    vector<cut*> current_path;
-
-    for (auto& cut : all_cuts) {
-      if (cut->get_line_number() >= active_op.end_line) {
-	op_paths.push_back( make_pair(active_op, current_path) );
-
-	op_ind++;
-	active_op = op_ranges[op_ind];
-
-	current_path = {cut};
-      } else {
-	current_path.push_back(cut);
-      }
-    
-    }
-
-    op_paths.push_back( make_pair(active_op, current_path) );
-
-    DBG_ASSERT(op_paths.size() == op_ranges.size());
-
-    return op_paths;
   }
 
   std::vector<pair<operation_info, vector<cut*> > >
