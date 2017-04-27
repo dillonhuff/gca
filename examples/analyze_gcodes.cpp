@@ -622,13 +622,32 @@ encode_json(const operation_info& op_info) {
 }
 
 ptree
+encode_json(const grid_cell& cell) {
+  ptree p;
+  p.put("x_ind", cell.x_ind);
+  p.put("y_ind", cell.y_ind);
+
+  return p;
+}
+
+ptree
+encode_json(const grid_update& cell) {
+  ptree p;
+
+  p.add_child("cell", encode_json(cell.cell));
+  p.put("height_diff", cell.height_diff);
+
+  return p;
+}
+
+ptree
 encode_json(const point_update& cut_log) {
   ptree p;
   p.add_child("cutter_location", encode_json(cut_log.cutter_location));
 
   ptree grid_updates;
   for (auto& g : cut_log.grid_updates) {
-    
+    grid_updates.push_back( make_pair("", encode_json(g)) );
   }
 
   p.add_child("grid_updates", grid_updates);
