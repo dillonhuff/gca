@@ -835,25 +835,15 @@ namespace gca {
     
   }
 
-  std::vector<operation_params>
-  program_operations_GCA(std::vector<std::vector<cut*> >& paths,
-			 map<int, tool_info>& tool_table,
-			 const std::vector<operation_range>& op_ranges) {
-
-    auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
+  std::vector<operation_log>
+  simulate_operations(class region& r,
+		      const std::vector<pair<operation_info, std::vector<cut*> > >& op_paths) {
 
     if (op_paths.size() == 0) { return {}; }
-
-    double max_tool_diameter = 1.5;
-    auto r = set_up_region_conservative(paths, max_tool_diameter);
 
     //vtk_debug_depth_field(r.r);
 
     //vtk_debug_cuts(all_cuts);
-    vector<operation_params> ops;
-
-    int total_point_updates = 0;
-    int total_grid_updates = 0;
 
     vector<operation_log> operation_sim_log;
     for (auto path_op_pair : op_paths) {
@@ -861,22 +851,39 @@ namespace gca {
       operation_info op_info = path_op_pair.first;
       auto path = path_op_pair.second;
 
-      int current_tool_no = op_info.range.tool_number; //3; //tl->v;
+      int current_tool_no = op_info.range.tool_number;
       double tool_diameter = op_info.tool_inf.tool_diameter;
       tool_end tool_end_type = op_info.tool_inf.tool_end_type;
       cylindrical_bit t = (tool_diameter);
 
       std::vector<cut_simulation_log> cut_updates;
       for (auto c : path) {
-
 	vector<point_update> updates = update_cut_with_logging(*c, r, t);
 	cut_updates.push_back({c, updates});
-
       }
 
       operation_sim_log.push_back({cut_updates, op_info});
 
     }
+
+    return operation_sim_log;
+  }
+
+  std::vector<operation_params>
+  program_operations_GCA(std::vector<std::vector<cut*> >& paths,
+			 map<int, tool_info>& tool_table,
+			 const std::vector<operation_range>& op_ranges) {
+
+    auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
+
+    double max_tool_diameter = 1.5;
+
+    auto r = set_up_region_conservative(paths, max_tool_diameter);
+
+    std::vector<operation_log> operation_sim_log =
+      simulate_operations(r, op_paths);
+
+    vector<operation_params> ops;
 
     for (auto& op_log : operation_sim_log) {
       ops.push_back(build_operation_summary(r.r.resolution, op_log));
