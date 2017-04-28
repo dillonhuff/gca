@@ -1,5 +1,6 @@
 #include <cassert>
 #include <ctime>
+#include <future>
 #include <map>
 #include <numeric>
 #include <streambuf>
