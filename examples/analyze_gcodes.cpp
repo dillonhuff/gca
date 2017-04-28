@@ -746,32 +746,36 @@ int main(int argc, char** argv) {
   // int num_failed_blocks = 0;
 
   std::vector<pair<string, simulation_log> > files_to_simulation_logs;
+  std::vector<pair<string, int> > files_to_unsafe_moves;
 
-  apply_to_gprograms(dir_name, [&all_params, &files_to_simulation_logs](const vector<block>& p, const string& file_name) {
+  apply_to_gprograms(dir_name, [&all_params, &files_to_unsafe_moves](const vector<block>& p, const string& file_name) {
       vector<vector<cut*>> paths;
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	map<int, tool_info> tt = infer_tool_table_GCA(p);
-
-  	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_GCA(p);
-	
-	simulation_log prog_ops = simulation_log_GCA(paths, tt, op_ranges);
-
-	cout << "# of operations = " << prog_ops.operation_logs.size() << endl;
-	cout << "# of unsafe moves = " << num_unsafe_moves(prog_ops) << endl;
-
-	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
-	
-  	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+	// map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	// std::vector<operation_range> op_ranges =
-  	//   infer_operation_ranges_HAAS(p);
+  	//   infer_operation_ranges_GCA(p);
+	
+	// simulation_log prog_ops = simulation_log_GCA(paths, tt, op_ranges);
 
-	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
+	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
 
-	// files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
+	//cout << "# of operations = " << prog_ops.operation_logs.size() << endl;
+
+	map<int, tool_info> tt = infer_tool_table_HAAS(p);
+
+  	std::vector<operation_range> op_ranges =
+  	  infer_operation_ranges_HAAS(p);
+
+	simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
+
+	int num_unsafe_G0s = num_unsafe_moves(l);
+
+	cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
+	
+	files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
 	
 	// for (auto& op : prog_ops) {
 	//   cout << "-------------------------------------------------" << endl;
@@ -807,11 +811,11 @@ int main(int argc, char** argv) {
       }
     });
 
-  // cout << "Files unsafe moves" << endl;
-  // for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
-  //   cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
-  // }
-  
+  cout << "Files unsafe moves" << endl;
+  for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
+    cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
+  }
+
   // cout << "All MRRs of programs" << endl;
 
   // for (auto& op : all_params) {
