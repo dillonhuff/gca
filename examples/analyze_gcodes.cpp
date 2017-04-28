@@ -31,6 +31,21 @@
 using namespace gca;
 using namespace std;
 
+using int_futures = std::vector<std::future<int>>;
+
+int accumulate_block_worker_ret(string* data, size_t count) {
+  return count; //std::accumulate(data, data + count, 0);
+}
+
+int_futures launch_split_workers_with_std_async(std::vector<string>& v) {
+  int_futures futures;
+  futures.push_back(std::async(std::launch::async, accumulate_block_worker_ret,
+                               v.data(), v.size() / 2));
+  futures.push_back(std::async(std::launch::async, accumulate_block_worker_ret,
+                               v.data() + v.size() / 2, v.size() / 2));
+  return futures;
+}
+
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
 
@@ -55,6 +70,14 @@ void apply_to_gprograms(const string& dn, F f) {
   for (auto& n : names) {
     cout << n << endl;
   }
+
+  auto fs = launch_split_workers_with_std_async(names);
+  int total = 0;
+  for (auto& f : fs) {
+    total += f.get();
+  }
+
+  cout << "total = " << total << endl;
   
   // auto func = [&f](const string& dir_name) {
   //   if (ends_with(dir_name, ".NCF")) {
