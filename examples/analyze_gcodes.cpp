@@ -37,15 +37,21 @@ int accumulate_block_worker_ret(string* data, size_t count) {
   return 0; //std::accumulate(data, data + count, 0);
 }
 
-int apply_to_each(std::vector<string>& v,
-		  unsigned start,
-		  unsigned end) {
-  return 0;
-}
+template<typename F>
+int apply_to_each(std::vector<string> const * const v,
+		  const unsigned start,
+		  const unsigned end,
+		  F f) {
 
-int apply_void(std::vector<string>* v,
-	       const unsigned start,
-	       const unsigned end) {
+  for (auto& dir_name : *v) {
+    std::ifstream t(dir_name);
+    std::string str((std::istreambuf_iterator<char>(t)),
+		    std::istreambuf_iterator<char>());
+    vector<block> p = lex_gprog(str);
+    cout << "NUM BLOCKS: " << p.size() << endl;
+    f(p, dir_name);
+  }
+  
   return 0;
 }
 
@@ -53,11 +59,11 @@ int_futures launch_split_workers_with_std_async(std::vector<string>& v) {
   unsigned split = v.size() / 2;
 
   int_futures futures;
-  futures.push_back(std::async(std::launch::async, apply_void, &v, 0, split));
-			       //                               v, 0, split));
+  futures.push_back(std::async(std::launch::async, apply_to_each,
+			       &v, 0, split, f));
 
-  futures.push_back(std::async(std::launch::async, apply_void, &v, split, v.size()));
-			       //			       v, split, v.size()));
+  futures.push_back(std::async(std::launch::async, apply_to_each,
+			       &v, split, v.size(), f));
   
   // int_futures futures;
   // futures.push_back(std::async(std::launch::async, accumulate_block_worker_ret,
