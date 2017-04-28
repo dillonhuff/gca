@@ -760,8 +760,9 @@ int main(int argc, char** argv) {
 	simulation_log prog_ops = simulation_log_GCA(paths, tt, op_ranges);
 
 	cout << "# of operations = " << prog_ops.operation_logs.size() << endl;
+	cout << "# of unsafe moves = " << num_unsafe_moves(prog_ops) << endl;
 
-	files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
+	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
 	
   	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
@@ -819,7 +820,7 @@ int main(int argc, char** argv) {
 
   // }
 
-  write_logs_to_json(files_to_simulation_logs);
+  //write_logs_to_json(files_to_simulation_logs);
 
   return 0;
 

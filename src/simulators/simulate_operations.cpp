@@ -657,121 +657,6 @@ namespace gca {
 
     return ops;
 
-    // if (paths.size() == 0) { return {}; }
-
-    // if (op_ranges.size() == 0) { return {}; }
-
-    // double max_tool_diameter = 1.5;
-    // auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-    // //vtk_debug_depth_field(r.r);
-
-    // auto all_cuts = concat_all(paths);
-
-    // unsigned op_ind = 0;
-    // auto active_op = op_ranges[0];
-
-    // vector<pair<operation_range, vector<cut*> > > op_paths =
-    //   segment_cuts(paths, op_ranges);
-
-    // //vtk_debug_cuts(all_cuts);
-  
-    // vector<operation_params> ops;
-
-    // for (auto path_op_pair : op_paths) {
-
-    //   auto path = path_op_pair.second;
-
-    //   cout << "Looking up tool diameter" << endl;
-    //   auto c_iter = find_if(path.begin(), path.end(),
-    // 			    [](const cut* c) { return !c->is_safe_move(); });
-
-    //   if (c_iter == end(path)) {
-    // 	break;
-    //   }
-
-    //   auto c = *c_iter;
-
-    //   auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-    //   if (!(tn->is_ilit())) {
-    // 	cout << "ERROR" << endl;
-    // 	cout << *c << endl;
-    // 	cout << "Active tool = " << *(c->settings.active_tool) << endl;
-    // 	assert(false);
-    //   }
-    //   auto tl = static_cast<ilit*>(tn);
-    //   int current_tool_no = tl->v;
-    //   double tool_diameter = tool_table[current_tool_no].tool_diameter;
-    //   tool_end tool_end_type = tool_table[current_tool_no].tool_end_type;
-    //   cylindrical_bit t = (tool_diameter);
-
-    //   double material_removed = 0.0;
-    //   for (auto c : path) {
-
-    // 	double volume_removed = update_cut(*c, r, t);      
-    // 	// Assume no crashes since the program was submitted
-    // 	if (!c->is_safe_move()) {
-    // 	  material_removed += volume_removed;
-    // 	} else {
-
-    // 	  if (!(is_vertical(c) && (c->get_start().z < c->get_end().z))) {
-    // 	    double mat_removed_tol = 0.005;
-    // 	    if (!within_eps(volume_removed, 0.0, mat_removed_tol)) {
-    // 	      cout << "Safe move cuts " << volume_removed << " inches^3 of material!" << endl;
-    // 	      cout << "line # = " << c->get_line_number() << endl;
-    // 	      cout << *c << endl;
-    // 	      material_removed += volume_removed;
-
-    // 	      //DBG_ASSERT(within_eps(volume_removed, 0.0, mat_removed_tol));
-    // 	    }
-    // 	  }
-    // 	}
-    //   }
-
-    //   double total_length_inches = 0.0;
-    //   double cut_length_inches = 0.0;
-
-    //   double total_time_seconds = execution_time_seconds(path);
-    //   double cut_time_seconds = 0.0;
-
-    //   for (auto& c : path) {
-    // 	total_length_inches += c->length();
-
-    // 	if (!c->is_safe_move()) {
-    // 	  cut_length_inches += c->length();
-    // 	  cut_time_seconds += cut_execution_time_seconds(c);
-    // 	}
-    //   }
-
-    //   double cut_depth = estimate_cut_depth_median(path);
-    //   double feedrate = estimate_feedrate_median(path);
-    //   double spindle_speed = estimate_spindle_speed_median(path);
-    //   double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
-
-    //   operation_params op{current_tool_no,
-    // 	  tool_end_type,
-    // 	  tool_diameter,
-    // 	  cut_depth,
-    // 	  feedrate,
-    // 	  spindle_speed,
-    // 	  sfm,
-    // 	  total_length_inches,
-    // 	  cut_length_inches,
-    // 	  total_time_seconds,
-    // 	  cut_time_seconds,
-    // 	  material_removed,
-    // 	  "UNKNOWN",
-    // 	  path_op_pair.first};
-
-    //   ops.push_back(op);
-
-    //   cout << "--------------------------------------------------------" << endl;
-    //   cout << op << endl;
-    //   cout << "--------------------------------------------------------" << endl;
-    
-    // }
-
-    // return ops;
   }
 
   simulation_log
@@ -815,7 +700,6 @@ namespace gca {
     }
 
     return op_info_path_pairs;
-    
   }
 
   std::vector<operation_params>
