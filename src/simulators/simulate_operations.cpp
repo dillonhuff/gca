@@ -631,6 +631,8 @@ namespace gca {
 
     auto op_paths = segment_operations_HAAS(paths, tool_table, op_ranges);
 
+    if (op_paths.size() == 0) { return {0.01, {}}; }    
+
     double max_tool_diameter = 1.5;
 
     auto r = set_up_region_conservative(paths, max_tool_diameter);
@@ -666,6 +668,7 @@ namespace gca {
 
     auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
 
+    if (op_paths.size() == 0) { return {0.01, {}}; }
     double max_tool_diameter = 1.5;
 
     auto r = set_up_region_conservative(paths, max_tool_diameter);

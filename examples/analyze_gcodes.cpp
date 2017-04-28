@@ -93,7 +93,7 @@ int_futures launch_split_workers_with_std_async(std::vector<string>& v) {
 }
 
 template<typename F>
-void apply_to_gprograms(const string& dn, F f) {
+void apply_to_gprograms_parallel(const string& dn, F f) {
 
   std::vector<std::string> names;
 
@@ -130,6 +130,24 @@ void apply_to_gprograms(const string& dn, F f) {
   //   }
   // };
   // read_dir(dn, func);
+}
+
+template<typename F>
+void apply_to_gprograms(const string& dn, F f) {
+
+  auto func = [&f](const string& dir_name) {
+    if (ends_with(dir_name, ".NCF")) {
+      cout << dir_name << endl;
+      std::ifstream t(dir_name);
+      std::string str((std::istreambuf_iterator<char>(t)),
+  		      std::istreambuf_iterator<char>());
+      vector<block> p = lex_gprog(str);
+      cout << "NUM BLOCKS: " << p.size() << endl;
+      f(p, dir_name);
+    }
+  };
+  read_dir(dn, func);
+  
 }
 
 vector<cut*> clip_transition_heights(const vector<cut*>& path,
