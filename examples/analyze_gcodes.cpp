@@ -31,27 +31,46 @@
 using namespace gca;
 using namespace std;
 
+int num_unsafe_moves(const simulation_log& l);
+
 using int_futures = std::vector<std::future<int>>;
 
 int accumulate_block_worker_ret(string* data, size_t count) {
   return 0; //std::accumulate(data, data + count, 0);
 }
 
-template<typename F>
 int apply_to_each(std::vector<string> const * const v,
 		  const unsigned start,
-		  const unsigned end,
-		  F f) {
+		  const unsigned end) {
 
-  for (auto& dir_name : *v) {
+  //  for (auto& dir_name : *v) {
+  for (unsigned i = start; i < end; i++) {
+    string dir_name = (*v)[i];
+
     std::ifstream t(dir_name);
     std::string str((std::istreambuf_iterator<char>(t)),
 		    std::istreambuf_iterator<char>());
     vector<block> p = lex_gprog(str);
     cout << "NUM BLOCKS: " << p.size() << endl;
-    f(p, dir_name);
-  }
+
+    vector<vector<cut*>> paths;
+    auto r = gcode_to_cuts(p, paths);
+    if (r == GCODE_TO_CUTS_SUCCESS) {
+
+      // map<int, tool_info> tt = infer_tool_table_GCA(p);
+
+      // std::vector<operation_range> op_ranges =
+      // 	infer_operation_ranges_GCA(p);
+
+      // simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
+
+      // int num_unsafe_G0s = num_unsafe_moves(l);
+
+      // cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
+
+    }
   
+  }
   return 0;
 }
 
@@ -60,10 +79,10 @@ int_futures launch_split_workers_with_std_async(std::vector<string>& v) {
 
   int_futures futures;
   futures.push_back(std::async(std::launch::async, apply_to_each,
-			       &v, 0, split, f));
+			       &v, 0, split));
 
   futures.push_back(std::async(std::launch::async, apply_to_each,
-			       &v, split, v.size(), f));
+			       &v, split, v.size()));
   
   // int_futures futures;
   // futures.push_back(std::async(std::launch::async, accumulate_block_worker_ret,
