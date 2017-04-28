@@ -33,18 +33,41 @@ using namespace std;
 
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
-  auto func = [&f](const string& dir_name) {
+
+  std::vector<std::string> names;
+
+  auto func = [&names](const string& dir_name) {
     if (ends_with(dir_name, ".NCF")) {
       cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      f(p, dir_name);
+      names.push_back(dir_name);
+
+      // std::ifstream t(dir_name);
+      // std::string str((std::istreambuf_iterator<char>(t)),
+      // 		      std::istreambuf_iterator<char>());
+      // vector<block> p = lex_gprog(str);
+      // cout << "NUM BLOCKS: " << p.size() << endl;
+      // f(p, dir_name);
     }
   };
   read_dir(dn, func);
+
+  cout << "# of names = " << names.size() << endl;
+  for (auto& n : names) {
+    cout << n << endl;
+  }
+  
+  // auto func = [&f](const string& dir_name) {
+  //   if (ends_with(dir_name, ".NCF")) {
+  //     cout << dir_name << endl;
+  //     std::ifstream t(dir_name);
+  //     std::string str((std::istreambuf_iterator<char>(t)),
+  // 		      std::istreambuf_iterator<char>());
+  //     vector<block> p = lex_gprog(str);
+  //     cout << "NUM BLOCKS: " << p.size() << endl;
+  //     f(p, dir_name);
+  //   }
+  // };
+  // read_dir(dn, func);
 }
 
 vector<cut*> clip_transition_heights(const vector<cut*>& path,
