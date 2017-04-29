@@ -95,8 +95,10 @@ namespace gca {
       return total_volume_removed;
     }
 
-    point_update update_at_point(const point p, const mill_tool& t) {
+    point_update update_at_point(const point pt, const mill_tool& t) {
       //double volume_removed = 0.0;
+
+      point p = machine_coords_to_region_coords(pt);
 
       vector<grid_update> grid_updates;
 
