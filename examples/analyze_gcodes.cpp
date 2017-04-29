@@ -857,23 +857,23 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	// map<int, tool_info> tt = infer_tool_table_GCA(p);
+	map<int, tool_info> tt = infer_tool_table_GCA(p);
 
-  	// std::vector<operation_range> op_ranges =
-  	//   infer_operation_ranges_GCA(p);
+  	std::vector<operation_range> op_ranges =
+  	  infer_operation_ranges_GCA(p);
 	
-	// simulation_log prog_ops = simulation_log_GCA(paths, tt, op_ranges);
+	simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
 
 	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
 
-	//cout << "# of operations = " << prog_ops.operation_logs.size() << endl;
+	cout << "# of operations = " << l.operation_logs.size() << endl;
 
-	map<int, tool_info> tt = infer_tool_table_HAAS(p);
+	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
-  	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_HAAS(p);
+  	// std::vector<operation_range> op_ranges =
+  	//   infer_operation_ranges_HAAS(p);
 
-	simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
+	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
 
 	int num_unsafe_G0s = num_unsafe_moves(l);
 
