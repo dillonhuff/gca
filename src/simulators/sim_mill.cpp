@@ -7,8 +7,8 @@
 namespace gca {
 
   region bounding_region(double tool_diameter, box b, double material_height) {
-    double x_len = b.x_max - b.x_min + 5*tool_diameter;
-    double y_len = b.y_max - b.y_min + 5*tool_diameter;
+    double x_len = b.x_max - b.x_min;// + 5*tool_diameter;
+    double y_len = b.y_max - b.y_min;// + 5*tool_diameter;
     double z_len = b.z_max - b.z_min;
 
     // if (!(b.z_max > material_height)) {
@@ -19,8 +19,8 @@ namespace gca {
     // }
 
     region r(x_len, y_len, z_len, 0.01);
-    r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
-    r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
+    r.set_machine_x_offset(-b.x_min);// + 2*tool_diameter);
+    r.set_machine_y_offset(-b.y_min);// + 2*tool_diameter);
     r.set_machine_z_offset(-b.z_min);
 
     // TODO: Find better way to express the safe z value in the
