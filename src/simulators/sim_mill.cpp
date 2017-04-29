@@ -42,17 +42,17 @@ namespace gca {
     return bounding_region(tool_diameter, b, safe_z);
   }
 
-  void check_region_bounds(const point e, const region& r, const mill_tool& t) {
-    if (!r.in_region(e, t)) {
-      cout << e << " goes outside of region bounds" << endl;
-      cout << "Region x len: " << r.r.x_len << endl;
-      cout << "Region y len: " << r.r.y_len << endl;
-      cout << "Machine x offset: " << r.machine_x_offset << endl;
-      cout << "Machine y offset: " << r.machine_y_offset << endl;
-      cout << "Machine z offset: " << r.machine_z_offset << endl;
-      DBG_ASSERT(false);
-    }
-  }
+  // void check_region_bounds(const point e, const region& r, const mill_tool& t) {
+  //   if (!r.in_region(e, t)) {
+  //     cout << e << " goes outside of region bounds" << endl;
+  //     cout << "Region x len: " << r.r.x_len << endl;
+  //     cout << "Region y len: " << r.r.y_len << endl;
+  //     cout << "Machine x offset: " << r.machine_x_offset << endl;
+  //     cout << "Machine y offset: " << r.machine_y_offset << endl;
+  //     cout << "Machine z offset: " << r.machine_z_offset << endl;
+  //     DBG_ASSERT(false);
+  //   }
+  // }
 
   double update_cut(const cut& c, region& r, const mill_tool& t) {
     double volume_removed = 0.0;
