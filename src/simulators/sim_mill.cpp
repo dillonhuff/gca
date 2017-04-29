@@ -10,18 +10,22 @@ namespace gca {
     double x_len = b.x_max - b.x_min + 5*tool_diameter;
     double y_len = b.y_max - b.y_min + 5*tool_diameter;
     double z_len = b.z_max - b.z_min;
+
     // if (!(b.z_max > material_height)) {
     //   cout << "ERROR" << endl;
     //   cout << "z_max = " << b.z_max << endl;
     //   cout << "material height = " << material_height << endl;
     //   DBG_ASSERT(false);
     // }
+
     region r(x_len, y_len, z_len, 0.01);
     r.set_machine_x_offset(-b.x_min + 2*tool_diameter);
     r.set_machine_y_offset(-b.y_min + 2*tool_diameter);
     r.set_machine_z_offset(-b.z_min);
+
     // TODO: Find better way to express the safe z value in the
     // machine coordinate system
+
     point safe_machine_point(0, 0, material_height);
     point safe_region_point = r.machine_coords_to_region_coords(safe_machine_point);
     r.r.set_height(0, x_len, 0, y_len, safe_region_point.z);
