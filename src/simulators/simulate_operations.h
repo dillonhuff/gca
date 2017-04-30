@@ -94,6 +94,8 @@ namespace gca {
     double resolution;
     std::vector<operation_log> operation_logs;
   };
+
+  std::string to_string(const tool_end l);
   
   std::map<int, tool_info> infer_tool_table_GCA(const std::vector<block>& p);
   std::map<int, tool_info> infer_tool_table_HAAS(const std::vector<block>& p);

@@ -34,7 +34,7 @@ namespace gca {
     for (auto c : path) {
       bound_pts.push_back(c->get_start());
       bound_pts.push_back(c->get_end());
-      // TODO: Improve sampling
+
       const int num_points = 10;
       for (int i = 0; i < num_points; i++) {
 	double t = static_cast<double>(i) / static_cast<const double>(num_points);

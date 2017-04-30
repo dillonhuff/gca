@@ -712,7 +712,7 @@ int num_unsafe_moves(const simulation_log& l) {
 ptree
 encode_json(const tool_info& op_info) {
   ptree p;
-  p.put("tool_end_type", op_info.tool_end_type);
+  p.put("tool_end_type", to_string(op_info.tool_end_type));
   p.put("tool_diameter", op_info.tool_diameter);
   return p;
 }
@@ -811,6 +811,14 @@ encode_json(const simulation_log& sim_log) {
   return p;
 }
 
+ptree encode_params(const std::vector<operation_params>& elems) {
+  ptree children;
+  for (auto e : elems) {
+    children.push_back(std::make_pair("", encode_json(e)));
+  }
+  return children;
+}
+
 void
 write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pairs) {
   ptree p;
@@ -828,6 +836,48 @@ write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pa
   write_json(cout, p);
 }
 
+bool program_in_HAAS_travel(const std::vector<std::vector<cut*> >& paths) {
+  double HAAS_x_travel = 20;
+  double HAAS_y_travel = 16;
+  double HAAS_z_travel = 20;
+
+  box bound = bound_paths(paths);
+
+  if ((bound.x_len() > HAAS_x_travel) ||
+      (bound.y_len() > HAAS_y_travel) ||
+      (bound.z_len() > HAAS_z_travel)) {
+    cout << "Box" << endl;
+    cout << bound << endl;
+    cout << "goes beyond HAAS bounds" << endl;
+
+    return true;
+  }
+
+  return false;
+}
+
+std::vector<operation_params>
+read_operation_params_json(const std::string& dir_name) {
+  ptree json_ops;
+  read_json(dir_name, json_ops);
+
+  vector<operation_params> read_params =
+    decode_params(json_ops.get_child("All params"));
+
+  return read_params;
+}
+
+void write_as_json(const std::vector<operation_params>& all_params) {
+
+  ptree all_params_json;
+  ptree all_params_json_arr = encode_params(all_params);
+  all_params_json.add_child("All params", all_params_json_arr);
+
+  cout << "ALL PARAMS AS JSON" << endl;
+  write_json(cout, all_params_json);
+
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -838,12 +888,15 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
+  auto read_params = read_operation_params_json(dir_name);
 
-  // std::ifstream t(dir_name);
-  // std::string str((std::istreambuf_iterator<char>(t)),
-  // 		  std::istreambuf_iterator<char>());
-  // vector<block> p = lex_gprog(str);
-  // cout << "NUM BLOCKS: " << p.size() << endl;
+  cout << "# of ops = " << read_params.size() << endl;
+
+  for (auto& op : read_params) {
+    cout << op << endl;
+  }
+
+  return 0;
 
   vector<operation_params> all_params;
   // int num_processed_blocks = 0;
@@ -857,19 +910,6 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	double HAAS_x_travel = 20;
-	double HAAS_y_travel = 16;
-	double HAAS_z_travel = 20;
-
-	box bound = bound_paths(paths);
-
-	if ((bound.x_len() > HAAS_x_travel) ||
-	    (bound.y_len() > HAAS_y_travel) ||
-	    (bound.z_len() > HAAS_z_travel)) {
-	  cout << "Box" << endl;
-	  cout << bound << endl;
-	  cout << "goes beyond HAAS bounds" << endl;
-	}
 	// map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	// std::vector<operation_range> op_ranges =
@@ -884,10 +924,12 @@ int main(int argc, char** argv) {
 
 	//cout << "# of operations = " << l.operation_logs.size() << endl;
 
-	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+	map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
-  	// std::vector<operation_range> op_ranges =
-  	//   infer_operation_ranges_HAAS(p);
+  	std::vector<operation_range> op_ranges =
+  	  infer_operation_ranges_HAAS(p);
+
+	auto prog_ops = program_operations_HAAS(paths, tt, op_ranges);
 
 	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
 
@@ -919,11 +961,13 @@ int main(int argc, char** argv) {
   	//   cout << "STATED program length in feet = " << *stated_len << endl;
   	// }
 
-  	// for (auto& op : prog_ops) {
-  	//   op.file_name = file_name;
-  	// }
+  	for (auto& op : prog_ops) {
+  	  op.file_name = file_name;
+	  cout << op << endl;
+  	}
+	
 
-  	//concat(all_params, prog_ops);
+  	concat(all_params, prog_ops);
 
   	//simulate_paths(paths, tt, mrrs);
       } else {
@@ -931,46 +975,28 @@ int main(int argc, char** argv) {
       }
     });
 
+  write_as_json(all_params);
   // cout << "Files unsafe moves" << endl;
   // for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
   //   cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
   // }
 
-  cout << "All MRRs of programs" << endl;
+  // cout << "All MRRs of programs" << endl;
 
-  for (auto& op : all_params) {
+  // for (auto& op : all_params) {
 
-    cout << op.average_MRR() << endl;
+  //   cout << op.average_MRR() << endl;
 
-  }
+  // }
+
+  //  return 0;
 
   //write_logs_to_json(files_to_simulation_logs);
 
+  //return 0;
+
   return 0;
 
-  ptree json_ops;
-  read_json(dir_name, json_ops);
-
-  vector<operation_params> read_params =
-    decode_params(json_ops.get_child("All params"));
-
-  cout << "# of ops = " << read_params.size() << endl;
-
-  // for (auto& op : read_params) {
-  //   cout << op << endl;
-  // }
-
-  // return 0;
-
-  // ptree all_params_json;
-  // ptree all_params_json_arr = encode_json(all_params);
-  // all_params_json.add_child("All params", all_params_json_arr);
-
-  // cout << "ALL PARAMS AS JSON" << endl;
-  // write_json(cout, all_params_json);
-
-  // return 0;
-  
   // for (auto& op : p) {
   //   cout << "-------------------------------------------------------------" << endl;
   //   cout << op << endl;
@@ -979,71 +1005,71 @@ int main(int argc, char** argv) {
   // Now start analyzing the trace
   //return 0;
 
-  time_t start_time;
-  time_t end_time;
-  time(&start_time);
+  // time_t start_time;
+  // time_t end_time;
+  // time(&start_time);
 
   // return 0;
 
-  vector<operation_params> likely_rough_ops = read_params;
-  delete_if(likely_rough_ops,
-	    [](const operation_params& op) {
-	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
-		(op.range.name != "ROUGHING") ||
-		within_eps(op.tool_diameter, 0.0, 0.0001) ||
-		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
-	    });
+  // vector<operation_params> likely_rough_ops = read_params;
+  // delete_if(likely_rough_ops,
+  // 	    [](const operation_params& op) {
+  // 	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
+  // 		(op.range.name != "ROUGHING") ||
+  // 		within_eps(op.tool_diameter, 0.0, 0.0001) ||
+  // 		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
+  // 	    });
 
-  cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
+  // cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
 
-  print_sfm_mrr_csv(likely_rough_ops);
+  // print_sfm_mrr_csv(likely_rough_ops);
 
-  return 0;
+  // return 0;
 
-  sort_lt(likely_rough_ops, [](const operation_params& l) {
-      return l.average_MRR();
-    });
+  // sort_lt(likely_rough_ops, [](const operation_params& l) {
+  //     return l.average_MRR();
+  //   });
 
-  for (auto& op : likely_rough_ops) {
-    cout << endl << "-------------------------------------" << endl;
-    cout << op << endl;
-  }
+  // for (auto& op : likely_rough_ops) {
+  //   cout << endl << "-------------------------------------" << endl;
+  //   cout << op << endl;
+  // }
 
-  return 0;
+  // return 0;
 
-  vector<vector<operation_params> > grouped =
-    group_by(likely_rough_ops, [](const operation_params& l,
-				  const operation_params& r) {
-	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
-	     });
+  // vector<vector<operation_params> > grouped =
+  //   group_by(likely_rough_ops, [](const operation_params& l,
+  // 				  const operation_params& r) {
+  // 	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
+  // 	     });
 
-  sort(begin(grouped), end(grouped), [](const std::vector<operation_params>& l,
-					const std::vector<operation_params>& r) {
-	 return l.front().tool_diameter < r.front().tool_diameter;
-       });
+  // sort(begin(grouped), end(grouped), [](const std::vector<operation_params>& l,
+  // 					const std::vector<operation_params>& r) {
+  // 	 return l.front().tool_diameter < r.front().tool_diameter;
+  //      });
 
-  cout << "# of tool groups = " << grouped.size() << endl;
-  for (auto& g : grouped) {
-    cout << "# of operations with diameter " << g.front().tool_diameter;
-    cout << " inches = " << g.size() << endl;
+  // cout << "# of tool groups = " << grouped.size() << endl;
+  // for (auto& g : grouped) {
+  //   cout << "# of operations with diameter " << g.front().tool_diameter;
+  //   cout << " inches = " << g.size() << endl;
 
-    sort(begin(g), end(g), [](const operation_params& l,
-			      const operation_params& r) {
-	   return l.average_MRR() < r.average_MRR();
-	 });
+  //   sort(begin(g), end(g), [](const operation_params& l,
+  // 			      const operation_params& r) {
+  // 	   return l.average_MRR() < r.average_MRR();
+  // 	 });
 
 
-    cout << endl << "&&&&&&&&&& MRRS for Diam = " << g.front().tool_diameter << " &&&&&&&&&&" << endl;
-    for (auto& op : g) {
+  //   cout << endl << "&&&&&&&&&& MRRS for Diam = " << g.front().tool_diameter << " &&&&&&&&&&" << endl;
+  //   for (auto& op : g) {
 
-      cout << "---------------------------------------" << endl;
+  //     cout << "---------------------------------------" << endl;
 
-      cout << ", file = " << op.file_name << endl;      
-      cout << "Type = " << op.tool_end_type << ", Diam = " << op.tool_diameter << endl;
-      cout << "Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
-      cout << "Material removed = " << op.material_removed << endl;
-      cout << "average MRR = " << op.average_MRR() << endl;
-    }
+  //     cout << ", file = " << op.file_name << endl;      
+  //     cout << "Type = " << op.tool_end_type << ", Diam = " << op.tool_diameter << endl;
+  //     cout << "Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
+  //     cout << "Material removed = " << op.material_removed << endl;
+  //     cout << "average MRR = " << op.average_MRR() << endl;
+  //   }
     
     // cout << "SURFACE FEET PER MINUTE" << endl;
     // for (auto op : g) {
@@ -1073,81 +1099,81 @@ int main(int argc, char** argv) {
     
 
 
-  }
+  // }
 
-  vector<operation_params> cached = likely_rough_ops;
+  // vector<operation_params> cached = likely_rough_ops;
 
-  auto voted_op_score =
-    [&cached](const operation_params& v) {
-    double score = 0.0;
+  // auto voted_op_score =
+  //   [&cached](const operation_params& v) {
+  //   double score = 0.0;
 
-    for (auto& op : cached) {
-      double sfm_diff = fabs(op.SFM() - v.SFM());
-      double sfm_v = v.SFM();
+  //   for (auto& op : cached) {
+  //     double sfm_diff = fabs(op.SFM() - v.SFM());
+  //     double sfm_v = v.SFM();
 
-      if (sfm_diff <= 200.0) {
-	double mrr_diff = v.average_MRR() - op.average_MRR();
+  //     if (sfm_diff <= 200.0) {
+  // 	double mrr_diff = v.average_MRR() - op.average_MRR();
 
-	// NOTE: Add sfm weight later
-	score += mrr_diff;
-      }
-    }
+  // 	// NOTE: Add sfm weight later
+  // 	score += mrr_diff;
+  //     }
+  //   }
 
-    return score;
-  };
-  sort_lt(likely_rough_ops, voted_op_score);
+  //   return score;
+  // };
+  // sort_lt(likely_rough_ops, voted_op_score);
 
-  for (auto& op : likely_rough_ops) {
-    cout << "----------------------------------------------" << endl;
-    cout << op << endl;
-    cout << "SCORE = " << voted_op_score(op) << endl;
-  }
+  // for (auto& op : likely_rough_ops) {
+  //   cout << "----------------------------------------------" << endl;
+  //   cout << op << endl;
+  //   cout << "SCORE = " << voted_op_score(op) << endl;
+  // }
 
-  return 0;
+  // return 0;
 
-  // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
-  // 				   [](double mrr) { return mrr > 5.0; });;
-  // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
+  // // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
+  // // 				   [](double mrr) { return mrr > 5.0; });;
+  // // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
 
-  vector<op_replacement> replacements;
-  for (auto& g : grouped) {
-    for (unsigned i = 0; i < g.size(); i++) {
-      for (unsigned j = i + 1; j < g.size(); j++) {
-	replacements.push_back({g[i], g[j]});
-      }
-    }
-  }
+  // vector<op_replacement> replacements;
+  // for (auto& g : grouped) {
+  //   for (unsigned i = 0; i < g.size(); i++) {
+  //     for (unsigned j = i + 1; j < g.size(); j++) {
+  // 	replacements.push_back({g[i], g[j]});
+  //     }
+  //   }
+  // }
 
-  cout << "# of replacements = " << replacements.size() << endl;
+  // cout << "# of replacements = " << replacements.size() << endl;
 
-  delete_if(replacements, []
-	    (const op_replacement& l) {
-	      return fabs(l.better.SFM() - l.worse.SFM()) > 200.0;
-	    });
+  // delete_if(replacements, []
+  // 	    (const op_replacement& l) {
+  // 	      return fabs(l.better.SFM() - l.worse.SFM()) > 200.0;
+  // 	    });
 
-  cout << "# of replacements with SFM diff < 200.0 = " << replacements.size() << endl;
+  // cout << "# of replacements with SFM diff < 200.0 = " << replacements.size() << endl;
 
-  auto replacement_rank =
-    [](const op_replacement& l, const op_replacement& r) {
-    return (l.better.average_MRR() - l.worse.average_MRR()) <
-    (r.better.average_MRR() - r.worse.average_MRR());
-  };
+  // auto replacement_rank =
+  //   [](const op_replacement& l, const op_replacement& r) {
+  //   return (l.better.average_MRR() - l.worse.average_MRR()) <
+  //   (r.better.average_MRR() - r.worse.average_MRR());
+  // };
 
-  sort(begin(replacements), end(replacements), replacement_rank);
+  // sort(begin(replacements), end(replacements), replacement_rank);
 
-  cout << endl << "ALL REPLACEMENTS RANKED" << endl;
-  for (auto& rep : replacements) {
-    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl;
-    cout << "========== WORSE ==========" << endl;
-    cout << rep.worse << endl;
-    cout << "========== BETTER ==========" << endl;
-    cout << rep.better << endl;
-    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl << endl;
-  }
+  // cout << endl << "ALL REPLACEMENTS RANKED" << endl;
+  // for (auto& rep : replacements) {
+  //   cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl;
+  //   cout << "========== WORSE ==========" << endl;
+  //   cout << rep.worse << endl;
+  //   cout << "========== BETTER ==========" << endl;
+  //   cout << rep.better << endl;
+  //   cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl << endl;
+  // }
 
-  time(&end_time);
-  double seconds = difftime(end_time, start_time);
-  cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
+  // time(&end_time);
+  // double seconds = difftime(end_time, start_time);
+  // cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
   
 
   // cout << "mrrs.size() = " << mrrs.size() << endl;
