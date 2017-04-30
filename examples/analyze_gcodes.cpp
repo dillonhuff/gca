@@ -857,16 +857,32 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	map<int, tool_info> tt = infer_tool_table_GCA(p);
+	double HAAS_x_travel = 20;
+	double HAAS_y_travel = 16;
+	double HAAS_z_travel = 20;
 
-  	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_GCA(p);
-	
-	simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
+	box bound = bound_paths(paths);
+
+	if ((bound.x_len() > HAAS_x_travel) ||
+	    (bound.y_len() > HAAS_y_travel) ||
+	    (bound.z_len() > HAAS_z_travel)) {
+	  cout << "Box" << endl;
+	  cout << bound << endl;
+	  cout << "goes beyond HAAS bounds" << endl;
+	}
+	// map<int, tool_info> tt = infer_tool_table_GCA(p);
+
+  	// std::vector<operation_range> op_ranges =
+  	//   infer_operation_ranges_GCA(p);
+
+	// auto ops = program_operations_GCA(paths, tt, op_ranges);
+	// concat(all_params, ops);
+
+	//simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
 
 	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
 
-	cout << "# of operations = " << l.operation_logs.size() << endl;
+	//cout << "# of operations = " << l.operation_logs.size() << endl;
 
 	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
@@ -875,11 +891,11 @@ int main(int argc, char** argv) {
 
 	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
 
-	int num_unsafe_G0s = num_unsafe_moves(l);
+	// int num_unsafe_G0s = num_unsafe_moves(l);
 
-	cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
+	// cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
 	
-	files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
+	// files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
 	
 	// for (auto& op : prog_ops) {
 	//   cout << "-------------------------------------------------" << endl;
@@ -915,18 +931,18 @@ int main(int argc, char** argv) {
       }
     });
 
-  cout << "Files unsafe moves" << endl;
-  for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
-    cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
-  }
-
-  // cout << "All MRRs of programs" << endl;
-
-  // for (auto& op : all_params) {
-
-  //   cout << op.average_MRR() << endl;
-
+  // cout << "Files unsafe moves" << endl;
+  // for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
+  //   cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
   // }
+
+  cout << "All MRRs of programs" << endl;
+
+  for (auto& op : all_params) {
+
+    cout << op.average_MRR() << endl;
+
+  }
 
   //write_logs_to_json(files_to_simulation_logs);
 

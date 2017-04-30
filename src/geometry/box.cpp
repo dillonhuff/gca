@@ -46,7 +46,11 @@ namespace gca {
   }
 
   box bound_boxes(const vector<box>& boxes) {
-    assert(boxes.size() > 0);
+    //assert(boxes.size() > 0);
+    if (boxes.size() == 0) {
+      return box(0, 0, 0, 0, 0, 0);
+    }
+
     auto x_min = *min_element(boxes.begin(), boxes.end(),
 			      [](const box& l, const box& r)
 			      { return l.x_min < r.x_min; });
