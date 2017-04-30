@@ -884,6 +884,50 @@ struct mutated_test_case {
   bool found_error;
 };
 
+void test_mutated_cases(const std::string& dir_name) {
+  std::vector<mutated_test_case> cases;
+
+  apply_to_gprograms(dir_name, [&cases](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+
+	
+	bool any_travel_errors = program_in_HAAS_travel(paths);
+	cases.push_back({paths, false, any_travel_errors});
+      }
+    });
+
+  int true_positives = 0;
+  int true_negatives = 0;
+  int false_positives = 0;
+  int false_negatives = 0;
+
+  for (auto& c : cases) {
+    if (c.introduced_error && c.found_error) {
+      true_positives++;
+    }
+
+    if (c.introduced_error && !c.found_error) {
+      false_negatives++;
+    }
+
+    if (!c.introduced_error && c.found_error) {
+      false_positives++;
+    }
+    
+    if (!c.introduced_error && !c.found_error) {
+      true_negatives++;
+    }
+
+  }
+
+  cout << "False positives = " << false_positives << endl;
+  cout << "False negatives = " << false_negatives << endl;
+  cout << "True positives  = " << true_positives << endl;
+  cout << "True negatives  = " << true_negatives << endl;
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -894,6 +938,9 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
+  test_mutated_cases(dir_name);
+
+  return 0;
 
   vector<operation_params> all_params;
 
