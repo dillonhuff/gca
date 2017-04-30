@@ -884,6 +884,22 @@ struct mutated_test_case {
   bool found_error;
 };
 
+bool randomly_mutate(std::vector<std::vector<cut*> >& paths) {
+  if (paths.size() == 0) { return false; }
+
+  double r = ((double) rand() / (RAND_MAX));
+  if (r < 0.5) {
+    cut* last = paths.back().back();
+    linear_cut* error_cut =
+      new (allocate<linear_cut>()) linear_cut(last->get_end(),
+					      point(1000, 1000, 1000));
+    paths.back().push_back(error_cut);
+
+    return true;
+  }
+  return false;
+}
+
 void test_mutated_cases(const std::string& dir_name) {
   std::vector<mutated_test_case> cases;
 
@@ -892,9 +908,16 @@ void test_mutated_cases(const std::string& dir_name) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	
+	bool introduced_error =
+	  randomly_mutate(paths);
+
 	bool any_travel_errors = program_in_HAAS_travel(paths);
-	cases.push_back({paths, false, any_travel_errors});
+
+	if (!introduced_error) {
+	  cases.push_back({paths, false, any_travel_errors});
+	} else {
+	  cases.push_back({paths, true, any_travel_errors});
+	}
       }
     });
 
