@@ -878,6 +878,12 @@ void write_as_json(const std::vector<operation_params>& all_params) {
 
 }
 
+struct mutated_test_case {
+  std::vector<vector<cut*> > paths;
+  bool introduced_error;
+  bool found_error;
+};
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -888,19 +894,8 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
-  auto read_params = read_operation_params_json(dir_name);
-
-  cout << "# of ops = " << read_params.size() << endl;
-
-  for (auto& op : read_params) {
-    cout << op << endl;
-  }
-
-  return 0;
 
   vector<operation_params> all_params;
-  // int num_processed_blocks = 0;
-  // int num_failed_blocks = 0;
 
   std::vector<pair<string, simulation_log> > files_to_simulation_logs;
   std::vector<pair<string, int> > files_to_unsafe_moves;
@@ -910,6 +905,8 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
+	bool any_travel_errors = program_in_HAAS_travel(paths);
+	
 	// map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	// std::vector<operation_range> op_ranges =
@@ -924,12 +921,12 @@ int main(int argc, char** argv) {
 
 	//cout << "# of operations = " << l.operation_logs.size() << endl;
 
-	map<int, tool_info> tt = infer_tool_table_HAAS(p);
+	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
-  	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_HAAS(p);
+  	// std::vector<operation_range> op_ranges =
+  	//   infer_operation_ranges_HAAS(p);
 
-	auto prog_ops = program_operations_HAAS(paths, tt, op_ranges);
+	// auto prog_ops = program_operations_HAAS(paths, tt, op_ranges);
 
 	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
 
@@ -961,13 +958,13 @@ int main(int argc, char** argv) {
   	//   cout << "STATED program length in feet = " << *stated_len << endl;
   	// }
 
-  	for (auto& op : prog_ops) {
-  	  op.file_name = file_name;
-	  cout << op << endl;
-  	}
+  	// for (auto& op : prog_ops) {
+  	//   op.file_name = file_name;
+	//   cout << op << endl;
+  	// }
 	
 
-  	concat(all_params, prog_ops);
+  	//concat(all_params, prog_ops);
 
   	//simulate_paths(paths, tt, mrrs);
       } else {
@@ -975,7 +972,8 @@ int main(int argc, char** argv) {
       }
     });
 
-  write_as_json(all_params);
+  //write_as_json(all_params);
+
   // cout << "Files unsafe moves" << endl;
   // for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
   //   cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
