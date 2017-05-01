@@ -1098,6 +1098,20 @@ vector<operation_params> generate_params(const std::string& dir_name) {
 
 }
 
+bool all_same_file(const std::vector<operation_params>& params) {
+  if (params.size() < 2) { return true; }
+
+  string name = params[0].file_name;
+  for (unsigned i = 1; i < params.size(); i++) {
+    operation_params op = params[i];
+    if (op.file_name != name) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -1130,8 +1144,15 @@ int main(int argc, char** argv) {
   	     });
 
   delete_if(grouped, [](const std::vector<operation_params>& group) {
-      return group.size() == 1;
+      return group.size() < 2;
     });
+
+  delete_if(grouped, all_same_file);
+  
+  sort_lt(grouped, [](const std::vector<operation_params>& group) {
+      return group.front().tool_diameter;
+    });
+
 
   cout << "Same tool and SFM groups = " << grouped.size() << endl;
   for (auto& group : grouped) {
