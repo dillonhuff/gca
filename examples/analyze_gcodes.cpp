@@ -1098,13 +1098,26 @@ vector<operation_params> generate_params(const std::string& dir_name) {
 
 }
 
-bool all_same_file(const std::vector<operation_params>& params) {
+std::string student_name(const operation_params& p) {
+  string file = p.file_name;
+  string start = "/Users/dillon/Documents/PRL-Project-Folders/";
+  string suffix = file.substr(start.size());
+  cout << "Suffix = " << suffix << endl;
+  size_t loc = suffix.find_first_of("/");
+  string student_name = suffix.substr(0, loc);
+
+  cout << "student name = " << student_name << endl;
+  return student_name;
+}
+
+bool all_same_student(const std::vector<operation_params>& params) {
   if (params.size() < 2) { return true; }
 
-  string name = params[0].file_name;
+  string name = student_name(params[0]);
   for (unsigned i = 1; i < params.size(); i++) {
     operation_params op = params[i];
-    if (op.file_name != name) {
+
+    if (student_name(op) != name) {
       return false;
     }
   }
@@ -1147,7 +1160,7 @@ int main(int argc, char** argv) {
       return group.size() < 2;
     });
 
-  delete_if(grouped, all_same_file);
+  delete_if(grouped, all_same_student);
   
   sort_lt(grouped, [](const std::vector<operation_params>& group) {
       return group.front().tool_diameter;
