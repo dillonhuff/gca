@@ -999,31 +999,7 @@ void test_mutated_cases_GCA(const std::string& dir_name) {
   print_case_stats(cases);
 }
 
-int main(int argc, char** argv) {
-  if (argc != 2) {
-    cout << "Usage: analyze-gcodes <directory path>" << endl;
-    return 0;
-  }
-
-  arena_allocator a;
-  set_system_allocator(&a);
-
-  string dir_name = argv[1];
-
-  // auto all_ops = read_operation_params_json(dir_name);
-  
-  // sort(begin(all_ops), end(all_ops), [](const operation_params& l,
-  // 					const operation_params& r) {
-  // 	 return l.average_MRR() < r.average_MRR();
-  //      });
-  
-  // for (auto& op : all_ops) {
-  //   if (op.range.name == "ROUGHING") {
-  //     cout << op.file_name << endl;
-  //     cout << op.SFM() << "," << 60*op.average_MRR() << endl;
-  //   }
-  // }
-
+vector<operation_params> generate_params(const std::string& dir_name) {
   vector<operation_params> all_params;
 
   std::vector<pair<string, simulation_log> > files_to_simulation_logs;
@@ -1118,6 +1094,56 @@ int main(int argc, char** argv) {
 
   //  return 0;
 
+  return all_params;
+
+}
+
+int main(int argc, char** argv) {
+  if (argc != 2) {
+    cout << "Usage: analyze-gcodes <directory path>" << endl;
+    return 0;
+  }
+
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  string dir_name = argv[1];
+
+  auto all_ops = read_operation_params_json(dir_name);
+
+  vector<operation_params> likely_rough_ops = all_ops;
+  delete_if(likely_rough_ops,
+  	    [](const operation_params& op) {
+  	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
+  		(op.range.name != "ROUGHING") ||
+  		within_eps(op.tool_diameter, 0.0, 0.0001) ||
+  		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
+  	    });
+
+  cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
+
+  vector<vector<operation_params> > grouped =
+    group_by(likely_rough_ops, [](const operation_params& l,
+  				  const operation_params& r) {
+  	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
+  	     });
+
+  
+
+  
+  // sort(begin(all_ops), end(all_ops), [](const operation_params& l,
+  // 					const operation_params& r) {
+  // 	 return l.average_MRR() < r.average_MRR();
+  //      });
+  
+  // for (auto& op : all_ops) {
+  //   if (op.range.name == "ROUGHING") {
+  //     cout << op.file_name << endl;
+  //     cout << op.SFM() << "," << 60*op.average_MRR() << endl;
+  //   }
+  // }
+
+
   //write_logs_to_json(files_to_simulation_logs);
 
   //return 0;
@@ -1138,17 +1164,6 @@ int main(int argc, char** argv) {
 
   // return 0;
 
-  // vector<operation_params> likely_rough_ops = read_params;
-  // delete_if(likely_rough_ops,
-  // 	    [](const operation_params& op) {
-  // 	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
-  // 		(op.range.name != "ROUGHING") ||
-  // 		within_eps(op.tool_diameter, 0.0, 0.0001) ||
-  // 		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
-  // 	    });
-
-  // cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
-
   // print_sfm_mrr_csv(likely_rough_ops);
 
   // return 0;
@@ -1163,12 +1178,6 @@ int main(int argc, char** argv) {
   // }
 
   // return 0;
-
-  // vector<vector<operation_params> > grouped =
-  //   group_by(likely_rough_ops, [](const operation_params& l,
-  // 				  const operation_params& r) {
-  // 	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
-  // 	     });
 
   // sort(begin(grouped), end(grouped), [](const std::vector<operation_params>& l,
   // 					const std::vector<operation_params>& r) {
