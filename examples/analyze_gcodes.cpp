@@ -856,6 +856,26 @@ bool program_in_HAAS_travel(const std::vector<std::vector<cut*> >& paths) {
   return false;
 }
 
+bool program_in_GCA_travel(const std::vector<std::vector<cut*> >& paths) {
+  double emco_f1_x_travel = 8;
+  double emco_f1_y_travel = 6;
+  double emco_f1_z_travel = 8;
+
+  box bound = bound_paths(paths);
+
+  if ((bound.x_len() > emco_f1_x_travel) ||
+      (bound.y_len() > emco_f1_y_travel) ||
+      (bound.z_len() > emco_f1_z_travel)) {
+    cout << "Box" << endl;
+    cout << bound << endl;
+    cout << "goes beyond emco_f1 bounds" << endl;
+
+    return true;
+  }
+
+  return false;
+}
+
 std::vector<operation_params>
 read_operation_params_json(const std::string& dir_name) {
   ptree json_ops;
@@ -900,27 +920,7 @@ bool randomly_mutate(std::vector<std::vector<cut*> >& paths) {
   return false;
 }
 
-void test_mutated_cases(const std::string& dir_name) {
-  std::vector<mutated_test_case> cases;
-
-  apply_to_gprograms(dir_name, [&cases](const vector<block>& p, const string& file_name) {
-      vector<vector<cut*>> paths;
-      auto r = gcode_to_cuts(p, paths);
-      if (r == GCODE_TO_CUTS_SUCCESS) {
-
-	bool introduced_error =
-	  randomly_mutate(paths);
-
-	bool any_travel_errors = program_in_HAAS_travel(paths);
-
-	if (!introduced_error) {
-	  cases.push_back({paths, false, any_travel_errors});
-	} else {
-	  cases.push_back({paths, true, any_travel_errors});
-	}
-      }
-    });
-
+void print_case_stats(const std::vector<mutated_test_case>& cases) {
   int true_positives = 0;
   int true_negatives = 0;
   int false_positives = 0;
@@ -951,6 +951,54 @@ void test_mutated_cases(const std::string& dir_name) {
   cout << "True negatives  = " << true_negatives << endl;
 }
 
+void test_mutated_cases_HAAS(const std::string& dir_name) {
+  std::vector<mutated_test_case> cases;
+
+  apply_to_gprograms(dir_name, [&cases](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+
+	bool introduced_error =
+	  randomly_mutate(paths);
+
+	bool any_travel_errors = program_in_HAAS_travel(paths);
+
+	if (!introduced_error) {
+	  cases.push_back({paths, false, any_travel_errors});
+	} else {
+	  cases.push_back({paths, true, any_travel_errors});
+	}
+      }
+    });
+
+  print_case_stats(cases);
+}
+
+void test_mutated_cases_GCA(const std::string& dir_name) {
+  std::vector<mutated_test_case> cases;
+
+  apply_to_gprograms(dir_name, [&cases](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+
+	bool introduced_error =
+	  randomly_mutate(paths);
+
+	bool any_travel_errors = program_in_GCA_travel(paths);
+
+	if (!introduced_error) {
+	  cases.push_back({paths, false, any_travel_errors});
+	} else {
+	  cases.push_back({paths, true, any_travel_errors});
+	}
+      }
+    });
+
+  print_case_stats(cases);
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -961,9 +1009,20 @@ int main(int argc, char** argv) {
   set_system_allocator(&a);
 
   string dir_name = argv[1];
-  test_mutated_cases(dir_name);
 
-  return 0;
+  // auto all_ops = read_operation_params_json(dir_name);
+  
+  // sort(begin(all_ops), end(all_ops), [](const operation_params& l,
+  // 					const operation_params& r) {
+  // 	 return l.average_MRR() < r.average_MRR();
+  //      });
+  
+  // for (auto& op : all_ops) {
+  //   if (op.range.name == "ROUGHING") {
+  //     cout << op.file_name << endl;
+  //     cout << op.SFM() << "," << 60*op.average_MRR() << endl;
+  //   }
+  // }
 
   vector<operation_params> all_params;
 
@@ -975,41 +1034,41 @@ int main(int argc, char** argv) {
       auto r = gcode_to_cuts(p, paths);
       if (r == GCODE_TO_CUTS_SUCCESS) {
 
-	bool any_travel_errors = program_in_HAAS_travel(paths);
+  	//bool any_travel_errors = program_in_HAAS_travel(paths);
 	
-	// map<int, tool_info> tt = infer_tool_table_GCA(p);
+  	// map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	// std::vector<operation_range> op_ranges =
   	//   infer_operation_ranges_GCA(p);
 
-	// auto ops = program_operations_GCA(paths, tt, op_ranges);
-	// concat(all_params, ops);
+  	// auto ops = program_operations_GCA(paths, tt, op_ranges);
+  	// concat(all_params, ops);
 
-	//simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
+  	//simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
 
-	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
+  	//files_to_simulation_logs.push_back( make_pair(file_name, prog_ops) );
 
-	//cout << "# of operations = " << l.operation_logs.size() << endl;
+  	//cout << "# of operations = " << l.operation_logs.size() << endl;
 
-	// map<int, tool_info> tt = infer_tool_table_HAAS(p);
+  	map<int, tool_info> tt = infer_tool_table_HAAS(p);
 
-  	// std::vector<operation_range> op_ranges =
-  	//   infer_operation_ranges_HAAS(p);
+  	std::vector<operation_range> op_ranges =
+  	  infer_operation_ranges_HAAS(p);
 
-	// auto prog_ops = program_operations_HAAS(paths, tt, op_ranges);
+  	auto prog_ops = program_operations_HAAS(paths, tt, op_ranges);
 
-	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
+  	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
 
-	// int num_unsafe_G0s = num_unsafe_moves(l);
+  	// int num_unsafe_G0s = num_unsafe_moves(l);
 
-	// cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
+  	// cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
 	
-	// files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
+  	// files_to_unsafe_moves.push_back( make_pair(file_name, num_unsafe_G0s) );
 	
-	// for (auto& op : prog_ops) {
-	//   cout << "-------------------------------------------------" << endl;
-	//   cout << op << endl;
-	// }
+  	// for (auto& op : prog_ops) {
+  	//   cout << "-------------------------------------------------" << endl;
+  	//   cout << op << endl;
+  	// }
 
   	// double program_length = 0.0;
   	// double program_cut_length = 0.0;
@@ -1030,7 +1089,7 @@ int main(int argc, char** argv) {
 
   	// for (auto& op : prog_ops) {
   	//   op.file_name = file_name;
-	//   cout << op << endl;
+  	//   cout << op << endl;
   	// }
 	
 
@@ -1063,7 +1122,7 @@ int main(int argc, char** argv) {
 
   //return 0;
 
-  return 0;
+  // return 0;
 
   // for (auto& op : p) {
   //   cout << "-------------------------------------------------------------" << endl;

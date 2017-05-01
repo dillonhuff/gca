@@ -488,7 +488,7 @@ namespace gca {
 
     }
 
-    //vtk_debug_depth_field(r.r);
+    vtk_debug_depth_field(r.r);
 
     return operation_sim_log;
   }
