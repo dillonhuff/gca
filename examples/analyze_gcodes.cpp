@@ -1114,10 +1114,9 @@ int main(int argc, char** argv) {
   vector<operation_params> likely_rough_ops = all_ops;
   delete_if(likely_rough_ops,
   	    [](const operation_params& op) {
-  	      return //!(op.tool_end_type == ROUGH_ENDMILL) ||
-  		(op.range.name != "ROUGHING") ||
+  	      return (op.range.name != "ROUGHING") ||
   		within_eps(op.tool_diameter, 0.0, 0.0001) ||
-  		(op.cut_depth < 0.0); //op.cut_depth < 0.0 || op.material_removed < 0.1;
+  		(op.cut_depth < 0.0);
   	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
@@ -1125,10 +1124,23 @@ int main(int argc, char** argv) {
   vector<vector<operation_params> > grouped =
     group_by(likely_rough_ops, [](const operation_params& l,
   				  const operation_params& r) {
-  	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001);
+  	       return within_eps(l.tool_diameter, r.tool_diameter, 0.001) &&
+	       (l.tool_end_type == r.tool_end_type) &&
+	       within_eps(l.SFM(), r.SFM(), 1.0);
   	     });
 
-  
+  delete_if(grouped, [](const std::vector<operation_params>& group) {
+      return group.size() == 1;
+    });
+
+  cout << "Same tool and SFM groups = " << grouped.size() << endl;
+  for (auto& group : grouped) {
+    cout << "===================================================" << endl;
+    for (auto& op : group) {
+      cout << "-------------------------------------------------" << endl;
+      cout << op << endl;
+    }
+  }
 
   
   // sort(begin(all_ops), end(all_ops), [](const operation_params& l,
