@@ -1166,6 +1166,12 @@ int main(int argc, char** argv) {
       return group.front().tool_diameter;
     });
 
+  for (auto& group : grouped) {
+    sort_lt(group, [](const operation_params& op) {
+	return op.average_MRR();
+      });
+  }
+
 
   cout << "Same tool and SFM groups = " << grouped.size() << endl;
   for (auto& group : grouped) {
