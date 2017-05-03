@@ -1173,13 +1173,28 @@ int main(int argc, char** argv) {
   }
 
 
+  int total_ops = 0;
+  for (auto& g : grouped) {
+    total_ops += g.size();
+  }
+
   cout << "Same tool and SFM groups = " << grouped.size() << endl;
+  cout << "Total operations in      = " << total_ops << endl;
+
   for (auto& group : grouped) {
     cout << "===================================================" << endl;
-    for (auto& op : group) {
-      cout << "-------------------------------------------------" << endl;
-      cout << op << endl;
-    }
+    cout << group.front().tool_diameter << " inch " << to_string(group.front().tool_end_type);
+    cout << " at " << group.front().SFM() << " SFM " << endl;
+
+    cout << "# of operations = " << group.size() << endl;    
+
+    cout << "Worst MRR = " << 60*group.front().average_MRR() << endl;
+    cout << "Best MRR = " << 60*group.back().average_MRR() << endl;
+    
+    // for (auto& op : group) {
+    //   cout << "-------------------------------------------------" << endl;
+    //   cout << op << endl;
+    // }
   }
 
   
