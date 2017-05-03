@@ -1144,7 +1144,7 @@ int main(int argc, char** argv) {
   	      return (op.range.name != "ROUGHING") ||
   		within_eps(op.tool_diameter, 0.0, 0.0001) ||
   		(op.cut_depth < 0.0) ||
-		(op.material_removed < 0.125);
+		(op.material_removed < pow(op.tool_diameter, 3));
   	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
