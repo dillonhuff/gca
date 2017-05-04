@@ -1144,7 +1144,9 @@ int main(int argc, char** argv) {
   	      return (op.range.name != "ROUGHING") ||
   		within_eps(op.tool_diameter, 0.0, 0.0001) ||
   		(op.cut_depth < 0.0) ||
-		(op.material_removed < pow(op.tool_diameter, 3));
+		(op.material_removed < 0.3333);
+		//(60*op.average_MRR() < 0.3333);
+		//(op.material_removed < 0.125); //pow(op.tool_diameter, 3));
   	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
@@ -1191,10 +1193,11 @@ int main(int argc, char** argv) {
 
     double worst_mrr = 60*group.front().average_MRR();
     cout << "Worst MRR = " << worst_mrr << endl;
-    //cout << group.front() << endl;
+    cout << group.front() << endl;
 
     double best_mrr = 60*group.back().average_MRR();
     cout << "Best MRR = " << best_mrr << endl;
+    cout << group.back() << endl;
 
     double pct_diff = ((best_mrr - worst_mrr) / worst_mrr) * 100;
 
