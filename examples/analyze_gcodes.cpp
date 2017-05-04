@@ -1102,11 +1102,11 @@ std::string student_name(const operation_params& p) {
   string file = p.file_name;
   string start = "/Users/dillon/Documents/PRL-Project-Folders/";
   string suffix = file.substr(start.size());
-  cout << "Suffix = " << suffix << endl;
+  //cout << "Suffix = " << suffix << endl;
   size_t loc = suffix.find_first_of("/");
   string student_name = suffix.substr(0, loc);
 
-  cout << "student name = " << student_name << endl;
+  //cout << "student name = " << student_name << endl;
   return student_name;
 }
 
@@ -1150,6 +1150,9 @@ int main(int argc, char** argv) {
   	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;
+  // for (auto& op : likely_rough_ops) {
+  //   cout << op.SFM() << "," << op.average_MRR() << endl;
+  // }
 
   vector<vector<operation_params> > grouped =
     group_by(likely_rough_ops, [](const operation_params& l,
@@ -1193,11 +1196,19 @@ int main(int argc, char** argv) {
 
     double worst_mrr = 60*group.front().average_MRR();
     cout << "Worst MRR = " << worst_mrr << endl;
-    cout << group.front() << endl;
+    //cout << group.front() << endl;
 
     double best_mrr = 60*group.back().average_MRR();
     cout << "Best MRR = " << best_mrr << endl;
-    cout << group.back() << endl;
+    //cout << group.back() << endl;
+    double avg = 0.0;
+    for (auto& g : group) {
+      avg += g.average_MRR();
+    }
+
+    avg = 60*(avg / group.size());
+
+    cout << "Average MRR = " << avg << endl;
 
     double pct_diff = ((best_mrr - worst_mrr) / worst_mrr) * 100;
 
