@@ -1,4 +1,5 @@
 #include "gcode/circular_arc.h"
+#include "gcode/circular_helix_cut.h"
 #include "gcode/cut.h"
 #include "utils/algorithm.h"
 #include "utils/check.h"
@@ -53,30 +54,30 @@ namespace gca {
     return 360 + negative_angle_between(a, b);
   }
 
-  vector<point> bound_points(const circular_arc* arc) {
+  vector<point> bound_points(const circular_arc& arc) {
     vector<point> bound_pts;
 
-    point c1 = arc->get_start() - arc->center();
-    point c2 = arc->get_end() - arc->center();
+    point c1 = arc.get_start() - arc.center();
+    point c2 = arc.get_end() - arc.center();
     double radius = c1.len();
     double angle = signed_angle_2D(c1, c2);
 
     vector<point> extremal_pts;
-    extremal_pts.push_back(arc->center() + point(radius, 0, 0));
-    extremal_pts.push_back(arc->center() + point(-radius, 0, 0));
-    extremal_pts.push_back(arc->center() + point(0, radius, 0));
-    extremal_pts.push_back(arc->center() + point(0, -radius, 0));
+    extremal_pts.push_back(arc.center() + point(radius, 0, 0));
+    extremal_pts.push_back(arc.center() + point(-radius, 0, 0));
+    extremal_pts.push_back(arc.center() + point(0, radius, 0));
+    extremal_pts.push_back(arc.center() + point(0, -radius, 0));
 
-    if (arc->dir == COUNTERCLOCKWISE) {
+    if (arc.dir == COUNTERCLOCKWISE) {
 
       if (angle <= 0.0) {
 	cout << "angle     = " << angle << endl;
-	cout << "direction = " << arc->dir << endl;
+	cout << "direction = " << arc.dir << endl;
 	DBG_ASSERT(!(angle <= 0.0));
       }
 
       for (auto& pt : extremal_pts) {
-	point c = pt - arc->center();
+	point c = pt - arc.center();
 	double a = fabs(negative_angle_between( c, c1 ));
 	    
 	if (a <= fabs(angle)) {
@@ -91,13 +92,13 @@ namespace gca {
 	  angle = -180;
 	} else {
 	  cout << "angle     = " << angle << endl;
-	  cout << "direction = " << arc->dir << endl;
+	  cout << "direction = " << arc.dir << endl;
 	  DBG_ASSERT(!(angle >= 0.0));
 	}
       }
 
       for (auto& pt : extremal_pts) {
-	point c = pt - arc->center();
+	point c = pt - arc.center();
 	double a = fabs(positive_angle_between( c, c1 ));
 	    
 	if (a <= fabs(angle)) {
@@ -111,6 +112,64 @@ namespace gca {
     return bound_pts;
   }
 
+  vector<point> bound_points(const circular_helix_cut& arc) {
+    vector<point> bound_pts;
+
+    point c1 = arc.get_start() - arc.center();
+    point c2 = arc.get_end() - arc.center();
+    double radius = c1.len();
+    double angle = signed_angle_2D(c1, c2);
+
+    vector<point> extremal_pts;
+    extremal_pts.push_back(arc.center() + point(radius, 0, 0));
+    extremal_pts.push_back(arc.center() + point(-radius, 0, 0));
+    extremal_pts.push_back(arc.center() + point(0, radius, 0));
+    extremal_pts.push_back(arc.center() + point(0, -radius, 0));
+
+    if (arc.dir == COUNTERCLOCKWISE) {
+
+      if (angle <= 0.0) {
+	cout << "angle     = " << angle << endl;
+	cout << "direction = " << arc.dir << endl;
+	DBG_ASSERT(!(angle <= 0.0));
+      }
+
+      for (auto& pt : extremal_pts) {
+	point c = pt - arc.center();
+	double a = fabs(negative_angle_between( c, c1 ));
+	    
+	if (a <= fabs(angle)) {
+	  bound_pts.push_back(pt);
+	  //cout << "Added extremal point " << pt << endl;
+	}
+      }
+
+    } else {
+      if (angle >= 0.0) {
+	if (within_eps(angle, 180, 0.0001)) {
+	  angle = -180;
+	} else {
+	  cout << "angle     = " << angle << endl;
+	  cout << "direction = " << arc.dir << endl;
+	  DBG_ASSERT(!(angle >= 0.0));
+	}
+      }
+
+      for (auto& pt : extremal_pts) {
+	point c = pt - arc.center();
+	double a = fabs(positive_angle_between( c, c1 ));
+	    
+	if (a <= fabs(angle)) {
+	  bound_pts.push_back(pt);
+	  //cout << "Added extremal point " << pt << endl;
+	}
+      }
+	  
+    }
+
+    return bound_pts;
+  }
+  
   box path_bounds(const vector<cut*>& path) {
     vector<point> bound_pts;
     for (auto c : path) {
@@ -133,10 +192,22 @@ namespace gca {
 
       	DBG_ASSERT(arc->pl == XY);
 
-	concat(bound_pts, bound_points(arc));
+	concat(bound_pts, bound_points(*arc));
 
 	continue;
       }
+
+      if (c->is_circular_helix_cut()) {
+
+      	circular_helix_cut* arc = static_cast<circular_helix_cut*>(c);
+
+      	DBG_ASSERT(arc->pl == XY);
+
+	concat(bound_pts, bound_points(*arc));
+
+	continue;
+      }
+
     }
 
       
