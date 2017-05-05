@@ -79,9 +79,13 @@ namespace gca {
 	  }
 	} else {
 	  if (angle >= 0.0) {
-	    cout << "angle     = " << angle << endl;
-	    cout << "direction = " << arc->dir << endl;
-	    DBG_ASSERT(!(angle >= 0.0));
+	    if (within_eps(angle, 180, 0.0001)) {
+	      angle = -180;
+	    } else {
+	      cout << "angle     = " << angle << endl;
+	      cout << "direction = " << arc->dir << endl;
+	      DBG_ASSERT(!(angle >= 0.0));
+	    }
 	  }
 
 	}
