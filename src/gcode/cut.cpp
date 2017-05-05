@@ -48,6 +48,10 @@ namespace gca {
     return sab - 360;
   }
 
+  double positive_angle_between(const point a, const point b) {
+    return 360 + negative_angle_between(a, b);
+  }
+
   box path_bounds(const vector<cut*>& path) {
     vector<point> bound_pts;
     for (auto c : path) {
@@ -94,6 +98,7 @@ namespace gca {
 	    
 	    if (a <= fabs(angle)) {
 	      bound_pts.push_back(pt);
+	      //cout << "Added extremal point " << pt << endl;
 	    }
 	  }
 
@@ -108,6 +113,16 @@ namespace gca {
 	    }
 	  }
 
+	  for (auto& pt : extremal_pts) {
+	    point c = pt - arc->center();
+	    double a = fabs(positive_angle_between( c, c1 ));
+	    
+	    if (a <= fabs(angle)) {
+	      bound_pts.push_back(pt);
+	      //cout << "Added extremal point " << pt << endl;
+	    }
+	  }
+	  
 	}
 	
 	continue;
