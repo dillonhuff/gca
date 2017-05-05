@@ -30,9 +30,19 @@ namespace gca {
     return l.settings == r.settings;
   }
 
+  double signed_angle_2D(const point a, const point b) {
+    double angle = angle_between(a, b);
+    if(a.x*b.y - a.y*b.x < 0) {
+      angle = -angle;
+    }
+
+    return angle;
+  }
+
   box path_bounds(const vector<cut*>& path) {
     vector<point> bound_pts;
     for (auto c : path) {
+
       DBG_ASSERT(c->is_safe_move() ||
 		 c->is_linear_cut() ||
 		 c->is_circular_arc() ||
@@ -47,20 +57,34 @@ namespace gca {
 
       if (c->is_circular_arc()) {
       	circular_arc* arc = static_cast<circular_arc*>(c);
+
       	DBG_ASSERT(arc->pl == XY);
 
 	point c1 = arc->get_start() - arc->center();
 	point c2 = arc->get_end() - arc->center();
 	double radius = c1.len();
-	double angle = angle_between(c1, c2);
+	double angle = signed_angle_2D(c1, c2);
 
 	bound_pts.push_back(arc->center() + point(radius, 0, 0));
 	bound_pts.push_back(arc->center() + point(-radius, 0, 0));
 	bound_pts.push_back(arc->center() + point(0, radius, 0));
 	bound_pts.push_back(arc->center() + point(0, -radius, 0));
 
-	// cout << "angle     = " << angle << endl;
-	// cout << "direction = " << arc->dir << endl;
+	if (arc->dir == COUNTERCLOCKWISE) {
+
+	  if (angle <= 0.0) {
+	    cout << "angle     = " << angle << endl;
+	    cout << "direction = " << arc->dir << endl;
+	    DBG_ASSERT(!(angle <= 0.0));
+	  }
+	} else {
+	  if (angle >= 0.0) {
+	    cout << "angle     = " << angle << endl;
+	    cout << "direction = " << arc->dir << endl;
+	    DBG_ASSERT(!(angle >= 0.0));
+	  }
+
+	}
 	
 	continue;
       }
