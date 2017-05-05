@@ -1136,7 +1136,7 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  test_mutated_cases_GCA(dir_name);
+  test_mutated_cases_HAAS(dir_name);
 
   return 0;
 

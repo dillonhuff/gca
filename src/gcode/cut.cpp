@@ -1,3 +1,4 @@
+#include "gcode/circular_arc.h"
 #include "gcode/cut.h"
 #include "utils/check.h"
 
@@ -37,6 +38,11 @@ namespace gca {
 
       if (c->is_safe_move() || c->is_linear_cut()) {
 	continue;
+      }
+
+      if (c->is_circular_arc()) {
+	circular_arc* arc = static_cast<circular_arc*>(c);
+	DBG_ASSERT(arc->pl == XY);
       }
 
       const int num_points = 10;
