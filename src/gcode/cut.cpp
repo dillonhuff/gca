@@ -51,10 +51,16 @@ namespace gca {
 
 	point c1 = arc->get_start() - arc->center();
 	point c2 = arc->get_end() - arc->center();
+	double radius = c1.len();
 	double angle = angle_between(c1, c2);
 
-	cout << "angle     = " << angle << endl;
-	cout << "direction = " << arc->dir << endl;
+	bound_pts.push_back(arc->center() + point(radius, 0, 0));
+	bound_pts.push_back(arc->center() + point(-radius, 0, 0));
+	bound_pts.push_back(arc->center() + point(0, radius, 0));
+	bound_pts.push_back(arc->center() + point(0, -radius, 0));
+
+	// cout << "angle     = " << angle << endl;
+	// cout << "direction = " << arc->dir << endl;
 	
 	continue;
       }
