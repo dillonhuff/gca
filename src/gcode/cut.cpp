@@ -36,20 +36,26 @@ namespace gca {
       bound_pts.push_back(c->get_start());
       bound_pts.push_back(c->get_end());
 
+      DBG_ASSERT(c->is_safe_move() ||
+		 c->is_linear_cut() ||
+		 c->is_circular_arc());
+
       if (c->is_safe_move() || c->is_linear_cut()) {
 	continue;
       }
 
-      if (c->is_circular_arc()) {
-	circular_arc* arc = static_cast<circular_arc*>(c);
-	DBG_ASSERT(arc->pl == XY);
-      }
+      
 
-      const int num_points = 10;
-      for (int i = 0; i < num_points; i++) {
-	double t = static_cast<double>(i) / static_cast<const double>(num_points);
-	bound_pts.push_back(c->value_at(t));
-      }
+      // if (c->is_circular_arc()) {
+      // 	circular_arc* arc = static_cast<circular_arc*>(c);
+      // 	DBG_ASSERT(arc->pl == XY);
+      // }
+
+      // const int num_points = 10;
+      // for (int i = 0; i < num_points; i++) {
+      // 	double t = static_cast<double>(i) / static_cast<const double>(num_points);
+      // 	bound_pts.push_back(c->value_at(t));
+      // }
     }
     return bound_positions(bound_pts);
   }
