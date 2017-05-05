@@ -33,14 +33,29 @@ namespace gca {
   box path_bounds(const vector<cut*>& path) {
     vector<point> bound_pts;
     for (auto c : path) {
-      bound_pts.push_back(c->get_start());
-      bound_pts.push_back(c->get_end());
-
       DBG_ASSERT(c->is_safe_move() ||
 		 c->is_linear_cut() ||
-		 c->is_circular_arc());
+		 c->is_circular_arc() ||
+		 c->is_circular_helix_cut());
 
       if (c->is_safe_move() || c->is_linear_cut()) {
+	bound_pts.push_back(c->get_start());
+	bound_pts.push_back(c->get_end());
+
+	continue;
+      }
+
+      if (c->is_circular_arc()) {
+      	circular_arc* arc = static_cast<circular_arc*>(c);
+      	DBG_ASSERT(arc->pl == XY);
+
+	point c1 = arc->get_start() - arc->center();
+	point c2 = arc->get_end() - arc->center();
+	double angle = angle_between(c1, c2);
+
+	cout << "angle     = " << angle << endl;
+	cout << "direction = " << arc->dir << endl;
+	
 	continue;
       }
 
