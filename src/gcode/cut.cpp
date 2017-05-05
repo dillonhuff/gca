@@ -39,6 +39,15 @@ namespace gca {
     return angle;
   }
 
+  double negative_angle_between(const point a, const point b) {
+    double sab = signed_angle_2D(a, b);
+    if (sab < 0.0) {
+      return sab;
+    }
+
+    return sab - 360;
+  }
+
   box path_bounds(const vector<cut*>& path) {
     vector<point> bound_pts;
     for (auto c : path) {
@@ -65,10 +74,11 @@ namespace gca {
 	double radius = c1.len();
 	double angle = signed_angle_2D(c1, c2);
 
-	bound_pts.push_back(arc->center() + point(radius, 0, 0));
-	bound_pts.push_back(arc->center() + point(-radius, 0, 0));
-	bound_pts.push_back(arc->center() + point(0, radius, 0));
-	bound_pts.push_back(arc->center() + point(0, -radius, 0));
+	vector<point> extremal_pts;
+	extremal_pts.push_back(arc->center() + point(radius, 0, 0));
+	extremal_pts.push_back(arc->center() + point(-radius, 0, 0));
+	extremal_pts.push_back(arc->center() + point(0, radius, 0));
+	extremal_pts.push_back(arc->center() + point(0, -radius, 0));
 
 	if (arc->dir == COUNTERCLOCKWISE) {
 
@@ -77,6 +87,16 @@ namespace gca {
 	    cout << "direction = " << arc->dir << endl;
 	    DBG_ASSERT(!(angle <= 0.0));
 	  }
+
+	  for (auto& pt : extremal_pts) {
+	    point c = pt - arc->center();
+	    double a = fabs(negative_angle_between( c, c1 ));
+	    
+	    if (a <= fabs(angle)) {
+	      bound_pts.push_back(pt);
+	    }
+	  }
+
 	} else {
 	  if (angle >= 0.0) {
 	    if (within_eps(angle, 180, 0.0001)) {
