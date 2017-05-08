@@ -126,7 +126,7 @@ namespace gca {
 
 	      double tool_z = t.z_at(p, other_pt);
 	      double z_diff = h - tool_z;
-	      r.set_column_height(i, j, p.z);
+	      r.set_column_height(i, j, tool_z);
 	      grid_updates.push_back({{i, j}, z_diff});
 
 	      //volume_removed += r.resolution*r.resolution*z_diff;
