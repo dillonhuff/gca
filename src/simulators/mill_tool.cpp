@@ -12,6 +12,10 @@ namespace gca {
     return val <= r;
   }
 
+  double cylindrical_bit::z_at(const point tool_loc, const point p) const {
+    return tool_loc.z;
+  }
+
   bool cylindrical_bit::contains(const point tool_location,
 				 const point other_pt) const {//, double resolution, int i, int j) const {
     // double bl_corner_x = origin.x + i*resolution;
@@ -53,6 +57,20 @@ namespace gca {
     double z = -1*sqrt(zsq);// + sphere_center.z;
 
     return (sphere_center.z + z) < other_pt.z;
+  }
+
+  double ball_nosed::z_at(const point p, const point other_pt) const {
+    point sphere_center = p + point(0, 0, radius);
+
+    double xdiff = other_pt.x - sphere_center.x;
+    double ydiff = other_pt.y - sphere_center.y;
+    
+    //    double zh = other_pt.z - sphere_center.z;
+
+    double zsq = radius*radius - xdiff*xdiff - ydiff*ydiff;
+    double z = -1*sqrt(zsq);// + sphere_center.z;
+
+    return (sphere_center.z + z);
   }
   
 }

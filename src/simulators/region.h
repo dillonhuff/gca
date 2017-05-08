@@ -123,7 +123,9 @@ namespace gca {
 	    if (t.contains(p, other_pt)) {
 	      //double h = static_cast<double>(r.column_height(i, j));
 	      //	    if (h > p.z) {
-	      double z_diff = h - p.z;
+
+	      double tool_z = t.z_at(p, other_pt);
+	      double z_diff = h - tool_z;
 	      r.set_column_height(i, j, p.z);
 	      grid_updates.push_back({{i, j}, z_diff});
 

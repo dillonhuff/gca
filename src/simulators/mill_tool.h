@@ -14,7 +14,8 @@ namespace gca {
 
   class mill_tool {
   public:
-    virtual bool contains(const point p, const point other) const = 0; //, double resolution, int i, int j) const { DBG_ASSERT(false); }
+    virtual bool contains(const point p, const point other) const = 0;
+    virtual double z_at(const point tool_loc, const point p) const = 0;
 
     virtual double x_min(point p) const { DBG_ASSERT(false); }
     virtual double x_max(point p) const { DBG_ASSERT(false); }
@@ -37,7 +38,8 @@ namespace gca {
     virtual inline double y_max(point p) const { return p.y + radius; }
     
 
-    virtual bool contains(const point p, const point origin) const; //, double resolution, int i, int j) const;
+    virtual double z_at(const point tool_loc, const point p) const;
+    virtual bool contains(const point p, const point origin) const;
     inline bool in_circle(point p, double x, double y) const;
   };
 
@@ -53,7 +55,8 @@ namespace gca {
     virtual inline double y_max(point p) const { return p.y + radius; }
     
 
-    virtual bool contains(const point p, const point origin) const; //, double resolution, int i, int j) const;
+    virtual double z_at(const point tool_loc, const point p) const;
+    virtual bool contains(const point p, const point origin) const;
     inline bool in_circle(point p, double x, double y) const;
   };
 

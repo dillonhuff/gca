@@ -129,8 +129,9 @@ namespace gca {
     if (arc.dir == COUNTERCLOCKWISE) {
 
       if (angle <= 0.0) {
-	cout << "angle     = " << angle << endl;
-	cout << "direction = " << arc.dir << endl;
+	cout << "angle       = " << angle << endl;
+	cout << "direction   = " << arc.dir << endl;
+	cout << "line number = "<< arc.get_line_number() << endl;
 	DBG_ASSERT(!(angle <= 0.0));
       }
 

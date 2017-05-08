@@ -1026,12 +1026,12 @@ vector<operation_params> generate_params(const std::string& dir_name) {
 
   	//cout << "# of operations = " << l.operation_logs.size() << endl;
 
-  	map<int, tool_info> tt = infer_tool_table_HAAS(p);
+  	map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_HAAS(p);
+  	  infer_operation_ranges_GCA(p);
 
-  	auto prog_ops = program_operations_HAAS(paths, tt, op_ranges);
+  	auto prog_ops = program_operations_GCA(paths, tt, op_ranges);
 
   	// simulation_log l = simulation_log_HAAS(paths, tt, op_ranges);
 
@@ -1077,23 +1077,6 @@ vector<operation_params> generate_params(const std::string& dir_name) {
       }
     });
 
-  //write_as_json(all_params);
-
-  // cout << "Files unsafe moves" << endl;
-  // for (auto& file_unsafe_moves_pair : files_to_unsafe_moves) {
-  //   cout << file_unsafe_moves_pair.first << " = " << file_unsafe_moves_pair.second << endl;
-  // }
-
-  // cout << "All MRRs of programs" << endl;
-
-  // for (auto& op : all_params) {
-
-  //   cout << op.average_MRR() << endl;
-
-  // }
-
-  //  return 0;
-
   return all_params;
 
 }
@@ -1136,7 +1119,9 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  test_mutated_cases_HAAS(dir_name);
+  // test_mutated_cases_HAAS(dir_name);
+
+  generate_params(dir_name);
 
   return 0;
 
@@ -1200,7 +1185,7 @@ int main(int argc, char** argv) {
 
     double worst_mrr = 60*group.front().average_MRR();
     cout << "Worst MRR = " << worst_mrr << endl;
-    //cout << group.front() << endl;
+    cout << group.front() << endl;
 
     double best_mrr = 60*group.back().average_MRR();
     cout << "Best MRR = " << best_mrr << endl;
