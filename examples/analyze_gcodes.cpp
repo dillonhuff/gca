@@ -934,23 +934,37 @@ point random_point(const point l, const point r) {
   return point(x, y, z);
 }
 
+cut* random_cut_to_from(const point start, const point end) {
+  return new (allocate<linear_cut>()) linear_cut(start, end);
+}
+
+cut* random_cut_starting_at(const point start, const point bound) {
+  return new (allocate<linear_cut>()) linear_cut(start, random_point(start, bound));
+}
+
 vector<cut*> random_cuts_to_from(const point start, const point end) {
   int max_cuts = 8;
   int num_cuts = random_int(1, max_cuts);
 
   point first_point = start;
+  //point last_point = first_point;
 
   vector<cut*> cuts;
   for (int i = 0; i < num_cuts; i++) {
-    point last_point = random_point(start, end);
+
+    cut* c;
+    
     if (i == (num_cuts - 1)) {
-      last_point = end;
+      c = random_cut_to_from(first_point, end);
+    } else {
+      c = random_cut_starting_at(first_point, end);
     }
 
-    cut* c =  new (allocate<linear_cut>()) linear_cut(first_point, last_point);
+    first_point = c->get_end();
+    //last_point = c->get_end();
+
     cuts.push_back(c);
 
-    first_point = last_point;
   }
   
 
