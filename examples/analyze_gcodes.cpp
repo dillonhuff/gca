@@ -920,6 +920,23 @@ point out_of_bounds_point(const double range) {
   return point(x, y, z);
 }
 
+vector<cut*> random_cuts_to_from(const point start, const point end) {
+  cut* c =  new (allocate<linear_cut>()) linear_cut(start, end);
+
+  return {c};
+}
+
+vector<cut*> random_cut_sequence(const point start_pt, const double range) {
+  point start = start_pt;
+  point mid = out_of_bounds_point(range);
+  point end = start_pt;
+
+  vector<cut*> cuts = random_cuts_to_from(start, mid);
+  concat(cuts, random_cuts_to_from(mid, end));
+  return cuts;
+}
+
+
 bool randomly_mutate(std::vector<std::vector<cut*> >& paths) {
   if (paths.size() == 0) { return false; }
 
@@ -927,11 +944,9 @@ bool randomly_mutate(std::vector<std::vector<cut*> >& paths) {
   if (r < 0.5) {
     cut* last = paths.back().back();
     point last_pt = last->get_end();
-    linear_cut* error_cut =
-      new (allocate<linear_cut>()) linear_cut(last_pt,
-					      out_of_bounds_point(100));
+    vector<cut*> error_cuts = random_cut_sequence(last_pt, 100);
 
-    paths.back().push_back(error_cut);
+    concat(paths.back(), error_cuts); //.push_back(error_cut);
 
     return true;
   }
