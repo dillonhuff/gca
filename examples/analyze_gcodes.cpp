@@ -22,6 +22,7 @@
 #include "simulators/simulate_operations.h"
 #include "synthesis/visual_debug.h"
 #include "gcode/cut.h"
+#include "gcode/safe_move.h"
 #include "utils/algorithm.h"
 #include "utils/grouping.h"
 #include "utils/arena_allocator.h"
@@ -935,7 +936,12 @@ point random_point(const point l, const point r) {
 }
 
 cut* random_cut_to_from(const point start, const point end) {
-  return new (allocate<linear_cut>()) linear_cut(start, end);
+  int cut_index = random_int(0, 1);
+  if (cut_index == 0) {
+    return new (allocate<linear_cut>()) linear_cut(start, end);
+  } else {
+    return new (allocate<safe_move>()) safe_move(start, end);
+  }
 }
 
 cut* random_cut_starting_at(const point start, const point bound) {
