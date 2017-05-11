@@ -32,6 +32,28 @@ namespace gca {
     return l.settings == r.settings;
   }
 
+  double clockwise_angle(const point a, const point b) {
+    double x1 = a.x;
+    double x2 = b.x;
+    double y1 = a.y;
+    double y2 = b.y;
+
+    double dot = x1*x2 + y1*y2;
+    double det = x1*y2 - y1*x2; 
+    double angle = atan2(det, dot);
+    angle = fmod(-180/M_PI * angle, 360);
+
+    if (angle < 0.0) {
+      // cout << "a     = " << a << endl;
+      // cout << "b     = " << b << endl;
+      // cout << "Angle = " << angle << endl;
+      //DBG_ASSERT(angle >= 0.0);
+      return 360 + angle;
+    }
+    
+    return angle;
+  }
+
   double signed_angle_2D(const point ab, const point bb) {
     point a(ab.x, ab.y, 0.0);
     a = a.normalize();
@@ -124,7 +146,12 @@ namespace gca {
     point c1 = arc.get_start() - arc.center();
     point c2 = arc.get_end() - arc.center();
     double radius = c1.len();
-    double angle = signed_angle_2D(c1, c2);
+    double angle;// = signed_angle_2D(c1, c2);
+    if (arc.dir == CLOCKWISE) {
+      angle = -1*clockwise_angle(c1, c2);
+    } else {
+      angle = 360 - clockwise_angle(c1, c2);
+    }
 
     vector<point> extremal_pts;
     extremal_pts.push_back(arc.center() + point(radius, 0, 0));
@@ -135,19 +162,19 @@ namespace gca {
     if (arc.dir == COUNTERCLOCKWISE) {
 
       if (angle <= 0.0) {
-      	// cout << "angle       = " << angle << endl;
-      	// cout << "direction   = " << arc.dir << endl;
-      	// cout << "line number = "<< arc.get_line_number() << endl;
+      	cout << "angle       = " << angle << endl;
+      	cout << "direction   = " << arc.dir << endl;
+      	cout << "line number = "<< arc.get_line_number() << endl;
 
-      	// cout << arc << endl;
-	// cout << "Direction    = " << arc.dir << endl;
-	// cout << "Start offset = " << arc.start_offset << endl;
-	// cout << "Center = " << arc.center() << endl;
-	// cout << "Start  = " << arc.get_start() << endl;
-	// cout << "End    = " << arc.get_end() << endl;
+      	cout << arc << endl;
+	cout << "Direction    = " << arc.dir << endl;
+	cout << "Start offset = " << arc.start_offset << endl;
+	cout << "Center = " << arc.center() << endl;
+	cout << "Start  = " << arc.get_start() << endl;
+	cout << "End    = " << arc.get_end() << endl;
 	
 
-      	//DBG_ASSERT(!(angle <= 0.0));
+      	DBG_ASSERT(!(angle <= 0.0));
 	angle = 360 - angle;
       }
 
