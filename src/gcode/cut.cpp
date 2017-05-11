@@ -113,7 +113,7 @@ namespace gca {
   }
 
   vector<point> bound_points(const circular_helix_cut& arc) {
-    cout << "found CIRCULAR ARC" << endl;
+    //cout << "found CIRCULAR ARC" << endl;
     vector<point> bound_pts;
 
     point c1 = arc.get_start() - arc.center();
@@ -129,15 +129,22 @@ namespace gca {
 
     if (arc.dir == COUNTERCLOCKWISE) {
 
-      // if (angle <= 0.0) {
-      // 	cout << "angle       = " << angle << endl;
-      // 	cout << "direction   = " << arc.dir << endl;
-      // 	cout << "line number = "<< arc.get_line_number() << endl;
+      if (angle <= 0.0) {
+      	// cout << "angle       = " << angle << endl;
+      	// cout << "direction   = " << arc.dir << endl;
+      	// cout << "line number = "<< arc.get_line_number() << endl;
 
-      // 	cout << arc << endl;
+      	// cout << arc << endl;
+	// cout << "Direction    = " << arc.dir << endl;
+	// cout << "Start offset = " << arc.start_offset << endl;
+	// cout << "Center = " << arc.center() << endl;
+	// cout << "Start  = " << arc.get_start() << endl;
+	// cout << "End    = " << arc.get_end() << endl;
+	
 
-      // 	DBG_ASSERT(!(angle <= 0.0));
-      // }
+      	//DBG_ASSERT(!(angle <= 0.0));
+	angle = 360 - angle;
+      }
 
       for (auto& pt : extremal_pts) {
 	point c = pt - arc.center();
@@ -145,20 +152,21 @@ namespace gca {
 
 	if (a <= fabs(angle)) {
 	  bound_pts.push_back(pt);
-	  //cout << "Added extremal point " << pt << endl;
+	  cout << "Added extremal point " << pt << endl;
 	}
       }
 
     } else {
-      // if (angle >= 0.0) {
-      // 	if (within_eps(angle, 180, 0.0001)) {
-      // 	  angle = -180;
-      // 	} else {
-      // 	  cout << "angle     = " << angle << endl;
-      // 	  cout << "direction = " << arc.dir << endl;
-      // 	  DBG_ASSERT(!(angle >= 0.0));
-      // 	}
-      // }
+      if (angle >= 0.0) {
+      	if (within_eps(angle, 180, 0.0001)) {
+      	  angle = -180;
+      	} else {
+      	  // cout << "angle     = " << angle << endl;
+      	  // cout << "direction = " << arc.dir << endl;
+      	  //DBG_ASSERT(!(angle >= 0.0));
+	  angle = angle - 360;
+      	}
+      }
 
       for (auto& pt : extremal_pts) {
 	point c = pt - arc.center();
@@ -166,7 +174,7 @@ namespace gca {
 	    
 	if (a <= fabs(angle)) {
 	  bound_pts.push_back(pt);
-	  //cout << "Added extremal point " << pt << endl;
+	  cout << "Added extremal point " << pt << endl;
 	}
       }
 	  
