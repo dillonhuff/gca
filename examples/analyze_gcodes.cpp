@@ -935,17 +935,45 @@ point random_point(const point l, const point r) {
   return point(x, y, z);
 }
 
+circular_arc* random_circular_arc_to_from(const point start, const point end) {
+  DBG_ASSERT(start.z == end.z);
+  DBG_ASSERT(false);
+}
+
 cut* random_cut_to_from(const point start, const point end) {
   int cut_index = random_int(0, 1);
   if (cut_index == 0) {
     return new (allocate<linear_cut>()) linear_cut(start, end);
-  } else {
+  } else if (cut_index == 1) {
     return new (allocate<safe_move>()) safe_move(start, end);
+  } else {
+    DBG_ASSERT(false);
   }
 }
 
 cut* random_cut_starting_at(const point start, const point bound) {
-  return new (allocate<linear_cut>()) linear_cut(start, random_point(start, bound));
+  int cut_index = random_int(0, 2);
+  if (cut_index == 0) {
+
+    return new (allocate<linear_cut>()) linear_cut(start, random_point(start, bound));
+
+  } else if (cut_index == 1) {
+
+    return new (allocate<safe_move>()) safe_move(start, random_point(start, bound));
+  }
+  else if (cut_index == 2) {
+
+    point end = random_point(start, bound);
+    end.z = start.z;
+    point centroid = 0.5*(start + end);
+    point center = centroid;
+    direction dir = COUNTERCLOCKWISE;
+
+    return new (allocate<circular_arc>()) circular_arc(start, end, center - start, dir, XY);
+    
+  } else {
+    DBG_ASSERT(false);
+  }
 }
 
 vector<cut*> random_cuts_to_from(const point start, const point end) {
