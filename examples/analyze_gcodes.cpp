@@ -23,6 +23,7 @@
 #include "synthesis/visual_debug.h"
 #include "gcode/cut.h"
 #include "gcode/safe_move.h"
+#include "gcode/circular_helix_cut.h"
 #include "utils/algorithm.h"
 #include "utils/grouping.h"
 #include "utils/arena_allocator.h"
@@ -952,7 +953,7 @@ cut* random_cut_to_from(const point start, const point end) {
 }
 
 cut* random_cut_starting_at(const point start, const point bound) {
-  int cut_index = random_int(0, 2);
+  int cut_index = random_int(0, 3);
   if (cut_index == 0) {
 
     return new (allocate<linear_cut>()) linear_cut(start, random_point(start, bound));
@@ -967,12 +968,18 @@ cut* random_cut_starting_at(const point start, const point bound) {
     end.z = start.z;
     point centroid = 0.5*(start + end);
     point center = centroid;
-    direction dir = COUNTERCLOCKWISE;
+    direction dir = random_int(0, 1) == 1 ? COUNTERCLOCKWISE : CLOCKWISE;
 
     return new (allocate<circular_arc>()) circular_arc(start, end, center - start, dir, XY);
     
   } else {
-    DBG_ASSERT(false);
+    point end = random_point(start, bound);
+    point centroid = 0.5*(start + end);
+    point center = centroid;
+    direction dir = random_int(0, 1) == 1 ? COUNTERCLOCKWISE : CLOCKWISE;//COUNTERCLOCKWISE;
+
+    return new (allocate<circular_arc>()) circular_helix_cut(start, end, center - start, dir, XY);
+
   }
 }
 
