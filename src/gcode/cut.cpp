@@ -32,7 +32,12 @@ namespace gca {
     return l.settings == r.settings;
   }
 
-  double signed_angle_2D(const point a, const point b) {
+  double signed_angle_2D(const point ab, const point bb) {
+    point a(ab.x, ab.y, 0.0);
+    a = a.normalize();
+    point b(bb.x, bb.y, 0.0);
+    b = b.normalize();
+
     double angle = angle_between(a, b);
     if(a.x*b.y - a.y*b.x < 0) {
       angle = -angle;
@@ -152,7 +157,7 @@ namespace gca {
 
 	if (a <= fabs(angle)) {
 	  bound_pts.push_back(pt);
-	  cout << "Added extremal point " << pt << endl;
+	  //cout << "Added extremal point " << pt << endl;
 	}
       }
 
@@ -174,7 +179,7 @@ namespace gca {
 	    
 	if (a <= fabs(angle)) {
 	  bound_pts.push_back(pt);
-	  cout << "Added extremal point " << pt << endl;
+	  //cout << "Added extremal point " << pt << endl;
 	}
       }
 	  
