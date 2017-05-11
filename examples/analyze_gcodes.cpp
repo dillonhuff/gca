@@ -920,10 +920,41 @@ point out_of_bounds_point(const double range) {
   return point(x, y, z);
 }
 
-vector<cut*> random_cuts_to_from(const point start, const point end) {
-  cut* c =  new (allocate<linear_cut>()) linear_cut(start, end);
+int random_int(const int min, const int max) {
+  return min + (rand() % (int)(max - min + 1));
+}
 
-  return {c};
+point random_point(const point l, const point r) {
+  box bb = bound_positions({l, r});
+
+  double x = fRand(bb.x_min, bb.x_max);
+  double y = fRand(bb.y_min, bb.y_max);
+  double z = fRand(bb.z_min, bb.z_max);
+
+  return point(x, y, z);
+}
+
+vector<cut*> random_cuts_to_from(const point start, const point end) {
+  int max_cuts = 8;
+  int num_cuts = random_int(1, max_cuts);
+
+  point first_point = start;
+
+  vector<cut*> cuts;
+  for (int i = 0; i < num_cuts; i++) {
+    point last_point = random_point(start, end);
+    if (i == (num_cuts - 1)) {
+      last_point = end;
+    }
+
+    cut* c =  new (allocate<linear_cut>()) linear_cut(first_point, last_point);
+    cuts.push_back(c);
+
+    first_point = last_point;
+  }
+  
+
+  return cuts;
 }
 
 vector<cut*> random_cut_sequence(const point start_pt, const double range) {
