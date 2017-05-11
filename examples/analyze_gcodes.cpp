@@ -904,15 +904,33 @@ struct mutated_test_case {
   bool found_error;
 };
 
+double fRand(double fMin, double fMax)
+{
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}
+
+point out_of_bounds_point(const double range) {
+  double v = range;
+  double x = fRand(0, v);
+  v = v - x;
+  double y = fRand(0, v);
+  v = v - y;
+  double z = v;
+  return point(x, y, z);
+}
+
 bool randomly_mutate(std::vector<std::vector<cut*> >& paths) {
   if (paths.size() == 0) { return false; }
 
   double r = ((double) rand() / (RAND_MAX));
   if (r < 0.5) {
     cut* last = paths.back().back();
+    point last_pt = last->get_end();
     linear_cut* error_cut =
-      new (allocate<linear_cut>()) linear_cut(last->get_end(),
-					      point(1000, 1000, 1000));
+      new (allocate<linear_cut>()) linear_cut(last_pt,
+					      out_of_bounds_point(100));
+
     paths.back().push_back(error_cut);
 
     return true;
