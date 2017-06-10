@@ -1118,6 +1118,52 @@ void test_mutated_cases_GCA(const std::string& dir_name) {
   print_case_stats(cases);
 }
 
+void test_bounds_cases_HAAS(const std::string& dir_name) {
+  std::vector<mutated_test_case> cases;
+
+  apply_to_gprograms(dir_name, [&cases](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+
+	bool introduced_error = false;
+
+	bool any_travel_errors = program_in_HAAS_travel(paths);
+
+	if (!introduced_error) {
+	  cases.push_back({paths, false, any_travel_errors});
+	} else {
+	  cases.push_back({paths, true, any_travel_errors});
+	}
+      }
+    });
+
+  print_case_stats(cases);
+}
+
+void test_bounds_cases_GCA(const std::string& dir_name) {
+  std::vector<mutated_test_case> cases;
+
+  apply_to_gprograms(dir_name, [&cases](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+
+	bool introduced_error = false;
+
+	bool any_travel_errors = program_in_GCA_travel(paths);
+
+	if (!introduced_error) {
+	  cases.push_back({paths, false, any_travel_errors});
+	} else {
+	  cases.push_back({paths, true, any_travel_errors});
+	}
+      }
+    });
+
+  print_case_stats(cases);
+}
+
 vector<operation_params> generate_params(const std::string& dir_name) {
   vector<operation_params> all_params;
 
@@ -1238,7 +1284,7 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  test_mutated_cases_HAAS(dir_name);
+  test_bounds_cases_HAAS(dir_name);
 
   return 0;
 

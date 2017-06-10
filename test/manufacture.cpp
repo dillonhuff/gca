@@ -120,6 +120,7 @@ namespace gca {
       point p = access_dirs[i];
 
       surface_setup ss;
+      ss.access_direction = p;
 
       for (unsigned j = 0; j < surfs.size(); j++) {
 	if (!elem(j, assigned) && access_rel.connected(j, i)) {
@@ -133,7 +134,9 @@ namespace gca {
       }
     }
 
-    return {{setups}};
+    vector<surface_plan> plans{{setups}};
+
+    return plans;
   }
 
   struct two_setup_plan_case {
@@ -253,11 +256,12 @@ namespace gca {
 	vector<vector<surface> > decomp;
 	for (auto& step : plan.setups) {
 	  //vtk_debug_highlight_inds(step.surfs);
+	  cout << step.access_direction << endl;
 	  decomp.push_back(step.surfs);
 	}
 
 	cout << "# of setups in plan = " << plan.setups.size() << endl;
-	//visualize_surface_decomp(decomp);
+	visualize_surface_decomp(decomp);
       }
     }
 
