@@ -153,6 +153,23 @@ void apply_to_gprograms(const string& dn, F f) {
   
 }
 
+template<typename F>
+void apply_to_router_gprograms(const string& dn, F f) {
+  auto func = [&f](const string& dir_name) {
+    if (ends_with(dir_name, ".tap")) {
+      cout << dir_name << endl;
+      std::ifstream t(dir_name);
+      std::string str((std::istreambuf_iterator<char>(t)),
+  		      std::istreambuf_iterator<char>());
+      vector<block> p = lex_gprog(str);
+      cout << "NUM BLOCKS: " << p.size() << endl;
+      f(p, dir_name);
+    }
+  };
+  read_dir(dn, func);
+  
+}
+
 vector<cut*> clip_transition_heights(const vector<cut*>& path,
 				     double new_safe_height) {
   vector<vector<cut*>> move_sequences =
@@ -1153,6 +1170,18 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
+  apply_to_router_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
+      vector<vector<cut*>> paths;
+      auto r = gcode_to_cuts(p, paths);
+      if (r == GCODE_TO_CUTS_SUCCESS) {
+	vtk_debug_cuts(concat_all(paths));
+      } else {
+	cout << "Could not process " << file_name << endl;
+      }
+    });
+
+  return 0;
+
   test_bounds_cases_HAAS(dir_name);
 
   return 0;
@@ -1244,189 +1273,4 @@ int main(int argc, char** argv) {
     //   cout << op << endl;
     // }
   }
-
-  
-  // sort(begin(all_ops), end(all_ops), [](const operation_params& l,
-  // 					const operation_params& r) {
-  // 	 return l.average_MRR() < r.average_MRR();
-  //      });
-  
-  // for (auto& op : all_ops) {
-  //   if (op.range.name == "ROUGHING") {
-  //     cout << op.file_name << endl;
-  //     cout << op.SFM() << "," << 60*op.average_MRR() << endl;
-  //   }
-  // }
-
-
-  //write_logs_to_json(files_to_simulation_logs);
-
-  //return 0;
-
-  // return 0;
-
-  // for (auto& op : p) {
-  //   cout << "-------------------------------------------------------------" << endl;
-  //   cout << op << endl;
-  // }
-
-  // Now start analyzing the trace
-  //return 0;
-
-  // time_t start_time;
-  // time_t end_time;
-  // time(&start_time);
-
-  // return 0;
-
-  // print_sfm_mrr_csv(likely_rough_ops);
-
-  // return 0;
-
-  // sort_lt(likely_rough_ops, [](const operation_params& l) {
-  //     return l.average_MRR();
-  //   });
-
-  // for (auto& op : likely_rough_ops) {
-  //   cout << endl << "-------------------------------------" << endl;
-  //   cout << op << endl;
-  // }
-
-  // return 0;
-
-  // sort(begin(grouped), end(grouped), [](const std::vector<operation_params>& l,
-  // 					const std::vector<operation_params>& r) {
-  // 	 return l.front().tool_diameter < r.front().tool_diameter;
-  //      });
-
-  // cout << "# of tool groups = " << grouped.size() << endl;
-  // for (auto& g : grouped) {
-  //   cout << "# of operations with diameter " << g.front().tool_diameter;
-  //   cout << " inches = " << g.size() << endl;
-
-  //   sort(begin(g), end(g), [](const operation_params& l,
-  // 			      const operation_params& r) {
-  // 	   return l.average_MRR() < r.average_MRR();
-  // 	 });
-
-
-  //   cout << endl << "&&&&&&&&&& MRRS for Diam = " << g.front().tool_diameter << " &&&&&&&&&&" << endl;
-  //   for (auto& op : g) {
-
-  //     cout << "---------------------------------------" << endl;
-
-  //     cout << ", file = " << op.file_name << endl;      
-  //     cout << "Type = " << op.tool_end_type << ", Diam = " << op.tool_diameter << endl;
-  //     cout << "Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
-  //     cout << "Material removed = " << op.material_removed << endl;
-  //     cout << "average MRR = " << op.average_MRR() << endl;
-  //   }
-    
-    // cout << "SURFACE FEET PER MINUTE" << endl;
-    // for (auto op : g) {
-    //   cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
-    //   cout << ", file = " << op.file_name << endl;
-    // }
-
-    // auto similar_groups =
-    //   group_by(g, [](const operation_params& l,
-    // 		     const operation_params& r) {
-    // 		 return within_eps(l.SFM(), r.SFM(), 10.0) &&
-    // 		 within_eps(l.cut_depth, r.cut_depth, 0.001);
-    // 	       });
-
-    // for (auto sim_group : similar_groups) {
-    //   if (sim_group.size() > 1) {
-
-    // 	cout << endl << "&&&&&&&&&&&&&&&&&&& CLOSE SFM AND DOC &&&&&&&&&&&&&&&&&&&" << endl;
-    // 	for (auto& op : sim_group) {
-    // 	  cout << "Diam = " << op.tool_diameter << ", Speed = " << op.spindle_speed << ", Feed = " << op.feedrate << ", DOC = " << op.cut_depth << ", SFM = " << op.SFM() << endl;
-    // 	  cout << ", material removed = " << op.material_removed;
-    // 	  cout << ", file = " << op.file_name << endl;
-    // 	}
-    //   }
-    // }
-
-    
-
-
-  // }
-
-  // vector<operation_params> cached = likely_rough_ops;
-
-  // auto voted_op_score =
-  //   [&cached](const operation_params& v) {
-  //   double score = 0.0;
-
-  //   for (auto& op : cached) {
-  //     double sfm_diff = fabs(op.SFM() - v.SFM());
-  //     double sfm_v = v.SFM();
-
-  //     if (sfm_diff <= 200.0) {
-  // 	double mrr_diff = v.average_MRR() - op.average_MRR();
-
-  // 	// NOTE: Add sfm weight later
-  // 	score += mrr_diff;
-  //     }
-  //   }
-
-  //   return score;
-  // };
-  // sort_lt(likely_rough_ops, voted_op_score);
-
-  // for (auto& op : likely_rough_ops) {
-  //   cout << "----------------------------------------------" << endl;
-  //   cout << op << endl;
-  //   cout << "SCORE = " << voted_op_score(op) << endl;
-  // }
-
-  // return 0;
-
-  // // double num_large_mrrs = count_if(mrrs.begin(), mrrs.end(),
-  // // 				   [](double mrr) { return mrr > 5.0; });;
-  // // cout << "# files w/ MRR > 10 in^3/min: " << num_large_mrrs << endl;
-
-  // vector<op_replacement> replacements;
-  // for (auto& g : grouped) {
-  //   for (unsigned i = 0; i < g.size(); i++) {
-  //     for (unsigned j = i + 1; j < g.size(); j++) {
-  // 	replacements.push_back({g[i], g[j]});
-  //     }
-  //   }
-  // }
-
-  // cout << "# of replacements = " << replacements.size() << endl;
-
-  // delete_if(replacements, []
-  // 	    (const op_replacement& l) {
-  // 	      return fabs(l.better.SFM() - l.worse.SFM()) > 200.0;
-  // 	    });
-
-  // cout << "# of replacements with SFM diff < 200.0 = " << replacements.size() << endl;
-
-  // auto replacement_rank =
-  //   [](const op_replacement& l, const op_replacement& r) {
-  //   return (l.better.average_MRR() - l.worse.average_MRR()) <
-  //   (r.better.average_MRR() - r.worse.average_MRR());
-  // };
-
-  // sort(begin(replacements), end(replacements), replacement_rank);
-
-  // cout << endl << "ALL REPLACEMENTS RANKED" << endl;
-  // for (auto& rep : replacements) {
-  //   cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl;
-  //   cout << "========== WORSE ==========" << endl;
-  //   cout << rep.worse << endl;
-  //   cout << "========== BETTER ==========" << endl;
-  //   cout << rep.better << endl;
-  //   cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl << endl;
-  // }
-
-  // time(&end_time);
-  // double seconds = difftime(end_time, start_time);
-  // cout << "Total time to process all .NCF files: " << seconds << " seconds" << endl;
-  
-
-  // cout << "mrrs.size() = " << mrrs.size() << endl;
-  //print_histogram(mrrs);
 }
