@@ -146,7 +146,7 @@ namespace gca {
       active_coord_system(UNKNOWN_COORD_SYSTEM),
       tool_height_comp(TOOL_HEIGHT_COMP_UNKNOWN),
       tool_radius_comp(TOOL_RADIUS_COMP_UNKNOWN),
-      active_plane(UNKNOWN_PLANE),
+      active_plane(XY_PLANE),
       active_non_modal_setting(NO_NON_MODAL_SETTING),
       x(omitted::make()), y(omitted::make()), z(omitted::make()),
       spindle_setting(SPINDLE_STATE_UNKNOWN),
