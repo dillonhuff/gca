@@ -11,7 +11,7 @@ namespace gca {
 
   std::vector<cut*> extract_drill_downs(const std::vector<cut*>& drill_downs) {
     vector<cut*> drills = drill_downs;
-    delete_if(drills, [](const cut* c) { return !c->is_linear_cut(); });
+    delete_if(drills, [](const cut* c) { return !c->is_linear_cut() || !is_vertical(c); });
 
     return drills;
   }
