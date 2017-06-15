@@ -44,7 +44,10 @@ namespace gca {
       assert(false);
     }
     if (!s.k->is_lit()) {
-      assert(s.active_plane == XY_PLANE);
+      if (s.active_plane != XY_PLANE) {
+	cout << "Active plane = " << s.active_plane << endl;
+	assert(s.active_plane == XY_PLANE);
+      }
       assert(s.k->is_omitted());
       assert(s.i->is_lit() || s.i->is_omitted());
       assert(s.j->is_lit() || s.j->is_omitted());
