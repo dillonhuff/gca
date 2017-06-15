@@ -280,6 +280,7 @@ SET(TEST_FILES test/main.cpp
 	       test/mesh_to_gcode_tests.cpp
 	       test/axis_3_tests.cpp
 	       test/chamfer_detection_tests.cpp
+	       test/drill_optimization_tests.cpp
 	       ${BACKEND_TEST_FILES}
 	       ${GEOMETRY_TEST_FILES})
 

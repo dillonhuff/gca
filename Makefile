@@ -4319,6 +4319,36 @@ test/cut_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/cut_tests.cpp.s
 .PHONY : test/cut_tests.cpp.s
 
+test/drill_optimization_tests.o: test/drill_optimization_tests.cpp.o
+
+.PHONY : test/drill_optimization_tests.o
+
+# target to build an object file
+test/drill_optimization_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/drill_optimization_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/drill_optimization_tests.cpp.o
+.PHONY : test/drill_optimization_tests.cpp.o
+
+test/drill_optimization_tests.i: test/drill_optimization_tests.cpp.i
+
+.PHONY : test/drill_optimization_tests.i
+
+# target to preprocess a source file
+test/drill_optimization_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/drill_optimization_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/drill_optimization_tests.cpp.i
+.PHONY : test/drill_optimization_tests.cpp.i
+
+test/drill_optimization_tests.s: test/drill_optimization_tests.cpp.s
+
+.PHONY : test/drill_optimization_tests.s
+
+# target to generate assembly for a file
+test/drill_optimization_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/drill_optimization_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/drill_optimization_tests.cpp.s
+.PHONY : test/drill_optimization_tests.cpp.s
+
 test/dxf_to_gcode_tests.o: test/dxf_to_gcode_tests.cpp.o
 
 .PHONY : test/dxf_to_gcode_tests.o
@@ -6103,6 +6133,9 @@ help:
 	@echo "... test/cut_tests.o"
 	@echo "... test/cut_tests.i"
 	@echo "... test/cut_tests.s"
+	@echo "... test/drill_optimization_tests.o"
+	@echo "... test/drill_optimization_tests.i"
+	@echo "... test/drill_optimization_tests.s"
 	@echo "... test/dxf_to_gcode_tests.o"
 	@echo "... test/dxf_to_gcode_tests.i"
 	@echo "... test/dxf_to_gcode_tests.s"
