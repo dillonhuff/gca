@@ -89,6 +89,28 @@ namespace gca {
     surface_plan plan;
   };
 
+  
+  relation<surface, point>
+  build_access_relation(const vector<surface>& surfs,
+			const vector<point>& access_dirs) {
+
+    const auto& mesh = surfs.front().get_parent_mesh();
+    
+    relation<surface, point> access_rel(surfs, access_dirs);
+    for (unsigned i = 0; i < access_dirs.size(); i++) {
+      vector<index_t> inds = millable_faces(access_dirs[i], mesh);
+      sort(begin(inds), end(inds));
+
+      for (unsigned surf_ind = 0; surf_ind < surfs.size(); surf_ind++) {
+	if ( surfs[surf_ind].contained_by_sorted(inds) ) {
+	  access_rel.insert(surf_ind, i);
+	}
+      }
+    }
+
+    return access_rel;
+  }
+
   std::vector<surface_plan>
   ranked_surface_plans(const std::vector<surface>& surfs) {
     if (surfs.size() == 0) { return {}; }
@@ -101,17 +123,9 @@ namespace gca {
       access_dirs.push_back(normal(s));
     }
 
-    relation<surface, point> access_rel(surfs, access_dirs);
-    for (unsigned i = 0; i < access_dirs.size(); i++) {
-      vector<index_t> inds = millable_faces(access_dirs[i], mesh);
-      sort(begin(inds), end(inds));
+    cout << "# of access dirs = " << access_dirs.size() << endl;
 
-      for (unsigned surf_ind = 0; surf_ind < surfs.size(); surf_ind++) {
-	if ( surfs[surf_ind].contained_by_sorted(inds) ) {
-	  access_rel.insert(surf_ind, i);
-	}
-      }
-    }
+    auto access_rel = build_access_relation(surfs, access_dirs);
 
     vector<surface_setup> setups;
     vector<unsigned> assigned;
@@ -302,12 +316,12 @@ namespace gca {
       REQUIRE(axis_fix.positive);
       REQUIRE(axis_fix.negative);
 
-      vector<tool> tools = long_tools();
-      workpiece wp = test_case.wp;
-      fabrication_plan fp =
-	axis_fabrication_plan(*cut_axis, axis_fix, fixes, wp, tools);
+      // vector<tool> tools = long_tools();
+      // workpiece wp = test_case.wp;
+      // fabrication_plan fp =
+      // 	axis_fabrication_plan(*cut_axis, axis_fix, fixes, wp, tools);
 
-      REQUIRE(fp.steps().size() == 2);
+      // REQUIRE(fp.steps().size() == 2);
 
       // for (auto& fs : fp.steps()) {
       // 	visual_debug(fs);

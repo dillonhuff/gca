@@ -113,7 +113,8 @@ SET(GCODE_CPPS 	 ./src/gcode/cut.cpp
 	 ./src/gcode/lexer.cpp
 	 ./src/gcode/machine.cpp
 	 ./src/gcode/parse_stream.cpp
-	 ./src/gcode/linear_cut.cpp)
+	 ./src/gcode/linear_cut.cpp
+	 ./src/gcode/visual_debug.cpp)
 
 add_library(gcode ${GCODE_HEADERS} ${GCODE_CPPS})
 target_link_libraries(gcode geometry utils)

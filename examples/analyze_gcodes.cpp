@@ -15,6 +15,7 @@
 #include "backend/output.h"
 #include "checkers/block_rate_checker.h"
 #include "gcode/lexer.h"
+#include "gcode/visual_debug.h"
 #include "geometry/box.h"
 #include "geometry/vtk_debug.h"
 #include "simulators/region.h"
@@ -263,114 +264,6 @@ void print_histogram(vector<T>& items) {
   }
 }
 
-// void simulate_paths(vector<vector<cut*>>& paths,
-// 		    map<int, tool_info>& tool_table,
-// 		    vector<double>& mrrs) {
-//   if (paths.size() == 0) { return; }
-//   // TODO: Add proper tool diameter max checking
-
-//   double max_tool_diameter = 1.5;
-//   // auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-//   // vtk_debug_depth_field(r.r);
-
-//   for (auto path : paths) {
-//     cout << "Looking up tool diameter" << endl;
-//     auto c = *find_if(path.begin(), path.end(),
-// 		       [](const cut* c) { return !c->is_safe_move(); });
-//     auto tn = c->settings.active_tool; //path.front()->settings.active_tool;
-//     if (!(tn->is_ilit())) {
-//       cout << "ERROR" << endl;
-//       cout << *c << endl;
-//       cout << "Active tool = " << *(c->settings.active_tool) << endl;
-//       assert(false);
-//     }
-//     auto tl = static_cast<ilit*>(tn);
-//     int current_tool_no = tl->v;
-//     double tool_diameter = tool_table[current_tool_no].tool_diameter;
-//     cylindrical_bit t = (tool_diameter);
-
-//     double cut_depth = estimate_cut_depth_median(path);
-//     double feedrate = estimate_feedrate_median(path);
-//     double spindle_speed = estimate_spindle_speed_median(path);
-//     double sfm = surface_feet_per_minute(spindle_speed, tool_diameter);
-
-//     double cl_2_flute = chip_load(spindle_speed, feedrate, 2);
-//     double cl_4_flute = chip_load(spindle_speed, feedrate, 4);
-//     double cl_6_flute = chip_load(spindle_speed, feedrate, 6);
-
-//     cout << "--------------------------------------------------------" << endl;
-
-//     cout << "current_tool_no = " << current_tool_no << endl;
-//     cout << "Tool diameter = " << tool_diameter << endl << endl;
-
-//     cout << "cut depth estimate = " << cut_depth << endl;
-//     cout << "feedrate estimate = " << feedrate << endl;
-//     cout << "spindle speed estimate = " << spindle_speed << endl << endl;
-    
-//     cout << "implied sfm = " << sfm << endl;
-
-//     cout << "implied CL for 2 flutes = " << cl_2_flute << endl;
-//     cout << "implied CL for 4 flutes = " << cl_4_flute << endl;
-//     cout << "implied CL for 6 flutes = " << cl_6_flute << endl;
-    
-//     cout << "--------------------------------------------------------" << endl;
-
-    
-
-//     // for (auto c : path) {
-//     //   double volume_removed = update_cut(*c, r, t);
-//     //   double execution_time = cut_execution_time_minutes(c);
-
-//     //   if (!within_eps(execution_time, 0.0)) {
-
-//     // 	if (!c->is_safe_move()) {
-//     // 	  auto f = c->get_feedrate();
-//     // 	  auto sp = c->get_spindle_speed();
-
-//     // 	  double cut_length = (c->get_end() - c->get_start()).len();
-//     // 	  double mrr = volume_removed / execution_time;
-	  
-//     // 	  // cout << "Feedrate       = " << static_cast<lit*>(f)->v << endl;
-//     // 	  // cout << "Spindle speed  = " << static_cast<lit*>(sp)->v << endl;
-//     // 	  // cout << "Z start        = " << c->get_start().z << endl;
-//     // 	  // cout << "Z end        = " << c->get_end().z << endl;
-	  
-//     // 	  // cout << "Volume removed = " << volume_removed << endl;
-//     // 	  // cout << "Cut length     = " << cut_length << endl;
-//     // 	  // cout << "MRR            = " << mrr << endl;
-
-//     // 	  mrrs.push_back(mrr);
-//     // 	}
-
-//     // 	// if (c->is_safe_move()) {
-//     // 	//   cout << "SAFE MOVE WITH MRR = " << mrr << endl;
-	  
-//     // 	//   DBG_ASSERT(false);
-//     // 	// }
-
-
-//     //   }
-
-//     // }
-
-//     // vtk_debug_depth_field(r.r);
-
-
-//   }
-
-//   // auto mm = minmax_element(mrrs.begin(), mrrs.end());
-//   // auto total_removed = accumulate(mrrs.begin(), mrrs.end(), 0.0);
-//   // auto cut_average_mrr = total_removed / static_cast<double>(mrrs.size());
-
-//   // cout << "MRR STATS" << endl;
-//   // cout << "-----------------------------------------------------" << endl;
-//   // cout << "Average MRR so far  = "<< cut_average_mrr << endl;
-//   // cout << "Smallest MRR so far = " << *mm.first << endl;
-//   // cout << "Largest MRR so far  = " << *mm.second << endl;
-//   // cout << "-----------------------------------------------------" << endl;
-// }
-
 std::string to_string(const operation_type op_type) {
   switch (op_type) {
 
@@ -447,30 +340,6 @@ struct op_replacement {
   operation_params worse;
   operation_params better;
 };
-
-std::vector<polyline> cuts_to_polylines(const std::vector<cut*>& cuts) {
-  vector<point> points;
-  for (auto& c : cuts) {
-    if (c->is_safe_move() || c->is_linear_cut()) {
-      points.push_back(c->get_start());
-      points.push_back(c->get_end());
-    } else {
-      double ind = 0;
-      while (ind < 1) {
-	points.push_back(c->value_at(ind));
-	ind += 0.1;
-      }
-      points.push_back(c->get_end());
-    }
-  }
-  return {{points}};
-}
-
-void vtk_debug_cuts(const std::vector<cut*>& cuts) {
-  vector<polyline> lines = cuts_to_polylines(cuts);
-  auto pd = polydata_for_polylines(lines);
-  visualize_polydatas({pd});
-}
 
 tool_end decode_tool_end_json(const ptree& p) {
   string tool_name = p.get<std::string>("");

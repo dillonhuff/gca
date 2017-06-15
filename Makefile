@@ -2228,6 +2228,33 @@ src/gcode/value.cpp.s:
 	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/value.cpp.s
 .PHONY : src/gcode/value.cpp.s
 
+src/gcode/visual_debug.o: src/gcode/visual_debug.cpp.o
+
+.PHONY : src/gcode/visual_debug.o
+
+# target to build an object file
+src/gcode/visual_debug.cpp.o:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/visual_debug.cpp.o
+.PHONY : src/gcode/visual_debug.cpp.o
+
+src/gcode/visual_debug.i: src/gcode/visual_debug.cpp.i
+
+.PHONY : src/gcode/visual_debug.i
+
+# target to preprocess a source file
+src/gcode/visual_debug.cpp.i:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/visual_debug.cpp.i
+.PHONY : src/gcode/visual_debug.cpp.i
+
+src/gcode/visual_debug.s: src/gcode/visual_debug.cpp.s
+
+.PHONY : src/gcode/visual_debug.s
+
+# target to generate assembly for a file
+src/gcode/visual_debug.cpp.s:
+	$(MAKE) -f CMakeFiles/gcode.dir/build.make CMakeFiles/gcode.dir/src/gcode/visual_debug.cpp.s
+.PHONY : src/gcode/visual_debug.cpp.s
+
 src/geometry/arc.o: src/geometry/arc.cpp.o
 
 .PHONY : src/geometry/arc.o
@@ -5848,6 +5875,9 @@ help:
 	@echo "... src/gcode/value.o"
 	@echo "... src/gcode/value.i"
 	@echo "... src/gcode/value.s"
+	@echo "... src/gcode/visual_debug.o"
+	@echo "... src/gcode/visual_debug.i"
+	@echo "... src/gcode/visual_debug.s"
 	@echo "... src/geometry/arc.o"
 	@echo "... src/geometry/arc.i"
 	@echo "... src/geometry/arc.s"

@@ -43,6 +43,9 @@ namespace gca {
 		      const unsigned char green,
 		      const unsigned char blue);
 
+  vtkSmartPointer<vtkPolyData>
+  polydata_for_polylines(const std::vector<polyline>& polylines);
+  
 }
 
 #endif
