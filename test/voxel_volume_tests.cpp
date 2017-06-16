@@ -24,7 +24,7 @@ namespace gca {
  
     // Intersect the locator with the line
     double lineP0[3] = {pt.x, pt.y, pt.z};
-    double lineP1[3] = {10000.0, 1000.0, 1000.0};
+    double lineP1[3] = {-10000.0, -1000.0, -1000.0};
 
     vtkSmartPointer<vtkPoints> intersectPoints = 
       vtkSmartPointer<vtkPoints>::New();
