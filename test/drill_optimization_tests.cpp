@@ -28,7 +28,8 @@ namespace gca {
   TEST_CASE("Counting needed drilling actions") {
     arena_allocator a;
     set_system_allocator(&a);
-    
+
+    // For CAMASTER Cobra 408
     string file_name = "/Users/dillon/CppWorkspace/gca/test/nc-files/strip=3,holes=.5,h=.2,len=60,drill.tap";
 
     std::ifstream t(file_name);
@@ -44,7 +45,7 @@ namespace gca {
 
     REQUIRE(paths.size() == 1);
 
-    vtk_debug_cuts(paths[0]);
+    //vtk_debug_cuts(paths[0]);
 
     double len = length(paths[0]);
     cout << "total length = " << len << endl;
@@ -55,6 +56,12 @@ namespace gca {
     cout << "drill length = " << length(drill_cuts) << endl;
 
     REQUIRE(drill_cuts.size() == num_drills);
+
+    int i = 0;
+    for (auto c : drill_cuts) {
+      cout << i << " " << c->get_start().x << " " << c->get_end().y << endl;
+      i++;
+    }
   }
 
 }

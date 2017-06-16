@@ -727,10 +727,10 @@ namespace gca {
     for (auto& n : next) {
       cout << "# of deep features in split = " << total_deep_features(n) << endl;
 
-      for (auto& split : n) {
-	vtk_debug_meshes(nef_polyhedron_to_trimeshes(split.nef));
-	vtk_debug_features(split.deep_features);
-      }
+      // for (auto& split : n) {
+      // 	vtk_debug_meshes(nef_polyhedron_to_trimeshes(split.nef));
+      // 	vtk_debug_features(split.deep_features);
+      // }
 
       concat(n, next_partial_solution);
     }
