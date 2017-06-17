@@ -25,12 +25,15 @@ namespace gca {
     // Intersect the locator with the line
     double lineP0[3] = {pt.x, pt.y, pt.z};
     double lineP1[3] = {-10000.0, -1000.0, -1000.0};
+    double lineP2[3] = {10000.0, 1000.0, 1000.0};
 
     vtkSmartPointer<vtkPoints> intersectPoints = 
       vtkSmartPointer<vtkPoints>::New();
  
     int res = tree->IntersectWithLine(lineP0, lineP1, intersectPoints, NULL);
-    if (res == -1) {
+    int res2 = tree->IntersectWithLine(lineP0, lineP2, intersectPoints, NULL);
+
+    if (res == -1 && res2 == -1) {
       return true;
     } else {
       //cout << "res = " << res << endl;
