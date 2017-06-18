@@ -277,7 +277,7 @@ namespace gca {
     {
       Vector pull_force(mesh->bdr_attributes.Max());
       pull_force = 0.0;
-      pull_force(1) = -100.0; //-1.0e-2;
+      pull_force(1) = -1.0e-2;
       f.Set(dim-1, new PWConstCoefficient(pull_force));
     }
 
