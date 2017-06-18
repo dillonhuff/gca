@@ -184,5 +184,26 @@ namespace gca {
     point n2 = m.face_orientation(e.triangle_2);
     return angle_between(n1, n2);
   }
+
+  // Move to triangular mesh utils
+  std::vector<index_t>
+  vertex_inds_on_surface(const std::vector<index_t>& s,
+		      const triangular_mesh& m) {
+    std::vector<index_t> pts;
+    std::unordered_set<index_t> already_added;
+
+    for (auto j : s) {
+      auto t = m.triangle_vertices(j);
+      for (unsigned i = 0; i < 3; i++) {
+	index_t v = t.v[i];
+	if (already_added.find(v) == end(already_added)) {
+	  already_added.insert(v);
+	  pts.push_back(v);
+	}
+      }
+    }
+    
+    return pts;
+  }
   
 }

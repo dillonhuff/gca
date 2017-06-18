@@ -41,4 +41,7 @@ namespace gca {
   polygon_3 surface_boundary_polygon(const vector<index_t>& faces,
 				     const triangular_mesh& mesh);
 
+  std::vector<index_t>
+  vertex_inds_on_surface(const std::vector<index_t>& s,
+			 const triangular_mesh& m);
 }

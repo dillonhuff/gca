@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iostream>
 
+#include "geometry/triangular_mesh_utils.h"
 #include "system/parse_stl.h"
 
 using namespace mfem;
@@ -16,27 +17,6 @@ using namespace std;
 
 namespace gca {
 
-  // Move to triangular mesh utils
-  std::vector<index_t>
-  vertex_inds_on_surface(const std::vector<index_t>& s,
-		      const triangular_mesh& m) {
-    std::vector<index_t> pts;
-    std::unordered_set<index_t> already_added;
-
-    for (auto j : s) {
-      auto t = m.triangle_vertices(j);
-      for (unsigned i = 0; i < 3; i++) {
-	index_t v = t.v[i];
-	if (already_added.find(v) == end(already_added)) {
-	  already_added.insert(v);
-	  pts.push_back(v);
-	}
-      }
-    }
-    
-    return pts;
-  }
-  
   void write_to_poly_file(const triangular_mesh& md,
 			  const std::vector<index_t> faces_touching_fixed_jaw,
 			  const std::vector<index_t> faces_touching_clamp_jaw,
@@ -239,16 +219,12 @@ namespace gca {
     //    associated with the mesh nodes.
     FiniteElementCollection *fec;
     FiniteElementSpace *fespace;
-    if (mesh->NURBSext)
-      {
-	fec = NULL;
-	fespace = mesh->GetNodes()->FESpace();
-      }
-    else
-      {
-	fec = new H1_FECollection(order, dim);
-	fespace = new FiniteElementSpace(mesh, fec, dim);
-      }
+
+    assert(!mesh->NURBSext);
+
+    fec = new H1_FECollection(order, dim);
+    fespace = new FiniteElementSpace(mesh, fec, dim);
+
     cout << "Number of finite element unknowns: " << fespace->GetTrueVSize()
 	 << endl << "Assembling: " << flush;
 
@@ -277,7 +253,7 @@ namespace gca {
     {
       Vector pull_force(mesh->bdr_attributes.Max());
       pull_force = 0.0;
-      pull_force(1) = -1.0e-2;
+      pull_force(1) = -1.0e-1;
       f.Set(dim-1, new PWConstCoefficient(pull_force));
     }
 
@@ -337,10 +313,10 @@ namespace gca {
     //     element displacement field. We assume that the initial mesh (read from
     //     the file) is not higher order curved mesh compared to the chosen FE
     //     space.
-    if (!mesh->NURBSext) {
-      cout << "Not nurbs!" << endl;
-      mesh->SetNodalFESpace(fespace);
-    }
+    assert(!mesh->NURBSext);
+
+    cout << "Not nurbs!" << endl;
+    mesh->SetNodalFESpace(fespace);
 
     visualize_mesh(mesh, x, visualization);
 
@@ -353,7 +329,6 @@ namespace gca {
 	delete fec;
       }
     delete mesh;
-  
   }
 
   //int analyze(const std::string& stl_file) {//(int argc, char *argv[]) {
