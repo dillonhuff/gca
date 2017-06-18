@@ -181,7 +181,7 @@ namespace gca {
     for (auto& att : mesh->attributes) {
       cout << att << endl;
     }
-   
+
     cout << "Boundary attributes" << endl;   
     for (auto& att : mesh->bdr_attributes) {
       cout << att << endl;
