@@ -16,23 +16,58 @@ using namespace std;
 
 namespace gca {
 
+  // Move to triangular mesh utils
+  std::vector<index_t>
+  vertex_inds_on_surface(const std::vector<index_t>& s,
+		      const triangular_mesh& m) {
+    std::vector<index_t> pts;
+    std::unordered_set<index_t> already_added;
+
+    for (auto j : s) {
+      auto t = m.triangle_vertices(j);
+      for (unsigned i = 0; i < 3; i++) {
+	index_t v = t.v[i];
+	if (already_added.find(v) == end(already_added)) {
+	  already_added.insert(v);
+	  pts.push_back(v);
+	}
+      }
+    }
+    
+    return pts;
+  }
+  
   void write_to_poly_file(const triangular_mesh& md,
 			  const std::vector<index_t> faces_touching_fixed_jaw,
 			  const std::vector<index_t> faces_touching_clamp_jaw,
 			  const std::string& dest_file) {
+    vector<index_t> vertices_touching_fixed_jaw =
+      vertex_inds_on_surface(faces_touching_fixed_jaw, md);
+    vector<index_t> vertices_touching_clamp_jaw =
+      vertex_inds_on_surface(faces_touching_clamp_jaw, md);
+
     cout << "dest file = " << dest_file << endl;
     ofstream out_stream(dest_file + ".poly", std::ofstream::out);
-  
+
+    int num_boundary_attributes = 1;
     // vector<point> vertices;
     // vector<triangle_t> vertex_triangles =
     //   fill_vertex_triangles(md.triangles, vertices, 0.0001);
 
     out_stream << "# Node list" << endl;
-    out_stream << md.vertex_indexes().size() << " " << 3 << " " << 0 << " " << 0 << endl;
+    out_stream << md.vertex_indexes().size() << " " << 3 << " " << num_boundary_attributes << " " << 0 << endl;
     int j = 1;
     for (auto& i : md.vertex_indexes()) {
       auto t = md.vertex(i);
-      out_stream << j << " " << t.x << " " << t.y << " " << t.z << endl;
+      out_stream << j << " " << t.x << " " << t.y << " " << t.z << " ";
+      if (elem(i, vertices_touching_fixed_jaw)) {
+	out_stream << 2;
+      } else if (elem(i, vertices_touching_clamp_jaw)) {
+	out_stream << 3;
+      } else {
+	out_stream << 1;
+      }
+      out_stream << endl;
       j++;
     }
 
