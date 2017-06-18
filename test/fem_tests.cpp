@@ -23,7 +23,12 @@ namespace gca {
   }
 
   TEST_CASE("PSU mount test") {
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1x1x1.stl", 0.0001); //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+    auto mesh =
+      parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/UIST_example_1p5.stl", 0.0001);
+      //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.0001);
+      //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+      //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1x1x1.stl", 0.0001);
+      
     vice v = emco_vice(point(0, 0, 0));
 
     auto surfs = outer_surfaces(mesh);
@@ -39,10 +44,10 @@ namespace gca {
     plane right_pl = test_orient.right_plane();
 
     auto left_coplanar_tris = coplanar_triangles(left_pl, mesh);
-    //vtk_debug_highlight_inds(coplanar_tris, mesh);
+    vtk_debug_highlight_inds(left_coplanar_tris, mesh);
 
     auto right_coplanar_tris = coplanar_triangles(right_pl, mesh);
-    //vtk_debug_highlight_inds(coplanar_tris, mesh);
+    vtk_debug_highlight_inds(right_coplanar_tris, mesh);
 
     analyze(mesh, left_coplanar_tris, right_coplanar_tris);
   }
