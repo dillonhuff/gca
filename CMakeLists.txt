@@ -204,6 +204,7 @@ SET(GCA_CPPS
 	./src/feature_recognition/prismatic_feature_utils.cpp
 	./src/feature_recognition/vertical_wall.cpp
 	./src/feature_recognition/visual_debug.cpp
+	./src/process_planning/fem_analysis.cpp
 	./src/process_planning/major_axis_fixturing.cpp
 	./src/process_planning/axis_location.cpp
 	./src/process_planning/direction_selection.cpp

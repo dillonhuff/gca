@@ -3092,6 +3092,33 @@ src/process_planning/feature_to_pocket.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/feature_to_pocket.cpp.s
 .PHONY : src/process_planning/feature_to_pocket.cpp.s
 
+src/process_planning/fem_analysis.o: src/process_planning/fem_analysis.cpp.o
+
+.PHONY : src/process_planning/fem_analysis.o
+
+# target to build an object file
+src/process_planning/fem_analysis.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/fem_analysis.cpp.o
+.PHONY : src/process_planning/fem_analysis.cpp.o
+
+src/process_planning/fem_analysis.i: src/process_planning/fem_analysis.cpp.i
+
+.PHONY : src/process_planning/fem_analysis.i
+
+# target to preprocess a source file
+src/process_planning/fem_analysis.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/fem_analysis.cpp.i
+.PHONY : src/process_planning/fem_analysis.cpp.i
+
+src/process_planning/fem_analysis.s: src/process_planning/fem_analysis.cpp.s
+
+.PHONY : src/process_planning/fem_analysis.s
+
+# target to generate assembly for a file
+src/process_planning/fem_analysis.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/process_planning/fem_analysis.cpp.s
+.PHONY : src/process_planning/fem_analysis.cpp.s
+
 src/process_planning/job_planning.o: src/process_planning/job_planning.cpp.o
 
 .PHONY : src/process_planning/job_planning.o
@@ -6034,6 +6061,9 @@ help:
 	@echo "... src/process_planning/feature_to_pocket.o"
 	@echo "... src/process_planning/feature_to_pocket.i"
 	@echo "... src/process_planning/feature_to_pocket.s"
+	@echo "... src/process_planning/fem_analysis.o"
+	@echo "... src/process_planning/fem_analysis.i"
+	@echo "... src/process_planning/fem_analysis.s"
 	@echo "... src/process_planning/job_planning.o"
 	@echo "... src/process_planning/job_planning.i"
 	@echo "... src/process_planning/job_planning.s"
