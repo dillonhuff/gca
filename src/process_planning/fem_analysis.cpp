@@ -61,11 +61,11 @@ namespace gca {
       auto t = md.vertex(i);
       out_stream << j << " " << t.x << " " << t.y << " " << t.z << " ";
       if (elem(i, vertices_touching_fixed_jaw)) {
-	out_stream << 2;
-      } else if (elem(i, vertices_touching_clamp_jaw)) {
-	out_stream << 3;
-      } else {
 	out_stream << 1;
+      } else if (elem(i, vertices_touching_clamp_jaw)) {
+	out_stream << 2;
+      } else {
+	out_stream << 3;
       }
       out_stream << endl;
       j++;
@@ -131,12 +131,12 @@ namespace gca {
 	  within_eps(v1_att, v2_att) &&
 	  within_eps(v1_att, v3_att)) {
 	out_stream << 2 << " ";
-      } else if (within_eps(v1_att, 3.0) &&
+      } else if (within_eps(v1_att, 1.0) &&
 	  within_eps(v1_att, v2_att) &&
 	  within_eps(v1_att, v3_att)) {
-	out_stream << 3 << " ";
-      } else {
 	out_stream << 1 << " ";
+      } else {
+	out_stream << 3 << " ";
       }
       
       out_stream << 2 << " " << (out.trifacelist[tri_index] - 1) << " " << (out.trifacelist[tri_index + 1] - 1) << " " << (out.trifacelist[tri_index + 2] - 1) << endl;
