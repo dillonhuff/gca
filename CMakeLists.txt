@@ -10,7 +10,7 @@ include( ${CGAL_USE_FILE} )
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
-SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2")
+SET(EXTRA_CXX_COMPILE_FLAGS "-std=c++11 -I./src -I./test -I/opt/local/include -O2 -I/Users/dillon/Downloads/tetgen1.5.1-beta1 -I/Users/dillon/Downloads/mfem-3.3/build/")
 #-Werror -Wall")
 
 SET(CXX_OCL_LINK_FLAGS "-locl -locl.11.10.66 -ltet -L/Users/dillon/Downloads/tetgen1.5.1-beta1 -lmfem")
