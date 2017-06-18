@@ -29,11 +29,11 @@ namespace gca {
 
     out_stream << "# Node list" << endl;
     out_stream << md.vertex_indexes().size() << " " << 3 << " " << 0 << " " << 0 << endl;
-    int i = 1;
+    int j = 1;
     for (auto& i : md.vertex_indexes()) {
       auto t = md.vertex(i);
-      out_stream << i << " " << t.x << " " << t.y << " " << t.z << endl;
-      i++;
+      out_stream << j << " " << t.x << " " << t.y << " " << t.z << endl;
+      j++;
     }
 
     out_stream << endl;
