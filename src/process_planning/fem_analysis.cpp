@@ -95,21 +95,6 @@ namespace gca {
   }
 
   void write_tetrahedral_mesh(const tetgenio& out, const std::string& out_file) {
-    // cout << "---------------- MY OUTPUT ----------------" << endl;
-    // cout << "# of points                 = " << out.numberofpoints << endl;
-    // cout << "# of tetrahedra             = " << out.numberoftetrahedra << endl;
-    // cout << "# of corners                = " << out.numberofcorners << endl;
-    // cout << "# of tetrahedron attributes = " << out.numberoftetrahedronattributes << endl;
-    // cout << "# of facets                 = " << out.numberoffacets << endl;
-
-    // cout << "Tetrahedra corners" << endl;
-    // for (int i = 0; i < out.numberoftetrahedra; i++) {
-    //   cout << out.tetrahedronlist[i] << "\t" << out.tetrahedronlist[i + 1] << "\t" << out.tetrahedronlist[i + 2] << "\t" << out.tetrahedronlist[i + 3] << endl;
-
-    //   cout << "Points = " << out.pointlist[out.tetrahedronlist[i]] << endl;
-    //   cout << "Points = " << out.pointlist[out.tetrahedronlist[i+1]] << endl;
-    //   cout << "Points = " << out.pointlist[out.tetrahedronlist[i+2]] << endl;
-    // }
 
     ofstream out_stream(out_file + ".mesh", std::ofstream::out);
 
@@ -131,14 +116,17 @@ namespace gca {
     out_stream << out.numberoftrifaces << endl;
     for (int i = 0; i < out.numberoftrifaces; i++) {
       int tri_index = 3*i;
-      int v1 = out.trifacelist[tri_index];
-      int v2 = out.trifacelist[tri_index + 1];
-      int v3 = out.trifacelist[tri_index + 2];
+      int v1 = out.trifacelist[tri_index] - 1;
+      int v2 = out.trifacelist[tri_index + 1] - 1;
+      int v3 = out.trifacelist[tri_index + 2] - 1;
 
       int v1_att = out.pointattributelist[v1];
       int v2_att = out.pointattributelist[v2];
       int v3_att = out.pointattributelist[v3];
 
+      // out_stream << "# v1 = " << v1 << ", v1_att = " << v1_att << endl;
+      // out_stream << "# v2 = " << v2 << ", v2_att = " << v2_att << endl;
+      // out_stream << "# v3 = " << v3 << ", v3_att = " << v3_att << endl;
       if (within_eps(v1_att, 2.0) &&
 	  within_eps(v1_att, v2_att) &&
 	  within_eps(v1_att, v3_att)) {

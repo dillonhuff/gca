@@ -23,7 +23,7 @@ namespace gca {
   }
 
   TEST_CASE("PSU mount test") {
-    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+    auto mesh = parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1x1x1.stl", 0.0001); //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
     vice v = emco_vice(point(0, 0, 0));
 
     auto surfs = outer_surfaces(mesh);
