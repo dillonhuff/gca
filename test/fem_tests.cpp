@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "geometry/vtk_debug.h"
+#include "process_planning/fem_analysis.h"
 #include "synthesis/clamp_orientation.h"
 #include "system/parse_stl.h"
 
@@ -43,5 +44,6 @@ namespace gca {
     auto right_coplanar_tris = coplanar_triangles(right_pl, mesh);
     //vtk_debug_highlight_inds(coplanar_tris, mesh);
 
+    analyze(mesh, left_coplanar_tris, right_coplanar_tris);
   }
 }

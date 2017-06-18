@@ -307,12 +307,16 @@ namespace gca {
   
   }
 
-  int analyze(int argc, char *argv[]) {
+  //int analyze(const std::string& stl_file) {//(int argc, char *argv[]) {
+  int analyze(const triangular_mesh& m,
+	      const std::vector<index_t> faces_touching_fixed_jaw,
+	      const std::vector<index_t> faces_touching_clamp_jaw) {
 
-    string target_file(argv[1]);
-    triangular_mesh mesh_data = parse_stl(target_file, 0.001);
+    // string target_file(argv[1]);
+    // triangular_mesh mesh_data = parse_stl(target_file, 0.001);
     string mesh_file = "meshfile";
-    write_to_poly_file(mesh_data, mesh_file);
+    //write_to_poly_file(mesh_data, mesh_file);
+    write_to_poly_file(m, mesh_file);
 
     tetgenbehavior b;
 
