@@ -131,7 +131,27 @@ namespace gca {
     out_stream << out.numberoftrifaces << endl;
     for (int i = 0; i < out.numberoftrifaces; i++) {
       int tri_index = 3*i;
-      out_stream << 1 << " " << 2 << " " << (out.trifacelist[tri_index] - 1) << " " << (out.trifacelist[tri_index + 1] - 1) << " " << (out.trifacelist[tri_index + 2] - 1) << endl; 
+      int v1 = out.trifacelist[tri_index];
+      int v2 = out.trifacelist[tri_index + 1];
+      int v3 = out.trifacelist[tri_index + 2];
+
+      int v1_att = out.pointattributelist[v1];
+      int v2_att = out.pointattributelist[v2];
+      int v3_att = out.pointattributelist[v3];
+
+      if (within_eps(v1_att, 2.0) &&
+	  within_eps(v1_att, v2_att) &&
+	  within_eps(v1_att, v3_att)) {
+	out_stream << 2 << " ";
+      } else if (within_eps(v1_att, 3.0) &&
+	  within_eps(v1_att, v2_att) &&
+	  within_eps(v1_att, v3_att)) {
+	out_stream << 3 << " ";
+      } else {
+	out_stream << 1 << " ";
+      }
+      
+      out_stream << 2 << " " << (out.trifacelist[tri_index] - 1) << " " << (out.trifacelist[tri_index + 1] - 1) << " " << (out.trifacelist[tri_index + 2] - 1) << endl;
     }
 
     out_stream << endl;
@@ -139,6 +159,9 @@ namespace gca {
     out_stream << "vertices" << endl;
     out_stream << out.numberofpoints << endl;
     out_stream << 3 << endl;
+
+    cout << "# of point attributes = " << out.numberofpointattributes << endl;
+    
     for (int i = 0; i < out.numberofpoints; i++) {
       int vert_index = 3*i;
       out_stream << out.pointlist[vert_index] << " " << out.pointlist[vert_index + 1] << " " << out.pointlist[vert_index + 2] << endl;
