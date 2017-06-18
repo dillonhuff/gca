@@ -80,6 +80,7 @@ target_link_libraries(geometry utils ${CGAL_LIBRARIES})
 # /Users/dillon/CppWorkspace/gca/src/triangle_lib/triangle.o)
 
 SET(GEOMETRY_TEST_FILES test/plane_tests.cpp
+			test/fem_tests.cpp
 			test/rotation_tests.cpp
 			test/extrusion_tests.cpp
 			test/matrix_tests.cpp

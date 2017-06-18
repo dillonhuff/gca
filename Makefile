@@ -4472,6 +4472,39 @@ test/feature_selection_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/feature_selection_tests.cpp.s
 .PHONY : test/feature_selection_tests.cpp.s
 
+test/fem_tests.o: test/fem_tests.cpp.o
+
+.PHONY : test/fem_tests.o
+
+# target to build an object file
+test/fem_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fem_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fem_tests.cpp.o
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/fem_tests.cpp.o
+.PHONY : test/fem_tests.cpp.o
+
+test/fem_tests.i: test/fem_tests.cpp.i
+
+.PHONY : test/fem_tests.i
+
+# target to preprocess a source file
+test/fem_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fem_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fem_tests.cpp.i
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/fem_tests.cpp.i
+.PHONY : test/fem_tests.cpp.i
+
+test/fem_tests.s: test/fem_tests.cpp.s
+
+.PHONY : test/fem_tests.s
+
+# target to generate assembly for a file
+test/fem_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/fem_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/fem_tests.cpp.s
+	$(MAKE) -f CMakeFiles/geometry-tests.dir/build.make CMakeFiles/geometry-tests.dir/test/fem_tests.cpp.s
+.PHONY : test/fem_tests.cpp.s
+
 test/fillet_detection_tests.o: test/fillet_detection_tests.cpp.o
 
 .PHONY : test/fillet_detection_tests.o
@@ -6148,6 +6181,9 @@ help:
 	@echo "... test/feature_selection_tests.o"
 	@echo "... test/feature_selection_tests.i"
 	@echo "... test/feature_selection_tests.s"
+	@echo "... test/fem_tests.o"
+	@echo "... test/fem_tests.i"
+	@echo "... test/fem_tests.s"
 	@echo "... test/fillet_detection_tests.o"
 	@echo "... test/fillet_detection_tests.i"
 	@echo "... test/fillet_detection_tests.s"
