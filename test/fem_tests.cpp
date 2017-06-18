@@ -46,4 +46,5 @@ namespace gca {
 
     analyze(mesh, left_coplanar_tris, right_coplanar_tris);
   }
+
 }

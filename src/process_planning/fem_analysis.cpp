@@ -16,7 +16,10 @@ using namespace std;
 
 namespace gca {
 
-  void write_to_poly_file(const triangular_mesh& md, const std::string& dest_file) {
+  void write_to_poly_file(const triangular_mesh& md,
+			  const std::vector<index_t> faces_touching_fixed_jaw,
+			  const std::vector<index_t> faces_touching_clamp_jaw,
+			  const std::string& dest_file) {
     cout << "dest file = " << dest_file << endl;
     ofstream out_stream(dest_file + ".poly", std::ofstream::out);
   
@@ -316,7 +319,10 @@ namespace gca {
     // triangular_mesh mesh_data = parse_stl(target_file, 0.001);
     string mesh_file = "meshfile";
     //write_to_poly_file(mesh_data, mesh_file);
-    write_to_poly_file(m, mesh_file);
+    write_to_poly_file(m,
+		       faces_touching_fixed_jaw,
+		       faces_touching_clamp_jaw,
+		       mesh_file);
 
     tetgenbehavior b;
 
