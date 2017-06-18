@@ -5118,9 +5118,9 @@ REAL *h;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL estimate(int elen, REAL *e)
+REAL estimate_dup(int elen, REAL *e)
 #else /* not ANSI_DECLARATORS */
-REAL estimate(elen, e)
+REAL estimate_dup(elen, e)
 int elen;
 REAL *e;
 #endif /* not ANSI_DECLARATORS */
@@ -5201,7 +5201,7 @@ REAL detsum;
                B3, B[2], B[1], B[0]);
   B[3] = B3;
 
-  det = estimate(4, B);
+  det = estimate_dup(4, B);
   errbound = ccwerrboundB * detsum;
   if ((det >= errbound) || (-det >= errbound)) {
     return det;
@@ -5315,9 +5315,9 @@ vertex pc;
 /*****************************************************************************/
 
 #ifdef ANSI_DECLARATORS
-REAL incircleadapt(vertex pa, vertex pb, vertex pc, vertex pd, REAL permanent)
+REAL incircleadapt_dup(vertex pa, vertex pb, vertex pc, vertex pd, REAL permanent)
 #else /* not ANSI_DECLARATORS */
-REAL incircleadapt(pa, pb, pc, pd, permanent)
+REAL incircleadapt_dup(pa, pb, pc, pd, permanent)
 vertex pa;
 vertex pb;
 vertex pc;
@@ -5427,7 +5427,7 @@ REAL permanent;
   ablen = fast_expansion_sum_zeroelim_dup(alen, adet, blen, bdet, abdet);
   finlength = fast_expansion_sum_zeroelim_dup(ablen, abdet, clen, cdet, fin1);
 
-  det = estimate(finlength, fin1);
+  det = estimate_dup(finlength, fin1);
   errbound = iccerrboundB * permanent;
   if ((det >= errbound) || (-det >= errbound)) {
     return det;
@@ -5950,7 +5950,7 @@ vertex pd;
     return det;
   }
 
-  return incircleadapt(pa, pb, pc, pd, permanent);
+  return incircleadapt_dup(pa, pb, pc, pd, permanent);
 }
 
 /*****************************************************************************/
@@ -6076,7 +6076,7 @@ REAL permanent;
   ablen = fast_expansion_sum_zeroelim_dup(alen, adet, blen, bdet, abdet);
   finlength = fast_expansion_sum_zeroelim_dup(ablen, abdet, clen, cdet, fin1);
 
-  det = estimate(finlength, fin1);
+  det = estimate_dup(finlength, fin1);
   errbound = o3derrboundB * permanent;
   if ((det >= errbound) || (-det >= errbound)) {
     return det;
