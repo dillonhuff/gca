@@ -24,10 +24,14 @@ namespace gca {
 
   TEST_CASE("PSU mount test") {
     auto mesh =
-      parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/UIST_example_1p5.stl", 0.0001);
+      parse_stl("./test/stl-files/onshape_parts/Mitnehmer 03290-04 Norelem - 1.stl", 0.0001);
+      //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/UIST_example_1p5.stl", 0.0001);
       //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.0001);
-      //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
       //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/Box1x1x1.stl", 0.0001);
+      
+      // Immediate convergence for reasons I don't understand
+      //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+
       
     vice v = emco_vice(point(0, 0, 0));
 
@@ -36,7 +40,7 @@ namespace gca {
 
     REQUIRE(orients.size() > 0);
 
-    clamp_orientation test_orient = orients[0];
+    clamp_orientation test_orient = orients[1];
     
     cout << "top orient 1 = " << test_orient.top_normal() << endl;
 
