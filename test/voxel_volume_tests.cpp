@@ -25,12 +25,16 @@ namespace gca {
     // Intersect the locator with the line
     double lineP0[3] = {pt.x, pt.y, pt.z};
     double lineP1[3] = {-10000.0, -1000.0, -1000.0};
-    double lineP2[3] = {10000.0, 1000.0, 1000.0};
+    double lineP2[3] = {100.0, 100.0, 100.0};
 
     vtkSmartPointer<vtkPoints> intersectPoints = 
       vtkSmartPointer<vtkPoints>::New();
  
     int res = tree->IntersectWithLine(lineP0, lineP1, intersectPoints, NULL);
+    if (res != -1) {
+      return false;
+    }
+
     int res2 = tree->IntersectWithLine(lineP0, lineP2, intersectPoints, NULL);
 
     if (res == -1 && res2 == -1) {
@@ -82,7 +86,7 @@ namespace gca {
 
   voxel_volume build_from_mesh(const triangular_mesh& m) {
     box bb = m.bounding_box();
-    double resolution = bb.x_len() / 40.0;
+    double resolution = bb.x_len() / 80.0;
 
     auto pd = polydata_for_trimesh(m);
     
@@ -129,8 +133,8 @@ namespace gca {
 
   TEST_CASE("Loading a model from an stl file") {
     triangular_mesh m =
-      parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
-
+      //parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+      parse_stl("test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.0001);
     voxel_volume vv = build_from_mesh(m);
 
     vtk_debug_voxel_volume(vv);
