@@ -289,7 +289,7 @@ namespace gca {
     {
       Vector pull_force(mesh->bdr_attributes.Max());
       pull_force = 0.0;
-      pull_force(1) = -1.0e-2;
+      pull_force(1) = -1.0; //-1.0e-2;
       f.Set(dim-1, new PWConstCoefficient(pull_force));
     }
 
@@ -313,7 +313,7 @@ namespace gca {
     PWConstCoefficient lambda_func(lambda);
     Vector mu(mesh->attributes.Max());
     mu = 1.0;
-    mu(0) = mu(1)*50;
+    //mu(0) = mu(1)*50;
     PWConstCoefficient mu_func(mu);
 
     BilinearForm *a = new BilinearForm(fespace);
