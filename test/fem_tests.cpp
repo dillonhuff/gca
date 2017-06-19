@@ -24,6 +24,7 @@ namespace gca {
 
   TEST_CASE("PSU mount test") {
     auto mesh =
+      
       //parse_stl("./test/stl-files/onshape_parts/Mitnehmer 03290-04 Norelem - 1.stl", 0.0001);
       //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/UIST_example_1p5.stl", 0.0001);
       //parse_stl("/Users/dillon/CppWorkspace/gca/test/stl-files/BoxWith2Holes.stl", 0.0001);
@@ -56,4 +57,32 @@ namespace gca {
     analyze(mesh, left_coplanar_tris, right_coplanar_tris);
   }
 
+  TEST_CASE("Bracket of the year") {
+    auto mesh =
+      parse_stl("/Users/dillon/CppWorkspace/gca/./test/stl-files/onshape_parts/Part Studio 1 - Part 1(46).stl", 0.0001);
+
+    
+    vice v = emco_vice(point(0, 0, 0));
+
+    auto surfs = outer_surfaces(mesh);
+    vector<clamp_orientation> orients = all_viable_clamp_orientations(surfs, v);
+
+    REQUIRE(orients.size() > 0);
+
+    clamp_orientation test_orient = orients[1];
+    
+    cout << "top orient 1 = " << test_orient.top_normal() << endl;
+
+    plane left_pl = test_orient.left_plane();
+    plane right_pl = test_orient.right_plane();
+
+    auto left_coplanar_tris = coplanar_triangles(left_pl, mesh);
+    vtk_debug_highlight_inds(left_coplanar_tris, mesh);
+
+    auto right_coplanar_tris = coplanar_triangles(right_pl, mesh);
+    vtk_debug_highlight_inds(right_coplanar_tris, mesh);
+
+    analyze(mesh, left_coplanar_tris, right_coplanar_tris);
+  }
+  
 }
