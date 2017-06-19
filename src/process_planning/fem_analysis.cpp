@@ -165,6 +165,20 @@ namespace gca {
     }
   }
 
+  void print_backward_displacements(Mesh* mesh, GridFunction& x) {
+    GridFunction *nodes = mesh->GetNodes();
+    *nodes += x;
+    x *= -1;
+
+    cout << "GridFunction size = " << x.Size() << endl;
+    cout << "# of 3D points    = " << (x.Size() % 3) << endl;
+
+    for (int i = 0; i < x.Size(); i++) {
+      const double& dp = x.Elem(i);
+      cout << dp << endl;
+    }
+  }
+
   void analyze_mesh_forces(const std::string& m_file) {
     // 1. Parse command-line options.
     const char *mesh_file = m_file.c_str();
@@ -318,7 +332,8 @@ namespace gca {
     cout << "Not nurbs!" << endl;
     mesh->SetNodalFESpace(fespace);
 
-    visualize_mesh(mesh, x, visualization);
+    //visualize_mesh(mesh, x, visualization);
+    print_backward_displacements(mesh, x);
 
     // 16. Free the used memory.
     delete a;

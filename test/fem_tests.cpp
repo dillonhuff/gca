@@ -48,10 +48,10 @@ namespace gca {
     plane right_pl = test_orient.right_plane();
 
     auto left_coplanar_tris = coplanar_triangles(left_pl, mesh);
-    vtk_debug_highlight_inds(left_coplanar_tris, mesh);
+    //vtk_debug_highlight_inds(left_coplanar_tris, mesh);
 
     auto right_coplanar_tris = coplanar_triangles(right_pl, mesh);
-    vtk_debug_highlight_inds(right_coplanar_tris, mesh);
+    //vtk_debug_highlight_inds(right_coplanar_tris, mesh);
 
     analyze(mesh, left_coplanar_tris, right_coplanar_tris);
   }
