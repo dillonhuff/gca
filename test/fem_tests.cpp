@@ -59,8 +59,10 @@ namespace gca {
 
   TEST_CASE("Bracket of the year") {
     auto mesh =
-      parse_stl("/Users/dillon/CppWorkspace/gca/./test/stl-files/onshape_parts/Part Studio 1 - Part 1(46).stl", 0.0001);
+      parse_and_scale_stl("/Users/dillon/CppWorkspace/gca/./test/stl-files/onshape_parts/Part Studio 1 - Part 1(47).stl", 0.25, 0.0001);
 
+    box bb = mesh.bounding_box();
+    cout << bb << endl;
     
     vice v = emco_vice(point(0, 0, 0));
 
