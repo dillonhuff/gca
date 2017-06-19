@@ -166,8 +166,8 @@ namespace gca {
   }
 
   void print_backward_displacements(Mesh* mesh, GridFunction& x) {
-    GridFunction *nodes = mesh->GetNodes();
-    *nodes += x;
+    //GridFunction *nodes = mesh->GetNodes();
+    //*nodes += x;
     x *= -1;
 
     cout << "GridFunction size = " << x.Size() << endl;
