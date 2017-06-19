@@ -193,6 +193,22 @@ namespace gca {
     return max;
   }
 
+  double lambda_constant(const double youngs_modulus,
+			 const double poissons_ratio) {
+    double numerator = youngs_modulus * poissons_ratio;
+    double denominator = (1 + poissons_ratio)*(1 - 2*poissons_ratio);
+
+    return numerator / denominator;
+  }
+
+  double mu_constant(const double youngs_modulus,
+		     const double poissons_ratio) {
+    double numerator = youngs_modulus;
+    double denominator = 2*(1 + poissons_ratio);
+
+    return numerator / denominator;
+  }
+
   void analyze_mesh_forces(const std::string& m_file) {
     // 1. Parse command-line options.
     const char *mesh_file = m_file.c_str();
@@ -281,7 +297,7 @@ namespace gca {
     {
       Vector pull_force(mesh->bdr_attributes.Max());
       pull_force = 0.0;
-      pull_force(1) = -1.0e-1;
+      pull_force(1) = -10.0e-1;
       f.Set(dim-1, new PWConstCoefficient(pull_force));
     }
 
@@ -299,11 +315,25 @@ namespace gca {
     // 9. Set up the bilinear form a(.,.) on the finite element space
     //    corresponding to the linear elasticity integrator with piece-wise
     //    constants coefficient lambda and mu.
-    Vector lambda(mesh->attributes.Max());
-    lambda = 1.0;
-    lambda(0) = lambda(1)*50;
+    //cout << "# of attributes = " << mesh->attributes.Max() << endl;
+    assert(mesh->attributes.Max() == 1);
+
+    // Aluminum material constants
+    double youngs_modulus_nm_sq = 69e9;
+    double poissons_ratio = 0.35;
+
+    cout << "Youngs modulus = " << youngs_modulus_nm_sq << endl;
+    cout << "Poissons ratio = " << poissons_ratio << endl;
+
+    cout << "Lambda         = " << lambda_constant(youngs_modulus_nm_sq, poissons_ratio) << endl;
+    cout << "Mu             = " << mu_constant(youngs_modulus_nm_sq, poissons_ratio) << endl;
+    
+    Vector lambda(1);//mesh->attributes.Max());
+    lambda = lambda_constant(youngs_modulus_nm_sq, poissons_ratio);
+    //lambda(0) = lambda(1)*50;
     PWConstCoefficient lambda_func(lambda);
-    Vector mu(mesh->attributes.Max());
+
+    Vector mu(1); //mesh->attributes.Max());
     mu = 1.0;
     //mu(0) = mu(1)*50;
     PWConstCoefficient mu_func(mu);
@@ -347,7 +377,7 @@ namespace gca {
     mesh->SetNodalFESpace(fespace);
 
     //visualize_mesh(mesh, x, visualization);
-    print_backward_displacements(x);
+    //print_backward_displacements(x);
 
     cout << "Max absolute displacement = " << maximum_abs_displacement(x) << endl;
 
