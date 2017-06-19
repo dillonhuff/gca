@@ -289,6 +289,8 @@ namespace gca {
     //    which is a vector of Coefficient objects. The fact that f is non-zero
     //    on boundary attribute 2 is indicated by the use of piece-wise constants
     //    coefficient for its last component.
+    double total_newtons = 600;
+    
     VectorArrayCoefficient f(dim);
     for (int i = 0; i < dim-1; i++)
       {
@@ -297,7 +299,7 @@ namespace gca {
     {
       Vector pull_force(mesh->bdr_attributes.Max());
       pull_force = 0.0;
-      pull_force(1) = -10.0e-1;
+      pull_force(1) = -total_newtons;
       f.Set(dim-1, new PWConstCoefficient(pull_force));
     }
 
