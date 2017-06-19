@@ -173,6 +173,8 @@ namespace gca {
     cout << "GridFunction size = " << x.Size() << endl;
     cout << "# of 3D points    = " << (x.Size() % 3) << endl;
 
+    assert(x.FESpace()->GetOrdering() == mfem::Ordering::byNODES);
+
     for (int i = 0; i < x.Size(); i++) {
       const double& dp = x.Elem(i);
       cout << dp << endl;
