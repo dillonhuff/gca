@@ -320,7 +320,7 @@ namespace gca {
     //    which is a vector of Coefficient objects. The fact that f is non-zero
     //    on boundary attribute 2 is indicated by the use of piece-wise constants
     //    coefficient for its last component.
-    double total_newtons = 60;
+    double total_newtons = 60000;
     
     VectorArrayCoefficient f(dim);
     for (int i = 0; i < dim-1; i++)
