@@ -138,6 +138,37 @@ namespace gca {
     out_stream.close();
   }
 
+  void write_to_ply(Mesh* mesh, GridFunction& x) {
+    GridFunction *nodes = mesh->GetNodes();
+    *nodes += x;
+    x *= -1;
+
+    ofstream out_stream("dispmesh.ply", std::ofstream::out);
+    out_stream << "ply" << endl;
+    out_stream << "format ascii 1.0" << endl;
+    out_stream << "element vertex " << mesh->GetNV() << endl;
+    out_stream << "property float32 x" << endl;
+    out_stream << "property float32 y" << endl;
+    out_stream << "property float32 z" << endl;
+    out_stream << "element face " << mesh->GetNFaces() << endl;
+    out_stream << "property list uint8 int32 vertex_index" << endl;
+    out_stream << "end_header" << endl;
+
+    // Vertex list
+    for (int i = 0; i < mesh->GetNV(); i++) {
+      const double* p = mesh->GetVertex(i);
+      out_stream << p[0] << " " << p[1] << " " << p[2] << endl;
+    }
+
+    // Face list
+    for (int i = 0; i < mesh->GetNFaces(); i++) {
+      const Element* e = mesh->GetFace(i);
+      assert(e->GetNVertices() == 3);
+      const int* verts = e->GetVertices();
+      out_stream << 3 << " " << verts[0] << " " << verts[1] << " " << verts[2] << endl;
+    }
+  }
+
   void visualize_mesh(Mesh* mesh, GridFunction& x, const bool visualization) {
     // 14. Save the displaced mesh and the inverted solution (which gives the
     //     backward displacements to the original grid). This output can be
@@ -289,7 +320,7 @@ namespace gca {
     //    which is a vector of Coefficient objects. The fact that f is non-zero
     //    on boundary attribute 2 is indicated by the use of piece-wise constants
     //    coefficient for its last component.
-    double total_newtons = 600;
+    double total_newtons = 60;
     
     VectorArrayCoefficient f(dim);
     for (int i = 0; i < dim-1; i++)
@@ -378,6 +409,7 @@ namespace gca {
     cout << "Not nurbs!" << endl;
     mesh->SetNodalFESpace(fespace);
 
+    write_to_ply(mesh, x);
     //visualize_mesh(mesh, x, visualization);
     //print_backward_displacements(x);
 
