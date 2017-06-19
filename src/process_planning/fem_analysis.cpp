@@ -165,20 +165,32 @@ namespace gca {
     }
   }
 
-  void print_backward_displacements(Mesh* mesh, GridFunction& x) {
-    //GridFunction *nodes = mesh->GetNodes();
-    //*nodes += x;
+  void print_backward_displacements(GridFunction& x) {
     x *= -1;
 
     cout << "GridFunction size = " << x.Size() << endl;
     cout << "# of 3D points    = " << (x.Size() % 3) << endl;
 
-    assert(x.FESpace()->GetOrdering() == mfem::Ordering::byNODES);
+    DBG_ASSERT(x.FESpace()->GetOrdering() == mfem::Ordering::byNODES);
 
     for (int i = 0; i < x.Size(); i++) {
       const double& dp = x.Elem(i);
       cout << dp << endl;
     }
+  }
+
+  double maximum_abs_displacement(const GridFunction& x) {
+    DBG_ASSERT(x.Size() > 0);
+    
+    double max = fabs(x.Elem(0));
+    for (int i = 1; i < x.Size(); i++) {
+      double fi = fabs(x.Elem(i));
+      if (fi > max) {
+	max = fi;
+      }
+    }
+
+    return max;
   }
 
   void analyze_mesh_forces(const std::string& m_file) {
@@ -335,7 +347,9 @@ namespace gca {
     mesh->SetNodalFESpace(fespace);
 
     //visualize_mesh(mesh, x, visualization);
-    print_backward_displacements(mesh, x);
+    print_backward_displacements(x);
+
+    cout << "Max absolute displacement = " << maximum_abs_displacement(x) << endl;
 
     // 16. Free the used memory.
     delete a;
