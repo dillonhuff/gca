@@ -244,7 +244,7 @@ namespace gca {
     return numerator / denominator;
   }
 
-  void analyze_mesh_forces(const std::string& m_file) {
+  void analyze_mesh_forces(const std::string& m_file, const point force_dir) {
     const char *mesh_file = m_file.c_str();
     int order = 1;
     bool static_cond = false;
@@ -323,19 +323,31 @@ namespace gca {
     //    which is a vector of Coefficient objects. The fact that f is non-zero
     //    on boundary attribute 2 is indicated by the use of piece-wise constants
     //    coefficient for its last component.
-    double total_newtons = 60000;
+    double total_newtons = 60;
+
+    double dir[3];
+    dir[0] = force_dir.x;
+    dir[1] = force_dir.y;
+    dir[2] = force_dir.z;
     
     VectorArrayCoefficient f(dim);
-    for (int i = 0; i < dim-1; i++)
-      {
-	f.Set(i, new ConstantCoefficient(0.0));
-      }
-    {
+    for (int i = 0; i < dim; i++) {
       Vector pull_force(mesh->bdr_attributes.Max());
       pull_force = 0.0;
-      pull_force(1) = -total_newtons;
-      f.Set(dim-1, new PWConstCoefficient(pull_force));
+      pull_force(1) = total_newtons*dir[i];
+      f.Set(i, new PWConstCoefficient(pull_force));
     }
+
+    // for (int i = 0; i < dim-1; i++)
+    //   {
+    // 	f.Set(i, new ConstantCoefficient(0.0));
+    //   }
+    // {
+    //   Vector pull_force(mesh->bdr_attributes.Max());
+    //   pull_force = 0.0;
+    //   pull_force(1) = -total_newtons;
+    //   f.Set(dim-1, new PWConstCoefficient(pull_force));
+    // }
 
     LinearForm *b = new LinearForm(fespace);
     b->AddBoundaryIntegrator(new VectorBoundaryLFIntegrator(f));
@@ -483,7 +495,7 @@ namespace gca {
     string tetfile = "output_mesh";
     write_tetrahedral_mesh(out, tetfile);
 
-    analyze_mesh_forces(tetfile + ".mesh");
+    analyze_mesh_forces(tetfile + ".mesh", force_dir);
     return 0;
   }
   
