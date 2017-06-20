@@ -150,6 +150,9 @@ namespace gca {
     out_stream << "property float32 x" << endl;
     out_stream << "property float32 y" << endl;
     out_stream << "property float32 z" << endl;
+    out_stream << "property uchar red" << endl;
+    out_stream << "property uchar green" << endl;
+    out_stream << "property uchar blue" << endl;
     out_stream << "element face " << mesh->GetNFaces() << endl;
     out_stream << "property list uint8 int32 vertex_index" << endl;
     out_stream << "end_header" << endl;
@@ -157,7 +160,8 @@ namespace gca {
     // Vertex list
     for (int i = 0; i < mesh->GetNV(); i++) {
       const double* p = mesh->GetVertex(i);
-      out_stream << p[0] << " " << p[1] << " " << p[2] << endl;
+      out_stream << p[0] << " " << p[1] << " " << p[2];
+      out_stream << " " << 255 << " " << 0 << " " << 0 << endl;
     }
 
     // Face list
@@ -241,7 +245,6 @@ namespace gca {
   }
 
   void analyze_mesh_forces(const std::string& m_file) {
-    // 1. Parse command-line options.
     const char *mesh_file = m_file.c_str();
     int order = 1;
     bool static_cond = false;
@@ -361,14 +364,12 @@ namespace gca {
     cout << "Lambda         = " << lambda_constant(youngs_modulus_nm_sq, poissons_ratio) << endl;
     cout << "Mu             = " << mu_constant(youngs_modulus_nm_sq, poissons_ratio) << endl;
     
-    Vector lambda(1);//mesh->attributes.Max());
+    Vector lambda(1);
     lambda = lambda_constant(youngs_modulus_nm_sq, poissons_ratio);
-    //lambda(0) = lambda(1)*50;
     PWConstCoefficient lambda_func(lambda);
 
-    Vector mu(1); //mesh->attributes.Max());
+    Vector mu(1);
     mu = 1.0;
-    //mu(0) = mu(1)*50;
     PWConstCoefficient mu_func(mu);
 
     BilinearForm *a = new BilinearForm(fespace);
@@ -431,6 +432,16 @@ namespace gca {
 	      const std::vector<index_t> faces_touching_fixed_jaw,
 	      const std::vector<index_t> faces_touching_clamp_jaw) {
 
+    cout << "# of faces touching fixed = " << faces_touching_fixed_jaw.size() << endl;
+    cout << "# of faces touching clamp = " << faces_touching_clamp_jaw.size() << endl;
+
+    assert(faces_touching_fixed_jaw.size() > 0);
+    assert(faces_touching_clamp_jaw.size() > 0);
+    
+    point clamped_face_normal =
+      m.face_orientation(faces_touching_clamp_jaw.front());
+    point force_dir = -1*clamped_face_normal;
+    
     // string target_file(argv[1]);
     // triangular_mesh mesh_data = parse_stl(target_file, 0.001);
     string mesh_file = "meshfile";
