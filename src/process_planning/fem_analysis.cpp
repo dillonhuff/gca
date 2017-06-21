@@ -366,11 +366,14 @@ namespace gca {
     //    largest number that gives a final mesh with no more than 5,000
     //    elements.
     {
+      double size = 10000000.0;
       int ref_levels =
-	(int)floor(log(5000./mesh->GetNE())/log(2.)/dim);
+	(int)floor(log(size/mesh->GetNE())/log(2.)/dim);
       for (int l = 0; l < ref_levels; l++) {
 	mesh->UniformRefinement();
       }
+
+      cout << "ref_levels = " << ref_levels << endl;
     }
 
     // 5. Define a finite element space on the mesh. Here we use vector finite
@@ -406,7 +409,9 @@ namespace gca {
     //    which is a vector of Coefficient objects. The fact that f is non-zero
     //    on boundary attribute 2 is indicated by the use of piece-wise constants
     //    coefficient for its last component.
-    double total_newtons = 6000;
+    double total_newtons = 6;
+
+    DBG_ASSERT(within_eps(1.0, force_dir.len(), 0.0001));
 
     double dir[3];
     dir[0] = force_dir.x;
