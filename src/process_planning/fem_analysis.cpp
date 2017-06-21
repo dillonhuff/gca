@@ -141,7 +141,9 @@ namespace gca {
 
   triangular_mesh extract_trimesh(Mesh* mesh) {
     vector<triangle_t> tris;
-    
+
+    cout << "# of boundary elements = " << mesh->GetNBE() << endl;
+    cout << "# of faces             = " << mesh->GetNFaces() << endl;
     vector<triangle> triangles;
     for (int i = 0; i < mesh->GetNBE(); i++) {
       const Element* e = mesh->GetBdrElement(i);
@@ -150,7 +152,7 @@ namespace gca {
       //out_stream << 3 << " " << verts[0] << " " << verts[1] << " " << verts[2] << endl;
       int v1 = verts[0];
       int v2 = verts[1];
-      int v3 = verts[3];
+      int v3 = verts[2];
       triangle_t tri;
       tri.v[0] = v1;
       tri.v[1] = v2;
@@ -347,6 +349,10 @@ namespace gca {
     if (mesh->NURBSext && order > mesh->NURBSext->GetOrder()) {
       mesh->DegreeElevate(order - mesh->NURBSext->GetOrder());
     }
+
+    triangular_mesh pre_ref_mesh = extract_trimesh(mesh);
+    cout << "before refinement" << endl;
+    vtk_debug_mesh(pre_ref_mesh);
 
     // 4. Refine the mesh to increase the resolution. In this example we do
     //    'ref_levels' of uniform refinement. We choose 'ref_levels' to be the
