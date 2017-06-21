@@ -219,6 +219,7 @@ namespace gca {
     
     double max = fabs(x.Elem(0));
     for (int i = 1; i < x.Size(); i++) {
+      //cout << "elem = " << x.Elem(i) << endl;
       double fi = fabs(x.Elem(i));
       if (fi > max) {
 	max = fi;
@@ -405,7 +406,10 @@ namespace gca {
     // 11. Define a simple symmetric Gauss-Seidel preconditioner and use it to
     //     solve the system Ax=b with PCG.
     GSSmoother M(A);
-    PCG(A, M, B, X, 1, 500, 1e-8, 0.0);
+    // PCG(A, M, B, X, 1, 500, 1e-8, 0.0); // 17.0 max displacement box
+    //CG(A, B, X, 1, 500, 1e-8, 0.0); // 18.6 max displacement box
+    MINRES(A, M, B, X, 1, 500, 1e-8, 0.0); // 17.952 max displacement box
+    MINRES(A, M, B, X, 1, 1000, 1e-8, 0.0); // 17.952 max displacement box
 
     // 12. Recover the solution as a finite element grid function.
     a->RecoverFEMSolution(X, *b, x);
@@ -422,11 +426,13 @@ namespace gca {
     cout << "Not nurbs!" << endl;
     mesh->SetNodalFESpace(fespace);
 
+    cout << "Max absolute displacement = " << maximum_abs_displacement(x) << endl;
+
     write_to_ply(mesh, x);
     //visualize_mesh(mesh, x, visualization);
     //print_backward_displacements(x);
 
-    cout << "Max absolute displacement = " << maximum_abs_displacement(x) << endl;
+
 
     // 16. Free the used memory.
     delete a;
