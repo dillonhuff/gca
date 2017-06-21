@@ -161,6 +161,8 @@ namespace gca {
     }
 
     DBG_ASSERT(x.FESpace()->GetOrdering() == mfem::Ordering::byNODES);
+    DBG_ASSERT((x.Size() % 3) == 0);
+    DBG_ASSERT((x.Size() / 3) == mesh->GetNV());
 
     vector<point> vertices;
     for (int i = 0; i < mesh->GetNV(); i++) {
@@ -404,7 +406,7 @@ namespace gca {
     //    which is a vector of Coefficient objects. The fact that f is non-zero
     //    on boundary attribute 2 is indicated by the use of piece-wise constants
     //    coefficient for its last component.
-    double total_newtons = 60;
+    double total_newtons = 6000;
 
     double dir[3];
     dir[0] = force_dir.x;
