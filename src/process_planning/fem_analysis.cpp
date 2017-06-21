@@ -139,6 +139,46 @@ namespace gca {
     out_stream.close();
   }
 
+  triangular_mesh extract_offset_trimesh(Mesh* mesh, const GridFunction& x) {
+    vector<triangle_t> tris;
+
+    cout << "# of boundary elements = " << mesh->GetNBE() << endl;
+    cout << "# of faces             = " << mesh->GetNFaces() << endl;
+    vector<triangle> triangles;
+    for (int i = 0; i < mesh->GetNBE(); i++) {
+      const Element* e = mesh->GetBdrElement(i);
+      assert(e->GetNVertices() == 3);
+      const int* verts = e->GetVertices();
+      //out_stream << 3 << " " << verts[0] << " " << verts[1] << " " << verts[2] << endl;
+      int v1 = verts[0];
+      int v2 = verts[1];
+      int v3 = verts[2];
+      triangle_t tri;
+      tri.v[0] = v1;
+      tri.v[1] = v2;
+      tri.v[2] = v3;
+      tris.push_back(tri);
+    }
+
+    DBG_ASSERT(x.FESpace()->GetOrdering() == mfem::Ordering::byNODES);
+
+    vector<point> vertices;
+    for (int i = 0; i < mesh->GetNV(); i++) {
+      const double* p = mesh->GetVertex(i);
+      double offx = x.Elem(i);
+      double offy = x.Elem(i + mesh->GetNV());
+      double offz = x.Elem(i + 2*mesh->GetNV());
+      vertices.push_back({p[0] + offx, p[1] + offy, p[2] + offz});
+    }
+    
+    std::vector< gca::edge_t > edges_out;
+    unordered_edges_from_triangles(tris.size(), tris.data(), edges_out);
+
+    trimesh_t trim;
+    trim.build(mesh->GetNV(), tris.size(), tris.data(), edges_out.size(), edges_out.data());
+    return triangular_mesh(vertices, tris, trim);
+  }
+
   triangular_mesh extract_trimesh(Mesh* mesh) {
     vector<triangle_t> tris;
 
@@ -172,41 +212,6 @@ namespace gca {
     trimesh_t trim;
     trim.build(mesh->GetNV(), tris.size(), tris.data(), edges_out.size(), edges_out.data());
     return triangular_mesh(vertices, tris, trim);
-
-    
-    // // Vertex list
-    // for (int i = 0; i < mesh->GetNV(); i++) {
-    //   const double* p = mesh->GetVertex(i);
-    //   out_stream << p[0] << " " << p[1] << " " << p[2];
-    //   out_stream << " " << 255 << " " << 0 << " " << 0 << endl;
-    // }
-
-    // Face list
-    for (int i = 0; i < mesh->GetNFaces(); i++) {
-      const Element* e = mesh->GetFace(i);
-      assert(e->GetNVertices() == 3);
-      const int* verts = e->GetVertices();
-      //out_stream << 3 << " " << verts[0] << " " << verts[1] << " " << verts[2] << endl;
-      int v1 = verts[0];
-      const double* p = mesh->GetVertex(v1);
-      point p1(p[0], p[1], p[2]);
-
-      int v2 = verts[1];
-      p = mesh->GetVertex(v2);
-      point p2(p[0], p[1], p[2]);
-
-      int v3 = verts[3];
-      p = mesh->GetVertex(v3);
-      point p3(p[0], p[1], p[2]);
-      
-      triangle tri(point(0, 0, 0), p1, p2, p3);
-      point n = normal(tri);
-      tri = triangle(n, p1, p2, p3);
-      triangles.push_back(tri);
-    }
-
-    return make_mesh(triangles, 0.0001);
-    
   }
 
   void write_to_ply(Mesh* mesh, GridFunction& x) {
@@ -489,6 +494,9 @@ namespace gca {
     // 12. Recover the solution as a finite element grid function.
     a->RecoverFEMSolution(X, *b, x);
 
+    // Check that RecoverFEMSolution sets fespace correctly
+    assert(x.FESpace() == fespace);
+
     // 13. For non-NURBS meshes, make the mesh curved based on the finite element
     //     space. This means that we define the mesh elements through a fespace
     //     based transformation of the reference element. This allows us to save
@@ -503,11 +511,13 @@ namespace gca {
 
     cout << "Max absolute displacement = " << maximum_abs_displacement(x) << endl;
 
-    write_to_ply(mesh, x);
+    //write_to_ply(mesh, x);
 
-    triangular_mesh m = extract_trimesh(mesh);
-    vtk_debug_mesh(m);
     //visualize_mesh(mesh, x, visualization);
+
+    triangular_mesh m = extract_offset_trimesh(mesh, x);
+    vtk_debug_mesh(m);
+
     //print_backward_displacements(x);
 
 
