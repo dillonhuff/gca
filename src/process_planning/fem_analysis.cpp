@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iostream>
 
+#include "geometry/vtk_debug.h"
 #include "geometry/triangular_mesh_utils.h"
 #include "system/parse_stl.h"
 
@@ -136,6 +137,74 @@ namespace gca {
     }
 
     out_stream.close();
+  }
+
+  triangular_mesh extract_trimesh(Mesh* mesh) {
+    vector<triangle_t> tris;
+    
+    vector<triangle> triangles;
+    for (int i = 0; i < mesh->GetNBE(); i++) {
+      const Element* e = mesh->GetBdrElement(i);
+      assert(e->GetNVertices() == 3);
+      const int* verts = e->GetVertices();
+      //out_stream << 3 << " " << verts[0] << " " << verts[1] << " " << verts[2] << endl;
+      int v1 = verts[0];
+      int v2 = verts[1];
+      int v3 = verts[3];
+      triangle_t tri;
+      tri.v[0] = v1;
+      tri.v[1] = v2;
+      tri.v[2] = v3;
+      tris.push_back(tri);
+    }
+
+    vector<point> vertices;
+    for (int i = 0; i < mesh->GetNV(); i++) {
+      const double* p = mesh->GetVertex(i);
+      vertices.push_back({p[0], p[1], p[2]});
+    }
+    
+    std::vector< gca::edge_t > edges_out;
+    unordered_edges_from_triangles(tris.size(), tris.data(), edges_out);
+
+    trimesh_t trim;
+    trim.build(mesh->GetNV(), tris.size(), tris.data(), edges_out.size(), edges_out.data());
+    return triangular_mesh(vertices, tris, trim);
+
+    
+    // // Vertex list
+    // for (int i = 0; i < mesh->GetNV(); i++) {
+    //   const double* p = mesh->GetVertex(i);
+    //   out_stream << p[0] << " " << p[1] << " " << p[2];
+    //   out_stream << " " << 255 << " " << 0 << " " << 0 << endl;
+    // }
+
+    // Face list
+    for (int i = 0; i < mesh->GetNFaces(); i++) {
+      const Element* e = mesh->GetFace(i);
+      assert(e->GetNVertices() == 3);
+      const int* verts = e->GetVertices();
+      //out_stream << 3 << " " << verts[0] << " " << verts[1] << " " << verts[2] << endl;
+      int v1 = verts[0];
+      const double* p = mesh->GetVertex(v1);
+      point p1(p[0], p[1], p[2]);
+
+      int v2 = verts[1];
+      p = mesh->GetVertex(v2);
+      point p2(p[0], p[1], p[2]);
+
+      int v3 = verts[3];
+      p = mesh->GetVertex(v3);
+      point p3(p[0], p[1], p[2]);
+      
+      triangle tri(point(0, 0, 0), p1, p2, p3);
+      point n = normal(tri);
+      tri = triangle(n, p1, p2, p3);
+      triangles.push_back(tri);
+    }
+
+    return make_mesh(triangles, 0.0001);
+    
   }
 
   void write_to_ply(Mesh* mesh, GridFunction& x) {
@@ -406,10 +475,10 @@ namespace gca {
     // 11. Define a simple symmetric Gauss-Seidel preconditioner and use it to
     //     solve the system Ax=b with PCG.
     GSSmoother M(A);
-    // PCG(A, M, B, X, 1, 500, 1e-8, 0.0); // 17.0 max displacement box
+    PCG(A, M, B, X, 1, 500, 1e-8, 0.0); // 17.0 max displacement box
     //CG(A, B, X, 1, 500, 1e-8, 0.0); // 18.6 max displacement box
-    MINRES(A, M, B, X, 1, 500, 1e-8, 0.0); // 17.952 max displacement box
-    MINRES(A, M, B, X, 1, 1000, 1e-8, 0.0); // 17.952 max displacement box
+    //MINRES(A, M, B, X, 1, 500, 1e-8, 0.0); // 17.952 max displacement box
+    //MINRES(A, M, B, X, 1, 1000, 1e-8, 0.0); // 17.952 max displacement box
 
     // 12. Recover the solution as a finite element grid function.
     a->RecoverFEMSolution(X, *b, x);
@@ -429,6 +498,9 @@ namespace gca {
     cout << "Max absolute displacement = " << maximum_abs_displacement(x) << endl;
 
     write_to_ply(mesh, x);
+
+    triangular_mesh m = extract_trimesh(mesh);
+    vtk_debug_mesh(m);
     //visualize_mesh(mesh, x, visualization);
     //print_backward_displacements(x);
 
