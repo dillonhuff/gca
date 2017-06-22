@@ -9,32 +9,52 @@
 
 namespace gca {
 
+    vector<string> test_parts{
+      "test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 
+	"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 
+	"test/stl-files/OctagonWithHolesShort.stl",
+	"test/stl-files/CircleWithFilletAndSide.stl",
+	"test/stl-files/onshape_parts/100-013 - Part 1.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl",
+	"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"};
+  
   TEST_CASE("Subtracting from ") {
-    auto mesh =
-      parse_stl("./test/stl-files/onshape_parts/100-009 - Part 1.stl", 0.0001);
+    // auto mesh =
+    //   parse_stl("./test/stl-files/onshape_parts/100-009 - Part 1.stl", 0.0001);
 
-    box bb = mesh.bounding_box();
-    double eps = 0.000001;
-    bb.x_min += eps;
-    bb.y_min += eps;
-    bb.z_min += eps;
+    for (auto m_str : test_parts) {
+      auto mesh = parse_stl(m_str, 0.0001);
 
-    bb.x_max -= eps;
-    bb.y_max -= eps;
-    bb.z_max -= eps;
+      box bb = mesh.bounding_box();
+      double eps = 0.000001;
+      bb.x_min += eps;
+      bb.y_min += eps;
+      bb.z_min += eps;
 
-    triangular_mesh stock = make_mesh(box_triangles(bb), 0.001);
+      bb.x_max -= eps;
+      bb.y_max -= eps;
+      bb.z_max -= eps;
 
-    //vtk_debug_meshes({mesh, stock});
+      triangular_mesh stock = make_mesh(box_triangles(bb), 0.001);
 
-    Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(mesh);
-    Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
-    auto negative_space = stock_nef - mesh_nef;
+      //vtk_debug_meshes({mesh, stock});
 
-    cout << "about to convert to trimeshes" << endl;
-    auto neg_meshes = nef_polyhedron_to_trimeshes(negative_space);
+      Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(mesh);
+      Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
+      auto negative_space = stock_nef - mesh_nef;
 
-    vtk_debug_meshes(neg_meshes);
+      cout << "about to convert to trimeshes" << endl;
+      auto neg_meshes = nef_polyhedron_to_trimeshes(negative_space);
+
+      vtk_debug_meshes(neg_meshes);
+    }
   }
 
 }
