@@ -5672,6 +5672,36 @@ test/unfold_tests.cpp.s:
 	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/unfold_tests.cpp.s
 .PHONY : test/unfold_tests.cpp.s
 
+test/volume_surface_decomp_tests.o: test/volume_surface_decomp_tests.cpp.o
+
+.PHONY : test/volume_surface_decomp_tests.o
+
+# target to build an object file
+test/volume_surface_decomp_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/volume_surface_decomp_tests.cpp.o
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/volume_surface_decomp_tests.cpp.o
+.PHONY : test/volume_surface_decomp_tests.cpp.o
+
+test/volume_surface_decomp_tests.i: test/volume_surface_decomp_tests.cpp.i
+
+.PHONY : test/volume_surface_decomp_tests.i
+
+# target to preprocess a source file
+test/volume_surface_decomp_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/volume_surface_decomp_tests.cpp.i
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/volume_surface_decomp_tests.cpp.i
+.PHONY : test/volume_surface_decomp_tests.cpp.i
+
+test/volume_surface_decomp_tests.s: test/volume_surface_decomp_tests.cpp.s
+
+.PHONY : test/volume_surface_decomp_tests.s
+
+# target to generate assembly for a file
+test/volume_surface_decomp_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/all-tests.dir/build.make CMakeFiles/all-tests.dir/test/volume_surface_decomp_tests.cpp.s
+	$(MAKE) -f CMakeFiles/non-manufacture-tests.dir/build.make CMakeFiles/non-manufacture-tests.dir/test/volume_surface_decomp_tests.cpp.s
+.PHONY : test/volume_surface_decomp_tests.cpp.s
+
 test/voxel_volume_tests.o: test/voxel_volume_tests.cpp.o
 
 .PHONY : test/voxel_volume_tests.o
@@ -6325,6 +6355,9 @@ help:
 	@echo "... test/unfold_tests.o"
 	@echo "... test/unfold_tests.i"
 	@echo "... test/unfold_tests.s"
+	@echo "... test/volume_surface_decomp_tests.o"
+	@echo "... test/volume_surface_decomp_tests.i"
+	@echo "... test/volume_surface_decomp_tests.s"
 	@echo "... test/voxel_volume_tests.o"
 	@echo "... test/voxel_volume_tests.i"
 	@echo "... test/voxel_volume_tests.s"
