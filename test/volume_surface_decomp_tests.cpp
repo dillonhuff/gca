@@ -87,7 +87,7 @@ namespace gca {
   bool coplanar(const plane l, const plane r, const double eps) {
     point diff = l.pt() - r.pt();
     return angle_eps(l.normal(), r.normal(), 0.0, eps) &&
-      angle_eps(diff, l.normal(), 90, 10);
+      angle_eps(diff, l.normal(), 90, eps);
   }
 
   std::vector<surface> coplanar_surfaces(const plane pl,
