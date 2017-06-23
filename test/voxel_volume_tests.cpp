@@ -62,6 +62,32 @@ namespace gca {
      
   }
 
+  int num_line_intersections(const point pt0,
+			     const point pt1,
+			     vtkSmartPointer<vtkOBBTree>& tree) {
+ 
+    // Intersect the locator with the line
+    double lineP0[3] = {pt0.x, pt0.y, pt0.z};
+    double lineP1[3] = {pt1.x, pt1.y, pt1.z};
+
+    vtkSmartPointer<vtkPoints> intersectPoints = 
+      vtkSmartPointer<vtkPoints>::New();
+    int res2 = tree->IntersectWithLine(lineP0, lineP1, intersectPoints, NULL);
+
+    return intersectPoints->GetNumberOfPoints();
+    // std::cout << "NumPoints: " << intersectPoints->GetNumberOfPoints()
+    // 	      << std::endl;
+    
+    // if (res == -1 && res2 == -1) {
+    //   return true;
+    // } else {
+    //   //cout << "res = " << res << endl;
+    //   //assert(res == 1);
+    //   return false;
+    // }
+
+  }
+  
   bool contains_point(const point p,
 		      vtkSmartPointer<vtkPolyData>& pd) {
     double testInside[3] = {p.x, p.y, p.z};
@@ -115,6 +141,39 @@ namespace gca {
     return vv;
   }
 
+  voxel_volume accessible_from_direction(const triangular_mesh& m,
+					 const point access_dir) {
+    auto pd = polydata_for_trimesh(m);
+    
+    DBG_ASSERT(is_closed(pd));
+
+    vtkSmartPointer<vtkOBBTree> tree = 
+      vtkSmartPointer<vtkOBBTree>::New();
+    tree->SetDataSet(pd);
+    tree->BuildLocator();
+
+    box bb = m.bounding_box();
+    double resolution = bb.x_len() / 80.0;
+    voxel_volume vv(min_point(bb), bb.x_len(), bb.y_len(), bb.z_len(), resolution);
+
+    for (int i = 0; i < vv.num_x_elems(); i++) {
+      for (int j = 0; j < vv.num_y_elems(); j++) {
+	for (int k = 0; k < vv.num_z_elems(); k++) {
+
+	  point pt(vv.x_center(i), vv.y_center(j), vv.z_center(k));
+	  point outside_mesh = pt + (bb.x_len()*20)*access_dir;
+
+	  if (num_line_intersections(pt, outside_mesh, tree) == 0) {
+	    vv.set_occupied(i, j, k);
+	  }
+
+	}
+      }
+    }
+    
+    return vv;
+  }
+
   TEST_CASE("Initial voxel volume is empty") {
     voxel_volume vol(point(0, 0, 0), 1.0, 1.0, 1.0, 0.1);
 
@@ -133,9 +192,10 @@ namespace gca {
 
   TEST_CASE("Loading a model from an stl file") {
     triangular_mesh m =
-      //parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
-      parse_stl("test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.0001);
-    voxel_volume vv = build_from_mesh(m);
+      parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.0001);
+    voxel_volume vv = accessible_from_direction(m, point(0, 0, 1));
+    //build_from_mesh(m);
 
     vtk_debug_voxel_volume(vv);
   }
