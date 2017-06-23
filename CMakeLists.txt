@@ -232,6 +232,7 @@ SET(GCA_CPPS
 	 ./src/system/file.cpp
 	 ./src/system/json.cpp
 	 ./src/system/parse_stl.cpp
+	 ./src/system/write_ply.cpp
 	./src/synthesis/timing.cpp
 	./src/dxflib/dl_dxf.cpp
 	 ./src/dxflib/dl_writer_ascii.cpp)

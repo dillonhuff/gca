@@ -3902,6 +3902,33 @@ src/system/settings.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/system/settings.cpp.s
 .PHONY : src/system/settings.cpp.s
 
+src/system/write_ply.o: src/system/write_ply.cpp.o
+
+.PHONY : src/system/write_ply.o
+
+# target to build an object file
+src/system/write_ply.cpp.o:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/system/write_ply.cpp.o
+.PHONY : src/system/write_ply.cpp.o
+
+src/system/write_ply.i: src/system/write_ply.cpp.i
+
+.PHONY : src/system/write_ply.i
+
+# target to preprocess a source file
+src/system/write_ply.cpp.i:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/system/write_ply.cpp.i
+.PHONY : src/system/write_ply.cpp.i
+
+src/system/write_ply.s: src/system/write_ply.cpp.s
+
+.PHONY : src/system/write_ply.s
+
+# target to generate assembly for a file
+src/system/write_ply.cpp.s:
+	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/system/write_ply.cpp.s
+.PHONY : src/system/write_ply.cpp.s
+
 src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
 
 .PHONY : src/transformers/feed_changer.o
@@ -6181,6 +6208,9 @@ help:
 	@echo "... src/system/settings.o"
 	@echo "... src/system/settings.i"
 	@echo "... src/system/settings.s"
+	@echo "... src/system/write_ply.o"
+	@echo "... src/system/write_ply.i"
+	@echo "... src/system/write_ply.s"
 	@echo "... src/transformers/feed_changer.o"
 	@echo "... src/transformers/feed_changer.i"
 	@echo "... src/transformers/feed_changer.s"

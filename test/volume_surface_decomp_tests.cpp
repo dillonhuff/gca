@@ -8,6 +8,7 @@
 #include "synthesis/visual_debug.h"
 #include "system/file.h"
 #include "system/parse_stl.h"
+#include "system/write_ply.h"
 
 namespace gca {
 
@@ -90,8 +91,12 @@ namespace gca {
     auto mvs = mandatory_volumes(mesh);
 
     vector<triangular_mesh> mvs_meshes;
+    int i = 0;
     for (auto& mv : mvs) {
       mvs_meshes.push_back(mv.front().volume);
+      string file_name = "mvs_mesh" + std::to_string(i);
+      i++;
+      write_to_ply(mv.front().volume, file_name);
     }
 
     vtk_debug_meshes(mvs_meshes);
@@ -102,7 +107,7 @@ namespace gca {
 
     Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(mesh);
     for (auto& mv : mvs_meshes) {
-      mesh_nef = mesh_nef + trimesh_to_nef_polyhedron(mv);
+      //mesh_nef = mesh_nef + trimesh_to_nef_polyhedron(mv);
     }
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     auto negative_space = stock_nef - mesh_nef;
