@@ -114,14 +114,18 @@ namespace gca {
   }
 
   plane triangle_plane(const triangle& t) {
-    return plane(-1*normal(t), t.v1);
+    return plane(normal(t), t.v1);
+  }
+
+  triangle flip_winding_order(const triangle& t) {
+    return triangle(-1*t.normal, t.v2, t.v1, t.v3);
   }
 
   vector<plane> box_planes(const box& b) {
     vector<triangle> tris = box_triangles(b);
     vector<plane> pls;
     for (auto t : tris) {
-      pls.push_back(triangle_plane(t));
+      pls.push_back(triangle_plane(flip_winding_order(t)));
     }
 
     return pls;
