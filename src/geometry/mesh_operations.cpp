@@ -73,12 +73,7 @@ namespace gca {
     }
   };
 
-  std::vector<triangle> nef_to_triangle_list(const Nef_polyhedron& p) {
-    //    DBG_DBG_ASSERT(p.is_simple());
-
-    Polyhedron poly;
-    p.convert_to_polyhedron(poly);
-
+  std::vector<triangle> polyhedron_to_triangle_list(const Polyhedron& poly) {
     vector<triangle> tris;
     for (auto it = poly.facets_begin(); it != poly.facets_end(); it++) {
       auto fc = *it;
@@ -111,6 +106,15 @@ namespace gca {
     }
 
     return tris;
+  }
+
+  std::vector<triangle> nef_to_triangle_list(const Nef_polyhedron& p) {
+    //    DBG_DBG_ASSERT(p.is_simple());
+
+    Polyhedron poly;
+    p.convert_to_polyhedron(poly);
+
+    return polyhedron_to_triangle_list(poly);
   }
 
   boost::optional<triangular_mesh>

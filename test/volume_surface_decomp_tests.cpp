@@ -83,7 +83,50 @@ namespace gca {
   TEST_CASE("Negative space for all onshape parts") {
     read_dir("./test/stl-files/onshape_parts/", compute_negative_space_file, ".stl");
   }
-  
+
+  bool coplanar(const plane l, const plane r, const double eps) {
+    point diff = l.pt() - r.pt();
+    return angle_eps(l.normal(), r.normal(), 0.0, eps);// &&
+      //angle_eps(diff, l.normal(), 90, eps);
+  }
+
+  std::vector<surface> coplanar_surfaces(const plane pl,
+					 const triangular_mesh& m) {
+    vector<surface> surfs =
+      inds_to_surfaces(const_orientation_regions(m), m);
+
+    delete_if(surfs,
+	      [pl](const surface& s) {
+		plane spl = surface_plane(s);
+		return !coplanar(spl, pl, 1.0);
+	      });
+
+    return surfs;
+  }
+
+  vector<surface> coplanar_surfaces(const std::vector<plane>& planes,
+				    const triangular_mesh& m) {
+    vector<surface> coplanar_surfs;
+    for (auto& pl : planes) {
+      concat(coplanar_surfs, coplanar_surfaces(pl, m));
+    }
+    return coplanar_surfs;
+  }
+
+  plane triangle_plane(const triangle& t) {
+    return plane(normal(t), t.v1);
+  }
+
+  vector<plane> box_planes(const box& b) {
+    vector<triangle> tris = box_triangles(b);
+    vector<plane> pls;
+    for (auto t : tris) {
+      pls.push_back(triangle_plane(t));
+    }
+
+    return pls;
+  }
+
   TEST_CASE("Subtracting from ") {
 
     auto mesh = parse_stl("./test/stl-files/onshape_parts/Part Studio 1 - Part 1(10).stl", 0.0001);
@@ -99,15 +142,16 @@ namespace gca {
       write_to_ply(mv.front().volume, file_name);
     }
 
-    vtk_debug_meshes(mvs_meshes);
+    //vtk_debug_meshes(mvs_meshes);
 
     box bb = eps_adjusted_bounding_box(mesh);
+    vector<plane> access_planes = box_planes(bb);
 
     triangular_mesh stock = make_mesh(box_triangles(bb), 0.001);
 
     Nef_polyhedron mesh_nef = trimesh_to_nef_polyhedron(mesh);
     for (auto& mv : mvs_meshes) {
-      //mesh_nef = mesh_nef + trimesh_to_nef_polyhedron(mv);
+      mesh_nef = mesh_nef + trimesh_to_nef_polyhedron(mv);
     }
     Nef_polyhedron stock_nef = trimesh_to_nef_polyhedron(stock);
     auto negative_space = stock_nef - mesh_nef;
@@ -119,6 +163,15 @@ namespace gca {
     auto neg_meshes = nef_polyhedron_to_trimeshes(negative_space);
 
     vtk_debug_meshes(neg_meshes);
+
+    for (auto& neg_mesh : neg_meshes) {
+      vector<surface> access_surfs =
+	coplanar_surfaces(access_planes, neg_mesh);
+      if (access_surfs.size() > 0) {
+	vtk_debug_highlight_inds(access_surfs);
+      }
+    }
+
   }
 
 }
