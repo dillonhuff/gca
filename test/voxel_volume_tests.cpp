@@ -153,7 +153,7 @@ namespace gca {
     tree->BuildLocator();
 
     box bb = m.bounding_box();
-    double resolution = bb.x_len() / 80.0;
+    double resolution = bb.x_len() / 40.0;
     voxel_volume vv(min_point(bb), bb.x_len(), bb.y_len(), bb.z_len(), resolution);
 
     for (int i = 0; i < vv.num_x_elems(); i++) {
@@ -218,6 +218,22 @@ namespace gca {
 
   }
 
+    vector<string> voxel_test_parts{
+      "test/stl-files/onshape_parts/Part Studio 1 - Part 1(3).stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(20).stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(24).stl", 
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(2).stl", 
+	"test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(29).stl", 
+	"test/stl-files/OctagonWithHolesShort.stl",
+	"test/stl-files/CircleWithFilletAndSide.stl",
+	"test/stl-files/onshape_parts/100-013 - Part 1.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - ESC spacer.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1(23).stl",
+	"test/stl-files/onshape_parts/Japanese_Two_Contours_Part.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Part 1.stl",
+	"test/stl-files/onshape_parts/Part Studio 1 - Falcon Prarie .177 single shot tray.stl"};
+  
   TEST_CASE("Loading a model from an stl file") {
     triangular_mesh m =
       //parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
@@ -225,21 +241,24 @@ namespace gca {
       parse_stl("test/stl-files/onshape_parts/Part Studio 1 - Part 1(10).stl",
 		0.0001);
 
-    vtk_debug_mesh(m);
+    for (auto& n : voxel_test_parts) {
+      triangular_mesh m = parse_stl(n, 0.0001);
+      vtk_debug_mesh(m);
 
-    voxel_volume bottom = accessible_from_direction(m, point(0, 0, -1));
+      voxel_volume bottom = accessible_from_direction(m, point(0, 1, 0));
 
-    cout << "done with point 0 0 -1" << endl;
-    vtk_debug_voxel_volume(bottom);
+      cout << "done with point 0 0 -1" << endl;
+      vtk_debug_voxel_volume(bottom);
 
-    voxel_volume top = accessible_from_direction(m, point(0, 0, 1));
+      voxel_volume top = accessible_from_direction(m, point(1, 0, 0));
 
-    vtk_debug_voxel_volume(top);
-    //build_from_mesh(m);
+      vtk_debug_voxel_volume(top);
+      //build_from_mesh(m);
 
-    voxel_volume diff = difference(top, bottom);
+      voxel_volume diff = difference(top, bottom);
 
-    vtk_debug_voxel_volume(diff);
+      vtk_debug_voxel_volume(diff);
+    }
   }
 
 }
