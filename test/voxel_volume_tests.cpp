@@ -174,6 +174,34 @@ namespace gca {
     return vv;
   }
 
+  voxel_volume difference(const voxel_volume& top,
+			  const voxel_volume& bottom) {
+
+    DBG_ASSERT(top.num_x_elems() == bottom.num_x_elems());
+    DBG_ASSERT(top.num_y_elems() == bottom.num_y_elems());
+    DBG_ASSERT(top.num_z_elems() == bottom.num_z_elems());
+    
+    voxel_volume diff(top.get_origin(),
+		      top.x_length(),
+		      top.y_length(),
+		      top.z_length(),
+		      top.get_resolution());
+
+    
+    for (int i = 0; i < top.num_x_elems(); i++) {
+      for (int j = 0; j < top.num_y_elems(); j++) {
+	for (int k = 0; k < top.num_z_elems(); k++) {
+	  if (top.is_occupied(i, j, k) &&
+	      !bottom.is_occupied(i, j, k)) {
+	    diff.set_occupied(i, j, k);
+	  }
+	}
+      }
+    }
+
+    return diff;
+  }
+
   TEST_CASE("Initial voxel volume is empty") {
     voxel_volume vol(point(0, 0, 0), 1.0, 1.0, 1.0, 0.1);
 
@@ -192,12 +220,26 @@ namespace gca {
 
   TEST_CASE("Loading a model from an stl file") {
     triangular_mesh m =
-      parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
+      //parse_stl("test/stl-files/onshape_parts/PSU Mount - PSU Mount.stl", 0.0001);
       //parse_stl("test/stl-files/onshape_parts/Magnetic Latch Top - Part 1.stl", 0.0001);
-    voxel_volume vv = accessible_from_direction(m, point(0, 0, 1));
+      parse_stl("test/stl-files/onshape_parts/Part Studio 1 - Part 1(10).stl",
+		0.0001);
+
+    vtk_debug_mesh(m);
+
+    voxel_volume bottom = accessible_from_direction(m, point(0, 0, -1));
+
+    cout << "done with point 0 0 -1" << endl;
+    vtk_debug_voxel_volume(bottom);
+
+    voxel_volume top = accessible_from_direction(m, point(0, 0, 1));
+
+    vtk_debug_voxel_volume(top);
     //build_from_mesh(m);
 
-    vtk_debug_voxel_volume(vv);
+    voxel_volume diff = difference(top, bottom);
+
+    vtk_debug_voxel_volume(diff);
   }
-  
+
 }

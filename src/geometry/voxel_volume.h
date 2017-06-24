@@ -41,6 +41,10 @@ namespace gca {
 		 const double z_len,
 		 const double resolution);
 
+    inline double get_resolution() const { return resolution; }
+
+    inline point get_origin() const { return origin; }
+
     inline bool is_empty(int x_i, int y_i, int z_i) const {
       return !is_occupied(x_i, y_i, z_i);
     }
@@ -63,6 +67,18 @@ namespace gca {
 
     inline double z_center(const int i) const {
       return z_min() + resolution*i + (resolution/2.0);
+    }
+
+    inline double x_length() const {
+      return x_max() - x_min();
+    }
+
+    inline double y_length() const {
+      return y_max() - y_min();
+    }
+
+    inline double z_length() const {
+      return z_max() - z_min();
     }
     
     inline double x_min() const {
