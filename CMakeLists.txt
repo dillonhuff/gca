@@ -129,6 +129,7 @@ SET(GPROCESS_HEADERS 	    ./src/checkers/bounds_checker.h
 	    ./src/transformers/retarget.h)
 
 SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
+		  ./src/analysis/fuzzing.cpp
 	 ./src/analysis/gcode_to_cuts.cpp
 	 ./src/analysis/position_table.cpp
 	 ./src/analysis/utils.cpp

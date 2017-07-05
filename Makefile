@@ -1040,6 +1040,33 @@ src/analysis/extract_cuts.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/extract_cuts.cpp.s
 .PHONY : src/analysis/extract_cuts.cpp.s
 
+src/analysis/fuzzing.o: src/analysis/fuzzing.cpp.o
+
+.PHONY : src/analysis/fuzzing.o
+
+# target to build an object file
+src/analysis/fuzzing.cpp.o:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/fuzzing.cpp.o
+.PHONY : src/analysis/fuzzing.cpp.o
+
+src/analysis/fuzzing.i: src/analysis/fuzzing.cpp.i
+
+.PHONY : src/analysis/fuzzing.i
+
+# target to preprocess a source file
+src/analysis/fuzzing.cpp.i:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/fuzzing.cpp.i
+.PHONY : src/analysis/fuzzing.cpp.i
+
+src/analysis/fuzzing.s: src/analysis/fuzzing.cpp.s
+
+.PHONY : src/analysis/fuzzing.s
+
+# target to generate assembly for a file
+src/analysis/fuzzing.cpp.s:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/analysis/fuzzing.cpp.s
+.PHONY : src/analysis/fuzzing.cpp.s
+
 src/analysis/gcode_to_cuts.o: src/analysis/gcode_to_cuts.cpp.o
 
 .PHONY : src/analysis/gcode_to_cuts.o
@@ -5917,6 +5944,9 @@ help:
 	@echo "... src/analysis/extract_cuts.o"
 	@echo "... src/analysis/extract_cuts.i"
 	@echo "... src/analysis/extract_cuts.s"
+	@echo "... src/analysis/fuzzing.o"
+	@echo "... src/analysis/fuzzing.i"
+	@echo "... src/analysis/fuzzing.s"
 	@echo "... src/analysis/gcode_to_cuts.o"
 	@echo "... src/analysis/gcode_to_cuts.i"
 	@echo "... src/analysis/gcode_to_cuts.s"
