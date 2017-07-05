@@ -43,6 +43,8 @@ namespace gca {
   void print_performance_diff(const program_profile_info& before,
 			      const program_profile_info& after);
 
+  void print_profile_info(vector<vector<cut*>>& paths);
+
 }
 
 #endif

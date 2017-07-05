@@ -69,4 +69,11 @@ namespace gca {
     cout << "% change     = " << pct_change << endl;;
   }
 
+  void print_profile_info(vector<vector<cut*>>& paths) {
+    for (auto path : paths) {
+      print_profile_info(path);
+    }
+  }
+
+  
 }

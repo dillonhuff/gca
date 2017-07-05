@@ -9,6 +9,7 @@
 #include "geometry/polyline.h"
 #include "geometry/triangle.h"
 #include "geometry/triangular_mesh.h"
+#include "simulators/simulate_operations.h"
 #include "synthesis/fixture_analysis.h"
 #include "synthesis/mesh_to_gcode.h"
 #include "backend/shapes_to_gcode.h"

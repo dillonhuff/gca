@@ -145,12 +145,6 @@ void print_geometry_info(vector<vector<cut*>>& paths) {
   }
 }
 
-void print_profile_info(vector<vector<cut*>>& paths) {
-  for (auto path : paths) {
-    print_profile_info(path);
-  }
-}
-
 void print_paths_gcode(vector<vector<cut*>>& paths) {
   program_profile_info before = profile_toolpaths(paths);
   vector<vector<cut*>> clipped_height_paths = clip_transition_heights(paths, 0.01);
