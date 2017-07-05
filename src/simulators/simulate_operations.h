@@ -152,4 +152,6 @@ namespace gca {
 
   std::string to_string(const operation_type op_type);
 
+  int num_unsafe_moves(const simulation_log& l);
+
 }

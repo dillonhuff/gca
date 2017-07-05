@@ -25,6 +25,7 @@
 #include "gcode/cut.h"
 #include "gcode/safe_move.h"
 #include "gcode/circular_helix_cut.h"
+#include "transformers/clip_transitions.h"
 #include "utils/algorithm.h"
 #include "utils/grouping.h"
 #include "utils/arena_allocator.h"
@@ -69,56 +70,6 @@ using namespace std;
     read_dir(dn, func);
   
   }
-
-vector<cut*> clip_transition_heights(const vector<cut*>& path,
-				     double new_safe_height) {
-  vector<vector<cut*>> move_sequences =
-    group_unary(path, [](const cut* c) { return c->is_safe_move(); });
-  delete_if(move_sequences, [](const vector<cut*>& cs)
-	    { return cs.front()->is_safe_move(); });
-  bool all_normal_paths = true;
-  for (auto s : move_sequences) {
-    if (!is_vertical(s.front()) || s.size() < 2) {
-      all_normal_paths = false;
-      break;
-    }
-  }
-  vector<cut*> clipped_cuts;
-  if (all_normal_paths) {
-    cout << "All normal paths" << endl;
-    vector<vector<cut*>> transitions(move_sequences.size() - 1);
-    // TODO: Add push feedrate inference
-    auto mk_transition = [new_safe_height](const vector<cut*> l,
-					   const vector<cut*> r) {
-      return from_to_with_G0_height(l.back()->get_end(),
-				    r.front()->get_start(),
-				    new_safe_height, lit::make(10.0));
-    };
-    apply_between(move_sequences.begin() + 1, move_sequences.end(),
-		  transitions.begin(),
-		  mk_transition);
-    for (unsigned i = 0; i < move_sequences.size(); i++) {
-      auto m = move_sequences[i];
-      clipped_cuts.insert(end(clipped_cuts), m.begin() + 1, m.end());
-      if (i < move_sequences.size() - 1) {
-	auto t = transitions[i];
-	clipped_cuts.insert(end(clipped_cuts), t.begin(), t.end());
-      }
-    }
-  } else {
-    clipped_cuts = path;
-  }
-  return clipped_cuts;
-}
-
-vector<vector<cut*>> clip_transition_heights(vector<vector<cut*>>& paths,
-					     double new_safe_height) {
-  vector<vector<cut*>> clipped_paths;
-  for (auto path : paths) {
-    clipped_paths.push_back(clip_transition_heights(path, new_safe_height));
-  }
-  return clipped_paths;
-}
 
 void print_geometry_info(vector<vector<cut*>>& paths) {
   vector<box> path_boxes;
@@ -265,53 +216,6 @@ void simulate_all_programs(const std::string& dir_name) {
 
 }
 
-int num_unsafe_moves(const simulation_log& l) {
-  int num_unsafe_G0s = 0;
-
-  for (auto& op : l.operation_logs) {
-    for (auto& cut_log : op.cuts) {
-      cut* c = cut_log.c;
-      const vector<point_update>& updates = cut_log.updates;
-      vector<grid_update> total_updates =
-	sum_updates(updates);
-
-      if (c->is_safe_move() &&
-	  !(is_vertical(c) && ( c->get_start().z < c->get_end().z ))) {
-
-	double vol_removed =
-	  volume_removed_in_updates(l.resolution, total_updates);
-
-	if (vol_removed > 0.0001) {
-	  cout << "Volume removed in safe move!" << endl;
-	  cout << *c << endl;
-	  cout << "Volume removed = " << vol_removed << endl;
-	  cout << "Line number = " << c->get_line_number() << endl;
-	  num_unsafe_G0s++;
-	}
-      }
-    }
-  }
-
-  return num_unsafe_G0s;
-}
-
-void
-write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pairs) {
-  ptree p;
-
-  ptree children;
-  for (auto& file_log_pair : file_log_pairs) {
-    ptree c;
-    c.put("name", file_log_pair.first);
-    c.add_child("log", encode_json(file_log_pair.second));
-    children.push_back( make_pair("", c) );
-  }
-
-  p.add_child("All-ops", children);
-
-  write_json(cout, p);
-}
-
 bool program_in_HAAS_travel(const std::vector<std::vector<cut*> >& paths) {
   double HAAS_x_travel = 20;
   double HAAS_y_travel = 16;
@@ -386,11 +290,6 @@ point random_point(const point l, const point r) {
   double z = fRand(bb.z_min, bb.z_max);
 
   return point(x, y, z);
-}
-
-circular_arc* random_circular_arc_to_from(const point start, const point end) {
-  DBG_ASSERT(start.z == end.z);
-  DBG_ASSERT(false);
 }
 
 cut* random_cut_to_from(const point start, const point end) {

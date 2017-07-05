@@ -831,5 +831,36 @@ namespace gca {
     DBG_ASSERT(false);
   }
 
+
+  int num_unsafe_moves(const simulation_log& l) {
+    int num_unsafe_G0s = 0;
+
+    for (auto& op : l.operation_logs) {
+      for (auto& cut_log : op.cuts) {
+	cut* c = cut_log.c;
+	const vector<point_update>& updates = cut_log.updates;
+	vector<grid_update> total_updates =
+	  sum_updates(updates);
+
+	if (c->is_safe_move() &&
+	    !(is_vertical(c) && ( c->get_start().z < c->get_end().z ))) {
+
+	  double vol_removed =
+	    volume_removed_in_updates(l.resolution, total_updates);
+
+	  if (vol_removed > 0.0001) {
+	    cout << "Volume removed in safe move!" << endl;
+	    cout << *c << endl;
+	    cout << "Volume removed = " << vol_removed << endl;
+	    cout << "Line number = " << c->get_line_number() << endl;
+	    num_unsafe_G0s++;
+	  }
+	}
+      }
+    }
+
+    return num_unsafe_G0s;
+  }
+
   
 }

@@ -154,6 +154,9 @@ namespace gca {
 
   std::vector<operation_params>
   read_operation_params_json(const std::string& dir_name);
+
+  void
+  write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pairs);
   
 }
 

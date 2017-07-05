@@ -3929,6 +3929,33 @@ src/system/write_ply.cpp.s:
 	$(MAKE) -f CMakeFiles/gca.dir/build.make CMakeFiles/gca.dir/src/system/write_ply.cpp.s
 .PHONY : src/system/write_ply.cpp.s
 
+src/transformers/clip_transitions.o: src/transformers/clip_transitions.cpp.o
+
+.PHONY : src/transformers/clip_transitions.o
+
+# target to build an object file
+src/transformers/clip_transitions.cpp.o:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/clip_transitions.cpp.o
+.PHONY : src/transformers/clip_transitions.cpp.o
+
+src/transformers/clip_transitions.i: src/transformers/clip_transitions.cpp.i
+
+.PHONY : src/transformers/clip_transitions.i
+
+# target to preprocess a source file
+src/transformers/clip_transitions.cpp.i:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/clip_transitions.cpp.i
+.PHONY : src/transformers/clip_transitions.cpp.i
+
+src/transformers/clip_transitions.s: src/transformers/clip_transitions.cpp.s
+
+.PHONY : src/transformers/clip_transitions.s
+
+# target to generate assembly for a file
+src/transformers/clip_transitions.cpp.s:
+	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/transformers/clip_transitions.cpp.s
+.PHONY : src/transformers/clip_transitions.cpp.s
+
 src/transformers/feed_changer.o: src/transformers/feed_changer.cpp.o
 
 .PHONY : src/transformers/feed_changer.o
@@ -6211,6 +6238,9 @@ help:
 	@echo "... src/system/write_ply.o"
 	@echo "... src/system/write_ply.i"
 	@echo "... src/system/write_ply.s"
+	@echo "... src/transformers/clip_transitions.o"
+	@echo "... src/transformers/clip_transitions.i"
+	@echo "... src/transformers/clip_transitions.s"
 	@echo "... src/transformers/feed_changer.o"
 	@echo "... src/transformers/feed_changer.i"
 	@echo "... src/transformers/feed_changer.s"

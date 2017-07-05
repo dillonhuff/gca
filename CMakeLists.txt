@@ -145,6 +145,7 @@ SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/simulators/simulate_operations.cpp
 	 ./src/transformers/feed_changer.cpp
+	 ./src/transformers/clip_transitions.cpp
 	 ./src/transformers/retarget.cpp)
 
 add_library(gprocess ${GPROCESS_HEADERS} ${GPROCESS_CPPS})

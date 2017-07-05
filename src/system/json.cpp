@@ -403,27 +403,45 @@ namespace gca {
     return children;
   }
 
-std::vector<operation_params>
-read_operation_params_json(const std::string& dir_name) {
-  ptree json_ops;
-  read_json(dir_name, json_ops);
+  std::vector<operation_params>
+  read_operation_params_json(const std::string& dir_name) {
+    ptree json_ops;
+    read_json(dir_name, json_ops);
 
-  vector<operation_params> read_params =
-    decode_params(json_ops.get_child("All params"));
+    vector<operation_params> read_params =
+      decode_params(json_ops.get_child("All params"));
 
-  return read_params;
-}
+    return read_params;
+  }
 
-void write_as_json(const std::vector<operation_params>& all_params) {
+  void write_as_json(const std::vector<operation_params>& all_params) {
 
-  ptree all_params_json;
-  ptree all_params_json_arr = encode_params(all_params);
-  all_params_json.add_child("All params", all_params_json_arr);
+    ptree all_params_json;
+    ptree all_params_json_arr = encode_params(all_params);
+    all_params_json.add_child("All params", all_params_json_arr);
 
-  cout << "ALL PARAMS AS JSON" << endl;
-  write_json(cout, all_params_json);
+    cout << "ALL PARAMS AS JSON" << endl;
+    write_json(cout, all_params_json);
 
-}
+  }
+
+
+  void
+  write_logs_to_json(const std::vector<pair<string, simulation_log> >& file_log_pairs) {
+    ptree p;
+
+    ptree children;
+    for (auto& file_log_pair : file_log_pairs) {
+      ptree c;
+      c.put("name", file_log_pair.first);
+      c.add_child("log", encode_json(file_log_pair.second));
+      children.push_back( make_pair("", c) );
+    }
+
+    p.add_child("All-ops", children);
+
+    write_json(cout, p);
+  }
 
   
 }
