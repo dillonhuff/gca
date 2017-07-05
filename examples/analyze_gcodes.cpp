@@ -371,61 +371,9 @@ bool all_same_student(const std::vector<operation_params>& params) {
   return true;
 }
 
-int main(int argc, char** argv) {
-  if (argc != 2) {
-    cout << "Usage: analyze-gcodes <directory path>" << endl;
-    return 0;
-  }
-
-  arena_allocator a;
-  set_system_allocator(&a);
-
-  string dir_name = argv[1];
-
-  clock_t begin = clock();
-
-  cout << "Start time = " << begin << endl;
-
-  simulate_all_programs(dir_name);
-
-  clock_t end = clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;  
-
-  cout << "Elapsed time = " << elapsed_secs << " secs" << endl;
-
-  return 0;
-
-  // apply_to_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
-  //     auto ops =
-  // 	simulate_program_HAAS(p, file_name);
-  //     cout << "# of ops = " << ops.size() << endl;
-  //   });
-
-  // cout << "# of op params = " << op_params.size() << endl;
-
-  // apply_to_router_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
-  //     vector<vector<cut*>> paths;
-  //     auto r = gcode_to_cuts(p, paths);
-  //     if (r == GCODE_TO_CUTS_SUCCESS) {
-  // 	vtk_debug_cuts(concat_all(paths));
-  //     } else {
-  // 	cout << "Could not process " << file_name << endl;
-  //     }
-  //   });
-
-  // return 0;
-
-  // test_bounds_cases_HAAS(dir_name);
-
-  // return 0;
-
-  // generate_params(dir_name);
-
-  // return 0;
-
-  auto all_ops = read_operation_params_json(dir_name);
-
+void compute_perf_groups(const std::vector<operation_params>& all_ops) {
   vector<operation_params> likely_rough_ops = all_ops;
+    
   delete_if(likely_rough_ops,
   	    [](const operation_params& op) {
   	      return (op.range.name != "ROUGHING") ||
@@ -506,4 +454,61 @@ int main(int argc, char** argv) {
     //   cout << op << endl;
     // }
   }
+
+}
+
+int main(int argc, char** argv) {
+  if (argc != 2) {
+    cout << "Usage: analyze-gcodes <directory path>" << endl;
+    return 0;
+  }
+
+  arena_allocator a;
+  set_system_allocator(&a);
+
+  string dir_name = argv[1];
+
+  clock_t begin = clock();
+
+  cout << "Start time = " << begin << endl;
+
+  simulate_all_programs(dir_name);
+
+  clock_t end = clock();
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;  
+
+  cout << "Elapsed time = " << elapsed_secs << " secs" << endl;
+
+  return 0;
+
+  // apply_to_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
+  //     auto ops =
+  // 	simulate_program_HAAS(p, file_name);
+  //     cout << "# of ops = " << ops.size() << endl;
+  //   });
+
+  // cout << "# of op params = " << op_params.size() << endl;
+
+  // apply_to_router_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
+  //     vector<vector<cut*>> paths;
+  //     auto r = gcode_to_cuts(p, paths);
+  //     if (r == GCODE_TO_CUTS_SUCCESS) {
+  // 	vtk_debug_cuts(concat_all(paths));
+  //     } else {
+  // 	cout << "Could not process " << file_name << endl;
+  //     }
+  //   });
+
+  // return 0;
+
+  // test_bounds_cases_HAAS(dir_name);
+
+  // return 0;
+
+  // generate_params(dir_name);
+
+  // return 0;
+
+  auto all_ops = read_operation_params_json(dir_name);
+  compute_perf_groups(all_ops);
 }
