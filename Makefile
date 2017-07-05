@@ -3335,33 +3335,6 @@ src/simulators/region.cpp.s:
 	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/region.cpp.s
 .PHONY : src/simulators/region.cpp.s
 
-src/simulators/serialize.o: src/simulators/serialize.cpp.o
-
-.PHONY : src/simulators/serialize.o
-
-# target to build an object file
-src/simulators/serialize.cpp.o:
-	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/serialize.cpp.o
-.PHONY : src/simulators/serialize.cpp.o
-
-src/simulators/serialize.i: src/simulators/serialize.cpp.i
-
-.PHONY : src/simulators/serialize.i
-
-# target to preprocess a source file
-src/simulators/serialize.cpp.i:
-	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/serialize.cpp.i
-.PHONY : src/simulators/serialize.cpp.i
-
-src/simulators/serialize.s: src/simulators/serialize.cpp.s
-
-.PHONY : src/simulators/serialize.s
-
-# target to generate assembly for a file
-src/simulators/serialize.cpp.s:
-	$(MAKE) -f CMakeFiles/gprocess.dir/build.make CMakeFiles/gprocess.dir/src/simulators/serialize.cpp.s
-.PHONY : src/simulators/serialize.cpp.s
-
 src/simulators/sim_mill.o: src/simulators/sim_mill.cpp.o
 
 .PHONY : src/simulators/sim_mill.o
@@ -6172,9 +6145,6 @@ help:
 	@echo "... src/simulators/region.o"
 	@echo "... src/simulators/region.i"
 	@echo "... src/simulators/region.s"
-	@echo "... src/simulators/serialize.o"
-	@echo "... src/simulators/serialize.i"
-	@echo "... src/simulators/serialize.s"
 	@echo "... src/simulators/sim_mill.o"
 	@echo "... src/simulators/sim_mill.i"
 	@echo "... src/simulators/sim_mill.s"

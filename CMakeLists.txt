@@ -144,7 +144,6 @@ SET(GPROCESS_CPPS ./src/analysis/extract_cuts.cpp
 	 ./src/simulators/visual_debug.cpp
 	 ./src/simulators/sim_mill.cpp
 	 ./src/simulators/simulate_operations.cpp
-	 ./src/simulators/serialize.cpp
 	 ./src/transformers/feed_changer.cpp
 	 ./src/transformers/retarget.cpp)
 

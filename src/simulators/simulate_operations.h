@@ -95,6 +95,12 @@ namespace gca {
     std::vector<operation_log> operation_logs;
   };
 
+  struct labeled_operation_params {
+    operation_type op_type;
+    operation_params params;
+  };
+
+  
   std::string to_string(const tool_end l);
   
   std::map<int, tool_info> infer_tool_table_GCA(const std::vector<block>& p);
@@ -143,5 +149,7 @@ namespace gca {
   segment_operations_GCA(std::vector<std::vector<cut*> >& paths,
 			 map<int, tool_info>& tool_table,
 			 const std::vector<operation_range>& op_ranges);
-  
+
+  std::string to_string(const operation_type op_type);
+
 }

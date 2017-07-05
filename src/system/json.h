@@ -134,6 +134,27 @@ namespace gca {
   }
   plan_inputs parse_inputs_json(const std::string& s);
 
+  ptree encode_json(const labeled_operation_params& op);
+
+  ptree encode_json(const operation_params& op);
+
+  ptree encode_json(const operation_range& op_range);
+
+  tool_end decode_tool_end_json(const ptree& p);
+
+  operation_params decode_json_params(const ptree& p);
+
+  std::vector<operation_params> decode_params(const ptree& p);
+
+  ptree encode_json(const simulation_log& sim_log);
+  
+  ptree encode_params(const std::vector<operation_params>& elems);
+
+  void write_as_json(const std::vector<operation_params>& all_params);
+
+  std::vector<operation_params>
+  read_operation_params_json(const std::string& dir_name);
+  
 }
 
 #endif

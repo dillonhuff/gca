@@ -814,5 +814,22 @@ namespace gca {
     return depth;
   }
 
+
+  std::string to_string(const operation_type op_type) {
+    switch (op_type) {
+
+    case ROUGH_OPERATION:
+      return "ROUGH_OPERATION";
+
+    case FINISH_OPERATION:
+      return "FINISH_OPERATION";
+
+    case OTHER_OPERATION:
+      return "OTHER_OPERATION";
+    }
+
+    DBG_ASSERT(false);
+  }
+
   
 }
