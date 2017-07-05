@@ -34,141 +34,41 @@
 using namespace gca;
 using namespace std;
 
-int num_unsafe_moves(const simulation_log& l);
 
-using int_futures = std::vector<std::future<int>>;
+  template<typename F>
+  void apply_to_gprograms(const string& dn, F f) {
 
-int accumulate_block_worker_ret(string* data, size_t count) {
-  return 0; //std::accumulate(data, data + count, 0);
-}
-
-int apply_to_each(std::vector<string> const * const v,
-		  const unsigned start,
-		  const unsigned end) {
-
-  //  for (auto& dir_name : *v) {
-  for (unsigned i = start; i < end; i++) {
-    string dir_name = (*v)[i];
-
-    std::ifstream t(dir_name);
-    std::string str((std::istreambuf_iterator<char>(t)),
-		    std::istreambuf_iterator<char>());
-    vector<block> p = lex_gprog(str);
-    cout << "NUM BLOCKS: " << p.size() << endl;
-
-    vector<vector<cut*>> paths;
-    auto r = gcode_to_cuts(p, paths);
-    if (r == GCODE_TO_CUTS_SUCCESS) {
-
-      // map<int, tool_info> tt = infer_tool_table_GCA(p);
-
-      // std::vector<operation_range> op_ranges =
-      // 	infer_operation_ranges_GCA(p);
-
-      // simulation_log l = simulation_log_GCA(paths, tt, op_ranges);
-
-      // int num_unsafe_G0s = num_unsafe_moves(l);
-
-      // cout << "# of unsafe moves = " << num_unsafe_G0s << endl;
-
-    }
+    auto func = [&f](const string& dir_name) {
+      if (ends_with(dir_name, ".NCF")) {
+	cout << dir_name << endl;
+	std::ifstream t(dir_name);
+	std::string str((std::istreambuf_iterator<char>(t)),
+			std::istreambuf_iterator<char>());
+	vector<block> p = lex_gprog(str);
+	cout << "NUM BLOCKS: " << p.size() << endl;
+	f(p, dir_name);
+      }
+    };
+    read_dir(dn, func);
   
   }
-  return 0;
-}
 
-int_futures launch_split_workers_with_std_async(std::vector<string>& v) {
-  unsigned split = v.size() / 2;
-
-  int_futures futures;
-  futures.push_back(std::async(std::launch::async, apply_to_each,
-			       &v, 0, split));
-
-  futures.push_back(std::async(std::launch::async, apply_to_each,
-			       &v, split, v.size()));
+  template<typename F>
+  void apply_to_router_gprograms(const string& dn, F f) {
+    auto func = [&f](const string& dir_name) {
+      if (ends_with(dir_name, ".tap")) {
+	cout << dir_name << endl;
+	std::ifstream t(dir_name);
+	std::string str((std::istreambuf_iterator<char>(t)),
+			std::istreambuf_iterator<char>());
+	vector<block> p = lex_gprog(str);
+	cout << "NUM BLOCKS: " << p.size() << endl;
+	f(p, dir_name);
+      }
+    };
+    read_dir(dn, func);
   
-  // int_futures futures;
-  // futures.push_back(std::async(std::launch::async, accumulate_block_worker_ret,
-  //                              v.data(), v.size() / 2));
-  // futures.push_back(std::async(std::launch::async, accumulate_block_worker_ret,
-  //                              v.data() + v.size() / 2, v.size() / 2));
-  return futures;
-}
-
-template<typename F>
-void apply_to_gprograms_parallel(const string& dn, F f) {
-
-  std::vector<std::string> names;
-
-  auto func = [&names](const string& dir_name) {
-    if (ends_with(dir_name, ".NCF")) {
-      cout << dir_name << endl;
-      names.push_back(dir_name);
-    }
-  };
-  read_dir(dn, func);
-
-  // cout << "# of names = " << names.size() << endl;
-  // for (auto& n : names) {
-  //   cout << n << endl;
-  // }
-
-  auto fs = launch_split_workers_with_std_async(names);
-  int total = 0;
-  for (auto& f : fs) {
-    total += f.get();
   }
-
-  cout << "total = " << total << endl;
-  
-  // auto func = [&f](const string& dir_name) {
-  //   if (ends_with(dir_name, ".NCF")) {
-  //     cout << dir_name << endl;
-  //     std::ifstream t(dir_name);
-  //     std::string str((std::istreambuf_iterator<char>(t)),
-  // 		      std::istreambuf_iterator<char>());
-  //     vector<block> p = lex_gprog(str);
-  //     cout << "NUM BLOCKS: " << p.size() << endl;
-  //     f(p, dir_name);
-  //   }
-  // };
-  // read_dir(dn, func);
-}
-
-template<typename F>
-void apply_to_gprograms(const string& dn, F f) {
-
-  auto func = [&f](const string& dir_name) {
-    if (ends_with(dir_name, ".NCF")) {
-      cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-  		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      f(p, dir_name);
-    }
-  };
-  read_dir(dn, func);
-  
-}
-
-template<typename F>
-void apply_to_router_gprograms(const string& dn, F f) {
-  auto func = [&f](const string& dir_name) {
-    if (ends_with(dir_name, ".tap")) {
-      cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-  		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      f(p, dir_name);
-    }
-  };
-  read_dir(dn, func);
-  
-}
 
 vector<cut*> clip_transition_heights(const vector<cut*>& path,
 				     double new_safe_height) {
@@ -249,18 +149,6 @@ void print_profile_info(vector<vector<cut*>>& paths) {
   for (auto path : paths) {
     print_profile_info(path);
   }
-}
-
-void print_performance_diff(const program_profile_info& before,
-			    const program_profile_info& after) {
-  assert(before.size() == after.size());
-  double time_before = execution_time(before);
-  double time_after = execution_time(after);
-  assert(!within_eps(time_before, 0));
-  double pct_change = ((time_before - time_after) / time_before) * 100;
-  cout << "Time before  = " << time_before << endl;
-  cout << "Time after   = " << time_after << endl;
-  cout << "% change     = " << pct_change << endl;;
 }
 
 void print_paths_gcode(vector<vector<cut*>>& paths) {
@@ -543,6 +431,11 @@ void simulate_all_programs(const std::string& dir_name) {
   	  op.file_name = file_name;
   	}
 
+
+	for (auto& op : prog_ops) {
+	  cout << op << endl;
+	}
+	
   	concat(all_params, prog_ops);
 
   	//simulate_paths(paths, tt, mrrs);
@@ -550,7 +443,9 @@ void simulate_all_programs(const std::string& dir_name) {
   	cout << "Could not process all paths: " << r << endl;
   	num_failed_blocks += p.size();
       }
+
     });
+
 
   cout << "# processed files = " << num_processed_blocks << endl;
   cout << "# of failed files = " << num_failed_blocks << endl;
@@ -1080,7 +975,7 @@ vector<operation_params> generate_params(const std::string& dir_name) {
   	map<int, tool_info> tt = infer_tool_table_GCA(p);
 
   	std::vector<operation_range> op_ranges =
-  	  infer_operation_ranges_GCA(p);
+  	  infer_operation_ranges_HAAS(p);
 
   	auto prog_ops = program_operations_GCA(paths, tt, op_ranges);
 
@@ -1170,25 +1065,46 @@ int main(int argc, char** argv) {
 
   string dir_name = argv[1];
 
-  apply_to_router_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
-      vector<vector<cut*>> paths;
-      auto r = gcode_to_cuts(p, paths);
-      if (r == GCODE_TO_CUTS_SUCCESS) {
-	vtk_debug_cuts(concat_all(paths));
-      } else {
-	cout << "Could not process " << file_name << endl;
-      }
-    });
+  clock_t begin = clock();
+
+  cout << "Start time = " << begin << endl;
+
+  simulate_all_programs(dir_name);
+
+  clock_t end = clock();
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;  
+
+  cout << "Elapsed time = " << elapsed_secs << " secs" << endl;
 
   return 0;
 
-  test_bounds_cases_HAAS(dir_name);
+  // apply_to_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
+  //     auto ops =
+  // 	simulate_program_HAAS(p, file_name);
+  //     cout << "# of ops = " << ops.size() << endl;
+  //   });
 
-  return 0;
+  // cout << "# of op params = " << op_params.size() << endl;
 
-  generate_params(dir_name);
+  // apply_to_router_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
+  //     vector<vector<cut*>> paths;
+  //     auto r = gcode_to_cuts(p, paths);
+  //     if (r == GCODE_TO_CUTS_SUCCESS) {
+  // 	vtk_debug_cuts(concat_all(paths));
+  //     } else {
+  // 	cout << "Could not process " << file_name << endl;
+  //     }
+  //   });
 
-  return 0;
+  // return 0;
+
+  // test_bounds_cases_HAAS(dir_name);
+
+  // return 0;
+
+  // generate_params(dir_name);
+
+  // return 0;
 
   auto all_ops = read_operation_params_json(dir_name);
 
@@ -1199,8 +1115,8 @@ int main(int argc, char** argv) {
   		within_eps(op.tool_diameter, 0.0, 0.0001) ||
   		(op.cut_depth < 0.0) ||
 		(op.material_removed < 0.3333);
-		//(60*op.average_MRR() < 0.3333);
-		//(op.material_removed < 0.125); //pow(op.tool_diameter, 3));
+	      //(60*op.average_MRR() < 0.3333);
+	      //(op.material_removed < 0.125); //pow(op.tool_diameter, 3));
   	    });
 
   cout << "# of likely rough operations = " << likely_rough_ops.size() << endl;

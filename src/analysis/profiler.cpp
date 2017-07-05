@@ -56,4 +56,17 @@ namespace gca {
       { time += prof.time; }
     return time;
   }
+
+  void print_performance_diff(const program_profile_info& before,
+			      const program_profile_info& after) {
+    assert(before.size() == after.size());
+    double time_before = execution_time(before);
+    double time_after = execution_time(after);
+    assert(!within_eps(time_before, 0));
+    double pct_change = ((time_before - time_after) / time_before) * 100;
+    cout << "Time before  = " << time_before << endl;
+    cout << "Time after   = " << time_after << endl;
+    cout << "% change     = " << pct_change << endl;;
+  }
+
 }

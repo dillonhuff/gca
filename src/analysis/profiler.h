@@ -40,6 +40,9 @@ namespace gca {
   program_profile_info profile_toolpaths(const vector<vector<cut*>>& paths);
   void print_profile_info(const vector<cut*>& path);
 
+  void print_performance_diff(const program_profile_info& before,
+			      const program_profile_info& after);
+
 }
 
 #endif
