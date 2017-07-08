@@ -58,37 +58,16 @@ void apply_to_gprograms(const string& dn, const string& extension, F f) {
 template<typename F>
 void apply_to_gprograms(const string& dn, F f) {
   apply_to_gprograms(dn, ".NCF", f);
+}
 
-  // auto func = [&f](const string& dir_name) {
-  //   if (ends_with(dir_name, ".NCF")) {
-  //     cout << dir_name << endl;
-  //     std::ifstream t(dir_name);
-  //     std::string str((std::istreambuf_iterator<char>(t)),
-  // 		      std::istreambuf_iterator<char>());
-  //     vector<block> p = lex_gprog(str);
-  //     cout << "NUM BLOCKS: " << p.size() << endl;
-  //     f(p, dir_name);
-  //   }
-  // };
-  // read_dir(dn, func);
-  
+template<typename F>
+void apply_to_cura_programs(const string& dn, F f) {
+  apply_to_gprograms(dn, ".gcode", f);
 }
 
 template<typename F>
 void apply_to_router_gprograms(const string& dn, F f) {
-  auto func = [&f](const string& dir_name) {
-    if (ends_with(dir_name, ".tap")) {
-      cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      f(p, dir_name);
-    }
-  };
-  read_dir(dn, func);
-  
+  apply_to_gprograms(dn, ".tap", f);
 }
 
 
@@ -493,8 +472,19 @@ int main(int argc, char** argv) {
 
   cout << "Start time = " << begin << endl;
 
-  simulate_all_programs(dir_name);
+  auto print_prog = [](const std::vector<block>& p, const std::string& file_name) {
+    cout << p.size() << endl;
+  };
 
+  apply_to_cura_programs(dir_name, print_prog);
+  //  simulate_all_programs(dir_name);
+
+  // apply_to_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
+  //     auto ops =
+  // 	simulate_program_GCA(p, file_name);
+  //     cout << "# of ops = " << ops.size() << endl;
+  //   });
+  
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;  
 
@@ -502,11 +492,6 @@ int main(int argc, char** argv) {
 
   return 0;
 
-  // apply_to_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
-  //     auto ops =
-  // 	simulate_program_HAAS(p, file_name);
-  //     cout << "# of ops = " << ops.size() << endl;
-  //   });
 
   // cout << "# of op params = " << op_params.size() << endl;
 
