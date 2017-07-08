@@ -36,11 +36,12 @@
 using namespace gca;
 using namespace std;
 
-template<typename F>
-void apply_to_gprograms(const string& dn, F f) {
 
-  auto func = [&f](const string& dir_name) {
-    if (ends_with(dir_name, ".NCF")) {
+template<typename F>
+void apply_to_gprograms(const string& dn, const string& extension, F f) {
+
+  auto func = [&f, extension](const string& dir_name) {
+    if (ends_with(dir_name, extension)) {
       cout << dir_name << endl;
       std::ifstream t(dir_name);
       std::string str((std::istreambuf_iterator<char>(t)),
@@ -51,6 +52,25 @@ void apply_to_gprograms(const string& dn, F f) {
     }
   };
   read_dir(dn, func);
+  
+}
+
+template<typename F>
+void apply_to_gprograms(const string& dn, F f) {
+  apply_to_gprograms(dn, ".NCF", f);
+
+  // auto func = [&f](const string& dir_name) {
+  //   if (ends_with(dir_name, ".NCF")) {
+  //     cout << dir_name << endl;
+  //     std::ifstream t(dir_name);
+  //     std::string str((std::istreambuf_iterator<char>(t)),
+  // 		      std::istreambuf_iterator<char>());
+  //     vector<block> p = lex_gprog(str);
+  //     cout << "NUM BLOCKS: " << p.size() << endl;
+  //     f(p, dir_name);
+  //   }
+  // };
+  // read_dir(dn, func);
   
 }
 
@@ -58,24 +78,6 @@ template<typename F>
 void apply_to_router_gprograms(const string& dn, F f) {
   auto func = [&f](const string& dir_name) {
     if (ends_with(dir_name, ".tap")) {
-      cout << dir_name << endl;
-      std::ifstream t(dir_name);
-      std::string str((std::istreambuf_iterator<char>(t)),
-		      std::istreambuf_iterator<char>());
-      vector<block> p = lex_gprog(str);
-      cout << "NUM BLOCKS: " << p.size() << endl;
-      f(p, dir_name);
-    }
-  };
-  read_dir(dn, func);
-  
-}
-
-template<typename F>
-void apply_to_gprograms(const string& dn, const string& extension, F f) {
-
-  auto func = [&f, extension](const string& dir_name) {
-    if (ends_with(dir_name, extension)) {
       cout << dir_name << endl;
       std::ifstream t(dir_name);
       std::string str((std::istreambuf_iterator<char>(t)),
