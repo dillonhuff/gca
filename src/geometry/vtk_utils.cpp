@@ -120,7 +120,7 @@ namespace gca {
     data->GetCellData()->SetScalars(colors);
 
   }
-
+  
   vtkSmartPointer<vtkPolyData>
   polydata_for_ring(const std::vector<point>& mpts) {
     // Create the polydata where we will store all the geometric data

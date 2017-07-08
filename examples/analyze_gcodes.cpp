@@ -71,6 +71,25 @@ void apply_to_router_gprograms(const string& dn, F f) {
   
 }
 
+template<typename F>
+void apply_to_gprograms(const string& dn, const string& extension, F f) {
+
+  auto func = [&f, extension](const string& dir_name) {
+    if (ends_with(dir_name, extension)) {
+      cout << dir_name << endl;
+      std::ifstream t(dir_name);
+      std::string str((std::istreambuf_iterator<char>(t)),
+		      std::istreambuf_iterator<char>());
+      vector<block> p = lex_gprog(str);
+      cout << "NUM BLOCKS: " << p.size() << endl;
+      f(p, dir_name);
+    }
+  };
+  read_dir(dn, func);
+  
+}
+
+
 void print_geometry_info(vector<vector<cut*>>& paths) {
   vector<box> path_boxes;
   for (auto path : paths) {
