@@ -103,7 +103,8 @@ namespace gca {
     } else if (s.next() == ';') {
       s++;
       string cs = parse_line_comment_with_delimiter(';', s);
-      return token(cs);
+      token comment(cs, LINE_SEMICOLON_COMMENT);
+      return comment;
     } else {
       char c = s.next();
       s++;

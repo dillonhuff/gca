@@ -18,6 +18,7 @@ namespace gca {
   enum token_type {
     PAREN_COMMENT = 0,
     BRACKET_COMMENT,
+    LINE_SEMICOLON_COMMENT,
     ICODE
   };
 
@@ -35,7 +36,7 @@ namespace gca {
     token(string textp) : ttp(PAREN_COMMENT), text(textp), line_no(-1) {}
     token(string textp, token_type comment_type) :
       ttp(comment_type), text(textp), line_no(-1) {
-      DBG_ASSERT((ttp == PAREN_COMMENT) || (ttp == BRACKET_COMMENT));
+      DBG_ASSERT((ttp == PAREN_COMMENT) || (ttp == BRACKET_COMMENT) || (ttp == LINE_SEMICOLON_COMMENT));
     }
     token(char cp, value* vp) : ttp(ICODE), c(cp), v(vp), line_no(-1) {}
     token(char cp, int vp) : ttp(ICODE), c(cp), v(ilit::make(vp)), line_no(-1) {}
@@ -63,6 +64,8 @@ namespace gca {
 	stream << "(*** " << text << " ***)";
       } else if (ttp == BRACKET_COMMENT) {
 	stream << "[*** " << text << " ***]";
+      } else if (ttp == LINE_SEMICOLON_COMMENT) {
+	stream << "; " << text;
       } else {
 	stream << c << *v;
       }
