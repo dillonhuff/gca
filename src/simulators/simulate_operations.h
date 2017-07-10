@@ -11,6 +11,8 @@
 
 namespace gca {
 
+  bool starts_with(const string& value, const string& prefix);  
+
   enum tool_end {
     ROUGH_ENDMILL,
     FINISH_ENDMILL,

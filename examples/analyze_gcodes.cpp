@@ -457,6 +457,23 @@ void compute_perf_groups(const std::vector<operation_params>& all_ops) {
 
 }
 
+vector<block> add_temperature_gradient(const std::vector<block>& program) {
+  string layer_prefix = "LAYER:";
+  for (auto& blk : program) {
+    for (auto& token : blk) {
+      if (token.tp() == LINE_SEMICOLON_COMMENT) {
+	
+	if (starts_with(token.text, layer_prefix)) {
+	  cout << token << " " << endl;
+	  cout << "Layer num = " << token.text.substr(layer_prefix.size()) << endl;
+	}
+      }
+    }
+  }
+
+  return program;
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     cout << "Usage: analyze-gcodes <directory path>" << endl;
@@ -473,8 +490,8 @@ int main(int argc, char** argv) {
   cout << "Start time = " << begin << endl;
 
   auto print_prog = [](const std::vector<block>& p, const std::string& file_name) {
-    cout << p.size() << endl;
-    cout << p << endl;
+    vector<block> fp = add_temperature_gradient(p);
+    cout << fp.size() << endl;
   };
 
   apply_to_cura_programs(dir_name, print_prog);
