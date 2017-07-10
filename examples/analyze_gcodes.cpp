@@ -474,16 +474,10 @@ int main(int argc, char** argv) {
 
   auto print_prog = [](const std::vector<block>& p, const std::string& file_name) {
     cout << p.size() << endl;
+    cout << p << endl;
   };
 
   apply_to_cura_programs(dir_name, print_prog);
-  //  simulate_all_programs(dir_name);
-
-  // apply_to_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
-  //     auto ops =
-  // 	simulate_program_GCA(p, file_name);
-  //     cout << "# of ops = " << ops.size() << endl;
-  //   });
   
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;  
@@ -491,30 +485,4 @@ int main(int argc, char** argv) {
   cout << "Elapsed time = " << elapsed_secs << " secs" << endl;
 
   return 0;
-
-
-  // cout << "# of op params = " << op_params.size() << endl;
-
-  // apply_to_router_gprograms(dir_name, [](const vector<block>& p, const string& file_name) {
-  //     vector<vector<cut*>> paths;
-  //     auto r = gcode_to_cuts(p, paths);
-  //     if (r == GCODE_TO_CUTS_SUCCESS) {
-  // 	vtk_debug_cuts(concat_all(paths));
-  //     } else {
-  // 	cout << "Could not process " << file_name << endl;
-  //     }
-  //   });
-
-  // return 0;
-
-  // test_bounds_cases_HAAS(dir_name);
-
-  // return 0;
-
-  // generate_params(dir_name);
-
-  // return 0;
-
-  auto all_ops = read_operation_params_json(dir_name);
-  compute_perf_groups(all_ops);
 }
