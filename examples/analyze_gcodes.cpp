@@ -457,6 +457,32 @@ void compute_perf_groups(const std::vector<operation_params>& all_ops) {
 
 }
 
+vector<vector<block> > split_layers(const std::vector<block>& program) {
+  string layer_prefix = "LAYER:";
+  auto not_layer = [&layer_prefix](const block& b) {
+    for (auto& token : b) {
+      if (token.tp() == LINE_SEMICOLON_COMMENT) {
+	
+	if (starts_with(token.text, layer_prefix)) {
+	  return true;
+	}
+
+      }
+    }
+
+    return false;
+  };
+
+  auto it = begin(program);
+  while (it != end(program)) {
+    auto r = find(it, end(program), not_f);
+    res.push_back(std::vector<I>(it, r.first + 1));
+    it = r.second;
+  }
+  
+  return split_by(program, not_layer);
+}
+
 vector<block> add_temperature_gradient(const std::vector<block>& program) {
   string layer_prefix = "LAYER:";
   for (auto& blk : program) {
@@ -464,9 +490,10 @@ vector<block> add_temperature_gradient(const std::vector<block>& program) {
       if (token.tp() == LINE_SEMICOLON_COMMENT) {
 	
 	if (starts_with(token.text, layer_prefix)) {
-	  cout << token << " " << endl;
-	  cout << "Layer num = " << token.text.substr(layer_prefix.size()) << endl;
+	  int layer_num = stoi(token.text.substr(layer_prefix.size()));
+	  cout << "Layer num = " << layer_num << endl;
 	}
+
       }
     }
   }
