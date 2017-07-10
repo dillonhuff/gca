@@ -47,6 +47,7 @@ namespace gca {
     case 'X':
     case 'Y':
     case 'Z':
+    case 'E':
     case 'I':
     case 'J':
     case 'K':
@@ -98,6 +99,10 @@ namespace gca {
       return token(cs);
     } else if (s.next() == '(') {
       string cs = parse_comment_with_delimiters('(', ')', s);
+      return token(cs);
+    } else if (s.next() == ';') {
+      s++;
+      string cs = parse_line_comment_with_delimiter(';', s);
       return token(cs);
     } else {
       char c = s.next();

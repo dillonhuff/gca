@@ -61,7 +61,9 @@ namespace gca {
   int parse_int(parse_state& s);
   double parse_coordinate(char c, parse_state& s);
   double parse_option_coordinate(char c, parse_state& s, double def=0.0);
-  value* parse_option_value(char v, parse_state& s);  
+  value* parse_option_value(char v, parse_state& s);
+  string parse_line_comment_with_delimiter(char sc, parse_state& s);
+
 }
 
 #endif

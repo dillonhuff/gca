@@ -14,6 +14,16 @@ namespace gca {
     cout << "Cannot parse char " << c << " from string " << string_remaining(s) << endl;
     assert(false);
   }
+
+  string parse_line_comment_with_delimiter(char sc, parse_state& s) {
+    string text = "";
+    while (s.chars_left()) {
+      text += s.next();
+      s++;
+    }
+
+    return text;
+  }
   
   string parse_comment_with_delimiters(char sc, char ec, parse_state& s) {
     int depth = 0;
