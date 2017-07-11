@@ -38,8 +38,8 @@ namespace gca {
 
   //double max_cut_depth_from_updates(const std::vector<point_update>& updates);
 
-  double volume_removed_in_update(const double resolution,
-				  const point_update& update);
+  // double volume_removed_in_update(const double resolution,
+  // 				  const point_update& update);
 
   double
   volume_removed_in_updates(const double resolution,
