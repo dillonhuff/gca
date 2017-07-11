@@ -59,12 +59,13 @@ namespace gca {
 
   double volume_removed_in_update(const double resolution,
 				  const point_update& update) {
-    double volume_removed = 0.0;
-    for (auto& g : update.grid_updates) {
-      volume_removed += g.height_diff * resolution*resolution;
-    }
+    return volume_removed_in_updates(resolution, update.grid_updates);
+    // double volume_removed = 0.0;
+    // for (auto& g : update.grid_updates) {
+    //   volume_removed += g.height_diff * resolution*resolution;
+    // }
 
-    return volume_removed;
+    // return volume_removed;
   }
 
   double
