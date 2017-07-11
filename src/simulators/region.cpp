@@ -42,30 +42,24 @@ namespace gca {
     return total_updates;
   }
 
-  double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
-    if (updates.size() == 0) { return -1; }
-    vector<grid_update> total_updates = sum_updates(updates);
+  // double max_cut_depth_from_updates(const std::vector<point_update>& updates) {
+  //   if (updates.size() == 0) { return -1; }
+  //   vector<grid_update> total_updates = sum_updates(updates);
 
-    if (total_updates.size() == 0) {
-      return -1;
-    }
+  //   if (total_updates.size() == 0) {
+  //     return -1;
+  //   }
     
-    grid_update largest_cut = max_e(total_updates, [](const grid_update& g) {
-	return g.height_diff;
-      });
+  //   grid_update largest_cut = max_e(total_updates, [](const grid_update& g) {
+  // 	return g.height_diff;
+  //     });
 
-    return largest_cut.height_diff;
-  }
+  //   return largest_cut.height_diff;
+  // }
 
   double volume_removed_in_update(const double resolution,
 				  const point_update& update) {
     return volume_removed_in_updates(resolution, update.grid_updates);
-    // double volume_removed = 0.0;
-    // for (auto& g : update.grid_updates) {
-    //   volume_removed += g.height_diff * resolution*resolution;
-    // }
-
-    // return volume_removed;
   }
 
   double

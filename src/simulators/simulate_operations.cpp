@@ -189,7 +189,6 @@ namespace gca {
     return tt;
   }
 
-
   boost::optional<double> infer_program_length_feet(const vector<block>& p) {
     vector<token> comments;
     for (auto b : p) {
@@ -510,7 +509,7 @@ namespace gca {
 
       double volume_removed = 0.0;
       for (auto& update : updates) {
-	volume_removed += volume_removed_in_update(sim_resolution, update);
+	volume_removed += update.volume_removed;
       }
 
       // Assume no crashes since the program was submitted
