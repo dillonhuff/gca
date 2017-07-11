@@ -353,7 +353,8 @@ namespace gca {
       vector<grid_update> sum = sum_updates(cut_log.updates);
       // Dummy cutter location
       point start = cut_log.updates.front().cutter_location;
-      point_update all{start, sum};
+      // Fix this layout encoding problem once simulator refactor is complete
+      point_update all{start, 0, sum};
 
       updates.push_back( make_pair("", encode_json(all)) );
     

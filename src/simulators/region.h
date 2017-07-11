@@ -25,6 +25,7 @@ namespace gca {
 
   struct point_update {
     point cutter_location;
+    double volume_removed;
     vector<grid_update> grid_updates;
   };
 
@@ -35,7 +36,7 @@ namespace gca {
 
   std::vector<grid_update> sum_updates(const std::vector<point_update>& updates);
 
-  double max_cut_depth_from_updates(const std::vector<point_update>& updates);
+  //double max_cut_depth_from_updates(const std::vector<point_update>& updates);
 
   double volume_removed_in_update(const double resolution,
 				  const point_update& update);
@@ -139,7 +140,7 @@ namespace gca {
       // total_volume_removed += volume_removed;
       // return volume_removed;
 
-      return point_update{p, grid_updates};
+      return point_update{p, 0.0, grid_updates};
     }
 
     double update(point p, const mill_tool& t) {
@@ -152,33 +153,6 @@ namespace gca {
 
       return volume_removed;
     }
-
-    // inline bool in_region(point p, const mill_tool& t) const {
-
-    //   int first_x = r.x_index(t.x_min(p));
-    //   int last_x = r.x_index(t.x_max(p));
-    //   int first_y = r.y_index(t.y_min(p));
-    //   int last_y = r.y_index(t.y_max(p));
-
-    //   for (int i = first_x; i < last_x; i++) {
-    // 	for (int j = first_y; j < last_y; j++) {
-
-    // 	  double bl_corner_x = r.get_origin().x + i*r.resolution;
-    // 	  double bl_corner_y = r.get_origin().y + j*r.resolution;
-    // 	  double h = static_cast<double>(r.column_height(i, j));
-    // 	  point other_pt(bl_corner_x, bl_corner_y, h);
-	  
-    // 	  if (t.contains(p, other_pt) && !r.legal_column(i, j)) {
-    // 	    return true;
-    // 	  }
-    // 	  // if (t.contains(p, r.get_origin(), r.resolution, i, j) && !r.legal_column(i, j)) {
-    // 	  //   return false;
-    // 	  // }
-    // 	}
-    //   }
-
-    //   return true;
-    // }
 
   };
 

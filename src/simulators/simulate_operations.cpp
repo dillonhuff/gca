@@ -711,16 +711,6 @@ namespace gca {
 			 const std::vector<operation_range>& op_ranges) {
 
     simulation_log l = simulation_log_GCA(paths, tool_table, op_ranges);
-    // auto op_paths = segment_operations_GCA(paths, tool_table, op_ranges);
-
-    // if (op_paths.size() == 0) { return {}; }
-
-    // double max_tool_diameter = 1.5;
-
-    // auto r = set_up_region_conservative(paths, max_tool_diameter);
-
-    // std::vector<operation_log> operation_sim_log =
-    //   simulate_operations(r, op_paths);
 
     vector<operation_params> ops;
 
