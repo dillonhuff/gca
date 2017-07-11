@@ -140,7 +140,7 @@ namespace gca {
       // total_volume_removed += volume_removed;
       // return volume_removed;
 
-      return point_update{p, 0.0, grid_updates};
+      return point_update{p, volume_removed_in_updates(r.resolution, grid_updates), grid_updates};
     }
 
     double update(point p, const mill_tool& t) {
