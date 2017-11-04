@@ -22,7 +22,7 @@ CAD Model                  |  Final Part
 
 ### Output
 GCA produces a list of setups that when carried out on a 3-axis mill will manufacture
-the given part from the given stock given. Each setup is complete with a description
-of how to place the part in the vice, which parallel plates to use (if any) and
+the given part from the given stock. Each setup is complete with a description
+of how to place the part in the vice, which parallel plates to use (if any),
 ready to run G-code programs for each toolpath, and instructions on which tool to
 use in each path.
