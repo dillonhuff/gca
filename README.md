@@ -1,4 +1,4 @@
-## A Process Planner for 3-Axis CNC Mills
+# A Process Planner for 3-Axis CNC Mills
 
 CAD Model                  |  Final Part
 :-------------------------:|:-------------------------:
