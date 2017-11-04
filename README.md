@@ -26,3 +26,5 @@ the given part from the given stock. Each setup is complete with a description
 of how to place the part in the vice, which parallel plates to use (if any),
 ready to run G-code programs for each toolpath, and instructions on which tool to
 use in each path.
+
+To see some examples of how to use GCAs C++ API see the tests in [https://github.com/dillonhuff/gca/blob/master/test/mesh_to_gcode_tests.cpp](https://github.com/dillonhuff/gca/blob/master/test/mesh_to_gcode_tests.cpp)
