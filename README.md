@@ -1,5 +1,9 @@
 # A Process Planner for 3-Axis CNC Mills
 
+GCA is a basic process planner that automatically generates machining plans for 3-axis
+mills. Below is an example part that was manufactured using a process plan produced
+by GCA.
+
 CAD Model                  |  Final Part
 :-------------------------:|:-------------------------:
 ![Screenshot](/images/CircleWithFilletSide.jpg)  |  ![Screenshot](/images/Half_sphere_teaser_part.jpg)
@@ -16,7 +20,7 @@ CAD Model                  |  Final Part
 3. Setup Selection
 4. Toolpath Generation
 
-## Output
+### Output
 GCA produces a list of setups that when carried out on a 3-axis mill will manufacture
 the given part from the given stock given. Each setup is complete with a description
 of how to place the part in the vice, which parallel plates to use (if any) and
