@@ -28,3 +28,18 @@ ready to run G-code programs for each toolpath, and instructions on which tool t
 use in each path.
 
 To see some examples of how to use GCAs C++ API see the tests in [https://github.com/dillonhuff/gca/blob/master/test/mesh_to_gcode_tests.cpp](https://github.com/dillonhuff/gca/blob/master/test/mesh_to_gcode_tests.cpp)
+
+## Testing
+
+GCA has been used to make several real parts out of 6061 aluminum on an Emco F1
+3-axis mill. It should work well on prismatic parts, and parts that are mostly
+prismatic with isolated freeform surfaces
+
+## Limitations
+
+GCA supports only flat nosed and ball nosed end mills. Special tools like chamfers
+and corner-rounding end-mills are not supported.
+
+GCA only supports cuboid stocks.
+
+The only fixture type that is supported is vices.
