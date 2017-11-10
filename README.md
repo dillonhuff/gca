@@ -35,6 +35,8 @@ GCA has been used to make several real parts out of 6061 aluminum on an Emco F1
 3-axis mill. It should work well on prismatic parts, and parts that are mostly
 prismatic with isolated freeform surfaces
 
+![Screenshot](/images/IMG_0956.jpg)
+
 ## Limitations
 
 GCA supports only flat nosed and ball nosed end mills. Special tools like chamfers
