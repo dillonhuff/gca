@@ -139,7 +139,6 @@ namespace gca {
 
 
 
-  // TODO: Change to actually align instead of just using displacement
   triangular_mesh align_workpiece(const std::vector<surface>& part_surfaces,
 				  const workpiece& w) {
 
@@ -148,10 +147,6 @@ namespace gca {
     const triangular_mesh& part = part_surfaces.front().get_parent_mesh();
 
     cout << "# of part surfaces = " << part_surfaces.size() << endl;
-
-    // for (auto s : part_surfaces) {
-    //   vtk_debug_highlight_inds(s);
-    // }
 
     vector<plane> part_planes = set_right_handed(max_area_basis(part_surfaces));
 
@@ -177,13 +172,6 @@ namespace gca {
     DBG_ASSERT(t);
 
     triangular_mesh aligned_wp = apply(*t, mesh);
-
-    //vtk_debug_meshes({aligned_wp, part});
-
-    // vector<triangular_mesh> to_sub{aligned_wp};
-    // vector<triangular_mesh> res = boolean_difference(part, to_sub);
-
-    // DBG_ASSERT(res.size() == 0);
 
     return aligned_wp;
   }
